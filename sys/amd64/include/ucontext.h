@@ -28,7 +28,7 @@ comment|/* XXX - sigcontext compat. */
 name|int
 name|mc_gs
 decl_stmt|;
-comment|/* machine state (trapframe) */
+comment|/* machine state (struct trapframe) */
 name|int
 name|mc_fs
 decl_stmt|;
@@ -128,13 +128,15 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* align next field to 16 bytes */
+comment|/* 	 * See<machine/npx.h> for the internals of mc_fpstate[]. 	 */
 name|int
 name|mc_fpstate
 index|[
 literal|128
 index|]
-decl_stmt|;
-comment|/* must be multiple of 16 bytes */
+name|__aligned
+decl|(16
+decl_stmt|);
 name|int
 name|mc_spare2
 index|[
@@ -160,10 +162,6 @@ name|COMPAT_FREEBSD4
 argument_list|)
 end_if
 
-begin_comment
-comment|/* For 4.x binaries */
-end_comment
-
 begin_struct
 struct|struct
 name|mcontext4
@@ -175,6 +173,7 @@ comment|/* XXX - sigcontext compat. */
 name|int
 name|mc_gs
 decl_stmt|;
+comment|/* machine state (struct trapframe) */
 name|int
 name|mc_fs
 decl_stmt|;

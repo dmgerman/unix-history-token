@@ -197,7 +197,7 @@ comment|/* sigstack state to restore */
 name|int
 name|sc_gs
 decl_stmt|;
-comment|/* machine state (struct trapframe): */
+comment|/* machine state (struct trapframe) */
 name|int
 name|sc_fs
 decl_stmt|;
@@ -274,6 +274,10 @@ name|sc_fpstate
 index|[
 literal|128
 index|]
+name|__aligned
+argument_list|(
+literal|16
+argument_list|)
 decl_stmt|;
 name|int
 name|sc_spare2
