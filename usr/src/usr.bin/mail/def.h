@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.7 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.8 %G%";  */
 end_comment
 
 begin_comment
@@ -523,6 +523,17 @@ end_define
 
 begin_comment
 comment|/* Is a transparent command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R
+value|04000
+end_define
+
+begin_comment
+comment|/* Cannot be called from collect */
 end_comment
 
 begin_comment
