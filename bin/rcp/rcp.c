@@ -5315,13 +5315,6 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
 operator|++
 name|errs
 expr_stmt|;
@@ -5366,6 +5359,13 @@ argument_list|,
 literal|"rcp: "
 argument_list|)
 expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5375,6 +5375,11 @@ name|fp
 argument_list|,
 name|fmt
 argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
@@ -5401,6 +5406,14 @@ condition|(
 operator|!
 name|iamremote
 condition|)
+block|{
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
 name|vwarnx
 argument_list|(
 name|fmt
@@ -5408,6 +5421,12 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
 name|va_end
 argument_list|(
 name|ap
