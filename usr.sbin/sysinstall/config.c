@@ -3217,6 +3217,7 @@ argument_list|(
 literal|"/sbin/ifconfig lo0 127.0.0.1"
 argument_list|)
 expr_stmt|;
+comment|/*       * execcmd may have been passed in as a command name with      * arguments.  Therefore, before determining if it is suitable for      * execution, we must split off the filename component from the      * command line arguments.      */
 name|execcmd
 operator|=
 name|string_concat
