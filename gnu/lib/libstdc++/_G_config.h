@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* XXX _G_VTABLE_LABEL_PREFIX is different between ELF and a.out */
 end_comment
 
@@ -33,12 +37,6 @@ name|_G_VTABLE_LABEL_HAS_LENGTH
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|_G_USING_THUNKS
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -56,14 +54,14 @@ begin_define
 define|#
 directive|define
 name|_G_VTABLE_LABEL_PREFIX
-value|"__vt_"
+value|"_vt$"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_G_VTABLE_LABEL_PREFIX_ID
-value|__vt_
+value|_vt$
 end_define
 
 begin_else
