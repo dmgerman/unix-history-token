@@ -1371,7 +1371,7 @@ name|u_char
 modifier|*
 name|ob
 init|=
-name|alloca
+name|malloc
 argument_list|(
 name|l
 argument_list|)
@@ -1787,6 +1787,11 @@ operator|.
 name|st_size
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|ob
+argument_list|)
+expr_stmt|;
 block|}
 name|finish
 label|:
