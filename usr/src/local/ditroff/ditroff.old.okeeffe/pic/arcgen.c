@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*	arcgen.c	(Berkeley)	1.2	86/03/11	*/
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -701,12 +705,12 @@ else|:
 name|PI2
 operator|)
 expr_stmt|;
-for|for
-control|(
 name|r
 operator|=
 name|prevrad
-init|;
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|d
 operator|=
@@ -724,15 +728,30 @@ operator|*
 name|dy2
 operator|)
 operator|)
-operator|<=
+operator|<
 literal|0.0
-condition|;
-name|r
-operator|*=
-literal|2
-control|)
-empty_stmt|;
+condition|)
+block|{
 comment|/* this kludge gets around too-small radii */
+name|r
+operator|=
+name|sqrt
+argument_list|(
+name|dx2
+operator|*
+name|dx2
+operator|+
+name|dy2
+operator|*
+name|dy2
+argument_list|)
+expr_stmt|;
+comment|/* smallest radius */
+name|d
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|prevrad
 operator|=
 name|r
