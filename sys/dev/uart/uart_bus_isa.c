@@ -798,9 +798,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* Probe PnP _and_ non-PnP ns8250 here. */
 if|if
 condition|(
-operator|!
 name|ISA_PNP_PROBE
 argument_list|(
 name|parent
@@ -809,6 +809,8 @@ name|dev
 argument_list|,
 name|isa_ns8250_ids
 argument_list|)
+operator|!=
+name|ENXIO
 condition|)
 block|{
 name|sc
@@ -836,27 +838,9 @@ operator|)
 return|;
 block|}
 comment|/* Add checks for non-ns8250 IDs here. */
-name|sc
-operator|->
-name|sc_class
-operator|=
-operator|&
-name|uart_ns8250_class
-expr_stmt|;
 return|return
 operator|(
-name|uart_bus_probe
-argument_list|(
-name|dev
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
+name|ENXIO
 operator|)
 return|;
 block|}
