@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)atoi.c	4.2 (Berkeley) 1/11/81 */
+comment|/* @(#)atoi.c	4.3 (Berkeley) 81/02/28 */
 end_comment
 
 begin_expr_stmt
