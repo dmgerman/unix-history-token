@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	8.3 (Berkeley) %G%"
+literal|"@(#)exec.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1554,6 +1554,9 @@ operator|&
 name|entry
 argument_list|,
 literal|1
+argument_list|,
+name|pathval
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -1812,6 +1815,8 @@ parameter_list|,
 name|entry
 parameter_list|,
 name|printerr
+parameter_list|,
+name|path
 parameter_list|)
 name|char
 modifier|*
@@ -1825,6 +1830,10 @@ decl_stmt|;
 name|int
 name|printerr
 decl_stmt|;
+name|char
+modifier|*
+name|path
+decl_stmt|;
 block|{
 name|struct
 name|tblentry
@@ -1836,10 +1845,6 @@ name|index
 decl_stmt|;
 name|int
 name|prev
-decl_stmt|;
-name|char
-modifier|*
-name|path
 decl_stmt|;
 name|char
 modifier|*
@@ -1994,11 +1999,6 @@ operator|.
 name|index
 expr_stmt|;
 block|}
-name|path
-operator|=
-name|pathval
-argument_list|()
-expr_stmt|;
 name|e
 operator|=
 name|ENOENT
