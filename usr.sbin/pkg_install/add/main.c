@@ -268,6 +268,14 @@ literal|"/packages-4.7-release"
 block|}
 block|,
 block|{
+literal|480000
+block|,
+literal|480099
+block|,
+literal|"/packages-4.8-release"
+block|}
+block|,
+block|{
 literal|300000
 block|,
 literal|399000
