@@ -1,6 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1981 Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -15,18 +39,21 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vpltdmp.c	5.1 (Berkeley) %G%"
+literal|"@(#)vpltdmp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * Copyright (C) 1981, Regents of the University of California  *	All rights reserved  *  *  reads raster file created by vplot and dumps it onto the  *  Varian or Versatec plotter.  *  Input comes from file descriptor 0, output is to file descriptor 1.  */
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  *  reads raster file created by vplot and dumps it onto the  *  Varian or Versatec plotter.  *  Input comes from file descriptor 0, output is to file descriptor 1.  */
 end_comment
 
 begin_include
@@ -61,7 +88,7 @@ name|char
 modifier|*
 name|Sid
 init|=
-literal|"@(#)vpltdmp.c	5.1\t%G%"
+literal|"@(#)vpltdmp.c	5.2\t%G%"
 decl_stmt|;
 end_decl_stmt
 
