@@ -87,20 +87,22 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|wrt_E
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|w
+argument|w
 argument_list|,
-name|d
+argument|d
 argument_list|,
-name|e
+argument|e
 argument_list|,
-name|len
+argument|len
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ufloat
 modifier|*
 name|p
@@ -118,28 +120,27 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|wrt_E
-parameter_list|(
-name|ufloat
-modifier|*
-name|p
-parameter_list|,
-name|int
-name|w
-parameter_list|,
-name|int
-name|d
-parameter_list|,
-name|int
-name|e
-parameter_list|,
-name|ftnlen
-name|len
-parameter_list|)
+argument_list|(
+argument|ufloat *p
+argument_list|,
+argument|int w
+argument_list|,
+argument|int d
+argument_list|,
+argument|int e
+argument_list|,
+argument|ftnlen len
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|char
 name|buf
@@ -640,31 +641,11 @@ index|[
 literal|3
 index|]
 condition|)
-for|for
-control|(
-name|s
-operator|-=
-literal|2
-operator|,
 name|e1
 operator|=
 literal|2
-init|;
-name|s
-index|[
-literal|0
-index|]
-operator|=
-name|s
-index|[
-literal|1
-index|]
-condition|;
-name|s
-operator|++
-control|)
-empty_stmt|;
-comment|/* Pedantic gives the behavior that Fortran 77 specifies,	*/
+expr_stmt|;
+comment|/* for(s -= 2, e1 = 2; s[0] = s[1]; s++);  	/* Pedantic gives the behavior that Fortran 77 specifies,	*/
 comment|/* i.e., requires that E be specified for exponent fields	*/
 comment|/* of more than 3 digits.  With Pedantic undefined, we get	*/
 comment|/* the behavior that Cray displays -- you get a bigger		*/
@@ -687,7 +668,6 @@ name|e1
 operator|=
 literal|2
 init|;
-operator|(
 name|s
 index|[
 literal|0
@@ -697,7 +677,6 @@ name|s
 index|[
 literal|1
 index|]
-operator|)
 condition|;
 name|s
 operator|++
@@ -997,7 +976,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -1005,18 +984,20 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|wrt_F
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|w
+argument|w
 argument_list|,
-name|d
+argument|d
 argument_list|,
-name|len
+argument|len
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ufloat
 modifier|*
 name|p
@@ -1034,25 +1015,25 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|wrt_F
-parameter_list|(
-name|ufloat
-modifier|*
-name|p
-parameter_list|,
-name|int
-name|w
-parameter_list|,
-name|int
-name|d
-parameter_list|,
-name|ftnlen
-name|len
-parameter_list|)
+argument_list|(
+argument|ufloat *p
+argument_list|,
+argument|int w
+argument_list|,
+argument|int d
+argument_list|,
+argument|ftnlen len
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|int
 name|d1
@@ -1162,11 +1143,9 @@ directive|endif
 block|}
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|f__scale
-operator|)
 condition|)
 if|if
 condition|(
@@ -1415,13 +1394,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|n
 operator|=
 operator|*
 name|b
 operator|++
-operator|)
 condition|)
 name|PUT
 argument_list|(
@@ -1444,7 +1421,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

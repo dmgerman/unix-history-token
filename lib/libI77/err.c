@@ -153,6 +153,17 @@ comment|/*active external io list*/
 end_comment
 
 begin_decl_stmt
+name|icilist
+modifier|*
+name|f__svic
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*active internal io list*/
+end_comment
+
+begin_decl_stmt
 name|flag
 name|f__reading
 decl_stmt|;
@@ -398,7 +409,16 @@ begin_decl_stmt
 name|int
 name|f__cursor
 decl_stmt|,
+name|f__hiwater
+decl_stmt|,
 name|f__scale
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|f__icptr
 decl_stmt|;
 end_decl_stmt
 
@@ -501,7 +521,10 @@ literal|"'new' file exists"
 block|,
 comment|/* 128 */
 literal|"can't append to file"
+block|,
 comment|/* 129 */
+literal|"non-positive record number"
+comment|/* 130 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -519,12 +542,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|f__canseek
 argument_list|(
-name|f
+argument|f
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|FILE
 modifier|*
 name|f
@@ -540,17 +565,23 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|f__canseek
-parameter_list|(
-name|FILE
-modifier|*
-name|f
-parameter_list|)
+argument_list|(
+argument|FILE *f
+argument_list|)
+end_macro
+
+begin_comment
 comment|/*SYSDEP*/
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -780,7 +811,7 @@ comment|/* who knows what it is? */
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 begin_function
 name|void
@@ -1146,12 +1177,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|f__nowreading
 argument_list|(
-name|x
+argument|x
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|unit
 modifier|*
 name|x
@@ -1163,16 +1196,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|f__nowreading
-parameter_list|(
-name|unit
-modifier|*
-name|x
-parameter_list|)
+argument_list|(
+argument|unit *x
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|long
 name|loc
@@ -1270,7 +1306,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -1278,12 +1314,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|f__nowwriting
 argument_list|(
-name|x
+argument|x
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|unit
 modifier|*
 name|x
@@ -1295,16 +1333,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|f__nowwriting
-parameter_list|(
-name|unit
-modifier|*
-name|x
-parameter_list|)
+argument_list|(
+argument|unit *x
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|long
 name|loc
@@ -1565,7 +1606,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int

@@ -40,18 +40,20 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|int
+begin_macro
 name|ef1asc_
 argument_list|(
-name|a
+argument|a
 argument_list|,
-name|la
+argument|la
 argument_list|,
-name|b
+argument|b
 argument_list|,
-name|lb
+argument|lb
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ftnint
 modifier|*
 name|a
@@ -141,9 +143,14 @@ operator|*
 name|lb
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__cplusplus
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

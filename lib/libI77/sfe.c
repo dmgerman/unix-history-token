@@ -79,12 +79,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|c_sfe
 argument_list|(
-name|a
+argument|a
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|cilist
 modifier|*
 name|a
@@ -100,17 +102,23 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|c_sfe
-parameter_list|(
-name|cilist
-modifier|*
-name|a
-parameter_list|)
+argument_list|(
+argument|cilist *a
+argument_list|)
+end_macro
+
+begin_comment
 comment|/* check */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|unit
 modifier|*
@@ -199,7 +207,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|integer

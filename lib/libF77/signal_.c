@@ -16,7 +16,7 @@ typedef|typedef
 name|VOID
 function_decl|(
 modifier|*
-name|sig_type
+name|sig_pf
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -24,22 +24,18 @@ end_typedef
 
 begin_function_decl
 specifier|extern
-name|sig_type
+name|sig_pf
 name|signal
 parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|sig_proc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|signal1
+value|signal
+end_define
 
 begin_decl_stmt
 name|ftnint
@@ -56,7 +52,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|sig_type
+name|sig_pf
 name|proc
 decl_stmt|;
 end_decl_stmt
@@ -69,34 +65,8 @@ end_else
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"signal1.h"
 end_include
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|sig_type
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|sig_proc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
 
 begin_function
 name|ftnint
@@ -106,7 +76,7 @@ name|integer
 modifier|*
 name|sigp
 parameter_list|,
-name|sig_proc
+name|sig_pf
 name|proc
 parameter_list|)
 endif|#
@@ -131,9 +101,6 @@ name|signal
 argument_list|(
 name|sig
 argument_list|,
-operator|(
-name|sig_type
-operator|)
 name|proc
 argument_list|)
 return|;

@@ -310,6 +310,12 @@ block|{
 name|short
 name|is
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|KR_headers
+name|signed
+endif|#
+directive|endif
 name|char
 name|ic
 decl_stmt|;

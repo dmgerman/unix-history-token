@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"signal1.h"
 end_include
 
 begin_ifndef
@@ -327,26 +327,49 @@ modifier|*
 modifier|*
 name|xargv
 decl_stmt|;
-name|int
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|KR_headers
-decl|main
-argument_list|(
+end_ifdef
+
+begin_expr_stmt
+expr|main
+operator|(
 name|argc
-argument_list|,
+operator|,
 name|argv
-argument_list|)
+operator|)
 name|int
 name|argc
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+end_decl_stmt
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_function
 name|main
 parameter_list|(
 name|int
@@ -368,7 +391,7 @@ name|xargv
 operator|=
 name|argv
 expr_stmt|;
-name|signal
+name|signal1
 argument_list|(
 name|SIGFPE
 argument_list|,
@@ -379,7 +402,7 @@ comment|/* ignore underflow, enable overflow */
 ifdef|#
 directive|ifdef
 name|SIGIOT
-name|signal
+name|signal1
 argument_list|(
 name|SIGIOT
 argument_list|,
@@ -391,7 +414,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|SIGTRAP
-name|signal
+name|signal1
 argument_list|(
 name|SIGTRAP
 argument_list|,
@@ -405,7 +428,7 @@ directive|ifdef
 name|SIGQUIT
 if|if
 condition|(
-name|signal
+name|signal1
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -414,7 +437,7 @@ argument_list|)
 operator|==
 name|SIG_IGN
 condition|)
-name|signal
+name|signal1
 argument_list|(
 name|SIGQUIT
 argument_list|,
@@ -425,7 +448,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|signal
+name|signal1
 argument_list|(
 name|SIGINT
 argument_list|,
@@ -434,14 +457,14 @@ argument_list|)
 operator|==
 name|SIG_IGN
 condition|)
-name|signal
+name|signal1
 argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|signal1
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -495,16 +518,7 @@ return|;
 comment|/* For compilers that complain of missing return values; */
 comment|/* others will complain that this is unreachable code. */
 block|}
-ifdef|#
-directive|ifdef
-name|__cplusplus
-block|}
-end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_function
 
 end_unit
 

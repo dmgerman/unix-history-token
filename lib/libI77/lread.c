@@ -686,12 +686,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_function
-name|int
+begin_macro
 name|t_getc
-parameter_list|(
-name|Void
-parameter_list|)
+argument_list|(
+argument|Void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|ch
@@ -746,7 +748,7 @@ name|EOF
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|integer
@@ -779,12 +781,33 @@ argument_list|()
 operator|)
 operator|!=
 literal|'\n'
-operator|&&
+condition|)
+if|if
+condition|(
 name|ch
-operator|!=
+operator|==
 name|EOF
 condition|)
-empty_stmt|;
+block|{
+if|if
+condition|(
+name|feof
+argument_list|(
+name|f__cf
+argument_list|)
+condition|)
+name|f__curunit
+operator|->
+name|uend
+operator|=
+name|l_eof
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|EOF
+return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -831,7 +854,7 @@ name|ERR
 parameter_list|(
 name|x
 parameter_list|)
-value|if( (n=(x)) ) return(n)
+value|if(n=(x)) return(n)
 end_define
 
 begin_define
@@ -862,12 +885,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|l_R
 argument_list|(
-name|poststar
+argument|poststar
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|poststar
 decl_stmt|;
@@ -878,15 +903,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|l_R
-parameter_list|(
-name|int
-name|poststar
-parameter_list|)
+argument_list|(
+argument|int poststar
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|char
 name|s
@@ -1561,7 +1590,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -1645,12 +1674,14 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
 name|l_C
-parameter_list|(
-name|Void
-parameter_list|)
+argument_list|(
+argument|Void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|ch
@@ -1866,14 +1897,12 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ch
 operator|=
 name|l_R
 argument_list|(
 literal|1
 argument_list|)
-operator|)
 condition|)
 return|return
 name|ch
@@ -1961,14 +1990,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|ch
 operator|=
 name|l_R
 argument_list|(
 literal|1
 argument_list|)
-operator|)
 condition|)
 return|return
 name|ch
@@ -2044,14 +2071,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
 name|l_L
-parameter_list|(
-name|Void
-parameter_list|)
+argument_list|(
+argument|Void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|ch
@@ -2286,7 +2315,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_define
 define|#
@@ -2295,12 +2324,14 @@ name|BUFSIZE
 value|128
 end_define
 
-begin_function
-name|int
+begin_macro
 name|l_CHAR
-parameter_list|(
-name|Void
-parameter_list|)
+argument_list|(
+argument|Void
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|ch
@@ -2993,7 +3024,7 @@ return|;
 block|}
 block|}
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -3001,12 +3032,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|c_le
 argument_list|(
-name|a
+argument|a
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|cilist
 modifier|*
 name|a
@@ -3018,16 +3051,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|c_le
-parameter_list|(
-name|cilist
-modifier|*
-name|a
-parameter_list|)
+argument_list|(
+argument|cilist *a
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 if|if
 condition|(
@@ -3143,7 +3179,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -3151,18 +3187,20 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|l_read
 argument_list|(
-name|number
+argument|number
 argument_list|,
-name|ptr
+argument|ptr
 argument_list|,
-name|len
+argument|len
 argument_list|,
-name|type
+argument|type
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ftnint
 modifier|*
 name|number
@@ -3189,26 +3227,25 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|l_read
-parameter_list|(
-name|ftnint
-modifier|*
-name|number
-parameter_list|,
-name|char
-modifier|*
-name|ptr
-parameter_list|,
-name|ftnlen
-name|len
-parameter_list|,
-name|ftnint
-name|type
-parameter_list|)
+argument_list|(
+argument|ftnint *number
+argument_list|,
+argument|char *ptr
+argument_list|,
+argument|ftnlen len
+argument_list|,
+argument|ftnint type
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 define|#
 directive|define
@@ -3295,9 +3332,14 @@ block|{
 case|case
 name|EOF
 case|:
-goto|goto
-name|loopend
-goto|;
+name|err
+argument_list|(
+argument|f__elist->ciend
+argument_list|,
+argument|(EOF)
+argument_list|,
+literal|"list in"
+argument_list|)
 case|case
 literal|' '
 case|:
@@ -3495,26 +3537,7 @@ return|;
 if|if
 condition|(
 name|f__cf
-condition|)
-block|{
-if|if
-condition|(
-name|feof
-argument_list|(
-name|f__cf
-argument_list|)
-condition|)
-name|err
-argument_list|(
-argument|f__elist->ciend
-argument_list|,
-argument|(EOF)
-argument_list|,
-literal|"list in"
-argument_list|)
-elseif|else
-if|if
-condition|(
+operator|&&
 name|ferror
 argument_list|(
 name|f__cf
@@ -3537,7 +3560,6 @@ argument_list|,
 literal|"list in"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -3739,7 +3761,7 @@ undef|#
 directive|undef
 name|Ptr
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -3780,14 +3802,12 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|c_le
 argument_list|(
 name|a
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(

@@ -63,6 +63,18 @@ else|#
 directive|else
 end_else
 
+begin_undef
+undef|#
+directive|undef
+name|min
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|max
+end_undef
+
 begin_include
 include|#
 directive|include
@@ -290,7 +302,12 @@ argument_list|,
 literal|"s_cat"
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
+name|lp1
+operator|=
+name|lp
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* NO_OVERWRITE */

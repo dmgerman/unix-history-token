@@ -1,10 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -229,12 +223,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|f__isdev
 argument_list|(
-name|s
+argument|s
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|s
@@ -246,16 +242,19 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|f__isdev
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|)
+argument_list|(
+argument|char *s
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -399,7 +398,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -1022,7 +1021,6 @@ directive|ifdef
 name|NON_UNIX_STDIO
 if|if
 condition|(
-operator|(
 name|tf
 operator|=
 name|fopen
@@ -1034,7 +1032,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|)
 condition|)
 name|fclose
 argument_list|(
@@ -1223,7 +1220,6 @@ directive|ifdef
 name|NON_UNIX_STDIO
 if|if
 condition|(
-operator|(
 name|b
 operator|->
 name|ufd
@@ -1239,7 +1235,6 @@ operator||
 literal|2
 index|]
 argument_list|)
-operator|)
 condition|)
 name|b
 operator|->
@@ -1250,7 +1245,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
 name|b
 operator|->
 name|ufd
@@ -1264,7 +1258,6 @@ index|[
 name|ufmt
 index|]
 argument_list|)
-operator|)
 condition|)
 name|b
 operator|->
@@ -1476,16 +1469,18 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_decl_stmt
-name|int
+begin_macro
 name|fk_open
 argument_list|(
-name|seq
+argument|seq
 argument_list|,
-name|fmt
+argument|fmt
 argument_list|,
-name|n
+argument|n
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|ftnint
 name|n
 decl_stmt|;
@@ -1496,21 +1491,23 @@ else|#
 directive|else
 end_else
 
-begin_function
-name|int
+begin_macro
 name|fk_open
-parameter_list|(
-name|int
-name|seq
-parameter_list|,
-name|int
-name|fmt
-parameter_list|,
-name|ftnint
-name|n
-parameter_list|)
+argument_list|(
+argument|int seq
+argument_list|,
+argument|int fmt
+argument_list|,
+argument|ftnint n
+argument_list|)
+end_macro
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_block
 block|{
 name|char
 name|nbuf
@@ -1618,7 +1615,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -46,14 +46,12 @@ name|n
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|n
 operator|=
 name|c_le
 argument_list|(
 name|a
 argument_list|)
-operator|)
 condition|)
 return|return
 operator|(

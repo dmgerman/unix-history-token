@@ -5,7 +5,7 @@ name|char
 name|junk
 index|[]
 init|=
-literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 19950907\n"
+literal|"\n@(#) LIBI77 VERSION pjw,dmg-mods 19970226\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,7 +114,11 @@ comment|/* 17 Oct. 1991: change type of length field in sequential unformatted 	
 end_comment
 
 begin_comment
-comment|/* 14 Nov. 1991: change uint to Uint in fmt.h, rdfmt.c, wrtfmt.c. /* 25 Nov. 1991: change uint to Uint in lwrite.c; change sizeof(int) to 		 sizeof(uioint) in fseeks in sue.c (missed on 17 Oct.). */
+comment|/* 14 Nov. 1991: change uint to Uint in fmt.h, rdfmt.c, wrtfmt.c. */
+end_comment
+
+begin_comment
+comment|/* 25 Nov. 1991: change uint to Uint in lwrite.c; change sizeof(int) to 		 sizeof(uioint) in fseeks in sue.c (missed on 17 Oct.). */
 end_comment
 
 begin_comment
@@ -279,6 +283,42 @@ end_comment
 
 begin_comment
 comment|/* 7 Sept. 1995: Fix some bugs with -DAllow_TYQUAD (for integer*8). 		 Add -DNo_Namelist_Comments lines to rsne.c. */
+end_comment
+
+begin_comment
+comment|/* 5 Oct. 1995:  wrtfmt.c: fix bug with t editing (f__cursor was not 		 always zeroed in mv_cur). */
+end_comment
+
+begin_comment
+comment|/* 11 Oct. 1995: move defs of f__hiwater, f__svic, f__icptr from wrtfmt.c 		 to err.c */
+end_comment
+
+begin_comment
+comment|/* 15 Mar. 1996: lread.c, rsfe.c: honor END= in READ stmt with empty iolist */
+end_comment
+
+begin_comment
+comment|/* 13 May 1996:  add ftell_.c and fseek_.c */
+end_comment
+
+begin_comment
+comment|/* 9 June 1996:  Adjust rsli.c and lread.c so internal list input with 		 too few items in the input string will honor end= . */
+end_comment
+
+begin_comment
+comment|/* 12 Sept. 1995:fmtlib.c: fix glitch in printing the most negative integer. */
+end_comment
+
+begin_comment
+comment|/* 25 Sept. 1995:fmt.h: for formatted writes of negative integer*1 values, 		 make ic signed on ANSI systems.  If formatted writes of 		 integer*1 values trouble you when using a K&R C compiler, 		 switch to an ANSI compiler or use a compiler flag that 		 makes characters signed. */
+end_comment
+
+begin_comment
+comment|/* 9 Dec. 1996:	 d[fu]e.c, err.c: complain about non-positive rec= 		 in direct read and write statements. 		 ftell_.c: change param "unit" to "Unit" for -DKR_headers. */
+end_comment
+
+begin_comment
+comment|/* 26 Feb. 1997: ftell_.c: on systems that define SEEK_SET, etc., use 		 SEEK_SET, SEEK_CUR, SEEK_END for *whence = 0, 1, 2. */
 end_comment
 
 end_unit
