@@ -405,6 +405,60 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* This is the correct way to handle all BSD NET2 and BSD 4.4 systems.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_VA_LIST_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_VA_LIST_
+name|__gnuc_va_list
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|_VA_LIST_
+name|__gnuc_va_list
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__svr4__
 argument_list|)
 operator|||
@@ -439,6 +493,11 @@ modifier|*
 name|__gnuc_va_list
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1042,6 +1101,16 @@ begin_comment
 comment|/* The next BSD release (if there is one) wants this symbol to be    undefined instead of _VA_LIST_.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* BSD 4.4 actually spells the name _BSD_VA_LIST_ and requires it to be  * defined and usable in place of va_list when the latter name is not  * allowed (e.g., in stdio.h - see ginclude/stdarg.h).  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1053,6 +1122,11 @@ undef|#
 directive|undef
 name|_BSD_VA_LIST
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

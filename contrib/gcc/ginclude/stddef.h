@@ -1456,11 +1456,19 @@ begin_comment
 comment|/*  In 4.3bsd-net2, leave these undefined to indicate that size_t, etc.     are already defined.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_ANSI_H_
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_MACHINE_ANSI_H_
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  The references to _GCC_PTRDIFF_T_, _GCC_SIZE_T_, and _GCC_WCHAR_T_     are probably typos and should be removed before 2.8 is released.  */
@@ -1614,7 +1622,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ANSI_H_ */
+comment|/* defined(_ANSI_H_) || defined(_MACHINE_ANSI_H_) */
 end_comment
 
 begin_endif
