@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	2.6 %G%"
+literal|"@(#)aux.c	2.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,43 +477,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * Compute the size in characters of the passed message  */
-end_comment
-
-begin_function
-name|unsigned
-name|int
-name|msize
-parameter_list|(
-name|messp
-parameter_list|)
-name|struct
-name|message
-modifier|*
-name|messp
-decl_stmt|;
-block|{
-specifier|register
-name|struct
-name|message
-modifier|*
-name|mp
-decl_stmt|;
-name|mp
-operator|=
-name|messp
-expr_stmt|;
-return|return
-operator|(
-name|mp
-operator|->
-name|m_size
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Count the number of arguments in the given string raw list.  */
@@ -3290,31 +3253,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIGRETRO
-end_ifndef
-
-begin_comment
-comment|/*  * This routine is used by the sigretro package to  * reset held signals to ignored signals.  If you're not  * using sigretro, you don't need to do anything, but you DO  * need this stub to keep everyone happy.  */
-end_comment
-
-begin_macro
-name|sigchild
-argument_list|()
-end_macro
-
-begin_block
-block|{}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|SIGRETRO
-end_endif
 
 begin_comment
 comment|/*  * See if the given header field is supposed to be ignored.  */
