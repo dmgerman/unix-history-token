@@ -2559,6 +2559,14 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_sp
+operator|!=
+name|NULL
+condition|)
 name|ipsec4_delete_pcbpolicy
 argument_list|(
 name|inp
