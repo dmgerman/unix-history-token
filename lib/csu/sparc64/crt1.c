@@ -214,20 +214,15 @@ modifier|*
 modifier|*
 name|env
 decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|term
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+if|#
+directive|if
+literal|0
+block|void (*term)(void);
 comment|/* Grab %g1 before it gets used for anything by the compiler. */
 comment|/* Sparc ELF psABI specifies a termination routine (if any) will be in 	   %g1 */
-asm|__asm__
-specifier|volatile
-asm|("mov %%g1,%0" : "=r"(term));
+block|__asm__ volatile("mov %%g1,%0" : "=r"(term));
+endif|#
+directive|endif
 name|argc
 operator|=
 operator|*
@@ -308,16 +303,13 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
 comment|/* 	 * If the kernel or a shared library wants us to call 	 * a termination function, arrange to do so. 	 */
-if|if
-condition|(
-name|term
-condition|)
-name|atexit
-argument_list|(
-name|term
-argument_list|)
-expr_stmt|;
+block|if (term) 		atexit(term);
+endif|#
+directive|endif
 if|if
 condition|(
 operator|&
@@ -340,11 +332,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|atexit
-argument_list|(
-name|_fini
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|atexit(_fini);
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|GCRT
@@ -359,9 +352,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|_init
-argument_list|()
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|_init();
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|main
