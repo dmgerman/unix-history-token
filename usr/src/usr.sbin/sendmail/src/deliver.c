@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.98
+literal|3.99
 operator|%
 name|G
 operator|%
@@ -5130,6 +5130,9 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
+name|bool
+name|oldverbose
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -5162,6 +5165,18 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* 	**  Run through the list and send everything. 	*/
+name|oldverbose
+operator|=
+name|Verbose
+expr_stmt|;
+if|if
+condition|(
+name|verifyonly
+condition|)
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
 for|for
 control|(
 name|q
@@ -5226,6 +5241,10 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
+name|Verbose
+operator|=
+name|oldverbose
+expr_stmt|;
 comment|/* 	**  Now run through and check for errors. 	*/
 if|if
 condition|(
