@@ -1724,7 +1724,9 @@ name|VM_OBJECT_LOCK
 argument_list|(
 name|tbp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 for|for
@@ -1774,7 +1776,9 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|tbp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 if|if
@@ -1897,7 +1901,9 @@ name|VM_OBJECT_LOCK
 argument_list|(
 name|tbp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -2018,7 +2024,9 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|tbp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX shouldn't this be += size for both, like in 		 * cluster_wbuild()? 		 * 		 * Don't inherit tbp->b_bufsize as it may be larger due to 		 * a non-page-aligned size.  Instead just aggregate using 		 * 'size'. 		 */
@@ -2078,7 +2086,9 @@ name|VM_OBJECT_LOCK
 argument_list|(
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 for|for
@@ -2144,7 +2154,9 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|bp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 if|if
@@ -3834,7 +3846,9 @@ name|VM_OBJECT_LOCK
 argument_list|(
 name|tbp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 if|if
@@ -3992,7 +4006,9 @@ name|VM_OBJECT_UNLOCK
 argument_list|(
 name|tbp
 operator|->
-name|b_object
+name|b_bufobj
+operator|->
+name|bo_object
 argument_list|)
 expr_stmt|;
 block|}
