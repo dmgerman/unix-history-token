@@ -37,6 +37,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATM_PCR_25
+value|59111
+end_define
+
+begin_comment
+comment|/* Peak Cell Rate for 25.6 Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_PCR_DS3
+value|(12*8000)
+end_define
+
+begin_comment
+comment|/* 12 cells in 1/8000 seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATM_PCR_TAXI100
 value|227273
 end_define
@@ -120,7 +142,17 @@ name|VENDOR_FORE
 block|,
 comment|/* FORE Systems, Inc. */
 name|VENDOR_ENI
+block|,
 comment|/* Efficient Networks, Inc. */
+name|VENDOR_IDT
+block|,
+comment|/* Integrated Device Technology, Inc. */
+name|VENDOR_PROSUM
+block|,
+comment|/* PROSUM, Inc. */
+name|VENDOR_NETGRAPH
+block|,
+comment|/* Netgraph pseudo device */
 block|}
 enum|;
 end_enum
@@ -148,7 +180,14 @@ name|VENDAPI_FORE_1
 block|,
 comment|/* FORE - 200 Series */
 name|VENDAPI_ENI_1
+block|,
 comment|/* ENI - Midway */
+name|VENDAPI_IDT_1
+block|,
+comment|/* IDT - NICStAR */
+name|VENDAPI_IDT_2
+block|,
+comment|/* IDT 77252 ABR */
 block|}
 enum|;
 end_enum
@@ -181,8 +220,24 @@ comment|/* FORE SBA-200 */
 name|DEV_FORE_PCA200E
 block|,
 comment|/* FORE PCA-200E */
+name|DEV_FORE_ESA200E
+block|,
+comment|/* FORE ESA-200E */
 name|DEV_ENI_155P
+block|,
 comment|/* ENI-155p */
+name|DEV_IDT_155
+block|,
+comment|/* IDT NICStAR 155Mbps */
+name|DEV_PROATM_25
+block|,
+comment|/* Prosum boards based on IDT 77252 */
+name|DEV_PROATM_155
+block|,
+comment|/* Prosum boards based on IDT 77252 */
+name|DEV_VATMPIF
+block|,
+comment|/* Virtual ATM Physical IF */
 block|}
 enum|;
 end_enum
@@ -219,7 +274,11 @@ name|MEDIA_OC12C
 block|,
 comment|/* OC-12C */
 name|MEDIA_UTP155
+block|,
 comment|/* UTP-155 */
+name|MEDIA_UTP25
+block|,
+comment|/* UTP 25.6 */
 block|}
 enum|;
 end_enum
@@ -250,7 +309,17 @@ name|BUS_SBUS_B32
 block|,
 comment|/* SBus: 32 byte (8 word) max burst */
 name|BUS_PCI
+block|,
 comment|/* PCI */
+name|BUS_EISA
+block|,
+comment|/* EISA */
+name|BUS_USB
+block|,
+comment|/* USB */
+name|BUS_VIRTUAL
+block|,
+comment|/* Virtual Bus */
 block|}
 enum|;
 end_enum

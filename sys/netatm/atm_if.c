@@ -1667,6 +1667,27 @@ operator|=
 literal|155000000
 expr_stmt|;
 break|break;
+case|case
+name|MEDIA_UTP25
+case|:
+name|ifp
+operator|->
+name|if_baudrate
+operator|=
+literal|25600000
+expr_stmt|;
+break|break;
+case|case
+name|MEDIA_UNKNOWN
+case|:
+name|ifp
+operator|->
+name|if_baudrate
+operator|=
+literal|10000000
+expr_stmt|;
+comment|/* XXX */
+break|break;
 block|}
 endif|#
 directive|endif
