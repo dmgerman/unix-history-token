@@ -2734,6 +2734,34 @@ value|array[ICB_NNM0] = (u_int8_t) ((wwn>>  0)& 0xff), \ 	array[ICB_NNM1] = (u_i
 end_define
 
 begin_comment
+comment|/*  * FC-AL Position Map  *  * This is an at most 128 byte map that returns either  * the LILP or Firmware generated list of ports.  *  * We deviate a bit from the returned qlogic format to  * use an extra bit to say whether this was a LILP or  * f/w generated map.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int8_t
+name|fwmap
+range|:
+literal|1
+decl_stmt|,
+name|count
+range|:
+literal|7
+decl_stmt|;
+name|u_int8_t
+name|map
+index|[
+literal|127
+index|]
+decl_stmt|;
+block|}
+name|fcpos_map_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Port Data Base Element  */
 end_comment
 
