@@ -13431,6 +13431,8 @@ name|ac
 operator|--
 expr_stmt|;
 block|}
+else|else
+break|break;
 block|}
 elseif|else
 if|if
@@ -13500,9 +13502,16 @@ name|ac
 operator|--
 expr_stmt|;
 block|}
+else|else
+break|break;
 block|}
 else|else
-block|{
+break|break;
+block|}
+if|if
+condition|(
+name|ac
+condition|)
 name|show_usage
 argument_list|(
 literal|"unknown argument ``%s''"
@@ -13511,8 +13520,6 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 comment|/* No direction specified -> do both directions */
 if|if
 condition|(
