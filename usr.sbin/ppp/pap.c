@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.23 1998/05/21 21:47:18 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP PAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993-94, Internet Initiative Japan, Inc.  *		     All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: pap.c,v 1.24 1998/06/27 23:48:51 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -214,9 +214,9 @@ literal|"???"
 block|,
 literal|"REQUEST"
 block|,
-literal|"ACK"
+literal|"SUCCESS"
 block|,
-literal|"NAK"
+literal|"FAILURE"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -316,7 +316,7 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"PAP: %s\n"
+literal|"Pap Output: %s ********\n"
 argument_list|,
 name|physical
 operator|->
@@ -329,6 +329,30 @@ operator|.
 name|auth
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|physical
+operator|->
+name|dl
+operator|->
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|auth
+operator|.
+name|name
+operator|==
+literal|'\0'
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Sending empty PAP authname!\n"
 argument_list|)
 expr_stmt|;
 name|lh
@@ -618,7 +642,7 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"PapOutput: %s\n"
+literal|"Pap Output: %s\n"
 argument_list|,
 name|papcodes
 index|[
@@ -822,20 +846,6 @@ name|code
 operator|=
 literal|0
 expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogPHASE
-argument_list|,
-literal|"pap_Input: %s\n"
-argument_list|,
-name|papcodes
-index|[
-name|php
-operator|->
-name|code
-index|]
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|php
@@ -857,6 +867,27 @@ name|php
 operator|+
 literal|1
 operator|)
+expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Pap Input: %s (%.*s)\n"
+argument_list|,
+name|papcodes
+index|[
+name|php
+operator|->
+name|code
+index|]
+argument_list|,
+operator|*
+name|cp
+argument_list|,
+name|cp
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1019,7 +1050,14 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Received PAP_ACK (%s)\n"
+literal|"Pap Input: %s (%s)\n"
+argument_list|,
+name|papcodes
+index|[
+name|php
+operator|->
+name|code
+index|]
 argument_list|,
 name|cp
 argument_list|)
@@ -1111,7 +1149,14 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Received PAP_NAK (%s)\n"
+literal|"Pap Input: %s (%s)\n"
+argument_list|,
+name|papcodes
+index|[
+name|php
+operator|->
+name|code
+index|]
 argument_list|,
 name|cp
 argument_list|)

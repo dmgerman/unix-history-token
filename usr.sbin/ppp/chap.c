@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.33 1998/06/27 14:18:01 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.34 1998/06/27 23:48:41 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -286,6 +286,11 @@ name|ptr
 parameter_list|,
 name|int
 name|count
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|text
 parameter_list|)
 block|{
 name|int
@@ -388,16 +393,37 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|text
+operator|==
+name|NULL
+condition|)
 name|log_Printf
 argument_list|(
-name|LogLCP
+name|LogPHASE
 argument_list|,
-literal|"ChapOutput: %s\n"
+literal|"Chap Output: %s\n"
 argument_list|,
 name|chapcodes
 index|[
 name|code
 index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Chap Output: %s (%s)\n"
+argument_list|,
+name|chapcodes
+index|[
+name|code
+index|]
+argument_list|,
+name|text
 argument_list|)
 expr_stmt|;
 name|hdlc_Output
@@ -559,6 +585,8 @@ operator|-
 name|chap
 operator|->
 name|challenge_data
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -720,11 +748,16 @@ literal|0
 expr_stmt|;
 name|log_Printf
 argument_list|(
-name|LogLCP
+name|LogPHASE
 argument_list|,
-literal|" Valsize = %d, Name = \"%s\"\n"
+literal|"Chap Input: %s (from %s)\n"
 argument_list|,
-name|valsize
+name|chapcodes
+index|[
+name|chp
+operator|->
+name|code
+index|]
 argument_list|,
 name|name
 argument_list|)
@@ -845,6 +878,8 @@ argument_list|,
 literal|"Out of memory!"
 argument_list|,
 literal|14
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1058,6 +1093,8 @@ operator|+
 name|MS_CHAP_RESPONSE_LEN
 operator|+
 literal|1
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1193,6 +1230,8 @@ argument_list|,
 name|namelen
 operator|+
 literal|17
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1204,6 +1243,20 @@ directive|endif
 name|free
 argument_list|(
 name|argp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|name
+operator|==
+literal|'\0'
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Sending empty CHAP authname!\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1373,7 +1426,19 @@ argument_list|,
 literal|"Welcome!!"
 argument_list|,
 literal|10
+argument_list|,
+name|NULL
 argument_list|)
+expr_stmt|;
+name|physical
+operator|->
+name|link
+operator|.
+name|lcp
+operator|.
+name|auth_ineed
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1428,6 +1493,8 @@ argument_list|,
 literal|"Invalid!!"
 argument_list|,
 literal|9
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|datalink_AuthNotOk
@@ -1550,7 +1617,7 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Received CHAP_FAILURE\n"
+literal|"Chap Input: Giving up after name/key FAILURE\n"
 argument_list|)
 expr_stmt|;
 name|datalink_AuthNotOk
@@ -1652,20 +1719,6 @@ name|code
 operator|=
 literal|0
 expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogLCP
-argument_list|,
-literal|"chap_Input: %s\n"
-argument_list|,
-name|chapcodes
-index|[
-name|chp
-operator|->
-name|code
-index|]
-argument_list|)
-expr_stmt|;
 name|bp
 operator|->
 name|offset
@@ -1730,6 +1783,20 @@ case|:
 case|case
 name|CHAP_FAILURE
 case|:
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Chap Input: %s\n"
+argument_list|,
+name|chapcodes
+index|[
+name|chp
+operator|->
+name|code
+index|]
+argument_list|)
+expr_stmt|;
 name|RecvChapResult
 argument_list|(
 name|bundle
