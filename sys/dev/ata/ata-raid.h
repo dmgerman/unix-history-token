@@ -56,7 +56,7 @@ name|AR_STRATEGY
 parameter_list|(
 name|x
 parameter_list|)
-value|(x)->bio_dev->si_disk->d_devsw->d_strategy((x))
+value|(x)->bio_disk->d_strategy((x))
 end_define
 
 begin_define
@@ -238,10 +238,6 @@ modifier|*
 name|pid
 decl_stmt|;
 comment|/* rebuilder process id */
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* device place holder */
 block|}
 struct|;
 end_struct

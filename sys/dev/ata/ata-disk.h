@@ -186,10 +186,6 @@ name|disk
 name|disk
 decl_stmt|;
 comment|/* disklabel/slice stuff */
-name|dev_t
-name|dev
-decl_stmt|;
-comment|/* device place holder */
 block|}
 struct|;
 end_struct

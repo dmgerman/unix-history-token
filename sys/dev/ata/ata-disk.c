@@ -136,26 +136,26 @@ file|<dev/ata/ata-raid.h>
 end_include
 
 begin_comment
-comment|/* device structures */
+comment|/* prototypes */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|d_open_t
+name|disk_open_t
 name|adopen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_close_t
+name|disk_close_t
 name|adclose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_strategy_t
+name|disk_strategy_t
 name|adstrategy
 decl_stmt|;
 end_decl_stmt
@@ -166,67 +166,6 @@ name|dumper_t
 name|addump
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|ad_cdevsw
-init|=
-block|{
-comment|/* open */
-name|adopen
-block|,
-comment|/* close */
-name|adclose
-block|,
-comment|/* read */
-name|physread
-block|,
-comment|/* write */
-name|physwrite
-block|,
-comment|/* ioctl */
-name|noioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|adstrategy
-block|,
-comment|/* name */
-literal|"ad"
-block|,
-comment|/* maj */
-literal|116
-block|,
-comment|/* dump */
-name|addump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-name|D_DISK
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|addisk_cdevsw
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* prototypes */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -476,9 +415,6 @@ name|struct
 name|ad_softc
 modifier|*
 name|adp
-decl_stmt|;
-name|dev_t
-name|dev
 decl_stmt|;
 name|u_int32_t
 name|lbasize
@@ -1060,47 +996,63 @@ argument_list|,
 name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
-name|dev
-operator|=
-name|disk_create
-argument_list|(
-name|adp
-operator|->
-name|lun
-argument_list|,
-operator|&
 name|adp
 operator|->
 name|disk
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|ad_cdevsw
-argument_list|,
-operator|&
-name|addisk_cdevsw
-argument_list|)
+operator|.
+name|d_open
+operator|=
+name|adopen
 expr_stmt|;
-name|dev
+name|adp
 operator|->
-name|si_drv1
+name|disk
+operator|.
+name|d_close
+operator|=
+name|adclose
+expr_stmt|;
+name|adp
+operator|->
+name|disk
+operator|.
+name|d_strategy
+operator|=
+name|adstrategy
+expr_stmt|;
+name|adp
+operator|->
+name|disk
+operator|.
+name|d_dump
+operator|=
+name|addump
+expr_stmt|;
+name|adp
+operator|->
+name|disk
+operator|.
+name|d_name
+operator|=
+literal|"ad"
+expr_stmt|;
+name|adp
+operator|->
+name|disk
+operator|.
+name|d_drv1
 operator|=
 name|adp
 expr_stmt|;
-name|dev
+name|adp
 operator|->
-name|si_iosize_max
+name|disk
+operator|.
+name|d_maxsize
 operator|=
 name|adp
 operator|->
 name|max_iosize
-expr_stmt|;
-name|adp
-operator|->
-name|dev
-operator|=
-name|dev
 expr_stmt|;
 name|adp
 operator|->
@@ -1145,6 +1097,24 @@ name|adp
 operator|->
 name|heads
 expr_stmt|;
+name|disk_create
+argument_list|(
+name|adp
+operator|->
+name|lun
+argument_list|,
+operator|&
+name|adp
+operator|->
+name|disk
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|atadev
 operator|->
 name|driver
@@ -1156,6 +1126,11 @@ operator|->
 name|flags
 operator|=
 literal|0
+expr_stmt|;
+name|ata_enclosure_print
+argument_list|(
+name|atadev
+argument_list|)
 expr_stmt|;
 comment|/* if this disk belongs to an ATA RAID dont print the probe */
 if|if
@@ -1183,11 +1158,6 @@ block|{
 name|ad_print
 argument_list|(
 name|adp
-argument_list|)
-expr_stmt|;
-name|ata_enclosure_print
-argument_list|(
-name|atadev
 argument_list|)
 expr_stmt|;
 block|}
@@ -1452,19 +1422,10 @@ specifier|static
 name|int
 name|adopen
 parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|fmt
-parameter_list|,
 name|struct
-name|thread
+name|disk
 modifier|*
-name|td
+name|dp
 parameter_list|)
 block|{
 name|struct
@@ -1472,9 +1433,9 @@ name|ad_softc
 modifier|*
 name|adp
 init|=
-name|dev
+name|dp
 operator|->
-name|si_drv1
+name|d_drv1
 decl_stmt|;
 if|if
 condition|(
@@ -1515,19 +1476,10 @@ specifier|static
 name|int
 name|adclose
 parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|flags
-parameter_list|,
-name|int
-name|fmt
-parameter_list|,
 name|struct
-name|thread
+name|disk
 modifier|*
-name|td
+name|dp
 parameter_list|)
 block|{
 name|struct
@@ -1535,9 +1487,9 @@ name|ad_softc
 modifier|*
 name|adp
 init|=
-name|dev
+name|dp
 operator|->
-name|si_drv1
+name|d_drv1
 decl_stmt|;
 name|adp
 operator|->
@@ -1645,9 +1597,9 @@ name|adp
 init|=
 name|bp
 operator|->
-name|bio_dev
+name|bio_disk
 operator|->
-name|si_drv1
+name|d_drv1
 decl_stmt|;
 name|int
 name|s
@@ -1755,9 +1707,7 @@ name|adp
 operator|=
 name|dp
 operator|->
-name|d_dev
-operator|->
-name|si_drv1
+name|d_drv1
 expr_stmt|;
 if|if
 condition|(
