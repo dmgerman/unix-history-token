@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)from.c	5.5 (Berkeley) %G%"
+literal|"@(#)from.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_function
@@ -301,7 +307,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"/usr/spool/mail/%s"
+literal|"%s/%s"
+argument_list|,
+name|_PATH_MAILDIR
 argument_list|,
 name|file
 argument_list|)
