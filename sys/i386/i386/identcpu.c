@@ -3840,7 +3840,8 @@ literal|"\023<b18>"
 literal|"\024<b19>"
 literal|"\025<b20>"
 literal|"\026<b21>"
-literal|"\027<b22>"
+literal|"\027AMIE"
+comment|/* AMD MMX Instruction Extensions */
 literal|"\030MMX"
 literal|"\031<b24>"
 literal|"\032<b25>"
@@ -3848,7 +3849,8 @@ literal|"\033<b26>"
 literal|"\034<b27>"
 literal|"\035<b28>"
 literal|"\036<b29>"
-literal|"\037<b30>"
+literal|"\037DSP"
+comment|/* AMD 3DNow! Instruction Extensions */
 literal|"\0403DNow!"
 argument_list|)
 expr_stmt|;
