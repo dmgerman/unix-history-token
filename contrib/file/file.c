@@ -193,7 +193,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: file.c,v 1.58 2001/07/22 21:04:15 christos Exp $"
+literal|"@(#)$Id: file.c,v 1.59 2001/07/23 00:02:32 christos Exp $"
 argument_list|)
 end_macro
 
@@ -570,12 +570,16 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|home
 operator|=
 name|getenv
 argument_list|(
 literal|"HOME"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if

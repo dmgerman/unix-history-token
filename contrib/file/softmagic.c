@@ -54,7 +54,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: softmagic.c,v 1.45 2001/07/22 21:04:15 christos Exp $"
+literal|"@(#)$Id: softmagic.c,v 1.46 2001/07/23 00:02:32 christos Exp $"
 argument_list|)
 end_macro
 
@@ -847,27 +847,8 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|pp
-decl_stmt|,
-modifier|*
-name|rt
-decl_stmt|;
-name|char
-modifier|*
-name|oldtz
-decl_stmt|,
-name|tz
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|uint32
 name|v
-decl_stmt|;
-name|time_t
-name|curtime
 decl_stmt|;
 name|int32
 name|t
@@ -1677,10 +1658,6 @@ case|case
 name|STRING
 case|:
 block|{
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
 name|int
 name|n
 decl_stmt|;
