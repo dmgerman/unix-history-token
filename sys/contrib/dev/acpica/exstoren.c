@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -63,7 +63,7 @@ value|ACPI_EXECUTER
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"exstoren"
 argument_list|)
@@ -82,7 +82,7 @@ modifier|*
 modifier|*
 name|SourceDescPtr
 parameter_list|,
-name|ACPI_OBJECT_TYPE8
+name|ACPI_OBJECT_TYPE
 name|TargetType
 parameter_list|,
 name|ACPI_WALK_STATE
@@ -102,7 +102,7 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExResolveObject"
 argument_list|)
@@ -135,43 +135,19 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*           * Stores into a Field/Region or into a Integer/Buffer/String          * are all essentially the same.  This case handles the           * "interchangeable" types Integer, String, and Buffer.           */
-comment|/* TBD: FIX - check for source==REF, resolve, then check type */
-comment|/*          * If SourceDesc is not a valid type, try to resolve it to one.          */
+comment|/*          * Stores into a Field/Region or into a Integer/Buffer/String          * are all essentially the same.  This case handles the          * "interchangeable" types Integer, String, and Buffer.          */
 if|if
 condition|(
-operator|(
 name|SourceDesc
 operator|->
 name|Common
 operator|.
 name|Type
-operator|!=
-name|ACPI_TYPE_INTEGER
-operator|)
-operator|&&
-operator|(
-name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
-operator|!=
-name|ACPI_TYPE_BUFFER
-operator|)
-operator|&&
-operator|(
-name|SourceDesc
-operator|->
-name|Common
-operator|.
-name|Type
-operator|!=
-name|ACPI_TYPE_STRING
-operator|)
+operator|==
+name|INTERNAL_TYPE_REFERENCE
 condition|)
 block|{
-comment|/*              * Initially not a valid type, convert              */
+comment|/* Resolve a reference object first */
 name|Status
 operator|=
 name|AcpiExResolveToValue
@@ -183,11 +159,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
-operator|&&
+condition|)
+block|{
+break|break;
+block|}
+block|}
+comment|/*          * Must have a Integer, Buffer, or String          */
+if|if
+condition|(
 operator|(
 name|SourceDesc
 operator|->
@@ -219,7 +202,7 @@ name|ACPI_TYPE_STRING
 operator|)
 condition|)
 block|{
-comment|/*                  * Conversion successful but still not a valid type                  */
+comment|/*              * Conversion successful but still not a valid type              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -229,10 +212,7 @@ literal|"Cannot assign type %s to %s (must be type Int/Str/Buf)\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-operator|(
-operator|*
-name|SourceDescPtr
-operator|)
+name|SourceDesc
 operator|->
 name|Common
 operator|.
@@ -250,7 +230,6 @@ name|Status
 operator|=
 name|AE_AML_OPERAND_TYPE
 expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
@@ -287,24 +266,25 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObject  *  * PARAMETERS:  SourceDesc          - Object to store  *              TargetType          - Current type of the target  *              TargetDescPtr       - Pointer to the target  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: "Store" an object to another object.  This may include  *              converting the source type to the target type (implicit  *              conversion), and a copy of the value of the source to  *              the target.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToObject  *  * PARAMETERS:  SourceDesc          - Object to store  *              DestDesc            - Object to recieve a copy of the source  *              NewDesc             - New object if DestDesc is obsoleted  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: "Store" an object to another object.  This may include  *              converting the source type to the target type (implicit  *              conversion), and a copy of the value of the source to  *              the target.  *  *              The Assignment of an object to another (not named) object  *              is handled here.  *              The Source passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              This module allows destination types of Number, String,  *              Buffer, and Package.  *  *              Assumes parameters are already validated.  NOTE: SourceDesc  *              resolution (from a reference object) must be performed by  *              the caller if necessary.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiExStoreObject
+name|AcpiExStoreObjectToObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|SourceDesc
 parameter_list|,
-name|ACPI_OBJECT_TYPE8
-name|TargetType
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|DestDesc
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
-name|TargetDescPtr
+name|NewDesc
 parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
@@ -313,30 +293,78 @@ parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|TargetDesc
-init|=
-operator|*
-name|TargetDescPtr
+name|ActualSrcDesc
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-literal|"ExStoreObject"
+literal|"AcpiExStoreObjectToObject"
+argument_list|,
+name|SourceDesc
 argument_list|)
 expr_stmt|;
-comment|/*      * Perform the "implicit conversion" of the source to the current type      * of the target - As per the ACPI specification.      *      * If no conversion performed, SourceDesc is left alone, otherwise it      * is updated with a new object.      */
+name|ActualSrcDesc
+operator|=
+name|SourceDesc
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DestDesc
+condition|)
+block|{
+comment|/*          * There is no destination object (An uninitialized node or          * package element), so we can simply copy the source object          * creating a new destination object          */
+name|Status
+operator|=
+name|AcpiUtCopyIobjectToIobject
+argument_list|(
+name|ActualSrcDesc
+argument_list|,
+name|NewDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|SourceDesc
+operator|->
+name|Common
+operator|.
+name|Type
+operator|!=
+name|DestDesc
+operator|->
+name|Common
+operator|.
+name|Type
+condition|)
+block|{
+comment|/*          * The source type does not match the type of the destination.          * Perform the "implicit conversion" of the source to the current type          * of the target as per the ACPI specification.          *          * If no conversion performed, ActualSrcDesc = SourceDesc.          * Otherwise, ActualSrcDesc is a temporary object to hold the          * converted object.          */
 name|Status
 operator|=
 name|AcpiExConvertToTargetType
 argument_list|(
-name|TargetType
+name|DestDesc
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|,
+name|SourceDesc
 argument_list|,
 operator|&
-name|SourceDesc
+name|ActualSrcDesc
 argument_list|,
 name|WalkState
 argument_list|)
@@ -355,35 +383,27 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/*      * We now have two objects of identical types, and we can perform a      * copy of the *value* of the source object.      */
 switch|switch
 condition|(
-name|TargetType
+name|DestDesc
+operator|->
+name|Common
+operator|.
+name|Type
 condition|)
 block|{
 case|case
-name|ACPI_TYPE_ANY
-case|:
-case|case
-name|INTERNAL_TYPE_DEF_ANY
-case|:
-comment|/*          * The target namespace node is uninitialized (has no target object),          * and will take on the type of the source object          */
-operator|*
-name|TargetDescPtr
-operator|=
-name|SourceDesc
-expr_stmt|;
-break|break;
-case|case
 name|ACPI_TYPE_INTEGER
 case|:
-name|TargetDesc
+name|DestDesc
 operator|->
 name|Integer
 operator|.
 name|Value
 operator|=
-name|SourceDesc
+name|ActualSrcDesc
 operator|->
 name|Integer
 operator|.
@@ -392,7 +412,7 @@ expr_stmt|;
 comment|/* Truncate value if we are executing from a 32-bit ACPI table */
 name|AcpiExTruncateFor32bitTable
 argument_list|(
-name|TargetDesc
+name|DestDesc
 argument_list|,
 name|WalkState
 argument_list|)
@@ -403,11 +423,11 @@ name|ACPI_TYPE_STRING
 case|:
 name|Status
 operator|=
-name|AcpiExCopyStringToString
+name|AcpiExStoreStringToString
 argument_list|(
-name|SourceDesc
+name|ActualSrcDesc
 argument_list|,
-name|TargetDesc
+name|DestDesc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -416,21 +436,28 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|Status
 operator|=
-name|AcpiExCopyBufferToBuffer
+name|AcpiExStoreBufferToBuffer
 argument_list|(
-name|SourceDesc
+name|ActualSrcDesc
 argument_list|,
-name|TargetDesc
+name|DestDesc
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*          * TBD: [Unhandled] Not real sure what to do here          */
 name|Status
 operator|=
-name|AE_NOT_IMPLEMENTED
+name|AcpiUtCopyIobjectToIobject
+argument_list|(
+name|ActualSrcDesc
+argument_list|,
+operator|&
+name|DestDesc
+argument_list|,
+name|WalkState
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -444,7 +471,11 @@ literal|"Store into type %s not implemented\n"
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
-name|TargetType
+name|DestDesc
+operator|->
+name|Common
+operator|.
+name|Type
 argument_list|)
 operator|)
 argument_list|)
@@ -455,6 +486,25 @@ name|AE_NOT_IMPLEMENTED
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|ActualSrcDesc
+operator|!=
+name|SourceDesc
+condition|)
+block|{
+comment|/* Delete the intermediate (temporary) source object */
+name|AcpiUtRemoveReference
+argument_list|(
+name|ActualSrcDesc
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|NewDesc
+operator|=
+name|DestDesc
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 19 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 26 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -33,7 +33,7 @@ value|ACPI_RESOURCES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"rslist"
 argument_list|)
@@ -51,7 +51,7 @@ name|UINT8
 name|ResourceStartByte
 parameter_list|)
 block|{
-name|FUNCTION_ENTRY
+name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
 comment|/*      * Determine if this is a small or large resource      */
@@ -59,11 +59,11 @@ switch|switch
 condition|(
 name|ResourceStartByte
 operator|&
-name|RESOURCE_DESC_TYPE_MASK
+name|ACPI_RDESC_TYPE_MASK
 condition|)
 block|{
 case|case
-name|RESOURCE_DESC_TYPE_SMALL
+name|ACPI_RDESC_TYPE_SMALL
 case|:
 comment|/*          * Small Resource Type -- Only bits 6:3 are valid          */
 return|return
@@ -74,13 +74,12 @@ call|)
 argument_list|(
 name|ResourceStartByte
 operator|&
-name|RESOURCE_DESC_SMALL_MASK
+name|ACPI_RDESC_SMALL_MASK
 argument_list|)
 operator|)
 return|;
-break|break;
 case|case
-name|RESOURCE_DESC_TYPE_LARGE
+name|ACPI_RDESC_TYPE_LARGE
 case|:
 comment|/*          * Large Resource Type -- All bits are valid          */
 return|return
@@ -88,7 +87,6 @@ operator|(
 name|ResourceStartByte
 operator|)
 return|;
-break|break;
 block|}
 return|return
 operator|(
@@ -115,7 +113,6 @@ name|ByteStreamBufferLength
 parameter_list|,
 name|UINT8
 modifier|*
-modifier|*
 name|OutputBuffer
 parameter_list|)
 block|{
@@ -132,19 +129,18 @@ name|ResourceType
 init|=
 literal|0
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|BytesConsumed
 init|=
 literal|0
 decl_stmt|;
 name|UINT8
 modifier|*
-modifier|*
 name|Buffer
 init|=
 name|OutputBuffer
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|StructureSize
 init|=
 literal|0
@@ -154,7 +150,11 @@ name|EndTagProcessed
 init|=
 name|FALSE
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_RESOURCE
+modifier|*
+name|Resource
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsByteStreamToList"
 argument_list|)
@@ -185,7 +185,7 @@ name|ResourceType
 condition|)
 block|{
 case|case
-name|RESOURCE_DESC_MEMORY_24
+name|ACPI_RDESC_TYPE_MEMORY_24
 case|:
 comment|/*              * 24-Bit Memory Resource              */
 name|Status
@@ -197,6 +197,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -205,7 +206,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_LARGE_VENDOR
+name|ACPI_RDESC_TYPE_LARGE_VENDOR
 case|:
 comment|/*              * Vendor Defined Resource              */
 name|Status
@@ -217,6 +218,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -225,7 +227,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_MEMORY_32
+name|ACPI_RDESC_TYPE_MEMORY_32
 case|:
 comment|/*              * 32-Bit Memory Range Resource              */
 name|Status
@@ -237,6 +239,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -245,7 +248,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_FIXED_MEMORY_32
+name|ACPI_RDESC_TYPE_FIXED_MEMORY_32
 case|:
 comment|/*              * 32-Bit Fixed Memory Resource              */
 name|Status
@@ -257,6 +260,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -265,7 +269,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_QWORD_ADDRESS_SPACE
+name|ACPI_RDESC_TYPE_QWORD_ADDRESS_SPACE
 case|:
 comment|/*              * 64-Bit Address Resource              */
 name|Status
@@ -277,6 +281,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -285,7 +290,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_DWORD_ADDRESS_SPACE
+name|ACPI_RDESC_TYPE_DWORD_ADDRESS_SPACE
 case|:
 comment|/*              * 32-Bit Address Resource              */
 name|Status
@@ -297,6 +302,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -305,7 +311,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_WORD_ADDRESS_SPACE
+name|ACPI_RDESC_TYPE_WORD_ADDRESS_SPACE
 case|:
 comment|/*              * 16-Bit Address Resource              */
 name|Status
@@ -317,6 +323,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -325,7 +332,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_EXTENDED_XRUPT
+name|ACPI_RDESC_TYPE_EXTENDED_XRUPT
 case|:
 comment|/*              * Extended IRQ              */
 name|Status
@@ -337,6 +344,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -345,7 +353,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_IRQ_FORMAT
+name|ACPI_RDESC_TYPE_IRQ_FORMAT
 case|:
 comment|/*              * IRQ Resource              */
 name|Status
@@ -357,6 +365,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -365,7 +374,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_DMA_FORMAT
+name|ACPI_RDESC_TYPE_DMA_FORMAT
 case|:
 comment|/*              * DMA Resource              */
 name|Status
@@ -377,6 +386,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -385,18 +395,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_START_DEPENDENT
+name|ACPI_RDESC_TYPE_START_DEPENDENT
 case|:
 comment|/*              * Start Dependent Functions Resource              */
 name|Status
 operator|=
-name|AcpiRsStartDependentFunctionsResource
+name|AcpiRsStartDependFnsResource
 argument_list|(
 name|ByteStreamBuffer
 argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -405,18 +416,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_END_DEPENDENT
+name|ACPI_RDESC_TYPE_END_DEPENDENT
 case|:
 comment|/*              * End Dependent Functions Resource              */
 name|Status
 operator|=
-name|AcpiRsEndDependentFunctionsResource
+name|AcpiRsEndDependFnsResource
 argument_list|(
 name|ByteStreamBuffer
 argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -425,7 +437,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_IO_PORT
+name|ACPI_RDESC_TYPE_IO_PORT
 case|:
 comment|/*              * IO Port Resource              */
 name|Status
@@ -437,6 +449,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -445,7 +458,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_FIXED_IO_PORT
+name|ACPI_RDESC_TYPE_FIXED_IO_PORT
 case|:
 comment|/*              * Fixed IO Port Resource              */
 name|Status
@@ -457,6 +470,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -465,7 +479,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_SMALL_VENDOR
+name|ACPI_RDESC_TYPE_SMALL_VENDOR
 case|:
 comment|/*              * Vendor Specific Resource              */
 name|Status
@@ -477,6 +491,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -485,7 +500,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RESOURCE_DESC_END_TAG
+name|ACPI_RDESC_TYPE_END_TAG
 case|:
 comment|/*              * End Tag              */
 name|EndTagProcessed
@@ -501,6 +516,7 @@ argument_list|,
 operator|&
 name|BytesConsumed
 argument_list|,
+operator|&
 name|Buffer
 argument_list|,
 operator|&
@@ -518,8 +534,7 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
@@ -542,10 +557,31 @@ operator|+=
 name|BytesConsumed
 expr_stmt|;
 comment|/*          * Set the Buffer to the next structure          */
+name|Resource
+operator|=
+operator|(
+name|ACPI_RESOURCE
 operator|*
+operator|)
+name|Buffer
+expr_stmt|;
+name|Resource
+operator|->
+name|Length
+operator|=
+name|ACPI_ALIGN_RESOURCE_SIZE
+argument_list|(
+name|Resource
+operator|->
+name|Length
+argument_list|)
+expr_stmt|;
 name|Buffer
 operator|+=
+name|ACPI_ALIGN_RESOURCE_SIZE
+argument_list|(
 name|StructureSize
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*  end while */
@@ -588,7 +624,6 @@ name|ByteStreamSizeNeeded
 parameter_list|,
 name|UINT8
 modifier|*
-modifier|*
 name|OutputBuffer
 parameter_list|)
 block|{
@@ -599,10 +634,9 @@ name|UINT8
 modifier|*
 name|Buffer
 init|=
-operator|*
 name|OutputBuffer
 decl_stmt|;
-name|UINT32
+name|ACPI_SIZE
 name|BytesConsumed
 init|=
 literal|0
@@ -612,7 +646,7 @@ name|Done
 init|=
 name|FALSE
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsListToByteStream"
 argument_list|)
@@ -672,7 +706,7 @@ case|:
 comment|/*              * Start Dependent Functions Resource              */
 name|Status
 operator|=
-name|AcpiRsStartDependentFunctionsStream
+name|AcpiRsStartDependFnsStream
 argument_list|(
 name|LinkedList
 argument_list|,
@@ -690,7 +724,7 @@ case|:
 comment|/*              * End Dependent Functions Resource              */
 name|Status
 operator|=
-name|AcpiRsEndDependentFunctionsStream
+name|AcpiRsEndDependFnsStream
 argument_list|(
 name|LinkedList
 argument_list|,
@@ -916,8 +950,7 @@ block|}
 comment|/* switch (LinkedList->Id) */
 if|if
 condition|(
-operator|!
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
@@ -937,7 +970,7 @@ expr_stmt|;
 comment|/*          * Point to the next object          */
 name|LinkedList
 operator|=
-name|POINTER_ADD
+name|ACPI_PTR_ADD
 argument_list|(
 name|ACPI_RESOURCE
 argument_list|,

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 109 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 119 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ value|ACPI_PARSER
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"psparse"
 argument_list|)
@@ -148,7 +148,7 @@ operator|=
 operator|(
 name|UINT16
 operator|)
-name|GET8
+name|ACPI_GET8
 argument_list|(
 name|Aml
 argument_list|)
@@ -176,7 +176,7 @@ operator|<<
 literal|8
 operator|)
 operator||
-name|GET8
+name|ACPI_GET8
 argument_list|(
 name|Aml
 argument_list|)
@@ -347,13 +347,26 @@ name|ReplacementOp
 init|=
 name|NULL
 decl_stmt|;
-name|FUNCTION_TRACE_PTR
+name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 literal|"PsCompleteThisOp"
 argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
+comment|/* Check for null Op, can happen if AML code is corrupt */
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+block|{
+name|return_VALUE
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Delete this op and the subtree below it if asked to */
 if|if
 condition|(
@@ -725,14 +738,7 @@ name|Status
 init|=
 name|AE_CTRL_PENDING
 decl_stmt|;
-name|UINT8
-modifier|*
-name|Start
-decl_stmt|;
-name|UINT32
-name|PackageLength
-decl_stmt|;
-name|FUNCTION_TRACE_PTR
+name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 literal|"PsNextParseState"
 argument_list|,
@@ -762,11 +768,50 @@ name|AE_CTRL_TERMINATE
 expr_stmt|;
 break|break;
 case|case
+name|AE_CTRL_BREAK
+case|:
+name|ParserState
+operator|->
+name|Aml
+operator|=
+name|WalkState
+operator|->
+name|AmlLastWhile
+expr_stmt|;
+name|WalkState
+operator|->
+name|ControlState
+operator|->
+name|Common
+operator|.
+name|Value
+operator|=
+name|FALSE
+expr_stmt|;
+name|Status
+operator|=
+name|AE_CTRL_BREAK
+expr_stmt|;
+break|break;
+case|case
+name|AE_CTRL_CONTINUE
+case|:
+name|ParserState
+operator|->
+name|Aml
+operator|=
+name|WalkState
+operator|->
+name|AmlLastWhile
+expr_stmt|;
+name|Status
+operator|=
+name|AE_CTRL_CONTINUE
+expr_stmt|;
+break|break;
+case|case
 name|AE_CTRL_PENDING
 case|:
-comment|/*          * Predicate of a WHILE was true and the loop just completed an          * execution.  Go back to the start of the loop and reevaluate the          * predicate.          */
-comment|/* TBD: How to handle a break within a while. */
-comment|/* This code attempts it */
 name|ParserState
 operator|->
 name|Aml
@@ -779,27 +824,15 @@ break|break;
 case|case
 name|AE_CTRL_TRUE
 case|:
-comment|/*          * Predicate of an IF was true, and we are at the matching ELSE.          * Just close out this package          *          * Note: ParserState->Aml is modified by the package length procedure          * TBD: [Investigate] perhaps it shouldn't, too much trouble          */
-name|Start
-operator|=
+comment|/*          * Predicate of an IF was true, and we are at the matching ELSE.          * Just close out this package          */
 name|ParserState
 operator|->
 name|Aml
-expr_stmt|;
-name|PackageLength
 operator|=
-name|AcpiPsGetNextPackageLength
+name|AcpiPsGetNextPackageEnd
 argument_list|(
 name|ParserState
 argument_list|)
-expr_stmt|;
-name|ParserState
-operator|->
-name|Aml
-operator|=
-name|Start
-operator|+
-name|PackageLength
 expr_stmt|;
 break|break;
 case|case
@@ -954,7 +987,7 @@ name|UINT8
 modifier|*
 name|AmlOpStart
 decl_stmt|;
-name|FUNCTION_TRACE_PTR
+name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 literal|"PsParseLoop"
 argument_list|,
@@ -983,7 +1016,7 @@ name|WalkState
 operator|->
 name|WalkType
 operator|&
-name|WALK_METHOD_RESTART
+name|ACPI_WALK_METHOD_RESTART
 condition|)
 block|{
 comment|/* We are restarting a preempted control method */
@@ -1053,7 +1086,7 @@ name|Common
 operator|.
 name|State
 operator|==
-name|CONTROL_PREDICATE_EXECUTING
+name|ACPI_CONTROL_PREDICATE_EXECUTING
 operator|)
 condition|)
 block|{
@@ -1070,7 +1103,10 @@ name|AcpiDsGetPredicateValue
 argument_list|(
 name|WalkState
 argument_list|,
+name|ACPI_TO_POINTER
+argument_list|(
 name|TRUE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1316,7 +1352,7 @@ name|AmlOffset
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_BUFFER
+name|ACPI_DUMP_BUFFER
 argument_list|(
 name|ParserState
 operator|->
@@ -1764,13 +1800,19 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"Op=%p Opcode=%4.4X Aml %p Oft=%5.5X\n"
-operator|,
-name|Op
+literal|"Opcode %4.4X [%s] Op %p Aml %p AmlOffset %5.5X\n"
 operator|,
 name|Op
 operator|->
 name|Opcode
+operator|,
+name|WalkState
+operator|->
+name|OpInfo
+operator|->
+name|Name
+operator|,
+name|Op
 operator|,
 name|ParserState
 operator|->
@@ -2009,19 +2051,71 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_WHILE_OP
+condition|)
+block|{
+if|if
+condition|(
+name|WalkState
+operator|->
+name|ControlState
+condition|)
+block|{
+name|WalkState
+operator|->
+name|ControlState
+operator|->
+name|Control
+operator|.
+name|PackageEnd
+operator|=
+name|ParserState
+operator|->
+name|PkgEnd
+expr_stmt|;
+block|}
+block|}
 break|break;
 block|}
 block|}
-comment|/*          * Zero ArgCount means that all arguments for this op have been processed          */
+comment|/* Check for arguments that need to be processed */
 if|if
 condition|(
-operator|!
 name|WalkState
 operator|->
 name|ArgCount
 condition|)
 block|{
-comment|/* completed Op, prepare for next */
+comment|/* There are arguments (complex ones), push Op and prepare for argument */
+name|AcpiPsPushScope
+argument_list|(
+name|ParserState
+argument_list|,
+name|Op
+argument_list|,
+name|WalkState
+operator|->
+name|ArgTypes
+argument_list|,
+name|WalkState
+operator|->
+name|ArgCount
+argument_list|)
+expr_stmt|;
+name|Op
+operator|=
+name|NULL
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* All arguments have been processed -- Op is complete, prepare for next */
 name|WalkState
 operator|->
 name|OpInfo
@@ -2062,7 +2156,7 @@ operator|==
 name|AML_REGION_OP
 condition|)
 block|{
-comment|/*                      * Skip parsing of control method or opregion body,                      * because we don't have enough info in the first pass                      * to parse them correctly.                      *                      * Completed parsing an OpRegion declaration, we now                      * know the length.                      */
+comment|/*                  * Skip parsing of control method or opregion body,                  * because we don't have enough info in the first pass                  * to parse them correctly.                  *                  * Completed parsing an OpRegion declaration, we now                  * know the length.                  */
 operator|(
 operator|(
 name|ACPI_PARSE2_OBJECT
@@ -2105,7 +2199,7 @@ operator|&
 name|AML_CREATE
 condition|)
 block|{
-comment|/*                  * Backup to beginning of CreateXXXfield declaration (1 for                  * Opcode)                  *                  * BodyLength is unknown until we parse the body                  */
+comment|/*              * Backup to beginning of CreateXXXfield declaration (1 for              * Opcode)              *              * BodyLength is unknown until we parse the body              */
 operator|(
 operator|(
 name|ACPI_PARSE2_OBJECT
@@ -2198,7 +2292,7 @@ block|}
 block|}
 name|CloseThisOp
 label|:
-comment|/*              * Finished one argument of the containing scope              */
+comment|/*          * Finished one argument of the containing scope          */
 name|ParserState
 operator|->
 name|Scope
@@ -2236,7 +2330,7 @@ break|break;
 case|case
 name|AE_CTRL_TRANSFER
 case|:
-comment|/*                  * We are about to transfer to a called method.                  */
+comment|/*              * We are about to transfer to a called method.              */
 name|WalkState
 operator|->
 name|PrevOp
@@ -2256,7 +2350,6 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 name|AE_CTRL_END
 case|:
@@ -2278,6 +2371,108 @@ operator|->
 name|ArgCount
 argument_list|)
 expr_stmt|;
+name|WalkState
+operator|->
+name|Op
+operator|=
+name|Op
+expr_stmt|;
+name|WalkState
+operator|->
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Op
+operator|->
+name|Opcode
+argument_list|)
+expr_stmt|;
+name|WalkState
+operator|->
+name|Opcode
+operator|=
+name|Op
+operator|->
+name|Opcode
+expr_stmt|;
+name|Status
+operator|=
+name|WalkState
+operator|->
+name|AscendingCallback
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiPsNextParseState
+argument_list|(
+name|WalkState
+argument_list|,
+name|Op
+argument_list|,
+name|Status
+argument_list|)
+expr_stmt|;
+name|AcpiPsCompleteThisOp
+argument_list|(
+name|WalkState
+argument_list|,
+name|Op
+argument_list|)
+expr_stmt|;
+name|Op
+operator|=
+name|NULL
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+break|break;
+case|case
+name|AE_CTRL_BREAK
+case|:
+case|case
+name|AE_CTRL_CONTINUE
+case|:
+comment|/* Pop off scopes until we find the While */
+while|while
+condition|(
+operator|!
+name|Op
+operator|||
+operator|(
+name|Op
+operator|->
+name|Opcode
+operator|!=
+name|AML_WHILE_OP
+operator|)
+condition|)
+block|{
+name|AcpiPsPopScope
+argument_list|(
+name|ParserState
+argument_list|,
+operator|&
+name|Op
+argument_list|,
+operator|&
+name|WalkState
+operator|->
+name|ArgTypes
+argument_list|,
+operator|&
+name|WalkState
+operator|->
+name|ArgCount
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Close this iteration of the While loop */
 name|WalkState
 operator|->
 name|Op
@@ -2391,16 +2586,23 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
-break|break;
 default|default:
 comment|/* All other non-AE_OK status */
+do|do
+block|{
 if|if
 condition|(
 name|Op
-operator|==
-name|NULL
 condition|)
 block|{
+name|AcpiPsCompleteThisOp
+argument_list|(
+name|WalkState
+argument_list|,
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
 name|AcpiPsPopScope
 argument_list|(
 name|ParserState
@@ -2420,6 +2622,18 @@ name|ArgCount
 argument_list|)
 expr_stmt|;
 block|}
+do|while
+condition|(
+name|Op
+condition|)
+do|;
+comment|/*              * TBD: Cleanup parse ops on error              */
+if|#
+directive|if
+literal|0
+block|if (Op == NULL)             {                 AcpiPsPopScope (ParserState,&Op,&WalkState->ArgTypes,&WalkState->ArgCount);             }
+endif|#
+directive|endif
 name|WalkState
 operator|->
 name|PrevOp
@@ -2434,13 +2648,11 @@ name|WalkState
 operator|->
 name|ArgTypes
 expr_stmt|;
-comment|/*                  * TBD: TEMP:                  */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 comment|/* This scope complete? */
 if|if
@@ -2483,31 +2695,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|Op
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* ArgCount is non-zero */
-comment|/* complex argument, push Op and prepare for argument */
-name|AcpiPsPushScope
-argument_list|(
-name|ParserState
-argument_list|,
-name|Op
-argument_list|,
-name|WalkState
-operator|->
-name|ArgTypes
-argument_list|,
-name|WalkState
-operator|->
-name|ArgCount
-argument_list|)
-expr_stmt|;
 name|Op
 operator|=
 name|NULL
@@ -2753,7 +2940,7 @@ name|ACPI_WALK_STATE
 modifier|*
 name|PreviousWalkState
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"PsParseAml"
 argument_list|)
@@ -2812,7 +2999,7 @@ argument_list|,
 name|Thread
 argument_list|)
 expr_stmt|;
-comment|/* TBD: [Restructure] TEMP until we pass WalkState to the interpreter      */
+comment|/*      * This global allows the AML debugger to get a handle to the currently      * executing control method.      */
 name|AcpiGbl_CurrentWalkList
 operator|=
 name|Thread
@@ -2991,8 +3178,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* There is another walk state, restart it */
-comment|/*                  * If the method returned value is not used by the parent,                  * The object is deleted                  */
+comment|/*                  * There is another walk state, restart it.                  * If the method return value is not used by the parent,                  * The object is deleted                  */
 name|AcpiDsRestartControlMethod
 argument_list|(
 name|WalkState
@@ -3006,7 +3192,43 @@ name|WalkState
 operator|->
 name|WalkType
 operator||=
-name|WALK_METHOD_RESTART
+name|ACPI_WALK_METHOD_RESTART
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* On error, delete any return object */
+name|AcpiUtRemoveReference
+argument_list|(
+name|PreviousWalkState
+operator|->
+name|ReturnDesc
+argument_list|)
+expr_stmt|;
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Method execution failed, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ACPI_DUMP_PATHNAME
+argument_list|(
+name|WalkState
+operator|->
+name|MethodNode
+argument_list|,
+literal|"Method pathname: "
+argument_list|,
+name|ACPI_LV_ERROR
+argument_list|,
+name|_COMPONENT
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 100 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 115 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_ifndef
@@ -23,218 +23,44 @@ begin_comment
 comment|/*  * Data manipulation macros  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|LOWORD
+name|ACPI_LOWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|((UINT16)(NATIVE_UINT)(l))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HIWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|HIWORD
+name|ACPI_HIWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|((UINT16)((((NATIVE_UINT)(l))>> 16)& 0xFFFF))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOBYTE
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|LOBYTE
+name|ACPI_LOBYTE
 parameter_list|(
 name|l
 parameter_list|)
 value|((UINT8)(UINT16)(l))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HIBYTE
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|HIBYTE
+name|ACPI_HIBYTE
 parameter_list|(
 name|l
 parameter_list|)
 value|((UINT8)((((UINT16)(l))>> 8)& 0xFF))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|BIT0
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x01)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT1
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x02)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT2
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x04)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT3
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x08)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT4
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x10)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT5
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x20)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT6
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x40)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIT7
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)& 0x80)> 0) ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOW_BASE
-parameter_list|(
-name|w
-parameter_list|)
-value|((UINT16) ((w)& 0x0000FFFF))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MID_BASE
-parameter_list|(
-name|b
-parameter_list|)
-value|((UINT8) (((b)& 0x00FF0000)>> 16))
-end_define
-
-begin_define
-define|#
-directive|define
-name|HI_BASE
-parameter_list|(
-name|b
-parameter_list|)
-value|((UINT8) (((b)& 0xFF000000)>> 24))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOW_LIMIT
-parameter_list|(
-name|w
-parameter_list|)
-value|((UINT16) ((w)& 0x0000FFFF))
-end_define
-
-begin_define
-define|#
-directive|define
-name|HI_LIMIT
-parameter_list|(
-name|b
-parameter_list|)
-value|((UINT8) (((b)& 0x00FF0000)>> 16))
 end_define
 
 begin_ifdef
@@ -247,47 +73,25 @@ begin_comment
 comment|/*  * For 16-bit addresses, we have to assume that the upper 32 bits  * are zero.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LODWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|LODWORD
+name|ACPI_LODWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|(l)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HIDWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|HIDWORD
+name|ACPI_HIDWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -336,47 +140,25 @@ begin_comment
 comment|/*  * ACPI_INTEGER is 32-bits, no 64-bit support on this platform  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LODWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|LODWORD
+name|ACPI_LODWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|((UINT32)(l))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HIDWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|HIDWORD
+name|ACPI_HIDWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|(0)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -419,47 +201,25 @@ begin_comment
 comment|/*  * Full 64-bit address/integer on both 32-bit and 64-bit platforms  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LODWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|LODWORD
+name|ACPI_LODWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|((UINT32)(UINT64)(l))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HIDWORD
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|HIDWORD
+name|ACPI_HIDWORD
 parameter_list|(
 name|l
 parameter_list|)
 value|((UINT32)(((*(UINT64_STRUCT *)(&l))).Hi))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -510,7 +270,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GET8
+name|ACPI_GET8
 parameter_list|(
 name|addr
 parameter_list|)
@@ -524,7 +284,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|POINTER_ADD
+name|ACPI_PTR_ADD
 parameter_list|(
 name|t
 parameter_list|,
@@ -532,20 +292,122 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(t *) ((NATIVE_UINT)(a) + (NATIVE_UINT)(b))
+value|(t *) ((char *)(a) + (b))
 end_define
 
 begin_define
 define|#
 directive|define
-name|POINTER_DIFF
+name|ACPI_PTR_DIFF
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((UINT32) ((NATIVE_UINT)(a) - (NATIVE_UINT)(b)))
+value|(NATIVE_UINT) ((char *)(a) - (char *)(b))
 end_define
+
+begin_comment
+comment|/* Pointer/Integer type conversions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_TO_POINTER
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_PTR_ADD (void,NULL,(NATIVE_UINT)i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_TO_INTEGER
+parameter_list|(
+name|p
+parameter_list|)
+value|ACPI_PTR_DIFF (p,NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OFFSET
+parameter_list|(
+name|d
+parameter_list|,
+name|o
+parameter_list|)
+value|((ACPI_SIZE) ACPI_TO_INTEGER (&(((d *)0)->o)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_OFFSET
+parameter_list|(
+name|o
+parameter_list|)
+value|ACPI_OFFSET (FADT_DESCRIPTOR, o)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_IA16
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_PHYSADDR_TO_PTR
+parameter_list|(
+name|i
+parameter_list|)
+value|(void *)(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PTR_TO_PHYSADDR
+parameter_list|(
+name|i
+parameter_list|)
+value|(char *)(i)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_PHYSADDR_TO_PTR
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_TO_POINTER(i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PTR_TO_PHYSADDR
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_TO_INTEGER(i)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Macros for moving data around to/from buffers that are possibly unaligned.  * If the hardware supports the transfer of unaligned data, just do the store.  * Otherwise, we have to move one byte at a time.  */
@@ -564,49 +426,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT16*)(d) = *(UINT16*)(s)
+value|*(UINT16 *)(d) = *(UINT16 *)(s)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT32*)(d) = *(UINT32*)(s)
+value|*(UINT32 *)(d) = *(UINT32 *)(s)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED16_TO_32
+name|ACPI_MOVE_UNALIGNED16_TO_32
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT32*)(d) = *(UINT16*)(s)
+value|*(UINT32 *)(d) = *(UINT16 *)(s)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_UNALIGNED64_TO_64
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|*(UINT64*)(d) = *(UINT64*)(s)
+value|*(UINT64 *)(d) = *(UINT64 *)(s)
 end_define
 
 begin_else
@@ -621,49 +483,49 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                          ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];}
+value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                              ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                          ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];\                                          ((UINT8 *)(d))[2] = ((UINT8 *)(s))[2];\                                          ((UINT8 *)(d))[3] = ((UINT8 *)(s))[3];}
+value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                              ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];\                                              ((UINT8 *)(d))[2] = ((UINT8 *)(s))[2];\                                              ((UINT8 *)(d))[3] = ((UINT8 *)(s))[3];}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED16_TO_32
+name|ACPI_MOVE_UNALIGNED16_TO_32
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{(*(UINT32*)(d)) = 0; MOVE_UNALIGNED16_TO_16(d,s);}
+value|{(*(UINT32*)(d)) = 0; ACPI_MOVE_UNALIGNED16_TO_16(d,s);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_UNALIGNED64_TO_64
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                          ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];\                                          ((UINT8 *)(d))[2] = ((UINT8 *)(s))[2];\                                          ((UINT8 *)(d))[3] = ((UINT8 *)(s))[3];\                                          ((UINT8 *)(d))[4] = ((UINT8 *)(s))[4];\                                          ((UINT8 *)(d))[5] = ((UINT8 *)(s))[5];\                                          ((UINT8 *)(d))[6] = ((UINT8 *)(s))[6];\                                          ((UINT8 *)(d))[7] = ((UINT8 *)(s))[7];}
+value|{((UINT8 *)(d))[0] = ((UINT8 *)(s))[0];\                                              ((UINT8 *)(d))[1] = ((UINT8 *)(s))[1];\                                              ((UINT8 *)(d))[2] = ((UINT8 *)(s))[2];\                                              ((UINT8 *)(d))[3] = ((UINT8 *)(s))[3];\                                              ((UINT8 *)(d))[4] = ((UINT8 *)(s))[4];\                                              ((UINT8 *)(d))[5] = ((UINT8 *)(s))[5];\                                              ((UINT8 *)(d))[6] = ((UINT8 *)(s))[6];\                                              ((UINT8 *)(d))[7] = ((UINT8 *)(s))[7];}
 end_define
 
 begin_endif
@@ -678,7 +540,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_DIV
+name|_ACPI_DIV
 parameter_list|(
 name|value
 parameter_list|,
@@ -690,7 +552,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|_MUL
+name|_ACPI_MUL
 parameter_list|(
 name|value
 parameter_list|,
@@ -702,7 +564,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|_MOD
+name|_ACPI_MOD
 parameter_list|(
 name|value
 parameter_list|,
@@ -714,121 +576,121 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIV_2
+name|ACPI_DIV_2
 parameter_list|(
 name|a
 parameter_list|)
-value|_DIV(a,1)
+value|_ACPI_DIV(a,1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MUL_2
+name|ACPI_MUL_2
 parameter_list|(
 name|a
 parameter_list|)
-value|_MUL(a,1)
+value|_ACPI_MUL(a,1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOD_2
+name|ACPI_MOD_2
 parameter_list|(
 name|a
 parameter_list|)
-value|_MOD(a,2)
+value|_ACPI_MOD(a,2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIV_4
+name|ACPI_DIV_4
 parameter_list|(
 name|a
 parameter_list|)
-value|_DIV(a,2)
+value|_ACPI_DIV(a,2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MUL_4
+name|ACPI_MUL_4
 parameter_list|(
 name|a
 parameter_list|)
-value|_MUL(a,2)
+value|_ACPI_MUL(a,2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOD_4
+name|ACPI_MOD_4
 parameter_list|(
 name|a
 parameter_list|)
-value|_MOD(a,4)
+value|_ACPI_MOD(a,4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIV_8
+name|ACPI_DIV_8
 parameter_list|(
 name|a
 parameter_list|)
-value|_DIV(a,3)
+value|_ACPI_DIV(a,3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MUL_8
+name|ACPI_MUL_8
 parameter_list|(
 name|a
 parameter_list|)
-value|_MUL(a,3)
+value|_ACPI_MUL(a,3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOD_8
+name|ACPI_MOD_8
 parameter_list|(
 name|a
 parameter_list|)
-value|_MOD(a,8)
+value|_ACPI_MOD(a,8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIV_16
+name|ACPI_DIV_16
 parameter_list|(
 name|a
 parameter_list|)
-value|_DIV(a,4)
+value|_ACPI_DIV(a,4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MUL_16
+name|ACPI_MUL_16
 parameter_list|(
 name|a
 parameter_list|)
-value|_MUL(a,4)
+value|_ACPI_MUL(a,4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOD_16
+name|ACPI_MOD_16
 parameter_list|(
 name|a
 parameter_list|)
-value|_MOD(a,16)
+value|_ACPI_MOD(a,16)
 end_define
 
 begin_comment
@@ -838,135 +700,111 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ROUND_DOWN
+name|ACPI_ROUND_DOWN
 parameter_list|(
 name|value
 parameter_list|,
 name|boundary
 parameter_list|)
-value|((value)& (~((boundary)-1)))
+value|(((NATIVE_UINT)(value))& (~((boundary)-1)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_UP
+name|ACPI_ROUND_UP
 parameter_list|(
 name|value
 parameter_list|,
 name|boundary
 parameter_list|)
-value|(((value) + ((boundary)-1))& (~((boundary)-1)))
+value|((((NATIVE_UINT)(value)) + ((boundary)-1))& (~((boundary)-1)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_DOWN_TO_32_BITS
+name|ACPI_ROUND_DOWN_TO_32_BITS
 parameter_list|(
 name|a
 parameter_list|)
-value|ROUND_DOWN(a,4)
+value|ACPI_ROUND_DOWN(a,4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_DOWN_TO_64_BITS
+name|ACPI_ROUND_DOWN_TO_64_BITS
 parameter_list|(
 name|a
 parameter_list|)
-value|ROUND_DOWN(a,8)
+value|ACPI_ROUND_DOWN(a,8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_DOWN_TO_NATIVE_WORD
+name|ACPI_ROUND_DOWN_TO_NATIVE_WORD
 parameter_list|(
 name|a
 parameter_list|)
-value|ROUND_DOWN(a,ALIGNED_ADDRESS_BOUNDARY)
+value|ACPI_ROUND_DOWN(a,ALIGNED_ADDRESS_BOUNDARY)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_UP_TO_32BITS
+name|ACPI_ROUND_UP_TO_32BITS
 parameter_list|(
 name|a
 parameter_list|)
-value|ROUND_UP(a,4)
+value|ACPI_ROUND_UP(a,4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_UP_TO_64BITS
+name|ACPI_ROUND_UP_TO_64BITS
 parameter_list|(
 name|a
 parameter_list|)
-value|ROUND_UP(a,8)
+value|ACPI_ROUND_UP(a,8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_UP_TO_NATIVE_WORD
+name|ACPI_ROUND_UP_TO_NATIVE_WORD
 parameter_list|(
 name|a
 parameter_list|)
-value|ROUND_UP(a,ALIGNED_ADDRESS_BOUNDARY)
+value|ACPI_ROUND_UP(a,ALIGNED_ADDRESS_BOUNDARY)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_PTR_UP_TO_4
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((b *)(((NATIVE_UINT)(a) + 3)& ~3))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROUND_PTR_UP_TO_8
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((b *)(((NATIVE_UINT)(a) + 7)& ~7))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROUND_BITS_UP_TO_BYTES
+name|ACPI_ROUND_BITS_UP_TO_BYTES
 parameter_list|(
 name|a
 parameter_list|)
-value|DIV_8((a) + 7)
+value|ACPI_DIV_8((a) + 7)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_BITS_DOWN_TO_BYTES
+name|ACPI_ROUND_BITS_DOWN_TO_BYTES
 parameter_list|(
 name|a
 parameter_list|)
-value|DIV_8((a))
+value|ACPI_DIV_8((a))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ROUND_UP_TO_1K
+name|ACPI_ROUND_UP_TO_1K
 parameter_list|(
 name|a
 parameter_list|)
@@ -980,7 +818,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ROUND_UP_TO
+name|ACPI_ROUND_UP_TO
 parameter_list|(
 name|value
 parameter_list|,
@@ -996,7 +834,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK_BITS_ABOVE
+name|ACPI_MASK_BITS_ABOVE
 parameter_list|(
 name|position
 parameter_list|)
@@ -1006,11 +844,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|MASK_BITS_BELOW
+name|ACPI_MASK_BITS_BELOW
 parameter_list|(
 name|position
 parameter_list|)
 value|(((ACPI_INTEGER)(-1))<< ((UINT32) (position)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_OCTAL_DIGIT
+parameter_list|(
+name|d
+parameter_list|)
+value|(((char)(d)>= '0')&& ((char)(d)<= '7'))
 end_define
 
 begin_comment
@@ -1119,19 +967,63 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * An ACPI_NAMESPACE_NODE * can appear in some contexts,  * where a pointer to an ACPI_OPERAND_OBJECT  can also  * appear.  This macro is used to distinguish them.  *  * The DataType field is the first field in both structures.  */
+comment|/* Bitfields within ACPI registers */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VALID_DESCRIPTOR_TYPE
+name|ACPI_REGISTER_PREPARE_BITS
+parameter_list|(
+name|Val
+parameter_list|,
+name|Pos
+parameter_list|,
+name|Mask
+parameter_list|)
+value|((Val<< Pos)& Mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_REGISTER_INSERT_VALUE
+parameter_list|(
+name|Reg
+parameter_list|,
+name|Pos
+parameter_list|,
+name|Mask
+parameter_list|,
+name|Val
+parameter_list|)
+value|Reg = (Reg& (~(Mask))) | ACPI_REGISTER_PREPARE_BITS(Val, Pos, Mask)
+end_define
+
+begin_comment
+comment|/*  * An ACPI_NAMESPACE_NODE * can appear in some contexts,  * where a pointer to an ACPI_OPERAND_OBJECT  can also  * appear.  This macro is used to distinguish them.  *  * The "Descriptor" field is the first field in both structures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_DESCRIPTOR_TYPE
+parameter_list|(
+name|d
+parameter_list|)
+value|(((ACPI_NAMESPACE_NODE *)d)->Descriptor)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SET_DESCRIPTOR_TYPE
 parameter_list|(
 name|d
 parameter_list|,
 name|t
 parameter_list|)
-value|(((ACPI_NAMESPACE_NODE *)d)->DataType == t)
+value|(((ACPI_NAMESPACE_NODE *)d)->Descriptor = t)
 end_define
 
 begin_comment
@@ -1141,13 +1033,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_THIS_OBJECT_TYPE
+name|ACPI_GET_OBJECT_TYPE
 parameter_list|(
 name|d
-parameter_list|,
-name|t
 parameter_list|)
-value|(((ACPI_OPERAND_OBJECT  *)d)->Common.Type == (UINT8)t)
+value|(((ACPI_OPERAND_OBJECT *)d)->Common.Type)
 end_define
 
 begin_comment
@@ -1157,7 +1047,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IS_SINGLE_TABLE
+name|ACPI_IS_SINGLE_TABLE
 parameter_list|(
 name|x
 parameter_list|)
@@ -1177,13 +1067,13 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|IS_IN_ACPI_TABLE
+name|ACPI_IS_IN_ACPI_TABLE
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(((UINT8 *)(a)>= (UINT8 *)(b + 1))&&\                                         ((UINT8 *)(a)< ((UINT8 *)b + b->Length)))
+value|(((UINT8 *)(a)>= (UINT8 *)(b + 1))&&\                                          ((UINT8 *)(a)< ((UINT8 *)b + b->Length)))
 end_define
 
 begin_else
@@ -1194,7 +1084,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|IS_IN_ACPI_TABLE
+name|ACPI_IS_IN_ACPI_TABLE
 parameter_list|(
 name|a
 parameter_list|,
@@ -1556,7 +1446,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|{a.AddressSpaceId = (UINT8) d;\                                              a.RegisterBitWidth = (UINT8) MUL_8 (b);\                                              a.RegisterBitOffset = 0;\                                              a.Reserved = 0;\                                              ACPI_STORE_ADDRESS (a.Address,c);}
+value|{a.AddressSpaceId = (UINT8) d;\                                              a.RegisterBitWidth = (UINT8) ACPI_MUL_8 (b);\                                              a.RegisterBitOffset = 0;\                                              a.Reserved = 0;\                                              ACPI_STORE_ADDRESS (a.Address,c);}
 end_define
 
 begin_comment
@@ -1584,7 +1474,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PARAM_LIST
+name|ACPI_PARAM_LIST
 parameter_list|(
 name|pl
 parameter_list|)
@@ -1604,31 +1494,31 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|REPORT_INFO
+name|ACPI_REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportInfo(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportInfo(_THIS_MODULE,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|REPORT_ERROR
+name|ACPI_REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportError(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportError(_THIS_MODULE,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|REPORT_WARNING
+name|ACPI_REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_else
@@ -1639,31 +1529,31 @@ end_else
 begin_define
 define|#
 directive|define
-name|REPORT_INFO
+name|ACPI_REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportInfo("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportInfo("ACPI",__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|REPORT_ERROR
+name|ACPI_REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportError("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportError("ACPI",__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|REPORT_WARNING
+name|ACPI_REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{AcpiUtReportWarning("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportWarning("ACPI",__LINE__,_COMPONENT); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_endif
@@ -1678,7 +1568,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_REPORT_INFO
+name|_ACPI_REPORT_INFO
 parameter_list|(
 name|a
 parameter_list|,
@@ -1688,13 +1578,13 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{AcpiUtReportInfo(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportInfo(a,b,c); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|_REPORT_ERROR
+name|_ACPI_REPORT_ERROR
 parameter_list|(
 name|a
 parameter_list|,
@@ -1704,13 +1594,13 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{AcpiUtReportError(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportError(a,b,c); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|_REPORT_WARNING
+name|_ACPI_REPORT_WARNING
 parameter_list|(
 name|a
 parameter_list|,
@@ -1720,7 +1610,7 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{AcpiUtReportWarning(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
+value|{AcpiUtReportWarning(a,b,c); \                                                 AcpiOsPrintf ACPI_PARAM_LIST(fp);}
 end_define
 
 begin_comment
@@ -1736,7 +1626,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 parameter_list|(
 name|name
 parameter_list|)
@@ -1750,7 +1640,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PROC_NAME
+name|ACPI_FUNCTION_NAME
 parameter_list|(
 name|a
 parameter_list|)
@@ -1760,53 +1650,53 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 parameter_list|(
 name|a
 parameter_list|)
-value|PROC_NAME(a)\                                         AcpiUtTrace(__LINE__,&_Dbg)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTrace(__LINE__,&_Dbg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_TRACE_PTR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|PROC_NAME(a)\                                         AcpiUtTracePtr(__LINE__,&_Dbg,(void *)b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE_PTR
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|PROC_NAME(a)\                                         AcpiUtTraceU32(__LINE__,&_Dbg,(UINT32)b)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTracePtr(__LINE__,&_Dbg,(void *)b)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_TRACE_STR
+name|ACPI_FUNCTION_TRACE_U32
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|PROC_NAME(a)\                                         AcpiUtTraceStr(__LINE__,&_Dbg,(NATIVE_CHAR *)b)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTraceU32(__LINE__,&_Dbg,(UINT32)b)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_ENTRY
+name|ACPI_FUNCTION_TRACE_STR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTraceStr(__LINE__,&_Dbg,(NATIVE_CHAR *)b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FUNCTION_ENTRY
 parameter_list|()
 value|AcpiUtTrackStackPtr()
 end_define
@@ -1859,7 +1749,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEBUG_EXEC
+name|ACPI_DEBUG_EXEC
 parameter_list|(
 name|a
 parameter_list|)
@@ -1869,7 +1759,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NORMAL_EXEC
+name|ACPI_NORMAL_EXEC
 parameter_list|(
 name|a
 parameter_list|)
@@ -1878,7 +1768,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG_DEFINE
+name|ACPI_DEBUG_DEFINE
 parameter_list|(
 name|a
 parameter_list|)
@@ -1888,7 +1778,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG_ONLY_MEMBERS
+name|ACPI_DEBUG_ONLY_MEMBERS
 parameter_list|(
 name|a
 parameter_list|)
@@ -1914,7 +1804,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DUMP_STACK_ENTRY
+name|ACPI_DUMP_STACK_ENTRY
 parameter_list|(
 name|a
 parameter_list|)
@@ -1924,7 +1814,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_OPERANDS
+name|ACPI_DUMP_OPERANDS
 parameter_list|(
 name|a
 parameter_list|,
@@ -1942,7 +1832,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_ENTRY
+name|ACPI_DUMP_ENTRY
 parameter_list|(
 name|a
 parameter_list|,
@@ -1954,7 +1844,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_TABLES
+name|ACPI_DUMP_TABLES
 parameter_list|(
 name|a
 parameter_list|,
@@ -1966,7 +1856,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_PATHNAME
+name|ACPI_DUMP_PATHNAME
 parameter_list|(
 name|a
 parameter_list|,
@@ -1982,7 +1872,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_RESOURCE_LIST
+name|ACPI_DUMP_RESOURCE_LIST
 parameter_list|(
 name|a
 parameter_list|)
@@ -1992,7 +1882,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_BUFFER
+name|ACPI_DUMP_BUFFER
 parameter_list|(
 name|a
 parameter_list|,
@@ -2004,7 +1894,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BREAK_MSG
+name|ACPI_BREAK_MSG
 parameter_list|(
 name|a
 parameter_list|)
@@ -2018,23 +1908,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ERROR_BREAK
+name|ACPI_ERROR_BREAK
 end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ERROR_BREAK
+name|ACPI_ERROR_BREAK
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|BREAK_ON_ERROR
+name|ACPI_BREAK_ON_ERROR
 parameter_list|(
 name|lvl
 parameter_list|)
-value|if ((lvl)&ACPI_ERROR) AcpiOsSignal(ACPI_SIGNAL_BREAKPOINT,"Fatal error encountered\n")
+value|if ((lvl)&ACPI_ERROR) \                                             AcpiOsSignal(ACPI_SIGNAL_BREAKPOINT,"Fatal error encountered\n")
 end_define
 
 begin_else
@@ -2045,7 +1935,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|BREAK_ON_ERROR
+name|ACPI_BREAK_ON_ERROR
 parameter_list|(
 name|lvl
 parameter_list|)
@@ -2067,7 +1957,7 @@ name|ACPI_DEBUG_PRINT
 parameter_list|(
 name|pl
 parameter_list|)
-value|AcpiUtDebugPrint PARAM_LIST(pl)
+value|AcpiUtDebugPrint ACPI_PARAM_LIST(pl)
 end_define
 
 begin_define
@@ -2077,7 +1967,7 @@ name|ACPI_DEBUG_PRINT_RAW
 parameter_list|(
 name|pl
 parameter_list|)
-value|AcpiUtDebugPrintRaw PARAM_LIST(pl)
+value|AcpiUtDebugPrintRaw ACPI_PARAM_LIST(pl)
 end_define
 
 begin_else
@@ -2092,7 +1982,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 parameter_list|(
 name|name
 parameter_list|)
@@ -2108,7 +1998,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG_EXEC
+name|ACPI_DEBUG_EXEC
 parameter_list|(
 name|a
 parameter_list|)
@@ -2117,7 +2007,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NORMAL_EXEC
+name|ACPI_NORMAL_EXEC
 parameter_list|(
 name|a
 parameter_list|)
@@ -2127,7 +2017,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG_DEFINE
+name|ACPI_DEBUG_DEFINE
 parameter_list|(
 name|a
 parameter_list|)
@@ -2136,7 +2026,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG_ONLY_MEMBERS
+name|ACPI_DEBUG_ONLY_MEMBERS
 parameter_list|(
 name|a
 parameter_list|)
@@ -2145,7 +2035,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PROC_NAME
+name|ACPI_FUNCTION_NAME
 parameter_list|(
 name|a
 parameter_list|)
@@ -2154,7 +2044,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 parameter_list|(
 name|a
 parameter_list|)
@@ -2163,18 +2053,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_TRACE_PTR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE_PTR
 parameter_list|(
 name|a
 parameter_list|,
@@ -2185,7 +2064,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_TRACE_STR
+name|ACPI_FUNCTION_TRACE_U32
 parameter_list|(
 name|a
 parameter_list|,
@@ -2196,13 +2075,24 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_EXIT
+name|ACPI_FUNCTION_TRACE_STR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 end_define
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_STATUS_EXIT
+name|ACPI_FUNCTION_EXIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FUNCTION_STATUS_EXIT
 parameter_list|(
 name|s
 parameter_list|)
@@ -2211,7 +2101,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_VALUE_EXIT
+name|ACPI_FUNCTION_VALUE_EXIT
 parameter_list|(
 name|s
 parameter_list|)
@@ -2220,14 +2110,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|FUNCTION_ENTRY
+name|ACPI_FUNCTION_ENTRY
 parameter_list|()
 end_define
 
 begin_define
 define|#
 directive|define
-name|DUMP_STACK_ENTRY
+name|ACPI_DUMP_STACK_ENTRY
 parameter_list|(
 name|a
 parameter_list|)
@@ -2236,7 +2126,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_OPERANDS
+name|ACPI_DUMP_OPERANDS
 parameter_list|(
 name|a
 parameter_list|,
@@ -2253,7 +2143,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_ENTRY
+name|ACPI_DUMP_ENTRY
 parameter_list|(
 name|a
 parameter_list|,
@@ -2264,7 +2154,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_TABLES
+name|ACPI_DUMP_TABLES
 parameter_list|(
 name|a
 parameter_list|,
@@ -2275,7 +2165,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_PATHNAME
+name|ACPI_DUMP_PATHNAME
 parameter_list|(
 name|a
 parameter_list|,
@@ -2290,7 +2180,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_RESOURCE_LIST
+name|ACPI_DUMP_RESOURCE_LIST
 parameter_list|(
 name|a
 parameter_list|)
@@ -2299,7 +2189,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DUMP_BUFFER
+name|ACPI_DUMP_BUFFER
 parameter_list|(
 name|a
 parameter_list|,
@@ -2328,7 +2218,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|BREAK_MSG
+name|ACPI_BREAK_MSG
 parameter_list|(
 name|a
 parameter_list|)
@@ -2389,7 +2279,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|DEBUGGER_EXEC
+name|ACPI_DEBUGGER_EXEC
 parameter_list|(
 name|a
 parameter_list|)
@@ -2404,7 +2294,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|DEBUGGER_EXEC
+name|ACPI_DEBUGGER_EXEC
 parameter_list|(
 name|a
 parameter_list|)
@@ -2428,7 +2318,7 @@ end_ifdef
 begin_undef
 undef|#
 directive|undef
-name|DEBUG_ONLY_MEMBERS
+name|ACPI_DEBUG_ONLY_MEMBERS
 end_undef
 
 begin_undef
@@ -2440,7 +2330,7 @@ end_undef
 begin_define
 define|#
 directive|define
-name|DEBUG_ONLY_MEMBERS
+name|ACPI_DEBUG_ONLY_MEMBERS
 parameter_list|(
 name|a
 parameter_list|)
@@ -2464,13 +2354,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ADD_OBJECT_NAME
+name|ACPI_ADD_OBJECT_NAME
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|MEMSET (a->Common.Name, ' ', sizeof (a->Common.Name));\                                         STRNCPY (a->Common.Name, AcpiGbl_NsTypeNames[b], sizeof (a->Common.Name))
+value|ACPI_MEMSET (a->Common.Name, ' ', sizeof (a->Common.Name));\                                         ACPI_STRNCPY (a->Common.Name, AcpiGbl_NsTypeNames[b], sizeof (a->Common.Name))
 end_define
 
 begin_else
@@ -2481,7 +2371,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ADD_OBJECT_NAME
+name|ACPI_ADD_OBJECT_NAME
 parameter_list|(
 name|a
 parameter_list|,
@@ -2515,7 +2405,7 @@ name|ACPI_MEM_ALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiOsAllocate(a)
+value|AcpiUtAllocate(a,_COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -2525,7 +2415,7 @@ name|ACPI_MEM_CALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiOsCallocate(a)
+value|AcpiUtCallocate(a, _COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -2563,7 +2453,7 @@ name|ACPI_MEM_ALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtAllocate(a,_COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtAllocateAndTrack(a,_COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -2573,7 +2463,7 @@ name|ACPI_MEM_CALLOCATE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtCallocate(a, _COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtCallocateAndTrack(a, _COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define
@@ -2583,7 +2473,7 @@ name|ACPI_MEM_FREE
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiUtFree(a,_COMPONENT,_THIS_MODULE,__LINE__)
+value|AcpiUtFreeAndTrack(a,_COMPONENT,_THIS_MODULE,__LINE__)
 end_define
 
 begin_define

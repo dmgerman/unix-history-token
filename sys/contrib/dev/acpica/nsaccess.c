@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 141 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 152 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -51,7 +51,7 @@ value|ACPI_NAMESPACE
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"nsaccess"
 argument_list|)
@@ -70,11 +70,9 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_OK
 decl_stmt|;
 specifier|const
-name|PREDEFINED_NAMES
+name|ACPI_PREDEFINED_NAMES
 modifier|*
 name|InitVal
 init|=
@@ -88,16 +86,32 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsRootInitialize"
 argument_list|)
 expr_stmt|;
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * The global root ptr is initially NULL, so a non-NULL value indicates      * that AcpiNsRootInitialize() has already been called; just return.      */
 if|if
 condition|(
@@ -156,9 +170,9 @@ name|InitVal
 operator|->
 name|Type
 argument_list|,
-name|IMODE_LOAD_PASS2
+name|ACPI_IMODE_LOAD_PASS2
 argument_list|,
-name|NS_NO_UPSEARCH
+name|ACPI_NS_NO_UPSEARCH
 argument_list|,
 name|NULL
 argument_list|,
@@ -251,7 +265,7 @@ operator|=
 operator|(
 name|ACPI_INTEGER
 operator|)
-name|STRTOUL
+name|ACPI_STRTOUL
 argument_list|(
 name|InitVal
 operator|->
@@ -273,7 +287,7 @@ name|String
 operator|.
 name|Length
 operator|=
-name|STRLEN
+name|ACPI_STRLEN
 argument_list|(
 name|InitVal
 operator|->
@@ -311,7 +325,7 @@ operator|=
 operator|(
 name|UINT16
 operator|)
-name|STRTOUL
+name|ACPI_STRTOUL
 argument_list|(
 name|InitVal
 operator|->
@@ -324,7 +338,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|STRCMP
+name|ACPI_STRCMP
 argument_list|(
 name|InitVal
 operator|->
@@ -409,7 +423,7 @@ block|}
 block|}
 break|break;
 default|default:
-name|REPORT_ERROR
+name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
 literal|"Unsupported initial type value %X\n"
@@ -455,6 +469,9 @@ block|}
 block|}
 name|UnlockAndExit
 label|:
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -484,10 +501,10 @@ name|NATIVE_CHAR
 modifier|*
 name|Pathname
 parameter_list|,
-name|ACPI_OBJECT_TYPE8
+name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|,
-name|OPERATING_MODE
+name|ACPI_INTERPRETER_MODE
 name|InterpreterMode
 parameter_list|,
 name|UINT32
@@ -528,15 +545,10 @@ decl_stmt|;
 name|ACPI_NAME
 name|SimpleName
 decl_stmt|;
-name|BOOLEAN
-name|NullNamePath
-init|=
-name|FALSE
-decl_stmt|;
-name|ACPI_OBJECT_TYPE8
+name|ACPI_OBJECT_TYPE
 name|TypeToCheckFor
 decl_stmt|;
-name|ACPI_OBJECT_TYPE8
+name|ACPI_OBJECT_TYPE
 name|ThisSearchType
 decl_stmt|;
 name|UINT32
@@ -545,9 +557,9 @@ init|=
 name|Flags
 operator|&
 operator|~
-name|NS_ERROR_IF_FOUND
+name|ACPI_NS_ERROR_IF_FOUND
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsLookup"
 argument_list|)
@@ -570,7 +582,7 @@ expr_stmt|;
 operator|*
 name|ReturnNode
 operator|=
-name|ENTRY_NOT_FOUND
+name|ACPI_ENTRY_NOT_FOUND
 expr_stmt|;
 if|if
 condition|(
@@ -664,18 +676,14 @@ operator|=
 name|Type
 expr_stmt|;
 block|}
-comment|/* Examine the pathname */
+comment|/*      * Begin examination of the actual pathname      */
 if|if
 condition|(
 operator|!
 name|Pathname
 condition|)
 block|{
-comment|/* Null NamePath -- is allowed */
-name|NullNamePath
-operator|=
-name|TRUE
-expr_stmt|;
+comment|/* A Null NamePath is allowed and refers to the root */
 name|NumSegments
 operator|=
 literal|0
@@ -698,7 +706,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*          * Valid name pointer (Internal name format)          *          * Check for prefixes.  As represented in the AML stream, a          * Pathname consists of an optional scope prefix followed by          * a segment part.          *          * If present, the scope prefix is either a RootPrefix (in          * which case the name is fully qualified), or zero or more          * ParentPrefixes (in which case the name's scope is relative          * to the current scope).          *          * The segment part consists of either:          *  - A single 4-byte name segment, or          *  - A DualNamePrefix followed by two 4-byte name segments, or          *  - A MultiNamePrefixOp, followed by a byte indicating the          *    number of segments and the segments themselves.          */
+comment|/*          * Name pointer is valid (and must be in internal name format)          *          * Check for scope prefixes:          *          * As represented in the AML stream, a namepath consists of an          * optional scope prefix followed by a name segment part.          *          * If present, the scope prefix is either a Root Prefix (in          * which case the name is fully qualified), or one or more          * Parent Prefixes (in which case the name's scope is relative          * to the current scope).          */
 if|if
 condition|(
 operator|*
@@ -708,11 +716,11 @@ name|AML_ROOT_PREFIX
 condition|)
 block|{
 comment|/* Pathname is fully qualified, start from the root */
-name|CurrentNode
+name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
-comment|/* Point to segment part */
+comment|/* Point to name segment part */
 name|Pathname
 operator|++
 expr_stmt|;
@@ -723,36 +731,14 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Searching from root [%p]\n"
 operator|,
-name|CurrentNode
+name|ThisNode
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-operator|*
-name|Pathname
-operator|)
-condition|)
-block|{
-comment|/* Direct reference to root, "\" */
-name|ThisNode
-operator|=
-name|AcpiGbl_RootNode
-expr_stmt|;
-goto|goto
-name|CheckForNewScopeAndExit
-goto|;
-block|}
 block|}
 else|else
 block|{
 comment|/* Pathname is relative to current scope, start there */
-name|CurrentNode
-operator|=
-name|PrefixNode
-expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -764,7 +750,11 @@ name|PrefixNode
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*              * Handle up-prefix (carat).  More than one prefix is supported              */
+comment|/*              * Handle multiple Parent Prefixes (carat) by just getting              * the parent node for each prefix instance.              */
+name|ThisNode
+operator|=
+name|PrefixNode
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -773,16 +763,16 @@ operator|==
 name|AML_PARENT_PREFIX
 condition|)
 block|{
-comment|/* Point to segment part or next ParentPrefix */
+comment|/*                  * Point past this prefix to the name segment                  * part or the next Parent Prefix                  */
 name|Pathname
 operator|++
 expr_stmt|;
-comment|/* Backup to the parent's scope  */
+comment|/* Backup to the parent node */
 name|ThisNode
 operator|=
-name|AcpiNsGetParentObject
+name|AcpiNsGetParentNode
 argument_list|(
-name|CurrentNode
+name|ThisNode
 argument_list|)
 expr_stmt|;
 if|if
@@ -792,10 +782,10 @@ name|ThisNode
 condition|)
 block|{
 comment|/* Current scope has no parent scope */
-name|REPORT_ERROR
+name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Too many parent prefixes (^) - reached root\n"
+literal|"ACPI path has too many parent prefixes (^) - reached beyond root node\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -805,22 +795,39 @@ name|AE_NOT_FOUND
 argument_list|)
 expr_stmt|;
 block|}
-name|CurrentNode
-operator|=
-name|ThisNode
-expr_stmt|;
 block|}
 block|}
-comment|/*          * Examine the name prefix opcode, if any, to determine the number of           * segments          */
-if|if
+comment|/*          * Determine the number of ACPI name segments in this pathname.          *          * The segment part consists of either:          *  - A Null name segment (0)          *  - A DualNamePrefix followed by two 4-byte name segments          *  - A MultiNamePrefix followed by a byte indicating the          *      number of segments and the segments themselves.          *  - A single 4-byte name segment          *          * Examine the name prefix opcode, if any, to determine the number of          * segments.          */
+switch|switch
 condition|(
 operator|*
 name|Pathname
-operator|==
-name|AML_DUAL_NAME_PREFIX
 condition|)
 block|{
-comment|/* Two segments, point to first segment */
+case|case
+literal|0
+case|:
+comment|/*              * Null name after a root or parent prefixes. We already              * have the correct target node and there are no name segments.              */
+name|NumSegments
+operator|=
+literal|0
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_NAMES
+operator|,
+literal|"Prefix-only Pathname (Zero name segments), Flags=%x\n"
+operator|,
+name|Flags
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_DUAL_NAME_PREFIX
+case|:
+comment|/* Two segments, point to first name segment */
 name|NumSegments
 operator|=
 literal|2
@@ -839,28 +846,23 @@ name|Flags
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|*
-name|Pathname
-operator|==
+break|break;
+case|case
 name|AML_MULTI_NAME_PREFIX_OP
-condition|)
-block|{
-comment|/* Extract segment count, point to first segment */
+case|:
+comment|/* Extract segment count, point to first name segment */
+name|Pathname
+operator|++
+expr_stmt|;
 name|NumSegments
 operator|=
-operator|(
+call|(
 name|UINT32
-operator|)
-operator|*
-operator|(
+call|)
+argument_list|(
 name|UINT8
+argument_list|)
 operator|*
-operator|)
-operator|++
 name|Pathname
 expr_stmt|;
 name|Pathname
@@ -879,10 +881,9 @@ name|Flags
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/*              * No Dual or Multi prefix, hence there is only one segment and               * Pathname is already pointing to it.              */
+break|break;
+default|default:
+comment|/*              * Not a Null name, no Dual or Multi prefix, hence there is              * only one name segment and Pathname is already pointing to it.              */
 name|NumSegments
 operator|=
 literal|1
@@ -898,8 +899,9 @@ name|Flags
 operator|)
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-name|DEBUG_EXEC
+name|ACPI_DEBUG_EXEC
 argument_list|(
 name|AcpiNsPrintPathname
 argument_list|(
@@ -910,19 +912,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Search namespace for each segment of the name.  Loop through and       * verify/add each name segment.      */
+comment|/*      * Search namespace for each segment of the name.  Loop through and      * verify/add each name segment.      */
+name|CurrentNode
+operator|=
+name|ThisNode
+expr_stmt|;
 while|while
 condition|(
 name|NumSegments
-operator|--
 operator|&&
 name|CurrentNode
 condition|)
 block|{
-comment|/*          * Search for the current name segment under the current          * named object.  The Type is significant only at the last (topmost)          * level.  (We don't care about the types along the path, only          * the type of the final target object.)          */
+comment|/*          * Search for the current name segment under the current          * named object.  The Type is significant only at the last name          * segment.  (We don't care about the types along the path, only          * the type of the final target object.)          */
 name|ThisSearchType
 operator|=
 name|ACPI_TYPE_ANY
+expr_stmt|;
+name|NumSegments
+operator|--
 expr_stmt|;
 if|if
 condition|(
@@ -939,8 +947,8 @@ operator|=
 name|Flags
 expr_stmt|;
 block|}
-comment|/* Pluck one ACPI name from the front of the pathname */
-name|MOVE_UNALIGNED32_TO_32
+comment|/* Extract one ACPI name from the front of the pathname */
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|SimpleName
@@ -984,13 +992,13 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-comment|/* Name not found in ACPI namespace  */
+comment|/* Name not found in ACPI namespace */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Name [%4.4s] not found in scope %p\n"
+literal|"Name [%4.4s] not found in scope [%4.4s] %p\n"
 operator|,
 operator|(
 name|char
@@ -998,6 +1006,15 @@ operator|*
 operator|)
 operator|&
 name|SimpleName
+operator|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|CurrentNode
+operator|->
+name|Name
 operator|,
 name|CurrentNode
 operator|)
@@ -1010,7 +1027,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * If 1) This is the last segment (NumSegments == 0)          *    2) and looking for a specific type          *       (Not checking for TYPE_ANY)          *    3) Which is not an alias          *    4) which is not a local type (TYPE_DEF_ANY)          *    5) which is not a local type (TYPE_SCOPE)          *    6) which is not a local type (TYPE_INDEX_FIELD_DEFN)          *    7) and type of object is known (not TYPE_ANY)          *    8) and object does not match request          *          * Then we have a type mismatch.  Just warn and ignore it.          */
+comment|/*          * Sanity typecheck of the target object:          *          * If 1) This is the last segment (NumSegments == 0)          *    2) And we are looking for a specific type          *       (Not checking for TYPE_ANY)          *    3) Which is not an alias          *    4) Which is not a local type (TYPE_DEF_ANY)          *    5) Which is not a local type (TYPE_SCOPE)          *    6) Which is not a local type (TYPE_INDEX_FIELD_DEFN)          *    7) And the type of target object is known (not TYPE_ANY)          *    8) And target object does not match what we are looking for          *          * Then we have a type mismatch.  Just warn and ignore it.          */
 if|if
 condition|(
 operator|(
@@ -1067,7 +1084,7 @@ operator|)
 condition|)
 block|{
 comment|/* Complain about a type mismatch */
-name|REPORT_WARNING
+name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
 literal|"NsLookup: %4.4s, type %X, checking for type %X\n"
@@ -1092,15 +1109,15 @@ comment|/*          * If this is the last name segment and we are not looking fo
 if|if
 condition|(
 operator|(
+name|NumSegments
+operator|==
 literal|0
-operator|==
-name|NumSegments
 operator|)
 operator|&&
 operator|(
+name|Type
+operator|==
 name|ACPI_TYPE_ANY
-operator|==
-name|Type
 operator|)
 condition|)
 block|{
@@ -1111,61 +1128,24 @@ operator|->
 name|Type
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|NumSegments
-operator|||
-name|AcpiNsOpensScope
-argument_list|(
-name|Type
-argument_list|)
-operator|)
-operator|&&
-operator|(
-name|ThisNode
-operator|->
-name|Child
-operator|==
-name|NULL
-operator|)
-condition|)
-block|{
-comment|/*              * More segments or the type implies enclosed scope,              * and the next scope has not been allocated.              */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Load mode=%X  ThisNode=%p\n"
-operator|,
-name|InterpreterMode
-operator|,
-name|ThisNode
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-name|CurrentNode
-operator|=
-name|ThisNode
-expr_stmt|;
-comment|/* point to next name segment */
+comment|/* Point to next name segment and make this node current */
 name|Pathname
 operator|+=
 name|ACPI_NAME_SIZE
 expr_stmt|;
+name|CurrentNode
+operator|=
+name|ThisNode
+expr_stmt|;
 block|}
 comment|/*      * Always check if we need to open a new scope      */
-name|CheckForNewScopeAndExit
-label|:
 if|if
 condition|(
 operator|!
 operator|(
 name|Flags
 operator|&
-name|NS_DONT_OPEN_SCOPE
+name|ACPI_NS_DONT_OPEN_SCOPE
 operator|)
 operator|&&
 operator|(
@@ -1173,7 +1153,7 @@ name|WalkState
 operator|)
 condition|)
 block|{
-comment|/*          * If entry is a type which opens a scope, push the new scope on the           * scope stack.          */
+comment|/*          * If entry is a type which opens a scope, push the new scope on the          * scope stack.          */
 if|if
 condition|(
 name|AcpiNsOpensScope
@@ -1212,7 +1192,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Set global scope to %p\n"
+literal|"Setting global scope to %p\n"
 operator|,
 name|ThisNode
 operator|)

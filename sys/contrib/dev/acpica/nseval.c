@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 104 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 109 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.   *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.   *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -51,7 +51,7 @@ value|ACPI_NAMESPACE
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"nseval"
 argument_list|)
@@ -106,7 +106,7 @@ decl_stmt|;
 name|ACPI_GENERIC_STATE
 name|ScopeInfo
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsEvaluateRelative"
 argument_list|)
@@ -150,11 +150,27 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get the prefix handle and Node */
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|PrefixNode
 operator|=
 name|AcpiNsMapHandleToNode
@@ -168,6 +184,9 @@ operator|!
 name|PrefixNode
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -201,9 +220,9 @@ name|InternalPath
 argument_list|,
 name|ACPI_TYPE_ANY
 argument_list|,
-name|IMODE_EXECUTE
+name|ACPI_IMODE_EXECUTE
 argument_list|,
-name|NS_NO_UPSEARCH
+name|ACPI_NS_NO_UPSEARCH
 argument_list|,
 name|NULL
 argument_list|,
@@ -211,6 +230,9 @@ operator|&
 name|Node
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -338,7 +360,7 @@ name|InternalPath
 init|=
 name|NULL
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsEvaluateByName"
 argument_list|)
@@ -368,11 +390,27 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Lookup the name in the namespace */
 name|Status
 operator|=
@@ -384,9 +422,9 @@ name|InternalPath
 argument_list|,
 name|ACPI_TYPE_ANY
 argument_list|,
-name|IMODE_EXECUTE
+name|ACPI_IMODE_EXECUTE
 argument_list|,
-name|NS_NO_UPSEARCH
+name|ACPI_NS_NO_UPSEARCH
 argument_list|,
 name|NULL
 argument_list|,
@@ -394,6 +432,9 @@ operator|&
 name|Node
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -521,7 +562,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|LocalReturnObject
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsEvaluateByHandle"
 argument_list|)
@@ -565,11 +606,27 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Get the prefix handle and Node */
+name|Status
+operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|Node
 operator|=
 name|AcpiNsMapHandleToNode
@@ -583,6 +640,9 @@ operator|!
 name|Node
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -707,7 +767,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsExecuteControlMethod"
 argument_list|)
@@ -735,6 +795,9 @@ literal|"No attached method object\n"
 operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
@@ -771,7 +834,7 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_PATHNAME
+name|ACPI_DUMP_PATHNAME
 argument_list|(
 name|MethodNode
 argument_list|,
@@ -800,11 +863,27 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Unlock the namespace before execution.  This allows namespace access      * via the external Acpi* interfaces while a method is being executed.      * However, any namespace deletion must acquire both the namespace and      * interpreter locks to ensure that no thread is using the portion of the      * namespace that is being deleted.      */
+name|Status
+operator|=
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Execute the method via the interpreter.  The interpreter is locked      * here before calling into the AML parser      */
 name|Status
 operator|=
@@ -848,7 +927,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetObjectValue  *  * PARAMETERS:  Node         - The object  *  * RETURN:      Status  *  * DESCRIPTION: Return the current value of the object  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetObjectValue  *  * PARAMETERS:  Node         - The object  *  * RETURN:      Status  *  * DESCRIPTION: Return the current value of the object  *  * MUTEX:       Assumes namespace is locked, leaves namespace unlocked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -874,163 +953,42 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|SourceDesc
-decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsGetObjectValue"
 argument_list|)
 expr_stmt|;
-comment|/*      *  We take the value from certain objects directly      */
-if|if
-condition|(
+comment|/*      * Objects require additional resolution steps (e.g., the      * Node may be a field that must be read, etc.) -- we can't just grab      * the object out of the node.      */
+name|ObjDesc
+operator|=
 operator|(
-name|Node
-operator|->
-name|Type
-operator|==
-name|ACPI_TYPE_PROCESSOR
-operator|)
-operator|||
-operator|(
-name|Node
-operator|->
-name|Type
-operator|==
-name|ACPI_TYPE_POWER
-operator|)
-condition|)
-block|{
-comment|/*          *  Create a Reference object to contain the object          */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|Node
-operator|->
-name|Type
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-comment|/*          *  Get the attached object          */
-name|SourceDesc
-operator|=
-name|AcpiNsGetAttachedObject
-argument_list|(
-name|Node
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|SourceDesc
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_NULL_OBJECT
-expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-comment|/*          * Just copy from the original to the return object          *          * TBD: [Future] - need a low-level object copy that handles          * the reference count automatically.  (Don't want to copy it)          */
-name|MEMCPY
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|SourceDesc
-argument_list|,
-sizeof|sizeof
-argument_list|(
 name|ACPI_OPERAND_OBJECT
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|ReferenceCount
-operator|=
-literal|1
-expr_stmt|;
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Other objects require a reference object wrapper which we      * then attempt to resolve.      */
-else|else
-block|{
-comment|/* Create an Reference object to contain the object */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|INTERNAL_TYPE_REFERENCE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-comment|/* Construct a descriptor pointing to the name */
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Opcode
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|AML_NAME_OP
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Object
-operator|=
-operator|(
-name|void
 operator|*
 operator|)
 name|Node
 expr_stmt|;
-comment|/*          * Use ResolveToValue() to get the associated value.  This call          * always deletes ObjDesc (allocated above).          *          * NOTE: we can get away with passing in NULL for a walk state          * because ObjDesc is guaranteed to not be a reference to either          * a method local or a method argument          *          * Even though we do not directly invoke the interpreter          * for this, we must enter it because we could access an opregion.          * The opregion access code assumes that the interpreter          * is locked.          *          * We must release the namespace lock before entering the          * intepreter.          */
+comment|/*      * Use ResolveNodeToValue() to get the associated value.  This call      * always deletes ObjDesc (allocated above).      *      * NOTE: we can get away with passing in NULL for a walk state      * because ObjDesc is guaranteed to not be a reference to either      * a method local or a method argument (because this interface can only be      * called from the AcpiEvaluate external interface, never called from      * a running control method.)      *      * Even though we do not directly invoke the interpreter      * for this, we must enter it because we could access an opregion.      * The opregion access code assumes that the interpreter      * is locked.      *      * We must release the namespace lock before entering the      * intepreter.      */
+name|Status
+operator|=
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiExEnterInterpreter
@@ -1046,20 +1004,23 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiExResolveToValue
+name|AcpiExResolveNodeToValue
 argument_list|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|*
+operator|)
 operator|&
 name|ObjDesc
 argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/*          * If AcpiExResolveNodeToValue() succeeded, the return value was          * placed in ObjDesc.          */
 name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
-block|}
-block|}
-comment|/*      * If AcpiExResolveToValue() succeeded, the return value was      * placed in ObjDesc.      */
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -1090,20 +1051,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* Namespace is unlocked */
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-name|UnlockAndExit
-label|:
-comment|/* Unlock the namespace */
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_NAMESPACE
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

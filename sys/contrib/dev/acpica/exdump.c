@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 138 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 145 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -57,7 +57,7 @@ value|ACPI_EXECUTER
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"exdump"
 argument_list|)
@@ -118,7 +118,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/*  Pointer to current byte of AML value    */
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExShowHexValue"
 argument_list|)
@@ -149,7 +149,7 @@ operator|!
 name|AmlStart
 condition|)
 block|{
-name|REPORT_ERROR
+name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
 literal|"ExShowHexValue: null pointer\n"
@@ -328,7 +328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpOperand  *  * PARAMETERS:  *EntryDesc          - Pointer to entry to be dumped  *  * RETURN:      Status  *  * DESCRIPTION: Dump a stack entry  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExDumpOperand  *  * PARAMETERS:  *ObjDesc          - Pointer to entry to be dumped  *  * RETURN:      Status  *  * DESCRIPTION: Dump an operand object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -337,7 +337,7 @@ name|AcpiExDumpOperand
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|EntryDesc
+name|ObjDesc
 parameter_list|)
 block|{
 name|UINT8
@@ -352,7 +352,7 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|PROC_NAME
+name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"ExDumpOperand"
 argument_list|)
@@ -383,7 +383,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|EntryDesc
+name|ObjDesc
 condition|)
 block|{
 comment|/*          * This usually indicates that something serious is wrong --          * since most (if not all)          * code that dumps the stack expects something to be there!          */
@@ -404,12 +404,12 @@ return|;
 block|}
 if|if
 condition|(
-name|VALID_DESCRIPTOR_TYPE
+name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
-name|EntryDesc
-argument_list|,
-name|ACPI_DESC_TYPE_NAMED
+name|ObjDesc
 argument_list|)
+operator|==
+name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -419,13 +419,13 @@ name|ACPI_DB_INFO
 operator|,
 literal|"%p NS Node: "
 operator|,
-name|EntryDesc
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_ENTRY
+name|ACPI_DUMP_ENTRY
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 argument_list|,
 name|ACPI_LV_INFO
 argument_list|)
@@ -438,13 +438,12 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|VALID_DESCRIPTOR_TYPE
+name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
-name|EntryDesc
-argument_list|,
-name|ACPI_DESC_TYPE_INTERNAL
+name|ObjDesc
 argument_list|)
+operator|!=
+name|ACPI_DESC_TYPE_INTERNAL
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
@@ -452,15 +451,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"%p Is not a local object \n"
+literal|"%p is not a local object\n"
 operator|,
-name|EntryDesc
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|DUMP_BUFFER
+name|ACPI_DUMP_BUFFER
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -474,7 +473,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*  EntryDesc is a valid object  */
+comment|/*  ObjDesc is a valid object  */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -482,13 +481,13 @@ name|ACPI_DB_INFO
 operator|,
 literal|"%p "
 operator|,
-name|EntryDesc
+name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Common
 operator|.
@@ -500,7 +499,7 @@ name|INTERNAL_TYPE_REFERENCE
 case|:
 switch|switch
 condition|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -555,9 +554,9 @@ break|break;
 case|case
 name|AML_NAME_OP
 case|:
-name|DUMP_PATHNAME
+name|ACPI_DUMP_PATHNAME
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -570,9 +569,9 @@ argument_list|,
 name|_COMPONENT
 argument_list|)
 expr_stmt|;
-name|DUMP_ENTRY
+name|ACPI_DUMP_ENTRY
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -589,7 +588,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Reference: Index %p\n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -604,7 +603,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Reference: Arg%d"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -615,7 +614,7 @@ if|if
 condition|(
 name|ACPI_TYPE_INTEGER
 operator|==
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Common
 operator|.
@@ -627,18 +626,18 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" value is [%8.8X%8.8x]"
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -660,7 +659,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Reference: Local%d"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -671,7 +670,7 @@ if|if
 condition|(
 name|ACPI_TYPE_INTEGER
 operator|==
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Common
 operator|.
@@ -683,18 +682,18 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" value is [%8.8X%8.8x]"
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -716,7 +715,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Reference.Node->Name %X\n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -732,7 +731,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Unknown opcode=%X\n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Reference
 operator|.
@@ -749,13 +748,13 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Buffer len %X @ %p \n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Buffer
 operator|.
 name|Length
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Buffer
 operator|.
@@ -764,7 +763,7 @@ argument_list|)
 expr_stmt|;
 name|Length
 operator|=
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Buffer
 operator|.
@@ -785,7 +784,7 @@ block|}
 comment|/* Debug only -- dump the buffer contents */
 if|if
 condition|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Buffer
 operator|.
@@ -801,7 +800,7 @@ for|for
 control|(
 name|Buf
 operator|=
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Buffer
 operator|.
@@ -837,18 +836,18 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Integer %8.8X%8.8X\n"
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -864,18 +863,18 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"If [Integer] %8.8X%8.8X\n"
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -891,18 +890,18 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"While [Integer] %8.8X%8.8X\n"
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Integer
 operator|.
@@ -918,13 +917,13 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Package count %X @ %p\n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Package
 operator|.
 name|Count
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Package
 operator|.
@@ -934,13 +933,13 @@ expr_stmt|;
 comment|/*          * If elements exist, package vector pointer is valid,          * and debug_level exceeds 1, dump package's elements.          */
 if|if
 condition|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Package
 operator|.
 name|Count
 operator|&&
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Package
 operator|.
@@ -967,7 +966,7 @@ literal|0
 operator|,
 name|Element
 operator|=
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Package
 operator|.
@@ -975,7 +974,7 @@ name|Elements
 init|;
 name|ElementIndex
 operator|<
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Package
 operator|.
@@ -1011,14 +1010,14 @@ literal|"Region %s (%X)"
 argument_list|,
 name|AcpiUtGetRegionName
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Region
 operator|.
 name|SpaceId
 argument_list|)
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Region
 operator|.
@@ -1030,7 +1029,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Region
 operator|.
@@ -1052,25 +1051,25 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" base %8.8X%8.8X Length %X\n"
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Region
 operator|.
 name|Address
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Region
 operator|.
 name|Address
 argument_list|)
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Region
 operator|.
@@ -1086,13 +1085,13 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"String length %X @ %p \""
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|String
 operator|.
 name|Length
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|String
 operator|.
@@ -1107,7 +1106,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|String
 operator|.
@@ -1121,7 +1120,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%c"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|String
 operator|.
@@ -1152,21 +1151,21 @@ name|INTERNAL_TYPE_REGION_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"RegionField: Bits=%X  BitAccWidth=%X Lock=%X Update=%X at byte=%X bit=%X of below:\n"
+literal|"RegionField: Bits=%X AccWidth=%X Lock=%X Update=%X at byte=%X bit=%X of below:\n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Field
 operator|.
 name|BitLength
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Field
 operator|.
-name|AccessBitWidth
+name|AccessByteWidth
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Field
 operator|.
@@ -1174,7 +1173,7 @@ name|FieldFlags
 operator|&
 name|AML_FIELD_LOCK_RULE_MASK
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Field
 operator|.
@@ -1182,22 +1181,22 @@ name|FieldFlags
 operator|&
 name|AML_FIELD_UPDATE_RULE_MASK
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Field
 operator|.
 name|BaseByteOffset
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Field
 operator|.
 name|StartFieldBitOffset
 argument_list|)
 expr_stmt|;
-name|DUMP_STACK_ENTRY
+name|ACPI_DUMP_STACK_ENTRY
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Field
 operator|.
@@ -1221,19 +1220,19 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"BufferField: %X bits at byte %X bit %X of \n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|BufferField
 operator|.
 name|BitLength
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|BufferField
 operator|.
 name|BaseByteOffset
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|BufferField
 operator|.
@@ -1243,7 +1242,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|BufferField
 operator|.
@@ -1265,7 +1264,7 @@ if|if
 condition|(
 name|ACPI_TYPE_BUFFER
 operator|!=
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|BufferField
 operator|.
@@ -1284,9 +1283,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DUMP_STACK_ENTRY
+name|ACPI_DUMP_STACK_ENTRY
 argument_list|(
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|BufferField
 operator|.
@@ -1311,19 +1310,19 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Method(%X) @ %p:%X\n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Method
 operator|.
 name|ParamCount
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Method
 operator|.
 name|AmlStart
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Method
 operator|.
@@ -1377,12 +1376,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/*  unknown EntryDesc->Common.Type value    */
+comment|/*  unknown ObjDesc->Common.Type value    */
 name|AcpiOsPrintf
 argument_list|(
 literal|"Unknown Type %X\n"
 argument_list|,
-name|EntryDesc
+name|ObjDesc
 operator|->
 name|Common
 operator|.
@@ -1412,7 +1411,7 @@ modifier|*
 modifier|*
 name|Operands
 parameter_list|,
-name|OPERATING_MODE
+name|ACPI_INTERPRETER_MODE
 name|InterpreterMode
 parameter_list|,
 name|NATIVE_CHAR
@@ -1440,9 +1439,9 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
-name|EntryDesc
+name|ObjDesc
 decl_stmt|;
-name|PROC_NAME
+name|ACPI_FUNCTION_NAME
 argument_list|(
 literal|"ExDumpOperands"
 argument_list|)
@@ -1512,7 +1511,7 @@ name|NumLevels
 operator|--
 control|)
 block|{
-name|EntryDesc
+name|ObjDesc
 operator|=
 operator|&
 name|Operands
@@ -1527,7 +1526,7 @@ argument_list|(
 name|AcpiExDumpOperand
 argument_list|(
 operator|*
-name|EntryDesc
+name|ObjDesc
 argument_list|)
 argument_list|)
 condition|)
@@ -1664,12 +1663,12 @@ literal|"%20s : %8.8X%8.8X\n"
 argument_list|,
 name|Title
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
 name|Value
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
 name|Value
 argument_list|)
@@ -1696,7 +1695,7 @@ name|UINT32
 name|Flags
 parameter_list|)
 block|{
-name|FUNCTION_ENTRY
+name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
 if|if
@@ -1813,7 +1812,7 @@ name|AcpiExOutPointer
 argument_list|(
 literal|"Parent"
 argument_list|,
-name|AcpiNsGetParentObject
+name|AcpiNsGetParentNode
 argument_list|(
 name|Node
 argument_list|)
@@ -1841,7 +1840,7 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExDumpObjectDescriptor"
 argument_list|)
@@ -1875,15 +1874,12 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
-operator|(
-name|VALID_DESCRIPTOR_TYPE
+name|ACPI_GET_DESCRIPTOR_TYPE
 argument_list|(
 name|ObjDesc
-argument_list|,
-name|ACPI_DESC_TYPE_INTERNAL
 argument_list|)
-operator|)
+operator|!=
+name|ACPI_DESC_TYPE_INTERNAL
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1951,7 +1947,7 @@ literal|"%20s : %X%8.8X\n"
 argument_list|,
 literal|"Value"
 argument_list|,
-name|HIDWORD
+name|ACPI_HIDWORD
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1960,7 +1956,7 @@ operator|.
 name|Value
 argument_list|)
 argument_list|,
-name|LODWORD
+name|ACPI_LODWORD
 argument_list|(
 name|ObjDesc
 operator|->
@@ -2251,6 +2247,17 @@ operator|->
 name|Method
 operator|.
 name|Semaphore
+argument_list|)
+expr_stmt|;
+name|AcpiExOutInteger
+argument_list|(
+literal|"OwningId"
+argument_list|,
+name|ObjDesc
+operator|->
+name|Method
+operator|.
+name|OwningId
 argument_list|)
 expr_stmt|;
 name|AcpiExOutInteger
@@ -2570,17 +2577,6 @@ operator|->
 name|CommonField
 operator|.
 name|FieldFlags
-argument_list|)
-expr_stmt|;
-name|AcpiExOutInteger
-argument_list|(
-literal|"AccessBitWidth"
-argument_list|,
-name|ObjDesc
-operator|->
-name|CommonField
-operator|.
-name|AccessBitWidth
 argument_list|)
 expr_stmt|;
 name|AcpiExOutInteger

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 23 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 29 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999, 2000, 2001, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * 1. Copyright Notice  *  * Some or all of this work - Copyright (c) 1999 - 2002, Intel Corp.  * All rights reserved.  *  * 2. License  *  * 2.1. This is your license from Intel Corp. under its intellectual property  * rights.  You may have additional license terms from the party that provided  * you this software, covering your right to use that party's intellectual  * property rights.  *  * 2.2. Intel grants, free of charge, to any person ("Licensee") obtaining a  * copy of the source code appearing in this file ("Covered Code") an  * irrevocable, perpetual, worldwide license under Intel's copyrights in the  * base code distributed originally by Intel ("Original Intel Code") to copy,  * make derivatives, distribute, use and display any portion of the Covered  * Code in any form, with the right to sublicense such rights; and  *  * 2.3. Intel grants Licensee a non-exclusive and non-transferable patent  * license (with the right to sublicense), under only those claims of Intel  * patents that are infringed by the Original Intel Code, to make, use, sell,  * offer to sell, and import the Covered Code and derivative works thereof  * solely to the minimum extent necessary to exercise the above copyright  * license, and in no event shall the patent license extend to any additions  * to or modifications of the Original Intel Code.  No other license or right  * is granted directly or by implication, estoppel or otherwise;  *  * The above copyright and patent license is granted only if the following  * conditions are met:  *  * 3. Conditions  *  * 3.1. Redistribution of Source with Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification with rights to further distribute source must include  * the above Copyright Notice, the above License, this list of Conditions,  * and the following Disclaimer and Export Compliance provision.  In addition,  * Licensee must cause all Covered Code to which Licensee contributes to  * contain a file documenting the changes Licensee made to create that Covered  * Code and the date of any change.  Licensee must include in that file the  * documentation of any changes made by any predecessor Licensee.  Licensee  * must include a prominent statement that the modification is derived,  * directly or indirectly, from Original Intel Code.  *  * 3.2. Redistribution of Source with no Rights to Further Distribute Source.  * Redistribution of source code of any substantial portion of the Covered  * Code or modification without rights to further distribute source must  * include the following Disclaimer and Export Compliance provision in the  * documentation and/or other materials provided with distribution.  In  * addition, Licensee may not authorize further sublicense of source of any  * portion of the Covered Code, and must include terms to the effect that the  * license from Licensee to its licensee is limited to the intellectual  * property embodied in the software Licensee provides to its licensee, and  * not to intellectual property embodied in modifications its licensee may  * make.  *  * 3.3. Redistribution of Executable. Redistribution in executable form of any  * substantial portion of the Covered Code or modification must reproduce the  * above Copyright Notice, and the following Disclaimer and Export Compliance  * provision in the documentation and/or other materials provided with the  * distribution.  *  * 3.4. Intel retains all right, title, and interest in and to the Original  * Intel Code.  *  * 3.5. Neither the name Intel nor any other trademark owned or controlled by  * Intel shall be used in advertising or otherwise to promote the sale, use or  * other dealings in products derived from or relating to the Covered Code  * without prior written authorization from Intel.  *  * 4. Disclaimer and Export Compliance  *  * 4.1. INTEL MAKES NO WARRANTY OF ANY KIND REGARDING ANY SOFTWARE PROVIDED  * HERE.  ANY SOFTWARE ORIGINATING FROM INTEL OR DERIVED FROM INTEL SOFTWARE  * IS PROVIDED "AS IS," AND INTEL WILL NOT PROVIDE ANY SUPPORT,  ASSISTANCE,  * INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL WILL NOT PROVIDE ANY  * UPDATES, ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY  * IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT AND FITNESS FOR A  * PARTICULAR PURPOSE.  *  * 4.2. IN NO EVENT SHALL INTEL HAVE ANY LIABILITY TO LICENSEE, ITS LICENSEES  * OR ANY OTHER THIRD PARTY, FOR ANY LOST PROFITS, LOST DATA, LOSS OF USE OR  * COSTS OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR FOR ANY INDIRECT,  * SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THIS AGREEMENT, UNDER ANY  * CAUSE OF ACTION OR THEORY OF LIABILITY, AND IRRESPECTIVE OF WHETHER INTEL  * HAS ADVANCE NOTICE OF THE POSSIBILITY OF SUCH DAMAGES.  THESE LIMITATIONS  * SHALL APPLY NOTWITHSTANDING THE FAILURE OF THE ESSENTIAL PURPOSE OF ANY  * LIMITED REMEDY.  *  * 4.3. Licensee shall not export, either directly or indirectly, any of this  * software or system incorporating such software without first obtaining any  * required license or other approval from the U. S. Department of Commerce or  * any other agency or department of the United States Government.  In the  * event Licensee exports any such software from the United States or  * re-exports any such software from a foreign destination, Licensee shall  * ensure that the distribution and export/re-export of the software is in  * compliance with all laws, regulations, orders, or other restrictions of the  * U.S. Export Administration Regulations. Licensee agrees that neither it nor  * any of its subsidiaries will export/re-export any technical data, process,  * software, or service, directly or indirectly, to any country for which the  * United States government or any agency thereof requires an export license,  * other governmental approval, or letter of assurance, without first obtaining  * such license, approval or letter.  *  *****************************************************************************/
 end_comment
 
 begin_define
@@ -39,7 +39,7 @@ value|ACPI_RESOURCES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"rsutils"
 argument_list|)
@@ -68,21 +68,12 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
-name|BufferSpaceNeeded
-decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsGetPrtMethodData"
 argument_list|)
 expr_stmt|;
-comment|/* already validated params, so we won't repeat here */
-name|BufferSpaceNeeded
-operator|=
-name|RetBuffer
-operator|->
-name|Length
-expr_stmt|;
+comment|/* Parameters guaranteed valid by caller */
 comment|/*      *  Execute the method, no parameters      */
 name|Status
 operator|=
@@ -134,7 +125,7 @@ name|AE_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The return object will be a package, so check the      *  parameters.  If the return object is not a package,      *  then the underlying AML code is corrupt or improperly      *  written.      */
+comment|/*      * The return object will be a package, so check the parameters.  If the      * return object is not a package, then the underlying AML code is corrupt      * or improperly written.      */
 if|if
 condition|(
 name|ACPI_TYPE_PACKAGE
@@ -146,6 +137,24 @@ operator|.
 name|Type
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"_PRT did not return a Package, returned %s\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|RetObj
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_OPERAND_TYPE
@@ -154,7 +163,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Make the call to create a resource linked list from the      *  byte stream buffer that comes back from the _CRS method      *  execution.      */
+comment|/*      * Create a resource linked list from the byte stream buffer that comes      * back from the _CRS method execution.      */
 name|Status
 operator|=
 name|AcpiRsCreatePciRoutingTable
@@ -162,21 +171,9 @@ argument_list|(
 name|RetObj
 argument_list|,
 name|RetBuffer
-operator|->
-name|Pointer
-argument_list|,
-operator|&
-name|BufferSpaceNeeded
 argument_list|)
 expr_stmt|;
-comment|/*      * Tell the user how much of the buffer we have used or is needed      *  and return the final status.      */
-name|RetBuffer
-operator|->
-name|Length
-operator|=
-name|BufferSpaceNeeded
-expr_stmt|;
-comment|/* On exit, we must delete the object returned by evaluateObject */
+comment|/* On exit, we must delete the object returned by EvaluateObject */
 name|Cleanup
 label|:
 name|AcpiUtRemoveReference
@@ -215,20 +212,13 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
-name|BufferSpaceNeeded
-init|=
-name|RetBuffer
-operator|->
-name|Length
-decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsGetCrsMethodData"
 argument_list|)
 expr_stmt|;
-comment|/* already validated params, so we won't repeat here */
-comment|/*      *  Execute the method, no parameters      */
+comment|/* Parameters guaranteed valid by caller */
+comment|/*      * Execute the method, no parameters      */
 name|Status
 operator|=
 name|AcpiNsEvaluateRelative
@@ -279,7 +269,7 @@ name|AE_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The return object will be a buffer, but check the      *  parameters.  If the return object is not a buffer,      *  then the underlying AML code is corrupt or improperly      *  written.      */
+comment|/*      * The return object will be a buffer, but check the      * parameters.  If the return object is not a buffer,      * then the underlying AML code is corrupt or improperly      * written.      */
 if|if
 condition|(
 name|ACPI_TYPE_BUFFER
@@ -291,6 +281,24 @@ operator|.
 name|Type
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"_CRS did not return a Buffer, returned %s\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|RetObj
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_OPERAND_TYPE
@@ -299,7 +307,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Make the call to create a resource linked list from the      *  byte stream buffer that comes back from the _CRS method      *  execution.      */
+comment|/*      * Make the call to create a resource linked list from the      * byte stream buffer that comes back from the _CRS method      * execution.      */
 name|Status
 operator|=
 name|AcpiRsCreateResourceList
@@ -307,19 +315,7 @@ argument_list|(
 name|RetObj
 argument_list|,
 name|RetBuffer
-operator|->
-name|Pointer
-argument_list|,
-operator|&
-name|BufferSpaceNeeded
 argument_list|)
-expr_stmt|;
-comment|/*      * Tell the user how much of the buffer we have used or is needed      *  and return the final status.      */
-name|RetBuffer
-operator|->
-name|Length
-operator|=
-name|BufferSpaceNeeded
 expr_stmt|;
 comment|/* On exit, we must delete the object returned by evaluateObject */
 name|Cleanup
@@ -360,20 +356,13 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT32
-name|BufferSpaceNeeded
-init|=
-name|RetBuffer
-operator|->
-name|Length
-decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsGetPrsMethodData"
 argument_list|)
 expr_stmt|;
-comment|/* already validated params, so we won't repeat here */
-comment|/*      *  Execute the method, no parameters      */
+comment|/* Parameters guaranteed valid by caller */
+comment|/*      * Execute the method, no parameters      */
 name|Status
 operator|=
 name|AcpiNsEvaluateRelative
@@ -424,7 +413,7 @@ name|AE_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The return object will be a buffer, but check the      *  parameters.  If the return object is not a buffer,      *  then the underlying AML code is corrupt or improperly      *  written..      */
+comment|/*      * The return object will be a buffer, but check the      * parameters.  If the return object is not a buffer,      * then the underlying AML code is corrupt or improperly      * written..      */
 if|if
 condition|(
 name|ACPI_TYPE_BUFFER
@@ -436,6 +425,24 @@ operator|.
 name|Type
 condition|)
 block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"_PRS did not return a Buffer, returned %s\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|RetObj
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AE_AML_OPERAND_TYPE
@@ -444,7 +451,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Make the call to create a resource linked list from the      *  byte stream buffer that comes back from the _CRS method      *  execution.      */
+comment|/*      * Make the call to create a resource linked list from the      * byte stream buffer that comes back from the _CRS method      * execution.      */
 name|Status
 operator|=
 name|AcpiRsCreateResourceList
@@ -452,19 +459,7 @@ argument_list|(
 name|RetObj
 argument_list|,
 name|RetBuffer
-operator|->
-name|Pointer
-argument_list|,
-operator|&
-name|BufferSpaceNeeded
 argument_list|)
-expr_stmt|;
-comment|/*      * Tell the user how much of the buffer we have used or is needed      *  and return the final status.      */
-name|RetBuffer
-operator|->
-name|Length
-operator|=
-name|BufferSpaceNeeded
 expr_stmt|;
 comment|/* On exit, we must delete the object returned by evaluateObject */
 name|Cleanup
@@ -508,29 +503,22 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|UINT8
-modifier|*
-name|ByteStream
-init|=
-name|NULL
+name|ACPI_BUFFER
+name|Buffer
 decl_stmt|;
-name|UINT32
-name|BufferSizeNeeded
-init|=
-literal|0
-decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"RsSetSrsMethodData"
 argument_list|)
 expr_stmt|;
-comment|/* already validated params, so we won't repeat here */
-comment|/*      * The InBuffer parameter will point to a linked list of      * resource parameters.  It needs to be formatted into a      * byte stream to be sent in as an input parameter.      */
-name|BufferSizeNeeded
+comment|/* Parameters guaranteed valid by caller */
+comment|/*      * The InBuffer parameter will point to a linked list of      * resource parameters.  It needs to be formatted into a      * byte stream to be sent in as an input parameter to _SRS      *      * Convert the linked list into a byte stream      */
+name|Buffer
+operator|.
+name|Length
 operator|=
-literal|0
+name|ACPI_ALLOCATE_LOCAL_BUFFER
 expr_stmt|;
-comment|/*      * First call is to get the buffer size needed      */
 name|Status
 operator|=
 name|AcpiRsCreateByteStream
@@ -539,60 +527,8 @@ name|InBuffer
 operator|->
 name|Pointer
 argument_list|,
-name|ByteStream
-argument_list|,
 operator|&
-name|BufferSizeNeeded
-argument_list|)
-expr_stmt|;
-comment|/*      * We expect a return of AE_BUFFER_OVERFLOW      * if not, exit with the error      */
-if|if
-condition|(
-name|AE_BUFFER_OVERFLOW
-operator|!=
-name|Status
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Allocate the buffer needed      */
-name|ByteStream
-operator|=
-name|ACPI_MEM_CALLOCATE
-argument_list|(
-name|BufferSizeNeeded
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|NULL
-operator|==
-name|ByteStream
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Now call to convert the linked list into a byte stream      */
-name|Status
-operator|=
-name|AcpiRsCreateByteStream
-argument_list|(
-name|InBuffer
-operator|->
-name|Pointer
-argument_list|,
-name|ByteStream
-argument_list|,
-operator|&
-name|BufferSizeNeeded
+name|Buffer
 argument_list|)
 expr_stmt|;
 if|if
@@ -603,9 +539,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|Cleanup
-goto|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Init the param object      */
 name|Params
@@ -627,22 +565,20 @@ literal|0
 index|]
 condition|)
 block|{
-name|Status
-operator|=
+name|AcpiOsFree
+argument_list|(
+name|Buffer
+operator|.
+name|Pointer
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_MEMORY
+argument_list|)
 expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 block|}
-name|Params
-index|[
-literal|1
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-comment|/*      *  Set up the parameter object      */
+comment|/*      * Set up the parameter object      */
 name|Params
 index|[
 literal|0
@@ -652,7 +588,9 @@ name|Buffer
 operator|.
 name|Length
 operator|=
-name|BufferSizeNeeded
+name|Buffer
+operator|.
+name|Length
 expr_stmt|;
 name|Params
 index|[
@@ -663,7 +601,16 @@ name|Buffer
 operator|.
 name|Pointer
 operator|=
-name|ByteStream
+name|Buffer
+operator|.
+name|Pointer
+expr_stmt|;
+name|Params
+index|[
+literal|1
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 comment|/*      * Execute the method, no return value      */
 name|Status
@@ -679,6 +626,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/*      * Clean up and return the status from AcpiNsEvaluateRelative      */
 name|AcpiUtRemoveReference
 argument_list|(
 name|Params
@@ -687,9 +635,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*      * Clean up and return the status from AcpiNsEvaluateRelative      */
-name|Cleanup
-label|:
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
