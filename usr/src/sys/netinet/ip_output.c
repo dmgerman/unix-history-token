@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.33	82/06/12	*/
+comment|/*	ip_output.c	1.34	82/06/13	*/
 end_comment
 
 begin_include
@@ -309,11 +309,12 @@ name|ifp
 operator|=
 name|if_ifonnetof
 argument_list|(
+name|IN_NETOF
+argument_list|(
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_net
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.43	82/05/02	*/
+comment|/*	ip_input.c	1.44	82/06/13	*/
 end_comment
 
 begin_include
@@ -2298,11 +2298,12 @@ name|IPOPT_SSRR
 operator|&&
 name|if_ifonnetof
 argument_list|(
+name|in_netof
+argument_list|(
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_net
+argument_list|)
 argument_list|)
 operator|==
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.15	82/06/12	*/
+comment|/*	if_dmc.c	4.16	82/06/13	*/
 end_comment
 
 begin_include
@@ -251,11 +251,11 @@ begin_define
 define|#
 directive|define
 name|DMC_NET
-value|0xff00
+value|0xffffff00
 end_define
 
 begin_comment
-comment|/* 8 bits of net number in ui_flags */
+comment|/* 24 bits of net number in ui_flags */
 end_comment
 
 begin_comment

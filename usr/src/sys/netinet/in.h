@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.12 82/06/05 */
+comment|/*	in.h	4.13	82/06/13	*/
 end_comment
 
 begin_comment
@@ -370,16 +370,23 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Macros for dealing with Class A/B/C network  * numbers.  High 3 bits of uppermost byte indicates  * how to interpret the remainder of the 32-bit  * Internet address.  */
+comment|/*  * Macros for dealing with Class A/B/C network  * numbers.  High 3 bits of uppermost byte indicates  * how to interpret the remainder of the 32-bit  * Internet address.  The macros may be used in time  * time critical sections of code, while subroutine  * versions also exist use in other places.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|vax
-name|||
+operator|||
 name|pdp11
-end_ifdef
+end_if
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSA
+value|0x00000080
+end_define
 
 begin_define
 define|#
@@ -403,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|IN_CLASSB
-value|0x00000008
+value|0x00000040
 end_define
 
 begin_define
@@ -422,13 +429,6 @@ define|#
 directive|define
 name|IN_CLASSB_LNA
 value|0xffff0000
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN_CLASSC
-value|0x0000000c
 end_define
 
 begin_define
@@ -457,23 +457,23 @@ end_endif
 begin_define
 define|#
 directive|define
-name|inetpart
+name|IN_NETOF
 parameter_list|(
 name|in
 parameter_list|)
 define|\
-value|((((in).s_addr&IN_CLASSC)==IN_CLASSC)?((in).s_addr&IN_CLASSC_NET):\ 	 ((((in).s_addr&IN_CLASSB)==IN_CLASSB)?((in).s_addr&IN_CLASSB_NET):\ 	  ((in).s_addr&IN_CLASSA_NET)))
+value|(((in).s_addr&IN_CLASSA) == 0 ? (in).s_addr&IN_CLASSA_NET : \ 		((in).s_addr&IN_CLASSB) == 0 ? (in).s_addr&IN_CLASSB_NET : \ 			(in).s_addr&IN_CLASSC_NET)
 end_define
 
 begin_define
 define|#
 directive|define
-name|lnapart
+name|IN_LNAOF
 parameter_list|(
 name|in
 parameter_list|)
 define|\
-value|((((in).s_addr&IN_CLASSC)==IN_CLASSC)?((in).s_addr&IN_CLASSC_LNA) : \ 	 ((((in).s_addr&IN_CLASSB)==IN_CLASSB)?((in).s_addr&IN_CLASSB_LNA) : \ 	  ((in).s_addr&IN_CLASSA_LNA)))
+value|(((in).s_addr&IN_CLASSA) == 0 ? (in).s_addr&IN_CLASSA_LNA : \ 		((in).s_addr&IN_CLASSB) == 0 ? (in).s_addr&IN_CLASSB_LNA : \ 			(in).s_addr&IN_CLASSC_LNA)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.26	82/04/24	*/
+comment|/*	in_pcb.c	4.27	82/06/13	*/
 end_comment
 
 begin_include
@@ -639,11 +639,12 @@ name|ifp
 operator|=
 name|if_ifonnetof
 argument_list|(
+name|in_netof
+argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_net
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

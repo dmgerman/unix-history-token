@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.13	82/05/24	*/
+comment|/*	if.h	4.14	82/06/13	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Structures defining a network interface, providing a packet  * tra
 end_comment
 
 begin_comment
-comment|/*  * Structure defining a queue for a network interface.  *  * (Would like to call this struct ``if'', but C isn't PL/1.)  */
+comment|/*  * Structure defining a queue for a network interface.  *  * (Would like to call this struct ``if'', but C isn't PL/1.)  *  * EVENTUALLY PURGE if_net AND if_host FROM STRUCTURE  */
 end_comment
 
 begin_struct
@@ -28,7 +28,7 @@ name|short
 name|if_mtu
 decl_stmt|;
 comment|/* maximum transmission unit */
-name|short
+name|int
 name|if_net
 decl_stmt|;
 comment|/* network number of interface */
