@@ -529,7 +529,7 @@ name|sc
 parameter_list|,
 name|x
 parameter_list|)
-value|(SC_DEV((sc), (x))->si_tty)
+value|(SC_DEV((sc), (x)) != NULL ?	\ 	SC_DEV((sc), (x))->si_tty : NULL)
 end_define
 
 begin_decl_stmt
