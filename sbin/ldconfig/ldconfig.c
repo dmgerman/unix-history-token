@@ -1674,7 +1674,12 @@ name|shp
 operator|->
 name|dewey
 argument_list|,
-name|MAXDEWEY
+sizeof|sizeof
+argument_list|(
+name|shp
+operator|->
+name|dewey
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|shp
