@@ -2324,6 +2324,17 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stringp
+operator|==
+name|NULL
+condition|)
+name|usage
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|ap
 operator|++
 expr_stmt|;
