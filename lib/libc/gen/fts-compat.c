@@ -2517,6 +2517,9 @@ name|void
 modifier|*
 name|oldaddr
 decl_stmt|;
+name|size_t
+name|dnamlen
+decl_stmt|;
 name|int
 name|cderrno
 decl_stmt|,
@@ -2911,6 +2914,12 @@ operator|)
 condition|;
 control|)
 block|{
+name|dnamlen
+operator|=
+name|dp
+operator|->
+name|d_namlen
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2943,9 +2952,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|dp
-operator|->
-name|d_namlen
+name|dnamlen
 argument_list|)
 operator|)
 operator|==
@@ -2956,9 +2963,7 @@ name|mem1
 goto|;
 if|if
 condition|(
-name|dp
-operator|->
-name|d_namlen
+name|dnamlen
 operator|>=
 name|maxlen
 condition|)
@@ -2976,9 +2981,7 @@ name|fts_palloc
 argument_list|(
 name|sp
 argument_list|,
-name|dp
-operator|->
-name|d_namlen
+name|dnamlen
 operator|+
 name|len
 operator|+
@@ -3079,9 +3082,7 @@ if|if
 condition|(
 name|len
 operator|+
-name|dp
-operator|->
-name|d_namlen
+name|dnamlen
 operator|>=
 name|USHRT_MAX
 condition|)
@@ -3146,9 +3147,7 @@ name|fts_pathlen
 operator|=
 name|len
 operator|+
-name|dp
-operator|->
-name|d_namlen
+name|dnamlen
 expr_stmt|;
 ifdef|#
 directive|ifdef
