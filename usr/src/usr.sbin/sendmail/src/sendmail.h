@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.25		%G%"
+literal|"@(#)sendmail.h	6.26		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ end_endif
 begin_comment
 comment|/* _DEFINE */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -118,6 +124,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
