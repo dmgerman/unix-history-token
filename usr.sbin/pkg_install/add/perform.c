@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.32 1995/11/12 04:55:23 jkh Exp $"
+literal|"$Id: perform.c,v 1.33 1996/03/12 06:12:37 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1297,6 +1297,15 @@ literal|" - already installed.\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|code
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|bomb
+goto|;
 comment|/* Look for the requirements file */
 if|if
 condition|(
