@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fseek.c,v 1.6 1997/02/22 15:02:05 peter Exp $"
+literal|"$Id: fseek.c,v 1.7 1998/04/11 07:40:44 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,10 +105,6 @@ name|POS_ERR
 value|(-(fpos_t)1)
 end_define
 
-begin_comment
-comment|/*  * Seek the given file to the given offset.  * `Whence' must be one of the three SEEK_* macros.  */
-end_comment
-
 begin_function
 name|int
 name|fseek
@@ -125,6 +121,47 @@ modifier|*
 name|fp
 decl_stmt|;
 name|long
+name|offset
+decl_stmt|;
+name|int
+name|whence
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|fseeko
+argument_list|(
+name|fp
+argument_list|,
+name|offset
+argument_list|,
+name|whence
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Seek the given file to the given offset.  * `Whence' must be one of the three SEEK_* macros.  */
+end_comment
+
+begin_function
+name|int
+name|fseeko
+parameter_list|(
+name|fp
+parameter_list|,
+name|offset
+parameter_list|,
+name|whence
+parameter_list|)
+specifier|register
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|off_t
 name|offset
 decl_stmt|;
 name|int

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftell.c,v 1.8 1997/03/11 11:40:40 peter Exp $"
+literal|"$Id: ftell.c,v 1.9 1998/04/11 07:40:44 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -75,12 +81,68 @@ file|"libc_private.h"
 end_include
 
 begin_comment
-comment|/*  * ftell: return current offset.  */
+comment|/*  * standard ftell function.  */
 end_comment
 
 begin_function
 name|long
 name|ftell
+parameter_list|(
+name|fp
+parameter_list|)
+specifier|register
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+block|{
+specifier|register
+name|off_t
+name|rv
+decl_stmt|;
+name|rv
+operator|=
+name|ftello
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|long
+operator|)
+name|rv
+operator|!=
+name|rv
+condition|)
+block|{
+name|errno
+operator|=
+name|EOVERFLOW
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|rv
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * ftello: return current offset.  */
+end_comment
+
+begin_function
+name|off_t
+name|ftello
 parameter_list|(
 name|fp
 parameter_list|)

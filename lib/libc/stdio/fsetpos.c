@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fsetpos.c,v 1.5 1997/02/22 15:02:06 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -80,12 +86,12 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|fseek
+name|fseeko
 argument_list|(
 name|iop
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 operator|*
 name|pos
