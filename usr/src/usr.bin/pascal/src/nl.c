@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.1 %G%"
+literal|"@(#)nl.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1611,13 +1611,12 @@ block|,
 literal|"program"
 block|,
 literal|"improper"
-ifdef|#
-directive|ifdef
-name|DEBUG
 block|,
 literal|"variant"
-endif|#
-directive|endif
+block|,
+literal|"formal procedure"
+block|,
+literal|"formal function"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1695,6 +1694,10 @@ block|,
 literal|"IMPROPER"
 block|,
 literal|"VARNT"
+block|,
+literal|"FPROC"
+block|,
+literal|"FFUNC"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2116,6 +2119,12 @@ name|REF
 case|:
 case|case
 name|WITHPTR
+case|:
+case|case
+name|FFUNC
+case|:
+case|case
+name|FPROC
 case|:
 name|printf
 argument_list|(

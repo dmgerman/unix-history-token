@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.2 %G%"
+literal|"@(#)put.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,6 +288,9 @@ name|O_CASE2OP
 case|:
 case|case
 name|O_CASE4OP
+case|:
+case|case
+name|O_FRTN
 case|:
 case|case
 name|O_WRITES
@@ -1037,8 +1040,21 @@ name|oldlc
 operator|)
 return|;
 case|case
-name|O_POP
+name|O_FCALL
 case|:
+if|if
+condition|(
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+condition|)
+goto|goto
+name|longgen
+goto|;
+comment|/* and fall through */
 case|case
 name|O_PUSH
 case|:
@@ -1101,10 +1117,10 @@ case|case
 name|O_CALL
 case|:
 case|case
-name|O_GOTO
+name|O_FSAV
 case|:
 case|case
-name|O_TRACNT
+name|O_GOTO
 case|:
 case|case
 name|O_NAM

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stkrval.c 1.2 %G%"
+literal|"@(#)stkrval.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,6 +1095,9 @@ endif|PC
 case|case
 name|FUNC
 case|:
+case|case
+name|FFUNC
+case|:
 comment|/* 			 * Function call 			 */
 name|pt
 operator|=
@@ -1289,6 +1292,9 @@ operator|)
 return|;
 case|case
 name|PROC
+case|:
+case|case
+name|FPROC
 case|:
 name|error
 argument_list|(

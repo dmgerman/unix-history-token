@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char sccsid[] = "@(#)OPnames.h 1.1 %G%"; */
+comment|/* static	char sccsid[] = "@(#)OPnames.h 1.2 %G%"; */
 end_comment
 
 begin_decl_stmt
@@ -12,10 +12,6 @@ init|=
 block|{
 literal|0
 block|,
-literal|" HALT"
-block|,
-literal|" TRA4"
-block|,
 literal|" NODUMP"
 block|,
 literal|" BEG"
@@ -24,23 +20,29 @@ literal|" END"
 block|,
 literal|" CALL"
 block|,
-literal|"*ABORT"
+literal|" FCALL"
 block|,
-literal|" PUSH"
+literal|" FRTN"
 block|,
-literal|" POP"
+literal|" FSAV"
 block|,
 literal|" SDUP2"
 block|,
 literal|" SDUP4"
 block|,
-literal|" IF"
-block|,
 literal|" TRA"
+block|,
+literal|" TRA4"
+block|,
+literal|" GOTO"
 block|,
 literal|" LINO"
 block|,
-literal|" GOTO"
+literal|" PUSH"
+block|,
+literal|0
+block|,
+literal|" IF"
 block|,
 literal|" REL2"
 block|,
@@ -55,8 +57,6 @@ block|,
 literal|" RELG"
 block|,
 literal|" RELT"
-block|,
-literal|0
 block|,
 literal|" REL28"
 block|,
@@ -304,7 +304,7 @@ literal|" LLIMIT"
 block|,
 literal|" BUFF"
 block|,
-literal|0
+literal|" HALT"
 block|,
 literal|0
 block|,
@@ -322,11 +322,11 @@ literal|"*CONC"
 block|,
 literal|"*CONC4"
 block|,
+literal|"*ABORT"
+block|,
 literal|" PXPBUF"
 block|,
 literal|" COUNT"
-block|,
-literal|" TRACNT"
 block|,
 literal|0
 block|,

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.1 %G%"
+literal|"@(#)rval.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1367,6 +1367,9 @@ return|;
 case|case
 name|FUNC
 case|:
+case|case
+name|FFUNC
+case|:
 comment|/* 			     * Function call with no arguments. 			     */
 if|if
 condition|(
@@ -1438,6 +1441,9 @@ operator|)
 return|;
 case|case
 name|PROC
+case|:
+case|case
+name|FPROC
 case|:
 name|error
 argument_list|(

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyid.c 1.1 %G%"
+literal|"@(#)yyid.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -507,7 +507,7 @@ begin_define
 define|#
 directive|define
 name|varkinds
-value|((1<<CONST)|(1<<VAR)|(1<<REF)|(1<<ARRAY)|(1<<PTR)|(1<<RECORD)|(1<<FIELD)|(1<<FUNC)|(1<<FVAR))
+value|((1<<CONST)|(1<<VAR)|(1<<REF)|(1<<ARRAY)|(1<<PTR) \ 			|(1<<RECORD)|(1<<FIELD)|(1<<FUNC)|(1<<FVAR) \ 			|(1<<FFUNC)|(1<<PROC)|(1<<FPROC))
 end_define
 
 begin_comment
@@ -654,17 +654,43 @@ block|{
 case|case
 name|FUNC
 case|:
-if|if
-condition|(
+return|return
+operator|(
+name|p
+operator|->
+name|class
+operator|==
+name|FUNC
+operator|||
 name|p
 operator|->
 name|class
 operator|==
 name|FVAR
-condition|)
+operator|||
+name|p
+operator|->
+name|class
+operator|==
+name|FFUNC
+operator|)
+return|;
+case|case
+name|PROC
+case|:
 return|return
 operator|(
-literal|1
+name|p
+operator|->
+name|class
+operator|==
+name|PROC
+operator|||
+name|p
+operator|->
+name|class
+operator|==
+name|FPROC
 operator|)
 return|;
 case|case
@@ -672,9 +698,6 @@ name|CONST
 case|:
 case|case
 name|TYPE
-case|:
-case|case
-name|PROC
 case|:
 case|case
 name|FIELD
@@ -793,6 +816,9 @@ comment|/* 		 * We would prefer to return 		 * parameterless functions only. 		 
 case|case
 name|FUNC
 case|:
+case|case
+name|FFUNC
+case|:
 return|return
 operator|(
 name|class
@@ -814,6 +840,19 @@ name|class
 operator|==
 name|class
 operator|)
+operator|)
+return|;
+case|case
+name|PROC
+case|:
+case|case
+name|FPROC
+case|:
+return|return
+operator|(
+name|class
+operator|==
+name|NIL
 operator|)
 return|;
 block|}

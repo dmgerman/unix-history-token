@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.1 %G%"
+literal|"@(#)p2put.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1923,6 +1923,21 @@ name|P2FTN
 argument_list|)
 argument_list|,
 name|P2PTR
+argument_list|)
+return|;
+case|case
+name|FFUNC
+case|:
+case|case
+name|FPROC
+case|:
+comment|/* 		     *	formal procedures and functions are pointers 		     *	to structures which describe their environment. 		     */
+return|return
+name|ADDTYPE
+argument_list|(
+name|P2PTR
+argument_list|,
+name|P2STRTY
 argument_list|)
 return|;
 default|default :

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)0.h 1.2 %G%"; */
+comment|/* static	char sccsid[] = "@(#)0.h 1.3 %G%"; */
 end_comment
 
 begin_define
@@ -1031,6 +1031,20 @@ define|#
 directive|define
 name|VARNT
 value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPROC
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|FFUNC
+value|24
 end_define
 
 begin_comment

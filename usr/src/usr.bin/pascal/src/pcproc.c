@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.1 %G%"
+literal|"@(#)pcproc.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +291,12 @@ operator|->
 name|class
 operator|!=
 name|PROC
+operator|&&
+name|p
+operator|->
+name|class
+operator|!=
+name|FPROC
 condition|)
 block|{
 name|error
