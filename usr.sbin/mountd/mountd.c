@@ -2359,7 +2359,7 @@ argument_list|,
 name|dirpath
 argument_list|)
 operator|==
-literal|0
+name|NULL
 operator|||
 name|stat
 argument_list|(
@@ -2933,7 +2933,7 @@ name|transp
 argument_list|,
 name|xdr_dir
 argument_list|,
-name|dirpath
+name|rpcpath
 argument_list|)
 condition|)
 block|{
@@ -2955,6 +2955,34 @@ name|transp
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+if|if
+condition|(
+name|realpath
+argument_list|(
+name|rpcpath
+argument_list|,
+name|dirpath
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"umount request from %s "
+literal|"for non existent path %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|saddrin
+argument_list|)
+argument_list|,
+name|dirpath
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4270,6 +4298,14 @@ name|i
 decl_stmt|,
 name|netgrp
 decl_stmt|;
+name|dirp
+operator|=
+name|NULL
+expr_stmt|;
+name|dirplen
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * First, get rid of the old list 	 */
 name|ep
 operator|=
@@ -7045,6 +7081,10 @@ name|allflag
 decl_stmt|,
 name|usedarg
 decl_stmt|;
+name|savedc2
+operator|=
+literal|'\0'
+expr_stmt|;
 name|cpopt
 operator|=
 operator|*
