@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.7	82/01/14	*/
+comment|/*	tty.h	4.8	82/01/20	*/
 end_comment
 
 begin_ifdef
@@ -71,16 +71,74 @@ begin_struct
 struct|struct
 name|tty
 block|{
+union|union
+block|{
+struct|struct
+block|{
 name|struct
 name|clist
+name|T_rawq
+decl_stmt|;
+name|struct
+name|clist
+name|T_canq
+decl_stmt|;
+block|}
+name|t_t
+struct|;
+define|#
+directive|define
 name|t_rawq
-decl_stmt|;
-comment|/* device */
-name|struct
-name|clist
+value|t_nu.t_t.T_rawq
+comment|/* raw characters or partial line */
+define|#
+directive|define
 name|t_canq
+value|t_nu.t_t.T_canq
+comment|/* raw characters or partial line */
+struct|struct
+block|{
+name|struct
+name|buf
+modifier|*
+name|T_bufp
 decl_stmt|;
-comment|/* tty */
+name|char
+modifier|*
+name|T_cp
+decl_stmt|;
+name|int
+name|T_inbuf
+decl_stmt|;
+name|int
+name|T_rec
+decl_stmt|;
+block|}
+name|t_n
+struct|;
+define|#
+directive|define
+name|t_bufp
+value|t_nu.t_n.T_bufp
+comment|/* buffer allocated to protocol */
+define|#
+directive|define
+name|t_cp
+value|t_nu.t_n.T_cp
+comment|/* pointer into the ripped off buffer */
+define|#
+directive|define
+name|t_inbuf
+value|t_nu.t_n.T_inbuf
+comment|/* number chars in the buffer */
+define|#
+directive|define
+name|t_rec
+value|t_nu.t_n.T_rec
+comment|/* have a complete record */
+block|}
+name|t_nu
+union|;
 name|struct
 name|clist
 name|t_outq
