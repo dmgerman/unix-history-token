@@ -2466,6 +2466,19 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|MAC
+comment|/* 	 * Tag the mbuf with an appropriate MAC label before any other 	 * consumers can get to it. 	 */
+name|mac_create_mbuf_from_ifnet
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Give bpf a chance at the packet. 	 */
 name|BPF_MTAP
 argument_list|(
@@ -2517,18 +2530,6 @@ operator|~
 name|M_HASFCS
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|MAC
-name|mac_create_mbuf_from_ifnet
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_ibytes
