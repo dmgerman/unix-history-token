@@ -1282,7 +1282,7 @@ comment|/* !UFS_EXTATTR_AUTOSTART */
 end_comment
 
 begin_comment
-comment|/*  * Enable an EA using the passed file system, backing vnode, attribute name,  * namespace, and proc.  Will perform a VOP_OPEN() on the vp, so expects vp  * to be locked when passed in.  Will unlock vp, and grab its own reference,  * so the caller needs to vrele(), just not vput().  The unlock the vnode  * regardless of call success or failure.  */
+comment|/*  * Enable an EA using the passed file system, backing vnode, attribute name,  * namespace, and proc.  Will perform a VOP_OPEN() on the vp, so expects vp  * to be locked when passed in.  The vnode will be returned unlocked,  * regardless of success/failure of the function.  As a result, the caller  * will always need to vrele(), but not vput().  */
 end_comment
 
 begin_function
@@ -1889,9 +1889,21 @@ name|error
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|bootverbose
+condition|)
 block|{
-comment|/*  * While it's nice to have some visual output here, skip for the time-being.  * Probably should be enabled by -v at boot. 					printf("Autostarted %s\n", dp->d_name);  */
+name|printf
+argument_list|(
+literal|"UFS autostarted EA %s\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|dp
@@ -2907,6 +2919,7 @@ condition|(
 operator|!
 name|uele
 condition|)
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
 name|ENOENT
@@ -3366,6 +3379,7 @@ block|{
 case|case
 name|EXTATTR_NAMESPACE_SYSTEM
 case|:
+comment|/* Potentially should be: return (EPERM); */
 return|return
 operator|(
 name|suser_xxx
@@ -3650,6 +3664,7 @@ condition|(
 operator|!
 name|attribute
 condition|)
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
 name|ENOENT
@@ -3879,6 +3894,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
 name|ENOENT
@@ -3913,6 +3929,7 @@ operator|->
 name|i_gen
 argument_list|)
 expr_stmt|;
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
 name|ENOENT
@@ -4343,6 +4360,7 @@ condition|(
 operator|!
 name|attribute
 condition|)
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
 name|ENOENT
@@ -4839,6 +4857,7 @@ condition|(
 operator|!
 name|attribute
 condition|)
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 return|return
 operator|(
 name|ENOENT
@@ -5053,6 +5072,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
 name|ENOENT
@@ -5087,6 +5107,7 @@ operator|->
 name|i_gen
 argument_list|)
 expr_stmt|;
+comment|/* XXX: ENOENT here will eventually be ENOATTR. */
 name|error
 operator|=
 name|ENOENT
