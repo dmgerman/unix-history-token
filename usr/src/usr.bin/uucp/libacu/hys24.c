@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hys24.c	1.5	(Berkeley) %G%"
+literal|"@(#)hys24.c	1.6	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -871,7 +871,7 @@ decl_stmt|;
 name|int
 name|fff
 init|=
-name|FREAD
+literal|1
 decl_stmt|;
 if|if
 condition|(
