@@ -1924,6 +1924,15 @@ modifier|*
 name|proxy_entry
 decl_stmt|;
 comment|/* Copy command line into a buffer */
+name|cmd
+operator|+=
+name|strspn
+argument_list|(
+name|cmd
+argument_list|,
+literal|" \t"
+argument_list|)
+expr_stmt|;
 name|cmd_len
 operator|=
 name|strlen
