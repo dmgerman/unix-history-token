@@ -275,7 +275,7 @@ name|timevalclear
 parameter_list|(
 name|tvp
 parameter_list|)
-value|(tvp)->tv_sec = (tvp)->tv_usec = 0
+value|((tvp)->tv_sec = (tvp)->tv_usec = 0)
 end_define
 
 begin_define
@@ -333,7 +333,7 @@ name|timerclear
 parameter_list|(
 name|tvp
 parameter_list|)
-value|(tvp)->tv_sec = (tvp)->tv_usec = 0
+value|((tvp)->tv_sec = (tvp)->tv_usec = 0)
 end_define
 
 begin_define
