@@ -24,21 +24,17 @@ file|<sys/libkern.h>
 end_include
 
 begin_comment
-comment|/*  * ffs -- vax ffs instruction  */
+comment|/*  * Find First Set bit  */
 end_comment
 
 begin_function
 name|int
 name|ffs
 parameter_list|(
-name|mask
-parameter_list|)
-specifier|register
 name|int
 name|mask
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|bit
 decl_stmt|;
