@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.2	81/05/12	*/
+comment|/*	lpr.c	4.3	81/05/19	*/
 end_comment
 
 begin_comment
@@ -814,6 +814,7 @@ case|:
 comment|/* specifiy printer name */
 name|printer
 operator|=
+operator|&
 name|arg
 index|[
 literal|2
