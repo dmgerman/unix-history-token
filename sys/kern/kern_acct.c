@@ -362,7 +362,7 @@ name|td
 decl_stmt|;
 name|struct
 name|acct_args
-comment|/* { 		syscallarg(char *) path; 	} */
+comment|/* { 		char *path; 	} */
 modifier|*
 name|uap
 decl_stmt|;

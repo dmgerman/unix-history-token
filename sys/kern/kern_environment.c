@@ -202,7 +202,7 @@ name|td
 decl_stmt|;
 name|struct
 name|kenv_args
-comment|/* { 		syscallarg(int) what; 		syscallarg(const char *) name; 		syscallarg(char *) value; 		syscallarg(int) len; 	} */
+comment|/* { 		int what; 		const char *name; 		char *value; 		int len; 	} */
 modifier|*
 name|uap
 decl_stmt|;

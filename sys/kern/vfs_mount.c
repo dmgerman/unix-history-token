@@ -1325,7 +1325,7 @@ name|td
 decl_stmt|;
 name|struct
 name|nmount_args
-comment|/* { 		syscallarg(struct iovec *) iovp; 		syscallarg(unsigned int) iovcnt; 		syscallarg(int) flags; 	} */
+comment|/* { 		struct iovec *iovp; 		unsigned int iovcnt; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -3729,7 +3729,7 @@ name|td
 decl_stmt|;
 name|struct
 name|mount_args
-comment|/* { 		syscallarg(char *) type; 		syscallarg(char *) path; 		syscallarg(int) flags; 		syscallarg(caddr_t) data; 	} */
+comment|/* { 		char *type; 		char *path; 		int flags; 		caddr_t data; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -5650,7 +5650,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|unmount_args
-comment|/* { 		syscallarg(char *) path; 		syscallarg(int) flags; 	} */
+comment|/* { 		char *path; 		int flags; 	} */
 modifier|*
 name|uap
 decl_stmt|;

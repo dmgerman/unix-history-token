@@ -2771,7 +2771,7 @@ name|td
 decl_stmt|;
 name|struct
 name|execve_args
-comment|/* { 		syscallarg(char *) fname; 		syscallarg(char **) argv; 		syscallarg(char **) envv; 	} */
+comment|/* { 		char *fname; 		char **argv; 		char **envv; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -2858,7 +2858,7 @@ name|td
 decl_stmt|;
 name|struct
 name|__mac_execve_args
-comment|/* { 		syscallarg(char *) fname; 		syscallarg(char **) argv; 		syscallarg(char **) envv; 		syscallarg(struct mac *) mac_p; 	} */
+comment|/* { 		char *fname; 		char **argv; 		char **envv; 		struct mac *mac_p; 	} */
 modifier|*
 name|uap
 decl_stmt|;
