@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subs.c	5.1 (Berkeley) %G%"
+literal|"@(#)subs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,6 +326,9 @@ argument_list|(
 literal|"readc"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WHY_IS_THIS_HARDWIRED_IN_HERE
 if|if
 condition|(
 name|c
@@ -335,6 +338,8 @@ condition|)
 name|getout
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c
