@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.85
+literal|3.86
 operator|%
 name|G
 operator|%
@@ -1714,7 +1714,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* if we have had errors sofar, drop out now */
+comment|/* if we have had errors sofar, arrange a meaningful exit stat */
 end_comment
 
 begin_if
@@ -1778,8 +1778,20 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	**  If we don't want to wait around for actual delivery, this 	**  is a good time to fork off. 	**	We have examined what we can without doing actual 	**		delivery, so we will inform our caller of 	**		whatever we can now. 	**	Since the parent process will go away immediately, 	**		the child will be caught by init. 	**	If the fork fails, we will just continue in the 	**		parent; this is perfectly safe, albeit 	**		slower than it must be. 	*/
+comment|/* 	**  If we don't want to wait around for actual delivery, this 	**  is a good time to fork off. 	**	We have examined what we can without doing actual 	**		delivery, so we will inform our caller of 	**		whatever we can now. 	**	Since the parent process will go away immediately, 	**		the child will be caught by init. 	**	If the fork fails, we will just continue in the 	**		parent; this is perfectly safe, albeit 	**		slower than it must be. 	**	If we have errors sofar, this seems like a good time 	**		to dispose of them. 	*/
 end_comment
+
+begin_if
+if|if
+condition|(
+name|ExitStat
+operator|!=
+name|EX_OK
+condition|)
+name|finis
+argument_list|()
+expr_stmt|;
+end_if
 
 begin_if
 if|if
