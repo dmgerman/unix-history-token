@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.29	83/06/30	*/
+comment|/*	raw_usrreq.c	4.30	83/06/30	*/
 end_comment
 
 begin_include
@@ -1020,9 +1020,6 @@ name|ENOTCONN
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
 comment|/* 		 * Check for routing.  If new foreign address, or 		 * no route presently in use, try to allocate new 		 * route.  On failure, just hand packet to output 		 * routine anyway in case it can handle it. 		 */
 if|if
 condition|(
@@ -1097,8 +1094,6 @@ name|rcb_route
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|error
 operator|=
 call|(
