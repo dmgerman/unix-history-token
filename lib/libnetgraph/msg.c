@@ -605,6 +605,14 @@ name|token
 operator|=
 name|gMsgId
 expr_stmt|;
+name|binary
+operator|->
+name|header
+operator|.
+name|version
+operator|=
+name|NG_VERSION
+expr_stmt|;
 if|if
 condition|(
 name|NgDeliverMsg
