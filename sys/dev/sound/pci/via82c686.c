@@ -2199,7 +2199,7 @@ name|dev
 argument_list|,
 name|VIA_ACLINKCTRL
 argument_list|,
-literal|0
+name|VIA_ACLINK_EN
 argument_list|,
 literal|1
 argument_list|)
@@ -2217,6 +2217,8 @@ name|dev
 argument_list|,
 name|VIA_ACLINKCTRL
 argument_list|,
+name|VIA_ACLINK_EN
+operator||
 name|VIA_ACLINK_NRST
 argument_list|,
 literal|1
@@ -2225,7 +2227,7 @@ expr_stmt|;
 comment|/* Assert high */
 name|DELAY
 argument_list|(
-literal|1
+literal|5
 argument_list|)
 expr_stmt|;
 comment|/* Wait T_rst2clk */
@@ -2235,12 +2237,72 @@ name|dev
 argument_list|,
 name|VIA_ACLINKCTRL
 argument_list|,
-literal|0
+name|VIA_ACLINK_EN
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Assert low */
+block|}
+else|else
+block|{
+comment|/* Warm reset */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|VIA_ACLINKCTRL
+argument_list|,
+name|VIA_ACLINK_EN
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Force no sync */
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|VIA_ACLINKCTRL
+argument_list|,
+name|VIA_ACLINK_EN
+operator||
+name|VIA_ACLINK_SYNC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Sync */
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+comment|/* Wait T_sync_high */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|VIA_ACLINKCTRL
+argument_list|,
+name|VIA_ACLINK_EN
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Force no sync */
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+comment|/* Wait T_sync2clk */
+block|}
 comment|/* Power everything up */
 name|pci_write_config
 argument_list|(
@@ -2291,7 +2353,6 @@ argument_list|(
 literal|5000
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|via
 operator|->
