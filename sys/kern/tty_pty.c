@@ -2469,16 +2469,19 @@ literal|0
 condition|)
 return|return
 operator|(
-name|seltrue
-argument_list|(
-name|dev
-argument_list|,
 name|events
-argument_list|,
-name|td
-argument_list|)
-operator||
+operator|&
+operator|(
 name|POLLHUP
+operator||
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator||
+name|POLLOUT
+operator||
+name|POLLWRNORM
+operator|)
 operator|)
 return|;
 comment|/* 	 * Need to block timeouts (ttrstart). 	 */
