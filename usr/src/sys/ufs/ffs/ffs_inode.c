@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -795,16 +795,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-name|vnode_pager_setsize
-argument_list|(
-name|ovp
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|length
-argument_list|)
-expr_stmt|;
 name|fs
 operator|=
 name|oip
@@ -910,6 +900,16 @@ operator|->
 name|i_size
 operator|=
 name|length
+expr_stmt|;
+name|vnode_pager_setsize
+argument_list|(
+name|ovp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|length
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -1111,6 +1111,16 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+name|vnode_pager_setsize
+argument_list|(
+name|ovp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|length
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Calculate index into inode's block list of 	 * last direct and indirect blocks (if any) 	 * which we want to keep.  Lastblock is -1 when 	 * the file is truncated to 0. 	 */
 name|lastblock
 operator|=
