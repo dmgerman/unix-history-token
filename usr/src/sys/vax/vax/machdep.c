@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.19	81/02/27	*/
+comment|/*	machdep.c	4.20	81/02/28	*/
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.19) 81/02/27 17:44:47 \n"
+literal|"VM/UNIX (Berkeley Version 4.20) 81/02/28 14:46:46 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,7 +548,7 @@ name|nswapmap
 operator|=
 name|nproc
 operator|*
-literal|4
+literal|2
 argument_list|)
 expr_stmt|;
 name|valloc
@@ -558,7 +558,7 @@ argument_list|,
 expr|struct
 name|map
 argument_list|,
-literal|25
+name|ARGMAPSIZE
 argument_list|)
 expr_stmt|;
 name|valloc
@@ -697,7 +697,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize memory allocator and 	 * related maps. 	 */
+comment|/* 	 * Initialize memory allocator and swap 	 * and user page table maps. 	 * 	 * THE USER PAGE TABLE MAP IS CALLED ``kernelmap'' 	 * WHICH IS A VERY UNDESCRIPTIVE AND INCONSISTENT NAME. 	 */
 name|meminit
 argument_list|(
 name|unixsize
@@ -719,13 +719,17 @@ name|maxmem
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mfree
+name|rminit
 argument_list|(
 name|kernelmap
 argument_list|,
 name|USRPTSIZE
 argument_list|,
 literal|1
+argument_list|,
+literal|"usrpt"
+argument_list|,
+name|nproc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Configure the system. 	 */
