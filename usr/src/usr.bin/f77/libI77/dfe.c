@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dfe[] = "@(#)dfe.c	1.3";  *  * direct formatted external i/o  */
+comment|/* char id_dfe[] = "@(#)dfe.c	1.4";  *  * direct formatted external i/o  */
 end_comment
 
 begin_include
@@ -736,9 +736,29 @@ argument_list|(
 name|cf
 argument_list|)
 condition|)
+name|rewind
+argument_list|(
+name|cf
+argument_list|)
+expr_stmt|;
+else|else
+name|fseek
+argument_list|(
+name|cf
+argument_list|,
+operator|(
+name|long
+operator|)
+name|cursor
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|F_ERBREC
+name|cursor
+operator|=
+literal|0
 operator|)
 return|;
 block|}
@@ -764,11 +784,12 @@ operator|)
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-name|F_ERBREC
-operator|)
-return|;
+name|cursor
+operator|=
+operator|-
+name|recpos
+expr_stmt|;
+comment|/* BOR */
 name|n
 operator|=
 name|reclen
