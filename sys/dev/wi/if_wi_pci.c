@@ -365,6 +365,16 @@ literal|"US Robotics 2415"
 block|}
 block|,
 block|{
+literal|0x4033
+block|,
+literal|0x7001
+block|,
+name|WI_BUS_PCI_PLX
+block|,
+literal|"Addtron AWA-100 PCI"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
