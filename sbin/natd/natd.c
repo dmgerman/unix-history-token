@@ -877,7 +877,7 @@ argument_list|,
 name|logFacility
 argument_list|)
 expr_stmt|;
-comment|/*  * Check that valid aliasing address has been given.  */
+comment|/*  * If not doing the transparent proxying only,  * check that valid aliasing address has been given.  */
 if|if
 condition|(
 name|aliasAddr
@@ -889,6 +889,18 @@ operator|&&
 name|ifName
 operator|==
 name|NULL
+operator|&&
+operator|!
+operator|(
+name|PacketAliasSetMode
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|&
+name|PKT_ALIAS_PROXY_ONLY
+operator|)
 condition|)
 name|errx
 argument_list|(
