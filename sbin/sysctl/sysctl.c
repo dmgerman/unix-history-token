@@ -136,8 +136,6 @@ end_include
 begin_decl_stmt
 specifier|static
 name|int
-name|Aflag
-decl_stmt|,
 name|aflag
 decl_stmt|,
 name|bflag
@@ -146,9 +144,9 @@ name|Nflag
 decl_stmt|,
 name|nflag
 decl_stmt|,
-name|wflag
+name|oflag
 decl_stmt|,
-name|Xflag
+name|xflag
 decl_stmt|;
 end_decl_stmt
 
@@ -239,17 +237,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bNn] variable ..."
+literal|"usage: sysctl [-bNnox] variable[=value] ..."
 argument_list|,
-literal|"       sysctl [-bNn] -w variable=value ..."
-argument_list|,
-literal|"       sysctl [-bNn] -a"
-argument_list|,
-literal|"       sysctl [-bNn] -A"
-argument_list|,
-literal|"       sysctl [-bNn] -X"
+literal|"       sysctl [-bNnox] -a"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -301,7 +293,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AabNnwX"
+literal|"AabNnowxX"
 argument_list|)
 operator|)
 operator|!=
@@ -317,7 +309,10 @@ block|{
 case|case
 literal|'A'
 case|:
-name|Aflag
+comment|/* compatibility */
+name|aflag
+operator|=
+name|oflag
 operator|=
 literal|1
 expr_stmt|;
@@ -355,19 +350,34 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'w'
+literal|'o'
 case|:
-name|wflag
+name|oflag
 operator|=
 literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'w'
+case|:
+comment|/* compatibility */
+comment|/* ignored */
+break|break;
+case|case
 literal|'X'
 case|:
-name|Xflag
+comment|/* compatibility */
+name|aflag
 operator|=
-name|Aflag
+name|xflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|xflag
 operator|=
 literal|1
 expr_stmt|;
@@ -388,30 +398,20 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|wflag
-operator|&&
-operator|(
-name|Aflag
-operator|||
-name|aflag
-operator|)
-operator|)
-operator|||
-operator|(
 name|Nflag
 operator|&&
 name|nflag
-operator|)
 condition|)
 name|usage
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|Aflag
-operator|||
 name|aflag
+operator|&&
+name|argc
+operator|==
+literal|0
 condition|)
 name|exit
 argument_list|(
@@ -543,18 +543,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|wflag
-condition|)
-name|errx
-argument_list|(
-literal|2
-argument_list|,
-literal|"must specify -w to set variables"
-argument_list|)
-expr_stmt|;
 operator|*
 name|strchr
 argument_list|(
@@ -592,16 +580,6 @@ name|strlen
 argument_list|(
 name|cp
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|wflag
-condition|)
-name|usage
-argument_list|()
 expr_stmt|;
 block|}
 name|len
@@ -653,8 +631,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|wflag
+name|newval
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -2353,7 +2332,10 @@ default|default:
 if|if
 condition|(
 operator|!
-name|Aflag
+name|oflag
+operator|&&
+operator|!
+name|xflag
 condition|)
 return|return
 operator|(
@@ -2398,7 +2380,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Xflag
+name|xflag
 operator|||
 name|p
 operator|<
@@ -2407,6 +2389,13 @@ operator|+
 literal|16
 condition|)
 continue|continue;
+if|if
+condition|(
+name|len
+operator|==
+literal|16
+condition|)
+break|break;
 name|printf
 argument_list|(
 literal|"..."
