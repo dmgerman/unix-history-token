@@ -665,12 +665,6 @@ operator|==
 name|ENOENT
 operator|)
 operator|)
-operator|||
-name|statbuf
-operator|.
-name|st_size
-operator|==
-literal|0
 condition|)
 block|{
 if|if
