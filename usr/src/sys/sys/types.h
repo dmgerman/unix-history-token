@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|major
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)(((unsigned)(x)>>8)&0377))
+value|((int)(((unsigned)(x)>> 8)&0xff))
 end_define
 
 begin_comment
@@ -53,7 +53,7 @@ name|minor
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)((x)&0377))
+value|((int)((x)&0xff))
 end_define
 
 begin_comment
@@ -513,6 +513,71 @@ name|p
 parameter_list|)
 value|bzero((char *)(p), sizeof(*(p)))
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  * Forward structure declarations for function prototypes.  * We include the common structures that cross subsystem boundaries here;  * others are mostly used in the same place that the structure is defined.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pgrp
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ucred
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|rusage
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|file
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|buf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
