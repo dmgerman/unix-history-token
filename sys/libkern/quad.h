@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LIBKERN_QUAD_H
+name|_LIBKERN_QUAD_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_LIBKERN_QUAD_H
+name|_LIBKERN_QUAD_H_
 end_define
 
 begin_comment
@@ -154,6 +154,36 @@ parameter_list|)
 value|((x)<< HALF_BITS)
 end_define
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|qshift_t
+typedef|;
+end_typedef
+
+begin_function_decl
+name|quad_t
+name|__ashldi3
+parameter_list|(
+name|quad_t
+parameter_list|,
+name|qshift_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|quad_t
+name|__ashrdi3
+parameter_list|(
+name|quad_t
+parameter_list|,
+name|qshift_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|quad_t
 name|__divdi3
@@ -163,6 +193,17 @@ name|a
 parameter_list|,
 name|quad_t
 name|b
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|quad_t
+name|__lshrdi3
+parameter_list|(
+name|quad_t
+parameter_list|,
+name|qshift_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -236,54 +277,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|qshift_t
-typedef|;
-end_typedef
-
-begin_function_decl
-name|quad_t
-name|__ashldi3
-parameter_list|(
-name|quad_t
-parameter_list|,
-name|qshift_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|quad_t
-name|__ashrdi3
-parameter_list|(
-name|quad_t
-parameter_list|,
-name|qshift_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|quad_t
-name|__lshrdi3
-parameter_list|(
-name|quad_t
-parameter_list|,
-name|qshift_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _LIBKERN_QUAD_H */
+comment|/* !_LIBKERN_QUAD_H_ */
 end_comment
 
 end_unit
