@@ -245,6 +245,11 @@ comment|/* this cmd refers to a pipe */
 name|do_sort
 decl_stmt|,
 comment|/* field to sort results (0=no) */
+name|do_dynamic
+init|=
+literal|1
+decl_stmt|,
+comment|/* display dynamic rules */
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -4614,6 +4619,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|do_dynamic
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|seen
@@ -4716,6 +4725,8 @@ block|}
 comment|/*          * show dynamic rules          */
 if|if
 condition|(
+name|do_dynamic
+operator|&&
 name|num
 operator|*
 sizeof|sizeof
@@ -14326,7 +14337,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"s:afqtvN"
+literal|"s:adfqtvN"
 argument_list|)
 operator|)
 operator|!=
@@ -14356,6 +14367,14 @@ case|:
 name|do_acct
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|do_dynamic
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
