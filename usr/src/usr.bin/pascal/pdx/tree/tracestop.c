@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tracestop.c	5.1 (Berkeley) %G%"
+literal|"@(#)tracestop.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -867,6 +867,15 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|cmd
+operator|=
+name|cmd
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|exp
