@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -549,7 +549,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Statistics/profiling clock interrupt.  Clear the interrupt and  * compute a new interval.  *  * DO THIS INLINE IN locore.s?  */
+comment|/*  * Statistics/profiling clock interrupt.  Compute a new interval.  * Interrupt has already been cleared.  *  * DO THIS INLINE IN locore.s?  */
 end_comment
 
 begin_function
@@ -579,10 +579,6 @@ name|r
 decl_stmt|,
 name|var
 decl_stmt|;
-specifier|register
-name|u_char
-name|discard
-decl_stmt|;
 name|clk
 operator|=
 operator|(
@@ -596,13 +592,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|discard
-operator|=
-name|clk
-operator|->
-name|clk_msb3
-expr_stmt|;
-comment|/* clear interrupt */
 name|var
 operator|=
 name|statvar
