@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.16	%G%"
+literal|"@(#)main.c	2.17	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,12 +44,6 @@ name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|int
-name|f77_dump_flag
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -702,6 +696,17 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_dbsubc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* dbsubc is non-zero if -lg was specified to ld */
+end_comment
+
 begin_macro
 name|f77_abort
 argument_list|(
@@ -755,6 +760,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* don't block */
+comment|/* see if we want a core dump: 		first line checks for signals like hangup - don't dump then. 		second line checks if -lg specified to ld (e.g. by saying 			-g to f77) and checks the f77_dump_flag var. */
 name|core_dump
 operator|=
 operator|(
@@ -770,7 +776,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|f77_dump_flag
+name|_dbsubc
 operator|&&
 operator|(
 name|first_char
