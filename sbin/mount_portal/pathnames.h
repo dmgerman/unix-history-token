@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_TMPPORTAL
-value|"/tmp/portalXXXXXX"
+value|"/tmp/portalXXXXXXXXXX"
 end_define
 
 begin_comment
