@@ -1394,7 +1394,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * Initiate I/O.  Bump the vm_page_t->busy counter and 	 * mark the pages read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 */
+comment|/* 	 * Initiate I/O.  Bump the vm_page_t->busy counter and 	 * mark the pages read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 * 	 * NOTE! mc[i]->dirty may be partial or fragmented due to an 	 * edge case with file fragments. 	 */
 for|for
 control|(
 name|i
@@ -1419,18 +1419,9 @@ operator|->
 name|valid
 operator|==
 name|VM_PAGE_BITS_ALL
-operator|&&
-name|mc
-index|[
-name|i
-index|]
-operator|->
-name|dirty
-operator|==
-name|VM_PAGE_BITS_ALL
 argument_list|,
 operator|(
-literal|"vm_pageout_flush page %p index %d/%d: partially dirty page"
+literal|"vm_pageout_flush page %p index %d/%d: partially invalid page"
 operator|,
 name|mc
 index|[
