@@ -488,7 +488,7 @@ name|madt
 operator|+
 name|madt
 operator|->
-name|header
+name|Header
 operator|.
 name|Length
 expr_stmt|;
