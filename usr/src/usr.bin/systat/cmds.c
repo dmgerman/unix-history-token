@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.8 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"systat.h"
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -41,32 +53,45 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_macro
-name|command
-argument_list|(
-argument|cmd
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
-begin_decl_stmt
+begin_include
+include|#
+directive|include
+file|"systat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_function
+name|void
+name|command
+parameter_list|(
+name|cmd
+parameter_list|)
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 specifier|register
 name|struct
 name|cmdtab
 modifier|*
 name|p
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 name|int
 name|interval
@@ -159,7 +184,9 @@ operator|==
 literal|0
 condition|)
 name|die
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -385,7 +412,9 @@ operator|=
 name|interval
 expr_stmt|;
 name|display
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|status
 argument_list|()
@@ -551,7 +580,9 @@ name|labels
 argument_list|()
 expr_stmt|;
 name|display
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|status
 argument_list|()
@@ -596,7 +627,7 @@ name|omask
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -768,12 +799,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|status
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|error
 argument_list|(
@@ -787,19 +816,24 @@ name|naptime
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
 name|suspend
-parameter_list|()
-block|{
+parameter_list|(
+name|signo
+parameter_list|)
 name|int
-name|oldmask
+name|signo
 decl_stmt|;
+block|{
 specifier|extern
 name|sig_t
 name|sigtstpdfl
+decl_stmt|;
+name|int
+name|oldmask
 decl_stmt|;
 name|alarm
 argument_list|(
@@ -822,6 +856,9 @@ expr_stmt|;
 name|nocrmode
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -849,6 +886,9 @@ argument_list|(
 name|oldmask
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -877,22 +917,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|prefix
-argument_list|(
+parameter_list|(
 name|s1
-argument_list|,
+parameter_list|,
 name|s2
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
