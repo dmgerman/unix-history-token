@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -315,6 +321,13 @@ name|int
 name|ecode
 parameter_list|)
 block|{
+name|proc_reparent
+argument_list|(
+name|curproc
+argument_list|,
+name|initproc
+argument_list|)
+expr_stmt|;
 name|exit1
 argument_list|(
 name|curproc
