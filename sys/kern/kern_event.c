@@ -3662,6 +3662,12 @@ expr|struct
 name|kevent
 argument_list|)
 expr_stmt|;
+name|st
+operator|->
+name|st_mode
+operator|=
+name|S_IFIFO
+expr_stmt|;
 return|return
 operator|(
 literal|0
