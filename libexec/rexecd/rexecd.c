@@ -1195,6 +1195,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|setlogin
+argument_list|(
+name|pwd
+operator|->
+name|pw_name
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|setgid
 argument_list|(
 operator|(
