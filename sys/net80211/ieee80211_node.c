@@ -2530,21 +2530,6 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* best/max rate preferred if signal level close enough XXX */
-name|maxa
-operator|=
-name|maxrate
-argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-name|maxb
-operator|=
-name|maxrate
-argument_list|(
-name|b
-argument_list|)
-expr_stmt|;
 name|rssia
 operator|=
 name|ic
@@ -2565,10 +2550,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|maxa
-operator|!=
-name|maxb
-operator|&&
 name|abs
 argument_list|(
 name|rssib
@@ -2577,6 +2558,28 @@ name|rssia
 argument_list|)
 operator|<
 literal|5
+condition|)
+block|{
+comment|/* best/max rate preferred if signal level close enough XXX */
+name|maxa
+operator|=
+name|maxrate
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|maxb
+operator|=
+name|maxrate
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxa
+operator|!=
+name|maxb
 condition|)
 return|return
 name|maxa
@@ -2626,6 +2629,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 comment|/* all things being equal, use signal level */
 return|return
 name|rssia
