@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.27 1997/03/24 11:52:26 bde Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.28 1997/04/09 16:53:39 bde Exp $  */
 end_comment
 
 begin_comment
@@ -189,6 +189,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
 end_include
 
 begin_comment
@@ -598,6 +604,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vm_zone_t
+name|pipe_zone
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The pipe system call for the DTYPE_PIPE type of pipes  */
 end_comment
@@ -663,21 +675,39 @@ name|fd
 decl_stmt|,
 name|error
 decl_stmt|;
-name|rpipe
+if|if
+condition|(
+name|pipe_zone
+operator|==
+name|NULL
+condition|)
+name|pipe_zone
 operator|=
-name|malloc
+name|zinit
 argument_list|(
+literal|"PIPE"
+argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
-name|rpipe
+expr|struct
+name|pipe
 argument_list|)
 argument_list|,
-name|M_TEMP
+literal|0
 argument_list|,
-name|M_WAITOK
+name|ZONE_WAIT
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
+name|rpipe
+operator|=
+name|zalloc
+argument_list|(
+name|pipe_zone
+argument_list|)
+expr_stmt|;
+comment|/* 	rpipe = malloc( sizeof (*rpipe), M_TEMP, M_WAITOK); */
 name|pipeinit
 argument_list|(
 name|rpipe
@@ -689,19 +719,12 @@ name|pipe_state
 operator||=
 name|PIPE_DIRECTOK
 expr_stmt|;
+comment|/* 	wpipe = malloc( sizeof (*wpipe), M_TEMP, M_WAITOK); */
 name|wpipe
 operator|=
-name|malloc
+name|zalloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-operator|*
-name|wpipe
-argument_list|)
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_WAITOK
+name|pipe_zone
 argument_list|)
 expr_stmt|;
 name|pipeinit
@@ -4829,13 +4852,14 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|free
+name|zfree
 argument_list|(
-name|cpipe
+name|pipe_zone
 argument_list|,
-name|M_TEMP
+name|cpipe
 argument_list|)
 expr_stmt|;
+comment|/* 		free(cpipe, M_TEMP); */
 block|}
 block|}
 end_function
