@@ -2749,7 +2749,7 @@ name|ans
 operator|.
 name|la_errno
 operator|=
-name|EACCES
+name|EAGAIN
 expr_stmt|;
 else|else
 block|{
@@ -2891,7 +2891,7 @@ name|ans
 operator|.
 name|la_errno
 operator|=
-name|EACCES
+name|EAGAIN
 expr_stmt|;
 else|else
 block|{
