@@ -18,14 +18,61 @@ value|0
 end_define
 
 begin_comment
-comment|/* ZMAGIC files start at offset 0.  Does not apply to QMAGIC files. */
+comment|/* A ZMAGIC file can start at almost any address if it is a kernel. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TEXT_START_ADDR
-value|0
+value|dont use TEXT_START_ADDR
+end_define
+
+begin_comment
+comment|/* The following definitions are essentially the same as the ones in    FreeBSD's<sys/imgact_aout.h>.  They override gdb's versions, which    don't work for kernels.  See ../include/aout/aout64.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|N_TXTADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(N_GETMAGIC(x) == OMAGIC || N_GETMAGIC(x) == NMAGIC \ 	 || N_GETMAGIC(x) == ZMAGIC \ 	 ? ((x).a_entry< (x).a_text ? 0 : (x).a_entry& ~TARGET_PAGE_SIZE) \ 	 : TARGET_PAGE_SIZE + sizeof(struct external_exec))
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_TXTOFF
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(N_GETMAGIC(x) == ZMAGIC ? TARGET_PAGE_SIZE \ 	 : (N_GETMAGIC(x) == QMAGIC || N_GETMAGIC_NET(x) == ZMAGIC) ? 0 \ 	 : sizeof(struct external_exec))
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_TXTSIZE
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).a_text)
+end_define
+
+begin_define
+define|#
+directive|define
+name|N_GETMAGIC
+parameter_list|(
+name|exec
+parameter_list|)
+define|\
+value|((exec).a_info& 0xffff)
 end_define
 
 begin_define
