@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	5.4 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,52 +525,52 @@ name|setnsellength
 block|}
 block|,
 block|{
-literal|"llc0"
+literal|"link0"
 block|,
-name|IFF_LLC0
+name|IFF_LINK0
 block|,
 name|setifflags
 block|}
 block|,
 block|{
-literal|"-llc0"
+literal|"-link0"
 block|,
 operator|-
-name|IFF_LLC0
+name|IFF_LINK0
 block|,
 name|setifflags
 block|}
 block|,
 block|{
-literal|"llc1"
+literal|"link1"
 block|,
-name|IFF_LLC1
+name|IFF_LINK1
 block|,
 name|setifflags
 block|}
 block|,
 block|{
-literal|"-llc1"
+literal|"-link1"
 block|,
 operator|-
-name|IFF_LLC1
+name|IFF_LINK1
 block|,
 name|setifflags
 block|}
 block|,
 block|{
-literal|"llc2"
+literal|"link2"
 block|,
-name|IFF_LLC2
+name|IFF_LINK2
 block|,
 name|setifflags
 block|}
 block|,
 block|{
-literal|"-llc2"
+literal|"-link2"
 block|,
 operator|-
-name|IFF_LLC2
+name|IFF_LINK2
 block|,
 name|setifflags
 block|}
@@ -1930,7 +1930,7 @@ define|#
 directive|define
 name|IFFBITS
 define|\
-value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP\ \11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LLC0\16LLC1\16LLC2"
+value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP\ \11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LINK0\16LINK1\16LINK2"
 end_define
 
 begin_comment
