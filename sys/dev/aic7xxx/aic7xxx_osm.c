@@ -6870,6 +6870,9 @@ operator|=
 operator|(
 name|bus_addr_t
 operator|)
+operator|(
+name|vm_offset_t
+operator|)
 name|csio
 operator|->
 name|data_ptr
