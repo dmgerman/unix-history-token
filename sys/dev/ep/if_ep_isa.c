@@ -1671,6 +1671,13 @@ argument_list|,
 name|ep_isa_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|ep_detach
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
