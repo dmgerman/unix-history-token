@@ -596,12 +596,9 @@ case|:
 case|case
 name|ARPOP_REVREPLY
 case|:
-name|type
+name|atype
 operator|=
-name|htons
-argument_list|(
 name|ARCTYPE_REVARP
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -611,12 +608,9 @@ case|case
 name|ARPOP_REPLY
 case|:
 default|default:
-name|type
+name|atype
 operator|=
-name|htons
-argument_list|(
 name|ARCTYPE_ARP
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
