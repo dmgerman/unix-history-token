@@ -603,10 +603,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  *  This command is provided since POSIX decided to standardize  *  the Korn shell fc command.  Oh well...  */
-end_comment
-
 begin_function
 name|int
 name|histcmd
@@ -677,7 +673,6 @@ decl_stmt|,
 modifier|*
 name|repl
 decl_stmt|;
-comment|/* ksh "fc old=new" crap */
 specifier|static
 name|int
 name|active
