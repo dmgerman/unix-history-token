@@ -1748,9 +1748,9 @@ name|msgbuf
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 operator|<
 literal|0
-operator|)
 condition|)
 block|{
 name|syslog
