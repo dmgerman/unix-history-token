@@ -767,10 +767,10 @@ comment|/* track mode */
 define|#
 directive|define
 name|CDR_TMODE_AUDIO
-value|0x01
+value|0x00
 define|#
 directive|define
-name|CDR_TMODE_INCR_DATA
+name|CDR_TMODE_AUDIO_PREEMP
 value|0x01
 define|#
 directive|define
@@ -1137,24 +1137,19 @@ value|0x0004
 comment|/* this unit is writing */
 define|#
 directive|define
-name|F_TRACK_PREP
-value|0x0010
-comment|/* track should be prep'ed */
-define|#
-directive|define
-name|F_TRACK_PREPED
-value|0x0020
-comment|/* track has been prep'ed */
-define|#
-directive|define
-name|F_DISK_PREPED
-value|0x0040
-comment|/* disk has been prep'ed */
-define|#
-directive|define
 name|F_WRITTEN
-value|0x0080
+value|0x0008
 comment|/* medium has been written to */
+define|#
+directive|define
+name|F_DISK_OPEN
+value|0x0010
+comment|/* disk open for writing */
+define|#
+directive|define
+name|F_TRACK_OPEN
+value|0x0020
+comment|/* track open for writing */
 name|int32_t
 name|refcnt
 decl_stmt|;
@@ -1244,19 +1239,10 @@ name|u_int32_t
 name|block_size
 decl_stmt|;
 comment|/* blocksize currently used */
-name|u_int8_t
-name|dummy
-decl_stmt|;
-comment|/* use dummy writes */
 name|u_int32_t
 name|next_writeable_addr
 decl_stmt|;
 comment|/* next writable address */
-name|struct
-name|wormio_prepare_track
-name|preptrack
-decl_stmt|;
-comment|/* scratch region */
 name|struct
 name|devstat
 modifier|*
