@@ -4844,6 +4844,10 @@ operator|||
 name|cmd
 operator|==
 name|PRC_UNREACH_PORT
+operator|||
+name|cmd
+operator|==
+name|PRC_TIMXCEED_INTRANS
 operator|)
 operator|&&
 name|ip
