@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.3 2000/06/05 13:12:42 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.3 2000/06/05 13:12:42 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -149,14 +149,14 @@ begin_define
 define|#
 directive|define
 name|SIOCADAFR
-value|_IOW('r', 60, struct frentry)
+value|_IOW('r', 60, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCRMAFR
-value|_IOW('r', 61, struct frentry)
+value|_IOW('r', 61, struct frentry *)
 end_define
 
 begin_define
@@ -177,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGETFS
-value|_IOR('r', 64, struct friostat)
+value|_IOWR('r', 64, struct friostat *)
 end_define
 
 begin_define
@@ -198,14 +198,14 @@ begin_define
 define|#
 directive|define
 name|SIOCADIFR
-value|_IOW('r', 67, struct frentry)
+value|_IOW('r', 67, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCRMIFR
-value|_IOW('r', 68, struct frentry)
+value|_IOW('r', 68, struct frentry *)
 end_define
 
 begin_define
@@ -219,14 +219,14 @@ begin_define
 define|#
 directive|define
 name|SIOCINAFR
-value|_IOW('r', 70, struct frentry)
+value|_IOW('r', 70, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCINIFR
-value|_IOW('r', 71, struct frentry)
+value|_IOW('r', 71, struct frentry *)
 end_define
 
 begin_define
@@ -247,35 +247,70 @@ begin_define
 define|#
 directive|define
 name|SIOCFRZST
-value|_IOWR('r', 74, struct friostat)
+value|_IOWR('r', 74, struct friostat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCZRLST
-value|_IOWR('r', 75, struct frentry)
+value|_IOWR('r', 75, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHW
-value|_IOWR('r', 76, struct fr_info)
+value|_IOWR('r', 76, struct fr_info *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHR
-value|_IOWR('r', 77, struct fr_info)
+value|_IOWR('r', 77, struct fr_info *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCATHST
-value|_IOWR('r', 78, struct fr_authstat)
+value|_IOWR('r', 78, struct fr_authstat *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTLCK
+value|_IOWR('r', 79, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTPUT
+value|_IOWR('r', 80, struct ipstate_save *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTGET
+value|_IOWR('r', 81, struct ipstate_save *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTGSZ
+value|_IOWR('r', 82, struct natget *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGFRST
+value|_IOWR('r', 83, struct ipfrstat *)
 end_define
 
 begin_else
@@ -287,14 +322,14 @@ begin_define
 define|#
 directive|define
 name|SIOCADAFR
-value|_IOW(r, 60, struct frentry)
+value|_IOW(r, 60, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCRMAFR
-value|_IOW(r, 61, struct frentry)
+value|_IOW(r, 61, struct frentry *)
 end_define
 
 begin_define
@@ -315,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGETFS
-value|_IOR(r, 64, struct friostat)
+value|_IOWR(r, 64, struct friostat *)
 end_define
 
 begin_define
@@ -336,14 +371,14 @@ begin_define
 define|#
 directive|define
 name|SIOCADIFR
-value|_IOW(r, 67, struct frentry)
+value|_IOW(r, 67, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCRMIFR
-value|_IOW(r, 68, struct frentry)
+value|_IOW(r, 68, struct frentry *)
 end_define
 
 begin_define
@@ -357,14 +392,14 @@ begin_define
 define|#
 directive|define
 name|SIOCINAFR
-value|_IOW(r, 70, struct frentry)
+value|_IOW(r, 70, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCINIFR
-value|_IOW(r, 71, struct frentry)
+value|_IOW(r, 71, struct frentry *)
 end_define
 
 begin_define
@@ -385,35 +420,70 @@ begin_define
 define|#
 directive|define
 name|SIOCFRZST
-value|_IOWR(r, 74, struct friostat)
+value|_IOWR(r, 74, struct friostat *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCZRLST
-value|_IOWR(r, 75, struct frentry)
+value|_IOWR(r, 75, struct frentry *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHW
-value|_IOWR(r, 76, struct fr_info)
+value|_IOWR(r, 76, struct fr_info *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHR
-value|_IOWR(r, 77, struct fr_info)
+value|_IOWR(r, 77, struct fr_info *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCATHST
-value|_IOWR(r, 78, struct fr_authstat)
+value|_IOWR(r, 78, struct fr_authstat *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTLCK
+value|_IOWR(r, 79, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTPUT
+value|_IOWR(r, 80, struct ipstate_save *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTGET
+value|_IOWR(r, 81, struct ipstate_save *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSTGSZ
+value|_IOWR(r, 82, struct natget *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGFRST
+value|_IOWR(r, 83, struct ipfrstat *)
 end_define
 
 begin_endif
@@ -447,37 +517,43 @@ typedef|typedef
 struct|struct
 name|fr_ip
 block|{
-name|u_char
+name|u_32_t
 name|fi_v
 range|:
 literal|4
 decl_stmt|;
 comment|/* IP version */
-name|u_char
+name|u_32_t
 name|fi_fl
 range|:
 literal|4
 decl_stmt|;
 comment|/* packet flags */
-name|u_char
+name|u_32_t
 name|fi_tos
+range|:
+literal|8
 decl_stmt|;
 comment|/* IP packet TOS */
-name|u_char
+name|u_32_t
 name|fi_ttl
+range|:
+literal|8
 decl_stmt|;
 comment|/* IP packet TTL */
-name|u_char
+name|u_32_t
 name|fi_p
+range|:
+literal|8
 decl_stmt|;
 comment|/* IP packet protocol */
-name|struct
-name|in_addr
+name|union
+name|i6addr
 name|fi_src
 decl_stmt|;
 comment|/* source address from packet */
-name|struct
-name|in_addr
+name|union
+name|i6addr
 name|fi_dst
 decl_stmt|;
 comment|/* destination address from packet */
@@ -537,6 +613,20 @@ name|FI_CMP
 value|(FI_OPTIONS|FI_TCPUDP|FI_SHORT)
 end_define
 
+begin_define
+define|#
+directive|define
+name|fi_saddr
+value|fi_src.in4.s_addr
+end_define
+
+begin_define
+define|#
+directive|define
+name|fi_daddr
+value|fi_dst.in4.s_addr
+end_define
+
 begin_comment
 comment|/*  * These are both used by the state and NAT code to indicate that one port or  * the other should be treated as a wildcard.  */
 end_comment
@@ -558,8 +648,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|FI_WILD
+name|FI_WILDP
 value|(FI_W_SPORT|FI_W_DPORT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_W_SADDR
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_W_DADDR
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_WILDA
+value|(FI_W_SADDR|FI_W_DADDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FI_NEWFR
+value|0x00001000
 end_define
 
 begin_typedef
@@ -609,7 +727,7 @@ name|u_short
 name|fin_rule
 decl_stmt|;
 comment|/* rule # last matched */
-name|u_short
+name|u_32_t
 name|fin_group
 decl_stmt|;
 comment|/* group number, -1 for none */
@@ -640,11 +758,6 @@ comment|/* pointer to pointer to mbuf */
 if|#
 directive|if
 name|SOLARIS
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
 name|void
 modifier|*
 name|fin_qfm
@@ -656,10 +769,23 @@ name|fin_qif
 decl_stmt|;
 endif|#
 directive|endif
+name|u_short
+name|fin_plen
+decl_stmt|;
+name|u_short
+name|fin_off
+decl_stmt|;
 block|}
 name|fr_info_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|fin_v
+value|fin_fi.fi_v
+end_define
 
 begin_comment
 comment|/*  * Size for compares on fr_info structures  */
@@ -710,6 +836,94 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
+name|frpcmp
+block|{
+name|int
+name|frp_cmp
+decl_stmt|;
+comment|/* data for port comparisons */
+name|u_short
+name|frp_port
+decl_stmt|;
+comment|/* top port for<> and>< */
+name|u_short
+name|frp_top
+decl_stmt|;
+comment|/* top port for<> and>< */
+block|}
+name|frpcmp_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|frtuc
+block|{
+name|u_char
+name|ftu_tcpfm
+decl_stmt|;
+comment|/* tcp flags mask */
+name|u_char
+name|ftu_tcpf
+decl_stmt|;
+comment|/* tcp flags */
+name|frpcmp_t
+name|ftu_src
+decl_stmt|;
+name|frpcmp_t
+name|ftu_dst
+decl_stmt|;
+block|}
+name|frtuc_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ftu_scmp
+value|ftu_src.frp_cmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|ftu_dcmp
+value|ftu_dst.frp_cmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|ftu_sport
+value|ftu_src.frp_port
+end_define
+
+begin_define
+define|#
+directive|define
+name|ftu_dport
+value|ftu_dst.frp_port
+end_define
+
+begin_define
+define|#
+directive|define
+name|ftu_stop
+value|ftu_src.frp_top
+end_define
+
+begin_define
+define|#
+directive|define
+name|ftu_dtop
+value|ftu_dst.frp_top
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|frentry
 block|{
 name|struct
@@ -717,11 +931,11 @@ name|frentry
 modifier|*
 name|fr_next
 decl_stmt|;
-name|u_short
+name|u_32_t
 name|fr_group
 decl_stmt|;
 comment|/* group to which this rule belongs */
-name|u_short
+name|u_32_t
 name|fr_grhead
 decl_stmt|;
 comment|/* group # which this rule starts */
@@ -766,14 +980,6 @@ name|fr_ip
 name|fr_mip
 decl_stmt|;
 comment|/* mask structure */
-name|u_char
-name|fr_tcpfm
-decl_stmt|;
-comment|/* tcp flags mask */
-name|u_char
-name|fr_tcpf
-decl_stmt|;
-comment|/* tcp flags */
 name|u_short
 name|fr_icmpm
 decl_stmt|;
@@ -781,36 +987,18 @@ comment|/* data for ICMP packets (mask) */
 name|u_short
 name|fr_icmp
 decl_stmt|;
-name|u_char
-name|fr_scmp
+name|frtuc_t
+name|fr_tuc
 decl_stmt|;
-comment|/* data for port comparisons */
-name|u_char
-name|fr_dcmp
-decl_stmt|;
-name|u_short
-name|fr_dport
-decl_stmt|;
-name|u_short
-name|fr_sport
-decl_stmt|;
-name|u_short
-name|fr_stop
-decl_stmt|;
-comment|/* top port for<> and>< */
-name|u_short
-name|fr_dtop
-decl_stmt|;
-comment|/* top port for<> and>< */
 name|u_32_t
 name|fr_flags
 decl_stmt|;
 comment|/* per-rule flags&& options (see below) */
-name|u_short
+name|u_int
 name|fr_skip
 decl_stmt|;
 comment|/* # of rules to skip */
-name|u_short
+name|u_int
 name|fr_loglevel
 decl_stmt|;
 comment|/* syslog log facility + priority */
@@ -832,7 +1020,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* call this function */
-name|char
+name|int
+name|fr_sap
+decl_stmt|;
+comment|/* For solaris only */
+name|u_char
 name|fr_icode
 decl_stmt|;
 comment|/* return ICMP code */
@@ -865,10 +1057,21 @@ name|frdest
 name|fr_dif
 decl_stmt|;
 comment|/* duplicate packet interfaces */
+name|u_int
+name|fr_cksum
+decl_stmt|;
+comment|/* checksum on filter rules for performance */
 block|}
 name|frentry_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|fr_v
+value|fr_ip.fi_v
+end_define
 
 begin_define
 define|#
@@ -894,29 +1097,85 @@ end_define
 begin_define
 define|#
 directive|define
+name|fr_tcpfm
+value|fr_tuc.ftu_tcpfm
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_tcpf
+value|fr_tuc.ftu_tcpf
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_scmp
+value|fr_tuc.ftu_scmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_dcmp
+value|fr_tuc.ftu_dcmp
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_dport
+value|fr_tuc.ftu_dport
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_sport
+value|fr_tuc.ftu_sport
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_stop
+value|fr_tuc.ftu_stop
+end_define
+
+begin_define
+define|#
+directive|define
+name|fr_dtop
+value|fr_tuc.ftu_dtop
+end_define
+
+begin_define
+define|#
+directive|define
 name|fr_dst
-value|fr_ip.fi_dst
+value|fr_ip.fi_dst.in4
 end_define
 
 begin_define
 define|#
 directive|define
 name|fr_src
-value|fr_ip.fi_src
+value|fr_ip.fi_src.in4
 end_define
 
 begin_define
 define|#
 directive|define
 name|fr_dmsk
-value|fr_mip.fi_dst
+value|fr_mip.fi_dst.in4
 end_define
 
 begin_define
 define|#
 directive|define
 name|fr_smsk
-value|fr_mip.fi_src
+value|fr_mip.fi_src.in4
 end_define
 
 begin_ifndef
@@ -1482,6 +1741,10 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* good and bad pullup attempts */
+name|u_long
+name|fr_badsrc
+decl_stmt|;
+comment|/* source received doesn't match route */
 if|#
 directive|if
 name|SOLARIS
@@ -1505,8 +1768,19 @@ name|u_long
 name|fr_drop
 decl_stmt|;
 comment|/* packets dropped - no info for them! */
+name|u_long
+name|fr_copy
+decl_stmt|;
+comment|/* messages copied due to db_ref> 1 */
 endif|#
 directive|endif
+name|u_long
+name|fr_ipv6
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* IPv6 packets in/out */
 block|}
 name|filterstats_t
 typedef|;
@@ -1563,6 +1837,38 @@ decl_stmt|;
 name|struct
 name|frentry
 modifier|*
+name|f_fin6
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|frentry
+modifier|*
+name|f_fout6
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|frentry
+modifier|*
+name|f_acctin6
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|frentry
+modifier|*
+name|f_acctout6
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|frentry
+modifier|*
 name|f_auth
 decl_stmt|;
 name|struct
@@ -1598,24 +1904,6 @@ name|char
 name|f_logging
 decl_stmt|;
 comment|/* 1 if enabled, else 0 */
-if|#
-directive|if
-operator|!
-name|SOLARIS
-operator|&&
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-name|char
-name|f_version
-index|[
-literal|25
-index|]
-decl_stmt|;
-comment|/* version string */
-else|#
-directive|else
 name|char
 name|f_version
 index|[
@@ -1623,8 +1911,12 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* version string */
-endif|#
-directive|endif
+name|int
+name|f_locks
+index|[
+literal|4
+index|]
+decl_stmt|;
 block|}
 name|friostat_t
 typedef|;
@@ -1655,7 +1947,7 @@ typedef|typedef
 struct|struct
 name|frgroup
 block|{
-name|u_short
+name|u_32_t
 name|fg_num
 decl_stmt|;
 name|struct
@@ -1791,16 +2083,15 @@ name|fl_hlen
 decl_stmt|;
 comment|/* length of IP headers saved */
 name|u_short
-name|fl_rule
-decl_stmt|;
-comment|/* assume never more than 64k rules, total */
-name|u_short
-name|fl_group
-decl_stmt|;
-name|u_short
 name|fl_loglevel
 decl_stmt|;
 comment|/* syslog log level */
+name|u_32_t
+name|fl_rule
+decl_stmt|;
+name|u_32_t
+name|fl_group
+decl_stmt|;
 name|u_32_t
 name|fl_flags
 decl_stmt|;
@@ -2244,6 +2535,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2527,6 +2820,44 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|send_icmp_err
+name|__P
+argument_list|(
+operator|(
+name|ip_t
+operator|*
+operator|,
+name|int
+operator|,
+name|fr_info_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|send_reset
+name|__P
+argument_list|(
+operator|(
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -2590,30 +2921,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|icmp_error
-name|__P
-argument_list|(
-operator|(
-name|ip_t
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|qif_t
-operator|*
-operator|,
-expr|struct
-name|in_addr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_if
 if|#
@@ -2841,12 +3148,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPFILTER_LOG
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2866,11 +3167,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -3569,6 +3865,28 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|memstr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|fixskip
 name|__P
@@ -3608,6 +3926,255 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_short
+name|ipf_cksum
+name|__P
+argument_list|(
+operator|(
+name|u_short
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ircopyptr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iwcopyptr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|frflush
+name|__P
+argument_list|(
+operator|(
+name|minor_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|frsync
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|frgroup_t
+modifier|*
+name|fr_addgroup
+name|__P
+argument_list|(
+operator|(
+name|u_32_t
+operator|,
+name|frentry_t
+operator|*
+operator|,
+name|minor_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fr_delgroup
+name|__P
+argument_list|(
+operator|(
+name|u_32_t
+operator|,
+name|u_32_t
+operator|,
+name|minor_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|frgroup_t
+modifier|*
+name|fr_findgroup
+name|__P
+argument_list|(
+operator|(
+name|u_32_t
+operator|,
+name|u_32_t
+operator|,
+name|minor_t
+operator|,
+name|int
+operator|,
+name|frgroup_t
+operator|*
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_copytolog
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fr_forgetifp
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fr_getstat
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|friostat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_ifpaddr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|void
+operator|*
+operator|,
+expr|struct
+name|in_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fr_lock
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fr_makefrip
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|ip_t
+operator|*
+operator|,
+name|fr_info_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3657,155 +4224,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_short
-name|ipf_cksum
+name|int
+name|fr_tcpudpchk
 name|__P
 argument_list|(
 operator|(
-name|u_short
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fr_copytolog
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fr_forgetifp
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|frflush
-name|__P
-argument_list|(
-operator|(
-name|minor_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|frsync
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|frgroup_t
-modifier|*
-name|fr_addgroup
-name|__P
-argument_list|(
-operator|(
-name|u_int
-operator|,
-name|frentry_t
-operator|*
-operator|,
-name|minor_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|frgroup_t
-modifier|*
-name|fr_findgroup
-name|__P
-argument_list|(
-operator|(
-name|u_int
-operator|,
-name|u_32_t
-operator|,
-name|minor_t
-operator|,
-name|int
-operator|,
-name|frgroup_t
-operator|*
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fr_delgroup
-name|__P
-argument_list|(
-operator|(
-name|u_int
-operator|,
-name|u_32_t
-operator|,
-name|minor_t
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fr_makefrip
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|ip_t
+name|frtuc_t
 operator|*
 operator|,
 name|fr_info_t
@@ -3818,38 +4242,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|fr_ifpaddr
+name|fr_verifysrc
 name|__P
 argument_list|(
 operator|(
-name|void
-operator|*
-operator|,
 expr|struct
 name|in_addr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|memstr
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
 operator|,
-name|char
+name|void
 operator|*
-operator|,
-name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3902,6 +4303,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|fr_chksrc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|fr_info_t
 name|frcache
 index|[
@@ -3917,12 +4325,6 @@ name|ipfilter_version
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPFILTER_LOG
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -3958,11 +4360,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -3986,6 +4383,63 @@ literal|2
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_INET6
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|frentry
+modifier|*
+name|ipfilter6
+index|[
+literal|2
+index|]
+index|[
+literal|2
+index|]
+decl_stmt|,
+modifier|*
+name|ipacct6
+index|[
+literal|2
+index|]
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|icmptoicmp6types
+index|[
+name|ICMP_MAXTYPE
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|icmptoicmp6unreach
+index|[
+name|ICMP_MAX_UNREACH
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern

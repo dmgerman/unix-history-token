@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_ifdef
@@ -377,6 +377,25 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_INET6
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|use_inet6
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -563,7 +582,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ipf [-AdDEInoPrsUvVyzZ] %s %s %s\n"
+literal|"usage: ipf [-6AdDEInoPrsUvVyzZ] %s %s %s\n"
 argument_list|,
 literal|"[-l block|pass|nomatch]"
 argument_list|,
@@ -611,7 +630,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AdDEf:F:Il:noPrsUvVyzZ"
+literal|"6AdDEf:F:Il:noPrsUvVyzZ"
 argument_list|)
 operator|)
 operator|!=
@@ -630,6 +649,19 @@ case|:
 name|usage
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_INET6
+case|case
+literal|'6'
+case|:
+name|use_inet6
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'A'
 case|:
@@ -722,10 +754,6 @@ break|break;
 case|case
 literal|'o'
 case|:
-name|opts
-operator||=
-name|OPT_OUTQUE
-expr_stmt|;
 break|break;
 case|case
 literal|'P'
@@ -893,7 +921,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|ipfname
+name|ipfdev
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -971,7 +999,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"SIOCFRENB"
+literal|"SIOCGETFF"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1020,11 +1048,27 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EBUSY
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"IP FIlter: already initialized\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|perror
 argument_list|(
 literal|"SIOCFRENB"
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -1438,322 +1482,1701 @@ name|printf
 argument_list|(
 literal|"hits %qd bytes %qd "
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|fr
+operator|->
+name|fr_hits
+argument_list|,
+operator|(
+name|long
+name|long
+operator|)
+name|fr
+operator|->
+name|fr_bytes
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
-argument|printf(
+name|printf
+argument_list|(
 literal|"hits %ld bytes %ld "
-argument|,
+argument_list|,
+name|fr
+operator|->
+name|fr_hits
+argument_list|,
+name|fr
+operator|->
+name|fr_bytes
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-argument|fr->fr_hits, fr->fr_bytes); 					printfr(fr); 				} 			} else if ((opts& OPT_REMOVE)&& 				   !(opts& OPT_DONOTHING)) { 				if (ioctl(fd, del,&fr) == -
+name|printfr
+argument_list|(
+name|fr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+name|OPT_REMOVE
+operator|)
+operator|&&
+operator|!
+operator|(
+name|opts
+operator|&
+name|OPT_DONOTHING
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|del
+argument_list|,
+operator|&
+name|fr
+argument_list|)
+operator|==
+operator|-
 literal|1
-argument|) { 					fprintf(stderr,
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"%d:"
-argument|, linenum); 					perror(
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
 literal|"ioctl(delete rule)"
-argument|); 				} 			} else if (!(opts& OPT_DONOTHING)) { 				if (ioctl(fd, add,&fr) == -
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
+name|opts
+operator|&
+name|OPT_DONOTHING
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|add
+argument_list|,
+operator|&
+name|fr
+argument_list|)
+operator|==
+operator|-
 literal|1
-argument|) { 					fprintf(stderr,
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"%d:"
-argument|, linenum); 					perror(
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
 literal|"ioctl(add/insert rule)"
-argument|); 				} 			} 		} 	} 	if (ferror(fp) || !feof(fp)) { 		fprintf(stderr,
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fp
+argument_list|)
+operator|||
+operator|!
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"%s: %s: file error or line too long\n"
-argument|, 		    name, file); 		exit(
-literal|1
-argument|); 	} 	(void)fclose(fp); }
-comment|/*  * Similar to fgets(3) but can handle '\\' and NL is converted to NUL.  * Returns NULL if error occured, EOF encounterd or input line is too long.  */
-argument|static char *getline(str, size, file) register char	*str; size_t	size; FILE	*file; { 	char *p; 	int s
 argument_list|,
-argument|len;  	do { 		for (p = str, s = size;; p += (len -
-literal|1
-argument|), s -= (len -
-literal|1
-argument|)) {
-comment|/* 			 * if an error occured, EOF was encounterd, or there 			 * was no room to put NUL, return NULL. 			 */
-argument|if (fgets(p, s, file) == NULL) 				return (NULL); 			len = strlen(p); 			if (p[len -
-literal|1
-argument|] !=
-literal|'\n'
-argument|) { 				p[len] =
-literal|'\0'
-argument|; 				break; 			} 			p[len -
-literal|1
-argument|] =
-literal|'\0'
-argument|; 			if (len<
-literal|2
-argument||| p[len -
-literal|2
-argument|] !=
-literal|'\\'
-argument|) 				break; 			else
-comment|/* 				 * Convert '\\' to a space so words don't 				 * run together 				 */
-argument|p[len -
-literal|2
-argument|] =
-literal|' '
-argument|; 		} 	} while (*str ==
-literal|'\0'
-argument|); 	return (str); }   static void packetlogon(opt) char	*opt; { 	int	flag
+name|name
 argument_list|,
-argument|err;  	err = get_flags(); 	if (err !=
-literal|0
-argument|) { 		if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) 			printf(
-literal|"log flag is currently %#x\n"
-argument|, flag); 	}  	flag&= ~(FF_LOGPASS|FF_LOGNOMATCH|FF_LOGBLOCK);  	if (index(opt,
-literal|'p'
-argument|)) { 		flag |= FF_LOGPASS; 		if (opts& OPT_VERBOSE) 			printf(
-literal|"set log flag: pass\n"
-argument|); 	} 	if (index(opt,
-literal|'m'
-argument|)&& (*opt ==
-literal|'n'
-argument||| *opt ==
-literal|'N'
-argument|)) { 		flag |= FF_LOGNOMATCH; 		if (opts& OPT_VERBOSE) 			printf(
-literal|"set log flag: nomatch\n"
-argument|); 	} 	if (index(opt,
-literal|'b'
-argument|) || index(opt,
-literal|'d'
-argument|)) { 		flag |= FF_LOGBLOCK; 		if (opts& OPT_VERBOSE) 			printf(
-literal|"set log flag: block\n"
-argument|); 	}  	if (opendevice(ipfname) != -
-literal|2
-argument|&& (err = ioctl(fd, SIOCSETFF,&flag))) 		perror(
-literal|"ioctl(SIOCSETFF)"
-argument|);  	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		flag = get_flags(); 		printf(
-literal|"log flag is now %#x\n"
-argument|, flag); 	} }   static	void	flushfilter(arg) char	*arg; { 	int	fl =
-literal|0
-argument_list|,
-argument|rem;  	if (!arg || !*arg) 		return; 	if (!strcmp(arg,
-literal|"s"
-argument|) || !strcmp(arg,
-literal|"S"
-argument|)) { 		if (*arg ==
-literal|'S'
-argument|) 			fl =
-literal|0
-argument|; 		else 			fl =
+name|file
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
 literal|1
-argument|; 		rem = fl;  		closedevice(); 		if (opendevice(IPL_STATE) != -
-literal|2
-argument|&& 		    ioctl(fd, SIOCIPFFL,&fl) == -
-literal|1
-argument|) 			perror(
-literal|"ioctl(SIOCIPFFL)"
-argument|); 		if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 			printf(
-literal|"remove flags %s (%d)\n"
-argument|, arg, rem); 			printf(
-literal|"removed %d filter rules\n"
-argument|, fl); 		} 		closedevice(); 		return; 	} 	if (strchr(arg,
-literal|'i'
-argument|) || strchr(arg,
-literal|'I'
-argument|)) 		fl = FR_INQUE; 	if (strchr(arg,
-literal|'o'
-argument|) || strchr(arg,
-literal|'O'
-argument|)) 		fl = FR_OUTQUE; 	if (strchr(arg,
-literal|'a'
-argument|) || strchr(arg,
-literal|'A'
-argument|)) 		fl = FR_OUTQUE|FR_INQUE; 	fl |= (opts& FR_INACTIVE); 	rem = fl;  	if (opendevice(ipfname) != -
-literal|2
-argument|&& ioctl(fd, SIOCIPFFL,&fl) == -
-literal|1
-argument|) 		perror(
-literal|"ioctl(SIOCIPFFL)"
-argument|); 	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		printf(
-literal|"remove flags %s%s (%d)\n"
-argument|, (rem& FR_INQUE) ?
-literal|"I"
-argument|:
-literal|""
-argument|, 			(rem& FR_OUTQUE) ?
-literal|"O"
-argument|:
-literal|""
-argument|, rem); 		printf(
-literal|"removed %d filter rules\n"
-argument|, fl); 	} 	return; }   static void swapactive() { 	int in =
-literal|2
-argument|;  	if (opendevice(ipfname) != -
-literal|2
-argument|&& ioctl(fd, SIOCSWAPA,&in) == -
-literal|1
-argument|) 		perror(
-literal|"ioctl(SIOCSWAPA)"
-argument|); 	else 		printf(
-literal|"Set %d now inactive\n"
-argument|, in); }   void frsync() { 	int frsyn =
-literal|0
-argument|;  	if (opendevice(ipfname) != -
-literal|2
-argument|&& ioctl(fd, SIOCFRSYN,&frsyn) == -
-literal|1
-argument|) 		perror(
-literal|"SIOCFRSYN"
-argument|); 	else 		printf(
-literal|"filter sync'd\n"
-argument|); }   void zerostats() { 	friostat_t	fio;  	if (opendevice(ipfname) != -
-literal|2
-argument|) { 		if (ioctl(fd, SIOCFRZST,&fio) == -
-literal|1
-argument|) { 			perror(
-literal|"ioctl(SIOCFRZST)"
-argument|); 			exit(-
-literal|1
-argument|); 		} 		showstats(&fio); 	}  }
-comment|/*  * read the kernel stats for packets blocked and passed  */
-argument|static void showstats(fp) friostat_t	*fp; {
-if|#
-directive|if
-name|SOLARIS
-argument|printf(
-literal|"dropped packets:\tin %lu\tout %lu\n"
-argument|, 			fp->f_st[
-literal|0
-argument|].fr_drop, fp->f_st[
-literal|1
-argument|].fr_drop); 	printf(
-literal|"non-ip packets:\t\tin %lu\tout %lu\n"
-argument|, 			fp->f_st[
-literal|0
-argument|].fr_notip, fp->f_st[
-literal|1
-argument|].fr_notip); 	printf(
-literal|"   bad packets:\t\tin %lu\tout %lu\n"
-argument|, 			fp->f_st[
-literal|0
-argument|].fr_bad, fp->f_st[
-literal|1
-argument|].fr_bad);
-endif|#
-directive|endif
-argument|printf(
-literal|" input packets:\t\tblocked %lu passed %lu nomatch %lu"
-argument|, 			fp->f_st[
-literal|0
-argument|].fr_block, fp->f_st[
-literal|0
-argument|].fr_pass, 			fp->f_st[
-literal|0
-argument|].fr_nom); 	printf(
-literal|" counted %lu\n"
-argument|, fp->f_st[
-literal|0
-argument|].fr_acct); 	printf(
-literal|"output packets:\t\tblocked %lu passed %lu nomatch %lu"
-argument|, 			fp->f_st[
-literal|1
-argument|].fr_block, fp->f_st[
-literal|1
-argument|].fr_pass, 			fp->f_st[
-literal|1
-argument|].fr_nom); 	printf(
-literal|" counted %lu\n"
-argument|, fp->f_st[
-literal|0
-argument|].fr_acct); 	printf(
-literal|" input packets logged:\tblocked %lu passed %lu\n"
-argument|, 			fp->f_st[
-literal|0
-argument|].fr_bpkl, fp->f_st[
-literal|0
-argument|].fr_ppkl); 	printf(
-literal|"output packets logged:\tblocked %lu passed %lu\n"
-argument|, 			fp->f_st[
-literal|1
-argument|].fr_bpkl, fp->f_st[
-literal|1
-argument|].fr_ppkl); 	printf(
-literal|" packets logged:\tinput %lu-%lu output %lu-%lu\n"
-argument|, 			fp->f_st[
-literal|0
-argument|].fr_pkl, fp->f_st[
-literal|0
-argument|].fr_skip, 			fp->f_st[
-literal|1
-argument|].fr_pkl, fp->f_st[
-literal|1
-argument|].fr_skip); }
-if|#
-directive|if
-name|SOLARIS
-argument|static void blockunknown() { 	u_32_t	flag;  	if (opendevice(ipfname) == -
-literal|1
-argument|) 		return;  	flag = get_flags(); 	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) 		printf(
-literal|"log flag is currently %#x\n"
-argument|, flag);  	flag ^= FF_BLOCKNONIP;  	if (opendevice(ipfname) != -
-literal|2
-argument|&& ioctl(fd, SIOCSETFF,&flag)) 		perror(
-literal|"ioctl(SIOCSETFF)"
-argument|);  	if ((opts& (OPT_DONOTHING|OPT_VERBOSE)) == OPT_VERBOSE) { 		if (ioctl(fd, SIOCGETFF,&flag)) 			perror(
-literal|"ioctl(SIOCGETFF)"
-argument|);  		printf(
-literal|"log flag is now %#x\n"
-argument|, flag); 	} }
-endif|#
-directive|endif
-argument|static void showversion() { 	struct friostat fio; 	u_32_t flags; 	char *s;  	printf(
-literal|"ipf: %s (%d)\n"
-argument|, IPL_VERSION, sizeof(frentry_t));  	if (opendevice(ipfname) != -
-literal|2
-argument|&& ioctl(fd, SIOCGETFS,&fio)) { 		perror(
-literal|"ioctl(SIOCGETFS"
-argument|); 		return; 	} 	flags = get_flags();  	printf(
-literal|"Kernel: %-*.*s\n"
-argument|, (int)sizeof(fio.f_version), 		(int)sizeof(fio.f_version), fio.f_version); 	printf(
-literal|"Running: %s\n"
-argument|, fio.f_running ?
-literal|"yes"
-argument|:
-literal|"no"
-argument|); 	printf(
-literal|"Log Flags: %#x = "
-argument|, flags); 	s =
-literal|""
-argument|; 	if (flags& FF_LOGPASS) { 		printf(
-literal|"pass"
-argument|); 		s =
-literal|", "
-argument|; 	} 	if (flags& FF_LOGBLOCK) { 		printf(
-literal|"%sblock"
-argument|, s); 		s =
-literal|", "
-argument|; 	} 	if (flags& FF_LOGNOMATCH) { 		printf(
-literal|"%snomatch"
-argument|, s); 		s =
-literal|", "
-argument|; 	} 	if (flags& FF_BLOCKNONIP) { 		printf(
-literal|"%snonip"
-argument|, s); 		s =
-literal|", "
-argument|; 	} 	if (!*s) 		printf(
-literal|"none set"
-argument|); 	putchar(
-literal|'\n'
-argument|);  	printf(
-literal|"Default: "
-argument|); 	if (fio.f_defpass& FR_PASS) 		s =
-literal|"pass"
-argument|; 	else if (fio.f_defpass& FR_BLOCK) 		s =
-literal|"block"
-argument|; 	else 		s =
-literal|"nomatch -> block"
-argument|; 	printf(
-literal|"%s all, Logging: %savailable\n"
-argument|, s, fio.f_logging ?
-literal|""
-argument|:
-literal|"un"
-argument|); 	printf(
-literal|"Active list: %d\n"
-argument|, fio.f_active); }
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 end_block
+
+begin_comment
+comment|/*  * Similar to fgets(3) but can handle '\\' and NL is converted to NUL.  * Returns NULL if error occured, EOF encounterd or input line is too long.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|getline
+parameter_list|(
+name|str
+parameter_list|,
+name|size
+parameter_list|,
+name|file
+parameter_list|)
+specifier|register
+name|char
+modifier|*
+name|str
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+name|FILE
+modifier|*
+name|file
+decl_stmt|;
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|s
+decl_stmt|,
+name|len
+decl_stmt|;
+do|do
+block|{
+for|for
+control|(
+name|p
+operator|=
+name|str
+operator|,
+name|s
+operator|=
+name|size
+init|;
+condition|;
+name|p
+operator|+=
+operator|(
+name|len
+operator|-
+literal|1
+operator|)
+operator|,
+name|s
+operator|-=
+operator|(
+name|len
+operator|-
+literal|1
+operator|)
+control|)
+block|{
+comment|/* 			 * if an error occured, EOF was encounterd, or there 			 * was no room to put NUL, return NULL. 			 */
+if|if
+condition|(
+name|fgets
+argument_list|(
+name|p
+argument_list|,
+name|s
+argument_list|,
+name|file
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'\n'
+condition|)
+block|{
+name|p
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
+block|}
+name|p
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+literal|2
+operator|||
+name|p
+index|[
+name|len
+operator|-
+literal|2
+index|]
+operator|!=
+literal|'\\'
+condition|)
+break|break;
+else|else
+comment|/* 				 * Convert '\\' to a space so words don't 				 * run together 				 */
+name|p
+index|[
+name|len
+operator|-
+literal|2
+index|]
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+block|}
+do|while
+condition|(
+operator|*
+name|str
+operator|==
+literal|'\0'
+condition|)
+do|;
+return|return
+operator|(
+name|str
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|packetlogon
+parameter_list|(
+name|opt
+parameter_list|)
+name|char
+modifier|*
+name|opt
+decl_stmt|;
+block|{
+name|int
+name|flag
+decl_stmt|,
+name|err
+decl_stmt|;
+name|flag
+operator|=
+name|get_flags
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+operator|(
+name|OPT_DONOTHING
+operator||
+name|OPT_VERBOSE
+operator|)
+operator|)
+operator|==
+name|OPT_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"log flag is currently %#x\n"
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+block|}
+name|flag
+operator|&=
+operator|~
+operator|(
+name|FF_LOGPASS
+operator||
+name|FF_LOGNOMATCH
+operator||
+name|FF_LOGBLOCK
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|index
+argument_list|(
+name|opt
+argument_list|,
+literal|'p'
+argument_list|)
+condition|)
+block|{
+name|flag
+operator||=
+name|FF_LOGPASS
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|OPT_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"set log flag: pass\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|index
+argument_list|(
+name|opt
+argument_list|,
+literal|'m'
+argument_list|)
+operator|&&
+operator|(
+operator|*
+name|opt
+operator|==
+literal|'n'
+operator|||
+operator|*
+name|opt
+operator|==
+literal|'N'
+operator|)
+condition|)
+block|{
+name|flag
+operator||=
+name|FF_LOGNOMATCH
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|OPT_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"set log flag: nomatch\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|index
+argument_list|(
+name|opt
+argument_list|,
+literal|'b'
+argument_list|)
+operator|||
+name|index
+argument_list|(
+name|opt
+argument_list|,
+literal|'d'
+argument_list|)
+condition|)
+block|{
+name|flag
+operator||=
+name|FF_LOGBLOCK
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|OPT_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"set log flag: block\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|&&
+operator|(
+name|err
+operator|=
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCSETFF
+argument_list|,
+operator|&
+name|flag
+argument_list|)
+operator|)
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl(SIOCSETFF)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+operator|(
+name|OPT_DONOTHING
+operator||
+name|OPT_VERBOSE
+operator|)
+operator|)
+operator|==
+name|OPT_VERBOSE
+condition|)
+block|{
+name|flag
+operator|=
+name|get_flags
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"log flag is now %#x\n"
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|flushfilter
+parameter_list|(
+name|arg
+parameter_list|)
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+name|int
+name|fl
+init|=
+literal|0
+decl_stmt|,
+name|rem
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|arg
+operator|||
+operator|!
+operator|*
+name|arg
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"s"
+argument_list|)
+operator|||
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"S"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|arg
+operator|==
+literal|'S'
+condition|)
+name|fl
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|fl
+operator|=
+literal|1
+expr_stmt|;
+name|rem
+operator|=
+name|fl
+expr_stmt|;
+name|closedevice
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|IPL_STATE
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|&&
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCIPFFL
+argument_list|,
+operator|&
+name|fl
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl(SIOCIPFFL)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+operator|(
+name|OPT_DONOTHING
+operator||
+name|OPT_VERBOSE
+operator|)
+operator|)
+operator|==
+name|OPT_VERBOSE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"remove flags %s (%d)\n"
+argument_list|,
+name|arg
+argument_list|,
+name|rem
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"removed %d filter rules\n"
+argument_list|,
+name|fl
+argument_list|)
+expr_stmt|;
+block|}
+name|closedevice
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|arg
+argument_list|,
+literal|'i'
+argument_list|)
+operator|||
+name|strchr
+argument_list|(
+name|arg
+argument_list|,
+literal|'I'
+argument_list|)
+condition|)
+name|fl
+operator|=
+name|FR_INQUE
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|arg
+argument_list|,
+literal|'o'
+argument_list|)
+operator|||
+name|strchr
+argument_list|(
+name|arg
+argument_list|,
+literal|'O'
+argument_list|)
+condition|)
+name|fl
+operator|=
+name|FR_OUTQUE
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|arg
+argument_list|,
+literal|'a'
+argument_list|)
+operator|||
+name|strchr
+argument_list|(
+name|arg
+argument_list|,
+literal|'A'
+argument_list|)
+condition|)
+name|fl
+operator|=
+name|FR_OUTQUE
+operator||
+name|FR_INQUE
+expr_stmt|;
+name|fl
+operator||=
+operator|(
+name|opts
+operator|&
+name|FR_INACTIVE
+operator|)
+expr_stmt|;
+name|rem
+operator|=
+name|fl
+expr_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|&&
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCIPFFL
+argument_list|,
+operator|&
+name|fl
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl(SIOCIPFFL)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+operator|(
+name|OPT_DONOTHING
+operator||
+name|OPT_VERBOSE
+operator|)
+operator|)
+operator|==
+name|OPT_VERBOSE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"remove flags %s%s (%d)\n"
+argument_list|,
+operator|(
+name|rem
+operator|&
+name|FR_INQUE
+operator|)
+condition|?
+literal|"I"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|rem
+operator|&
+name|FR_OUTQUE
+operator|)
+condition|?
+literal|"O"
+else|:
+literal|""
+argument_list|,
+name|rem
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"removed %d filter rules\n"
+argument_list|,
+name|fl
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|swapactive
+parameter_list|()
+block|{
+name|int
+name|in
+init|=
+literal|2
+decl_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|&&
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCSWAPA
+argument_list|,
+operator|&
+name|in
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl(SIOCSWAPA)"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"Set %d now inactive\n"
+argument_list|,
+name|in
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|frsync
+parameter_list|()
+block|{
+name|int
+name|frsyn
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|&&
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCFRSYN
+argument_list|,
+operator|&
+name|frsyn
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|perror
+argument_list|(
+literal|"SIOCFRSYN"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"filter sync'd\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|zerostats
+parameter_list|()
+block|{
+name|friostat_t
+name|fio
+decl_stmt|;
+name|friostat_t
+modifier|*
+name|fiop
+init|=
+operator|&
+name|fio
+decl_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCFRZST
+argument_list|,
+operator|&
+name|fiop
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"ioctl(SIOCFRZST)"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|showstats
+argument_list|(
+name|fiop
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * read the kernel stats for packets blocked and passed  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|showstats
+parameter_list|(
+name|fp
+parameter_list|)
+name|friostat_t
+modifier|*
+name|fp
+decl_stmt|;
+block|{
+if|#
+directive|if
+name|SOLARIS
+name|printf
+argument_list|(
+literal|"dropped packets:\tin %lu\tout %lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_drop
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_drop
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"non-ip packets:\t\tin %lu\tout %lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_notip
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_notip
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"   bad packets:\t\tin %lu\tout %lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_bad
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_bad
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|" input packets:\t\tblocked %lu passed %lu nomatch %lu"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_block
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_pass
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_nom
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" counted %lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_acct
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"output packets:\t\tblocked %lu passed %lu nomatch %lu"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_block
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_pass
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_nom
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" counted %lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_acct
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" input packets logged:\tblocked %lu passed %lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_bpkl
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_ppkl
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"output packets logged:\tblocked %lu passed %lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_bpkl
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_ppkl
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" packets logged:\tinput %lu-%lu output %lu-%lu\n"
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_pkl
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|0
+index|]
+operator|.
+name|fr_skip
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_pkl
+argument_list|,
+name|fp
+operator|->
+name|f_st
+index|[
+literal|1
+index|]
+operator|.
+name|fr_skip
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+end_if
+
+begin_function
+specifier|static
+name|void
+name|blockunknown
+parameter_list|()
+block|{
+name|u_32_t
+name|flag
+decl_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+name|flag
+operator|=
+name|get_flags
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+operator|(
+name|OPT_DONOTHING
+operator||
+name|OPT_VERBOSE
+operator|)
+operator|)
+operator|==
+name|OPT_VERBOSE
+condition|)
+name|printf
+argument_list|(
+literal|"log flag is currently %#x\n"
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+name|flag
+operator|^=
+name|FF_BLOCKNONIP
+expr_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|&&
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCSETFF
+argument_list|,
+operator|&
+name|flag
+argument_list|)
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl(SIOCSETFF)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|opts
+operator|&
+operator|(
+name|OPT_DONOTHING
+operator||
+name|OPT_VERBOSE
+operator|)
+operator|)
+operator|==
+name|OPT_VERBOSE
+condition|)
+block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCGETFF
+argument_list|,
+operator|&
+name|flag
+argument_list|)
+condition|)
+name|perror
+argument_list|(
+literal|"ioctl(SIOCGETFF)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"log flag is now %#x\n"
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|void
+name|showversion
+parameter_list|()
+block|{
+name|struct
+name|friostat
+name|fio
+decl_stmt|;
+name|struct
+name|friostat
+modifier|*
+name|fiop
+init|=
+operator|&
+name|fio
+decl_stmt|;
+name|u_32_t
+name|flags
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"ipf: %s (%d)\n"
+argument_list|,
+name|IPL_VERSION
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|frentry_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|opendevice
+argument_list|(
+name|ipfname
+argument_list|)
+operator|!=
+operator|-
+literal|2
+operator|&&
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|SIOCGETFS
+argument_list|,
+operator|&
+name|fiop
+argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"ioctl(SIOCGETFS"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|flags
+operator|=
+name|get_flags
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Kernel: %-*.*s\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|fio
+operator|.
+name|f_version
+argument_list|)
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|fio
+operator|.
+name|f_version
+argument_list|)
+argument_list|,
+name|fio
+operator|.
+name|f_version
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Running: %s\n"
+argument_list|,
+name|fio
+operator|.
+name|f_running
+condition|?
+literal|"yes"
+else|:
+literal|"no"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Log Flags: %#x = "
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|FF_LOGPASS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pass"
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+literal|", "
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|FF_LOGBLOCK
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%sblock"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+literal|", "
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|FF_LOGNOMATCH
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%snomatch"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+literal|", "
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|FF_BLOCKNONIP
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%snonip"
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+literal|", "
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+operator|*
+name|s
+condition|)
+name|printf
+argument_list|(
+literal|"none set"
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Default: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fio
+operator|.
+name|f_defpass
+operator|&
+name|FR_PASS
+condition|)
+name|s
+operator|=
+literal|"pass"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|fio
+operator|.
+name|f_defpass
+operator|&
+name|FR_BLOCK
+condition|)
+name|s
+operator|=
+literal|"block"
+expr_stmt|;
+else|else
+name|s
+operator|=
+literal|"nomatch -> block"
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s all, Logging: %savailable\n"
+argument_list|,
+name|s
+argument_list|,
+name|fio
+operator|.
+name|f_logging
+condition|?
+literal|""
+else|:
+literal|"un"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Active list: %d\n"
+argument_list|,
+name|fio
+operator|.
+name|f_active
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

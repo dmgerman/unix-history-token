@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 2.5.2.1 2000/07/19 13:11:47 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_log.c,v 2.5.2.1 2000/07/19 13:11:47 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -87,12 +87,6 @@ argument_list|(
 name|IPFILTER_LKM
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/osreldate.h>
-end_include
 
 begin_if
 if|#
@@ -843,6 +837,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|fr_info_t
 name|iplcrc
 index|[
@@ -1021,6 +1016,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|u_char
+name|p
+decl_stmt|;
 if|#
 directive|if
 name|SOLARIS
@@ -1054,22 +1052,24 @@ name|fin_hlen
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ip
+name|fin
 operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|fin_off
 operator|==
 literal|0
 condition|)
 block|{
+name|p
+operator|=
+name|fin
+operator|->
+name|fin_fi
+operator|.
+name|fi_p
+expr_stmt|;
 if|if
 condition|(
-name|ip
-operator|->
-name|ip_p
+name|p
 operator|==
 name|IPPROTO_TCP
 condition|)
@@ -1090,9 +1090,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|ip
-operator|->
-name|ip_p
+name|p
 operator|==
 name|IPPROTO_UDP
 condition|)
@@ -1113,9 +1111,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|ip
-operator|->
-name|ip_p
+name|p
 operator|==
 name|IPPROTO_ICMP
 condition|)
@@ -1132,15 +1128,9 @@ expr|struct
 name|icmp
 operator|*
 operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-name|ip
-operator|+
-name|hlen
-operator|)
+name|fin
+operator|->
+name|fin_dp
 expr_stmt|;
 comment|/* 			 * For ICMP, if the packet is an error packet, also 			 * include the information about the packet which 			 * caused the error. 			 */
 switch|switch
@@ -1407,9 +1397,9 @@ operator|)
 condition|?
 name|MIN
 argument_list|(
-name|ip
+name|fin
 operator|->
-name|ip_len
+name|fin_plen
 operator|-
 name|hlen
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_ifdef
@@ -318,7 +318,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ipt.c	1.19 6/3/96 (C) 1993-1996 Darren Reed"
+literal|"@(#)ipt.c	1.19 6/3/96 (C) 1993-2000 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,7 +329,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipt.c,v 2.1.2.1 2000/01/24 14:49:11 darrenr Exp $"
+literal|"@(#)$Id: ipt.c,v 2.6 2000/03/13 22:10:25 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,8 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -439,6 +441,25 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_INET6
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|use_inet6
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -534,7 +555,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bdEHi:I:NoPr:STvX"
+literal|"6bdEHi:I:NoPr:STvX"
 argument_list|)
 operator|)
 operator|!=
@@ -546,6 +567,19 @@ condition|(
 name|c
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|USE_INET6
+case|case
+literal|'6'
+case|:
+name|use_inet6
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'b'
 case|:
@@ -917,6 +951,10 @@ name|IPL_LOGNAT
 argument_list|,
 name|SIOCADNAT
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
 name|fr
 argument_list|,
 name|FWRITE
@@ -968,8 +1006,12 @@ argument_list|)
 argument_list|(
 literal|0
 argument_list|,
-name|SIOCADDFR
+name|SIOCADAFR
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
 name|fr
 argument_list|,
 name|FWRITE
@@ -987,7 +1029,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"iplioctl(ADDFR,%p,1) = %d\n"
+literal|"iplioctl(ADAFR,%p,1) = %d\n"
 argument_list|,
 name|fr
 argument_list|,
@@ -1104,6 +1146,10 @@ condition|?
 name|get_unit
 argument_list|(
 name|iface
+argument_list|,
+name|ip
+operator|->
+name|ip_v
 argument_list|)
 else|:
 name|NULL

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
 end_comment
 
 begin_include
@@ -133,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opt.c	1.8 4/10/96 (C) 1993-1995 Darren Reed"
+literal|"@(#)opt.c	1.8 4/10/96 (C) 1993-2000 Darren Reed"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,7 +144,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: opt.c,v 2.1 1999/08/04 17:30:15 darrenr Exp $"
+literal|"@(#)$Id: opt.c,v 2.2 2000/03/13 22:10:26 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
