@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	4.5	81/02/23	*/
+comment|/*	clock.h	4.6	82/09/04	*/
 end_comment
 
 begin_comment
@@ -120,30 +120,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|clkreld
-parameter_list|()
-value|mtpr(ICCS, ICCS_RUN+ICCS_IE+ICCS_INT+ICCS_ERR)
-end_define
-
-begin_define
-define|#
-directive|define
 name|clkwrap
 parameter_list|()
 value|(((unsigned)mfpr(TODR) - TODRZERO)/100> SECYR+SECDAY)
 end_define
 
 begin_comment
-comment|/*  * Software clock is software interrupt level 8  */
+comment|/*  * Software clock is software interrupt level 8,  * implemented as mtpr(SIRR, 0x8) in asm.sed.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|setsoftclock
-parameter_list|()
-value|mtpr(SIRR, 0x8)
-end_define
 
 end_unit
 
