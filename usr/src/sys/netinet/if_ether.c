@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Ethernet address resolution protocol.  */
+comment|/*  * Ethernet address resolution protocol.  * TODO:  *	run at splnet (add ARP protocol intr.)  *	link entries onto hash chains, keep free list  *	add "inuse/lock" bit (or ref. count) along with valid bit  */
 end_comment
 
 begin_include
@@ -91,6 +91,39 @@ directive|include
 file|"if_ether.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GATEWAY
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ARPTAB_BSIZ
+value|16
+end_define
+
+begin_comment
+comment|/* bucket size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARPTAB_NB
+value|37
+end_define
+
+begin_comment
+comment|/* number of buckets */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -112,6 +145,11 @@ end_define
 begin_comment
 comment|/* number of buckets */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -653,6 +691,18 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|useloopback
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use loopback interface for local traffic */
+end_comment
+
 begin_comment
 comment|/*  * Resolve an IP address into an ethernet address.  If success,   * desten is filled in.  If there is no entry in arptab,  * set one up and broadcast a request for the IP address.  * Hold onto this mbuf and resend it once the address  * is finally resolved.  A return value of 1 indicates  * that desten has been filled in and the packet should be sent  * normally; a 0 return indicates that the packet has been  * taken over here, either now or for later transmission.  *  * We do some (conservative) locking here at splimp, since  * arptab is also altered from input interrupt service (ecintr/ilintr  * calls arpinput when ETHERTYPE_ARP packets come in).  */
 end_comment
@@ -718,20 +768,15 @@ name|arptab
 modifier|*
 name|at
 decl_stmt|;
-specifier|register
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
 name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
+name|u_long
+name|lna
+decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|lna
 decl_stmt|;
 operator|*
 name|usetrailers
@@ -780,13 +825,6 @@ operator|*
 name|destip
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|=
-operator|&
-name|ac
-operator|->
-name|ac_if
-expr_stmt|;
 comment|/* if for us, use software loopback driver if up */
 if|if
 condition|(
@@ -801,13 +839,10 @@ operator|.
 name|s_addr
 condition|)
 block|{
+comment|/* 		 * This test used to be 		 *	if (loif.if_flags& IFF_UP) 		 * It allowed local traffic to be forced 		 * through the hardware by configuring the loopback down. 		 * However, it causes problems during network configuration 		 * for boards that can't receive packets they send. 		 * It is now necessary to clear "useloopback" 		 * to force traffic out to the hardware. 		 */
 if|if
 condition|(
-name|loif
-operator|.
-name|if_flags
-operator|&
-name|IFF_UP
+name|useloopback
 condition|)
 block|{
 name|sin
@@ -904,8 +939,10 @@ block|{
 comment|/* not found */
 if|if
 condition|(
-name|ifp
+name|ac
 operator|->
+name|ac_if
+operator|.
 name|if_flags
 operator|&
 name|IFF_NOARP
@@ -981,6 +1018,17 @@ operator|=
 name|arptnew
 argument_list|(
 name|destip
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|at
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"arpresolve: no free entry"
 argument_list|)
 expr_stmt|;
 name|at
@@ -1345,6 +1393,8 @@ name|int
 name|proto
 decl_stmt|,
 name|op
+decl_stmt|,
+name|s
 decl_stmt|;
 name|myaddr
 operator|=
@@ -1381,39 +1431,47 @@ operator|->
 name|arp_op
 argument_list|)
 expr_stmt|;
-name|isaddr
-operator|.
-name|s_addr
-operator|=
+name|bcopy
+argument_list|(
 operator|(
-operator|(
-expr|struct
-name|in_addr
-operator|*
+name|caddr_t
 operator|)
 name|ea
 operator|->
 name|arp_spa
+argument_list|,
+operator|(
+name|caddr_t
 operator|)
-operator|->
-name|s_addr
+operator|&
+name|isaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|isaddr
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|itaddr
-operator|.
-name|s_addr
-operator|=
+name|bcopy
+argument_list|(
 operator|(
-operator|(
-expr|struct
-name|in_addr
-operator|*
+name|caddr_t
 operator|)
 name|ea
 operator|->
 name|arp_tpa
+argument_list|,
+operator|(
+name|caddr_t
 operator|)
-operator|->
-name|s_addr
+operator|&
+name|itaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|itaddr
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1534,6 +1592,11 @@ goto|goto
 name|out
 goto|;
 block|}
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|ARPTAB_LOOK
 argument_list|(
 name|at
@@ -1687,6 +1750,11 @@ operator||=
 name|ATF_COM
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|reply
 label|:
 switch|switch
@@ -2190,7 +2258,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Enter a new address in arptab, pushing out the oldest entry   * from the bucket if there is no room.  * This always succeeds since no bucket can be completely filled  * with permanent entries (except from arpioctl when testing whether  * another permanent entry will fit).  */
+comment|/*  * Enter a new address in arptab, pushing out the oldest entry   * from the bucket if there is no room.  * This always succeeds since no bucket can be completely filled  * with permanent entries (except from arpioctl when testing whether  * another permanent entry will fit).  * MUST BE CALLED AT SPLIMP.  */
 end_comment
 
 begin_function
