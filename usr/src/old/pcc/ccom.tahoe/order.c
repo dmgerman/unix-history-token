@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)order.c	1.1 (Berkeley) %G%"
+literal|"@(#)order.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,7 +23,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"mfile2"
+file|"pass2.h"
 end_include
 
 begin_decl_stmt
