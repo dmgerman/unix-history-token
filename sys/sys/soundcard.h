@@ -2134,6 +2134,10 @@ name|fragments
 decl_stmt|;
 comment|/* # of available fragments (partially usend ones not counted) */
 name|int
+name|fragstotal
+decl_stmt|;
+comment|/* Total # of fragments allocated */
+name|int
 name|fragsize
 decl_stmt|;
 comment|/* Size of a fragment in bytes */
