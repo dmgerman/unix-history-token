@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.3 1994/09/22 22:16:50 wollman Exp $"
+literal|"$Id: mountd.c,v 1.4 1994/12/02 02:58:56 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,6 +461,13 @@ name|GT_ISO
 value|0x4
 end_define
 
+begin_define
+define|#
+directive|define
+name|GT_IGNORE
+value|0x5
+end_define
+
 begin_struct
 struct|struct
 name|hostlist
@@ -797,6 +804,10 @@ name|__P
 argument_list|(
 operator|(
 name|char
+operator|*
+operator|,
+expr|struct
+name|grouplist
 operator|*
 operator|,
 expr|struct
@@ -2720,7 +2731,7 @@ modifier|*
 name|nfh
 decl_stmt|;
 block|{
-name|int
+name|u_long
 name|ok
 init|=
 literal|0
@@ -4380,6 +4391,8 @@ argument_list|(
 name|hst
 argument_list|,
 name|grp
+argument_list|,
+name|tgrp
 argument_list|)
 condition|)
 block|{
@@ -4412,6 +4425,8 @@ argument_list|(
 name|cp
 argument_list|,
 name|grp
+argument_list|,
+name|tgrp
 argument_list|)
 condition|)
 block|{
@@ -6747,6 +6762,8 @@ parameter_list|(
 name|cp
 parameter_list|,
 name|grp
+parameter_list|,
+name|tgrp
 parameter_list|)
 name|char
 modifier|*
@@ -6757,7 +6774,17 @@ name|grouplist
 modifier|*
 name|grp
 decl_stmt|;
+name|struct
+name|grouplist
+modifier|*
+name|tgrp
+decl_stmt|;
 block|{
+name|struct
+name|grouplist
+modifier|*
+name|checkgrp
+decl_stmt|;
 name|struct
 name|hostent
 modifier|*
@@ -6953,6 +6980,62 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+comment|/*          * Sanity check: make sure we don't already have an entry          * for this host in the grouplist.          */
+name|checkgrp
+operator|=
+name|tgrp
+expr_stmt|;
+while|while
+condition|(
+name|checkgrp
+condition|)
+block|{
+if|if
+condition|(
+name|checkgrp
+operator|->
+name|gr_ptr
+operator|.
+name|gt_hostent
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|checkgrp
+operator|->
+name|gr_ptr
+operator|.
+name|gt_hostent
+operator|->
+name|h_name
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|)
+condition|)
+block|{
+name|grp
+operator|->
+name|gr_type
+operator|=
+name|GT_IGNORE
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|checkgrp
+operator|=
+name|checkgrp
+operator|->
+name|gr_next
+expr_stmt|;
 block|}
 name|grp
 operator|->
@@ -8163,6 +8246,15 @@ break|break;
 endif|#
 directive|endif
 comment|/* ISO */
+case|case
+name|GT_IGNORE
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+break|break;
 default|default:
 name|syslog
 argument_list|(
