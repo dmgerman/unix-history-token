@@ -273,6 +273,17 @@ name|TARGCTLIOFREEUNIT
 value|_IOW('C', 8, struct ioc_alloc_unit)
 end_define
 
+begin_comment
+comment|/*  * Set/clear debugging for this target mode instance  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGIODEBUG
+value|_IOW('C', 9, int)
+end_define
+
 begin_endif
 endif|#
 directive|endif
