@@ -387,6 +387,16 @@ begin_comment
 comment|/*  * Error return codes from getaddrinfo()  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* obsoleted */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -397,6 +407,11 @@ end_define
 begin_comment
 comment|/* address family for hostname not supported */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -453,6 +468,16 @@ begin_comment
 comment|/* memory allocation failure */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* obsoleted */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -463,6 +488,11 @@ end_define
 begin_comment
 comment|/* no address associated with hostname */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
