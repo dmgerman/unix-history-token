@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)puts.c	5.4 (Berkeley) %G%"
+literal|"@(#)puts.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +108,10 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|s
 expr_stmt|;
 name|iov
