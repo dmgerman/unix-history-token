@@ -816,48 +816,6 @@ begin_comment
 comment|/* XXX: could be 9188 with LLC/SNAP according 					to comer */
 end_comment
 
-begin_comment
-comment|/* atm_pseudoioctl: turns on and off RX VCIs  [for internal use only!] */
-end_comment
-
-begin_struct
-struct|struct
-name|atm_pseudoioctl
-block|{
-name|struct
-name|atm_pseudohdr
-name|aph
-decl_stmt|;
-name|void
-modifier|*
-name|rxhand
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|SIOCATMENA
-value|_IOWR('a', 123, struct atm_pseudoioctl)
-end_define
-
-begin_comment
-comment|/* enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCATMDIS
-value|_IOWR('a', 124, struct atm_pseudoioctl)
-end_define
-
-begin_comment
-comment|/* disable */
-end_comment
-
 begin_define
 define|#
 directive|define

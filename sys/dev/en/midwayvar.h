@@ -428,17 +428,6 @@ begin_comment
 comment|/* currently closing */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VCC_ASYNC
-value|0x0008
-end_define
-
-begin_comment
-comment|/* async close */
-end_comment
-
 begin_comment
 comment|/*  * softc  */
 end_comment
