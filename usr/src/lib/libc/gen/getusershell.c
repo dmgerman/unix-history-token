@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getusershell.c	5.3 (Berkeley) %G%"
+literal|"@(#)getusershell.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
