@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -371,6 +377,16 @@ comment|/*        stdout is a tty */
 end_comment
 
 begin_decl_stmt
+name|pid_t
+name|pgrp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*        our process group */
+end_comment
+
+begin_decl_stmt
 name|u_int
 name|w_secs
 decl_stmt|;
@@ -546,6 +562,9 @@ name|struct
 name|timeval
 name|now
 decl_stmt|;
+name|int
+name|ctty_pgrp
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -553,6 +572,30 @@ name|v_tty
 operator|||
 operator|!
 name|v_level
+condition|)
+return|return;
+comment|/* check if we're the foreground process */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+name|TIOCGPGRP
+argument_list|,
+operator|&
+name|ctty_pgrp
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|||
+operator|(
+name|pid_t
+operator|)
+name|ctty_pgrp
+operator|!=
+name|pgrp
 condition|)
 return|return;
 name|gettimeofday
@@ -3337,6 +3380,15 @@ name|isatty
 argument_list|(
 name|STDERR_FILENO
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|v_tty
+condition|)
+name|pgrp
+operator|=
+name|getpgrp
+argument_list|()
 expr_stmt|;
 name|r
 operator|=
