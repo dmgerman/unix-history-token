@@ -993,9 +993,6 @@ block|,
 name|esp_rijndael_blockencrypt
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|ENABLE_EALG_AESCTR
 block|{
 literal|16
 block|,
@@ -1019,10 +1016,7 @@ name|esp_aesctr_encrypt
 block|,
 name|esp_aesctr_schedule
 block|}
-block|,
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1104,9 +1098,6 @@ index|[
 literal|5
 index|]
 return|;
-ifdef|#
-directive|ifdef
-name|ENABLE_EALG_AESCTR
 case|case
 name|SADB_X_EALG_AESCTR
 case|:
@@ -1117,8 +1108,6 @@ index|[
 literal|6
 index|]
 return|;
-endif|#
-directive|endif
 default|default:
 return|return
 name|NULL
