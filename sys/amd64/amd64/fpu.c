@@ -259,7 +259,7 @@ name|ldmxcsr
 parameter_list|(
 name|r
 parameter_list|)
-value|__asm __volatile("ldmxcsr %0" : "m" (r))
+value|__asm __volatile("ldmxcsr %0" : : "m" (r))
 end_define
 
 begin_define
