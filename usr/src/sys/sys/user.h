@@ -4,7 +4,7 @@ comment|/* @(#)user.h 2.1 3/25/82 */
 end_comment
 
 begin_comment
-comment|/*	user.h	4.12	82/04/19	*/
+comment|/*	user.h	4.13	82/06/25	*/
 end_comment
 
 begin_ifdef
@@ -515,33 +515,11 @@ begin_comment
 comment|/* u_error codes */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../errno.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
