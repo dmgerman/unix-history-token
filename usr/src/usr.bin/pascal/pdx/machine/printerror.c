@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printerror.c 1.2 %G%"
+literal|"@(#)printerror.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,26 +145,14 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|filename
-operator|=
+name|skimsource
+argument_list|(
 name|srcfilename
 argument_list|(
 name|pc
 argument_list|)
-operator|)
-operator|!=
-name|cursource
-condition|)
-block|{
-name|skimsource
-argument_list|(
-name|filename
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|p
@@ -176,28 +164,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nerror at line %d"
-argument_list|,
-name|curline
+literal|"\nerror at "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nlhdr
-operator|.
-name|nfiles
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|printwhere
 argument_list|(
-literal|"in file %s"
+name|curline
 argument_list|,
 name|cursource
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errnum
@@ -221,28 +197,16 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\n\ninterrupt at line %d"
-argument_list|,
-name|curline
+literal|"\n\ninterrupt at "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|nlhdr
-operator|.
-name|nfiles
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|printwhere
 argument_list|(
-literal|" in file %s"
+name|curline
 argument_list|,
 name|cursource
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|putchar
 argument_list|(
