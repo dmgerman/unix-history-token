@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyname.c	8.1 (Berkeley) %G%"
+literal|"@(#)ttyname.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,6 +221,19 @@ name|NULL
 argument_list|)
 condition|)
 block|{
+name|memset
+argument_list|(
+operator|&
+name|bkey
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|bkey
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bkey
 operator|.
 name|type
