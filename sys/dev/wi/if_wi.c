@@ -3553,7 +3553,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|WI_P3_SST
+name|WI_NIC_P3_SST
 case|:
 name|printf
 argument_list|(
@@ -3562,7 +3562,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|WI_P3_PCI
+name|WI_NIC_P3_PCI
 case|:
 name|printf
 argument_list|(
