@@ -5706,6 +5706,16 @@ if|if
 condition|(
 operator|!
 name|wait
+operator|||
+operator|(
+name|vc
+operator|->
+name|vcc
+operator|.
+name|flags
+operator|&
+name|ATMIO_FLAG_ASYNC
+operator|)
 condition|)
 block|{
 name|vc
