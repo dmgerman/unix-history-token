@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.13	85/03/11	*/
+comment|/*	machdep.c	6.14	85/04/28	*/
 end_comment
 
 begin_include
@@ -188,54 +188,6 @@ include|#
 directive|include
 file|"../vaxuba/ubareg.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|icode
-index|[]
-init|=
-block|{
-literal|0x9f19af9f
-block|,
-comment|/* pushab [&"init",0]; pushab */
-literal|0x02dd09af
-block|,
-comment|/* "/etc/init"; pushl $2 */
-literal|0xbc5c5ed0
-block|,
-comment|/* movl sp,ap; chmk */
-literal|0x2ffe110b
-block|,
-comment|/* $exec; brb .; "/ */
-literal|0x2f637465
-block|,
-comment|/* etc/ */
-literal|0x74696e69
-block|,
-comment|/* init" */
-literal|0x00000000
-block|,
-comment|/* \0\0\0";  0 */
-literal|0x00000014
-block|,
-comment|/* [&"init", */
-literal|0x00000000
-block|,
-comment|/* 0] */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|szicode
-init|=
-sizeof|sizeof
-argument_list|(
-name|icode
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
