@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: badsect.c,v 1.5 1998/06/04 06:38:03 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -494,6 +494,9 @@ name|printf
 argument_list|(
 literal|"Cannot find dev 0%lo corresponding to %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|stbuf
 operator|.
 name|st_rdev
@@ -650,6 +653,9 @@ name|printf
 argument_list|(
 literal|"sector %ld cannot be represented as a dev_t\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|number
 argument_list|)
 expr_stmt|;
@@ -758,6 +764,9 @@ name|printf
 argument_list|(
 literal|"block %ld out of range of file system\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -812,6 +821,9 @@ name|printf
 argument_list|(
 literal|"block %ld in non-data area: cannot attach\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -846,6 +858,9 @@ name|printf
 argument_list|(
 literal|"block %ld in non-data area: cannot attach\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -939,6 +954,9 @@ name|printf
 argument_list|(
 literal|"Warning: sector %ld is in use\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blkno
 argument_list|)
 expr_stmt|;
@@ -1001,6 +1019,9 @@ name|printf
 argument_list|(
 literal|"seek error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
@@ -1034,6 +1055,9 @@ name|printf
 argument_list|(
 literal|"read error: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|bno
 argument_list|)
 expr_stmt|;
