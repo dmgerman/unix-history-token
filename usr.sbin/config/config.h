@@ -334,6 +334,10 @@ name|int
 name|d_conflicts
 decl_stmt|;
 comment|/* I'm allowed to conflict */
+name|int
+name|d_disabled
+decl_stmt|;
+comment|/* nonzero to skip probe/attach */
 name|char
 modifier|*
 name|d_port
