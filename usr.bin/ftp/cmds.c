@@ -3558,6 +3558,11 @@ argument_list|)
 else|:
 name|ch
 expr_stmt|;
+operator|*
+name|tp2
+operator|=
+literal|'\0'
+expr_stmt|;
 name|tp
 operator|=
 name|tmpbuf
