@@ -232,15 +232,6 @@ name|PCIbios
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|PnPBIOS_table
-modifier|*
-name|PnPBIOStable
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|segment_info

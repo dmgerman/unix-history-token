@@ -166,6 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|PnPBIOS_table
 modifier|*
@@ -2372,7 +2373,7 @@ name|devclass_get_softc
 argument_list|(
 name|devclass_find
 argument_list|(
-literal|"ACPI"
+literal|"acpi"
 argument_list|)
 argument_list|,
 literal|0

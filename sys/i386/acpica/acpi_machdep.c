@@ -1278,11 +1278,6 @@ argument_list|(
 name|acpi_dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Prevent the PnP BIOS code from interfering with 	 * our own scan of ISA devices. 	 */
-name|PnPBIOStable
-operator|=
-name|NULL
-expr_stmt|;
 name|acpi_capm_init
 argument_list|(
 name|sc
