@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.10 83/05/10"
+literal|"@(#)ls.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * ls  *  * 4.2bsd version for symbolic links and variable length directory entries.  */
+comment|/*  * ls  *  * 4.2bsd version for symbolic links, variable length  * directory entries, block size in the inode, etc.  */
 end_comment
 
 begin_include
@@ -61,7 +61,7 @@ name|kbytes
 parameter_list|(
 name|size
 parameter_list|)
-value|((size + 1023) / 1024)
+value|(((size) + 1023) / 1024)
 end_define
 
 begin_struct
@@ -96,6 +96,10 @@ name|long
 name|fsize
 decl_stmt|;
 comment|/* file size */
+name|long
+name|fblks
+decl_stmt|;
+comment|/* number of blocks used */
 name|time_t
 name|fmtime
 decl_stmt|;
@@ -1251,7 +1255,7 @@ modifier|*
 name|dp
 decl_stmt|;
 name|int
-name|nkb
+name|nb
 decl_stmt|,
 name|nent
 init|=
@@ -1322,7 +1326,7 @@ name|pfp0
 operator|+
 name|nent
 expr_stmt|;
-name|nkb
+name|nb
 operator|=
 literal|0
 expr_stmt|;
@@ -1414,7 +1418,7 @@ operator|+
 name|Rflg
 argument_list|,
 operator|&
-name|nkb
+name|nb
 argument_list|)
 operator|==
 literal|0
@@ -1531,7 +1535,13 @@ name|fp
 expr_stmt|;
 return|return
 operator|(
-name|nkb
+name|kbytes
+argument_list|(
+name|dbtob
+argument_list|(
+name|nb
+argument_list|)
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1559,7 +1569,7 @@ name|file
 parameter_list|,
 name|statarg
 parameter_list|,
-name|pnkb
+name|pnb
 parameter_list|)
 specifier|register
 name|struct
@@ -1575,7 +1585,7 @@ name|int
 name|statarg
 decl_stmt|,
 decl|*
-name|pnkb
+name|pnb
 decl_stmt|;
 end_function
 
@@ -1589,10 +1599,12 @@ function_decl|)
 parameter_list|()
 init|=
 name|Lflg
+operator|||
+name|Fflg
 condition|?
-name|stat
-operator|:
 name|lstat
+operator|:
+name|stat
 function_decl|;
 name|char
 name|buf
@@ -1679,6 +1691,14 @@ literal|0
 operator|)
 return|;
 block|}
+name|fp
+operator|->
+name|fblks
+operator|=
+name|stb
+operator|.
+name|st_blocks
+expr_stmt|;
 name|fp
 operator|->
 name|fsize
@@ -1853,6 +1873,14 @@ name|stb
 operator|.
 name|st_size
 expr_stmt|;
+name|fp
+operator|->
+name|fblks
+operator|=
+name|stb
+operator|.
+name|st_blocks
+expr_stmt|;
 block|}
 break|break;
 block|}
@@ -1935,37 +1963,14 @@ name|st_mtime
 expr_stmt|;
 if|if
 condition|(
-name|pnkb
-condition|)
-if|if
-condition|(
-name|fp
-operator|->
-name|ftype
-operator|!=
-literal|'b'
-operator|&&
-name|fp
-operator|->
-name|ftype
-operator|!=
-literal|'c'
-operator|&&
-name|fp
-operator|->
-name|ftype
-operator|!=
-literal|'s'
+name|pnb
 condition|)
 operator|*
-name|pnkb
+name|pnb
 operator|+=
-name|kbytes
-argument_list|(
-name|fp
-operator|->
-name|fsize
-argument_list|)
+name|stb
+operator|.
+name|st_blocks
 expr_stmt|;
 block|}
 return|return
@@ -2981,36 +2986,6 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-switch|switch
-condition|(
-name|p
-operator|->
-name|ftype
-condition|)
-block|{
-case|case
-literal|'b'
-case|:
-case|case
-literal|'c'
-case|:
-case|case
-literal|'s'
-case|:
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|sizebuf
-argument_list|,
-literal|"%4ld "
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
 operator|(
 name|void
 operator|)
@@ -3022,14 +2997,15 @@ literal|"%4ld "
 argument_list|,
 name|kbytes
 argument_list|(
+name|dbtob
+argument_list|(
 name|p
 operator|->
-name|fsize
+name|fblks
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
 name|sizebuf

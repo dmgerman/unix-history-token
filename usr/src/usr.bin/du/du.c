@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)du.c	4.8 (Berkeley) %G%"
+literal|"@(#)du.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,16 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|kb
+parameter_list|(
+name|n
+parameter_list|)
+value|(howmany(dbtob(n), 1024))
+end_define
+
 begin_function
 name|main
 parameter_list|(
@@ -153,7 +163,7 @@ name|argv
 decl_stmt|;
 block|{
 name|long
-name|kbytes
+name|blocks
 init|=
 literal|0
 decl_stmt|;
@@ -383,7 +393,7 @@ name|np
 operator|=
 name|path
 expr_stmt|;
-name|kbytes
+name|blocks
 operator|=
 name|descend
 argument_list|(
@@ -405,7 +415,10 @@ name|printf
 argument_list|(
 literal|"%ld\t%s\n"
 argument_list|,
-name|kbytes
+name|kb
+argument_list|(
+name|blocks
+argument_list|)
 argument_list|,
 name|path
 argument_list|)
@@ -487,7 +500,7 @@ name|int
 name|i
 decl_stmt|;
 name|long
-name|kbytes
+name|blocks
 init|=
 literal|0
 decl_stmt|;
@@ -654,16 +667,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|kbytes
+name|blocks
 operator|=
-name|howmany
-argument_list|(
 name|stb
 operator|.
-name|st_size
-argument_list|,
-literal|1024
-argument_list|)
+name|st_blocks
 expr_stmt|;
 if|if
 condition|(
@@ -686,14 +694,17 @@ name|printf
 argument_list|(
 literal|"%ld\t%s\n"
 argument_list|,
-name|kbytes
+name|kb
+argument_list|(
+name|blocks
+argument_list|)
 argument_list|,
 name|base
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|kbytes
+name|blocks
 operator|)
 return|;
 block|}
@@ -827,7 +838,7 @@ argument_list|(
 name|dirp
 argument_list|)
 expr_stmt|;
-name|kbytes
+name|blocks
 operator|+=
 name|descend
 argument_list|(
@@ -903,7 +914,10 @@ name|printf
 argument_list|(
 literal|"%ld\t%s\n"
 argument_list|,
-name|kbytes
+name|kb
+argument_list|(
+name|blocks
+argument_list|)
 argument_list|,
 name|base
 argument_list|)
@@ -951,7 +965,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|kbytes
+name|blocks
 operator|)
 return|;
 block|}
