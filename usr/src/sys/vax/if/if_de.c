@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_de.c	6.8	85/05/01	*/
+comment|/*	if_de.c	6.9	85/05/04	*/
 end_comment
 
 begin_include
@@ -135,11 +135,22 @@ directive|include
 file|"../netinet/if_ether.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PUP
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"../netpup/pup.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
