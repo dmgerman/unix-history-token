@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c 1.4 %G%"
+literal|"@(#)vax.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2238,7 +2238,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Single step the machine a source line (or instruction if "inst_tracing"  * is true.  If "isnext" is true, skip over procedure calls.  */
+comment|/*  * Single step the machine a source line (or instruction if "inst_tracing"  * is true).  If "isnext" is true, skip over procedure calls.  */
 end_comment
 
 begin_function_decl
@@ -2283,6 +2283,12 @@ if|if
 condition|(
 name|not
 name|inst_tracing
+name|and
+name|nlhdr
+operator|.
+name|nlines
+operator|!=
+literal|0
 condition|)
 block|{
 name|line
@@ -2316,15 +2322,22 @@ name|addr
 argument_list|)
 expr_stmt|;
 block|}
+name|curline
+operator|=
+name|line
+expr_stmt|;
+block|}
+else|else
+block|{
+name|curline
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|stepto
 argument_list|(
 name|addr
 argument_list|)
-expr_stmt|;
-name|curline
-operator|=
-name|line
 expr_stmt|;
 name|filename
 operator|=
