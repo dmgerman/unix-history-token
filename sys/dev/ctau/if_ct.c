@@ -347,7 +347,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|500000
+literal|400000
 end_if
 
 begin_include
