@@ -2076,6 +2076,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|mcl_pool_max
+init|=
+literal|10
 decl_stmt|;
 end_decl_stmt
 
