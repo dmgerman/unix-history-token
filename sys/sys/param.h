@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|BSD
-value|199507
+value|199506
 end_define
 
 begin_comment
@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|502106
+value|502107
 end_define
 
 begin_comment
