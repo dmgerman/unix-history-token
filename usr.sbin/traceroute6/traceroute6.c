@@ -333,27 +333,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|Fprintf
-value|(void)fprintf
-end_define
-
-begin_define
-define|#
-directive|define
-name|Sprintf
-value|(void)sprintf
-end_define
-
-begin_define
-define|#
-directive|define
-name|Printf
-value|(void)printf
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1209,7 +1188,7 @@ operator|*
 name|ep
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1229,7 +1208,7 @@ operator|>
 name|max_hops
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1269,7 +1248,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1322,7 +1301,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1357,7 +1336,7 @@ name|h_addr
 argument_list|)
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1450,7 +1429,7 @@ operator|*
 name|ep
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1470,7 +1449,7 @@ operator|<
 name|first_hop
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1522,7 +1501,7 @@ operator|*
 name|ep
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1542,7 +1521,7 @@ operator|<
 literal|1
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1585,7 +1564,7 @@ operator|*
 name|ep
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1605,7 +1584,7 @@ operator|<
 literal|1
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1672,7 +1651,7 @@ operator|*
 name|ep
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1692,7 +1671,7 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1813,9 +1792,6 @@ condition|(
 name|error
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1846,9 +1822,6 @@ name|Dst
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1898,9 +1871,6 @@ operator|!
 name|hostname
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1948,7 +1918,7 @@ operator|*
 name|ep
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -1979,7 +1949,7 @@ name|opacket
 argument_list|)
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -2148,7 +2118,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -2592,7 +2562,7 @@ literal|3
 argument_list|)
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -2648,7 +2618,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -2925,7 +2895,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|Printf
+name|printf
 argument_list|(
 literal|"traceroute6: %s: %s\n"
 argument_list|,
@@ -2955,7 +2925,7 @@ name|Src
 argument_list|)
 condition|)
 block|{
-name|Printf
+name|printf
 argument_list|(
 literal|"traceroute6: %s: %s\n"
 argument_list|,
@@ -3177,7 +3147,7 @@ name|NI_NUMERICHOST
 argument_list|)
 condition|)
 block|{
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -3200,9 +3170,6 @@ name|dummy
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|1
 name|ident
 operator|=
 operator|(
@@ -3214,15 +3181,6 @@ operator|)
 operator||
 literal|0x8000
 expr_stmt|;
-else|#
-directive|else
-name|ident
-operator|=
-literal|0
-expr_stmt|;
-comment|/*let the kernel pick one*/
-endif|#
-directive|endif
 name|Src
 operator|.
 name|sin6_port
@@ -3272,7 +3230,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
+name|socklen_t
 name|len
 decl_stmt|;
 name|len
@@ -3367,14 +3325,14 @@ name|hbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"traceroute6"
 argument_list|)
 expr_stmt|;
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -3389,7 +3347,7 @@ if|if
 condition|(
 name|source
 condition|)
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -3398,7 +3356,7 @@ argument_list|,
 name|source
 argument_list|)
 expr_stmt|;
-name|Fprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
@@ -3423,7 +3381,7 @@ name|first_hop
 operator|>
 literal|1
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|"Skipping %d intermediate hops\n"
 argument_list|,
@@ -3461,7 +3419,7 @@ name|unreachable
 init|=
 literal|0
 decl_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|"%2d "
 argument_list|,
@@ -3600,7 +3558,7 @@ operator|.
 name|sin6_addr
 expr_stmt|;
 block|}
-name|Printf
+name|printf
 argument_list|(
 literal|"  %.3f ms"
 argument_list|,
@@ -3627,7 +3585,7 @@ case|:
 operator|++
 name|unreachable
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|" !N"
 argument_list|)
@@ -3639,7 +3597,7 @@ case|:
 operator|++
 name|unreachable
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|" !P"
 argument_list|)
@@ -3651,7 +3609,7 @@ case|:
 operator|++
 name|unreachable
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|" !S"
 argument_list|)
@@ -3663,7 +3621,7 @@ case|:
 operator|++
 name|unreachable
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|" !A"
 argument_list|)
@@ -3682,7 +3640,7 @@ name|rcvhlim
 operator|<=
 literal|1
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|" !"
 argument_list|)
@@ -3701,7 +3659,7 @@ name|cc
 operator|==
 literal|0
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|" *"
 argument_list|)
@@ -4235,7 +4193,7 @@ argument_list|(
 literal|"sendto"
 argument_list|)
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|"traceroute6: wrote %s %d chars, ret=%d\n"
 argument_list|,
@@ -4463,7 +4421,7 @@ name|ICMP6_PACKET_TOO_BIG
 case|:
 name|cp
 operator|=
-literal|"Pakcet Too Big"
+literal|"Packet Too Big"
 expr_stmt|;
 break|break;
 case|case
@@ -4748,7 +4706,7 @@ name|hbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|"packet too short (%d bytes) from %s\n"
 argument_list|,
@@ -4842,7 +4800,7 @@ name|hbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|"data too short (%d bytes) from %s\n"
 argument_list|,
@@ -5216,11 +5174,11 @@ literal|"invalid"
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|hbuf
+name|sbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|"\n%d bytes from %s to %s"
 argument_list|,
@@ -5250,7 +5208,7 @@ else|:
 literal|"?"
 argument_list|)
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|": icmp type %d (%s) code %d\n"
 argument_list|,
@@ -5304,7 +5262,7 @@ name|WIDTH
 operator|==
 literal|0
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|"%04x:"
 argument_list|,
@@ -5319,12 +5277,12 @@ literal|4
 operator|==
 literal|0
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|" "
 argument_list|)
 expr_stmt|;
-name|Printf
+name|printf
 argument_list|(
 literal|"%02x"
 argument_list|,
@@ -5344,7 +5302,7 @@ name|WIDTH
 operator|-
 literal|1
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5358,7 +5316,7 @@ name|WIDTH
 operator|!=
 literal|0
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5676,7 +5634,7 @@ if|if
 condition|(
 name|nflag
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -5688,7 +5646,7 @@ if|if
 condition|(
 name|lflag
 condition|)
-name|Printf
+name|printf
 argument_list|(
 literal|" %s (%s)"
 argument_list|,
@@ -5706,7 +5664,7 @@ name|hbuf
 argument_list|)
 expr_stmt|;
 else|else
-name|Printf
+name|printf
 argument_list|(
 literal|" %s"
 argument_list|,
@@ -5729,7 +5687,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|OLDRAWSOCKET
-name|Printf
+name|printf
 argument_list|(
 literal|" %d bytes to %s"
 argument_list|,
@@ -5759,7 +5717,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|Printf
+name|printf
 argument_list|(
 literal|" %d bytes of data to %s"
 argument_list|,
@@ -5919,7 +5877,10 @@ name|gethostname
 argument_list|(
 name|domain
 argument_list|,
-name|MAXHOSTNAMELEN
+sizeof|sizeof
+argument_list|(
+name|domain
+argument_list|)
 argument_list|)
 operator|==
 literal|0
@@ -5927,7 +5888,7 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|domain
 argument_list|,
@@ -6003,7 +5964,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
