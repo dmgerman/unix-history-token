@@ -166,9 +166,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OPTRESET_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_OPTRESET_DECLARED
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optreset
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* _GETOPT_DECLARED */
+comment|/* getopt(3) external variable */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|__END_DECLS

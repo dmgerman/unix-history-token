@@ -4153,6 +4153,18 @@ begin_comment
 comment|/* obsoleted by malloc() */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_OPTRESET_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_OPTRESET_DECLARED
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -4163,6 +4175,11 @@ end_decl_stmt
 begin_comment
 comment|/* getopt(3) external variable */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
