@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.24 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.25 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.24 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.25 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3585,6 +3585,10 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|hp
 operator|=
 name|gethostbyname
@@ -3603,13 +3607,77 @@ operator|(
 name|FALSE
 operator|)
 return|;
+name|p
+operator|=
+name|hp
+operator|->
+name|h_name
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'.'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* first word is a short name -- try to find a long one */
+name|char
+modifier|*
+modifier|*
+name|ap
+decl_stmt|;
+for|for
+control|(
+name|ap
+operator|=
+name|hp
+operator|->
+name|h_aliases
+init|;
+operator|*
+name|ap
+operator|!=
+name|NULL
+condition|;
+name|ap
+operator|++
+control|)
+if|if
+condition|(
+name|strchr
+argument_list|(
+operator|*
+name|ap
+argument_list|,
+literal|'.'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+break|break;
+if|if
+condition|(
+operator|*
+name|ap
+operator|!=
+name|NULL
+condition|)
+name|p
+operator|=
+operator|*
+name|ap
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|strlen
 argument_list|(
-name|hp
-operator|->
-name|h_name
+name|p
 argument_list|)
 operator|>=
 name|hbsize
@@ -3626,9 +3694,7 @@ name|strcpy
 argument_list|(
 name|host
 argument_list|,
-name|hp
-operator|->
-name|h_name
+name|p
 argument_list|)
 expr_stmt|;
 return|return
