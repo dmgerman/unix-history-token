@@ -36,12 +36,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/limits.h>
+file|<machine/_limits.h>
 end_include
-
-begin_comment
-comment|/* XXX for CHAR_BIT */
-end_comment
 
 begin_comment
 comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  *  * A process is initially started out with NDFILE descriptors stored within  * this structure, selected to be enough for typical applications based on  * the historical limit of 20 open files (and the usage of descriptors by  * shells).  If these descriptors are exhausted, a larger descriptor table  * may be allocated, up to a process' resource limit; the internal arrays  * are then unused.  */
@@ -72,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|NDENTRIES
-value|(NDSLOTSIZE * CHAR_BIT)
+value|(NDSLOTSIZE * __CHAR_BIT)
 end_define
 
 begin_define
