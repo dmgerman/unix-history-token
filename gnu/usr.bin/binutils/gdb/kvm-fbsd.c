@@ -2156,6 +2156,9 @@ decl_stmt|;
 name|int
 name|cfd
 decl_stmt|;
+name|CORE_ADDR
+name|paddr
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2291,29 +2294,37 @@ condition|(
 operator|!
 name|devmem
 condition|)
-name|read_pcb
-argument_list|(
-name|cfd
-argument_list|,
+name|paddr
+operator|=
 name|ksym_lookup
 argument_list|(
 literal|"dumppcb"
 argument_list|)
 operator|-
 name|KERNOFF
-argument_list|)
 expr_stmt|;
 else|else
-name|read_pcb
-argument_list|(
-name|cfd
-argument_list|,
+name|paddr
+operator|=
 name|kvtophys
 argument_list|(
 name|cfd
 argument_list|,
 name|curpcb
 argument_list|)
+expr_stmt|;
+name|read_pcb
+argument_list|(
+name|cfd
+argument_list|,
+name|paddr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"initial pcb at %x\n"
+argument_list|,
+name|paddr
 argument_list|)
 expr_stmt|;
 return|return
@@ -3645,13 +3656,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|printf
-argument_list|(
-literal|"current pcb at %x\n"
-argument_list|,
-name|uaddr
-argument_list|)
-expr_stmt|;
 comment|/*    * get the register values out of the sys pcb and    * store them where `read_register' will find them.    */
 comment|/*    * XXX many registers aren't available.    * XXX for the non-core case, the registers are stale - they are for    *     the last context switch to the debugger.    * XXX gcc's register numbers aren't all #defined in tm-i386.h.    */
 name|noreg
@@ -3776,7 +3780,7 @@ literal|9
 init|;
 name|i
 operator|<
-literal|14
+literal|13
 condition|;
 operator|++
 name|i
@@ -3796,7 +3800,7 @@ argument_list|)
 expr_stmt|;
 name|supply_register
 argument_list|(
-literal|15
+literal|14
 argument_list|,
 operator|(
 name|char
@@ -3810,7 +3814,7 @@ argument_list|)
 expr_stmt|;
 name|supply_register
 argument_list|(
-literal|16
+literal|15
 argument_list|,
 operator|(
 name|char
