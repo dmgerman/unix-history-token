@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 1999 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: kuser_locl.h,v 1.12 1999/12/02 17:05:01 joda Exp $ */
+comment|/* $Id: kuser_locl.h,v 1.13 2003/01/21 14:13:51 nectar Exp $ */
 end_comment
 
 begin_ifndef
@@ -289,6 +289,16 @@ include|#
 directive|include
 file|<kafs.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto-headers.h"
+end_include
+
+begin_comment
+comment|/* for des_read_pw_string */
+end_comment
 
 begin_endif
 endif|#
