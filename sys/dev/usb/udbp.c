@@ -2836,11 +2836,6 @@ name|node
 operator|->
 name|private
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|node
 operator|->
 name|flags
