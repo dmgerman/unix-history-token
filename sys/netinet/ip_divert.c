@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ip_divert.c,v 1.1.2.9 1998/06/12 03:02:08 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ip_divert.c,v 1.1.2.10 1998/07/01 01:38:34 julian Exp $  */
 end_comment
 
 begin_include
@@ -405,30 +405,17 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* Record divert port */
-ifndef|#
-directive|ifndef
-name|IPFW_DIVERT_RESTART
-name|divsrc
-operator|.
-name|sin_port
-operator|=
-name|htons
-argument_list|(
-name|ip_divert_port
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+comment|/* Record divert cookie */
 name|divsrc
 operator|.
 name|sin_port
 operator|=
 name|ip_divert_cookie
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_RESTART */
+name|ip_divert_cookie
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Restore packet header fields */
 name|ip
 operator|->
@@ -450,7 +437,7 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-comment|/* Record receive interface address, if any */
+comment|/* 	 * Record receive interface address, if any  	 * But only for incoming packets. 	 */
 name|divsrc
 operator|.
 name|sin_addr
@@ -563,6 +550,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* 	 * Record the incoming interface name whenever we have one. 	 */
 if|if
 condition|(
 name|m
@@ -658,6 +646,10 @@ operator|->
 name|inp_socket
 expr_stmt|;
 block|}
+name|ip_divert_port
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sa
@@ -836,29 +828,12 @@ condition|(
 name|sin
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|IPFW_DIVERT_RESTART
-name|ip_divert_cookie
-operator|=
-name|ntohs
-argument_list|(
-name|sin
-operator|->
-name|sin_port
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|ip_divert_cookie
 operator|=
 name|sin
 operator|->
 name|sin_port
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IPFW_DIVERT_RESTART */
 block|}
 else|else
 block|{

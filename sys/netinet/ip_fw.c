@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.14 1998/06/05 21:38:07 julian Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.51.2.15 1998/07/01 01:38:35 julian Exp $  */
 end_comment
 
 begin_comment
@@ -2134,11 +2134,19 @@ directive|else
 name|u_int16_t
 name|ignport
 init|=
+name|ntohs
+argument_list|(
 operator|*
 name|cookie
+argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
+operator|*
+name|cookie
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Go down the chain, looking for enlightment 	 * #ifdef IPFW_DIVERT_RESTART 	 * If we've been asked to start at a given rule immediatly, do so. 	 * #endif 	 */
 ifndef|#
 directive|ifndef
@@ -3016,9 +3024,12 @@ directive|else
 operator|*
 name|cookie
 operator|=
+name|htons
+argument_list|(
 name|f
 operator|->
 name|fw_divert_port
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.50.2.15 1998/06/05 21:38:09 julian Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.50.2.16 1998/07/01 01:38:36 julian Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
 end_comment
 
 begin_define
@@ -1563,12 +1563,12 @@ condition|(
 name|ip_fw_chk_ptr
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPDIVERT
 name|u_short
 name|port
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPDIVERT
 name|port
 operator|=
 call|(
@@ -1606,12 +1606,12 @@ goto|;
 block|}
 else|#
 directive|else
-name|u_int16_t
-name|dummy
-init|=
-literal|0
-decl_stmt|;
 comment|/* If ipfw says divert, we have to just drop packet */
+comment|/* use port as a dummy argument */
+name|port
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 call|(
@@ -1627,7 +1627,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|dummy
+name|port
 argument_list|,
 operator|&
 name|m
@@ -2500,7 +2500,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPDIVERT
-comment|/* 	 * Divert reassembled packets to the divert protocol if required 	 */
+comment|/* 	 * Divert reassembled packets to the divert protocol if required 	 * If divert port is null then cookie should be too, 	 * so we shouldn't need to clear them here. Assume ip_divert does so. 	 */
 if|if
 condition|(
 name|frag_divert_port
@@ -2538,25 +2538,6 @@ name|hlen
 operator|)
 expr_stmt|;
 return|return;
-block|}
-comment|/* Don't let packets divert themselves */
-if|if
-condition|(
-name|ip
-operator|->
-name|ip_p
-operator|==
-name|IPPROTO_DIVERT
-condition|)
-block|{
-name|ipstat
-operator|.
-name|ips_noproto
-operator|++
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
 block|}
 comment|/* Don't let packets divert themselves */
 if|if
@@ -3140,13 +3121,6 @@ ifdef|#
 directive|ifdef
 name|IPDIVERT
 comment|/* 	 * Any fragment diverting causes the whole packet to divert 	 */
-if|if
-condition|(
-name|frag_divert_port
-operator|!=
-literal|0
-condition|)
-block|{
 name|fp
 operator|->
 name|ipq_divert
@@ -3165,7 +3139,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* IPFW_DIVERT_RESTART */
-block|}
 name|frag_divert_port
 operator|=
 literal|0
@@ -3547,6 +3520,19 @@ operator|)
 return|;
 name|dropfrag
 label|:
+ifdef|#
+directive|ifdef
+name|IPDIVERT
+name|frag_divert_port
+operator|=
+literal|0
+expr_stmt|;
+name|ip_divert_cookie
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|ipstat
 operator|.
 name|ips_fragdropped
