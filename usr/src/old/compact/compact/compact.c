@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compact.c	4.4 (Berkeley) %G%"
+literal|"@(#)compact.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,6 +1193,11 @@ operator|=
 name|ic
 expr_stmt|;
 block|}
+name|fflush
+argument_list|(
+name|cfp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ferror
@@ -1233,13 +1238,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|oc
-operator|>
-literal|1
-condition|)
-block|{
 name|unlink
 argument_list|(
 name|fname
@@ -1247,10 +1245,6 @@ argument_list|)
 expr_stmt|;
 goto|goto
 name|closeboth
-goto|;
-block|}
-goto|goto
-name|closein
 goto|;
 block|}
 else|else
@@ -1276,25 +1270,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: "
+literal|"%s: Not compacted.  "
 argument_list|,
 name|argv
 index|[
 name|i
 index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|<
-name|argc
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Not compacted.  "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1311,13 +1292,6 @@ operator|<
 name|argc
 condition|)
 block|{
-if|if
-condition|(
-name|oc
-operator|>
-literal|1
-condition|)
-block|{
 name|unlink
 argument_list|(
 name|fname
@@ -1325,10 +1299,6 @@ argument_list|)
 expr_stmt|;
 goto|goto
 name|closeboth
-goto|;
-block|}
-goto|goto
-name|closein
 goto|;
 block|}
 else|else
@@ -1491,7 +1461,12 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-continue|continue;
+block|}
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|fail
 label|:
 name|fprintf
@@ -1501,8 +1476,11 @@ argument_list|,
 literal|"Unsuccessful compact of standard input to standard output.\n"
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

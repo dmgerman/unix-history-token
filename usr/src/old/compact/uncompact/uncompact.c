@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uncompact.c	4.4 (Berkeley) %G%"
+literal|"@(#)uncompact.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,6 +1078,11 @@ goto|goto
 name|closeboth
 goto|;
 block|}
+name|fflush
+argument_list|(
+name|uncfp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ferror
@@ -1222,6 +1227,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
