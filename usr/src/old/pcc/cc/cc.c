@@ -1,15 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* USE<wait.h> */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 3.3 %G%"
+literal|"@(#)cc.c 3.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,12 +204,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|cps8
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|dflag
@@ -406,37 +396,6 @@ literal|1
 index|]
 condition|)
 block|{
-case|case
-literal|'8'
-case|:
-name|cps8
-operator|++
-expr_stmt|;
-name|cpp
-operator|=
-literal|"/usr/bin/8cpp"
-expr_stmt|;
-name|ccom
-operator|=
-literal|"/usr/lib/8ccom"
-expr_stmt|;
-name|c2
-operator|=
-literal|"/usr/bin/8c2"
-expr_stmt|;
-name|as
-operator|=
-literal|"/usr/bin/8as"
-expr_stmt|;
-name|ld
-operator|=
-literal|"/usr/bin/8ld"
-expr_stmt|;
-name|crt0
-operator|=
-literal|"/usr/lib/8crt0"
-expr_stmt|;
-continue|continue;
 case|case
 literal|'S'
 case|:
@@ -880,10 +839,6 @@ name|proflag
 condition|)
 name|crt0
 operator|=
-name|cps8
-condition|?
-literal|"/usr/lib/8mcrt0.o"
-else|:
 literal|"/usr/new/mcrt0.o"
 expr_stmt|;
 if|if
