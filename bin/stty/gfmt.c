@@ -364,6 +364,10 @@ name|ep
 argument_list|,
 literal|"%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|*
+operator|)
 operator|&
 name|tmp
 argument_list|)
