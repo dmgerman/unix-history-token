@@ -5111,7 +5111,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t(cd $(%s_SRCDIR)&& $(MAKE) $(BUILDOPTS) clean)\n\n"
+literal|"\t(cd $(%s_SRCDIR)&& $(MAKE) $(BUILDOPTS) clean cleandepend)\n\n"
 argument_list|,
 name|p
 operator|->
@@ -5137,10 +5137,6 @@ argument_list|(
 name|outmk
 argument_list|,
 literal|"\t@echo \"** cannot make objs for %s\"\n\n"
-argument_list|,
-name|p
-operator|->
-name|ident
 argument_list|,
 name|p
 operator|->
