@@ -2568,7 +2568,7 @@ name|nd
 argument_list|,
 name|CREATE
 argument_list|,
-name|FOLLOW
+name|NOFOLLOW
 operator||
 name|LOCKPARENT
 argument_list|,
