@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xi_src.c	7.2 (Berkeley) %G%"
+literal|"@(#)xi_src.c	7.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * This is a test program to be a source for TP4 connections.  */
+comment|/*  * This is a test program to be a source for X.25 connections.  */
 end_comment
 
 begin_include
@@ -419,14 +419,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|tisrc
+name|xisrc
 argument_list|()
 expr_stmt|;
 block|}
 end_function
 
 begin_macro
-name|tisrc
+name|xisrc
 argument_list|()
 end_macro
 
@@ -1175,6 +1175,23 @@ index|[
 literal|10240
 index|]
 decl_stmt|;
+specifier|static
+name|repeatcount
+operator|,
+name|repeatsize
+expr_stmt|;
+if|if
+condition|(
+name|repeatcount
+operator|>
+literal|0
+condition|)
+block|{
+name|repeatcount
+operator|--
+expr_stmt|;
+return|return;
+block|}
 operator|*
 name|flags
 operator|=
@@ -1342,6 +1359,47 @@ name|EOF
 condition|)
 break|break;
 block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|workbuf
+argument_list|,
+literal|"repeat"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|x
+operator|=
+name|scanf
+argument_list|(
+literal|"%d"
+argument_list|,
+operator|&
+name|repeatcount
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|repeatcount
+operator|<=
+literal|0
+condition|)
+name|repeatcount
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|x
+operator|==
+name|EOF
+condition|)
+break|break;
+block|}
 else|else
 block|{
 name|int
@@ -1419,6 +1477,8 @@ operator|.
 name|cmhdr
 argument_list|)
 expr_stmt|;
+name|repeatsize
+operator|=
 name|cm
 operator|.
 name|cm
