@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	5.2 (Berkeley) %G%"
+literal|"@(#)cmp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +150,7 @@ operator|->
 name|lstat
 operator|.
 name|st_mtime
-operator|<
+operator|-
 name|b
 operator|->
 name|lstat
@@ -189,7 +189,7 @@ operator|->
 name|lstat
 operator|.
 name|st_mtime
-operator|<
+operator|-
 name|a
 operator|->
 name|lstat
@@ -228,7 +228,7 @@ operator|->
 name|lstat
 operator|.
 name|st_atime
-operator|<
+operator|-
 name|b
 operator|->
 name|lstat
@@ -267,7 +267,7 @@ operator|->
 name|lstat
 operator|.
 name|st_atime
-operator|<
+operator|-
 name|a
 operator|->
 name|lstat
@@ -306,7 +306,7 @@ operator|->
 name|lstat
 operator|.
 name|st_ctime
-operator|<
+operator|-
 name|b
 operator|->
 name|lstat
@@ -345,7 +345,7 @@ operator|->
 name|lstat
 operator|.
 name|st_ctime
-operator|<
+operator|-
 name|a
 operator|->
 name|lstat
