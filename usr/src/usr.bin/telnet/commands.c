@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.21 (Berkeley) %G%"
+literal|"@(#)commands.c	1.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2616,6 +2616,19 @@ name|defined
 argument_list|(
 name|TN3270
 argument_list|)
+block|{
+literal|"apitrace"
+block|,
+literal|"(debugging) toggle tracing of API transactions"
+block|,
+literal|0
+block|,
+operator|&
+name|apitrace
+block|,
+literal|"trace API transactions"
+block|}
+block|,
 block|{
 literal|"cursesdata"
 block|,
