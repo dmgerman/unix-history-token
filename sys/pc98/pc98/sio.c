@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
 end_include
 
@@ -5734,6 +5740,16 @@ argument_list|,
 name|mcr_image
 argument_list|)
 expr_stmt|;
+comment|/* 	 * It seems my Xircom CBEM56G Cardbus modem wants to be reset 	 * to 8 bits *again*, or else probe test 0 will fail. 	 * gwk@sgi.com, 4/19/2001 	 */
+name|sio_setreg
+argument_list|(
+name|com
+argument_list|,
+name|com_cfcr
+argument_list|,
+name|CFCR_8BITS
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Some pcmcia cards have the "TXRDY bug", so we check everyone 	 * for IIR_TXRDY implementation ( Palido 321s, DC-1S... ) 	 */
 if|if
 condition|(
@@ -5788,7 +5804,7 @@ operator|&
 name|IIR_TXRDY
 condition|)
 block|{
-comment|/* Nop, Double check with clearing IER */
+comment|/* No, Double check with clearing IER */
 name|sio_setreg
 argument_list|(
 name|com
@@ -5810,7 +5826,7 @@ operator|&
 name|IIR_NOPEND
 condition|)
 block|{
-comment|/* Ok. we're familia this gang */
+comment|/* Ok. We discovered TXRDY bug! */
 name|SET_FLAG
 argument_list|(
 name|dev
