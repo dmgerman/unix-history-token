@@ -56,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_fd.h>
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/fdcio.h>
 end_include
 
 begin_function

@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ioctl_fd.h>
+file|<sys/fdcio.h>
 end_include
 
 begin_include
