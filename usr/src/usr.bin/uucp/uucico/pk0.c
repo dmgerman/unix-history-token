@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk0.c	5.2 (Berkeley) %G%"
+literal|"@(#)pk0.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,55 +20,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|USG
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
+file|"uucp.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"pk.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
 end_include
 
 begin_comment
@@ -2325,8 +2286,6 @@ name|pk
 decl_stmt|;
 specifier|register
 name|i
-operator|,
-name|rbits
 expr_stmt|;
 name|char
 modifier|*
@@ -2335,6 +2294,8 @@ name|bp
 decl_stmt|;
 name|int
 name|rcheck
+init|=
+literal|0
 decl_stmt|;
 name|pk
 operator|=
@@ -2481,10 +2442,6 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * free space 	 */
-name|rbits
-operator|=
-literal|1
-expr_stmt|;
 name|rcheck
 operator|=
 literal|0

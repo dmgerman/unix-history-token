@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusnap.c	5.3 (Berkeley) %G%"
+literal|"@(#)uusnap.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,12 +28,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -1384,7 +1378,7 @@ name|dirp
 operator|=
 name|opendir
 argument_list|(
-literal|"."
+name|LOCKDIR
 argument_list|)
 operator|)
 operator|==

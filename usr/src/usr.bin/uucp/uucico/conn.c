@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conn.c	5.4 (Berkeley) %G%"
+literal|"@(#)conn.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,12 +42,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -148,6 +142,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|errno
+decl_stmt|,
+name|onesys
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +153,15 @@ name|char
 modifier|*
 name|sys_errlist
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|MaxGrade
+decl_stmt|,
+name|DefMaxGrade
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +309,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*******  *	conn(system)  *	char *system;  *  *	conn - place a telephone call to system and  *	login, etc.  *  *	return codes:  *		CF_SYSTEM: don't know system  *		CF_TIME: wrong time to call  *		CF_DIAL: call failed  *		CF_NODEV: no devices available to place call  *		CF_LOGIN: login/password dialog failed  *  *>0  - file no.  -  connect ok  *  */
+comment|/*  *	place a telephone call to system and login, etc.  *  *	return codes:  *		CF_SYSTEM: don't know system  *		CF_TIME: wrong time to call  *		CF_DIAL: call failed  *		CF_NODEV: no devices available to place call  *		CF_LOGIN: login/password dialog failed  *  *>0  - file no.  -  connect ok  */
 end_comment
 
 begin_decl_stmt
@@ -366,6 +371,16 @@ name|char
 name|info
 index|[
 name|MAXC
+index|]
+decl_stmt|,
+name|wkpre
+index|[
+name|NAMESIZE
+index|]
+decl_stmt|,
+name|file
+index|[
+name|NAMESIZE
 index|]
 decl_stmt|;
 specifier|register
@@ -475,6 +490,42 @@ operator|=
 name|CF_TIME
 expr_stmt|;
 block|}
+name|sprintf
+argument_list|(
+name|wkpre
+argument_list|,
+literal|"%c.%.7s"
+argument_list|,
+name|CMDPRE
+argument_list|,
+name|Rmtname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|onesys
+operator|&&
+name|MaxGrade
+operator|!=
+name|DefMaxGrade
+operator|&&
+operator|!
+name|iswrk
+argument_list|(
+name|file
+argument_list|,
+literal|"chk"
+argument_list|,
+name|Spool
+argument_list|,
+name|wkpre
+argument_list|)
+condition|)
+name|fn
+operator|=
+name|CF_TIME
+expr_stmt|;
 if|if
 condition|(
 name|fn
@@ -1097,7 +1148,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	rddev - read and decode a line from device file  *  *	return code - FAIL at end-of file; 0 otherwise  */
+comment|/*  *	read and decode a line from device file  *  *	return code - FAIL at end-of file; 0 otherwise  */
 end_comment
 
 begin_expr_stmt
@@ -1224,7 +1275,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	finds(fsys, sysnam, info, flds)	set system attribute vector  *  *	return codes:  *>0  -  number of arguments in vector - succeeded  *		CF_SYSTEM  -  system name not found  *		CF_TIME  -  wrong time to call  */
+comment|/*  *	set system attribute vector  *  *	return codes:  *>0  -  number of arguments in vector - succeeded  *		CF_SYSTEM  -  system name not found  *		CF_TIME  -  wrong time to call  */
 end_comment
 
 begin_macro
@@ -1263,12 +1314,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|sysn
-index|[
-literal|8
-index|]
-decl_stmt|;
 name|int
 name|na
 decl_stmt|;
@@ -1305,25 +1350,18 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
-name|sprintf
+if|if
+condition|(
+name|strncmp
 argument_list|(
-name|sysn
-argument_list|,
-literal|"%.7s"
+name|sysnam
 argument_list|,
 name|flds
 index|[
 name|F_NAME
 index|]
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|sysnam
 argument_list|,
-name|sysn
+literal|7
 argument_list|)
 operator|!=
 name|SAME
@@ -1338,6 +1376,8 @@ index|[
 name|F_TIME
 index|]
 argument_list|)
+operator|!=
+name|FAIL
 condition|)
 comment|/*  found a good entry  */
 return|return
@@ -1371,7 +1411,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	login(nf, flds, dcr)		do login conversation  *	char *flds[];  *	int nf;  *  *	return codes:  0  |  FAIL  */
+comment|/*  *	do login conversation  *  *	return codes:  0  |  FAIL  */
 end_comment
 
 begin_expr_stmt
@@ -1890,7 +1930,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/***  *	fixline(tty, spwant)	set speed/echo/mode...  *	int tty, spwant;  *  *	return codes:  none  */
+comment|/*  *	set speed/echo/mode...  *  *	return codes:  none  */
 end_comment
 
 begin_macro
@@ -2168,7 +2208,7 @@ value|100
 end_define
 
 begin_comment
-comment|/***  *	expect(str, fn)	look for expected string  *	char *str;  *  *	return codes:  *		0  -  found  *		FAIL  -  lost line or too many characters read  *		some character  -  timed out  */
+comment|/*  *	look for expected string  *  *	return codes:  *		0  -  found  *		FAIL  -  lost line or too many characters read  *		some character  -  timed out  */
 end_comment
 
 begin_expr_stmt
@@ -3410,7 +3450,7 @@ value|B150
 end_define
 
 begin_comment
-comment|/***  *	genbrk		send a break  *  *	return codes;  none  */
+comment|/*  *	send a break  *  *	return codes;  none  */
 end_comment
 
 begin_expr_stmt
@@ -3670,7 +3710,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	notin(sh, lg)	check for occurrence of substring "sh"  *	char *sh, *lg;  *  *	return codes:  *		0  -  found the string  *		1  -  not in the string  */
+comment|/*  *	check for occurrence of substring "sh"  *  *	return codes:  *		0  -  found the string  *		1  -  not in the string  */
 end_comment
 
 begin_expr_stmt
@@ -3710,9 +3750,7 @@ name|lg
 argument_list|)
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 else|else
 name|lg
@@ -3720,64 +3758,83 @@ operator|++
 expr_stmt|;
 block|}
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*******  *	ifdate(s)  *	char *s;  *  *	ittvax!swatt  *	Allow multiple date specifications separated by '|'.  *	Calls ifadate, formerly "ifdate".  *  *	return codes:  *		see ifadate  */
+comment|/*  *	Allow multiple date specifications separated by '|'.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|ifdate
 argument_list|(
-argument|s
+name|p
 argument_list|)
-end_macro
-
-begin_decl_stmt
+specifier|register
 name|char
-modifier|*
-name|s
-decl_stmt|;
-end_decl_stmt
+operator|*
+name|p
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
 specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-specifier|register
 name|int
 name|ret
+decl_stmt|,
+name|g
 decl_stmt|;
-for|for
-control|(
-name|p
+name|ret
 operator|=
-name|s
-init|;
+name|FAIL
+expr_stmt|;
+name|MaxGrade
+operator|=
+literal|'\0'
+expr_stmt|;
+do|do
+block|{
+name|g
+operator|=
+name|ifadate
+argument_list|(
 name|p
-operator|&&
-operator|(
-operator|*
-name|p
-operator|==
-literal|'|'
-condition|?
-operator|*
-operator|++
-name|p
-else|:
-operator|*
-name|p
-operator|)
-condition|;
+argument_list|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|11
+argument_list|,
+literal|"ifadate returns %o\n"
+argument_list|,
+name|g
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|g
+operator|!=
+name|FAIL
+condition|)
+block|{
+name|ret
+operator|=
+name|SUCCESS
+expr_stmt|;
+if|if
+condition|(
+name|g
+operator|>
+name|MaxGrade
+condition|)
+name|MaxGrade
+operator|=
+name|g
+expr_stmt|;
+block|}
 name|p
 operator|=
 name|index
@@ -3786,40 +3843,38 @@ name|p
 argument_list|,
 literal|'|'
 argument_list|)
-control|)
-if|if
+expr_stmt|;
+block|}
+do|while
 condition|(
-name|ret
-operator|=
-name|ifadate
-argument_list|(
 name|p
-argument_list|)
+operator|++
+operator|&&
+operator|*
+name|p
 condition|)
+do|;
 return|return
 name|ret
-return|;
-return|return
-literal|0
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/*******  *	ifadate(s)  *	char *s;  *  *	ifadate  -  this routine will check a string (s)  *	like "MoTu0800-1730" to see if the present  *	time is within the given limits.  *	SIDE EFFECT - Retrytime is set  *  *	String alternatives:  *		Wk - Mo thru Fr  *		zero or one time means all day  *		Any - any day  *  *	return codes:  *		0  -  not within limits  *		1  -  within limits  */
+comment|/*  *	this routine will check a string (string)  *	like "MoTu0800-1730" to see if the present  *	time is within the given limits.  *	SIDE EFFECT - Retrytime is set  *  *	return codes:  *		0  -  not within limits  *		1  -  within limits  */
 end_comment
 
 begin_macro
 name|ifadate
 argument_list|(
-argument|s
+argument|string
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|s
+name|string
 decl_stmt|;
 end_decl_stmt
 
@@ -3852,6 +3907,13 @@ decl_stmt|;
 name|time_t
 name|clock
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|s
+init|=
+name|string
+decl_stmt|;
 name|int
 name|rtime
 decl_stmt|;
@@ -3881,12 +3943,9 @@ name|tp
 decl_stmt|;
 name|char
 modifier|*
-name|index
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
 name|p
+decl_stmt|,
+name|MGrade
 decl_stmt|;
 comment|/*  pick up retry time for failures  */
 comment|/*  global variable Retrytime is set here  */
@@ -3948,6 +4007,33 @@ operator|*
 literal|60
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|index
+argument_list|(
+name|s
+argument_list|,
+literal|'@'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|MGrade
+operator|=
+name|DefMaxGrade
+expr_stmt|;
+else|else
+name|MGrade
+operator|=
+name|p
+index|[
+literal|1
+index|]
+expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -4121,7 +4207,7 @@ operator|||
 name|tp
 operator|->
 name|tm_hour
-operator|>
+operator|>=
 literal|23
 operator|||
 name|tp
@@ -4129,6 +4215,21 @@ operator|->
 name|tm_hour
 operator|<
 literal|8
+comment|/* Sunday before 5pm */
+operator|||
+operator|(
+name|tp
+operator|->
+name|tm_wday
+operator|==
+literal|0
+operator|&&
+name|tp
+operator|->
+name|tm_hour
+operator|<
+literal|17
+operator|)
 condition|)
 name|dayok
 operator|=
@@ -4144,11 +4245,13 @@ condition|(
 name|dayok
 operator|==
 literal|0
+operator|&&
+name|s
+operator|!=
+name|string
 condition|)
 return|return
-operator|(
-literal|0
-operator|)
+name|FAIL
 return|;
 name|i
 operator|=
@@ -4172,9 +4275,7 @@ operator|<
 literal|2
 condition|)
 return|return
-operator|(
-literal|1
-operator|)
+name|MGrade
 return|;
 name|tn
 operator|=
@@ -4207,9 +4308,39 @@ operator|<
 name|th
 condition|)
 return|return
-operator|(
-literal|1
-operator|)
+name|MGrade
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|i
+operator|<
+literal|2
+condition|)
+return|return
+name|MGrade
+return|;
+if|if
+condition|(
+name|th
+operator|<
+name|tl
+condition|)
+block|{
+comment|/* crosses midnight */
+if|if
+condition|(
+name|tl
+operator|<=
+name|tn
+operator|||
+name|tn
+operator|<
+name|th
+condition|)
+return|return
+name|MGrade
 return|;
 block|}
 elseif|else
@@ -4224,53 +4355,16 @@ operator|<
 name|th
 condition|)
 return|return
-operator|(
-literal|1
-operator|)
+name|MGrade
 return|;
 return|return
-operator|(
-literal|0
-operator|)
+name|FAIL
 return|;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	char *  *	lastc(s)	return pointer to last character  *	char *s;  *  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|lastc
-parameter_list|(
-name|s
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-while|while
-condition|(
-operator|*
-name|s
-operator|!=
-literal|'\0'
-condition|)
-name|s
-operator|++
-expr_stmt|;
-return|return
-name|s
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/***  *	char *  *	fdig(cp)	find first digit in string  *  *	return - pointer to first digit in string or end of string  */
+comment|/*  *	find first digit in string  *  *	return - pointer to first digit in string or end of string  */
 end_comment
 
 begin_function

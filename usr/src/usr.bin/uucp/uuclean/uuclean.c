@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuclean.c	5.3 (Berkeley) %G%"
+literal|"@(#)uuclean.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include

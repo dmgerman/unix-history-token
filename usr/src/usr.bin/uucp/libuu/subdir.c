@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subdir.c	5.2 (Berkeley) %G%"
+literal|"@(#)subdir.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ file|"uucp.h"
 end_include
 
 begin_comment
-comment|/*  * By Tom Truscott, March 1983  *  * Prefix table.  * If a prefix is "abc", for example,  * then any file Spool/abc... is mapped to Spool/abc/abc... .  * The first prefix found is used, so D.foo should preceed D. in table.  *  * Each prefix must be a subdirectory of Spool, owned by uucp!  * Remember: use cron to uuclean these directories daily,  * and check them manual every now and then.  Beware complacency!  */
+comment|/*  * By Tom Truscott, March 1983  *  * Prefix table.  * If a prefix is "abc", for example,  * then any file Spool/abc... is mapped to Spool/abc/abc... .  * The first prefix found is used, so D.foo should preceed D. in table.  *  * Each prefix must be a subdirectory of Spool, owned by uucp!  * Remember: use cron to uuclean these directories daily,  * and check them manually every now and then.  Beware complacency!  */
 end_comment
 
 begin_decl_stmt
@@ -227,9 +227,7 @@ operator|!
 name|inspool
 condition|)
 return|return
-operator|(
 name|as
-operator|)
 return|;
 comment|/* look for first prefix which matches, and make subdirectory */
 for|for
@@ -305,16 +303,12 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|tptr
-operator|)
 return|;
 block|}
 block|}
 return|return
-operator|(
 name|as
-operator|)
 return|;
 block|}
 end_function
@@ -351,12 +345,10 @@ literal|0
 operator|)
 expr_stmt|;
 return|return
-operator|(
 name|chdir
 argument_list|(
 name|s
 argument_list|)
-operator|)
 return|;
 block|}
 end_block
@@ -400,9 +392,7 @@ operator|==
 name|CMDPRE
 condition|)
 return|return
-operator|(
 name|CMDSDIR
-operator|)
 return|;
 elseif|else
 if|if
@@ -412,14 +402,10 @@ operator|==
 name|XQTPRE
 condition|)
 return|return
-operator|(
 name|XEQTDIR
-operator|)
 return|;
 return|return
-operator|(
 name|d
-operator|)
 return|;
 block|}
 end_function

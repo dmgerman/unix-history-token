@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ulockf.c	5.2 (Berkeley) %G%"
+literal|"@(#)ulockf.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -61,19 +55,21 @@ begin_comment
 comment|/*  *	ulockf  -  this routine will create a lock file (file).  *	If one already exists, the create time is checked for  *	older than the age time (atime).  *	If it is older, an attempt will be made to unlink it  *	and create a new one.  *  *	return codes:  0  |  FAIL  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|ulockf
 argument_list|(
-name|file
+argument|hfile
 argument_list|,
-name|atime
+argument|atime
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
-name|file
-expr_stmt|;
-end_expr_stmt
+modifier|*
+name|hfile
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|time_t
@@ -108,6 +104,12 @@ index|[
 name|NAMESIZE
 index|]
 decl_stmt|;
+name|char
+name|file
+index|[
+name|NAMESIZE
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|pid
@@ -132,6 +134,17 @@ name|pid
 argument_list|)
 expr_stmt|;
 block|}
+name|sprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|LOCKDIR
+argument_list|,
+name|hfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|onelock
@@ -899,9 +912,7 @@ name|sprintf
 argument_list|(
 name|lname
 argument_list|,
-literal|"%s/%s.%s"
-argument_list|,
-name|LOCKDIR
+literal|"%s.%s"
 argument_list|,
 name|LOCKPRE
 argument_list|,

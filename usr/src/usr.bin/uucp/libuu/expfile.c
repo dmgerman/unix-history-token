@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expfile.c	5.3 (Berkeley) %G%"
+literal|"@(#)expfile.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,17 +29,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
 begin_comment
-comment|/*******  *	expfile(file)	expand file name  *	char *file;  *  *	return codes: 0 - Ordinary spool area file  *		      1 - Other normal file  *		      FAIL - no Wrkdir name available  */
+comment|/*  *	expand file name  *  *	return codes: 0 - Ordinary spool area file  *		      1 - Other normal file  *		      FAIL - no Wrkdir name available  */
 end_comment
 
 begin_macro
@@ -96,9 +90,7 @@ case|case
 literal|'/'
 case|:
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 case|case
 literal|'~'
@@ -124,6 +116,17 @@ operator|*
 name|fpart
 operator|!=
 literal|'/'
+operator|&&
+name|up
+operator|<
+name|user
+operator|+
+sizeof|sizeof
+argument_list|(
+name|user
+argument_list|)
+operator|-
+literal|1
 condition|;
 name|fpart
 operator|++
@@ -252,7 +255,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	isdir(name)	check if directory name  *	char *name;  *  *	return codes:  0 - not directory  |  1 - is directory  */
+comment|/*  *	check if directory name  *  *	return codes:  0 - not directory  |  1 - is directory  */
 end_comment
 
 begin_macro
@@ -323,7 +326,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	mkdirs(name)	make all necessary directories  *	char *name;  *  *	return 0  |  FAIL  */
+comment|/*  *	make all necessary directories  *  *	return SUCCESS  |  FAIL  */
 end_comment
 
 begin_macro
@@ -348,11 +351,6 @@ decl_stmt|,
 name|mask
 decl_stmt|;
 name|char
-name|cmd
-index|[
-name|MAXFULLNAME
-index|]
-decl_stmt|,
 name|dir
 index|[
 name|MAXFULLNAME
@@ -399,7 +397,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+name|SUCCESS
 return|;
 operator|*
 name|p
@@ -414,17 +412,6 @@ name|dir
 argument_list|)
 condition|)
 continue|continue;
-name|sprintf
-argument_list|(
-name|cmd
-argument_list|,
-literal|"mkdir %s;chmod 0777 %s"
-argument_list|,
-name|dir
-argument_list|,
-name|dir
-argument_list|)
-expr_stmt|;
 name|DEBUG
 argument_list|(
 literal|4
@@ -443,15 +430,11 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|shio
+name|mkdir
 argument_list|(
-name|cmd
+name|dir
 argument_list|,
-name|CNULL
-argument_list|,
-name|CNULL
-argument_list|,
-name|User
+literal|0777
 argument_list|)
 expr_stmt|;
 name|umask
@@ -474,7 +457,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	ckexpf - expfile and check return  *		print error if it failed.  *  *	return code - 0 - ok; FAIL if expfile failed  */
+comment|/*  *	expfile and check return  *		print error if it failed.  *  *	return code - SUCCESS - ok; FAIL if expfile failed  */
 end_comment
 
 begin_expr_stmt
@@ -501,7 +484,7 @@ operator|!=
 name|FAIL
 condition|)
 return|return
-literal|0
+name|SUCCESS
 return|;
 comment|/*  could not expand file name */
 comment|/* the gwd routine failed */

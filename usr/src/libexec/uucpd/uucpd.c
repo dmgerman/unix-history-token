@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpd.c	5.2 (Berkeley) %G%"
+literal|"@(#)uucpd.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -144,6 +138,9 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|BSDINETD
 specifier|register
 name|int
 name|s
@@ -155,6 +152,9 @@ name|servent
 modifier|*
 name|sp
 decl_stmt|;
+endif|#
+directive|endif
+endif|!BSDINETD
 specifier|extern
 name|int
 name|errno
@@ -555,12 +555,6 @@ end_decl_stmt
 begin_block
 block|{
 name|char
-name|ebuf
-index|[
-literal|32
-index|]
-decl_stmt|;
-name|char
 name|user
 index|[
 literal|64
@@ -592,6 +586,16 @@ decl_stmt|;
 name|alarm
 argument_list|(
 literal|60
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"login: "
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 if|if
@@ -682,6 +686,16 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Password: "
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|readline

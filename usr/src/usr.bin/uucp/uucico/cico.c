@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.5 (Berkeley) %G%"
+literal|"@(#)cico.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_ifdef
@@ -238,6 +232,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|turntime
+init|=
+literal|30
+operator|*
+literal|60
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 30 minutes expressed in seconds */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|LocalOnly
@@ -248,6 +256,16 @@ begin_decl_stmt
 specifier|extern
 name|char
 name|MaxGrade
+decl_stmt|,
+name|DefMaxGrade
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|Myfullname
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -632,7 +650,12 @@ break|break;
 case|case
 literal|'g'
 case|:
+case|case
+literal|'p'
+case|:
 name|MaxGrade
+operator|=
+name|DefMaxGrade
 operator|=
 name|argv
 index|[
@@ -752,6 +775,27 @@ argument_list|,
 literal|"DEBUG"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|turntime
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+operator|*
+literal|60
+expr_stmt|;
+comment|/* minutes to seconds */
 break|break;
 case|case
 literal|'L'
@@ -1226,7 +1270,7 @@ name|msg
 argument_list|,
 literal|"here=%s"
 argument_list|,
-name|Myname
+name|Myfullname
 argument_list|)
 expr_stmt|;
 name|omsg
@@ -1789,6 +1833,7 @@ if|if
 condition|(
 name|versys
 argument_list|(
+operator|&
 name|Rmtname
 argument_list|)
 condition|)
@@ -1984,6 +2029,27 @@ name|atoi
 argument_list|(
 operator|++
 name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|MaxGrade
+operator|=
+name|DefMaxGrade
+operator|=
+operator|*
+operator|++
+name|p
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"MaxGrade set to %c\n"
+argument_list|,
+name|MaxGrade
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2432,6 +2498,10 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+name|MaxGrade
+operator|=
+name|DefMaxGrade
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2784,6 +2854,36 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|!GNXSEQ
+if|if
+condition|(
+name|MaxGrade
+operator|!=
+literal|'\177'
+condition|)
+block|{
+name|char
+name|buf
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|" -p%c"
+argument_list|,
+name|MaxGrade
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|rflags
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|msg
@@ -3052,6 +3152,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|=
 name|setjmp
 argument_list|(
 name|Sjbuf
@@ -3099,6 +3201,12 @@ name|Rmtname
 argument_list|,
 name|SS_FAIL
 argument_list|,
+name|ret
+operator|>
+literal|0
+condition|?
+literal|"CONVERSATION FAILED"
+else|:
 literal|"STARTUP FAILED"
 argument_list|)
 expr_stmt|;
@@ -3444,6 +3552,39 @@ argument_list|,
 name|STBNULL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TIOCSDTR
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCCDTR
+argument_list|,
+name|STBNULL
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSDTR
+argument_list|,
+name|STBNULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|!TIOCSDTR
 name|ret
 operator|=
 name|ioctl
@@ -3456,6 +3597,9 @@ operator|&
 name|Hupvec
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|!TIOCSDTR
 name|Hupvec
 operator|.
 name|sg_ispeed
@@ -3580,6 +3724,16 @@ name|Ofn
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DIALINOUT
+comment|/* reenable logins on dialout */
+name|reenable
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|DIALINOUT
 if|if
 condition|(
 name|code
@@ -3714,11 +3868,13 @@ condition|(
 operator|*
 name|Rmtname
 operator|&&
-name|strcmp
+name|strncmp
 argument_list|(
 name|Rmtname
 argument_list|,
 name|Myname
+argument_list|,
+literal|7
 argument_list|)
 condition|)
 name|systat
@@ -4062,11 +4218,13 @@ condition|(
 operator|*
 name|Rmtname
 operator|&&
-name|strcmp
+name|strncmp
 argument_list|(
 name|Rmtname
 argument_list|,
 name|Myname
+argument_list|,
+literal|7
 argument_list|)
 condition|)
 block|{

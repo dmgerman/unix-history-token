@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uupoll.c	5.2 (Berkeley) %G%"
+literal|"@(#)uupoll.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,14 @@ include|#
 directive|include
 file|"uucp.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|TransferSucceeded
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -63,6 +71,16 @@ index|[
 name|MAXFULLNAME
 index|]
 decl_stmt|;
+name|char
+name|grade
+init|=
+literal|'z'
+decl_stmt|;
+name|int
+name|nocall
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -74,7 +92,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uupoll system ...\n"
+literal|"usage: uupoll [-gX] [-n] system ...\n"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -162,8 +180,58 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|strncmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-g"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+name|SAME
+condition|)
+block|{
+name|grade
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+index|[
+literal|2
+index|]
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-n"
+argument_list|)
+operator|==
+name|SAME
+condition|)
+block|{
+name|nocall
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|versys
 argument_list|(
+operator|&
 name|argv
 index|[
 literal|0
@@ -190,7 +258,9 @@ name|sprintf
 argument_list|(
 name|wrkpre
 argument_list|,
-literal|"LCK..%.7s"
+literal|"%s/LCK..%.7s"
+argument_list|,
+name|LOCKDIR
 argument_list|,
 name|argv
 index|[
@@ -250,7 +320,7 @@ name|sprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s/%c.%.7szPOLL"
+literal|"%s/%c.%.7s%cPOLL"
 argument_list|,
 name|subdir
 argument_list|(
@@ -265,6 +335,8 @@ name|argv
 index|[
 literal|0
 index|]
+argument_list|,
+name|grade
 argument_list|)
 expr_stmt|;
 name|close
@@ -279,6 +351,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Attempt the call */
+if|if
+condition|(
+operator|!
+name|nocall
+condition|)
 name|xuucico
 argument_list|(
 name|argv

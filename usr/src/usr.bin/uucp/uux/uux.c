@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uux.c	5.2 (Berkeley) %G%"
+literal|"@(#)uux.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,7 +244,7 @@ name|MAXFULLNAME
 index|]
 decl_stmt|;
 name|char
-name|xsys
+name|Xsys
 index|[
 literal|8
 index|]
@@ -253,6 +253,12 @@ name|local
 index|[
 literal|8
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|xsys
+init|=
+name|Xsys
 decl_stmt|;
 name|FILE
 modifier|*
@@ -931,6 +937,7 @@ if|if
 condition|(
 name|versys
 argument_list|(
+operator|&
 name|xsys
 argument_list|)
 operator|!=
@@ -2320,6 +2327,11 @@ name|subfile
 argument_list|(
 name|tcfile
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucp.c	5.2 (Berkeley) %G%"
+literal|"@(#)uucp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -203,14 +197,15 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|sysfile1
 decl_stmt|,
 modifier|*
 name|sysfl2
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -710,6 +705,7 @@ if|if
 condition|(
 name|versys
 argument_list|(
+operator|&
 name|sysfl2
 argument_list|)
 operator|!=
@@ -895,6 +891,7 @@ if|if
 condition|(
 name|versys
 argument_list|(
+operator|&
 name|sysfile1
 argument_list|)
 operator|!=

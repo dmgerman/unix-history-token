@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uudecode.c	5.2 (Berkeley) %G%"
+literal|"@(#)uudecode.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,10 +81,6 @@ name|in
 decl_stmt|,
 modifier|*
 name|out
-decl_stmt|;
-name|struct
-name|stat
-name|sbuf
 decl_stmt|;
 name|int
 name|mode

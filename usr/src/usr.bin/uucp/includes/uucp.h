@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uucp.h	5.5	85/01/28	*/
+comment|/*	uucp.h	5.6	85/04/10	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<stdio.h>
 end_include
 
 begin_comment
@@ -91,6 +91,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DF112
+end_define
+
+begin_comment
+comment|/* Dec's DF112 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|HAYES
 end_define
 
@@ -106,6 +116,16 @@ end_define
 
 begin_comment
 comment|/* ventel dialer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PENRIL
+end_define
+
+begin_comment
+comment|/* PENRIL Dialer */
 end_comment
 
 begin_define
@@ -231,11 +251,29 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VENTEL
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NOVATION
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|DF112
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PENRIL
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * We need a timer to write slowly to ventels.  * define INTERVALTIMER to use 4.2 bsd interval timer.  * define FASTTIMER if you have the nap() system call.  * define FTIME if you have the ftime() system call.  * define BUSYLOOP if you must do a busy loop.  * Look at uucpdelay() in condevs.c for details.  */
@@ -250,6 +288,7 @@ end_define
 begin_endif
 endif|#
 directive|endif
+endif|VENTEL || NOVATION || DF112 || PENRIL
 end_endif
 
 begin_comment
@@ -290,6 +329,14 @@ end_define
 
 begin_comment
 comment|/*#define VMSDTR	/* Turn on modem control on vms(works DTR) for 			   develcon and gandalf ports to gain access */
+end_comment
+
+begin_comment
+comment|/*  *	If you want to use the same modem for dialing in and out define  *	DIALINOUT to be the localtion of the acucntrl program  */
+end_comment
+
+begin_comment
+comment|/* #define DIALINOUT	"/usr/lib/uucp/acucntrl" */
 end_comment
 
 begin_comment
@@ -375,7 +422,7 @@ comment|/*  * Traditionally LCK (lock) files have been kept in /usr/spool/uucp. 
 end_comment
 
 begin_comment
-comment|/*#define	LOCKDIR	"LCK." */
+comment|/*#define	LOCKDIR	"LCK" */
 end_comment
 
 begin_define
@@ -396,11 +443,19 @@ name|DONTCOPY
 end_define
 
 begin_comment
-comment|/*  * Very few (none I know of) systems use the sequence checking feature.  * If you are not going to use it (hint: you are not),  * do not define GNXSEQ.  This saves precious room on PDP11s.  */
+comment|/*  * Very few (that I know of) systems use the sequence checking feature.  * If you are not going to use it (hint: you are not),  * do not define GNXSEQ.  This saves precious room on PDP11s.  */
 end_comment
 
 begin_comment
 comment|/*#define	GNXSEQ/* comment this out to save space */
+end_comment
+
+begin_comment
+comment|/*  * If you want the logfile stored in a file for each site instead  * of one file  * define LOGBYSITE as the directory to put the files in  */
+end_comment
+
+begin_comment
+comment|/*#define LOGBYSITE	"/usr/spool/uucp/LOG"	*/
 end_comment
 
 begin_define
@@ -475,6 +530,13 @@ define|#
 directive|define
 name|CMDFILE
 value|"/usr/lib/uucp/L.cmds"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALIASFILE
+value|"/usr/lib/uucp/L.aliases"
 end_define
 
 begin_define
@@ -1155,6 +1217,65 @@ begin_comment
 comment|/*  size of work dir name  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USG
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/timeb.h>
+end_include
+
+begin_else
+else|#
+directive|else
+else|USG
+end_else
+
+begin_struct
+struct|struct
+name|timeb
+block|{
+name|time_t
+name|time
+decl_stmt|;
+name|unsigned
+name|short
+name|millitm
+decl_stmt|;
+name|short
+name|timezone
+decl_stmt|;
+name|short
+name|dstflag
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+endif|USG
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|timeb
+name|Now
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1167,8 +1288,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
 name|Rmtname
-index|[]
 decl_stmt|;
 end_decl_stmt
 

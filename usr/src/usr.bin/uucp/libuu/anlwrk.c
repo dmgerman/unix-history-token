@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)anlwrk.c	5.3 (Berkeley) %G%"
+literal|"@(#)anlwrk.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -72,9 +66,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Re-written to be reasonable  * Mon Nov 15 17:19:52 EST 1982  * Alan S. Watt (ittvax!swatt)  *  * Tom Truscott (rti!trt):  * Priority ordering cleaned up.  New 'pcompar' subroutine.  * 'stat' removed (speeds things up).  * Possible infinite loop in gtwvec defended against.  * Feb 23, 1983  *  * Changes:  *  *  1)	The check for work is much faster; the first filename  *	that matches the prefix causes a "yes" return.  *  *  2)	The filename is not "stat" ed , so  *	there is no massive delay while the list of potential  *	names is built.  *  *  3)	Requesting work for a new system is now detected so  *	internal variables are re-initialized properly.  In  *	particular, the stream pointer for the current work  *	file is properly closed so work for a system which  *	hangs up will not be sent to the next system called.  *  * Fri Dec  3 09:31:45 EST 1982  *  *  5)	As new work files are requested, a check is made  *	every TLIMIT seconds (5 minutes at present) to see  *	if new files have entered the spool area.  Since  *	work file names are now cached up to LLEN, this can  *	represent a very long transmission time before new  *	work enters the list to be processed.  If people want  *	to use the "grade" character to specify a higher  *	priority, the list must be re-built and re-sorted for  *	higher priority stuff to have an immediate effect.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_define
 define|#
@@ -113,8 +109,25 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|long
+name|fseek
+argument_list|()
+decl_stmt|,
+name|ftell
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|TransferSucceeded
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*******  *	anlwrk(file, wvec)	create a vector of command arguments  *	char *file, **wvec;  *  *	return codes:  *		0  -  no more work in this file  *		positive number  -  number of arguments  */
+comment|/*  *	create a vector of command arguments  *  *	return codes:  *		0  -  no more work in this file  *		positive number  -  number of arguments  */
 end_comment
 
 begin_comment
@@ -148,6 +161,11 @@ name|str
 index|[
 name|MAXRQST
 index|]
+decl_stmt|,
+name|nstr
+index|[
+name|MAXRQST
+index|]
 decl_stmt|;
 specifier|static
 name|FILE
@@ -155,6 +173,12 @@ modifier|*
 name|fp
 init|=
 name|NULL
+decl_stmt|;
+specifier|static
+name|long
+name|nextread
+decl_stmt|,
+name|nextwrite
 decl_stmt|;
 comment|/* 	 * If called with a null string, force a shutdown 	 * of the current work file. 	 */
 if|if
@@ -202,7 +226,7 @@ argument_list|(
 name|file
 argument_list|)
 argument_list|,
-literal|"r"
+literal|"r+w"
 argument_list|)
 expr_stmt|;
 if|if
@@ -212,6 +236,55 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|char
+modifier|*
+name|bnp
+decl_stmt|,
+name|rqstr
+index|[
+name|MAXFULLNAME
+index|]
+decl_stmt|;
+name|bnp
+operator|=
+name|rindex
+argument_list|(
+name|file
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|rqstr
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|CORRUPT
+argument_list|,
+name|bnp
+condition|?
+name|bnp
+operator|+
+literal|1
+else|:
+name|file
+argument_list|)
+expr_stmt|;
+name|xmv
+argument_list|(
+name|file
+argument_list|,
+name|rqstr
+argument_list|)
+expr_stmt|;
+name|logent
+argument_list|(
+name|file
+argument_list|,
+literal|"CMD FILE UNREADABLE"
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|subfile
@@ -228,8 +301,67 @@ name|Usrf
 operator|=
 literal|0
 expr_stmt|;
+name|nstr
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|nextread
+operator|=
+name|nextwrite
+operator|=
+literal|0L
+expr_stmt|;
 block|}
-comment|/* This is what deletes the current work file when EOF 	 * is reached.  As this is called from gtwvec, which is 	 * in turn called externally, it is not possible to save 	 * "C." files in case of error, except for line errors, 	 * which shuts down the whole system. 	 */
+if|if
+condition|(
+name|nstr
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|TransferSucceeded
+condition|)
+block|{
+name|fseek
+argument_list|(
+name|fp
+argument_list|,
+name|nextwrite
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+name|nstr
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|fseek
+argument_list|(
+name|fp
+argument_list|,
+name|nextread
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+do|do
+block|{
+name|nextwrite
+operator|=
+name|ftell
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fgets
@@ -249,6 +381,10 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TransferSucceeded
+condition|)
 name|unlink
 argument_list|(
 name|subfile
@@ -288,6 +424,48 @@ return|return
 literal|0
 return|;
 block|}
+block|}
+do|while
+condition|(
+operator|!
+name|isupper
+argument_list|(
+name|str
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+do|;
+name|nextread
+operator|=
+name|ftell
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|nstr
+argument_list|,
+name|str
+argument_list|,
+name|MAXRQST
+argument_list|)
+expr_stmt|;
+name|nstr
+index|[
+literal|0
+index|]
+operator|=
+name|tolower
+argument_list|(
+name|nstr
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 name|getargs
 argument_list|(
@@ -302,7 +480,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	bldflst - build list of work files for given system  *	 Nfiles, Filent are global  *  *	return value - 1 if work was found, else 0  *  * Jul 26 19:17 1982 (ittvax!swatt). fixed this obnoxious  * routine to NOT read all the way through the damned directory  * "stat"'ing every file in sight just to get 10 names!!!  *  * It still reads through the directory from the beginning until  * the list is filled, but this is only once every LLEN names.  */
+comment|/*  *	build list of work files for given system  *  *	return value - 1 if work was found, else 0  *  */
 end_comment
 
 begin_comment
@@ -537,7 +715,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	entflst - put new name if list is not full  *		  or new name is less than the MAX  *		  now in the list.  *	Nfiles, Filent[] are modified.  *	return value - none  *  */
+comment|/*  *	put new name if list is not full  or new name is less than the MAX  *		  now in the list.  *  */
 end_comment
 
 begin_comment
@@ -588,7 +766,7 @@ operator|-
 literal|1
 index|]
 argument_list|)
-operator|>=
+operator|<=
 literal|0
 condition|)
 break|break;
@@ -757,7 +935,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	gtwrkf - get next work file  *	 Nfiles, Filent[] are modified.  *  *	return value:  *  *		0  - No file gotten  *		1  - File successfully gotten.  *  */
+comment|/*  *	get next work file  *  *	return value:  *  *		0  - No file gotten  *		1  - File successfully gotten.  *  */
 end_comment
 
 begin_comment
@@ -785,15 +963,26 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|Nfiles
+operator|--
 operator|<=
 literal|0
 condition|)
+block|{
+name|Nfiles
+operator|=
+literal|0
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|sprintf
 argument_list|(
 name|file
@@ -804,8 +993,35 @@ name|dir
 argument_list|,
 name|Filent
 index|[
-operator|--
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
 name|Nfiles
+condition|;
+name|i
+operator|++
+control|)
+name|strcpy
+argument_list|(
+name|Filent
+index|[
+name|i
+index|]
+argument_list|,
+name|Filent
+index|[
+name|i
+operator|+
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -816,7 +1032,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	gtwvec(file, dir, wkpre, wrkvec)	get work vector  *	char *file, *dir, *wkpre, **wrkvec;  *  *	return codes:  *		positive number  -  number of arguments  *		0 -  no arguments - fail  */
+comment|/*  *	get work vector  *  *	return codes:  *		positive number  -  number of arguments  *		0 -  no arguments - fail  */
 end_comment
 
 begin_comment
@@ -914,7 +1130,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	iswrk(file, reqst, dir, pre)  *	char *file, *reqst, *dir, *pre;  *  *	iswrk  -  this routine will check the work list (list).  *	If it is empty or the present work is exhausted, it  *	will call bldflst to generate a new list.  *	The "reqst" field will be the string "chk" or "get" to  *	check for work, or get the next work file respectively.  *  *	return codes:  *		0  -  no more work (or some error)  *		1  -  there is work  *  */
+comment|/*  *	iswrk  -  this routine will check the work list (list).  *	If it is empty or the present work is exhausted, it  *	will call bldflst to generate a new list.  *	The "reqst" field will be the string "chk" or "get" to  *	check for work, or get the next work file respectively.  *  *	return codes:  *		0  -  no more work (or some error)  *		1  -  there is work  *  */
 end_comment
 
 begin_comment
@@ -1047,7 +1263,7 @@ expr_stmt|;
 if|if
 condition|(
 name|Nfiles
-operator|==
+operator|<=
 literal|0
 operator|||
 name|newspool
@@ -1094,7 +1310,7 @@ return|;
 if|if
 condition|(
 name|Nfiles
-operator|==
+operator|<=
 literal|0
 condition|)
 return|return

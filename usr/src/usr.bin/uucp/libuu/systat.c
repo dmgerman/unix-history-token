@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)systat.c	5.2 (Berkeley) %G%"
+literal|"@(#)systat.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_function_decl
@@ -60,7 +54,7 @@ value|100
 end_define
 
 begin_comment
-comment|/*******  *	systat(name, type, text)	make system status entry  *	char *name, *text;  *	int type.  *  *	return codes:  none  */
+comment|/*  *	make system status entry  *	return codes:  none  */
 end_comment
 
 begin_macro

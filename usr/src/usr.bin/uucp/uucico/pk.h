@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pk.h	5.2	85/01/22	*/
+comment|/*	pk.h	5.3	85/04/10	*/
 end_comment
 
 begin_struct
@@ -453,6 +453,24 @@ define|#
 directive|define
 name|B_SHORT
 value|0100
+end_define
+
+begin_comment
+comment|/* read or write */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_WRITE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_READ
+value|1
 end_define
 
 begin_comment

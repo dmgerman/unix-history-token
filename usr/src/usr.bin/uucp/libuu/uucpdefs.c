@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpdefs.c	5.2 (Berkeley) %G%"
+literal|"@(#)uucpdefs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,10 +45,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|Rmtname
+name|RRmtname
 index|[
 literal|64
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Rmtname
+init|=
+name|RRmtname
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +188,14 @@ end_comment
 begin_decl_stmt
 name|char
 name|MaxGrade
+init|=
+literal|'\177'
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|DefMaxGrade
 init|=
 literal|'\177'
 decl_stmt|;

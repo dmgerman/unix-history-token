@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuxqt.c	5.4 (Berkeley) %G%"
+literal|"@(#)uuxqt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -76,8 +70,19 @@ begin_define
 define|#
 directive|define
 name|BADCHARS
-value|"&^|(`\\<>;"
+value|"&^|(`\\<>;\"{}\n'"
 end_define
+
+begin_define
+define|#
+directive|define
+name|RECHECKTIME
+value|60*10
+end_define
+
+begin_comment
+comment|/* 10 minutes */
+end_comment
 
 begin_define
 define|#
@@ -166,10 +171,18 @@ end_decl_stmt
 begin_function_decl
 name|char
 modifier|*
-name|sindex
+name|strpbrk
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|TransferSucceeded
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -187,53 +200,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGCHLD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
-begin_macro
-name|reapchild
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|union
-name|wait
-name|status
-decl_stmt|;
-while|while
-condition|(
-name|wait3
-argument_list|(
-operator|&
-name|status
-argument_list|,
-name|WNOHANG
-argument_list|,
-literal|0
-argument_list|)
-operator|>
-literal|0
-condition|)
-empty_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|SIGCHLD
-end_endif
-
 begin_decl_stmt
 name|char
 name|PATH
@@ -242,6 +208,51 @@ name|MAXFULLNAME
 index|]
 init|=
 literal|"PATH=/bin:/usr/bin:/usr/ucb"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|Shell
+index|[
+name|MAXFULLNAME
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|HOME
+index|[
+name|MAXFULLNAME
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|nenv
+index|[]
+init|=
+block|{
+name|PATH
+block|,
+name|Shell
+block|,
+name|HOME
+block|,
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -392,11 +403,21 @@ name|stcico
 init|=
 literal|0
 decl_stmt|;
+name|time_t
+name|xstart
+decl_stmt|,
+name|xnow
+decl_stmt|;
 name|char
 name|retstat
 index|[
 literal|30
 index|]
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|ep
 decl_stmt|;
 name|strcpy
 argument_list|(
@@ -410,19 +431,6 @@ argument_list|(
 name|Myname
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGCHLD
-name|signal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|reapchild
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|SIGCHLD
 name|umask
 argument_list|(
 name|WFMASK
@@ -521,9 +529,9 @@ name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
-literal|"\n\n** %s **\n"
+literal|"\n\n** START **\n"
 argument_list|,
-literal|"START"
+name|CNULL
 argument_list|)
 expr_stmt|;
 name|ret
@@ -567,7 +575,6 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-comment|/* Try to run as uucp -- rti!trt */
 name|setgid
 argument_list|(
 name|getegid
@@ -984,6 +991,47 @@ argument_list|)
 expr_stmt|;
 name|doprocess
 label|:
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|HOME
+argument_list|,
+literal|"HOME=%s"
+argument_list|,
+name|Spool
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|Shell
+argument_list|,
+literal|"SHELL=%s"
+argument_list|,
+name|SHELL
+argument_list|)
+expr_stmt|;
+name|environ
+operator|=
+name|nenv
+expr_stmt|;
+comment|/* force use if our environment */
+name|DEBUG
+argument_list|(
+literal|11
+argument_list|,
+literal|"path = %s\n"
+argument_list|,
+name|getenv
+argument_list|(
+literal|"PATH"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|DEBUG
 argument_list|(
 literal|4
@@ -991,6 +1039,12 @@ argument_list|,
 literal|"process %s\n"
 argument_list|,
 name|CNULL
+argument_list|)
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|xstart
 argument_list|)
 expr_stmt|;
 while|while
@@ -1451,28 +1505,9 @@ argument_list|(
 name|dfile
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-name|PATH
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
 name|cmdp
 operator|=
 name|buf
-operator|+
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
 expr_stmt|;
 name|ptr
 operator|=
@@ -1617,7 +1652,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|sindex
+name|strpbrk
 argument_list|(
 name|user
 argument_list|,
@@ -1757,8 +1792,6 @@ argument_list|,
 name|fin
 argument_list|,
 name|dfile
-argument_list|,
-name|CNULL
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -2208,6 +2241,38 @@ argument_list|(
 name|xfp
 argument_list|)
 expr_stmt|;
+comment|/* rescan X. for new work every RECHECKTIME seconds */
+name|time
+argument_list|(
+operator|&
+name|xnow
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xnow
+operator|>
+operator|(
+name|xstart
+operator|+
+name|RECHECKTIME
+operator|)
+condition|)
+block|{
+specifier|extern
+name|int
+name|Nfiles
+decl_stmt|;
+name|Nfiles
+operator|=
+literal|0
+expr_stmt|;
+comment|/*force rescan for new work */
+block|}
+name|xstart
+operator|=
+name|xnow
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2276,7 +2341,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*******  *	gtxfile(file)	get a file to execute  *	char *file;  *  *	return codes:  0 - no file  |  1 - file to execute  */
+comment|/*  *	get a file to execute  *  *	return codes:  0 - no file  |  1 - file to execute  */
 end_comment
 
 begin_expr_stmt
@@ -2611,7 +2676,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	gotfiles(file)		check for needed files  *	char *file;  *  *	return codes:  0 - not ready  |  1 - all files ready  */
+comment|/*  *	check for needed files  *  *	return codes:  0 - not ready  |  1 - all files ready  */
 end_comment
 
 begin_expr_stmt
@@ -2759,7 +2824,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	rmxfiles(xfile)		remove execute files to x-directory  *	char *xfile;  *  *	return codes - none  */
+comment|/*  *	remove execute files to x-directory  */
 end_comment
 
 begin_expr_stmt
@@ -2896,7 +2961,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	mvxfiles(xfile)		move execute files to x-directory  *	char *xfile;  *  *	return codes - none  */
+comment|/*  *	move execute files to x-directory  */
 end_comment
 
 begin_macro
@@ -3060,12 +3125,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_block
 
 begin_comment
-comment|/***  *	argok(xc, cmd)		check for valid command/argumanet  *			*NOTE - side effect is to set xc to the  *				command to be executed.  *	char *xc, *cmd;  *  *	return 0 - ok | 1 nok  */
+comment|/*  *	check for valid command/argument	  *	*NOTE - side effect is to set xc to the	command to be executed.  *  *	return 0 - ok | 1 nok  */
 end_comment
 
 begin_expr_stmt
@@ -3098,7 +3162,7 @@ directive|ifndef
 name|ALLOK
 if|if
 condition|(
-name|sindex
+name|strpbrk
 argument_list|(
 name|cmd
 argument_list|,
@@ -3115,6 +3179,13 @@ argument_list|,
 literal|"MAGIC CHARACTER FOUND\n"
 argument_list|,
 name|CNULL
+argument_list|)
+expr_stmt|;
+name|logent
+argument_list|(
+name|cmd
+argument_list|,
+literal|"NASTY MAGIC CHARACTER FOUND"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3233,7 +3304,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	chknotify(cmd)	check if notification should be sent for  *			successful execution of cmd  *	char *cmd;  *  *	return NT_YES - do notification  *	       NT_ERR - do notification if exit status != 0  *	       NT_NO  - don't do notification ever  */
+comment|/*  *	if notification should be sent for successful execution of cmd  *  *	return NT_YES - do notification  *	       NT_ERR - do notification if exit status != 0  *	       NT_NO  - don't do notification ever  */
 end_comment
 
 begin_macro
@@ -3310,7 +3381,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	notify	send mail to user giving execution results  *	return code - none  *	This program assumes new mail command - send remote mail  */
+comment|/*  *	send mail to user giving execution results  */
 end_comment
 
 begin_macro
@@ -3409,7 +3480,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	retosndr - return mail to sender  *  *	return code - none  */
+comment|/*  *	return mail to sender  *  */
 end_comment
 
 begin_macro
@@ -3513,7 +3584,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|sindex
+name|strpbrk
 parameter_list|(
 name|str
 parameter_list|,
@@ -3573,6 +3644,301 @@ condition|)
 do|;
 return|return
 name|NULL
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  *	execute shell of command with fi and fo as standard input/output  */
+end_comment
+
+begin_macro
+name|shio
+argument_list|(
+argument|cmd
+argument_list|,
+argument|fi
+argument_list|,
+argument|fo
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|cmd
+decl_stmt|,
+modifier|*
+name|fi
+decl_stmt|,
+modifier|*
+name|fo
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|status
+decl_stmt|,
+name|f
+decl_stmt|;
+name|int
+name|uid
+decl_stmt|,
+name|pid
+decl_stmt|,
+name|ret
+decl_stmt|;
+name|char
+name|path
+index|[
+name|MAXFULLNAME
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|args
+index|[
+literal|20
+index|]
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+if|if
+condition|(
+name|fi
+operator|==
+name|NULL
+condition|)
+name|fi
+operator|=
+name|DEVNULL
+expr_stmt|;
+if|if
+condition|(
+name|fo
+operator|==
+name|NULL
+condition|)
+name|fo
+operator|=
+name|DEVNULL
+expr_stmt|;
+name|getargs
+argument_list|(
+name|cmd
+argument_list|,
+name|args
+argument_list|,
+literal|20
+argument_list|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|3
+argument_list|,
+literal|"shio - %s\n"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SIGCHLD
+if|if
+condition|(
+operator|(
+name|pid
+operator|=
+name|fork
+argument_list|()
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGKILL
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|Ifn
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|Ofn
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|f
+operator|=
+name|open
+argument_list|(
+name|subfile
+argument_list|(
+name|fi
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|!=
+literal|0
+condition|)
+block|{
+name|logent
+argument_list|(
+name|fi
+argument_list|,
+literal|"CAN'T READ"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+name|close
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|f
+operator|=
+name|creat
+argument_list|(
+name|subfile
+argument_list|(
+name|fo
+argument_list|)
+argument_list|,
+literal|0666
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|!=
+literal|1
+condition|)
+block|{
+name|logent
+argument_list|(
+name|fo
+argument_list|,
+literal|"CAN'T WRITE"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+name|execvp
+argument_list|(
+name|args
+index|[
+literal|0
+index|]
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|100
+operator|+
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+while|while
+condition|(
+operator|(
+name|ret
+operator|=
+name|wait
+argument_list|(
+operator|&
+name|status
+argument_list|)
+operator|)
+operator|!=
+name|pid
+operator|&&
+name|ret
+operator|!=
+operator|-
+literal|1
+condition|)
+empty_stmt|;
+name|DEBUG
+argument_list|(
+literal|3
+argument_list|,
+literal|"status %d\n"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+return|return
+name|status
 return|;
 block|}
 end_block

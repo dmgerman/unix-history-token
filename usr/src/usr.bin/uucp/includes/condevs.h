@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	condevs.h	4.1	85/01/22	*/
+comment|/*	condevs.h	4.2	85/04/10	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"uucp.h"
 end_include
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"uucp.h"
 end_include
 
 begin_ifdef
@@ -283,6 +277,31 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|DF112
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|df12popn
+argument_list|()
+decl_stmt|,
+name|df12topn
+argument_list|()
+decl_stmt|,
+name|df12cls
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|DF112
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|PNET
 end_ifdef
 
@@ -319,6 +338,28 @@ begin_endif
 endif|#
 directive|endif
 endif|VENTEL
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PENRIL
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|penopn
+argument_list|()
+decl_stmt|,
+name|pencls
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|PENRIL
 end_endif
 
 begin_ifdef

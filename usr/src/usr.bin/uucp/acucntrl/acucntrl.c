@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.1 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -67,7 +67,6 @@ end_include
 begin_else
 else|#
 directive|else
-else|!BSD4_2
 end_else
 
 begin_include
@@ -79,7 +78,6 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|!BSD4_2
 end_endif
 
 begin_include
@@ -372,13 +370,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|off_t
 name|utmploc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|off_t
 name|ttyslnbeg
 decl_stmt|;
 end_decl_stmt
@@ -448,7 +446,7 @@ name|uid
 decl_stmt|,
 name|gid
 decl_stmt|;
-name|long
+name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
@@ -828,6 +826,10 @@ name|read
 argument_list|(
 name|etcutmp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|utmp
 argument_list|,
@@ -1001,8 +1003,15 @@ name|ioctl
 argument_list|(
 name|devfile
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCCDTR
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -1026,8 +1035,15 @@ name|ioctl
 argument_list|(
 name|devfile
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCNXCL
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -1053,8 +1069,15 @@ name|ioctl
 argument_list|(
 name|devfile
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCHPCL
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -1117,11 +1140,26 @@ name|resetmodem
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
 name|settys
 argument_list|(
 name|ENABLE
 argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s already enabled\n"
+argument_list|,
+name|device
+argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|pokeinit
 argument_list|(
 name|device
@@ -1131,6 +1169,7 @@ argument_list|,
 name|enable
 argument_list|)
 expr_stmt|;
+block|}
 name|post
 argument_list|(
 name|device
@@ -1303,11 +1342,26 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* poke init */
+if|if
+condition|(
 name|settys
 argument_list|(
 name|DISABLE
 argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s already disabled\n"
+argument_list|,
+name|device
+argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|pokeinit
 argument_list|(
 name|device
@@ -1317,6 +1371,7 @@ argument_list|,
 name|enable
 argument_list|)
 expr_stmt|;
+block|}
 name|post
 argument_list|(
 name|device
@@ -1363,8 +1418,15 @@ name|ioctl
 argument_list|(
 name|devfile
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCSDTR
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -1490,6 +1552,10 @@ name|void
 operator|)
 name|time
 argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
 operator|&
 name|utmp
 operator|.
@@ -1616,6 +1682,10 @@ name|struct
 name|utmp
 name|utmp
 decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 name|post
 argument_list|(
 name|device
@@ -1646,6 +1716,9 @@ name|errno
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|settys
 argument_list|(
 name|resettty
@@ -1673,6 +1746,10 @@ name|enable
 condition|)
 return|return;
 comment|/* wait till init has responded, clearing the utmp entry */
+name|i
+operator|=
+literal|100
+expr_stmt|;
 do|do
 block|{
 name|sleep
@@ -1711,6 +1788,10 @@ name|read
 argument_list|(
 name|etcutmp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|utmp
 argument_list|,
@@ -1743,6 +1824,11 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
+operator|&&
+operator|--
+name|i
+operator|>
+literal|0
 condition|)
 do|;
 block|}
@@ -1973,13 +2059,6 @@ block|{
 name|int
 name|ittysfil
 decl_stmt|;
-name|int
-name|lnbeg
-decl_stmt|,
-name|foundit
-decl_stmt|,
-name|ndevice
-decl_stmt|;
 name|char
 name|out
 decl_stmt|,
@@ -2028,9 +2107,6 @@ name|lseek
 argument_list|(
 name|ittysfil
 argument_list|,
-operator|(
-name|long
-operator|)
 name|ttyslnbeg
 argument_list|,
 literal|0
@@ -2094,9 +2170,6 @@ name|lseek
 argument_list|(
 name|ittysfil
 argument_list|,
-operator|(
-name|long
-operator|)
 name|ttyslnbeg
 argument_list|,
 literal|0
@@ -2145,6 +2218,13 @@ argument_list|(
 name|ittysfil
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|in
+operator|==
+name|out
+operator|)
+return|;
 block|}
 end_block
 
@@ -2193,6 +2273,30 @@ name|addr
 decl_stmt|,
 name|tflags
 decl_stmt|;
+name|int
+name|devtype
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|cflags
+decl_stmt|;
+name|short
+name|sflags
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BSD4_2
+name|int
+name|flags
+decl_stmt|;
+else|#
+directive|else
+name|short
+name|flags
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|uba_device
 modifier|*
@@ -2201,13 +2305,6 @@ decl_stmt|;
 name|struct
 name|stat
 name|statb
-decl_stmt|;
-name|short
-name|flags
-decl_stmt|,
-name|devtype
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|cdevsw
@@ -2310,11 +2407,13 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|statb
 operator|.
 name|st_mode
 operator|&
 name|S_IFMT
+operator|)
 operator|!=
 name|S_IFCHR
 condition|)
@@ -2349,7 +2448,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 operator|&
 operator|(
@@ -2462,7 +2561,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 name|NLVALUE
 argument_list|(
@@ -2543,7 +2642,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 name|NLVALUE
 argument_list|(
@@ -2624,7 +2723,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 name|NLVALUE
 argument_list|(
@@ -2719,6 +2818,9 @@ name|lseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|addr
 argument_list|,
 literal|0
@@ -2750,7 +2852,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 operator|&
 operator|(
@@ -2823,7 +2925,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 operator|&
 operator|(
@@ -2889,6 +2991,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|cflags
+operator|=
+name|flags
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2897,7 +3003,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 operator|&
 operator|(
@@ -2928,10 +3034,10 @@ name|char
 operator|*
 operator|)
 operator|&
-name|flags
+name|cflags
 argument_list|,
 sizeof|sizeof
-name|flags
+name|cflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2966,6 +3072,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|sflags
+operator|=
+name|flags
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2974,7 +3084,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 operator|&
 operator|(
@@ -3005,10 +3115,10 @@ name|char
 operator|*
 operator|)
 operator|&
-name|flags
+name|sflags
 argument_list|,
 sizeof|sizeof
-name|flags
+name|sflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3043,6 +3153,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|cflags
+operator|=
+name|flags
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3051,13 +3165,13 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 operator|&
 operator|(
 operator|(
 operator|(
-name|short
+name|char
 operator|*
 operator|)
 name|addr
@@ -3084,7 +3198,8 @@ operator|)
 operator|&
 name|flags
 argument_list|,
-literal|2
+sizeof|sizeof
+name|cflags
 argument_list|)
 expr_stmt|;
 break|break;

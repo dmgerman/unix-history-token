@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uulog.c	5.2 (Berkeley) %G%"
+literal|"@(#)uulog.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,10 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*******  *  *	uulog  -    *  *	options:  *		-s  -  system name for search  *		-u  -  user name for search  *  *	exit codes:  *		0  -  normal  *  */
-end_comment
-
 begin_function
 name|main
 parameter_list|(
@@ -70,7 +66,7 @@ name|plogf
 decl_stmt|;
 name|char
 modifier|*
-name|system
+name|sys
 decl_stmt|,
 modifier|*
 name|user
@@ -83,12 +79,12 @@ index|]
 decl_stmt|,
 name|u
 index|[
-literal|20
+literal|64
 index|]
 decl_stmt|,
 name|s
 index|[
-literal|20
+literal|64
 index|]
 decl_stmt|;
 name|setbuf
@@ -105,7 +101,7 @@ argument_list|,
 literal|"uulog"
 argument_list|)
 expr_stmt|;
-name|system
+name|sys
 operator|=
 name|user
 operator|=
@@ -142,7 +138,7 @@ block|{
 case|case
 literal|'s'
 case|:
-name|system
+name|sys
 operator|=
 operator|&
 name|argv
@@ -156,7 +152,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|system
+name|sys
 operator|==
 name|NULL
 operator|&&
@@ -175,7 +171,7 @@ operator|!=
 literal|'-'
 condition|)
 block|{
-name|system
+name|sys
 operator|=
 operator|&
 name|argv
@@ -197,18 +193,43 @@ if|if
 condition|(
 name|strlen
 argument_list|(
-name|system
+name|sys
 argument_list|)
 operator|>
 literal|7
 condition|)
-name|system
+name|sys
 index|[
 literal|7
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|versys
+argument_list|(
+operator|&
+name|sys
+argument_list|)
+operator|!=
+name|SUCCESS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"uulog: unknown system %s\n"
+argument_list|,
+name|sys
+argument_list|)
+expr_stmt|;
+name|sys
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'u'
@@ -291,7 +312,7 @@ name|user
 operator|==
 name|NULL
 operator|&&
-name|system
+name|sys
 operator|==
 name|NULL
 condition|)
@@ -300,7 +321,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uulog [-u user] [-s system]\n"
+literal|"usage: uulog [-u user] [-s sys]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -309,7 +330,74 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*	chmod(LOGFILE, 0666);	rm-ed by rti!trt */
+ifdef|#
+directive|ifdef
+name|LOGBYSITE
+if|if
+condition|(
+name|chdir
+argument_list|(
+name|SPOOL
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+name|SPOOL
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* this program is really obsolete, this is a rude backward compat */
+if|if
+condition|(
+name|user
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"exec cat LOG/uu*/* | egrep '^%s '"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sys
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"exec cat LOG/uu*/%s"
+argument_list|,
+name|sys
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+else|!LOGBYSITE
 name|plogf
 operator|=
 name|fopen
@@ -374,14 +462,14 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|system
+name|sys
 operator|!=
 name|NULL
 operator|&&
 operator|!
 name|prefix
 argument_list|(
-name|system
+name|sys
 argument_list|,
 name|s
 argument_list|)
@@ -400,6 +488,9 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|!LOGBYSITE
 name|exit
 argument_list|(
 literal|0

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chkpth.c	5.2 (Berkeley) %G%"
+literal|"@(#)chkpth.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -159,9 +153,20 @@ name|path
 operator|!=
 literal|'/'
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"filename doesn't begin with /\n"
+argument_list|,
+name|CNULL
+argument_list|)
+expr_stmt|;
 return|return
 name|FAIL
 return|;
+block|}
 if|if
 condition|(
 name|Uptfirst
@@ -305,9 +310,20 @@ argument_list|,
 name|s
 argument_list|)
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"filename has /../ in it\n"
+argument_list|,
+name|CNULL
+argument_list|)
+expr_stmt|;
 return|return
 name|FAIL
 return|;
+block|}
 block|}
 comment|/* Check for access permission */
 for|for
@@ -339,6 +355,15 @@ condition|)
 return|return
 name|SUCCESS
 return|;
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"filename not in list\n"
+argument_list|,
+name|CNULL
+argument_list|)
+expr_stmt|;
 comment|/* path name not valid */
 return|return
 name|FAIL
@@ -941,9 +966,22 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"file is not writable: mode %o\n"
+argument_list|,
+name|s
+operator|.
+name|st_mode
+argument_list|)
+expr_stmt|;
 return|return
 name|FAIL
 return|;
+block|}
 return|return
 name|SUCCESS
 return|;
@@ -987,9 +1025,23 @@ name|mopt
 operator|==
 name|NULL
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"can't stat directory %s\n"
+argument_list|,
+name|subfile
+argument_list|(
+name|dir
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|FAIL
 return|;
+block|}
 if|if
 condition|(
 name|ret
