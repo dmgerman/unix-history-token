@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.32 (Berkeley) %G%"
+literal|"@(#)tape.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|bct
+name|blkcnt
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|tbf
+name|tapebuf
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|FLUSHTAPEBUF
+parameter_list|()
+value|blkcnt = ntrec + 1
+end_define
+
 begin_comment
 comment|/*  * Set up an input source  */
 end_comment
@@ -306,7 +314,7 @@ modifier|*
 name|strerror
 parameter_list|()
 function_decl|;
-name|flsht
+name|FLUSHTAPEBUF
 argument_list|()
 expr_stmt|;
 if|if
@@ -510,7 +518,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|static
-name|tbfsize
+name|tapebufsize
 operator|=
 operator|-
 literal|1
@@ -523,21 +531,21 @@ if|if
 condition|(
 name|size
 operator|<=
-name|tbfsize
+name|tapebufsize
 condition|)
 return|return;
 if|if
 condition|(
-name|tbf
+name|tapebuf
 operator|!=
 name|NULL
 condition|)
 name|free
 argument_list|(
-name|tbf
+name|tapebuf
 argument_list|)
 expr_stmt|;
-name|tbf
+name|tapebuf
 operator|=
 operator|(
 name|char
@@ -552,7 +560,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tbf
+name|tapebuf
 operator|==
 name|NULL
 condition|)
@@ -570,7 +578,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|tbfsize
+name|tapebufsize
 operator|=
 name|size
 expr_stmt|;
@@ -677,7 +685,7 @@ expr_stmt|;
 name|setdumpnum
 argument_list|()
 expr_stmt|;
-name|flsht
+name|FLUSHTAPEBUF
 argument_list|()
 expr_stmt|;
 if|if
@@ -702,7 +710,7 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|bct
+name|blkcnt
 operator|--
 expr_stmt|;
 comment|/* push back this block */
@@ -921,18 +929,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|checkvol
-argument_list|(
-operator|&
 name|spcl
-argument_list|,
-operator|(
-name|long
-operator|)
+operator|.
+name|c_volume
+operator|!=
 literal|1
-argument_list|)
-operator|==
-name|FAIL
 condition|)
 block|{
 name|fprintf
@@ -950,7 +951,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|readhdr
+name|gethead
 argument_list|(
 operator|&
 name|spcl
@@ -958,11 +959,22 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
+name|dprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"header read failed at %d blocks\n"
+argument_list|,
+name|blksread
+argument_list|)
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"no header after volume mark!\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|findinode
 argument_list|(
 operator|&
@@ -971,15 +983,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|checktype
-argument_list|(
-operator|&
 name|spcl
-argument_list|,
+operator|.
+name|c_type
+operator|!=
 name|TS_CLRI
-argument_list|)
-operator|==
-name|FAIL
 condition|)
 block|{
 name|fprintf
@@ -1072,15 +1080,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|checktype
-argument_list|(
-operator|&
 name|spcl
-argument_list|,
+operator|.
+name|c_type
+operator|!=
 name|TS_BITS
-argument_list|)
-operator|==
-name|FAIL
 condition|)
 block|{
 name|fprintf
@@ -1338,7 +1342,7 @@ argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
-name|tbf
+name|buf
 argument_list|,
 literal|": "
 argument_list|)
@@ -1373,14 +1377,14 @@ name|stderr
 argument_list|,
 literal|"%s%d"
 argument_list|,
-name|tbf
+name|buf
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
-name|tbf
+name|buf
 argument_list|,
 literal|", "
 argument_list|)
@@ -1416,7 +1420,7 @@ name|void
 operator|)
 name|fgets
 argument_list|(
-name|tbf
+name|buf
 argument_list|,
 name|BUFSIZ
 argument_list|,
@@ -1432,7 +1436,7 @@ argument_list|(
 name|terminal
 argument_list|)
 operator|&&
-name|tbf
+name|buf
 index|[
 literal|0
 index|]
@@ -1456,7 +1460,7 @@ name|newvol
 operator|=
 name|atoi
 argument_list|(
-name|tbf
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1531,7 +1535,7 @@ name|void
 operator|)
 name|fgets
 argument_list|(
-name|tbf
+name|buf
 argument_list|,
 name|BUFSIZ
 argument_list|,
@@ -1555,7 +1559,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|tbf
+name|buf
 argument_list|,
 literal|"none\n"
 argument_list|)
@@ -1568,7 +1572,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|tbf
+name|buf
 index|[
 literal|0
 index|]
@@ -1583,7 +1587,7 @@ name|strcpy
 argument_list|(
 name|magtape
 argument_list|,
-name|tbf
+name|buf
 argument_list|)
 expr_stmt|;
 name|magtape
@@ -1662,12 +1666,12 @@ expr_stmt|;
 name|setdumpnum
 argument_list|()
 expr_stmt|;
-name|flsht
+name|FLUSHTAPEBUF
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|readhdr
+name|gethead
 argument_list|(
 operator|&
 name|tmpbuf
@@ -1676,6 +1680,15 @@ operator|==
 name|FAIL
 condition|)
 block|{
+name|dprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"header read failed at %d blocks\n"
+argument_list|,
+name|blksread
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1693,15 +1706,11 @@ goto|;
 block|}
 if|if
 condition|(
-name|checkvol
-argument_list|(
-operator|&
-name|tmpbuf
-argument_list|,
+name|spcl
+operator|.
+name|c_volume
+operator|!=
 name|volno
-argument_list|)
-operator|==
-name|FAIL
 condition|)
 block|{
 name|fprintf
@@ -2864,25 +2873,17 @@ begin_block
 block|{
 while|while
 condition|(
-name|checktype
-argument_list|(
-operator|&
 name|spcl
-argument_list|,
-name|TS_CLRI
-argument_list|)
+operator|.
+name|c_type
 operator|==
-name|GOOD
-operator|||
-name|checktype
-argument_list|(
-operator|&
-name|spcl
-argument_list|,
 name|TS_BITS
-argument_list|)
+operator|||
+name|spcl
+operator|.
+name|c_type
 operator|==
-name|GOOD
+name|TS_CLRI
 condition|)
 name|skipfile
 argument_list|()
@@ -2903,7 +2904,7 @@ begin_block
 block|{
 specifier|extern
 name|int
-name|null
+name|xtrnull
 parameter_list|()
 function_decl|;
 name|curfile
@@ -2914,24 +2915,24 @@ name|SKIP
 expr_stmt|;
 name|getfile
 argument_list|(
-name|null
+name|xtrnull
 argument_list|,
-name|null
+name|xtrnull
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Do the file extraction, calling the supplied functions  * with the blocks  */
+comment|/*  * Extract a file from the tape.  * When an allocated block is found it is passed to the fill function;  * when an unallocated block (hole) is found, a zeroed buffer is passed  * to the skip function.  */
 end_comment
 
 begin_macro
 name|getfile
 argument_list|(
-argument|f1
+argument|fill
 argument_list|,
-argument|f2
+argument|skip
 argument_list|)
 end_macro
 
@@ -2939,13 +2940,13 @@ begin_decl_stmt
 name|int
 argument_list|(
 operator|*
-name|f2
+name|fill
 argument_list|)
 argument_list|()
 decl_stmt|,
 argument_list|(
 operator|*
-name|f1
+name|skip
 argument_list|)
 argument_list|()
 decl_stmt|;
@@ -2997,15 +2998,11 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|checktype
-argument_list|(
-operator|&
 name|spcl
-argument_list|,
-name|TS_END
-argument_list|)
+operator|.
+name|c_type
 operator|==
-name|GOOD
+name|TS_END
 condition|)
 name|panic
 argument_list|(
@@ -3014,13 +3011,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ishead
-argument_list|(
-operator|&
 name|spcl
-argument_list|)
-operator|==
-name|FAIL
+operator|.
+name|c_magic
+operator|!=
+name|NFS_MAGIC
 condition|)
 name|panic
 argument_list|(
@@ -3095,7 +3090,7 @@ condition|)
 block|{
 call|(
 modifier|*
-name|f1
+name|fill
 call|)
 argument_list|(
 name|buf
@@ -3139,7 +3134,7 @@ condition|)
 block|{
 call|(
 modifier|*
-name|f1
+name|fill
 call|)
 argument_list|(
 name|buf
@@ -3175,7 +3170,7 @@ expr_stmt|;
 block|}
 call|(
 modifier|*
-name|f2
+name|skip
 call|)
 argument_list|(
 name|clearedbuf
@@ -3237,7 +3232,7 @@ block|}
 block|}
 if|if
 condition|(
-name|readhdr
+name|gethead
 argument_list|(
 operator|&
 name|spcl
@@ -3252,15 +3247,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|checktype
-argument_list|(
-operator|&
 name|spcl
-argument_list|,
-name|TS_ADDR
-argument_list|)
+operator|.
+name|c_type
 operator|==
-name|GOOD
+name|TS_ADDR
 condition|)
 goto|goto
 name|loop
@@ -3269,11 +3260,13 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Missing address (header) block for %s\n"
+literal|"Missing address (header) block for %s at %d blocks\n"
 argument_list|,
 name|curfile
 operator|.
 name|name
+argument_list|,
+name|blksread
 argument_list|)
 expr_stmt|;
 block|}
@@ -3285,7 +3278,7 @@ literal|0
 condition|)
 call|(
 modifier|*
-name|f1
+name|fill
 call|)
 argument_list|(
 name|buf
@@ -3313,7 +3306,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * The next routines are called during file extraction to  * put the data into the right form and place.  */
+comment|/*  * Write out the next block of a file.  */
 end_comment
 
 begin_macro
@@ -3392,6 +3385,14 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * Skip over a hole in a file.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|xtrskip
 argument_list|(
@@ -3416,15 +3417,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|buf
-operator|=
-name|buf
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|lseek
@@ -3471,6 +3463,10 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*  * Collect the next block of a symbolic link.  */
+end_comment
 
 begin_macro
 name|xtrlnkfile
@@ -3543,6 +3539,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Skip over a hole in a symbolic link (should never happen).  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|xtrlnkskip
 argument_list|(
@@ -3567,19 +3571,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|buf
-operator|=
-name|buf
-operator|,
-name|size
-operator|=
-name|size
-expr_stmt|;
-endif|#
-directive|endif
 name|fprintf
 argument_list|(
 name|stderr
@@ -3598,6 +3589,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Collect the next block of a bit map.  */
+end_comment
 
 begin_macro
 name|xtrmap
@@ -3639,6 +3634,14 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Skip over a hole in a bit map (should never happen).  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|xtrmapskip
 argument_list|(
@@ -3663,15 +3666,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|buf
-operator|=
-name|buf
-expr_stmt|;
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"hole in map\n"
@@ -3684,55 +3678,77 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
-name|null
-argument_list|()
-end_macro
-
-begin_block
-block|{
-empty_stmt|;
-block|}
-end_block
+begin_comment
+comment|/*  * Noop, when an extraction function is not needed.  */
+end_comment
 
 begin_comment
-comment|/*  * Do the tape i/o, dealing with volume changes  * etc..  */
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|readtape
+name|xtrnull
 argument_list|(
-argument|b
+argument|buf
+argument_list|,
+argument|size
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|b
+name|buf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|size
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|long
-name|i
+return|return;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Read TP_BSIZE blocks from the input.  * Handle read errors, and end of media.  */
+end_comment
+
+begin_macro
+name|readtape
+argument_list|(
+argument|buf
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|buf
 decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 name|long
 name|rd
 decl_stmt|,
 name|newvol
+decl_stmt|,
+name|i
 decl_stmt|;
 name|int
 name|cnt
-decl_stmt|;
-name|int
+decl_stmt|,
 name|seek_failed
 decl_stmt|;
 if|if
 condition|(
-name|bct
+name|blkcnt
 operator|<
 name|numtrec
 condition|)
@@ -3740,17 +3756,17 @@ block|{
 name|bcopy
 argument_list|(
 operator|&
-name|tbf
+name|tapebuf
 index|[
 operator|(
-name|bct
+name|blkcnt
 operator|++
 operator|*
 name|TP_BSIZE
 operator|)
 index|]
 argument_list|,
-name|b
+name|buf
 argument_list|,
 operator|(
 name|long
@@ -3786,7 +3802,7 @@ name|s_spcl
 operator|*
 operator|)
 operator|&
-name|tbf
+name|tapebuf
 index|[
 name|i
 operator|*
@@ -3832,7 +3848,7 @@ operator|=
 name|rmtread
 argument_list|(
 operator|&
-name|tbf
+name|tapebuf
 index|[
 name|rd
 index|]
@@ -3850,7 +3866,7 @@ argument_list|(
 name|mt
 argument_list|,
 operator|&
-name|tbf
+name|tapebuf
 index|[
 name|rd
 index|]
@@ -4072,7 +4088,7 @@ name|TP_BSIZE
 expr_stmt|;
 name|bzero
 argument_list|(
-name|tbf
+name|tapebuf
 argument_list|,
 name|i
 argument_list|)
@@ -4178,7 +4194,7 @@ argument_list|)
 expr_stmt|;
 name|readtape
 argument_list|(
-name|b
+name|buf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4215,7 +4231,7 @@ operator|&
 name|endoftapemark
 argument_list|,
 operator|&
-name|tbf
+name|tapebuf
 index|[
 name|rd
 index|]
@@ -4227,24 +4243,24 @@ name|TP_BSIZE
 argument_list|)
 expr_stmt|;
 block|}
-name|bct
+name|blkcnt
 operator|=
 literal|0
 expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
-name|tbf
+name|tapebuf
 index|[
 operator|(
-name|bct
+name|blkcnt
 operator|++
 operator|*
 name|TP_BSIZE
 operator|)
 index|]
 argument_list|,
-name|b
+name|buf
 argument_list|,
 operator|(
 name|long
@@ -4292,7 +4308,7 @@ name|s_spcl
 operator|*
 operator|)
 operator|&
-name|tbf
+name|tapebuf
 index|[
 name|i
 operator|*
@@ -4304,7 +4320,7 @@ name|c_magic
 operator|=
 literal|0
 expr_stmt|;
-name|bct
+name|blkcnt
 operator|=
 literal|0
 expr_stmt|;
@@ -4319,7 +4335,7 @@ name|i
 operator|=
 name|rmtread
 argument_list|(
-name|tbf
+name|tapebuf
 argument_list|,
 name|ntrec
 operator|*
@@ -4335,7 +4351,7 @@ name|read
 argument_list|(
 name|mt
 argument_list|,
-name|tbf
+name|tapebuf
 argument_list|,
 name|ntrec
 operator|*
@@ -4411,22 +4427,6 @@ block|}
 end_block
 
 begin_macro
-name|flsht
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|bct
-operator|=
-name|ntrec
-operator|+
-literal|1
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|closemt
 argument_list|()
 end_macro
@@ -4464,104 +4464,8 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
-name|checkvol
-argument_list|(
-argument|b
-argument_list|,
-argument|t
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|s_spcl
-modifier|*
-name|b
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|t
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|b
-operator|->
-name|c_volume
-operator|!=
-name|t
-condition|)
-return|return
-operator|(
-name|FAIL
-operator|)
-return|;
-return|return
-operator|(
-name|GOOD
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|readhdr
-argument_list|(
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|s_spcl
-modifier|*
-name|b
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|gethead
-argument_list|(
-name|b
-argument_list|)
-operator|==
-name|FAIL
-condition|)
-block|{
-name|dprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"readhdr fails at %d blocks\n"
-argument_list|,
-name|blksread
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|FAIL
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|GOOD
-operator|)
-return|;
-block|}
-end_block
-
 begin_comment
-comment|/*  * read the tape into buf, then return whether or  * or not it is a header block.  */
+comment|/*  * Read the next block from the tape.  * Check to see if it is one of several vintage headers.  * If it is an old style header, convert it to a new style header.  * If it is not any valid header, return an error.  */
 end_comment
 
 begin_macro
@@ -5693,14 +5597,15 @@ name|ino
 operator|=
 literal|0
 expr_stmt|;
+do|do
+block|{
 if|if
 condition|(
-name|ishead
-argument_list|(
 name|header
-argument_list|)
-operator|==
-name|FAIL
+operator|->
+name|c_magic
+operator|!=
+name|NFS_MAGIC
 condition|)
 block|{
 name|skipcnt
@@ -5725,24 +5630,16 @@ name|skipcnt
 operator|++
 expr_stmt|;
 block|}
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
+switch|switch
 condition|(
-name|checktype
-argument_list|(
 name|header
-argument_list|,
-name|TS_ADDR
-argument_list|)
-operator|==
-name|GOOD
+operator|->
+name|c_type
 condition|)
 block|{
+case|case
+name|TS_ADDR
+case|:
 comment|/* 			 * Skip up to the beginning of the next record 			 */
 for|for
 control|(
@@ -5773,28 +5670,28 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+while|while
+condition|(
 name|gethead
 argument_list|(
 name|header
 argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|checktype
-argument_list|(
-name|header
-argument_list|,
-name|TS_INODE
-argument_list|)
 operator|==
-name|GOOD
+name|FAIL
+operator|||
+name|header
+operator|->
+name|c_date
+operator|!=
+name|dumpdate
 condition|)
-block|{
+name|skipcnt
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|TS_INODE
+case|:
 name|curfile
 operator|.
 name|dip
@@ -5813,19 +5710,9 @@ operator|->
 name|c_inumber
 expr_stmt|;
 break|break;
-block|}
-if|if
-condition|(
-name|checktype
-argument_list|(
-name|header
-argument_list|,
+case|case
 name|TS_END
-argument_list|)
-operator|==
-name|GOOD
-condition|)
-block|{
+case|:
 name|curfile
 operator|.
 name|ino
@@ -5833,19 +5720,9 @@ operator|=
 name|maxino
 expr_stmt|;
 break|break;
-block|}
-if|if
-condition|(
-name|checktype
-argument_list|(
-name|header
-argument_list|,
+case|case
 name|TS_CLRI
-argument_list|)
-operator|==
-name|GOOD
-condition|)
-block|{
+case|:
 name|curfile
 operator|.
 name|name
@@ -5853,19 +5730,9 @@ operator|=
 literal|"<file removal list>"
 expr_stmt|;
 break|break;
-block|}
-if|if
-condition|(
-name|checktype
-argument_list|(
-name|header
-argument_list|,
+case|case
 name|TS_BITS
-argument_list|)
-operator|==
-name|GOOD
-condition|)
-block|{
+case|:
 name|curfile
 operator|.
 name|name
@@ -5873,20 +5740,37 @@ operator|=
 literal|"<file dump list>"
 expr_stmt|;
 break|break;
-block|}
-while|while
-condition|(
-name|gethead
+case|case
+name|TS_TAPE
+case|:
+name|panic
 argument_list|(
-name|header
+literal|"unexpected tape header\n"
 argument_list|)
-operator|==
-name|FAIL
-condition|)
-name|skipcnt
-operator|++
 expr_stmt|;
+comment|/* NOTREACHED */
+default|default:
+name|panic
+argument_list|(
+literal|"unknown tape header type %d\n"
+argument_list|,
+name|spcl
+operator|.
+name|c_type
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
+block|}
+do|while
+condition|(
+name|header
+operator|->
+name|c_type
+operator|==
+name|TS_ADDR
+condition|)
+do|;
 if|if
 condition|(
 name|skipcnt
@@ -5909,103 +5793,15 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * return whether or not the buffer contains a header block  */
-end_comment
-
-begin_macro
-name|ishead
-argument_list|(
-argument|buf
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|s_spcl
-modifier|*
-name|buf
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|buf
-operator|->
-name|c_magic
-operator|!=
-name|NFS_MAGIC
-condition|)
-return|return
-operator|(
-name|FAIL
-operator|)
-return|;
-return|return
-operator|(
-name|GOOD
-operator|)
-return|;
-block|}
-end_block
-
-begin_macro
-name|checktype
-argument_list|(
-argument|b
-argument_list|,
-argument|t
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|s_spcl
-modifier|*
-name|b
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|t
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|b
-operator|->
-name|c_type
-operator|!=
-name|t
-condition|)
-return|return
-operator|(
-name|FAIL
-operator|)
-return|;
-return|return
-operator|(
-name|GOOD
-operator|)
-return|;
-block|}
-end_block
-
 begin_expr_stmt
 name|checksum
 argument_list|(
-name|b
+name|buf
 argument_list|)
 specifier|register
 name|int
 operator|*
-name|b
+name|buf
 expr_stmt|;
 end_expr_stmt
 
@@ -6044,7 +5840,7 @@ do|do
 name|i
 operator|+=
 operator|*
-name|b
+name|buf
 operator|++
 expr_stmt|;
 do|while
@@ -6063,7 +5859,7 @@ operator|+=
 name|swabl
 argument_list|(
 operator|*
-name|b
+name|buf
 operator|++
 argument_list|)
 expr_stmt|;
