@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gprof.c,v 1.5 1997/07/10 06:45:00 charnier Exp $"
+literal|"$Id: gprof.c,v 1.6 1997/07/15 08:04:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3036,7 +3036,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* 	 *	name must start with an underscore if uflag is set. 	 *	can't have any `funny' characters in name, 	 *	where `funny' includes	`.', .o file names 	 *			and	`$', pascal labels. 	 *	need to make an exception for sparc .mul& co. 	 *	perhaps we should just drop this code entirely... 	 */
+comment|/* 	 *	name must start with an underscore if uflag is set. 	 *	can't have any `funny' characters in name, 	 *	where `funny' means `.' (.o file names) 	 *	need to make an exception for sparc .mul& co. 	 *	perhaps we should just drop this code entirely... 	 */
 name|name
 operator|=
 name|strtab
@@ -3137,10 +3137,6 @@ condition|(
 name|c
 operator|==
 literal|'.'
-operator|||
-name|c
-operator|==
-literal|'$'
 condition|)
 block|{
 return|return
