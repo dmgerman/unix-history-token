@@ -1506,15 +1506,6 @@ argument_list|,
 name|dumpinomap
 argument_list|)
 expr_stmt|;
-name|CLRINO
-argument_list|(
-name|dp
-operator|->
-name|d_ino
-argument_list|,
-name|usedinomap
-argument_list|)
-expr_stmt|;
 operator|*
 name|tapesize
 operator|-=
@@ -1524,7 +1515,7 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Add back to dumpdirmap to propagate nodump. */
+comment|/* 			 * Add back to dumpdirmap and remove from usedinomap 			 * to propagate nodump. 			 */
 if|if
 condition|(
 operator|(
@@ -1545,6 +1536,15 @@ operator|->
 name|d_ino
 argument_list|,
 name|dumpdirmap
+argument_list|)
+expr_stmt|;
+name|CLRINO
+argument_list|(
+name|dp
+operator|->
+name|d_ino
+argument_list|,
+name|usedinomap
 argument_list|)
 expr_stmt|;
 name|ret
