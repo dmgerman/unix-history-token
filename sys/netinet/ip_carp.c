@@ -10238,6 +10238,9 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
+case|case
+name|IFT_L2VLAN
+case|:
 block|{
 name|struct
 name|ether_header
