@@ -465,7 +465,7 @@ literal|0x0365
 block|,
 name|AAC_HWIF_STRONGARM
 block|,
-literal|0
+name|AAC_QUIRK_CAM_NORESET
 block|,
 literal|"Adaptec SCSI RAID 5400S"
 block|}
