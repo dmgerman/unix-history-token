@@ -328,13 +328,6 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|optreset
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|char
