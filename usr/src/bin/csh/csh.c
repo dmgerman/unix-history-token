@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	4.20 (Berkeley) %G%"
+literal|"@(#)csh.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,31 +378,11 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|getenv
-argument_list|(
-literal|"SHELL"
-argument_list|)
-operator|)
-operator|==
-name|NOSTR
-condition|)
-name|cp
-operator|=
-name|SHELLPATH
-expr_stmt|;
 name|set
 argument_list|(
 literal|"shell"
 argument_list|,
-name|savestr
-argument_list|(
-name|cp
-argument_list|)
+name|SHELLPATH
 argument_list|)
 expr_stmt|;
 name|doldol
