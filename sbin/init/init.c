@@ -2126,12 +2126,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* leave DTR low */
 if|if
 condition|(
 operator|(
