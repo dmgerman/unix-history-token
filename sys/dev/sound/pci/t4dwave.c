@@ -3707,6 +3707,8 @@ name|struct
 name|ac97_info
 modifier|*
 name|codec
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
