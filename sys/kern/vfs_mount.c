@@ -7990,6 +7990,17 @@ name|vfsopt
 modifier|*
 name|opt
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|opts
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"vfs_getopt: caller passed 'opts' as NULL\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|opt
@@ -8093,6 +8104,17 @@ name|vfsopt
 modifier|*
 name|opt
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|opts
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"vfs_copyopt: caller passed 'opts' as NULL\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|opt
