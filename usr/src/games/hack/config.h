@@ -7,6 +7,12 @@ begin_comment
 comment|/* config.h - version 1.0.3 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -213,7 +219,7 @@ begin_define
 define|#
 directive|define
 name|DEF_MAILREADER
-value|"/usr/ucb/mail"
+value|_PATH_MAIL
 end_define
 
 begin_comment
@@ -224,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|MAILCKFREQ
-value|1
+value|100
 end_define
 
 begin_define
@@ -285,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|HACKDIR
-value|"/usr/games/lib/questdir"
+value|_PATH_QUEST
 end_define
 
 begin_else
@@ -298,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|HACKDIR
-value|"/usr/games/lib/hackdir"
+value|_PATH_HACK
 end_define
 
 begin_endif
@@ -322,7 +328,7 @@ comment|/* do setuid(getuid()) after chdir() */
 end_comment
 
 begin_comment
-comment|/*  * If it is desirable to limit the number of people that can play Hack  * simultaneously, define HACKDIR, SECURE and MAX_NR_OF_PLAYERS.  * #define MAX_NR_OF_PLAYERS	6  */
+comment|/*  * If it is desirable to limit the number of people that can play Hack  * simultaneously, define HACKDIR, SECURE and MAX_NR_OF_PLAYERS.  * #define MAX_NR_OF_PLAYERS	100  */
 end_comment
 
 begin_endif
