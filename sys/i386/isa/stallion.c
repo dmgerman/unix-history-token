@@ -90,29 +90,11 @@ directive|include
 file|<machine/comstats.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pci.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPILING_LINT
-end_ifdef
-
 begin_warning
 warning|#
 directive|warning
-literal|"The stallion pci device is broken and not compiled with LINT"
+literal|"The stallion pci attachment is broken and not compiled"
 end_warning
-
-begin_undef
-undef|#
-directive|undef
-name|NPCI
-end_undef
 
 begin_define
 define|#
@@ -120,11 +102,6 @@ directive|define
 name|NPCI
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
