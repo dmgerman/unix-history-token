@@ -11940,13 +11940,16 @@ operator|->
 name|ifc_name
 expr_stmt|;
 else|else
-name|fatal
+block|{
+name|trace
 argument_list|(
-literal|"Unknown interface %d"
+literal|1
 argument_list|,
-name|s
+literal|" not configured\n"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|trace
 argument_list|(
 literal|1
