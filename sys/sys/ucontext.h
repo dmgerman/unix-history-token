@@ -26,12 +26,9 @@ typedef|typedef
 struct|struct
 name|__ucontext
 block|{
-comment|/* 	 * Keep the order of the first three fields. Also, 	 * keep them the first to fields in the structure. 	 * This way we can have a union with struct 	 * sigcontext and ucontext_t. This allows us to 	 * support them both at the same time. 	 * note: the union is not defined, though. 	 */
+comment|/* 	 * Keep the order of the first two fields. Also, 	 * keep them the first two fields in the structure. 	 * This way we can have a union with struct 	 * sigcontext and ucontext_t. This allows us to 	 * support them both at the same time. 	 * note: the union is not defined, though. 	 */
 name|sigset_t
 name|uc_sigmask
-decl_stmt|;
-name|stack_t
-name|uc_stack
 decl_stmt|;
 name|mcontext_t
 name|uc_mcontext
@@ -40,6 +37,9 @@ name|struct
 name|__ucontext_t
 modifier|*
 name|uc_link
+decl_stmt|;
+name|stack_t
+name|uc_stack
 decl_stmt|;
 name|int
 name|__spare__
