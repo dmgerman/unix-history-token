@@ -1507,8 +1507,6 @@ name|vector
 operator|==
 name|IA64_VEC_BREAK
 operator|&&
-name|user
-operator|&&
 name|framep
 operator|->
 name|tf_special
