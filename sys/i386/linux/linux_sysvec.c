@@ -4604,6 +4604,8 @@ block|,
 name|exec_copyout_strings
 block|,
 name|exec_linux_setregs
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4666,6 +4668,8 @@ block|,
 name|exec_copyout_strings
 block|,
 name|exec_linux_setregs
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

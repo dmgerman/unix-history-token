@@ -46,5 +46,38 @@ name|FREEBSD32_USRSTACK
 value|((1ul<< 32) - PAGE_SIZE)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IA32_MAXDSIZ
+value|(512*1024*1024)
+end_define
+
+begin_comment
+comment|/* 512MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_MAXSSIZ
+value|(64*1024*1024)
+end_define
+
+begin_comment
+comment|/* 64MB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IA32_MAXVMEM
+value|0
+end_define
+
+begin_comment
+comment|/* Unlimited */
+end_comment
+
 end_unit
 

@@ -1386,36 +1386,6 @@ name|DT_IA64_PLT_RESERVE
 value|0x70000000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * On the ia64 we load the dynamic linker where a userland call  * to mmap(0, ...) would put it.  The rationale behind this  * calculation is that it leaves room for the heap to grow to  * its maximum allowed size.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELF_RTLD_ADDR
-parameter_list|(
-name|vmspace
-parameter_list|)
-define|\
-value|(round_page((vm_offset_t)(vmspace)->vm_daddr + maxdsiz))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

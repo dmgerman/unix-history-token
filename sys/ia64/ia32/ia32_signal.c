@@ -429,6 +429,8 @@ block|,
 name|ia32_copyout_strings
 block|,
 name|ia32_setregs
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

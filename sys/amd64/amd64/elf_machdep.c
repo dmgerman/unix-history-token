@@ -175,6 +175,8 @@ block|,
 name|exec_copyout_strings
 block|,
 name|exec_setregs
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
