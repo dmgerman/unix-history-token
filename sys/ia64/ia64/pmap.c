@@ -1415,10 +1415,7 @@ operator|<<
 name|vhpt_size
 operator|)
 operator|<
-name|ia64_btop
-argument_list|(
 name|Maxmem
-argument_list|)
 operator|*
 literal|32
 condition|)
