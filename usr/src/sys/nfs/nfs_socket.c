@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -6023,12 +6023,16 @@ begin_comment
 comment|/*  * Nfs timer routine  * Scan the nfsreq list and retranmit any requests that have timed out  * To avoid retransmission attempts on STREAM sockets (in the future) make  * sure to set the r_retry field to 0 (implies nm_retry == 0).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|nfs_timer
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -6623,7 +6627,7 @@ name|NFS_HZ
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Test for a termination condition pending on the process.  * This is used for NFSMNT_INT mounts.  */
