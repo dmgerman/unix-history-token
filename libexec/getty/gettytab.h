@@ -415,7 +415,7 @@ begin_define
 define|#
 directive|define
 name|OPset
-value|gettyflags[2].set
+value|gettyflags[3].set
 end_define
 
 begin_define
@@ -429,7 +429,7 @@ begin_define
 define|#
 directive|define
 name|APset
-value|gettyflags[2].set
+value|gettyflags[4].set
 end_define
 
 begin_define
