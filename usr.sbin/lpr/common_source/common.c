@@ -1837,11 +1837,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -1867,8 +1867,8 @@ end_endif
 
 begin_function
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|fatal
 parameter_list|(
@@ -1898,8 +1898,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(

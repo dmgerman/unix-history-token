@@ -6666,12 +6666,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|char
-name|buf
-index|[
-literal|100
-index|]
-decl_stmt|;
 name|struct
 name|stat
 name|stb
@@ -6762,24 +6756,13 @@ name|cp
 operator|=
 name|_PATH_SENDMAIL
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%s@%s"
-argument_list|,
-name|user
-argument_list|,
-name|fromhost
-argument_list|)
-expr_stmt|;
 name|execl
 argument_list|(
 name|_PATH_SENDMAIL
 argument_list|,
 name|cp
 argument_list|,
-name|buf
+literal|"-t"
 argument_list|,
 literal|0
 argument_list|)
@@ -8953,11 +8936,11 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -8984,8 +8967,8 @@ end_endif
 begin_function
 specifier|static
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|pstatus
 parameter_list|(
@@ -9025,8 +9008,8 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(
@@ -9113,6 +9096,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|msg
 argument_list|,

@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.18 1997/07/23 20:53:38 imp Exp $\n"
+literal|"\n$Id: lpr.c,v 1.19 1997/07/29 04:17:19 imp Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -4005,11 +4005,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -4036,8 +4036,8 @@ end_endif
 begin_function
 specifier|static
 name|void
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|fatal2
 parameter_list|(
@@ -4067,8 +4067,8 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 name|va_start
 argument_list|(

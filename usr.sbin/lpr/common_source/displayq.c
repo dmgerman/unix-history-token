@@ -1127,6 +1127,8 @@ sizeof|sizeof
 argument_list|(
 name|line
 argument_list|)
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
@@ -1183,6 +1185,8 @@ sizeof|sizeof
 argument_list|(
 name|line
 argument_list|)
+operator|-
+literal|1
 condition|;
 name|i
 operator|++

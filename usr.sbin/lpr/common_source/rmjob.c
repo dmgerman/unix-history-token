@@ -1551,6 +1551,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
