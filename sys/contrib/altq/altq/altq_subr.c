@@ -1288,6 +1288,13 @@ argument_list|)
 expr_stmt|;
 name|ifq
 operator|->
+name|ifq_drv_maxlen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* disable bulk dequeue */
+name|ifq
+operator|->
 name|altq_flags
 operator||=
 name|ALTQF_ENABLED
