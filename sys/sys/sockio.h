@@ -424,6 +424,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGIFINDEX
+value|_IOWR('i', 32, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get IF index */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCADDMULTI
 value|_IOW('i', 49, struct ifreq)
 end_define

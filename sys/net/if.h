@@ -680,6 +680,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|short
+name|ifru_index
+decl_stmt|;
 name|int
 name|ifru_metric
 decl_stmt|;
@@ -764,6 +767,11 @@ directive|define
 name|ifr_curcap
 value|ifr_ifru.ifru_cap[1]
 comment|/* current capabilities */
+define|#
+directive|define
+name|ifr_index
+value|ifr_ifru.ifru_index
+comment|/* interface index */
 block|}
 struct|;
 end_struct
