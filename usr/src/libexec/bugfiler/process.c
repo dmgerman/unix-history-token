@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.6 (Berkeley) %G%"
+literal|"@(#)process.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,8 +390,11 @@ block|;
 specifier|register
 name|char
 operator|*
-name|C
+name|p
 block|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|bfr
@@ -429,7 +432,8 @@ for|for
 control|(
 name|highval
 operator|=
-literal|0
+operator|-
+literal|1
 init|;
 name|d
 operator|=
@@ -439,27 +443,34 @@ name|dirp
 argument_list|)
 condition|;
 control|)
+block|{
 for|for
 control|(
-name|C
+name|p
 operator|=
 name|d
 operator|->
 name|d_name
 init|;
+operator|*
+name|p
+operator|&&
+name|isdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
 condition|;
 operator|++
-name|C
+name|p
 control|)
+empty_stmt|;
 if|if
 condition|(
 operator|!
 operator|*
-name|C
-condition|)
-block|{
-if|if
-condition|(
+name|p
+operator|&&
 operator|(
 name|newval
 operator|=
@@ -477,19 +488,7 @@ name|highval
 operator|=
 name|newval
 expr_stmt|;
-break|break;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|isdigit
-argument_list|(
-operator|*
-name|C
-argument_list|)
-condition|)
-break|break;
 end_for
 
 begin_expr_stmt
