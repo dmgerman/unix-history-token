@@ -1207,6 +1207,17 @@ name|pdev
 operator|->
 name|si_disk
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dp
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|dev
 operator|->
 name|si_drv1
