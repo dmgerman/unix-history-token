@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.48 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.49 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1570,6 +1570,23 @@ argument_list|,
 name|M_ZOMBIE
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Decrement the count of procs running with this uid. 			 */
+operator|(
+name|void
+operator|)
+name|chgproccnt
+argument_list|(
+name|p
+operator|->
+name|p_cred
+operator|->
+name|p_ruid
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Free up credentials. 			 */
 if|if
 condition|(
 operator|--
