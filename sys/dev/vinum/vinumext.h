@@ -565,7 +565,7 @@ begin_function_decl
 name|int
 name|start_config
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
