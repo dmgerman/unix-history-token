@@ -92,7 +92,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_PACKET_TAGS
 argument_list|,
-literal|"tag"
+literal|"mbuf tags"
 argument_list|,
 literal|"packet-attached information"
 argument_list|)
@@ -1073,13 +1073,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Free a packet tag. */
+comment|/*  * Free a packet tag.  * This function should not be called directly, unless you know what you  * are doing. Use m_tag_delete() or (t->m_tag_free)(t) instead, when you  * work with a tag that you haven't allocated yourself.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|_m_tag_free
+name|m_tag_free
 parameter_list|(
 name|struct
 name|m_tag
@@ -1198,7 +1197,7 @@ name|t
 operator|->
 name|m_tag_free
 operator|=
-name|_m_tag_free
+name|m_tag_free
 expr_stmt|;
 return|return
 name|t
@@ -1247,7 +1246,11 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
+call|(
+name|t
+operator|->
 name|m_tag_free
+call|)
 argument_list|(
 name|t
 argument_list|)
