@@ -356,6 +356,27 @@ name|atm_stackq_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|atm_init_fn
+name|atm_init_fns
+index|[]
+init|=
+block|{
+operator|&
+name|atm_sock_init
+block|,
+operator|&
+name|atm_cm_init
+block|,
+operator|&
+name|atm_aal5_init
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Initialize ATM kernel  *   * Performs any initialization required before things really get underway.  * Called from ATM domain initialization or from first registration function   * which gets called.  *  * Arguments:  *	none  *  * Returns:  *	none  *  */
 end_comment
@@ -365,6 +386,9 @@ name|void
 name|atm_initialize
 parameter_list|()
 block|{
+name|u_int
+name|i
+decl_stmt|;
 comment|/* 	 * Never called from interrupts, so no locking needed 	 */
 if|if
 condition|(
@@ -492,14 +516,33 @@ name|atm_intr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize subsystems 	 */
-name|atm_sock_init
-argument_list|()
-expr_stmt|;
-name|atm_cm_init
-argument_list|()
-expr_stmt|;
-name|atm_aal5_init
-argument_list|()
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|atm_init_fns
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|atm_init_fn
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|atm_init_fns
+index|[
+name|i
+index|]
+operator|(
+operator|)
 expr_stmt|;
 comment|/* 	 * Prime the timer 	 */
 operator|(
