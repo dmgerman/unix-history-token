@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)prof.c	4.2 (Berkeley) %G%"
+literal|"@(#)prof.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,13 @@ end_typedef
 begin_comment
 comment|/* unit of profiling */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCFUDGE
+value|11
+end_define
 
 begin_define
 define|#
@@ -1835,7 +1842,7 @@ name|np
 operator|->
 name|value
 operator|+
-literal|11
+name|PCFUDGE
 condition|)
 operator|--
 name|kp
