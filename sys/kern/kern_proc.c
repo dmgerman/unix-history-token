@@ -2120,13 +2120,6 @@ name|kp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|td
-operator|=
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|kp
 operator|->
 name|ki_structsize
@@ -2524,6 +2517,13 @@ operator|.
 name|tv_usec
 expr_stmt|;
 block|}
+name|td
+operator|=
+name|FIRST_THREAD_IN_PROC
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|td
