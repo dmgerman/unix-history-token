@@ -689,7 +689,7 @@ condition|(
 name|pr
 operator|->
 name|pr_protocol
-operator|<=
+operator|<
 name|IPPROTO_MAX
 condition|)
 name|ip6_protox
