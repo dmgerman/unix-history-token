@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Parts Copyright (c) 1995 Terrence R. Lambert  * Copyright (c) 1995 Julian R. Elischer  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY Julian R. Elischer ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kern_conf.c,v 1.5 1995/11/30 05:59:09 julian Exp $  */
+comment|/*-  * Parts Copyright (c) 1995 Terrence R. Lambert  * Copyright (c) 1995 Julian R. Elischer  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY Julian R. Elischer ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: kern_conf.c,v 1.6 1995/12/08 11:16:55 julian Exp $  */
 end_comment
 
 begin_include
@@ -41,11 +41,11 @@ parameter_list|,
 name|NXXXDEV
 parameter_list|)
 define|\
-value|int TTYPE##_add(dev_t *descrip,						\ 		struct TTYPE *newentry,					\ 		struct TTYPE *oldentry)					\ {									\ 	int i ;								\ 	if ( (int)*descrip == -1) {
+value|int TTYPE##_add(dev_t *descrip,						\ 		struct TTYPE *newentry,					\ 		struct TTYPE **oldentry)				\ {									\ 	int i ;								\ 	if ( (int)*descrip == -1) {
 comment|/* auto (0 is valid) */
 value|\
 comment|/*							\ 		 * Search the table looking for a slot...		\ 		 */
-value|\ 		for (i = 0; i< NXXXDEV; i++)				\ 			if (TTYPE[i].d_open == NULL)			\ 				break;
+value|\ 		for (i = 0; i< NXXXDEV; i++)				\ 			if (TTYPE[i] == NULL)				\ 				break;
 comment|/* found one! */
 value|\
 comment|/* out of allocable slots? */
@@ -53,10 +53,10 @@ value|\ 		if (i == NXXXDEV) {					\ 			return ENFILE;					\ 		}							\ 	} else 
 comment|/* assign */
 value|\ 		i = major(*descrip);					\ 		if (i< 0 || i>= NXXXDEV) {				\ 			return EINVAL;					\ 		}							\ 	}								\ 									\
 comment|/* maybe save old */
-value|\         if (oldentry) {							\ 		bcopy(&TTYPE[i], oldentry, sizeof(struct TTYPE));	\ 	}								\ 	newentry->d_maj = i;						\
+value|\         if (oldentry) {							\ 		*oldentry = TTYPE[i];					\ 	}								\ 	newentry->d_maj = i;						\
 comment|/* replace with new */
-value|\ 	bcopy(newentry,&TTYPE[i], sizeof(struct TTYPE));		\ 									\
-comment|/* done! */
+value|\ 	TTYPE[i] = newentry;						\ 									\
+comment|/* done!  let them know where we put it */
 value|\ 	*descrip = makedev(i,0);					\ 	return 0;							\ } \  ADDENTRY(bdevsw, nblkdev)
 end_define
 

@@ -304,7 +304,7 @@ argument_list|(
 name|dev
 argument_list|)
 index|]
-operator|.
+operator|->
 name|d_devtotty
 operator|)
 operator|(
