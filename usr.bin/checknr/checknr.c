@@ -1472,6 +1472,13 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+name|b1
+index|[
+literal|2
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|addmac
 argument_list|(
 name|b1
