@@ -4,7 +4,7 @@ comment|/* RCS compile-time configuration */
 end_comment
 
 begin_comment
-comment|/* $Id: conf.sh,v 5.14.0.1 1993/03/25 04:24:49 eggert Exp $ */
+comment|/* $Id: conf.h,v 1.2 1994/08/05 22:33:44 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -3585,32 +3585,6 @@ operator|(
 name|char
 specifier|const
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|exiting
-name|void
-name|_exit
-name|P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|exiting
-name|void
-name|exit
-name|P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
