@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.62 (Berkeley) 6/24/98"
+literal|"@(#)makemap.c	8.71 (Berkeley) 11/29/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,7 +224,7 @@ begin_decl_stmt
 name|bool
 name|DontInitGroups
 init|=
-name|TRUE
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -247,7 +247,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|uid_t
-name|TrustedFileUid
+name|TrustedUid
 init|=
 literal|0
 decl_stmt|;
@@ -324,14 +324,20 @@ decl_stmt|;
 name|char
 modifier|*
 name|typename
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
 name|mapname
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
 name|ext
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|lineno
@@ -344,7 +350,12 @@ name|mode
 decl_stmt|;
 name|int
 name|putflags
+init|=
+literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEWDB
 name|long
 name|dbcachesize
 init|=
@@ -352,13 +363,21 @@ literal|1024
 operator|*
 literal|1024
 decl_stmt|;
+endif|#
+directive|endif
 name|enum
 name|type
 name|type
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|O_EXLOCK
 name|int
 name|fd
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|sff
 init|=
@@ -458,7 +477,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|_FFR_TRUSTED_FILE_OWNER
+name|_FFR_TRUSTED_USER
 name|FILE
 modifier|*
 name|cfp
@@ -599,7 +618,7 @@ name|_FFR_NEW_MAKEMAP_FLAGS
 define|#
 directive|define
 name|OPTIONS
-value|"C:Nc:dforsv"
+value|"C:Nc:dflorsv"
 else|#
 directive|else
 define|#
@@ -654,6 +673,9 @@ name|_FFR_NEW_MAKEMAP_FLAGS
 case|case
 literal|'c'
 case|:
+ifdef|#
+directive|ifdef
+name|NEWDB
 name|dbcachesize
 operator|=
 name|atol
@@ -661,6 +683,8 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 endif|#
 directive|endif
@@ -680,6 +704,45 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_NEW_MAKEMAP_FLAGS
+case|case
+literal|'l'
+case|:
+ifdef|#
+directive|ifdef
+name|NDBM
+name|printf
+argument_list|(
+literal|"dbm\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NEWDB
+name|printf
+argument_list|(
+literal|"hash\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"btree\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|exit
+argument_list|(
+name|EX_OK
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'o'
 case|:
@@ -875,7 +938,7 @@ expr_stmt|;
 block|}
 if|#
 directive|if
-name|_FFR_TRUSTED_FILE_OWNER
+name|_FFR_TRUSTED_USER
 if|if
 condition|(
 operator|(
@@ -973,9 +1036,9 @@ name|strncasecmp
 argument_list|(
 name|b
 argument_list|,
-literal|" TrustedFileOwner"
+literal|" TrustedUser"
 argument_list|,
-literal|17
+literal|12
 argument_list|)
 operator|==
 literal|0
@@ -986,7 +1049,7 @@ name|isascii
 argument_list|(
 name|b
 index|[
-literal|17
+literal|12
 index|]
 argument_list|)
 operator|&&
@@ -994,7 +1057,7 @@ name|isalnum
 argument_list|(
 name|b
 index|[
-literal|17
+literal|12
 index|]
 argument_list|)
 operator|)
@@ -1046,7 +1109,7 @@ operator|*
 name|b
 argument_list|)
 condition|)
-name|TrustedFileUid
+name|TrustedUid
 operator|=
 name|atoi
 argument_list|(
@@ -1061,7 +1124,7 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|TrustedFileUid
+name|TrustedUid
 operator|=
 literal|0
 expr_stmt|;
@@ -1082,13 +1145,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"TrustedFileOwner: unknown user %s"
+literal|"TrustedUser: unknown user %s\n"
 argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
 else|else
-name|TrustedFileUid
+name|TrustedUid
 operator|=
 name|pw
 operator|->
@@ -1100,21 +1163,21 @@ directive|ifdef
 name|UID_MAX
 if|if
 condition|(
-name|TrustedFileUid
+name|TrustedUid
 operator|>
 name|UID_MAX
 condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"TrustedFileOwner: uid value (%ld)> UID_MAX (%ld)"
+literal|"TrustedUser: uid value (%ld)> UID_MAX (%ld)"
 argument_list|,
-name|TrustedFileUid
+name|TrustedUid
 argument_list|,
 name|UID_MAX
 argument_list|)
 expr_stmt|;
-name|TrustedFileUid
+name|TrustedUid
 operator|=
 literal|0
 expr_stmt|;
@@ -1152,7 +1215,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-N] [-c cachesize] [-d] [-f] [-o] [-r] [-s] [-v] type mapname\n"
+literal|"Usage: %s [-N] [-c cachesize] [-d] [-f] [-l] [-o] [-r] [-s] [-v] type mapname\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -1997,6 +2060,9 @@ name|EX_CANTCREAT
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_TRUSTED_USER
 if|if
 condition|(
 name|geteuid
@@ -2004,7 +2070,7 @@ argument_list|()
 operator|==
 literal|0
 operator|&&
-name|TrustedFileUid
+name|TrustedUid
 operator|!=
 literal|0
 condition|)
@@ -2020,7 +2086,7 @@ operator|.
 name|dbm
 argument_list|)
 argument_list|,
-name|TrustedFileUid
+name|TrustedUid
 argument_list|,
 operator|-
 literal|1
@@ -2037,7 +2103,7 @@ operator|.
 name|dbm
 argument_list|)
 argument_list|,
-name|TrustedFileUid
+name|TrustedUid
 argument_list|,
 operator|-
 literal|1
@@ -2062,6 +2128,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 break|break;
 endif|#
 directive|endif
@@ -2331,6 +2399,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_TRUSTED_USER
 if|if
 condition|(
 name|geteuid
@@ -2338,7 +2409,7 @@ argument_list|()
 operator|==
 literal|0
 operator|&&
-name|TrustedFileUid
+name|TrustedUid
 operator|!=
 literal|0
 condition|)
@@ -2349,7 +2420,7 @@ name|fchown
 argument_list|(
 name|fd
 argument_list|,
-name|TrustedFileUid
+name|TrustedUid
 argument_list|,
 operator|-
 literal|1
@@ -2374,6 +2445,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 break|break;
 case|case
@@ -2627,6 +2700,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_TRUSTED_USER
 if|if
 condition|(
 name|geteuid
@@ -2634,7 +2710,7 @@ argument_list|()
 operator|==
 literal|0
 operator|&&
-name|TrustedFileUid
+name|TrustedUid
 operator|!=
 literal|0
 condition|)
@@ -2645,7 +2721,7 @@ name|fchown
 argument_list|(
 name|fd
 argument_list|,
-name|TrustedFileUid
+name|TrustedUid
 argument_list|,
 operator|-
 literal|1
@@ -2670,6 +2746,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 break|break;
 endif|#
@@ -3880,6 +3958,10 @@ name|int
 name|err
 decl_stmt|;
 block|{
+if|#
+directive|if
+operator|!
+name|HASSTRERROR
 specifier|static
 name|char
 name|errstr
@@ -3889,9 +3971,6 @@ index|]
 decl_stmt|;
 if|#
 directive|if
-operator|!
-name|HASSTRERROR
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -3907,6 +3986,8 @@ specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* handle pseudo-errors internal to sendmail */
