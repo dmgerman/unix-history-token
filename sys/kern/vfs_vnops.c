@@ -1464,7 +1464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Package up an I/O request on a vnode into a uio and do it.  The I/O  * request is split up into smaller chunks and we try to avoid saturating  * the buffer cache while potentially holding a vnode locked, so we   * check bwillwrite() before calling vn_rdwr()  */
+comment|/*  * Package up an I/O request on a vnode into a uio and do it.  The I/O  * request is split up into smaller chunks and we try to avoid saturating  * the buffer cache while potentially holding a vnode locked, so we   * check bwillwrite() before calling vn_rdwr().  We also call uio_yield()  * to give other processes a chance to lock the vnode (either other processes  * core'ing the same binary, or unrelated processes scanning the directory).  */
 end_comment
 
 begin_function
@@ -1608,6 +1608,9 @@ expr_stmt|;
 name|base
 operator|+=
 name|chunk
+expr_stmt|;
+name|uio_yield
+argument_list|()
 expr_stmt|;
 block|}
 do|while

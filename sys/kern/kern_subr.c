@@ -69,19 +69,6 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|void
-name|uio_yield
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|uiomove
@@ -1814,7 +1801,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|uio_yield
 parameter_list|()

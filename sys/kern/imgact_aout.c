@@ -1036,6 +1036,8 @@ argument_list|,
 name|UIO_USERSPACE
 argument_list|,
 name|IO_UNIT
+operator||
+name|IO_DIRECT
 argument_list|,
 name|cred
 argument_list|,
@@ -1105,6 +1107,8 @@ argument_list|,
 name|UIO_USERSPACE
 argument_list|,
 name|IO_UNIT
+operator||
+name|IO_DIRECT
 argument_list|,
 name|cred
 argument_list|,
