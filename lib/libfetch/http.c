@@ -4502,23 +4502,6 @@ operator|>
 name|hdr_end
 condition|)
 do|;
-comment|/* we have a hit or an error */
-if|if
-condition|(
-name|code
-operator|==
-name|HTTP_OK
-operator|||
-name|code
-operator|==
-name|HTTP_PARTIAL
-operator|||
-name|HTTP_ERROR
-argument_list|(
-name|code
-argument_list|)
-condition|)
-break|break;
 comment|/* we need to provide authentication */
 if|if
 condition|(
@@ -4543,6 +4526,23 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* we have a hit or an error */
+if|if
+condition|(
+name|code
+operator|==
+name|HTTP_OK
+operator|||
+name|code
+operator|==
+name|HTTP_PARTIAL
+operator|||
+name|HTTP_ERROR
+argument_list|(
+name|code
+argument_list|)
+condition|)
+break|break;
 comment|/* all other cases: we got a redirect */
 name|need_auth
 operator|=
