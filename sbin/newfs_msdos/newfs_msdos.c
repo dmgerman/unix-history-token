@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: newfs_msdos.c,v 1.1.1.1 1998/07/06 20:01:34 rnordier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_include
@@ -6457,162 +6451,19 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newfs_msdos [ -options ] special [disktype]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"where the options are:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: newfs_msdos [-N] [-B boot] [-F FAT-type] [-I volid] [-L label]"
 argument_list|,
-literal|"\t-N don't create file system: "
-literal|"just print out parameters\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"                   [-O OEM] [-S sector-size] [-a FAT-size] [-b block-size]"
 argument_list|,
-literal|"\t-B get bootstrap from file\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"                   [-c cluster-size] [-e dirents] [-f format] [-h heads]"
 argument_list|,
-literal|"\t-F FAT type (12, 16, or 32)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"                   [-i info] [-k backup] [-m media] [-n FATs] [-o hidden]"
 argument_list|,
-literal|"\t-I volume ID\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"                   [-r reserved] [-s total] [-u track-size]"
 argument_list|,
-literal|"\t-L volume label\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-O OEM string\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-S bytes/sector\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-a sectors/FAT\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-b block size\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-c sectors/cluster\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-e root directory entries\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-f standard format\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-h drive heads\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-i file system info sector\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-k backup boot sector\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-m media descriptor\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-n number of FATs\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-o hidden sectors\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-r reserved sectors\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-s file system size (sectors)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-u sectors/track\n"
+literal|"                   special [disktype]"
 argument_list|)
 expr_stmt|;
 name|exit
