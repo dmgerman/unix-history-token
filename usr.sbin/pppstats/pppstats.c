@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pppstats.c,v 1.3 1994/11/19 13:57:06 jkh Exp $"
+literal|"$Id: pppstats.c,v 1.4 1995/05/30 03:51:18 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1071,7 +1071,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kvm_openfiles: %s"
+literal|"kvm_openfiles: %s\n"
 argument_list|,
 name|errbuf
 argument_list|)
@@ -1108,7 +1108,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"kvm_openfiles: %s"
+literal|"kvm_openfiles: %s\n"
 argument_list|,
 name|kvm_geterr
 argument_list|()
