@@ -190,6 +190,16 @@ name|i
 index|]
 operator|.
 name|n_name
+operator|&&
+name|nl
+index|[
+name|i
+index|]
+operator|.
+name|n_name
+index|[
+literal|0
+index|]
 condition|;
 name|i
 operator|++
