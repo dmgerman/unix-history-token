@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"objfiles.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"x86-64-tdep.h"
 end_include
 
@@ -98,6 +104,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ST0_REGNUM
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
 name|XMM1_REGNUM
 value|39
 end_define
@@ -135,6 +148,7 @@ name|x86_64_register_info_table
 index|[]
 init|=
 block|{
+comment|/*  0 */
 block|{
 literal|8
 block|,
@@ -144,6 +158,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/*  1 */
 block|{
 literal|8
 block|,
@@ -153,6 +168,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/*  2 */
 block|{
 literal|8
 block|,
@@ -162,6 +178,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/*  3 */
 block|{
 literal|8
 block|,
@@ -171,6 +188,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/*  4 */
 block|{
 literal|8
 block|,
@@ -180,6 +198,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/*  5 */
 block|{
 literal|8
 block|,
@@ -189,6 +208,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/*  6 */
 block|{
 literal|8
 block|,
@@ -198,6 +218,7 @@ operator|&
 name|builtin_type_void_func_ptr
 block|}
 block|,
+comment|/*  7 */
 block|{
 literal|8
 block|,
@@ -207,6 +228,7 @@ operator|&
 name|builtin_type_void_func_ptr
 block|}
 block|,
+comment|/*  8 */
 block|{
 literal|8
 block|,
@@ -216,6 +238,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/*  9 */
 block|{
 literal|8
 block|,
@@ -225,6 +248,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/* 10 */
 block|{
 literal|8
 block|,
@@ -234,6 +258,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/* 11 */
 block|{
 literal|8
 block|,
@@ -243,6 +268,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/* 12 */
 block|{
 literal|8
 block|,
@@ -252,6 +278,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/* 13 */
 block|{
 literal|8
 block|,
@@ -261,6 +288,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/* 14 */
 block|{
 literal|8
 block|,
@@ -270,6 +298,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/* 15 */
 block|{
 literal|8
 block|,
@@ -279,6 +308,7 @@ operator|&
 name|builtin_type_int64
 block|}
 block|,
+comment|/* 16 */
 block|{
 literal|8
 block|,
@@ -288,6 +318,7 @@ operator|&
 name|builtin_type_void_func_ptr
 block|}
 block|,
+comment|/* 17 */
 block|{
 literal|4
 block|,
@@ -297,6 +328,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 18 */
 block|{
 literal|4
 block|,
@@ -306,6 +338,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 19 */
 block|{
 literal|4
 block|,
@@ -315,6 +348,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 20 */
 block|{
 literal|4
 block|,
@@ -324,6 +358,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 21 */
 block|{
 literal|4
 block|,
@@ -333,6 +368,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 22 */
 block|{
 literal|10
 block|,
@@ -342,6 +378,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 23 */
 block|{
 literal|10
 block|,
@@ -351,6 +388,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 24 */
 block|{
 literal|10
 block|,
@@ -360,6 +398,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 25 */
 block|{
 literal|10
 block|,
@@ -369,6 +408,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 26 */
 block|{
 literal|10
 block|,
@@ -378,6 +418,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 27 */
 block|{
 literal|10
 block|,
@@ -387,6 +428,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 28 */
 block|{
 literal|10
 block|,
@@ -396,6 +438,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 29 */
 block|{
 literal|10
 block|,
@@ -405,6 +448,7 @@ operator|&
 name|builtin_type_i387_ext
 block|}
 block|,
+comment|/* 30 */
 block|{
 literal|4
 block|,
@@ -414,6 +458,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 31 */
 block|{
 literal|4
 block|,
@@ -423,6 +468,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 32 */
 block|{
 literal|4
 block|,
@@ -432,6 +478,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 33 */
 block|{
 literal|4
 block|,
@@ -441,6 +488,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 34 */
 block|{
 literal|4
 block|,
@@ -450,6 +498,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 35 */
 block|{
 literal|4
 block|,
@@ -459,6 +508,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 36 */
 block|{
 literal|4
 block|,
@@ -468,6 +518,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 37 */
 block|{
 literal|4
 block|,
@@ -477,6 +528,7 @@ operator|&
 name|builtin_type_int32
 block|}
 block|,
+comment|/* 38 */
 block|{
 literal|16
 block|,
@@ -486,6 +538,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 39 */
 block|{
 literal|16
 block|,
@@ -495,6 +548,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 40 */
 block|{
 literal|16
 block|,
@@ -504,6 +558,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 41 */
 block|{
 literal|16
 block|,
@@ -513,6 +568,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 42 */
 block|{
 literal|16
 block|,
@@ -522,6 +578,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 43 */
 block|{
 literal|16
 block|,
@@ -531,6 +588,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 44 */
 block|{
 literal|16
 block|,
@@ -540,6 +598,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 45 */
 block|{
 literal|16
 block|,
@@ -549,6 +608,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 46 */
 block|{
 literal|16
 block|,
@@ -558,6 +618,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 47 */
 block|{
 literal|16
 block|,
@@ -567,6 +628,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 48 */
 block|{
 literal|16
 block|,
@@ -576,6 +638,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 49 */
 block|{
 literal|16
 block|,
@@ -585,6 +648,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 50 */
 block|{
 literal|16
 block|,
@@ -594,6 +658,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 51 */
 block|{
 literal|16
 block|,
@@ -603,6 +668,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 52 */
 block|{
 literal|16
 block|,
@@ -612,6 +678,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 53 */
 block|{
 literal|16
 block|,
@@ -621,6 +688,7 @@ operator|&
 name|builtin_type_v4sf
 block|}
 block|,
+comment|/* 54 */
 block|{
 literal|4
 block|,
@@ -630,6 +698,178 @@ operator|&
 name|builtin_type_int32
 block|}
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This array is a mapping from Dwarf-2 register     numbering to GDB's one. Dwarf-2 numbering is     defined in x86-64 ABI, section 3.6.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|x86_64_dwarf2gdb_regno_map
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+comment|/* RAX - RDX */
+literal|4
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|7
+block|,
+comment|/* RSI, RDI, RBP, RSP */
+literal|8
+block|,
+literal|9
+block|,
+literal|10
+block|,
+literal|11
+block|,
+comment|/* R8 - R11 */
+literal|12
+block|,
+literal|13
+block|,
+literal|14
+block|,
+literal|15
+block|,
+comment|/* R12 - R15 */
+operator|-
+literal|1
+block|,
+comment|/* RA - not mapped */
+name|XMM1_REGNUM
+operator|-
+literal|1
+block|,
+name|XMM1_REGNUM
+block|,
+comment|/* XMM0 ... */
+name|XMM1_REGNUM
+operator|+
+literal|1
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|2
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|3
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|4
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|5
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|6
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|7
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|8
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|9
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|10
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|11
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|12
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|13
+block|,
+name|XMM1_REGNUM
+operator|+
+literal|14
+block|,
+comment|/* ... XMM15 */
+name|ST0_REGNUM
+operator|+
+literal|0
+block|,
+name|ST0_REGNUM
+operator|+
+literal|1
+block|,
+comment|/* ST0 ... */
+name|ST0_REGNUM
+operator|+
+literal|2
+block|,
+name|ST0_REGNUM
+operator|+
+literal|3
+block|,
+name|ST0_REGNUM
+operator|+
+literal|4
+block|,
+name|ST0_REGNUM
+operator|+
+literal|5
+block|,
+name|ST0_REGNUM
+operator|+
+literal|6
+block|,
+name|ST0_REGNUM
+operator|+
+literal|7
+comment|/* ... ST7 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|x86_64_dwarf2gdb_regno_map_length
+init|=
+sizeof|sizeof
+argument_list|(
+name|x86_64_dwarf2gdb_regno_map
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|x86_64_dwarf2gdb_regno_map
+index|[
+literal|0
+index|]
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -819,9 +1059,6 @@ index|[
 literal|12
 index|]
 decl_stmt|;
-name|DOUBLEST
-name|d
-decl_stmt|;
 comment|/* We only support floating-point values.  */
 if|if
 condition|(
@@ -947,6 +1184,49 @@ argument_list|,
 name|FPU_REG_RAW_SIZE
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Dwarf-2<-> GDB register numbers mapping.  */
+end_comment
+
+begin_function
+name|int
+name|x86_64_dwarf2_reg_to_regnum
+parameter_list|(
+name|int
+name|dw_reg
+parameter_list|)
+block|{
+if|if
+condition|(
+name|dw_reg
+operator|<
+literal|0
+operator|||
+name|dw_reg
+operator|>
+name|x86_64_dwarf2gdb_regno_map_length
+condition|)
+block|{
+name|warning
+argument_list|(
+literal|"Dwarf-2 uses unmapped register #%d\n"
+argument_list|,
+name|dw_reg
+argument_list|)
+expr_stmt|;
+return|return
+name|dw_reg
+return|;
+block|}
+return|return
+name|x86_64_dwarf2gdb_regno_map
+index|[
+name|dw_reg
+index|]
+return|;
 block|}
 end_function
 
@@ -1391,9 +1671,10 @@ literal|0
 init|;
 name|j
 operator|<
+name|TYPE_NFIELDS
+argument_list|(
 name|type
-operator|->
-name|nfields
+argument_list|)
 condition|;
 operator|++
 name|j
@@ -1404,9 +1685,10 @@ name|num
 init|=
 name|classify_argument
 argument_list|(
+name|TYPE_FIELDS
+argument_list|(
 name|type
-operator|->
-name|fields
+argument_list|)
 index|[
 name|j
 index|]
@@ -1416,9 +1698,10 @@ argument_list|,
 name|subclasses
 argument_list|,
 operator|(
+name|TYPE_FIELDS
+argument_list|(
 name|type
-operator|->
-name|fields
+argument_list|)
 index|[
 name|j
 index|]
@@ -1459,9 +1742,10 @@ name|int
 name|pos
 init|=
 operator|(
+name|TYPE_FIELDS
+argument_list|(
 name|type
-operator|->
-name|fields
+argument_list|)
 index|[
 name|j
 index|]
@@ -1514,9 +1798,10 @@ name|num
 operator|=
 name|classify_argument
 argument_list|(
+name|TYPE_TARGET_TYPE
+argument_list|(
 name|type
-operator|->
-name|target_type
+argument_list|)
 argument_list|,
 name|subclasses
 argument_list|,
@@ -1615,9 +1900,10 @@ literal|0
 init|;
 name|j
 operator|<
+name|TYPE_NFIELDS
+argument_list|(
 name|type
-operator|->
-name|nfields
+argument_list|)
 condition|;
 operator|++
 name|j
@@ -1630,9 +1916,10 @@ name|num
 operator|=
 name|classify_argument
 argument_list|(
+name|TYPE_FIELDS
+argument_list|(
 name|type
-operator|->
-name|fields
+argument_list|)
 index|[
 name|j
 index|]
@@ -1686,6 +1973,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 comment|/* Final merger cleanup.  */
@@ -1937,6 +2226,9 @@ case|:
 return|return
 literal|0
 return|;
+default|default:
+comment|/* Avoid warning.  */
+break|break;
 block|}
 name|internal_error
 argument_list|(
@@ -3329,7 +3621,6 @@ begin_escape
 end_escape
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|x86_64_register_name
@@ -3358,6 +3649,58 @@ name|reg_nr
 index|]
 operator|.
 name|name
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|x86_64_register_number
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|int
+name|reg_nr
+decl_stmt|;
+for|for
+control|(
+name|reg_nr
+operator|=
+literal|0
+init|;
+name|reg_nr
+operator|<
+name|X86_64_NUM_REGS
+condition|;
+name|reg_nr
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+name|x86_64_register_info_table
+index|[
+name|reg_nr
+index|]
+operator|.
+name|name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+name|reg_nr
+return|;
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function
@@ -3489,10 +3832,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|firstline
-decl_stmt|,
-name|currline
 decl_stmt|;
 name|struct
 name|symtab_and_line
@@ -3504,13 +3843,7 @@ modifier|*
 name|v_function
 decl_stmt|;
 name|CORE_ADDR
-name|salendaddr
-init|=
-literal|0
-decl_stmt|,
 name|endaddr
-init|=
-literal|0
 decl_stmt|;
 comment|/* We will handle only functions beginning with:      55          pushq %rbp      48 89 e5    movq %rsp,%rbp     */
 name|unsigned
@@ -3622,22 +3955,6 @@ condition|)
 return|return
 name|pc
 return|;
-name|firstline
-operator|=
-name|v_sal
-operator|.
-name|line
-expr_stmt|;
-name|currline
-operator|=
-name|firstline
-expr_stmt|;
-name|salendaddr
-operator|=
-name|v_sal
-operator|.
-name|end
-expr_stmt|;
 name|endaddr
 operator|=
 name|v_function
@@ -3682,24 +3999,9 @@ index|[
 name|i
 index|]
 operator|.
-name|line
-operator|>
-name|firstline
-operator|&&
-name|v_sal
-operator|.
-name|symtab
-operator|->
-name|linetable
-operator|->
-name|item
-index|[
-name|i
-index|]
-operator|.
 name|pc
 operator|>=
-name|salendaddr
+name|pc
 operator|&&
 name|v_sal
 operator|.
@@ -3731,21 +4033,6 @@ name|i
 index|]
 operator|.
 name|pc
-expr_stmt|;
-name|currline
-operator|=
-name|v_sal
-operator|.
-name|symtab
-operator|->
-name|linetable
-operator|->
-name|item
-index|[
-name|i
-index|]
-operator|.
-name|line
 expr_stmt|;
 break|break;
 block|}
@@ -3801,7 +4088,7 @@ specifier|static
 name|struct
 name|gdbarch
 modifier|*
-name|i386_gdbarch_init
+name|x86_64_gdbarch_init
 parameter_list|(
 name|struct
 name|gdbarch_info
@@ -3913,7 +4200,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"i386_gdbarch_init: unknown machine type"
+literal|"x86_64_gdbarch_init: unknown machine type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3967,7 +4254,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"i386_gdbarch_init: unknown machine type"
+literal|"x86_64_gdbarch_init: unknown machine type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3979,7 +4266,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"i386_gdbarch_init: unknown machine type"
+literal|"x86_64_gdbarch_init: unknown machine type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4050,7 +4337,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"i386_gdbarch_init: unknown machine type"
+literal|"x86_64_gdbarch_init: unknown machine type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4239,13 +4526,6 @@ argument_list|(
 name|gdbarch
 argument_list|,
 name|cfi_read_fp
-argument_list|)
-expr_stmt|;
-name|set_gdbarch_write_fp
-argument_list|(
-name|gdbarch
-argument_list|,
-name|cfi_write_fp
 argument_list|)
 expr_stmt|;
 comment|/* Discard from the stack the innermost frame, restoring all registers.  */
@@ -4546,7 +4826,18 @@ name|set_gdbarch_breakpoint_from_pc
 argument_list|(
 name|gdbarch
 argument_list|,
+operator|(
+name|gdbarch_breakpoint_from_pc_ftype
+operator|*
+operator|)
 name|x86_64_breakpoint_from_pc
+argument_list|)
+expr_stmt|;
+name|set_gdbarch_in_solib_call_trampoline
+argument_list|(
+name|gdbarch
+argument_list|,
+name|in_plt_section
 argument_list|)
 expr_stmt|;
 comment|/* Amount PC must be decremented by after a breakpoint.  This is often the    number of bytes in BREAKPOINT but not always.  */
@@ -4563,6 +4854,13 @@ argument_list|(
 name|gdbarch
 argument_list|,
 name|dwarf2_build_frame_info
+argument_list|)
+expr_stmt|;
+name|set_gdbarch_dwarf2_reg_to_regnum
+argument_list|(
+name|gdbarch
+argument_list|,
+name|x86_64_dwarf2_reg_to_regnum
 argument_list|)
 expr_stmt|;
 return|return
@@ -4582,7 +4880,7 @@ name|register_gdbarch_init
 argument_list|(
 name|bfd_arch_i386
 argument_list|,
-name|i386_gdbarch_init
+name|x86_64_gdbarch_init
 argument_list|)
 expr_stmt|;
 comment|/* Initialize the table saying where each register starts in the      register file.  */

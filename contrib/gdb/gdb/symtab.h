@@ -44,12 +44,6 @@ name|obstack_chunk_free
 value|xfree
 end_define
 
-begin_include
-include|#
-directive|include
-file|"bcache.h"
-end_include
-
 begin_comment
 comment|/* Don't do this; it means that if some .o's are compiled with GNU C    and some are not (easy to do accidentally the way we configure    things; also it is a pain to have to "make clean" every time you    want to switch compilers), then GDB dies a horrible death.  */
 end_comment

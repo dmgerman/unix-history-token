@@ -27,6 +27,23 @@ directive|include
 file|"i386/tm-i386.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* FreeBSD/ELF uses stabs-in-ELF with the DWARF register numbering    scheme by default, so we must redefine STAB_REG_TO_REGNUM.  This    messes up the floating-point registers for a.out, but there is not    much we can do about that.  */
 end_comment
