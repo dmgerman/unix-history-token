@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)allo.c	4.8 (Berkeley) %G%"
+literal|"@(#)allo.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,7 +251,11 @@ name|p
 argument_list|,
 name|n
 operator|&
+operator|(
 name|NAMASK
+operator||
+name|NEVEN
+operator|)
 argument_list|)
 expr_stmt|;
 name|resc
@@ -297,6 +301,12 @@ literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
+name|n
+operator|&=
+operator|~
+name|NEVEN
+expr_stmt|;
+comment|/* only used for first need */
 name|n
 operator|-=
 name|NAREG
@@ -1204,6 +1214,12 @@ name|type
 argument_list|)
 operator|==
 literal|2
+operator|||
+operator|(
+name|n
+operator|&
+name|NEVEN
+operator|)
 operator|||
 operator|(
 name|logop
