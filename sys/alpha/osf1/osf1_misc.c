@@ -5191,7 +5191,7 @@ operator|(
 operator|(
 name|error
 operator|=
-name|suser
+name|suser_xxx
 argument_list|(
 name|p
 operator|->
