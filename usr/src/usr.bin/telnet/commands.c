@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	5.8 (Berkeley) %G%"
+literal|"@(#)commands.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3221,7 +3221,7 @@ block|,
 operator|&
 name|skiprc
 block|,
-literal|"read ~/.telnetrc file"
+literal|"skip reading of ~/.telnetrc file"
 block|}
 block|,
 block|{
