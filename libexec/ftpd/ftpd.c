@@ -4986,6 +4986,9 @@ name|shell
 operator|=
 name|_PATH_BSHELL
 expr_stmt|;
+name|setusershell
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
