@@ -637,6 +637,14 @@ name|bs_softc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|bsc
+operator|->
+name|timeout_ch
+argument_list|)
+expr_stmt|;
 name|bscdata
 index|[
 name|unit

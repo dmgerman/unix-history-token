@@ -72,6 +72,8 @@ begin_define
 define|#
 directive|define
 name|OS_DEPEND_MISC_HEADER
+define|\
+value|struct callout_handle timeout_ch;
 end_define
 
 begin_endif
