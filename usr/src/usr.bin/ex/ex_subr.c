@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.4	%G%"
+literal|"@(#)ex_subr.c	7.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3816,6 +3816,9 @@ block|{
 name|ttymode
 name|f
 decl_stmt|;
+name|int
+name|omask
+decl_stmt|;
 name|f
 operator|=
 name|setty
@@ -3833,6 +3836,14 @@ argument_list|)
 expr_stmt|;
 name|flush
 argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
