@@ -782,6 +782,8 @@ name|ip
 parameter_list|,
 name|lbprev
 parameter_list|,
+name|bprev
+parameter_list|,
 name|bpref
 parameter_list|,
 name|osize
@@ -799,6 +801,9 @@ name|ip
 decl_stmt|;
 name|ufs2_daddr_t
 name|lbprev
+decl_stmt|;
+name|ufs2_daddr_t
+name|bprev
 decl_stmt|;
 name|ufs2_daddr_t
 name|bpref
@@ -845,8 +850,6 @@ decl_stmt|,
 name|reclaimed
 decl_stmt|;
 name|ufs2_daddr_t
-name|bprev
-decl_stmt|,
 name|bno
 decl_stmt|;
 operator|*
@@ -1011,19 +1014,7 @@ name|nospace
 goto|;
 if|if
 condition|(
-operator|(
 name|bprev
-operator|=
-name|DIP
-argument_list|(
-name|ip
-argument_list|,
-name|i_db
-index|[
-name|lbprev
-index|]
-argument_list|)
-operator|)
 operator|==
 literal|0
 condition|)

@@ -4720,7 +4720,11 @@ operator|->
 name|b_xflags
 operator|&=
 operator|~
+operator|(
 name|BX_BKGRDWRITE
+operator||
+name|BX_ALTDATA
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -4838,7 +4842,11 @@ operator|->
 name|b_xflags
 operator|&=
 operator|~
+operator|(
 name|BX_BKGRDWRITE
+operator||
+name|BX_ALTDATA
+operator|)
 expr_stmt|;
 if|if
 condition|(

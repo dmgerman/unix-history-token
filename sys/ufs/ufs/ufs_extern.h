@@ -174,6 +174,10 @@ parameter_list|,
 name|ufs2_daddr_t
 modifier|*
 parameter_list|,
+name|struct
+name|buf
+modifier|*
+parameter_list|,
 name|int
 modifier|*
 parameter_list|,
@@ -267,6 +271,28 @@ name|ino_t
 parameter_list|,
 name|struct
 name|ucred
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ufs_extread
+parameter_list|(
+name|struct
+name|vop_read_args
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ufs_extwrite
+parameter_list|(
+name|struct
+name|vop_write_args
 modifier|*
 parameter_list|)
 function_decl|;
@@ -728,36 +754,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Flags to low-level allocation routines. */
+comment|/*  * Flags to low-level allocation routines.  * The low 16-bits are reserved for IO_ flags from vnode.h.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BA_CLRBUF
-value|0x01
+value|0x00010000
 end_define
 
 begin_comment
-comment|/* Request allocated buffer be cleared. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BA_SYNC
-value|0x02
-end_define
-
-begin_comment
-comment|/* Do all allocations synchronously. */
+comment|/* Request alloced buffer be cleared. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BA_METAONLY
-value|0x04
+value|0x00020000
 end_define
 
 begin_comment
@@ -768,11 +783,11 @@ begin_define
 define|#
 directive|define
 name|BA_NOWAIT
-value|0x08
+value|0x00040000
 end_define
 
 begin_comment
-comment|/* do not sleep to await lock */
+comment|/* Do not sleep to await lock. */
 end_comment
 
 begin_endif

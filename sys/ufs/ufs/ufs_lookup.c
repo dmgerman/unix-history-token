@@ -2922,7 +2922,7 @@ argument_list|)
 condition|)
 name|flags
 operator||=
-name|BA_SYNC
+name|IO_SYNC
 expr_stmt|;
 if|if
 condition|(
@@ -4018,6 +4018,8 @@ name|dp
 operator|->
 name|i_endoff
 argument_list|,
+name|IO_NORMAL
+operator||
 name|IO_SYNC
 argument_list|,
 name|cr

@@ -286,7 +286,9 @@ name|off_t
 operator|)
 literal|0
 argument_list|,
-literal|0
+name|IO_EXT
+operator||
+name|IO_NORMAL
 argument_list|,
 name|NOCRED
 argument_list|,

@@ -904,6 +904,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BX_ALTDATA
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* Holds extended data */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NOOFFSET
 value|(-1LL)
 end_define

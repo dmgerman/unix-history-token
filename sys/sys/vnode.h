@@ -860,7 +860,7 @@ begin_define
 define|#
 directive|define
 name|IO_UNIT
-value|0x01
+value|0x0001
 end_define
 
 begin_comment
@@ -871,7 +871,7 @@ begin_define
 define|#
 directive|define
 name|IO_APPEND
-value|0x02
+value|0x0002
 end_define
 
 begin_comment
@@ -882,7 +882,7 @@ begin_define
 define|#
 directive|define
 name|IO_SYNC
-value|0x04
+value|0x0004
 end_define
 
 begin_comment
@@ -893,7 +893,7 @@ begin_define
 define|#
 directive|define
 name|IO_NODELOCKED
-value|0x08
+value|0x0008
 end_define
 
 begin_comment
@@ -904,7 +904,7 @@ begin_define
 define|#
 directive|define
 name|IO_NDELAY
-value|0x10
+value|0x0010
 end_define
 
 begin_comment
@@ -915,7 +915,7 @@ begin_define
 define|#
 directive|define
 name|IO_VMIO
-value|0x20
+value|0x0020
 end_define
 
 begin_comment
@@ -926,7 +926,7 @@ begin_define
 define|#
 directive|define
 name|IO_INVAL
-value|0x40
+value|0x0040
 end_define
 
 begin_comment
@@ -937,7 +937,7 @@ begin_define
 define|#
 directive|define
 name|IO_ASYNC
-value|0x80
+value|0x0080
 end_define
 
 begin_comment
@@ -948,7 +948,7 @@ begin_define
 define|#
 directive|define
 name|IO_DIRECT
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
@@ -959,11 +959,33 @@ begin_define
 define|#
 directive|define
 name|IO_NOWDRAIN
-value|0x200
+value|0x0200
 end_define
 
 begin_comment
 comment|/* do not block on wdrain */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_EXT
+value|0x0400
+end_define
+
+begin_comment
+comment|/* operate on external attributes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_NORMAL
+value|0x0800
+end_define
+
+begin_comment
+comment|/* operate on regular data */
 end_comment
 
 begin_comment
@@ -1196,6 +1218,28 @@ end_define
 
 begin_comment
 comment|/* vinvalbuf: sync file first */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_ALT
+value|0x0002
+end_define
+
+begin_comment
+comment|/* vinvalbuf: invalidate only alternate bufs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_NORMAL
+value|0x0004
+end_define
+
+begin_comment
+comment|/* vinvalbuf: invalidate only regular bufs */
 end_comment
 
 begin_define
