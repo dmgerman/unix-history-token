@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_acct.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_acct.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -473,37 +473,23 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
+name|bcopy
+argument_list|(
+name|u
+operator|.
+name|u_comm
+argument_list|,
+name|ap
+operator|->
+name|ac_comm
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ap
 operator|->
 name|ac_comm
 argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-name|ap
-operator|->
-name|ac_comm
-index|[
-name|i
-index|]
-operator|=
-name|u
-operator|.
-name|u_comm
-index|[
-name|i
-index|]
+argument_list|)
 expr_stmt|;
 name|ru
 operator|=
