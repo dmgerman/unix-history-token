@@ -373,7 +373,7 @@ name|UNIT
 parameter_list|(
 name|u
 parameter_list|)
-value|((u)& 077)
+value|(minor(u)& 077)
 end_define
 
 begin_define

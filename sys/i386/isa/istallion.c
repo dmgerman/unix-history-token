@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * istallion.c  -- stallion intelligent multiport serial driver.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: istallion.c,v 1.25 1999/04/27 11:15:05 phk Exp $  */
+comment|/*  * istallion.c  -- stallion intelligent multiport serial driver.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: istallion.c,v 1.26 1999/04/28 10:52:35 dt Exp $  */
 end_comment
 
 begin_comment
@@ -1805,7 +1805,7 @@ name|MKDEV2BRD
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)& 0x00700000)>> 20)
+value|((minor(m)& 0x00700000)>> 20)
 end_define
 
 begin_define
@@ -1815,7 +1815,7 @@ name|MKDEV2PORT
 parameter_list|(
 name|m
 parameter_list|)
-value|(((m)& 0x1f) | (((m)& 0x00010000)>> 11))
+value|((minor(m)& 0x1f) | ((minor(m)& 0x00010000)>> 11))
 end_define
 
 begin_comment
@@ -4254,7 +4254,10 @@ directive|endif
 comment|/*  *	Firstly check if the supplied device number is a valid device.  */
 if|if
 condition|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_MEMDEV
 condition|)
@@ -4826,7 +4829,10 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_MEMDEV
 condition|)
@@ -4970,7 +4976,10 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_MEMDEV
 condition|)
@@ -5249,7 +5258,10 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_MEMDEV
 condition|)
@@ -5408,16 +5420,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|dev
-operator|=
+if|if
+condition|(
 name|minor
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dev
 operator|&
 name|STL_MEMDEV
 condition|)
@@ -5497,7 +5505,10 @@ expr_stmt|;
 comment|/*  *	First up handle ioctls on the control devices.  */
 if|if
 condition|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_CTRLDEV
 condition|)
@@ -5505,7 +5516,10 @@ block|{
 if|if
 condition|(
 operator|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_CTRLDEV
 operator|)
@@ -5515,7 +5529,10 @@ condition|)
 name|localtios
 operator|=
 operator|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_CALLOUTDEV
 operator|)
@@ -5534,7 +5551,10 @@ elseif|else
 if|if
 condition|(
 operator|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_CTRLDEV
 operator|)
@@ -5544,7 +5564,10 @@ condition|)
 name|localtios
 operator|=
 operator|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_CALLOUTDEV
 operator|)
@@ -5770,7 +5793,10 @@ expr_stmt|;
 name|localtios
 operator|=
 operator|(
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 name|STL_CALLOUTDEV
 operator|)
@@ -18256,7 +18282,10 @@ endif|#
 directive|endif
 name|brdnr
 operator|=
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 literal|0x7
 expr_stmt|;
@@ -18497,7 +18526,10 @@ endif|#
 directive|endif
 name|brdnr
 operator|=
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 operator|&
 literal|0x7
 expr_stmt|;

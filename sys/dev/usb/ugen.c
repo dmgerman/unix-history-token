@@ -689,7 +689,7 @@ name|UGENUNIT
 parameter_list|(
 name|n
 parameter_list|)
-value|(((n)>> 4)& 0xf)
+value|((minor(n)>> 4)& 0xf)
 end_define
 
 begin_define
@@ -699,7 +699,7 @@ name|UGENENDPOINT
 parameter_list|(
 name|n
 parameter_list|)
-value|((n)& 0xf)
+value|(minor(n)& 0xf)
 end_define
 
 begin_expr_stmt
