@@ -867,9 +867,12 @@ operator|)
 condition|)
 if|if
 condition|(
+name|SDL_ISO88025
+argument_list|(
 name|sdl
+argument_list|)
 operator|->
-name|sdl_rcf
+name|trld_rcf
 operator|!=
 name|NULL
 condition|)
@@ -877,9 +880,12 @@ name|rif_len
 operator|=
 name|TR_RCF_RIFLEN
 argument_list|(
+name|SDL_ISO88025
+argument_list|(
 name|sdl
+argument_list|)
 operator|->
-name|sdl_rcf
+name|trld_rcf
 argument_list|)
 expr_stmt|;
 comment|/* Generate a generic 802.5 header for the packet */

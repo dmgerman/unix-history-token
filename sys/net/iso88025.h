@@ -253,6 +253,46 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|iso88025_sockaddr_dl_data
+block|{
+name|u_short
+name|trld_rcf
+decl_stmt|;
+name|u_short
+modifier|*
+name|trld_route
+index|[
+name|RIF_MAX_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ISO88025_MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a)>(b))?(a):(b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDL_ISO88025
+parameter_list|(
+name|s
+parameter_list|)
+value|((struct iso88025_sockaddr_dl_data *)	\ 				 ((s)->sdl_data + \ 				  ISO88025_MAX((s)->sdl_nlen + (s)->sdl_alen + \ 					       (s)->sdl_slen, 12)))
+end_define
+
 begin_comment
 comment|/*  * Structure of a 48-bit iso 802.5 address.  *  ( We could also add the 16 bit addresses as a union)  */
 end_comment
