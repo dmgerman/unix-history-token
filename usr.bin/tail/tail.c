@@ -135,12 +135,6 @@ name|fname
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|no_files
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -328,9 +322,20 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-name|no_files
-operator|=
+if|if
+condition|(
+name|fflag
+operator|&&
 name|argc
+operator|>
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-f option only appropriate for a single file"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If displaying in reverse, don't permit follow option, and convert 	 * style values. 	 */
 if|if
@@ -401,13 +406,6 @@ name|RLINES
 expr_stmt|;
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"No files: %d\n"
-argument_list|,
-name|no_files
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
