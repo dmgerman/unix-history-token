@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.14 (Berkeley) %G%"
+literal|"@(#)conf.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5343,6 +5343,16 @@ name|lfd
 argument_list|)
 operator|>=
 literal|0
+condition|)
+return|return
+name|TRUE
+return|;
+comment|/* 	**  On SunOS, if you are testing using -oQ/tmp/mqueue or 	**  -oA/tmp/aliases or anything like that, and /tmp is mounted 	**  as type "tmp" (that is, served from swap space), the 	**  previous fcntl will fail with "Invalid argument" errors. 	**  Since this is fairly common during testing, we will assume 	**  that this indicates that the lock is successfully grabbed. 	*/
+if|if
+condition|(
+name|errno
+operator|==
+name|EINVAL
 condition|)
 return|return
 name|TRUE
