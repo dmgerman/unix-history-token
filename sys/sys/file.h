@@ -376,7 +376,8 @@ decl_stmt|;
 comment|/* see fcntl.h */
 name|struct
 name|mtx
-name|f_mtx
+modifier|*
+name|f_mtxp
 decl_stmt|;
 comment|/* mutex to protect data */
 block|}
@@ -608,7 +609,7 @@ name|FILE_LOCK
 parameter_list|(
 name|f
 parameter_list|)
-value|mtx_lock(&(f)->f_mtx)
+value|mtx_lock((f)->f_mtxp)
 end_define
 
 begin_define
@@ -618,7 +619,7 @@ name|FILE_UNLOCK
 parameter_list|(
 name|f
 parameter_list|)
-value|mtx_unlock(&(f)->f_mtx)
+value|mtx_unlock((f)->f_mtxp)
 end_define
 
 begin_define
@@ -628,7 +629,7 @@ name|FILE_LOCKED
 parameter_list|(
 name|f
 parameter_list|)
-value|mtx_owned(&(f)->f_mtx)
+value|mtx_owned((f)->f_mtxp)
 end_define
 
 begin_define
@@ -640,7 +641,7 @@ name|f
 parameter_list|,
 name|type
 parameter_list|)
-value|mtx_assert(&(f)->f_mtx, (type))
+value|mtx_assert((f)->f_mtxp, (type))
 end_define
 
 begin_decl_stmt

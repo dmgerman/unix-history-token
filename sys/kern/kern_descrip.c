@@ -4777,17 +4777,12 @@ name|error
 operator|)
 return|;
 block|}
-name|mtx_init
-argument_list|(
-operator|&
 name|fp
 operator|->
-name|f_mtx
-argument_list|,
-literal|"file structure"
-argument_list|,
-name|MTX_DEF
-argument_list|)
+name|f_mtxp
+operator|=
+name|mtx_pool_alloc
+argument_list|()
 expr_stmt|;
 name|fp
 operator|->
@@ -4993,14 +4988,6 @@ argument_list|(
 name|fp
 operator|->
 name|f_cred
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|fp
-operator|->
-name|f_mtx
 argument_list|)
 expr_stmt|;
 name|FREE
