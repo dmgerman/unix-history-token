@@ -100,7 +100,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * Definition of a CAM peripheral driver entry.  Peripheral drivers instantiate  * one of these for each device they wish to communicate with and pass it into  * the xpt layer when they wish to schedule work on that device via the  * xpt_schecule API.  */
+comment|/*  * Definition of a CAM peripheral driver entry.  Peripheral drivers instantiate  * one of these for each device they wish to communicate with and pass it into  * the xpt layer when they wish to schedule work on that device via the  * xpt_schedule API.  */
 end_comment
 
 begin_struct_decl
@@ -234,7 +234,7 @@ block|,
 comment|/* SCSI error, look at error code in CCB */
 name|CAM_MSG_REJECT_REC
 block|,
-comment|/* Message Reject Reveived */
+comment|/* Message Reject Received */
 name|CAM_SCSI_BUS_RESET
 block|,
 comment|/* SCSI Bus Reset Sent/Received */

@@ -295,7 +295,7 @@ name|CAM_DIS_AUTOSRP
 init|=
 literal|0x01000000
 block|,
-comment|/* Diable autosave/restore ptrs  */
+comment|/* Disable autosave/restore ptrs */
 name|CAM_DIS_AUTODISC
 init|=
 literal|0x02000000
