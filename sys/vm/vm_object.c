@@ -3597,8 +3597,6 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|object
@@ -3606,6 +3604,12 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|end
 operator|=
 name|pindex
@@ -3859,6 +3863,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -4580,8 +4580,6 @@ name|modify_map
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Some madvise calls directly modify the vm_map_entry, in which case 	 * we need to use an exclusive lock on the map and we need to perform  	 * various clipping operations.  Otherwise we only need a read-lock 	 * on the map. 	 */
 switch|switch
 condition|(
@@ -5001,6 +4999,12 @@ operator|==
 name|MADV_WILLNEED
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|pmap_object_init_pt
 argument_list|(
 name|map
@@ -5024,6 +5028,12 @@ name|PAGE_SHIFT
 operator|)
 argument_list|,
 name|MAP_PREFAULT_MADVISE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
