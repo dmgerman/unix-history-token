@@ -34,13 +34,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)route.c	8.3 (Berkeley) 3/19/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)route.c	8.3 (Berkeley) 3/19/94"
+literal|"$Id: $"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,6 +751,11 @@ argument_list|(
 literal|"socket"
 argument_list|)
 expr_stmt|;
+name|setuid
+argument_list|(
+name|uid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -1403,7 +1413,9 @@ specifier|static
 name|char
 name|line
 index|[
-literal|50
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -1462,6 +1474,14 @@ literal|'.'
 argument_list|)
 operator|)
 condition|)
+block|{
+name|domain
+index|[
+name|MAXHOSTNAMELEN
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1474,6 +1494,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|domain
 index|[
@@ -1626,11 +1647,14 @@ if|if
 condition|(
 name|cp
 condition|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|line
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+name|line
 argument_list|)
 expr_stmt|;
 else|else
@@ -1738,8 +1762,11 @@ case|:
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|line
+argument_list|,
+sizeof|sizeof
 name|line
 argument_list|,
 literal|"iso %s"
@@ -1808,18 +1835,37 @@ operator|->
 name|sa_family
 argument_list|)
 decl_stmt|;
+name|char
+modifier|*
+name|cpe
+init|=
+name|line
+operator|+
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+decl_stmt|;
 while|while
 condition|(
 operator|++
 name|s
 operator|<
 name|slim
+operator|&&
+name|cp
+operator|<
+name|cpe
 condition|)
 comment|/* start with sa->sa_data */
 name|cp
 operator|+=
-name|sprintf
+name|snprintf
 argument_list|(
+name|cp
+argument_list|,
+name|cpe
+operator|-
 name|cp
 argument_list|,
 literal|" %x"
@@ -1866,7 +1912,9 @@ specifier|static
 name|char
 name|line
 index|[
-literal|50
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -2068,11 +2116,16 @@ if|if
 condition|(
 name|cp
 condition|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|line
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2284,9 +2337,14 @@ case|:
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|,
 literal|"iso %s"
 argument_list|,
@@ -2356,16 +2414,35 @@ operator|->
 name|sa_family
 argument_list|)
 decl_stmt|;
+name|char
+modifier|*
+name|cpe
+init|=
+name|line
+operator|+
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+decl_stmt|;
 while|while
 condition|(
 name|s
 operator|<
 name|slim
+operator|&&
+name|cp
+operator|<
+name|cpe
 condition|)
 name|cp
 operator|+=
-name|sprintf
+name|snprintf
 argument_list|(
+name|cp
+argument_list|,
+name|cpe
+operator|-
 name|cp
 argument_list|,
 literal|" %x"
@@ -4381,6 +4458,10 @@ operator|-
 literal|1
 operator|||
 operator|(
+name|forcehost
+operator|==
+literal|0
+operator|&&
 operator|(
 name|np
 operator|=
