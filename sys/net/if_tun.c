@@ -3434,10 +3434,9 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|==
+operator|!=
 literal|0
 condition|)
-break|break;
 name|error
 operator|=
 name|uiomove
@@ -3473,7 +3472,15 @@ condition|)
 block|{
 name|TUNDEBUG
 argument_list|(
-literal|"Dropping mbuf\n"
+literal|"%s%d: Dropping mbuf\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
 argument_list|)
 expr_stmt|;
 name|m_freem
