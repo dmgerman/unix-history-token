@@ -978,12 +978,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* unlock the channel */
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
-expr_stmt|;
 name|ATA_UNLOCK_CH
 argument_list|(
 name|ch
@@ -1355,7 +1349,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* reset the HW */
 if|if
 condition|(
 name|bootverbose
@@ -1371,6 +1364,11 @@ literal|"reiniting channel ..\n"
 argument_list|)
 expr_stmt|;
 name|ATA_FORCELOCK_CH
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+name|ata_catch_inflight
 argument_list|(
 name|ch
 argument_list|)
@@ -1585,12 +1583,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* unlock the channel */
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
-expr_stmt|;
 name|ATA_UNLOCK_CH
 argument_list|(
 name|ch

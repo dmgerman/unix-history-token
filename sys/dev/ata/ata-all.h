@@ -2426,6 +2426,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ata_catch_inflight
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+name|ch
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ata_fail_requests
 parameter_list|(
 name|struct
