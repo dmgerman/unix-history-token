@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"snp.h"
+file|"opt_snp.h"
 end_include
 
 begin_include
@@ -152,13 +152,11 @@ directive|include
 file|<sys/filedesc.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NSNP
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_SNP
+end_ifdef
 
 begin_include
 include|#
@@ -1677,11 +1675,9 @@ operator|->
 name|t_rawq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NSNP
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SNP
 if|if
 condition|(
 name|ISSET
@@ -8272,11 +8268,9 @@ name|uio
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX if there was an error then we should ungetc() the 		 * unmoved chars and reduce icc here. 		 */
-if|#
-directive|if
-name|NSNP
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SNP
 if|if
 condition|(
 name|ISSET
@@ -8485,11 +8479,9 @@ name|error
 condition|)
 comment|/* XXX should ungetc(c, qp). */
 break|break;
-if|#
-directive|if
-name|NSNP
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SNP
 comment|/* 		 * Only snoop directly on input in echo mode.  Non-echoed 		 * input will be snooped later iff the application echoes it. 		 */
 if|if
 condition|(
@@ -9193,11 +9185,9 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|NSNP
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_SNP
 if|if
 condition|(
 name|ISSET
