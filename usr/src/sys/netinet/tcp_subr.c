@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_subr.c 4.9 81/12/19 */
+comment|/* tcp_subr.c 4.10 81/12/20 */
 end_comment
 
 begin_include
@@ -940,13 +940,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|in_pcbdetach
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1109,7 +1102,7 @@ name|inp_ppcb
 operator|=
 literal|0
 expr_stmt|;
-name|in_pcbdisconnect
+name|in_pcbdetach
 argument_list|(
 name|inp
 argument_list|)
