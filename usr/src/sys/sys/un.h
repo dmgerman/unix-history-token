@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	un.h	5.2	83/05/27	*/
+comment|/*	un.h	5.3	83/06/13	*/
 end_comment
 
 begin_comment
@@ -18,10 +18,10 @@ comment|/* AF_UNIX */
 name|char
 name|sun_path
 index|[
-literal|14
+literal|109
 index|]
 decl_stmt|;
-comment|/* path name */
+comment|/* path name (gag) */
 block|}
 struct|;
 end_struct
