@@ -468,6 +468,43 @@ name|da_quirk_table
 index|[]
 init|=
 block|{
+comment|/* 	 * Logitec USB/Firewire LHD-P30FU 	 */
+block|{
+comment|/* USB part */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"HITACHI_"
+block|,
+literal|"DK23DA*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
+comment|/* Firewire part */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"LSILogic"
+block|,
+literal|"SYM13FW*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
 block|{
 comment|/* 		 * Fujitsu M2513A MO drives. 		 * Tested devices: M2513A2 firmware versions 1200& 1300. 		 * (dip switch selects whether T_DIRECT or T_OPTICAL device) 		 * Reported by: W.Scholten<whs@xs4all.nl> 		 */
 block|{
@@ -4007,6 +4044,16 @@ operator|->
 name|inq_data
 argument_list|)
 operator|!=
+name|T_RBC
+operator|&&
+name|SID_TYPE
+argument_list|(
+operator|&
+name|cgd
+operator|->
+name|inq_data
+argument_list|)
+operator|!=
 name|T_OPTICAL
 condition|)
 break|break;
@@ -4419,6 +4466,16 @@ operator|->
 name|quirks
 operator|&
 name|DA_Q_NO_6_BYTE
+operator|||
+name|SID_TYPE
+argument_list|(
+operator|&
+name|cgd
+operator|->
+name|inq_data
+argument_list|)
+operator|==
+name|T_RBC
 condition|)
 name|softc
 operator|->
