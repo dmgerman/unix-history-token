@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *      aha 1540/1542B/1542C/1542CF/1542CP	aha_isa.c  *  * Copyright (c) 1998 M. Warner Losh.  * All Rights Reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aha.c,v 1.19.2.2 1999/05/13 07:00:34 imp Exp $  */
+comment|/*  * Generic register and struct definitions for the Adaptech 154x/164x  * SCSI host adapters. Product specific probe and attach routines can  * be found in:  *      aha 1540/1542B/1542C/1542CF/1542CP	aha_isa.c  *  * Copyright (c) 1998 M. Warner Losh.  * All Rights Reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from bt.c written by:  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aha.c,v 1.19.2.3 1999/05/15 05:02:49 imp Exp $  */
 end_comment
 
 begin_include
@@ -192,6 +192,29 @@ name|REV
 parameter_list|)
 value|(REV> 0x43&& REV< 0x56)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)> (b) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* MailBox Management functions */
@@ -4528,12 +4551,29 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|aha
+operator|->
+name|boardid
+operator|>=
+name|BOARD_1542CF
+condition|)
+name|cts
+operator|->
+name|sync_period
+operator|=
+literal|25
+expr_stmt|;
+else|else
 name|cts
 operator|->
 name|sync_period
 operator|=
 literal|50
 expr_stmt|;
+block|}
 else|else
 name|cts
 operator|->
@@ -7076,6 +7116,9 @@ name|u_int
 name|status
 decl_stmt|;
 name|u_int
+name|saved_status
+decl_stmt|;
+name|u_int
 name|intstat
 decl_stmt|;
 name|u_int
@@ -7086,6 +7129,9 @@ name|s
 decl_stmt|;
 name|int
 name|cmd_complete
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* No data returned to start */
 name|reply_buf_size
@@ -7104,16 +7150,100 @@ name|cmd_complete
 operator|=
 literal|0
 expr_stmt|;
+name|saved_status
+operator|=
+literal|0
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * All commands except for the "start mailbox" and the "enable 	 * outgoing mailbox read interrupt" commands cannot be issued 	 * while there are pending transactions.  Freeze our SIMQ 	 * and wait for all completions to occur if necessary. 	 */
+name|timeout
+operator|=
+literal|100000
+expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
+while|while
+condition|(
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|aha
+operator|->
+name|pending_ccbs
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+operator|--
+name|timeout
+condition|)
+block|{
+comment|/* Fire the interrupt handler in case interrupts are blocked */
+name|aha_intr
+argument_list|(
+name|aha
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timeout
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: aha_cmd: Timeout waiting for adapter idle\n"
+argument_list|,
+name|aha_name
+argument_list|(
+name|aha
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ETIMEDOUT
+operator|)
+return|;
+block|}
 name|aha
 operator|->
 name|command_cmp
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Wait up to 1 sec. for the adapter to become 	 * ready to accept commands. 	 */
+comment|/* 	 * Wait up to 10 sec. for the adapter to become 	 * ready to accept commands. 	 */
 name|timeout
 operator|=
-literal|10000
+literal|100000
 expr_stmt|;
 while|while
 condition|(
@@ -7149,6 +7279,27 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* 		 * Throw away any pending data which may be 		 * left over from earlier commands that we 		 * timedout on. 		 */
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|DATAIN_REG_READY
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|aha_inb
+argument_list|(
+name|aha
+argument_list|,
+name|DATAIN_REG
+argument_list|)
+expr_stmt|;
 name|DELAY
 argument_list|(
 literal|100
@@ -7209,6 +7360,11 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|status
 operator|=
 name|aha_inb
@@ -7225,6 +7381,11 @@ argument_list|(
 name|aha
 argument_list|,
 name|INTSTAT_REG
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -7246,6 +7407,10 @@ name|CMD_COMPLETE
 operator|)
 condition|)
 block|{
+name|saved_status
+operator|=
+name|status
+expr_stmt|;
 name|cmd_complete
 operator|=
 literal|1
@@ -7261,7 +7426,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|status
+name|saved_status
 operator|=
 name|aha
 operator|->
@@ -7309,6 +7474,10 @@ expr_stmt|;
 name|param_len
 operator|--
 expr_stmt|;
+name|timeout
+operator|=
+literal|10000
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -7331,11 +7500,10 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|ETIMEDOUT
-operator|)
-return|;
+expr_stmt|;
 block|}
 comment|/* 	 * For all other commands, we wait for any output data 	 * and the final comand completion interrupt. 	 */
 while|while
@@ -7348,6 +7516,11 @@ operator|--
 name|cmd_timeout
 condition|)
 block|{
+name|s
+operator|=
+name|splcam
+argument_list|()
+expr_stmt|;
 name|status
 operator|=
 name|aha_inb
@@ -7366,6 +7539,32 @@ argument_list|,
 name|INTSTAT_REG
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|aha
+operator|->
+name|command_cmp
+operator|!=
+literal|0
+condition|)
+block|{
+name|cmd_complete
+operator|=
+literal|1
+expr_stmt|;
+name|saved_status
+operator|=
+name|aha
+operator|->
+name|latched_status
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -7384,24 +7583,18 @@ operator||
 name|CMD_COMPLETE
 operator|)
 condition|)
-break|break;
-if|if
-condition|(
-name|aha
-operator|->
-name|command_cmp
-operator|!=
-literal|0
-condition|)
 block|{
-name|status
+comment|/* 			 * Our poll (in case interrupts are blocked) 			 * saw the CMD_COMPLETE interrupt. 			 */
+name|cmd_complete
 operator|=
-name|aha
-operator|->
-name|latched_status
+literal|1
 expr_stmt|;
-break|break;
+name|saved_status
+operator|=
+name|status
+expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -7443,8 +7636,8 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s: aha_cmd - Discarded reply data byte "
-literal|"for opcode 0x%x\n"
+literal|"%s: aha_cmd - Discarded reply data "
+literal|"byte for opcode 0x%x\n"
 argument_list|,
 name|aha_name
 argument_list|(
@@ -7455,6 +7648,16 @@ name|opcode
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Reset timeout to ensure at least a second 			 * between response bytes. 			 */
+name|cmd_timeout
+operator|=
+name|MAX
+argument_list|(
+name|cmd_timeout
+argument_list|,
+literal|10000
+argument_list|)
+expr_stmt|;
 name|reply_len
 operator|++
 expr_stmt|;
@@ -7467,7 +7670,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|timeout
+name|cmd_timeout
 operator|==
 literal|0
 condition|)
@@ -7517,11 +7720,22 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * If the command was rejected by the controller, tell the caller. 	 */
 if|if
 condition|(
 operator|(
-name|status
+name|saved_status
 operator|&
 name|CMD_INVALID
 operator|)
@@ -7868,12 +8082,7 @@ operator|&
 literal|0x7
 operator|)
 expr_stmt|;
-comment|/* 	 * Inquire Setup Information.  This command retreives 	 * the sync info for older models.  We put a small delay here 	 * because that seems to help the stability.  10mS is known 	 * to work, but other values might also work. 	 */
-name|DELAY
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Inquire Setup Information.  This command retreives 	 * the sync info for older models. 	 */
 name|param
 operator|=
 sizeof|sizeof
@@ -7919,12 +8128,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: ahafetchtransinfo - Inquire Setup Info Failed\n"
+literal|"%s: ahafetchtransinfo - Inquire Setup Info Failed %d\n"
 argument_list|,
 name|aha_name
 argument_list|(
 name|aha
 argument_list|)
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7967,17 +8178,30 @@ name|bus_width
 operator|=
 name|MSG_EXT_WDTR_BUS_8_BIT
 expr_stmt|;
+if|if
+condition|(
+name|aha
+operator|->
+name|boardid
+operator|>=
+name|BOARD_1542CF
+condition|)
+name|sync_period
+operator|=
+literal|1000
+expr_stmt|;
+else|else
 name|sync_period
 operator|=
 literal|2000
-operator|+
-operator|(
+expr_stmt|;
+name|sync_period
+operator|+=
 literal|500
 operator|*
 name|sync_info
 operator|.
 name|period
-operator|)
 expr_stmt|;
 comment|/* Convert ns value to standard SCSI sync rate */
 if|if
