@@ -298,16 +298,6 @@ directive|include
 file|<fs/procfs/procfs.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cdevsw
-modifier|*
-name|cdevsw
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Various conversion macros  */
 end_comment
@@ -3314,80 +3304,22 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
+unit|extern struct cdevsw *cdevsw[];
 comment|/*  * Filler function for proc/devices  */
 end_comment
 
-begin_function
-specifier|static
-name|int
-name|linprocfs_dodevices
-parameter_list|(
-name|PFS_FILL_ARGS
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"Character devices:\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NUMCDEVSW
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|cdevsw
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|)
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"%3d %s\n"
-argument_list|,
-name|i
-argument_list|,
-name|cdevsw
-index|[
-name|i
-index|]
-operator|->
-name|d_name
-argument_list|)
-expr_stmt|;
-name|sbuf_printf
-argument_list|(
-name|sb
-argument_list|,
-literal|"\nBlock devices:\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+begin_endif
+unit|static int linprocfs_dodevices(PFS_FILL_ARGS) { 	int i;  	sbuf_printf(sb, "Character devices:\n");  	for (i = 0; i< NUMCDEVSW; i++) 		if (cdevsw[i] != NULL) 			sbuf_printf(sb, "%3d %s\n", i, cdevsw[i]->d_name);  	sbuf_printf(sb, "\nBlock devices:\n"); 	 	return (0); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Filler function for proc/cmdline  */
@@ -3487,11 +3419,12 @@ argument_list|(
 name|cpuinfo
 argument_list|)
 expr_stmt|;
-name|PFS_CREATE_FILE
-argument_list|(
-name|devices
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|PFS_CREATE_FILE(devices);
+endif|#
+directive|endif
 name|PFS_CREATE_FILE
 argument_list|(
 name|loadavg
