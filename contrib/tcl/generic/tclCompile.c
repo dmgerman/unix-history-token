@@ -2600,11 +2600,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"\nByteCode 0x%x, ref ct %u, epoch %u, interp 0x%x(epoch %u)\n"
+literal|"\nByteCode %p, ref ct %u, epoch %u, interp %p(epoch %u)\n"
 argument_list|,
 operator|(
-name|unsigned
-name|int
+name|void
+operator|*
 operator|)
 name|codePtr
 argument_list|,
@@ -2617,8 +2617,8 @@ operator|->
 name|compileEpoch
 argument_list|,
 operator|(
-name|unsigned
-name|int
+name|void
+operator|*
 operator|)
 name|codePtr
 operator|->
@@ -2786,11 +2786,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"  Proc 0x%x, ref ct %d, args %d, compiled locals %d\n"
+literal|"  Proc %p, ref ct %d, args %d, compiled locals %d\n"
 argument_list|,
 operator|(
-name|unsigned
-name|int
+name|void
+operator|*
 operator|)
 name|procPtr
 argument_list|,
@@ -25376,7 +25376,7 @@ comment|/* already in object table and array */
 name|objIndex
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|Tcl_GetHashValue
 argument_list|(
