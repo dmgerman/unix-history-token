@@ -138,15 +138,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|opassfile
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|allow_chfn
 init|=
@@ -436,7 +427,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"usage: %s [-m master password file] [-o password file]\n [-h] [-f] [-s] [-v]\n"
+literal|"usage: %s [-m master password file] [-f] [-s] [-h] [-v]\n"
 argument_list|,
 name|program_name
 argument_list|)
@@ -582,7 +573,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"m:o:fshv"
+literal|"m:fshv"
 argument_list|)
 operator|)
 operator|!=
@@ -597,17 +588,6 @@ case|case
 literal|'m'
 case|:
 name|passfile
-operator|=
-name|strdup
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'o'
-case|:
-name|opassfile
 operator|=
 name|strdup
 argument_list|(

@@ -103,17 +103,9 @@ begin_decl_stmt
 name|char
 modifier|*
 name|tempname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|passfile
 decl_stmt|,
 modifier|*
-name|opassfile
+name|passfile
 decl_stmt|;
 end_decl_stmt
 
