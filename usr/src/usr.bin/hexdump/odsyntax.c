@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)odsyntax.c	5.5 (Berkeley) %G%"
+literal|"@(#)odsyntax.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,9 +476,25 @@ decl_stmt|;
 comment|/* 	 * The offset syntax of od(1) was genuinely bizarre.  First, if 	 * it started with a plus it had to be an offset.  Otherwise, if 	 * there were at least two arguments, a number or lower-case 'x' 	 * followed by a number makes it an offset.  By default it was 	 * octal; if it started with 'x' or '0x' it was hex.  If it ended 	 * in a '.', it was decimal.  If a 'b' or 'B' was appended, it 	 * multiplied the number by 512 or 1024 byte units.  There was 	 * no way to assign a block count to a hex offset. 	 * 	 * We assume it's a file if the offset is bad. 	 */
 name|p
 operator|=
-operator|*
+name|argc
+operator|==
+literal|1
+condition|?
+operator|(
 operator|*
 name|argvp
+operator|)
+index|[
+literal|0
+index|]
+else|:
+operator|(
+operator|*
+name|argvp
+operator|)
+index|[
+literal|1
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -683,30 +699,18 @@ name|end
 operator|!=
 name|p
 condition|)
+block|{
 name|skip
 operator|=
 literal|0
 expr_stmt|;
-else|else
-block|{
+return|return;
+block|}
 if|if
 condition|(
 operator|*
 name|p
 condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'b'
-condition|)
-name|skip
-operator|*=
-literal|512
-expr_stmt|;
-elseif|else
 if|if
 condition|(
 operator|*
@@ -714,9 +718,27 @@ name|p
 operator|==
 literal|'B'
 condition|)
+block|{
 name|skip
 operator|*=
 literal|1024
+expr_stmt|;
+operator|++
+name|p
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'b'
+condition|)
+block|{
+name|skip
+operator|*=
+literal|512
 expr_stmt|;
 operator|++
 name|p
@@ -727,17 +749,14 @@ condition|(
 operator|*
 name|p
 condition|)
+block|{
 name|skip
 operator|=
 literal|0
 expr_stmt|;
-else|else
-block|{
-operator|++
-operator|*
-name|argvp
-expr_stmt|;
-comment|/* 			 * If the offset uses a non-octal base, the base of 			 * the offset is changed as well.  This isn't pretty, 			 * but it's easy. 			 */
+return|return;
+block|}
+comment|/* 	 * If the offset uses a non-octal base, the base of the offset 	 * is changed as well.  This isn't pretty, but it's easy. 	 */
 define|#
 directive|define
 name|TYPE_OFFSET
@@ -807,8 +826,17 @@ operator|=
 literal|'d'
 expr_stmt|;
 block|}
-block|}
-block|}
+comment|/* Terminate file list. */
+operator|(
+operator|*
+name|argvp
+operator|)
+index|[
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_block
 
