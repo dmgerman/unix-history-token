@@ -3360,6 +3360,231 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * -delete functions --  *  *	True always.  Makes it's best shot and continues on regardless.  */
+end_comment
+
+begin_function
+name|int
+name|f_delete
+parameter_list|(
+name|plan
+parameter_list|,
+name|entry
+parameter_list|)
+name|PLAN
+modifier|*
+name|plan
+decl_stmt|;
+name|FTSENT
+modifier|*
+name|entry
+decl_stmt|;
+block|{
+comment|/* ignore these from fts */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|entry
+operator|->
+name|fts_accpath
+argument_list|,
+literal|"."
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|entry
+operator|->
+name|fts_accpath
+argument_list|,
+literal|".."
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* sanity check */
+if|if
+condition|(
+name|isdepth
+operator|==
+literal|0
+operator|||
+comment|/* depth off */
+operator|(
+name|ftsoptions
+operator|&
+name|FTS_NOSTAT
+operator|)
+operator|||
+comment|/* not stat()ing */
+operator|!
+operator|(
+name|ftsoptions
+operator|&
+name|FTS_PHYSICAL
+operator|)
+operator|||
+comment|/* physical off */
+operator|(
+name|ftsoptions
+operator|&
+name|FTS_LOGICAL
+operator|)
+condition|)
+comment|/* or finally, logical on */
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-delete: insecure options got turned on"
+argument_list|)
+expr_stmt|;
+comment|/* Potentially unsafe - do not accept relative paths whatsoever */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|entry
+operator|->
+name|fts_accpath
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-delete: %s: relative path potentially not safe"
+argument_list|,
+name|entry
+operator|->
+name|fts_accpath
+argument_list|)
+expr_stmt|;
+comment|/* rmdir directories, unlink everything else */
+if|if
+condition|(
+name|S_ISDIR
+argument_list|(
+name|entry
+operator|->
+name|fts_statp
+operator|->
+name|st_mode
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|rmdir
+argument_list|(
+name|entry
+operator|->
+name|fts_accpath
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"-delete: rmdir(%s)"
+argument_list|,
+name|entry
+operator|->
+name|fts_path
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|entry
+operator|->
+name|fts_accpath
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"-delete: unlink(%s)"
+argument_list|,
+name|entry
+operator|->
+name|fts_path
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* "succeed" */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|PLAN
+modifier|*
+name|c_delete
+parameter_list|()
+block|{
+name|ftsoptions
+operator|&=
+operator|~
+name|FTS_NOSTAT
+expr_stmt|;
+comment|/* no optimise */
+name|ftsoptions
+operator||=
+name|FTS_PHYSICAL
+expr_stmt|;
+comment|/* disable -follow */
+name|ftsoptions
+operator|&=
+operator|~
+name|FTS_LOGICAL
+expr_stmt|;
+comment|/* disable -follow */
+name|isoutput
+operator|=
+literal|1
+expr_stmt|;
+comment|/* possible output */
+name|isdepth
+operator|=
+literal|1
+expr_stmt|;
+comment|/* -depth implied */
+return|return
+operator|(
+name|palloc
+argument_list|(
+name|N_DELETE
+argument_list|,
+name|f_delete
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * -user uname functions --  *  *	True if the file belongs to the user uname.  If uname is numeric and  *	an equivalent of the getpwnam() S9.2.2 [POSIX.1] function does not  *	return a valid user name, uname is taken as a user ID.  */
 end_comment
 

@@ -75,6 +75,8 @@ block|,
 name|N_XDEV
 block|,
 name|N_PRINT0
+block|,
+name|N_DELETE
 block|}
 enum|;
 end_enum

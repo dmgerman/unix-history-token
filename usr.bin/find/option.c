@@ -174,6 +174,16 @@ name|O_ARGV
 block|}
 block|,
 block|{
+literal|"-delete"
+block|,
+name|N_DELETE
+block|,
+name|c_delete
+block|,
+name|O_ZERO
+block|}
+block|,
+block|{
 literal|"-depth"
 block|,
 name|N_DEPTH
