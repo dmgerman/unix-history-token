@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.3 (Berkeley) 85/11/04"
+literal|"@(#)bugfiler.c	4.15.2.1 (Berkeley) 85/11/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|unixtomh
 index|[]
 init|=
-literal|"/usr/new/lib/mh/unixtomh"
+literal|"/ra/bugs/bin/unixtomh"
 decl_stmt|;
 end_decl_stmt
 
@@ -2086,13 +2086,30 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"chkindex(%s)\n"
+literal|"chkfrom(%s)\n"
 argument_list|,
 name|hp
 operator|->
 name|h_info
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|substr
+argument_list|(
+name|hp
+operator|->
+name|h_info
+argument_list|,
+name|BUGS_NAME
+argument_list|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|substr
@@ -3044,7 +3061,7 @@ name|fprintf
 argument_list|(
 name|ftemp
 argument_list|,
-literal|"To: %s"
+literal|"Resent-To: %s"
 argument_list|,
 name|user
 argument_list|)
@@ -3131,6 +3148,12 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
+if|if
+condition|(
+operator|!
+name|SUBJECT_I
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|ftemp
@@ -3138,20 +3161,6 @@ argument_list|,
 literal|"Subject: "
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|SUBJECT_I
-condition|)
-name|fprintf
-argument_list|(
-name|ftemp
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|SUBJECT_I
-argument_list|)
-expr_stmt|;
-else|else
 name|fprintf
 argument_list|(
 name|ftemp
@@ -3159,17 +3168,7 @@ argument_list|,
 literal|"Untitled bug report\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|ftemp
-argument_list|,
-literal|"\nRedistributed-by: %s%s\n"
-argument_list|,
-name|BUGS_NAME
-argument_list|,
-name|BUGS_HOME
-argument_list|)
-expr_stmt|;
+block|}
 comment|/* 	 * Create copy of bug report.  Perhaps we should 	 * truncate large messages and just give people 	 * a pointer to the original? 	 */
 name|sprintf
 argument_list|(
@@ -3251,7 +3250,6 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
-continue|continue;
 block|}
 name|fputs
 argument_list|(
