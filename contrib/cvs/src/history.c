@@ -405,12 +405,6 @@ name|module_sort
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_RCS5
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|short
@@ -434,26 +428,6 @@ init|=
 literal|"+0000"
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|char
-name|tz_name
-index|[]
-init|=
-literal|"LT"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* -r, -t, or -b options, malloc'd.  These are "" if the option in    question is not specified or is overridden by another option.  The    main reason for using "" rather than NULL is historical.  Together    with since_date, these are a mutually exclusive set; one overrides the    others.  */
@@ -1587,20 +1561,6 @@ break|break;
 case|case
 literal|'z'
 case|:
-ifndef|#
-directive|ifndef
-name|HAVE_RCS5
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"-z not supported with RCS 4"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|tz_local
 operator|=
 operator|(
@@ -1752,8 +1712,6 @@ name|optarg
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'?'
@@ -5484,9 +5442,6 @@ operator|->
 name|type
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_RCS5
 if|if
 condition|(
 operator|!
@@ -5512,8 +5467,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 name|tm
 operator|=
 name|localtime

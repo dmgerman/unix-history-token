@@ -1139,9 +1139,23 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+operator|(
 name|errno
-operator|!=
+operator|==
 name|EEXIST
+operator|||
+operator|(
+name|errno
+operator|==
+name|EACCES
+operator|&&
+name|isdir
+argument_list|(
+name|name
+argument_list|)
+operator|)
+operator|)
 condition|)
 name|error
 argument_list|(
@@ -1698,32 +1712,16 @@ block|{
 if|if
 condition|(
 name|trace
-condition|)
 ifdef|#
 directive|ifdef
 name|SERVER_SUPPORT
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%c-> unlink_file_dir(%s)\n"
-argument_list|,
-operator|(
+comment|/* This is called by the server parent process in contexts where 	   it is not OK to send output (e.g. after we sent "ok" to the 	   client).  */
+operator|&&
+operator|!
 name|server_active
-operator|)
-condition|?
-literal|'S'
-else|:
-literal|' '
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
+condition|)
 operator|(
 name|void
 operator|)
@@ -1736,8 +1734,6 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|noexec
@@ -2720,7 +2716,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the home directory.  Returns a pointer to storage    managed by this function or its callees (currently getenv).    This function will return the same thing every time it is    called.  */
+comment|/* Return the home directory.  Returns a pointer to storage    managed by this function or its callees (currently getenv).    This function will return the same thing every time it is    called.  Returns NULL if there is no home directory.     Note that for a pserver server, this may return root's home    directory.  What typically happens is that upon being started from    inetd, before switching users, the code in cvsrc.c calls    get_homedir which remembers root's home directory in the static    variable.  Then the switch happens and get_homedir might return a    directory that we don't even have read or execute permissions for    (which is bad, when various parts of CVS try to read there).  One    fix would be to make the value returned by get_homedir only good    until the next call (which would free the old value).  Another fix    would be to just always malloc our answer, and let the caller free    it (that is best, because some day we may need to be reentrant).     The workaround is to put -f in inetd.conf which means that    get_homedir won't get called until after the switch in user ID.     The whole concept of a "home directory" on the server is pretty    iffy, although I suppose some people probably are relying on it for    .cvsrc and such, in the cases where it works.  */
 end_comment
 
 begin_function

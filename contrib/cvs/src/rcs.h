@@ -1,35 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * RCS source control definitions needed by rcs.c and friends  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * RCS source control definitions needed by rcs.c and friends  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RCS
-value|"rcs"
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCS_CI
-value|"ci"
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCS_DIFF
-value|"rcsdiff"
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCS_RCSMERGE
-value|"rcsmerge"
-end_define
 
 begin_comment
 comment|/* String which indicates a conflict if it occurs at the start of a line.  */
@@ -160,24 +132,19 @@ begin_comment
 comment|/* RCS file not completly parsed */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NODELTA
-value|0x8
-end_define
-
 begin_comment
-comment|/* delta_pos no longer valid */
+comment|/* All the "char *" fields in RCSNode, Deltatext, and RCSVers are    '\0'-terminated (except "text" in Deltatext).  This means that we    can't deal with fields containing '\0', which is a limitation that    RCS does not have.  Would be nice to fix this some day.  */
 end_comment
 
 begin_struct
 struct|struct
 name|rcsnode
 block|{
+comment|/* Reference count for this structure.  Used to deal with the        fact that there might be a pointer from the Vers_TS or might        not.  Callers who increment this field are responsible for        calling freercsnode when they are done with their reference.  */
 name|int
 name|refcount
 decl_stmt|;
+comment|/* Flags (INATTIC, PARTIAL,&c), see above.  */
 name|int
 name|flags
 decl_stmt|;
@@ -186,33 +153,70 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
+comment|/* Value for head keyword from RCS header, or NULL if empty.  */
 name|char
 modifier|*
 name|head
 decl_stmt|;
+comment|/* Value for branch keyword from RCS header, or NULL if omitted.  */
 name|char
 modifier|*
 name|branch
 decl_stmt|;
+comment|/* Raw data on symbolic revisions.  The first time that RCS_symbols is        called, we parse these into ->symbols, and free ->symbols_data.  */
 name|char
 modifier|*
 name|symbols_data
 decl_stmt|;
+comment|/* Value for expand keyword from RCS header, or NULL if omitted.  */
 name|char
 modifier|*
 name|expand
 decl_stmt|;
+comment|/* List of nodes, the key of which is the symbolic name and the data        of which is the numeric revision that it corresponds to (malloc'd).  */
 name|List
 modifier|*
 name|symbols
 decl_stmt|;
+comment|/* List of nodes (type RCSVERS), the key of which the numeric revision        number, and the data of which is an RCSVers * for the revision.  */
 name|List
 modifier|*
 name|versions
 decl_stmt|;
+comment|/* Value for access keyword from RCS header, or NULL if empty.        FIXME: RCS_delaccess would also seem to use "" for empty.  We        should pick one or the other.  */
+name|char
+modifier|*
+name|access
+decl_stmt|;
+comment|/* Raw data on locked revisions.  The first time that RCS_getlocks is        called, we parse these into ->locks, and free ->locks_data.  */
+name|char
+modifier|*
+name|locks_data
+decl_stmt|;
+comment|/* List of nodes, the key of which is the numeric revision and the        data of which is the user that it corresponds to (malloc'd).  */
+name|List
+modifier|*
+name|locks
+decl_stmt|;
+comment|/* Set for the strict keyword from the RCS header.  */
+name|int
+name|strict_locks
+decl_stmt|;
+comment|/* Value for the comment keyword from RCS header (comment leader), or        NULL if omitted.  */
+name|char
+modifier|*
+name|comment
+decl_stmt|;
+comment|/* Value for the desc field in the RCS file, or NULL if empty.  */
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+comment|/* File offset of the first deltatext node, so we can seek there.  */
 name|long
 name|delta_pos
 decl_stmt|;
+comment|/* Newphrases from the RCS header.  List of nodes, the key of which        is the "id" which introduces the newphrase, and the value of which        is the value from the newphrase.  */
 name|List
 modifier|*
 name|other
@@ -231,8 +235,47 @@ end_typedef
 
 begin_struct
 struct|struct
+name|deltatext
+block|{
+name|char
+modifier|*
+name|version
+decl_stmt|;
+comment|/* Log message, or NULL if we do not intend to change the log message        (that is, RCS_copydeltas should just use the log message from the        file).  */
+name|char
+modifier|*
+name|log
+decl_stmt|;
+comment|/* Change text, or NULL if we do not intend to change the change text        (that is, RCS_copydeltas should just use the change text from the        file).  Note that it is perfectly legal to have log be NULL and        text non-NULL, or vice-versa.  */
+name|char
+modifier|*
+name|text
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+comment|/* Newphrase fields from deltatext nodes.  FIXME: duplicates the        other field in the rcsversnode, I think.  */
+name|List
+modifier|*
+name|other
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|deltatext
+name|Deltatext
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
 name|rcsversnode
 block|{
+comment|/* Duplicate of the key by which this structure is indexed.  */
 name|char
 modifier|*
 name|version
@@ -256,13 +299,26 @@ decl_stmt|;
 name|int
 name|dead
 decl_stmt|;
+name|int
+name|outdated
+decl_stmt|;
+name|Deltatext
+modifier|*
+name|text
+decl_stmt|;
 name|List
 modifier|*
 name|branches
 decl_stmt|;
+comment|/* Newphrase fields from deltatext nodes.  Also contains ";add" and        ";delete" magic fields (see rcs.c, log.c).  I think this is        only used by log.c (where it looks up "log").  Duplicates the        other field in struct deltatext, I think.  */
 name|List
 modifier|*
 name|other
+decl_stmt|;
+comment|/* Newphrase fields from delta nodes.  */
+name|List
+modifier|*
+name|other_delta
 decl_stmt|;
 block|}
 struct|;
@@ -360,6 +416,23 @@ name|PROTO
 argument_list|(
 operator|(
 name|RCSNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_reparsercsfile
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|FILE
+operator|*
 operator|*
 operator|)
 argument_list|)
@@ -626,6 +699,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|List
+modifier|*
+name|RCS_getlocks
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+name|rcs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|freercsnode
 name|PROTO
@@ -728,6 +816,35 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|RCS_checkin
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+name|rcs
+operator|,
+name|char
+operator|*
+name|workfile
+operator|,
+name|char
+operator|*
+name|message
+operator|,
+name|char
+operator|*
+name|rev
+operator|,
+name|int
+name|flags
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|RCS_cmp_file
 name|PROTO
 argument_list|(
@@ -782,8 +899,6 @@ operator|,
 specifier|const
 name|char
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -846,6 +961,92 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|RCS_delete_revs
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_addaccess
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_delaccess
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|RCS_getaccess
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|RCS_rewrite
+name|PROTO
+argument_list|(
+operator|(
+name|RCSNode
+operator|*
+operator|,
+name|Deltatext
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|rcs_change_text
 name|PROTO
 argument_list|(
@@ -870,6 +1071,26 @@ operator|*
 operator|*
 operator|,
 name|size_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|make_file_label
+name|PROTO
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|RCSNode
 operator|*
 operator|)
 argument_list|)
@@ -905,11 +1126,19 @@ operator|,
 name|char
 operator|*
 operator|,
+name|char
+operator|*
+operator|,
 name|int
 operator|,
 name|char
 operator|*
 operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
 operator|,
 name|FILE
 operator|*

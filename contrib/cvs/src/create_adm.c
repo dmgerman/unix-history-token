@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Create Administration.  *   * Creates a CVS administration directory based on the argument repository; the  * "Entries" file is prefilled from the "initrecord" argument.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Create Administration.  *   * Creates a CVS administration directory based on the argument repository; the  * "Entries" file is prefilled from the "initrecord" argument.  */
 end_comment
 
 begin_include
@@ -10,11 +10,11 @@ file|"cvs.h"
 end_include
 
 begin_comment
-comment|/* update_dir includes dir as its last component.  */
+comment|/* update_dir includes dir as its last component.     Return value is 0 for success, or 1 if we printed a warning message.    Note that many errors are still fatal; particularly for unlikely errors    a fatal error is probably better than a warning which might be missed    or after which CVS might do something non-useful.  If WARN is zero, then    don't print warnings; all errors are fatal then.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|Create_Admin
 parameter_list|(
 name|dir
@@ -28,6 +28,8 @@ parameter_list|,
 name|date
 parameter_list|,
 name|nonbranch
+parameter_list|,
+name|warn
 parameter_list|)
 name|char
 modifier|*
@@ -52,6 +54,9 @@ decl_stmt|;
 name|int
 name|nonbranch
 decl_stmt|;
+name|int
+name|warn
+decl_stmt|;
 block|{
 name|FILE
 modifier|*
@@ -60,6 +65,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|char
+modifier|*
+name|reposcopy
 decl_stmt|;
 name|char
 modifier|*
@@ -73,18 +82,11 @@ condition|(
 name|trace
 condition|)
 block|{
-name|char
-modifier|*
-name|wd
-init|=
-name|xgetwd
-argument_list|()
-decl_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%c-> Create_Admin (%s, %s, %s, %s, %s) in %s\n"
+literal|"%c-> Create_Admin (%s, %s, %s, %s, %s, %d, %d)\n"
 argument_list|,
 operator|(
 name|server_active
@@ -112,12 +114,9 @@ name|date
 else|:
 literal|""
 argument_list|,
-name|wd
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|wd
+name|nonbranch
+argument_list|,
+name|warn
 argument_list|)
 expr_stmt|;
 block|}
@@ -127,7 +126,9 @@ if|if
 condition|(
 name|noexec
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|tmp
 operator|=
 name|xmalloc
@@ -189,11 +190,52 @@ argument_list|,
 name|update_dir
 argument_list|)
 expr_stmt|;
-name|make_directory
+if|if
+condition|(
+name|CVS_MKDIR
 argument_list|(
+name|tmp
+argument_list|,
+literal|0777
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|warn
+condition|)
+block|{
+comment|/* The reason that this is a warning, rather than silently 	       just skipping creating the directory, is that we don't want 	       CVS's behavior to vary subtly based on factors (like directory 	       permissions) which are not made clear to the user.  With 	       the warning at least we let them know what is going on.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot make directory %s"
+argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+else|else
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot make directory %s"
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* record the current cvs root for later use */
 name|Create_Root
 argument_list|(
@@ -284,14 +326,56 @@ name|CVSADM_REP
 argument_list|)
 expr_stmt|;
 block|}
+name|reposcopy
+operator|=
+name|xstrdup
+argument_list|(
+name|repository
+argument_list|)
+expr_stmt|;
+name|Sanitize_Repository_Name
+argument_list|(
+name|reposcopy
+argument_list|)
+expr_stmt|;
+comment|/* The top level of the repository is a special case -- we need to        write it with an extra dot at the end.  This trailing `.' stuff        rubs me the wrong way -- on the other hand, I don't want to        spend the time making sure all of the code can handle it if we        don't do it. */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|reposcopy
+argument_list|,
+name|CVSroot_directory
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|reposcopy
+operator|=
+name|xrealloc
+argument_list|(
+name|reposcopy
+argument_list|,
+name|strlen
+argument_list|(
+name|reposcopy
+argument_list|)
+operator|+
+literal|3
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|reposcopy
+argument_list|,
+literal|"/."
+argument_list|)
+expr_stmt|;
+block|}
 name|cp
 operator|=
-name|repository
-expr_stmt|;
-name|strip_trailing_slashes
-argument_list|(
-name|cp
-argument_list|)
+name|reposcopy
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -334,7 +418,7 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|repository
+name|cp
 argument_list|,
 name|path
 argument_list|,
@@ -347,9 +431,7 @@ operator|==
 literal|0
 condition|)
 name|cp
-operator|=
-name|repository
-operator|+
+operator|+=
 name|strlen
 argument_list|(
 name|path
@@ -642,9 +724,17 @@ endif|#
 directive|endif
 name|free
 argument_list|(
+name|reposcopy
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

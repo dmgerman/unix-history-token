@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Commit Files  *   * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *   */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Commit Files  *   * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *   */
 end_comment
 
 begin_include
@@ -671,6 +671,8 @@ literal|"\t-m msg\tLog message.\n"
 block|,
 literal|"\t-r rev\tCommit to this branch or trunk revision.\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -832,6 +834,20 @@ operator|*
 operator|)
 name|callerdat
 decl_stmt|;
+comment|/* This check seems to slowly be creeping throughout CVS (update        and send_dirent_proc by CVS 1.5, diff in 31 Oct 1995.  My guess        is that it (or some variant thereof) should go in all the        dirent procs.  Unless someone has some better idea...  */
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|dir
+argument_list|)
+condition|)
+return|return
+operator|(
+name|R_SKIP_ALL
+operator|)
+return|;
 comment|/* initialize the ignore list for this directory */
 name|find_data
 operator|->
@@ -839,6 +855,23 @@ name|ignlist
 operator|=
 name|getlist
 argument_list|()
+expr_stmt|;
+comment|/* Print the same warm fuzzy as in check_direntproc, since that        code will never be run during client/server operation and we        want the messages to match. */
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Examining %s"
+argument_list|,
+name|update_dir
+argument_list|)
 expr_stmt|;
 return|return
 name|R_PROCESS
@@ -1245,7 +1278,7 @@ name|xfinfo
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+name|tag
 argument_list|,
 name|NULL
 argument_list|,
@@ -1320,7 +1353,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"use `cvs add' to create an entry for %s"
+literal|"use `%s add' to create an entry for %s"
+argument_list|,
+name|program_name
 argument_list|,
 name|finfo
 operator|->
@@ -1638,6 +1673,7 @@ ifdef|#
 directive|ifdef
 name|CVS_BADROOT
 comment|/*      * For log purposes, do not allow "root" to commit files.  If you look      * like root, but are really logged in as a non-root user, it's OK.      */
+comment|/* FIXME: Shouldn't this check be much more closely related to the        readonly user stuff (CVSROOT/readers,&c).  That is, why should        root be able to "cvs init", "cvs import",&c, but not "cvs ci"?  */
 if|if
 condition|(
 name|geteuid
@@ -1750,13 +1786,13 @@ directive|ifdef
 name|FORCE_USE_EDITOR
 name|use_editor
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 else|#
 directive|else
 name|use_editor
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -1840,13 +1876,13 @@ directive|ifdef
 name|FORCE_USE_EDITOR
 name|use_editor
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 else|#
 directive|else
 name|use_editor
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -2067,6 +2103,9 @@ condition|(
 name|client_active
 condition|)
 block|{
+name|int
+name|err
+decl_stmt|;
 name|struct
 name|find_data
 name|find_args
@@ -2266,6 +2305,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* We always send some sort of message, even if empty.  */
+comment|/* FIXME: is that true?  There seems to be some code in do_editor 	   which can leave the message NULL.  */
 name|option_with_arg
 argument_list|(
 literal|"-m"
@@ -2525,7 +2565,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: This whole find_args.force/SEND_FORCE business is a 	   kludge.  It would seem to be a server bug that we have to 	   say that files are modified when they are not.  This makes 	   "cvs commit -r 2" across a whole bunch of files a very slow 	   operation (and it isn't documented in cvsclient.texi).  I 	   haven't looked at the server code carefully enough to be 	   _sure_ why this is needed, but if it is because RCS_CI 	   wants the file to exist, then it would be relatively simple 	   (but not trivial) to fix in the server.  */
+comment|/* FIXME: This whole find_args.force/SEND_FORCE business is a 	   kludge.  It would seem to be a server bug that we have to 	   say that files are modified when they are not.  This makes 	   "cvs commit -r 2" across a whole bunch of files a very slow 	   operation (and it isn't documented in cvsclient.texi).  I 	   haven't looked at the server code carefully enough to be 	   _sure_ why this is needed, but if it is because the "ci" 	   program, which we used to call, wanted the file to exist, 	   then it would be relatively simple to fix in the server.  */
 name|send_files
 argument_list|(
 name|find_args
@@ -2556,9 +2596,130 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
+name|err
+operator|=
 name|get_responses_and_close
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
+operator|&&
+name|use_editor
+operator|&&
+name|message
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* If there was an error, don't nuke the user's carefully 	       constructed prose.  This is something of a kludge; a better 	       solution is probably more along the lines of #150 in TODO 	       (doing a second up-to-date check before accepting the 	       log message has also been suggested, but that seems kind of 	       iffy because the real up-to-date check could still fail, 	       another error could occur,&c.  Also, a second check would 	       slow things down).  */
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+name|fname
+operator|=
+name|cvs_temp_name
+argument_list|()
+expr_stmt|;
+name|fp
+operator|=
+name|CVS_FOPEN
+argument_list|(
+name|fname
+argument_list|,
+literal|"w+"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"cannot create temporary file %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fwrite
+argument_list|(
+name|message
+argument_list|,
+literal|1
+argument_list|,
+name|strlen
+argument_list|(
+name|message
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+operator|!=
+name|strlen
+argument_list|(
+name|message
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot write temporary file %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close temporary file %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"saving log message in %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|err
 return|;
 block|}
 endif|#
@@ -2802,6 +2963,7 @@ decl_stmt|;
 name|Ctype
 name|status
 decl_stmt|;
+comment|/* FIXME: Do we need to save quiet as well as really_quiet?  Last        time I glanced at Classify_File I only saw it looking at really_quiet        not quiet.  */
 name|save_noexec
 operator|=
 name|noexec
@@ -3572,30 +3734,20 @@ name|finfo
 argument_list|)
 condition|)
 block|{
+comment|/* Make this a warning, not an error, because we have 		       no way of knowing whether the "conflict indicators" 		       are really from a conflict or whether they are part 		       of the document itself (cvs.texinfo and sanity.sh in 		       CVS itself, for example, tend to want to have strings 		       like ">>>>>>>" at the start of a line).  Making people 		       kludge this the way they need to kludge keyword 		       expansion seems undesirable.  And it is worse than 		       keyword expansion, because there is no -ko 		       analogue.  */
 name|error
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"file `%s' still contains conflict indicators"
+literal|"\ warning: file `%s' seems to still contain conflict indicators"
 argument_list|,
 name|finfo
 operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
-name|freevers_ts
-argument_list|(
-operator|&
-name|vers
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 block|}
 if|if
@@ -3617,6 +3769,7 @@ name|tag
 argument_list|)
 condition|)
 block|{
+comment|/* Remove also tries to forbid this, but we should check 		   here.  I'm only _sure_ about somewhat obscure cases 		   (hacking the Entries file, using an old version of 		   CVS for the remove and a new one for the commit), but 		   there might be other cases.  */
 name|error
 argument_list|(
 literal|0
@@ -4278,7 +4431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print warm fuzzies while examining the dirs  */
+comment|/*  * By default, return the code that tells do_recursion to examine all  * directories  */
 end_comment
 
 begin_comment
@@ -4321,6 +4474,19 @@ modifier|*
 name|entries
 decl_stmt|;
 block|{
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|dir
+argument_list|)
+condition|)
+return|return
+operator|(
+name|R_SKIP_ALL
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -4541,10 +4707,11 @@ expr_stmt|;
 block|}
 name|run_setup
 argument_list|(
-literal|"%s %s"
-argument_list|,
 name|filter
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|repository
 argument_list|)
 expr_stmt|;
@@ -5947,10 +6114,11 @@ argument_list|)
 expr_stmt|;
 name|run_setup
 argument_list|(
-literal|"%s %s"
-argument_list|,
 name|line
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|repository
 argument_list|)
 expr_stmt|;
@@ -6099,7 +6267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the log message for a dir and print a warm fuzzy  */
+comment|/*  * Get the log message for a dir  */
 end_comment
 
 begin_comment
@@ -6154,6 +6322,19 @@ name|char
 modifier|*
 name|real_repos
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|isdir
+argument_list|(
+name|dir
+argument_list|)
+condition|)
+return|return
+operator|(
+name|R_SKIP_ALL
+operator|)
+return|;
 comment|/* find the update list for this dir */
 name|p
 operator|=
@@ -6216,23 +6397,6 @@ operator|(
 name|R_SKIP_FILES
 operator|)
 return|;
-comment|/* print the warm fuzzy */
-if|if
-condition|(
-operator|!
-name|quiet
-condition|)
-name|error
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"Committing %s"
-argument_list|,
-name|update_dir
-argument_list|)
-expr_stmt|;
 comment|/* get commit message */
 name|real_repos
 operator|=
@@ -6590,7 +6754,7 @@ operator|!
 operator|(
 name|branch
 operator|=
-name|RCS_isbranch
+name|RCS_nodeisbranch
 argument_list|(
 name|finfo
 operator|->
@@ -6614,8 +6778,6 @@ operator|->
 name|rcs
 argument_list|,
 name|tag
-argument_list|,
-literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -6655,6 +6817,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|RCS_rewrite
+argument_list|(
+name|finfo
+operator|->
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|Scratch_Entry
 argument_list|(
 name|finfo
@@ -6882,6 +7055,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|RCS_rewrite
+argument_list|(
+name|finfo
+operator|->
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -6990,6 +7174,9 @@ if|if
 condition|(
 name|lockflag
 condition|)
+block|{
+if|if
+condition|(
 name|RCS_lock
 argument_list|(
 name|finfo
@@ -7002,9 +7189,23 @@ name|corev
 else|:
 name|NULL
 argument_list|,
+literal|1
+argument_list|)
+operator|==
 literal|0
+condition|)
+name|RCS_rewrite
+argument_list|(
+name|finfo
+operator|->
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|corev
@@ -7023,8 +7224,6 @@ argument_list|(
 name|finfo
 operator|->
 name|rcs
-operator|->
-name|path
 argument_list|,
 name|finfo
 operator|->
@@ -7595,6 +7794,16 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
+else|else
+name|RCS_rewrite
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7762,6 +7971,15 @@ argument_list|,
 name|rcs
 operator|->
 name|path
+argument_list|)
+expr_stmt|;
+name|RCS_rewrite
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -8253,14 +8471,31 @@ block|}
 else|else
 block|{
 comment|/* this is the first time we have ever seen this file; create 	   an rcs file.  */
-name|run_setup
-argument_list|(
-literal|"%s%s -x,v/ -i"
-argument_list|,
-name|Rcsbin
-argument_list|,
-name|RCS
-argument_list|)
+name|char
+modifier|*
+name|desc
+decl_stmt|;
+name|size_t
+name|descalloc
+decl_stmt|;
+name|size_t
+name|desclen
+decl_stmt|;
+name|char
+modifier|*
+name|opt
+decl_stmt|;
+name|desc
+operator|=
+name|NULL
+expr_stmt|;
+name|descalloc
+operator|=
+literal|0
+expr_stmt|;
+name|desclen
+operator|=
+literal|0
 expr_stmt|;
 name|fname
 operator|=
@@ -8308,15 +8543,23 @@ argument_list|(
 name|fname
 argument_list|)
 condition|)
-name|run_args
+comment|/* FIXME: Should be including update_dir in the appropriate 	       place here.  */
+name|get_file
 argument_list|(
-literal|"-t%s/%s%s"
+name|fname
 argument_list|,
-name|CVSADM
+name|fname
 argument_list|,
-name|file
+literal|"r"
 argument_list|,
-name|CVSEXT_LOG
+operator|&
+name|desc
+argument_list|,
+operator|&
+name|descalloc
+argument_list|,
+operator|&
+name|desclen
 argument_list|)
 expr_stmt|;
 name|free
@@ -8324,6 +8567,36 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
+comment|/* From reading the RCS 5.7 source, "rcs -i" adds a newline to the 	   end of the log message if the message is nonempty. 	   Do it.  RCS also deletes certain whitespace, in cleanlogmsg, 	   which we don't try to do here.  */
+if|if
+condition|(
+name|desclen
+operator|>
+literal|0
+condition|)
+block|{
+name|expand_string
+argument_list|(
+operator|&
+name|desc
+argument_list|,
+operator|&
+name|descalloc
+argument_list|,
+name|desclen
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|desc
+index|[
+name|desclen
+operator|++
+index|]
+operator|=
+literal|'\012'
+expr_stmt|;
+block|}
 comment|/* Set RCS keyword expansion options.  */
 if|if
 condition|(
@@ -8343,61 +8616,71 @@ index|]
 operator|==
 literal|'k'
 condition|)
-name|run_arg
-argument_list|(
+name|opt
+operator|=
 name|options
+operator|+
+literal|2
+expr_stmt|;
+else|else
+name|opt
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* This message is an artifact of the time when this 	   was implemented via "rcs -i".  It should be revised at 	   some point (does the "initial revision" in the message from 	   RCS_checkin indicate that this is a new file?  Or does the 	   "RCS file" message serve some function?).  */
+name|cvs_output
+argument_list|(
+literal|"RCS file: "
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|run_arg
+name|cvs_output
 argument_list|(
 name|rcs
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cvs_output
+argument_list|(
+literal|"\ndone\n"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|retcode
-operator|=
-name|run_exec
+name|add_rcs_file
 argument_list|(
-name|RUN_TTY
+name|NULL
 argument_list|,
-name|RUN_TTY
+name|rcs
 argument_list|,
-name|RUN_TTY
+name|file
 argument_list|,
-name|RUN_NORMAL
+name|NULL
+argument_list|,
+name|opt
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|desc
+argument_list|,
+name|desclen
+argument_list|,
+name|NULL
 argument_list|)
-operator|)
 operator|!=
 literal|0
 condition|)
 block|{
-name|error
-argument_list|(
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|,
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
-literal|0
-argument_list|,
-literal|"could not create %s"
-argument_list|,
-name|rcs
-argument_list|)
-expr_stmt|;
 name|retval
 operator|=
 literal|1
@@ -8406,9 +8689,27 @@ goto|goto
 name|out
 goto|;
 block|}
+name|rcsfile
+operator|=
+name|RCS_parsercsfile
+argument_list|(
+name|rcs
+argument_list|)
+expr_stmt|;
 name|newfile
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|desc
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|desc
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* when adding a file for the first time, and using a tag, we need        to create a dead revision on the trunk.  */
@@ -8512,7 +8813,7 @@ name|retcode
 operator|=
 name|RCS_checkin
 argument_list|(
-name|rcs
+name|rcsfile
 argument_list|,
 name|NULL
 argument_list|,
@@ -8583,11 +8884,11 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
-name|assert
+comment|/* double-check that the file was written correctly */
+name|freercsnode
 argument_list|(
+operator|&
 name|rcsfile
-operator|==
-name|NULL
 argument_list|)
 expr_stmt|;
 name|rcsfile
@@ -8810,6 +9111,15 @@ argument_list|,
 name|magicrev
 argument_list|)
 expr_stmt|;
+name|RCS_rewrite
+argument_list|(
+name|rcsfile
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|head
@@ -8927,6 +9237,7 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
+comment|/* I don't think fix_rcs_modes is needed any more.  In the        add_rcs_file case, the algorithms used by add_rcs_file and        fix_rcs_modes are the same, so there is no need to go through        it all twice.  In the other cases, I think we want to just        preserve the mode that the file had before we started.  That is        a behavior change, but I would think a desirable one.  */
 name|fix_rcs_modes
 argument_list|(
 name|rcs
@@ -9086,7 +9397,7 @@ name|rcs
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -9105,6 +9416,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|RCS_rewrite
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|err

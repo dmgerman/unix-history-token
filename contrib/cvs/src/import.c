@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * "import" checks in the vendor release located in the current directory into  * the CVS source repository.  The CVS vendor branch support is utilized.  *   * At least three arguments are expected to follow the options:  *	repository	Where the source belongs relative to the CVSROOT  *	VendorTag	Vendor's major tag  *	VendorReleTag	Tag for this particular release  *  * Additional arguments specify more Vendor Release Tags.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * "import" checks in the vendor release located in the current directory into  * the CVS source repository.  The CVS vendor branch support is utilized.  *   * At least three arguments are expected to follow the options:  *	repository	Where the source belongs relative to the CVSROOT  *	VendorTag	Vendor's major tag  *	VendorReleTag	Tag for this particular release  *  * Additional arguments specify more Vendor Release Tags.  */
 end_comment
 
 begin_include
@@ -39,28 +39,6 @@ operator|(
 name|char
 operator|*
 name|user
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|expand_at_signs
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-name|buf
-operator|,
-name|off_t
-name|size
-operator|,
-name|FILE
-operator|*
-name|fp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -354,6 +332,8 @@ literal|"\t-m msg\tLog message.\n"
 block|,
 literal|"\t-W spec\tWrappers specification line.\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -526,13 +506,13 @@ directive|ifdef
 name|FORCE_USE_EDITOR
 name|use_editor
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 else|#
 directive|else
 name|use_editor
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -975,6 +955,11 @@ operator|+
 literal|2
 argument_list|)
 decl_stmt|;
+operator|*
+name|nm
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|message
@@ -2258,6 +2243,18 @@ block|{
 name|int
 name|retval
 decl_stmt|;
+name|char
+modifier|*
+name|free_opt
+init|=
+name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|our_opt
+init|=
+name|keyword_opt
+decl_stmt|;
 name|free
 argument_list|(
 name|attic_name
@@ -2271,6 +2268,114 @@ argument_list|,
 name|vfile
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+comment|/* The most reliable information on whether the file is binary 	       is what the client told us.  That is because if the client had 	       the wrong idea about binaryness, it corrupted the file, so 	       we might as well believe the client.  */
+if|if
+condition|(
+name|server_active
+condition|)
+block|{
+name|Node
+modifier|*
+name|node
+decl_stmt|;
+name|List
+modifier|*
+name|entries
+decl_stmt|;
+comment|/* Reading all the entries for each file is fairly silly, and 		   probably slow.  But I am too lazy at the moment to do 		   anything else.  */
+name|entries
+operator|=
+name|Entries_Open
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|node
+operator|=
+name|findnode_fn
+argument_list|(
+name|entries
+argument_list|,
+name|vfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|node
+operator|!=
+name|NULL
+condition|)
+block|{
+name|Entnode
+modifier|*
+name|entdata
+init|=
+operator|(
+name|Entnode
+operator|*
+operator|)
+name|node
+operator|->
+name|data
+decl_stmt|;
+if|if
+condition|(
+name|entdata
+operator|->
+name|type
+operator|==
+name|ENT_FILE
+condition|)
+block|{
+name|assert
+argument_list|(
+name|entdata
+operator|->
+name|options
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|entdata
+operator|->
+name|options
+index|[
+literal|1
+index|]
+operator|==
+literal|'k'
+argument_list|)
+expr_stmt|;
+name|our_opt
+operator|=
+name|xstrdup
+argument_list|(
+name|entdata
+operator|->
+name|options
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|free_opt
+operator|=
+name|our_opt
+expr_stmt|;
+block|}
+block|}
+name|Entries_Close
+argument_list|(
+name|entries
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|retval
 operator|=
 name|add_rcs_file
@@ -2283,6 +2388,8 @@ name|vfile
 argument_list|,
 name|vhead
 argument_list|,
+name|our_opt
+argument_list|,
 name|vbranch
 argument_list|,
 name|vtag
@@ -2291,7 +2398,22 @@ name|targc
 argument_list|,
 name|targv
 argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
 name|logfp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|free_opt
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|free_opt
 argument_list|)
 expr_stmt|;
 name|free
@@ -2781,6 +2903,7 @@ name|NULL
 condition|)
 block|{
 comment|/* Before RCS_lock existed, we were directing stdout, as well as 	   stderr, from the RCS command, to DEVNULL.  I wouldn't guess that 	   was necessary, but I don't know for sure.  */
+comment|/* Earlier versions of this function printed a `fork failed' error 	   when RCS_lock returned an error code.  That's not appropriate 	   now that RCS_lock is librarified, but should the error text be 	   preserved? */
 if|if
 condition|(
 name|RCS_lock
@@ -2794,25 +2917,21 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|error
-argument_list|(
-literal|0
-argument_list|,
-name|errno
-argument_list|,
-literal|"fork failed"
-argument_list|)
-expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
-block|}
 name|locked
 operator|=
 literal|1
+expr_stmt|;
+name|RCS_rewrite
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|tocvsPath
@@ -2911,8 +3030,6 @@ operator|=
 name|RCS_checkin
 argument_list|(
 name|rcs
-operator|->
-name|path
 argument_list|,
 name|tocvsPath
 operator|==
@@ -3046,6 +3163,15 @@ argument_list|,
 name|vbranch
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|RCS_rewrite
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3204,6 +3330,15 @@ literal|1
 operator|)
 return|;
 block|}
+name|RCS_rewrite
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -3305,9 +3440,19 @@ operator|->
 name|vn_rcs
 argument_list|)
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
+name|RCS_rewrite
+argument_list|(
+name|rcs
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
 block|{
 name|ierrno
 operator|=
@@ -4122,7 +4267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Create a new RCS file from scratch.     This probably should be moved to rcs.c now that it is called from    places outside import.c.  */
+comment|/* Create a new RCS file from scratch.     This probably should be moved to rcs.c now that it is called from    places outside import.c.     Return value is 0 for success, or nonzero for failure (in which    case an error message will have already been printed).  */
 end_comment
 
 begin_function
@@ -4137,6 +4282,8 @@ name|user
 parameter_list|,
 name|add_vhead
 parameter_list|,
+name|key_opt
+parameter_list|,
 name|add_vbranch
 parameter_list|,
 name|vtag
@@ -4145,9 +4292,13 @@ name|targc
 parameter_list|,
 name|targv
 parameter_list|,
+name|desctext
+parameter_list|,
+name|desclen
+parameter_list|,
 name|add_logfp
 parameter_list|)
-comment|/* Log message for the addition.  */
+comment|/* Log message for the addition.  Not used if add_vhead == NULL.  */
 name|char
 modifier|*
 name|message
@@ -4157,15 +4308,20 @@ name|char
 modifier|*
 name|rcs
 decl_stmt|;
-comment|/* Filename of the file to serve as the contents of the initial        revision.  */
+comment|/* Filename of the file to serve as the contents of the initial        revision.  Even if add_vhead is NULL, we use this to determine        the modes to give the new RCS file.  */
 name|char
 modifier|*
 name|user
 decl_stmt|;
-comment|/* Revision number of head that we are adding.  Normally 1.1 but        could be another revision as long as ADD_VBRANCH is a branch        from it.  */
+comment|/* Revision number of head that we are adding.  Normally 1.1 but        could be another revision as long as ADD_VBRANCH is a branch        from it.  If NULL, then just add an empty file without any        revisions (similar to the one created by "rcs -i").  */
 name|char
 modifier|*
 name|add_vhead
+decl_stmt|;
+comment|/* Keyword expansion mode, e.g., "b" for binary.  NULL means the        default behavior.  */
+name|char
+modifier|*
+name|key_opt
 decl_stmt|;
 comment|/* Vendor branch to import to, or NULL if none.  If non-NULL, then        vtag should also be non-NULL.  */
 name|char
@@ -4183,6 +4339,14 @@ name|char
 modifier|*
 name|targv
 index|[]
+decl_stmt|;
+comment|/* If non-NULL, description for the file.  If NULL, the description        will be empty.  */
+name|char
+modifier|*
+name|desctext
+decl_stmt|;
+name|size_t
+name|desclen
 decl_stmt|;
 comment|/* Write errors to here as well as via error (), or NULL if we should        use only error ().  */
 name|FILE
@@ -4215,17 +4379,6 @@ index|[
 name|MAXDATELEN
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|HAVE_RCS5
-name|char
-name|altdate2
-index|[
-name|MAXDATELEN
-index|]
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|author
@@ -4254,7 +4407,7 @@ name|char
 modifier|*
 name|local_opt
 init|=
-name|keyword_opt
+name|key_opt
 decl_stmt|;
 name|char
 modifier|*
@@ -4271,6 +4424,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* Note that as the code stands now, the -k option overrides any        settings in wrappers (whether CVSROOT/cvswrappers, -W, or        whatever).  Some have suggested this should be the other way        around.  As far as I know the documentation doesn't say one way        or the other.  Before making a change of this sort, should think        about what is best, document it (in cvs.texinfo and NEWS),&c.  */
 if|if
 condition|(
 name|local_opt
@@ -4320,13 +4474,33 @@ else|:
 name|tocvsPath
 operator|)
 expr_stmt|;
+comment|/* Opening in text mode is probably never the right thing for the        server (because the protocol encodes text files in a fashion        which does not depend on what the client or server OS is, as        documented in cvsclient.texi), but as long as the server just        runs on unix it is a moot point.  */
 name|fpuser
 operator|=
 name|CVS_FOPEN
 argument_list|(
 name|userfile
 argument_list|,
+operator|(
+operator|(
+name|local_opt
+operator|!=
+name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|local_opt
+argument_list|,
+literal|"b"
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|?
+literal|"rb"
+else|:
 literal|"r"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4392,6 +4566,13 @@ block|}
 comment|/*      * putadmin()      */
 if|if
 condition|(
+name|add_vhead
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|fprcs
@@ -4406,6 +4587,24 @@ condition|)
 goto|goto
 name|write_error
 goto|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|fprcs
+argument_list|,
+literal|"head     ;\012"
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|write_error
+goto|;
+block|}
 if|if
 condition|(
 name|add_vbranch
@@ -4612,7 +4811,7 @@ condition|)
 goto|goto
 name|write_error
 goto|;
-comment|/*      * puttree()      */
+comment|/* Get information on modtime and mode.  */
 if|if
 condition|(
 name|fstat
@@ -4639,6 +4838,14 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
+comment|/* Write the revision(s), with the date and author and so on        (that is "delta" rather than "deltatext" from rcsfile(5)).  */
+if|if
+condition|(
+name|add_vhead
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|use_file_modtime
@@ -4659,9 +4866,6 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_RCS5
 name|ftm
 operator|=
 name|gmtime
@@ -4670,18 +4874,6 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|ftm
-operator|=
-name|localtime
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -4730,77 +4922,6 @@ operator|->
 name|tm_sec
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_RCS5
-define|#
-directive|define
-name|altdate2
-value|altdate1
-else|#
-directive|else
-comment|/*      * If you don't have RCS V5 or later, you need to lie about the ci      * time, since RCS V4 and earlier insist that the times differ.      */
-name|now
-operator|++
-expr_stmt|;
-name|ftm
-operator|=
-name|localtime
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|altdate2
-argument_list|,
-name|DATEFORM
-argument_list|,
-name|ftm
-operator|->
-name|tm_year
-operator|+
-operator|(
-name|ftm
-operator|->
-name|tm_year
-operator|<
-literal|100
-condition|?
-literal|0
-else|:
-literal|1900
-operator|)
-argument_list|,
-name|ftm
-operator|->
-name|tm_mon
-operator|+
-literal|1
-argument_list|,
-name|ftm
-operator|->
-name|tm_mday
-argument_list|,
-name|ftm
-operator|->
-name|tm_hour
-argument_list|,
-name|ftm
-operator|->
-name|tm_min
-argument_list|,
-name|ftm
-operator|->
-name|tm_sec
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|author
 operator|=
 name|getcaller
@@ -4927,7 +5048,7 @@ name|fprcs
 argument_list|,
 literal|"date     %s;  author %s;  state Exp;\012"
 argument_list|,
-name|altdate2
+name|altdate1
 argument_list|,
 name|author
 argument_list|)
@@ -4956,9 +5077,10 @@ goto|goto
 name|write_error
 goto|;
 block|}
+block|}
+comment|/* Now write the description (possibly empty).  */
 if|if
 condition|(
-comment|/* 	 * putdesc() 	 */
 name|fprintf
 argument_list|(
 name|fprcs
@@ -4972,12 +5094,66 @@ name|fprintf
 argument_list|(
 name|fprcs
 argument_list|,
-literal|"@@\012\012\012"
+literal|"@"
 argument_list|)
 operator|<
 literal|0
-operator|||
-comment|/* 	 * putdelta() 	 */
+condition|)
+goto|goto
+name|write_error
+goto|;
+if|if
+condition|(
+name|desctext
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* The use of off_t not size_t for the second argument is very 	   strange, since we are dealing with something which definitely 	   fits in memory.  */
+if|if
+condition|(
+name|expand_at_signs
+argument_list|(
+name|desctext
+argument_list|,
+operator|(
+name|off_t
+operator|)
+name|desclen
+argument_list|,
+name|fprcs
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|write_error
+goto|;
+block|}
+if|if
+condition|(
+name|fprintf
+argument_list|(
+name|fprcs
+argument_list|,
+literal|"@\012\012\012"
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|write_error
+goto|;
+comment|/* Now write the log messages and contents for the revision(s) (that        is, "deltatext" rather than "delta" from rcsfile(5)).  */
+if|if
+condition|(
+name|add_vhead
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|fprcs
@@ -5008,7 +5184,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* We are going to put the log message in the revision on the 	   branch.  So putting it here too seems kind of redundant, I 	   guess (and that is what CVS has always done, anyway).  */
+comment|/* We are going to put the log message in the revision on the 	       branch.  So putting it here too seems kind of redundant, I 	       guess (and that is what CVS has always done, anyway).  */
 if|if
 condition|(
 name|fprintf
@@ -5231,6 +5407,7 @@ condition|)
 goto|goto
 name|write_error
 goto|;
+block|}
 block|}
 if|if
 condition|(
@@ -5519,7 +5696,6 @@ comment|/*  * Write SIZE bytes at BUF to FP, expanding @ signs into double @  * 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|expand_at_signs
 parameter_list|(

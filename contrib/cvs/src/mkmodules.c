@@ -701,6 +701,25 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
+name|char
+modifier|*
+specifier|const
+name|config_contents
+index|[]
+init|=
+block|{
+literal|"# Set this to \"no\" if pserver shouldn't check system users/passwords\n"
+block|,
+literal|"#SystemAuth=no\n"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|admin_file
 name|filelist
@@ -816,7 +835,15 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* Some have suggested listing CVSROOTADM_PASSWD here too.  The        security implications of transmitting hashed passwords over the        net are no worse than transmitting cleartext passwords which pserver        does, so this isn't a problem.  But I'm worried about the implications        of storing old passwords--if someone used a password in the past        they might be using it elsewhere, using a similar password, etc,        and so it doesn't seem to me like we should be saving old passwords,        even hashed.  */
+comment|/* Some have suggested listing CVSROOTADM_PASSWD here too.  This        would mean that CVS commands which operate on the        CVSROOTADM_PASSWD file would transmit hashed passwords over the        net.  This might seem to be no big deal, as pserver normally        transmits cleartext passwords, but the difference is that        CVSROOTADM_PASSWD contains *all* passwords, not just the ones        currently being used.  For example, it could be too easy to        accidentally give someone readonly access to CVSROOTADM_PASSWD        (e.g. via anonymous CVS or cvsweb), and then if there are any        guessable passwords for read/write access (usually there will be)        they get read/write access.         Another worry is the implications of storing old passwords--if        someone used a password in the past they might be using it        elsewhere, using a similar password, etc, and so saving old        passwords, even hashed, is probably not a good idea.  */
+block|{
+name|CVSROOTADM_CONFIG
+block|,
+literal|"a %s file configures various behaviors"
+block|,
+name|config_contents
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -2710,6 +2737,8 @@ init|=
 block|{
 literal|"Usage: %s %s\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -3080,11 +3109,18 @@ literal|"1.1"
 argument_list|,
 name|NULL
 argument_list|,
+comment|/* No vendor branch.  */
+name|NULL
+argument_list|,
 name|NULL
 argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|)

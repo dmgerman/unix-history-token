@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Tag  *   * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Uses the checked out revision in the current directory.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Tag  *   * Add or delete a symbolic name to an RCS file, or a collection of RCS files.  * Uses the checked out revision in the current directory.  */
 end_comment
 
 begin_include
@@ -377,7 +377,9 @@ literal|"\t-R\tProcess directories recursively.\n"
 block|,
 literal|"\t-d\tDelete the given tag.\n"
 block|,
-literal|"\t-[rD]\tExisting tag or date.\n"
+literal|"\t-r rev\tExisting revision/tag.\n"
+block|,
+literal|"\t-D\tExisting date.\n"
 block|,
 literal|"\t-f\tForce a head revision if specified tag not found.\n"
 block|,
@@ -386,6 +388,8 @@ block|,
 literal|"\t-F\tMove tag if it already exists.\n"
 block|,
 literal|"\t-c\tCheck that working files are unmodified.\n"
+block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
 name|NULL
 block|}
@@ -1684,12 +1688,16 @@ expr_stmt|;
 block|}
 name|run_setup
 argument_list|(
-literal|"%s %s %s %s"
-argument_list|,
 name|filter
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|symtag
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|delete_flag
 condition|?
 literal|"del"
@@ -1699,7 +1707,10 @@ condition|?
 literal|"mov"
 else|:
 literal|"add"
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|run_arg
+argument_list|(
 name|repository
 argument_list|)
 expr_stmt|;
@@ -2073,8 +2084,6 @@ operator|->
 name|srcfile
 argument_list|,
 name|symtag
-argument_list|,
-literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -2122,6 +2131,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|RCS_rewrite
+argument_list|(
+name|vers
+operator|->
+name|srcfile
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* warm fuzzies */
 if|if
 condition|(
@@ -2381,7 +2401,7 @@ block|{
 name|int
 name|isbranch
 init|=
-name|RCS_isbranch
+name|RCS_nodeisbranch
 argument_list|(
 name|finfo
 operator|->
@@ -2615,6 +2635,17 @@ literal|1
 operator|)
 return|;
 block|}
+name|RCS_rewrite
+argument_list|(
+name|vers
+operator|->
+name|srcfile
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* more warm fuzzies */
 if|if
 condition|(
@@ -3169,6 +3200,7 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* FIXME: This routine doesn't seem to do any locking whatsoever        (and it is called from places which don't have locks in place).        If two processes try to write val-tags at the same time, it would        seem like we are in trouble.  */
 name|mytag
 operator|.
 name|dptr

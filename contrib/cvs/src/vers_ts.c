@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
 end_comment
 
 begin_include
@@ -41,7 +41,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Fill in and return a Vers_TS structure "user" is the name of the local  * file; entries is the entries file - preparsed for our pleasure. rcs is  * the current source control file - preparsed for our pleasure.  */
+comment|/* Fill in and return a Vers_TS structure for the file FINFO.  TAG and    DATE are from the command line.  */
 end_comment
 
 begin_function
@@ -66,6 +66,7 @@ name|file_info
 modifier|*
 name|finfo
 decl_stmt|;
+comment|/* Keyword expansion options, I think generally from the command        line.  Can be either NULL or "" to indicate none are specified        here.  */
 name|char
 modifier|*
 name|options
@@ -210,6 +211,24 @@ name|p
 operator|->
 name|data
 expr_stmt|;
+if|if
+condition|(
+name|entdata
+operator|->
+name|type
+operator|==
+name|ENT_SUBDIR
+condition|)
+block|{
+comment|/* According to cvs.texinfo, the various fields in the Entries 	       file for a directory (other than the name) do not have a 	       defined meaning.  We need to pass them along without getting 	       confused based on what is in them.  Therefore we make sure 	       not to set vn_user and the like from Entries, add.c and 	       perhaps other code will expect these fields to be NULL for 	       a directory.  */
+name|vers_ts
+operator|->
+name|entdata
+operator|=
+name|entdata
+expr_stmt|;
+block|}
+elseif|else
 ifdef|#
 directive|ifdef
 name|SERVER_SUPPORT
@@ -321,6 +340,14 @@ name|date
 argument_list|)
 expr_stmt|;
 block|}
+name|vers_ts
+operator|->
+name|entdata
+operator|=
+name|entdata
+expr_stmt|;
+block|}
+comment|/* Even if we don't have an "entries line" as such 	   (vers_ts->entdata), we want to pick up options which could 	   have been from a Kopt protocol request.  */
 if|if
 condition|(
 operator|!
@@ -359,18 +386,16 @@ name|options
 argument_list|)
 expr_stmt|;
 block|}
-name|vers_ts
-operator|->
-name|entdata
-operator|=
-name|entdata
-expr_stmt|;
-block|}
 block|}
 comment|/*      * -k options specified on the command line override (and overwrite)      * options stored in the entries file      */
 if|if
 condition|(
 name|options
+operator|&&
+operator|*
+name|options
+operator|!=
+literal|'\0'
 condition|)
 name|vers_ts
 operator|->
@@ -388,6 +413,13 @@ operator|!
 name|vers_ts
 operator|->
 name|options
+operator|||
+operator|*
+name|vers_ts
+operator|->
+name|options
+operator|==
+literal|'\0'
 condition|)
 block|{
 if|if
@@ -740,6 +772,12 @@ comment|/* 	 * If the source control file exists and has the requested revision,
 if|if
 condition|(
 name|set_time
+operator|&&
+name|vers_ts
+operator|->
+name|vn_rcs
+operator|!=
+name|NULL
 condition|)
 block|{
 ifdef|#
@@ -777,13 +815,6 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vers_ts
-operator|->
-name|vn_rcs
-condition|)
-block|{
 name|t
 operator|.
 name|modtime
@@ -822,6 +853,7 @@ name|t
 operator|.
 name|modtime
 expr_stmt|;
+comment|/* This used to need to ignore existence_errors 		       (for cases like where update.c now clears 		       set_time if noexec, but didn't used to).  I 		       think maybe now it doesn't (server_modtime does 		       not like those kinds of cases).  */
 operator|(
 name|void
 operator|)
@@ -835,7 +867,6 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}

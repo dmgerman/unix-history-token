@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  */
 end_comment
 
 begin_include
@@ -1447,8 +1447,6 @@ expr_stmt|;
 comment|/* run the editor */
 name|run_setup
 argument_list|(
-literal|"%s"
-argument_list|,
 name|editinfo_editor
 condition|?
 name|editinfo_editor
@@ -1786,7 +1784,54 @@ expr_stmt|;
 if|if
 condition|(
 name|line_length
-operator|<=
+operator|<
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read from stdin"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unlink_file
+argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"warning: cannot remove temp file %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"aborting"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|line_length
+operator|==
 literal|0
 operator|||
 operator|*
@@ -2013,7 +2058,6 @@ name|fp
 operator|==
 name|NULL
 condition|)
-block|{
 name|error
 argument_list|(
 literal|1
@@ -2025,8 +2069,6 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 else|else
 block|{
 name|fprintf
@@ -2124,8 +2166,6 @@ condition|)
 block|{
 name|run_setup
 argument_list|(
-literal|"%s"
-argument_list|,
 name|verifymsg_script
 argument_list|)
 expr_stmt|;
@@ -2155,6 +2195,13 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* Since following error() exits, delete the temp file 		   now.  */
+name|unlink_file
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|1
@@ -2172,7 +2219,8 @@ literal|"Message verification failed"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Close and delete the temp file  */
+block|}
+comment|/* Delete the temp file  */
 name|unlink_file
 argument_list|(
 name|fname

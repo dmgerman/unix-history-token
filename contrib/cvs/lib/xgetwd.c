@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xgetwd.c -- return current directory with unlimited length    Copyright (C) 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
+comment|/* xgetwd.c -- return current directory with unlimited length    Copyright (C) 1992, 1997 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_comment
@@ -65,62 +65,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_GETWD
-end_ifndef
-
-begin_function_decl
-name|char
-modifier|*
-name|getwd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|GETWD
-parameter_list|(
-name|buf
-parameter_list|,
-name|max
-parameter_list|)
-value|getwd (buf)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|char
-modifier|*
-name|getcwd
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|GETWD
-parameter_list|(
-name|buf
-parameter_list|,
-name|max
-parameter_list|)
-value|getcwd (buf, max)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Amount by which to increase buffer size when allocating more space. */
@@ -202,7 +146,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|GETWD
+name|getcwd
 argument_list|(
 name|cwd
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *    Copyright (c) 1992, Brian Berliner and Jeff Polk  *    Copyright (c) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS 1.4 kit.  *  * This is the main C driver for the CVS system.  *  * Credit to Dick Grune, Vrije Universiteit, Amsterdam, for writing  * the shell-script CVS system that this is based on.  *  */
+comment|/*  *    Copyright (c) 1992, Brian Berliner and Jeff Polk  *    Copyright (c) 1989-1992, Brian Berliner  *  *    You may distribute under the terms of the GNU General Public License  *    as specified in the README file that comes with the CVS source distribution.  *  * This is the main C driver for the CVS system.  *  * Credit to Dick Grune, Vrije Universiteit, Amsterdam, for writing  * the shell-script CVS system that this is based on.  *  */
 end_comment
 
 begin_include
@@ -95,7 +95,7 @@ begin_decl_stmt
 name|int
 name|use_editor
 init|=
-name|TRUE
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -103,7 +103,7 @@ begin_decl_stmt
 name|int
 name|use_cvsrc
 init|=
-name|TRUE
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ begin_decl_stmt
 name|int
 name|really_quiet
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -128,7 +128,7 @@ begin_decl_stmt
 name|int
 name|quiet
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +136,7 @@ begin_decl_stmt
 name|int
 name|trace
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -144,7 +144,7 @@ begin_decl_stmt
 name|int
 name|noexec
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -152,7 +152,7 @@ begin_decl_stmt
 name|int
 name|logoff
 init|=
-name|FALSE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -174,15 +174,6 @@ end_decl_stmt
 begin_comment
 comment|/*  * Defaults, for the environment variables that are not set  */
 end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|Rcsbin
-init|=
-name|RCSBIN_DFLT
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -561,59 +552,37 @@ name|usg
 index|[]
 init|=
 block|{
-literal|"Usage: %s [cvs-options] command [command-options] [files...]\n"
+comment|/* CVS usage messages never have followed the GNU convention of        putting metavariables in uppercase.  I don't know whether that        is a good convention or not, but if it changes it would have to        change in all the usage messages.  For now, they consistently        use lowercase, as far as I know.  Puncutation is pretty funky,        though.  Sometimes they use none, as here.  Sometimes they use        single quotes (not the TeX-ish `' stuff), as in --help-options.        Sometimes they use double quotes, as in cvs -H add.         Most (not all) of the usage messages seem to have periods at        the end of each line.  I haven't tried to duplicate this style        in --help as it is a rather different format from the rest.  */
+literal|"Usage: %s [cvs-options] command [command-options-and-arguments]\n"
 block|,
-literal|"    Where 'cvs-options' are:\n"
+literal|"  where cvs-options are -q, -n, etc.\n"
 block|,
-literal|"        -H           Displays Usage information for command\n"
+literal|"    (specify --help-options for a list of options)\n"
 block|,
-literal|"        -Q           Cause CVS to be really quiet.\n"
+literal|"  where command is add, admin, etc.\n"
 block|,
-literal|"        -q           Cause CVS to be somewhat quiet.\n"
+literal|"    (specify --help-commands for a list of commands\n"
 block|,
-literal|"        -r           Make checked-out files read-only\n"
+literal|"     or --help-synonyms for a list of command synonyms)\n"
 block|,
-literal|"        -w           Make checked-out files read-write (default)\n"
+literal|"  where command-options-and-arguments depend on the specific command\n"
 block|,
-literal|"        -l           Turn History logging off\n"
+literal|"    (specify -H followed by a command name for command-specific help)\n"
 block|,
-literal|"        -n           Do not execute anything that will change the disk\n"
-block|,
-literal|"        -t           Show trace of program execution -- Try with -n\n"
-block|,
-literal|"        -v           CVS version and copyright\n"
-block|,
-literal|"        -b bindir    Find RCS programs in 'bindir'\n"
-block|,
-literal|"        -T tmpdir    Use 'tmpdir' for temporary files\n"
-block|,
-literal|"        -e editor    Use 'editor' for editing log information\n"
-block|,
-literal|"        -d CVS_root  Overrides $CVSROOT as the root of the CVS tree\n"
-block|,
-literal|"        -f           Do not use the ~/.cvsrc file\n"
-block|,
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
-literal|"        -z #         Use compression level '#' for net traffic.\n"
-block|,
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-literal|"        -x           Encrypt all net traffic.\n"
-block|,
-endif|#
-directive|endif
-endif|#
-directive|endif
-literal|"        -s VAR=VAL   Set CVS user variable.\n"
+literal|"  Specify --help to receive this message\n"
 block|,
 literal|"\n"
 block|,
-literal|"    and where 'command' is: add, admin, etc. (use the --help-commands\n"
+comment|/* Some people think that a bug-reporting address should go here.  IMHO,        the web sites are better because anything else is very likely to go        obsolete in the years between a release and when someone might be        reading this help.  Besides, we could never adequately discuss        bug reporting in a concise enough way to put in a help message.  */
+comment|/* I was going to put this at the top, but usage() wants the %s to        be in the first line.  */
+literal|"The Concurrent Versions System (CVS) is a tool for version control.\n"
 block|,
-literal|"    option for a list of commands)\n"
+comment|/* I really don't think I want to try to define "version control"        in one line.  I'm not sure one can get more concise than the        paragraph in ../cvs.spec without assuming the reader knows what        version control means.  */
+literal|"For CVS updates and additional information, see\n"
+block|,
+literal|"    Cyclic Software at http://www.cyclic.com/ or\n"
+block|,
+literal|"    Pascal Molli's CVS site at http://www.loria.fr/~molli/cvs-index.html\n"
 block|,
 name|NULL
 block|, }
@@ -688,10 +657,75 @@ literal|"        watch        Set watches\n"
 block|,
 literal|"        watchers     See who is watching a file\n"
 block|,
-literal|"(Use the --help-synonyms option for a list of alternate command names)\n"
+literal|"(Specify the --help option for a list of other help options)\n"
 block|,
 name|NULL
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|opt_usage
+index|[]
+init|=
+block|{
+literal|"CVS global options (specified before the command name) are:\n"
+block|,
+literal|"    -H           Displays usage information for command.\n"
+block|,
+literal|"    -Q           Cause CVS to be really quiet.\n"
+block|,
+literal|"    -q           Cause CVS to be somewhat quiet.\n"
+block|,
+literal|"    -r           Make checked-out files read-only.\n"
+block|,
+literal|"    -w           Make checked-out files read-write (default).\n"
+block|,
+literal|"    -l           Turn history logging off.\n"
+block|,
+literal|"    -n           Do not execute anything that will change the disk.\n"
+block|,
+literal|"    -t           Show trace of program execution -- try with -n.\n"
+block|,
+literal|"    -v           CVS version and copyright.\n"
+block|,
+literal|"    -b bindir    Find RCS programs in 'bindir'.\n"
+block|,
+literal|"    -T tmpdir    Use 'tmpdir' for temporary files.\n"
+block|,
+literal|"    -e editor    Use 'editor' for editing log information.\n"
+block|,
+literal|"    -d CVS_root  Overrides $CVSROOT as the root of the CVS tree.\n"
+block|,
+literal|"    -f           Do not use the ~/.cvsrc file.\n"
+block|,
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+literal|"    -z #         Use compression level '#' for net traffic.\n"
+block|,
+ifdef|#
+directive|ifdef
+name|ENCRYPTION
+literal|"    -x           Encrypt all net traffic.\n"
+block|,
+endif|#
+directive|endif
+literal|"    -a           Authenticate all net traffic.\n"
+block|,
+endif|#
+directive|endif
+literal|"    -s VAR=VAL   Set CVS user variable.\n"
+block|,
+literal|"(Specify the --help option for a list of other help options)\n"
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -727,12 +761,12 @@ index|[
 literal|0
 index|]
 decl_stmt|;
+comment|/* Three more for title, "specify --help" line, and NULL.  */
 name|int
 name|numcmds
 init|=
-literal|2
+literal|3
 decl_stmt|;
-comment|/* two more for title and end */
 while|while
 condition|(
 name|c
@@ -894,6 +928,12 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|line
+operator|++
+operator|=
+literal|"(Specify the --help option for a list of other help options)\n"
+expr_stmt|;
 operator|*
 name|line
 operator|=
@@ -1354,8 +1394,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|rcsbin_update_env
-decl_stmt|,
 name|tmpdir_update_env
 decl_stmt|,
 name|cvs_update_env
@@ -1372,11 +1410,6 @@ literal|0
 decl_stmt|;
 name|int
 name|free_Tmpdir
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|free_Rcsbin
 init|=
 literal|0
 decl_stmt|;
@@ -1431,6 +1464,16 @@ block|,
 name|NULL
 block|,
 literal|2
+block|}
+block|,
+block|{
+literal|"help-options"
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|4
 block|}
 block|,
 block|{
@@ -1527,36 +1570,6 @@ name|cvs_update_env
 operator|=
 literal|0
 expr_stmt|;
-name|rcsbin_update_env
-operator|=
-operator|*
-name|Rcsbin
-expr_stmt|;
-comment|/* RCSBIN_DFLT must be set */
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|getenv
-argument_list|(
-name|RCSBIN_ENV
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|Rcsbin
-operator|=
-name|cp
-expr_stmt|;
-name|rcsbin_update_env
-operator|=
-literal|0
-expr_stmt|;
-comment|/* it's already there */
-block|}
 name|tmpdir_update_env
 operator|=
 operator|*
@@ -1675,7 +1688,7 @@ name|NULL
 condition|)
 name|cvswrite
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 comment|/* Set this to 0 to force getopt initialization.  getopt() sets        this to 1 internally.  */
 name|optind
@@ -1717,7 +1730,7 @@ literal|'f'
 condition|)
 name|use_cvsrc
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 block|}
 comment|/*      * Scan cvsrc file for global options.      */
@@ -1755,7 +1768,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+Qqrwtnlvb:T:e:d:Hfz:s:x"
+literal|"+Qqrwtnlvb:T:e:d:Hfz:s:xa"
 argument_list|,
 name|long_options
 argument_list|,
@@ -1794,6 +1807,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|4
+case|:
+comment|/* --help-options */
+name|usage
+argument_list|(
+name|opt_usage
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|3
 case|:
 comment|/* --allow-root */
@@ -1808,7 +1831,7 @@ literal|'Q'
 case|:
 name|really_quiet
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 comment|/* FALL THROUGH */
 case|case
@@ -1816,7 +1839,7 @@ literal|'q'
 case|:
 name|quiet
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1824,7 +1847,7 @@ literal|'r'
 case|:
 name|cvswrite
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1832,7 +1855,7 @@ literal|'w'
 case|:
 name|cvswrite
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1840,7 +1863,7 @@ literal|'t'
 case|:
 name|trace
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1848,7 +1871,7 @@ literal|'n'
 case|:
 name|noexec
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 case|case
 literal|'l'
@@ -1856,12 +1879,13 @@ case|:
 comment|/* Fall through */
 name|logoff
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'v'
 case|:
+comment|/* Having the year here is a good idea, so people have 		   some idea of how long ago their version of CVS was 		   released.  */
 operator|(
 name|void
 operator|)
@@ -1897,37 +1921,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"Copyright (c) 1993-1994 Brian Berliner\n"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"Copyright (c) 1993-1994 david d `zoo' zuhn\n"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"Copyright (c) 1992, Brian Berliner and Jeff Polk\n"
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-literal|"Copyright (c) 1989-1992, Brian Berliner\n"
+literal|"\ Copyright (c) 1989-1997 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
 argument_list|,
 name|stdout
 argument_list|)
@@ -1962,6 +1956,26 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"\n"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fputs
+argument_list|(
+literal|"Specify the --help option for further information about CVS\n"
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -1971,22 +1985,7 @@ break|break;
 case|case
 literal|'b'
 case|:
-name|Rcsbin
-operator|=
-name|xstrdup
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-name|free_Rcsbin
-operator|=
-literal|1
-expr_stmt|;
-name|rcsbin_update_env
-operator|=
-literal|1
-expr_stmt|;
-comment|/* need to update environment */
+comment|/* This option used to specify the directory for RCS 		   executables.  But since we don't run them any more, 		   this is a noop.  Silently ignore it so that .cvsrc 		   and scripts and inetd.conf and such can work with 		   either new or old CVS.  */
 break|break;
 case|case
 literal|'T'
@@ -2056,7 +2055,7 @@ literal|'f'
 case|:
 name|use_cvsrc
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 comment|/* unnecessary, since we've done it above */
 break|break;
@@ -2119,6 +2118,20 @@ endif|#
 directive|endif
 comment|/* CLIENT_SUPPORT */
 comment|/* If no CLIENT_SUPPORT, ignore -x, so that users can                    have it in their .cvsrc and not cause any trouble.                    If no ENCRYPTION, we still accept -x, but issue an                    error if we are being run as a client.  */
+break|break;
+case|case
+literal|'a'
+case|:
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+name|cvsauthenticate
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* If no CLIENT_SUPPORT, ignore -a, so that users can                    have it in their .cvsrc and not cause any trouble.                    We will issue an error later if stream                    authentication is not supported.  */
 break|break;
 case|case
 literal|'?'
@@ -2241,6 +2254,7 @@ operator|->
 name|fullname
 expr_stmt|;
 comment|/* Global pointer for later use */
+comment|/* This should probably remain a warning, rather than an error,        for quite a while.  For one thing the version of VC distributed        with GNU emacs 19.34 invokes 'cvs rlog' instead of 'cvs log'.  */
 if|if
 condition|(
 name|strcmp
@@ -2377,10 +2391,17 @@ directive|endif
 comment|/* HAVE_KERBEROS */
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|AUTH_SERVER_SUPPORT
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_GSSAPI
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -2411,21 +2432,26 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* AUTH_SERVER_SUPPORT&& SERVER_SUPPORT */
-comment|/* Fiddling with CVSROOT doesn't make sense if we're running            in server mode, since the client will send the repository            directory after the connection is made. */
+comment|/* (AUTH_SERVER_SUPPORT || HAVE_GSSAPI)&& SERVER_SUPPORT */
 ifdef|#
 directive|ifdef
 name|SERVER_SUPPORT
-if|if
-condition|(
+name|server_active
+operator|=
 name|strcmp
 argument_list|(
 name|command_name
 argument_list|,
 literal|"server"
 argument_list|)
-operator|!=
+operator|==
 literal|0
+expr_stmt|;
+comment|/* Fiddling with CVSROOT doesn't make sense if we're running            in server mode, since the client will send the repository            directory after the connection is made. */
+if|if
+condition|(
+operator|!
+name|server_active
 condition|)
 endif|#
 directive|endif
@@ -2856,14 +2882,7 @@ directive|ifdef
 name|SERVER_SUPPORT
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|command_name
-argument_list|,
-literal|"server"
-argument_list|)
-operator|==
-literal|0
+name|server_active
 condition|)
 name|CurDir
 operator|=
@@ -2917,59 +2936,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_PUTENV
-comment|/* Now, see if we should update the environment with the            Rcsbin value */
-if|if
-condition|(
-name|rcsbin_update_env
-condition|)
-block|{
-name|char
-modifier|*
-name|env
-decl_stmt|;
-name|env
-operator|=
-name|xmalloc
-argument_list|(
-name|strlen
-argument_list|(
-name|RCSBIN_ENV
-argument_list|)
-operator|+
-name|strlen
-argument_list|(
-name|Rcsbin
-argument_list|)
-operator|+
-literal|1
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|env
-argument_list|,
-literal|"%s=%s"
-argument_list|,
-name|RCSBIN_ENV
-argument_list|,
-name|Rcsbin
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|putenv
-argument_list|(
-name|env
-argument_list|)
-expr_stmt|;
-comment|/* do not free env, as putenv has control of it */
-block|}
 if|if
 condition|(
 name|tmpdir_update_env
@@ -3024,73 +2990,6 @@ comment|/* do not free env, as putenv has control of it */
 block|}
 endif|#
 directive|endif
-comment|/* 	 * If Rcsbin is set to something, make sure it is terminated with 	 * a slash character.  If not, add one. 	 */
-if|if
-condition|(
-operator|*
-name|Rcsbin
-condition|)
-block|{
-name|int
-name|len
-init|=
-name|strlen
-argument_list|(
-name|Rcsbin
-argument_list|)
-decl_stmt|;
-name|char
-modifier|*
-name|rcsbin
-decl_stmt|;
-if|if
-condition|(
-name|Rcsbin
-index|[
-name|len
-operator|-
-literal|1
-index|]
-operator|!=
-literal|'/'
-condition|)
-block|{
-name|rcsbin
-operator|=
-name|Rcsbin
-expr_stmt|;
-name|Rcsbin
-operator|=
-name|xmalloc
-argument_list|(
-name|len
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* one for '/', one for NULL */
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|Rcsbin
-argument_list|,
-name|rcsbin
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|Rcsbin
-argument_list|,
-literal|"/"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 ifndef|#
 directive|ifndef
 name|DONT_USE_SIGNALS
@@ -3291,6 +3190,35 @@ argument_list|,
 name|command_name
 argument_list|)
 expr_stmt|;
+comment|/* Parse the CVSROOT/config file, but only for local.  For the 	   server, we parse it after we know $CVSROOT.  For the 	   client, it doesn't get parsed at all, obviously.  The 	   presence of the parse_config call here is not mean to 	   predetermine whether CVSROOT/config overrides things from 	   read_cvsrc and other such places or vice versa.  That sort 	   of thing probably needs more thought.  */
+if|if
+condition|(
+literal|1
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+operator|&&
+operator|!
+name|server_active
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+operator|&&
+operator|!
+name|client_active
+endif|#
+directive|endif
+condition|)
+block|{
+comment|/* If there was an error parsing the config file, parse_config 	       already printed an error.  We keep going.  Why?  Because 	       if we didn't, then there would be no way to check in a new 	       CVSROOT/config file to fix the broken one!  */
+name|parse_config
+argument_list|(
+name|CVSroot_directory
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* end of stuff that gets done if the user DOESN'T ask for help */
 name|err
@@ -3314,7 +3242,7 @@ condition|(
 name|need_to_create_root
 condition|)
 block|{
-comment|/* Update the CVS/Root file.  We might want to do this in 	   all directories that we recurse into, but currently we 	   don't.  */
+comment|/* Update the CVS/Root file.  We might want to do this in 	   all directories that we recurse into, but currently we 	   don't.  Note that if there is an error writing the file, 	   we give an error/warning.  This is so if users try to rewrite 	   CVS/Root with the -d option (a documented feature), they will 	   either succeed, or be told why it didn't work.  */
 name|Create_Root
 argument_list|(
 name|NULL
@@ -3358,15 +3286,6 @@ argument_list|(
 name|Tmpdir
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|free_Rcsbin
-condition|)
-name|free
-argument_list|(
-name|Rcsbin
-argument_list|)
-expr_stmt|;
 name|root_allow_free
 argument_list|()
 expr_stmt|;
@@ -3389,6 +3308,10 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Keep picky/stupid compilers (e.g. Visual C++ 5.0) happy.  */
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -3457,9 +3380,6 @@ argument_list|,
 name|rawdate
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_RCS5
 name|ftm
 operator|=
 name|gmtime
@@ -3468,8 +3388,13 @@ operator|&
 name|unixtime
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+if|if
+condition|(
+name|ftm
+operator|==
+name|NULL
+condition|)
+comment|/* This is a system, like VMS, where the system clock is in local 	   time.  Hopefully using localtime here matches the "zero timezone" 	   hack I added to get_date.  */
 name|ftm
 operator|=
 name|localtime
@@ -3478,8 +3403,6 @@ operator|&
 name|unixtime
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)

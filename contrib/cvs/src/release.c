@@ -44,6 +44,8 @@ literal|"Usage: %s %s [-d] directories...\n"
 block|,
 literal|"\t-d\tDelete the given directory.\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -148,7 +150,7 @@ comment|/* SERVER_SUPPORT */
 end_comment
 
 begin_comment
-comment|/* There are various things to improve about this implementation:     1.  Using run_popen to run "cvs update" could be replaced by a    fairly simple start_recursion/classify_file loop--a win for    portability, performance, and cleanliness.  In particular, there is    no particularly good way to find the right "cvs".     2.  The fact that "cvs update" contacts the server slows things down;    it undermines the case for using "cvs release" rather than "rm -rf".    However, for correctly printing "? foo" and correctly handling    CVSROOTADM_IGNORE, we currently need to contact the server.     3.  Would be nice to take processing things on the client side one step    further, and making it like edit/unedit in terms of working well if    disconnected from the network, and then sending a delayed    notification.     4.  Having separate network turnarounds for the "Notify" request    which we do as part of unedit, and for the "release" itself, is slow    and unnecessary.  */
+comment|/* There are various things to improve about this implementation:     1.  Using run_popen to run "cvs update" could be replaced by a    fairly simple start_recursion/classify_file loop--a win for    portability, performance, and cleanliness.  In particular, there is    no particularly good way to find the right "cvs".     2.  The fact that "cvs update" contacts the server slows things down;    it undermines the case for using "cvs release" rather than "rm -rf".    However, for correctly printing "? foo" and correctly handling    CVSROOTADM_IGNORE, we currently need to contact the server.  (One    idea for how to fix this is to stash a copy of CVSROOTADM_IGNORE in    the working directories; see comment at base_* in entries.c for a    few thoughts on that).     3.  Would be nice to take processing things on the client side one step    further, and making it like edit/unedit in terms of working well if    disconnected from the network, and then sending a delayed    notification.     4.  Having separate network turnarounds for the "Notify" request    which we do as part of unedit, and for the "release" itself, is slow    and unnecessary.  */
 end_comment
 
 begin_function
@@ -497,6 +499,9 @@ operator|!
 name|really_quiet
 condition|)
 block|{
+name|int
+name|line_length
+decl_stmt|;
 comment|/* The "release" command piggybacks on "update", which 	       does the real work of finding out if anything is not 	       up-to-date with the repository.  Then "release" prompts 	       the user, telling her how many files have been 	       modified, and asking if she still wants to do the 	       release.  */
 name|fp
 operator|=
@@ -507,12 +512,32 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"cannot run command %s"
+argument_list|,
+name|update_cmd
+argument_list|)
+expr_stmt|;
 name|c
 operator|=
 literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|line_length
+operator|=
 name|getline
 argument_list|(
 operator|&
@@ -523,6 +548,7 @@ name|line_allocated
 argument_list|,
 name|fp
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -549,6 +575,27 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|line_length
+operator|<
+literal|0
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read from subprocess"
+argument_list|)
+expr_stmt|;
 comment|/* If the update exited with an error, then we just want to 	       complain and go on to the next arg.  Especially, we do 	       not want to delete the local copy, since it's obviously 	       not what the user thinks it is.  */
 if|if
 condition|(
@@ -895,6 +942,10 @@ operator|.
 name|st_ino
 condition|)
 block|{
+comment|/* This test does not work on cygwin32, because under cygwin32 	   the st_ino field is not the same when you refer to a file 	   by a different name.  This is a cygwin32 bug, but then I 	   don't see what the point of this test is anyhow.  */
+ifndef|#
+directive|ifndef
+name|__CYGWIN32__
 name|error
 argument_list|(
 literal|0
@@ -907,6 +958,8 @@ name|dir
 argument_list|)
 expr_stmt|;
 return|return;
+endif|#
+directive|endif
 block|}
 comment|/*      * XXX - shouldn't this just delete the CVS-controlled files and, perhaps,      * the files that would normally be ignored and leave everything else?      */
 if|if
