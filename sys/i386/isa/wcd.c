@@ -7494,6 +7494,7 @@ condition|)
 return|return
 name|err
 return|;
+comment|/* XXX Poking around in the LKM internals like this is bad. 	 */
 comment|/* Register the cdevsw entry. */
 name|lkmtp
 operator|->
@@ -7502,7 +7503,10 @@ operator|.
 name|lkm_dev
 operator|=
 operator|&
-name|rwcd_module
+name|MOD_PRIVATE
+argument_list|(
+name|rwcd
+argument_list|)
 expr_stmt|;
 name|err
 operator|=
@@ -7528,7 +7532,10 @@ operator|.
 name|lkm_dev
 operator|=
 operator|&
-name|wcd_module
+name|MOD_PRIVATE
+argument_list|(
+name|wcd
+argument_list|)
 expr_stmt|;
 return|return
 name|lkmdispatch

@@ -710,8 +710,10 @@ name|int
 name|ver
 parameter_list|)
 block|{
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+name|pcic
+argument_list|,
 name|lkmtp
 argument_list|,
 name|cmd

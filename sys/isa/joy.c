@@ -1330,6 +1330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|joy_load
 parameter_list|(
@@ -1382,6 +1383,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|joy_unload
 parameter_list|(
@@ -1406,6 +1408,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|joy_stat
 parameter_list|(
@@ -1440,12 +1443,10 @@ name|int
 name|ver
 parameter_list|)
 block|{
-define|#
-directive|define
-name|_module
-value|joy_module
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+name|joy
+argument_list|,
 name|lkmtp
 argument_list|,
 name|cmd

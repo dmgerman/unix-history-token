@@ -16,18 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -35,18 +23,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include
@@ -65,24 +41,6 @@ begin_include
 include|#
 directive|include
 file|<sys/lkm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_comment
@@ -418,8 +376,10 @@ name|int
 name|ver
 decl_stmt|;
 block|{
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+name|misc
+argument_list|,
 name|lkmtp
 argument_list|,
 name|cmd

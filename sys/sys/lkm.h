@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Header file used by loadable kernel modules and loadable kernel module  * utilities.  *  * 23 Jan 93	Terry Lambert		Original  *  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Header file used by loadable kernel modules and loadable kernel module  * utilities.  *  * 23 Jan 93	Terry Lambert		Original  *  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: lkm.h,v 1.15 1997/02/22 09:45:30 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -82,6 +82,7 @@ decl_stmt|;
 name|int
 name|lkm_ver
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lkm_name
@@ -118,6 +119,7 @@ decl_stmt|;
 name|int
 name|lkm_ver
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lkm_name
@@ -170,6 +172,7 @@ decl_stmt|;
 name|int
 name|lkm_ver
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lkm_name
@@ -232,6 +235,7 @@ decl_stmt|;
 name|int
 name|lkm_ver
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lkm_name
@@ -258,6 +262,7 @@ decl_stmt|;
 name|int
 name|lkm_ver
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lkm_name
@@ -293,6 +298,7 @@ decl_stmt|;
 name|int
 name|lkm_ver
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lkm_name
@@ -318,6 +324,7 @@ decl_stmt|;
 name|int
 name|lkm_ver
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|lkm_name
@@ -499,6 +506,31 @@ name|LKM_E_STAT
 value|3
 end_define
 
+begin_comment
+comment|/* Flag to indicate that LKM should select the slot, etc. Supported by:  *  devslot in MOD_DEV  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LKM_ANON
+value|((u_long)-1)
+end_define
+
+begin_comment
+comment|/* XXX wcd.c pokes around in the lkm private structure, so until that  * is fixed here is a way to export the structure name.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOD_PRIVATE
+parameter_list|(
+name|name
+parameter_list|)
+value|name ## _mod_struct
+end_define
+
 begin_define
 define|#
 directive|define
@@ -507,7 +539,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static int name ## _load __P((struct lkm_table *lkmtp, int cmd));   \ 	static int name ## _unload __P((struct lkm_table *lkmtp, int cmd)); \ 	int name ## _mod __P((struct lkm_table *lkmtp, int cmd,	int ver))   \  #define	MOD_SYSCALL(name,callslot,sysentp)	\ 	static struct lkm_syscall _module = {	\ 		LM_SYSCALL,			\ 		LKM_VERSION,			\ 		name,				\ 		callslot,			\ 		sysentp				\ 	}
+value|static int name ## _load __P((struct lkm_table *lkmtp, int cmd));   \ 	static int name ## _unload __P((struct lkm_table *lkmtp, int cmd)); \ 	int name ## _mod __P((struct lkm_table *lkmtp, int cmd,	int ver))   \  #define	MOD_SYSCALL(name,callslot,sysentp)	\ 	static struct lkm_syscall MOD_PRIVATE(name) = {	\ 		LM_SYSCALL,			\ 		LKM_VERSION,			\ 		#name,				\ 		callslot,			\ 		sysentp				\ 	}
 end_define
 
 begin_define
@@ -522,7 +554,7 @@ parameter_list|,
 name|vfsconf
 parameter_list|)
 define|\
-value|static struct lkm_vfs _module = {	\ 		LM_VFS,				\ 		LKM_VERSION,			\ 		name,				\ 		0,				\ 		vnodeops,			\ 		vfsconf				\ 	}
+value|static struct lkm_vfs MOD_PRIVATE(name) = {	\ 		LM_VFS,				\ 		LKM_VERSION,			\ 		#name,				\ 		0,				\ 		vnodeops,			\ 		vfsconf				\ 	}
 end_define
 
 begin_define
@@ -539,7 +571,7 @@ parameter_list|,
 name|devp
 parameter_list|)
 define|\
-value|MOD_DECL(name);				\ 	static struct lkm_dev name ## _module = {	\ 		LM_DEV,				\ 		LKM_VERSION,			\ 		#name ## "_mod",		\ 		devslot,			\ 		devtype,			\ 		(void *)devp			\ 	}
+value|MOD_DECL(name);				\ 	static struct lkm_dev MOD_PRIVATE(name) = {	\ 		LM_DEV,				\ 		LKM_VERSION,			\ 		#name ## "_mod",		\ 		devslot,			\ 		devtype,			\ 		{ (void *)devp }		\ 	}
 end_define
 
 begin_define
@@ -554,7 +586,7 @@ parameter_list|,
 name|execsw
 parameter_list|)
 define|\
-value|MOD_DECL(name);				\ 	static struct lkm_exec _module = {	\ 		LM_EXEC,			\ 		LKM_VERSION,			\ 		#name ## "_mod",		\ 		execslot,			\ 		execsw				\ 	}
+value|MOD_DECL(name);				\ 	static struct lkm_exec MOD_PRIVATE(name) = {	\ 		LM_EXEC,			\ 		LKM_VERSION,			\ 		#name ## "_mod",		\ 		execslot,			\ 		execsw				\ 	}
 end_define
 
 begin_define
@@ -565,18 +597,20 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|MOD_DECL(name);				\ 	static struct lkm_misc _module = {	\ 		LM_MISC,			\ 		LKM_VERSION,			\ 		#name ## "_mod"			\ 	}
+value|MOD_DECL(name);				\ 	static struct lkm_misc MOD_PRIVATE(name) = {	\ 		LM_MISC,			\ 		LKM_VERSION,			\ 		#name ## "_mod"			\ 	}
 end_define
 
 begin_comment
-comment|/*  * DISPATCH -- body function for use in module entry point function;  * generally, the function body will consist entirely of a single  * DISPATCH line.  *  * Call load/unload/stat on each corresponding entry instance.  "cmd" is  * passed to each function so that a single function can be used if desired.  */
+comment|/*  * MOD_DISPATCH -- body function for use in module entry point function;  * generally, the function body will consist entirely of a single  * MOD_DISPATCH line.  *  * Call load/unload/stat on each corresponding entry instance.  "cmd" is  * passed to each function so that a single function can be used if desired.  *  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DISPATCH
+name|MOD_DISPATCH
 parameter_list|(
+name|name
+parameter_list|,
 name|lkmtp
 parameter_list|,
 name|cmd
@@ -592,9 +626,36 @@ parameter_list|)
 define|\
 value|if (ver != LKM_VERSION)						\ 		return EINVAL;
 comment|/* version mismatch */
-value|\ 	switch (cmd) {							\ 	int	error;							\ 	case LKM_E_LOAD:						\ 		lkmtp->private.lkm_any = (struct lkm_any *)&_module;	\ 		if (lkmexists(lkmtp))
+value|\ 	switch (cmd) {							\ 	int	error;							\ 	case LKM_E_LOAD:						\ 		lkmtp->private.lkm_any =				\ 			(struct lkm_any *)& MOD_PRIVATE(name) ;		\ 		if (lkmexists(lkmtp))
 comment|/* !!! */
 value|\ 			return EEXIST;					\ 		if ((error = load(lkmtp, cmd)))				\ 			return error;					\ 		break;							\ 	case LKM_E_UNLOAD:						\ 		if ((error = unload(lkmtp, cmd)))			\ 			return error;					\ 		break;							\ 	case LKM_E_STAT:						\ 		if ((error = stat(lkmtp, cmd)))				\ 			return error;					\ 		break;							\ 	}								\ 	return lkmdispatch(lkmtp, cmd);
+end_define
+
+begin_comment
+comment|/* Provide a backward compatible stub that will generate compile time errors.  * When fixing, prefer MOD_DISPATCH to be consistent with the others.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DISPATCH
+parameter_list|(
+name|name
+parameter_list|,
+name|lkmtp
+parameter_list|,
+name|cmd
+parameter_list|,
+name|ver
+parameter_list|,
+name|load
+parameter_list|,
+name|unload
+parameter_list|,
+name|stat
+parameter_list|)
+define|\
+value|MOD_DISPATCH(name,lkmtp,cmd,ver,load,unload,stat)
 end_define
 
 begin_decl_stmt
@@ -741,6 +802,7 @@ name|u_long
 name|size
 decl_stmt|;
 comment|/* IN: size of module to reserve */
+specifier|const
 name|char
 modifier|*
 name|name
@@ -815,6 +877,7 @@ name|int
 name|id
 decl_stmt|;
 comment|/* IN: module ID to unload */
+specifier|const
 name|char
 modifier|*
 name|name

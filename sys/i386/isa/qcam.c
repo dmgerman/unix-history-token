@@ -1299,12 +1299,10 @@ name|int
 name|ver
 parameter_list|)
 block|{
-define|#
-directive|define
-name|_module
-value|qcam_module
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+name|qcam
+argument_list|,
 name|lkmtp
 argument_list|,
 name|cmd
