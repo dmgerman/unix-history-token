@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtpr.h	4.4	81/02/21	*/
+comment|/*	mtpr.h	4.5	81/02/25	*/
 end_comment
 
 begin_comment
@@ -340,9 +340,7 @@ end_comment
 begin_if
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 end_if
 
 begin_define
@@ -485,9 +483,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX
-operator|==
-literal|750
+name|VAX750
 end_if
 
 begin_define

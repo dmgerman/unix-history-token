@@ -1,14 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.h	4.3	81/02/19	*/
+comment|/*	flp.h	4.4	81/02/25	*/
 end_comment
 
 begin_if
 if|#
 directive|if
-name|VAX
-operator|==
-literal|780
+name|VAX780
 end_if
 
 begin_comment
