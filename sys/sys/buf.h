@@ -1552,16 +1552,6 @@ define|\
 value|(bp)->b_op->bop_write(bp)
 end_define
 
-begin_define
-define|#
-directive|define
-name|BUF_STRATEGY
-parameter_list|(
-name|bp
-parameter_list|)
-value|VOP_STRATEGY((bp)->b_vp, (bp))
-end_define
-
 begin_function
 specifier|static
 name|__inline

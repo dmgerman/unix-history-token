@@ -3919,8 +3919,12 @@ operator|+=
 name|pcount
 expr_stmt|;
 comment|/* Do the input. */
-name|BUF_STRATEGY
+name|VOP_STRATEGY
 argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
