@@ -203,11 +203,13 @@ specifier|static
 struct|struct
 name|djswitch
 block|{
+specifier|const
 name|char
 modifier|*
 name|cc
 decl_stmt|;
 comment|/* Country code according to ISO 3166 */
+specifier|const
 name|char
 modifier|*
 name|nm
@@ -1185,6 +1187,7 @@ modifier|*
 name|cp
 decl_stmt|;
 comment|/* character pointer */
+specifier|const
 name|char
 modifier|*
 name|locale
