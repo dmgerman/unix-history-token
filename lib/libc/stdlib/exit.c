@@ -66,6 +66,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * This variable is zero until a process has created a thread.  * It is used to avoid calling locking functions in libc when they  * are not required. By default, libc is intended to be(come)  * thread-safe, but without a (significant) penalty to non-threaded  * processes.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__isthreaded
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Exit, flushing stdio buffers if necessary.  */
 end_comment
 
