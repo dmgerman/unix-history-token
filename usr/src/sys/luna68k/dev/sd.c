@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1280,6 +1280,38 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/*  * Close  */
+end_comment
+
+begin_function
+name|int
+name|sdclose
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|,
+name|mode
+parameter_list|,
+name|p
+parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
+name|int
+name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+block|{ }
 end_function
 
 begin_comment
