@@ -403,6 +403,17 @@ end_function
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
+operator|*
+name|dst
+operator|=
+operator|*
+name|src
+expr_stmt|;
+else|#
+directive|else
 specifier|volatile
 name|u_int16_t
 modifier|*
@@ -447,6 +458,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -4731,7 +4744,7 @@ name|ether_header
 modifier|*
 name|eh
 decl_stmt|;
-name|u_int16_t
+name|int
 name|total_len
 decl_stmt|;
 name|total_len
