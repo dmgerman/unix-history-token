@@ -116,6 +116,11 @@ decl_stmt|;
 comment|/* ipfw divert cookie */
 endif|#
 directive|endif
+name|struct
+name|label
+name|ipq_label
+decl_stmt|;
+comment|/* MAC label */
 block|}
 struct|;
 end_struct
