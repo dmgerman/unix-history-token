@@ -4862,7 +4862,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s:cannot found node\n"
+literal|"%s:cannot find node\n"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
