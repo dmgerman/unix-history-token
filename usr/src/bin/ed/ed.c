@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.4 (Berkeley) %G%"
+literal|"@(#)ed.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,12 @@ end_endif
 begin_comment
 comment|/*  * Editor  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CRYPT
+end_define
 
 begin_include
 include|#
@@ -95,13 +101,6 @@ define|#
 directive|define
 name|EOF
 value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSIZE
-value|9
 end_define
 
 begin_define
@@ -390,6 +389,23 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRYPT
+end_ifdef
+
+begin_comment
+comment|/*  * Various flags and buffers needed by the encryption routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KSIZE
+value|9
+end_define
+
 begin_decl_stmt
 name|int
 name|xflag
@@ -445,6 +461,12 @@ literal|768
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|CRYPT
+end_endif
 
 begin_decl_stmt
 name|int
@@ -837,6 +859,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|CRYPT
 case|case
 literal|'x'
 case|:
@@ -845,6 +870,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+endif|CRYPT
 block|}
 name|argv
 operator|++
@@ -853,6 +881,9 @@ name|argc
 operator|--
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xflag
@@ -871,6 +902,9 @@ name|perm
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|CRYPT
 if|if
 condition|(
 name|argc
@@ -1678,6 +1712,9 @@ operator|=
 literal|0
 expr_stmt|;
 continue|continue;
+ifdef|#
+directive|ifdef
+name|CRYPT
 case|case
 literal|'x'
 case|:
@@ -1709,6 +1746,9 @@ name|perm
 argument_list|)
 expr_stmt|;
 continue|continue;
+endif|#
+directive|endif
+endif|CRYPT
 case|case
 literal|'='
 case|:
@@ -3083,6 +3123,9 @@ operator|&
 literal|0200
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|kflag
@@ -3100,6 +3143,9 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|CRYPT
 break|break;
 block|}
 block|}
@@ -3248,6 +3294,9 @@ name|fp
 operator|-
 name|genbuf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|kflag
@@ -3265,6 +3314,9 @@ operator|-
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|CRYPT
 if|if
 condition|(
 name|write
@@ -3342,6 +3394,9 @@ name|fp
 operator|-
 name|genbuf
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|kflag
@@ -3359,6 +3414,9 @@ operator|-
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|CRYPT
 if|if
 condition|(
 name|write
@@ -4333,6 +4391,9 @@ condition|(
 name|ichanged
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -4351,6 +4412,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|CRYPT
 name|blkio
 argument_list|(
 name|iblock
@@ -4378,6 +4442,9 @@ argument_list|,
 name|read
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -4396,6 +4463,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|CRYPT
 return|return
 operator|(
 name|ibuff
@@ -4414,6 +4484,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xtflag
@@ -4469,6 +4542,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
+endif|CRYPT
 name|blkio
 argument_list|(
 name|oblock
@@ -4647,6 +4723,9 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRYPT
 if|if
 condition|(
 name|xflag
@@ -4664,6 +4743,9 @@ name|tperm
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|CRYPT
 name|dot
 operator|=
 name|dol
@@ -7791,6 +7873,16 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRYPT
+end_ifdef
+
+begin_comment
+comment|/*  * Begin routines for doing encryption.  */
+end_comment
+
 begin_macro
 name|crblock
 argument_list|(
@@ -8737,6 +8829,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|CRYPT
+end_endif
 
 end_unit
 
