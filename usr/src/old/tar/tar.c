@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.17 (Berkeley) %G%"
+literal|"@(#)tar.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,20 @@ define|#
 directive|define
 name|NAMSIZ
 value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGV
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PUTFILE
+value|1
 end_define
 
 begin_define
@@ -405,6 +419,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|hflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Hflag
 decl_stmt|;
 end_decl_stmt
 
@@ -653,6 +673,13 @@ operator|*
 name|cp
 condition|)
 block|{
+case|case
+literal|'H'
+case|:
+name|Hflag
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'f'
 case|:
@@ -1629,6 +1656,8 @@ argument_list|,
 name|cp2
 argument_list|,
 name|parent
+argument_list|,
+name|ARGV
 argument_list|)
 expr_stmt|;
 if|if
@@ -2090,6 +2119,8 @@ argument_list|,
 argument|shortname
 argument_list|,
 argument|parent
+argument_list|,
+argument|source
 argument_list|)
 end_macro
 
@@ -2172,12 +2203,19 @@ decl_stmt|;
 comment|/* amount to write to get "in sync" */
 if|if
 condition|(
-operator|!
 name|hflag
+operator|||
+operator|(
+name|Hflag
+operator|&&
+name|source
+operator|==
+name|ARGV
+operator|)
 condition|)
 name|i
 operator|=
-name|lstat
+name|stat
 argument_list|(
 name|shortname
 argument_list|,
@@ -2188,7 +2226,7 @@ expr_stmt|;
 else|else
 name|i
 operator|=
-name|stat
+name|lstat
 argument_list|(
 name|shortname
 argument_list|,
@@ -2549,6 +2587,8 @@ argument_list|,
 name|cp
 argument_list|,
 name|newparent
+argument_list|,
+name|PUTFILE
 argument_list|)
 expr_stmt|;
 name|dirp

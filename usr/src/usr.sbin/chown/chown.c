@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.19 (Berkeley) %G%"
+literal|"@(#)chown.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +191,11 @@ decl_stmt|;
 name|int
 name|fts_options
 decl_stmt|;
+name|int
+name|hflag
+decl_stmt|,
+name|Hflag
+decl_stmt|;
 name|myname
 operator|=
 operator|(
@@ -220,6 +225,12 @@ literal|2
 index|]
 operator|==
 literal|'o'
+expr_stmt|;
+name|hflag
+operator|=
+name|Hflag
+operator|=
+literal|0
 expr_stmt|;
 name|fts_options
 operator|=
@@ -271,6 +282,10 @@ break|break;
 case|case
 literal|'h'
 case|:
+name|hflag
+operator|=
+literal|1
+expr_stmt|;
 name|fts_options
 operator|&=
 operator|~
@@ -284,6 +299,10 @@ break|break;
 case|case
 literal|'H'
 case|:
+name|Hflag
+operator|=
+literal|1
+expr_stmt|;
 name|fts_options
 operator||=
 name|FTS_COMFOLLOW
@@ -472,6 +491,30 @@ name|FTS_SKIP
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|fts_info
+operator|==
+name|FTS_SL
+operator|&&
+operator|!
+operator|(
+name|hflag
+operator|||
+operator|(
+name|Hflag
+operator|&&
+name|p
+operator|->
+name|fts_level
+operator|==
+name|FTS_ROOTLEVEL
+operator|)
+operator|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|p
@@ -966,7 +1009,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-Rf] %s file ...\n"
+literal|"usage: %s [-HRfh] %s file ...\n"
 argument_list|,
 name|myname
 argument_list|,
