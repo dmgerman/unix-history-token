@@ -275,7 +275,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|u_int
+name|uintptr_t
 operator|)
 name|paddr
 operator|&
