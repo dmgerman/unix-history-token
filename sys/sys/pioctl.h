@@ -198,6 +198,17 @@ begin_comment
 comment|/* stop on exit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|S_ALLSTOPS
+value|0x003f
+end_define
+
+begin_comment
+comment|/* stop on all events */
+end_comment
+
 begin_comment
 comment|/*  * If PF_LINGER is set in procp->p_pfsflags, then the last close  * of a /proc/<pid>/mem file will nto clear out the stops and continue  * the process.  */
 end_comment
