@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.25 1997/04/26 11:45:33 peter Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.26 1997/05/04 14:25:00 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -133,15 +133,11 @@ name|I686_CPU
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SMP
-argument_list|)
-end_if
+end_ifndef
 
 begin_decl_stmt
 specifier|extern
@@ -157,13 +153,6 @@ name|i586_ctr_comultiplier
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|i586_ctr_multiplier
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -175,6 +164,24 @@ name|u_int
 name|i586_ctr_freq
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|i586_ctr_multiplier
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
