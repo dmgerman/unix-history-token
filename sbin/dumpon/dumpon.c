@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "From: @(#)swapon.c	8.1 (Berkeley) 6/5/93";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "From: @(#)swapon.c	8.1 (Berkeley) 6/5/93";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -45,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dumpon.c,v 1.4 1997/02/22 14:32:22 peter Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,19 +70,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -112,12 +115,6 @@ directive|include
 file|<sysexits.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
 begin_decl_stmt
 name|void
 name|usage
@@ -128,14 +125,6 @@ name|void
 operator|)
 argument_list|)
 name|__dead2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|whoami
 decl_stmt|;
 end_decl_stmt
 
@@ -152,15 +141,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
@@ -183,13 +163,6 @@ operator|=
 name|rv
 operator|=
 literal|0
-expr_stmt|;
-name|whoami
-operator|=
-name|argv
-index|[
-literal|0
-index|]
 expr_stmt|;
 while|while
 condition|(
@@ -405,9 +378,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: crash dumps disabled\n"
-argument_list|,
-name|whoami
+literal|"dumpon: crash dumps disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -415,9 +386,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s: crash dumps to %s (%lu, %lu)\n"
-argument_list|,
-name|whoami
+literal|"dumpon: crash dumps to %s (%lu, %lu)\n"
 argument_list|,
 name|argv
 index|[
@@ -464,12 +433,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-v] special_file\n"
-literal|"       %s [-v] off\n"
-argument_list|,
-name|whoami
-argument_list|,
-name|whoami
+literal|"usage: dumpon [-v] special_file\n"
+literal|"       dumpon [-v] off\n"
 argument_list|)
 expr_stmt|;
 name|exit
