@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.117 (Berkeley) %G%"
+literal|"@(#)conf.c	8.118 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1246,6 +1246,26 @@ name|void
 name|inithostmaps
 parameter_list|()
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|int
+name|nmaps
+decl_stmt|;
+name|char
+modifier|*
+name|maptype
+index|[
+name|MAXMAPSTACK
+index|]
+decl_stmt|;
+name|short
+name|mapreturn
+index|[
+name|MAXMAPACTIONS
+index|]
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -1300,8 +1320,45 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	**  Set up default aliases maps 	*/
+name|nmaps
+operator|=
+name|switch_map_find
+argument_list|(
+literal|"aliases"
+argument_list|,
+name|maptype
+argument_list|,
+name|mapreturn
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nmaps
+condition|;
+name|i
+operator|++
+control|)
+block|{
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|maptype
+index|[
+name|i
+index|]
+argument_list|,
+literal|"files"
+argument_list|)
+operator|==
+literal|0
+operator|&&
 name|stab
 argument_list|(
 literal|"aliases.files"
@@ -1330,8 +1387,21 @@ block|}
 ifdef|#
 directive|ifdef
 name|NISPLUS
+elseif|else
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|maptype
+index|[
+name|i
+index|]
+argument_list|,
+literal|"nisplus"
+argument_list|)
+operator|==
+literal|0
+operator|&&
 name|stab
 argument_list|(
 literal|"aliases.nisplus"
@@ -1362,8 +1432,21 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|NIS
+elseif|else
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|maptype
+index|[
+name|i
+index|]
+argument_list|,
+literal|"nis"
+argument_list|)
+operator|==
+literal|0
+operator|&&
 name|stab
 argument_list|(
 literal|"aliases.nis"
@@ -1391,6 +1474,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+block|}
 if|if
 condition|(
 name|stab
@@ -1435,20 +1519,20 @@ directive|if
 literal|0
 comment|/* "user" map class is a better choice */
 comment|/* 	**  Set up default users maps. 	*/
-block|if (stab("users.files", ST_MAP, ST_FIND) == NULL) 	{ 		strcpy(buf, "users.files text -m -z: -k0 -v6 /etc/passwd"); 		makemapentry(buf); 	}
+block|nmaps = switch_map_find("passwd", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("users.files", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.files text -m -z: -k0 -v6 /etc/passwd"); 			makemapentry(buf); 		}
 ifdef|#
 directive|ifdef
 name|NISPLUS
-block|if (stab("users.nisplus", ST_MAP, ST_FIND) == NULL) 	{ 		strcpy(buf, "users.nisplus nisplus -m -kname -vhome -d passwd.org_dir"); 		makemapentry(buf); 	}
+block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("users.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.nisplus nisplus -m -kname -vhome -d passwd.org_dir"); 			makemapentry(buf); 		}
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|NIS
-block|if (stab("users.nis", ST_MAP, ST_FIND) == NULL) 	{ 		strcpy(buf, "users.nis nis -m -d passwd.byname"); 		makemapentry(buf); 	}
+block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("users.nis", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.nis nis -m -d passwd.byname"); 			makemapentry(buf); 		}
 endif|#
 directive|endif
-block|if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		strcpy(buf, "users switch -m passwd"); 		makemapentry(buf); 	}
+block|} 	if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		strcpy(buf, "users switch -m passwd"); 		makemapentry(buf); 	}
 endif|#
 directive|endif
 block|}
