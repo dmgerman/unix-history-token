@@ -1301,7 +1301,7 @@ break|break;
 case|case
 name|T_DATA_ERROR
 case|:
-comment|/* 			 * handle PCI poke/peek as per UltraSPARC IIi 			 * User's Manual 16.2.1. 			 * 			 * XXX - We really should make sure that tpc is 			 * pointing to the membar #Sync we are expecting. 			 */
+comment|/* 			 * handle PCI poke/peek as per UltraSPARC IIi 			 * User's Manual 16.2.1. 			 */
 define|#
 directive|define
 name|MEMBARSYNC_INST
