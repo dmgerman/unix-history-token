@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.2 (Berkeley) %G%"
+literal|"@(#)stty.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1592,13 +1592,13 @@ operator|->
 name|cp
 operator|=
 operator|(
-operator|*
 operator|(
+operator|*
 name|argv
+operator|)
 index|[
 literal|1
 index|]
-operator|)
 operator|==
 literal|'?'
 operator|)
