@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*		lpf.c	4.7	83/03/07  * 	filter which reads the output of nroff and converts lines  *	with ^H's to overwritten lines.  Thus this works like 'ul'  *	but is much better: it can handle more than 2 overwrites  *	and it is written with some style.  *	modified by kls to use register references instead of arrays  *	to try to gain a little speed.  */
+comment|/*		lpf.c	4.8	83/03/17  * 	filter which reads the output of nroff and converts lines  *	with ^H's to overwritten lines.  Thus this works like 'ul'  *	but is much better: it can handle more than 2 overwrites  *	and it is written with some style.  *	modified by kls to use register references instead of arrays  *	to try to gain a little speed.  */
 end_comment
 
 begin_include
@@ -136,6 +136,28 @@ begin_comment
 comment|/* accounting information file */
 end_comment
 
+begin_macro
+name|onintr
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_function
 name|main
 parameter_list|(
@@ -188,6 +210,34 @@ decl_stmt|,
 modifier|*
 name|limit
 decl_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|onintr
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|--
