@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_jnf.c,v 1.2 1994/08/18 23:05:39 jtc Exp $"
+literal|"$Id: e_jnf.c,v 1.1.1.1 1994/08/19 09:39:55 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -912,7 +912,7 @@ operator|&
 literal|1
 operator|)
 operator|<<
-literal|2
+literal|1
 operator|)
 expr_stmt|;
 block|}
