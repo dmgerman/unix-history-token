@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arp.c	5.7 (Berkeley) %G%"
+literal|"@(#)arp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,27 +757,35 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|hp
 operator|=
 name|gethostbyname
 argument_list|(
 name|host
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|==
-name|NULL
+operator|)
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arp: %s: unknown host\n"
+literal|"arp: %s: "
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1103,27 +1111,35 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|hp
 operator|=
 name|gethostbyname
 argument_list|(
 name|host
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|==
-name|NULL
+operator|)
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arp: %s: unknown host\n"
+literal|"arp: %s: "
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1432,27 +1448,35 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
 name|hp
 operator|=
 name|gethostbyname
 argument_list|(
 name|host
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|==
-name|NULL
+operator|)
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"arp: %s: unknown host\n"
+literal|"arp: %s: "
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
