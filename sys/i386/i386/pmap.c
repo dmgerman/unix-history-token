@@ -10262,7 +10262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Clear the given bit in each of the given page's ptes.  */
+comment|/*  *	Clear the given bit in each of the given page's ptes.  The bit is  *	expressed as a 32-bit mask.  Consequently, if the pte is 64 bits in  *	size, only a bit within the least significant 32 can be cleared.  */
 end_comment
 
 begin_function
@@ -10406,6 +10406,8 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
+name|retry
+label|:
 name|pbits
 operator|=
 operator|*
@@ -10425,6 +10427,33 @@ operator|==
 name|PG_RW
 condition|)
 block|{
+comment|/* 				 * Regardless of whether a pte is 32 or 64 bits 				 * in size, PG_RW and PG_M are among the least 				 * significant 32 bits. 				 */
+if|if
+condition|(
+operator|!
+name|atomic_cmpset_int
+argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
+name|pte
+argument_list|,
+name|pbits
+argument_list|,
+name|pbits
+operator|&
+operator|~
+operator|(
+name|PG_RW
+operator||
+name|PG_M
+operator|)
+argument_list|)
+condition|)
+goto|goto
+name|retry
+goto|;
 if|if
 condition|(
 name|pbits
@@ -10438,30 +10467,17 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|pte_store
-argument_list|(
-name|pte
-argument_list|,
-name|pbits
-operator|&
-operator|~
-operator|(
-name|PG_M
-operator||
-name|PG_RW
-operator|)
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
-name|pte_store
+name|atomic_clear_int
 argument_list|(
+operator|(
+name|u_int
+operator|*
+operator|)
 name|pte
 argument_list|,
-name|pbits
-operator|&
-operator|~
 name|bit
 argument_list|)
 expr_stmt|;
