@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.9 (Berkeley) %G%"
+literal|"@(#)indent.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,14 +56,12 @@ begin_include
 include|#
 directive|include
 file|"indent_globs.h"
-include|;
 end_include
 
 begin_include
 include|#
 directive|include
 file|"indent_codes.h"
-include|;
 end_include
 
 begin_include
@@ -131,6 +129,11 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|found_err
+decl_stmt|;
+comment|/* flag set in diag() on error */
 name|int
 name|dec_ind
 decl_stmt|;
@@ -1793,7 +1796,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|found_err
 argument_list|)
 expr_stmt|;
 block|}
