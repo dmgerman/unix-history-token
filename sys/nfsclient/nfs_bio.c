@@ -1738,8 +1738,6 @@ name|vp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|cred
-argument_list|,
 name|td
 argument_list|,
 literal|1
@@ -1870,8 +1868,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|cred
 argument_list|,
 name|td
 argument_list|,
@@ -2698,8 +2694,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|cred
 argument_list|,
 name|td
 argument_list|,
@@ -4120,8 +4114,6 @@ name|vp
 argument_list|,
 name|V_SAVE
 argument_list|,
-name|cred
-argument_list|,
 name|td
 argument_list|,
 literal|1
@@ -5384,11 +5376,6 @@ name|vp
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|ucred
-modifier|*
-name|cred
 parameter_list|,
 name|struct
 name|thread

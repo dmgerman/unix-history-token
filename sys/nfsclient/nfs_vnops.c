@@ -2004,10 +2004,6 @@ name|V_SAVE
 argument_list|,
 name|ap
 operator|->
-name|a_cred
-argument_list|,
-name|ap
-operator|->
 name|a_td
 argument_list|,
 literal|1
@@ -2159,10 +2155,6 @@ name|V_SAVE
 argument_list|,
 name|ap
 operator|->
-name|a_cred
-argument_list|,
-name|ap
-operator|->
 name|a_td
 argument_list|,
 literal|1
@@ -2229,10 +2221,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|ap
-operator|->
-name|a_cred
 argument_list|,
 name|ap
 operator|->
@@ -2427,10 +2415,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|ap
-operator|->
-name|a_cred
 argument_list|,
 name|ap
 operator|->
@@ -3084,10 +3068,6 @@ literal|0
 argument_list|,
 name|ap
 operator|->
-name|a_cred
-argument_list|,
-name|ap
-operator|->
 name|a_td
 argument_list|,
 literal|1
@@ -3101,10 +3081,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|ap
-operator|->
-name|a_cred
 argument_list|,
 name|ap
 operator|->
@@ -3195,10 +3171,6 @@ argument_list|(
 name|vp
 argument_list|,
 name|V_SAVE
-argument_list|,
-name|ap
-operator|->
-name|a_cred
 argument_list|,
 name|ap
 operator|->
@@ -7875,10 +7847,6 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|cnp
-operator|->
-name|cn_cred
 argument_list|,
 name|cnp
 operator|->
