@@ -95,17 +95,23 @@ begin_comment
 comment|/* Define if fpregset_t type is available. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FPREGSET_T */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FPREGSET_T
+value|1
+end_define
 
 begin_comment
 comment|/* Define if gregset_t type is available. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_GREGSET_T */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GREGSET_T
+value|1
+end_define
 
 begin_comment
 comment|/* Define if the "%Lg" format works to print long doubles. */
@@ -251,9 +257,12 @@ begin_comment
 comment|/* Define if you have the<sys/procfs.h> header file.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYS_PROCFS_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_PROCFS_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<termio.h> header file.  */

@@ -122,9 +122,12 @@ begin_comment
 comment|/* Define only if<sys/procfs.h> is available *and* it defines prstatus_t.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_SYS_PROCFS_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_PROCFS_H
+value|1
+end_define
 
 begin_comment
 comment|/* Do we really want to use mmap if it's available?  */
