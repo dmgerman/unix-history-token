@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sem.c,v 1.5 1997/02/22 14:02:07 peter Exp $"
+literal|"$Id: sem.c,v 1.6 1997/08/07 21:42:15 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,11 +261,11 @@ literal|2
 index|]
 decl_stmt|;
 specifier|static
-name|sigset_t
+name|int
 name|csigmask
 decl_stmt|;
 specifier|static
-name|sigset_t
+name|int
 name|ocsigmask
 decl_stmt|;
 specifier|static
@@ -1013,7 +1013,7 @@ name|oOLDSTD
 decl_stmt|,
 name|otpgrp
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 comment|/* 		 * Prepare for the vfork by saving everything that the child 		 * corrupts before it exec's. Note that in some signal 		 * implementations which keep the signal info in user space 		 * (e.g. Sun's) it will also be necessary to save and restore 		 * the current sigvec's for the signals the child touches 		 * before it exec's. 		 */

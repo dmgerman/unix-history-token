@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: exec.c,v 1.7 1997/08/07 21:42:07 steve Exp $"
+literal|"$Id: exec.c,v 1.8 1997/12/10 22:18:22 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -748,9 +748,6 @@ name|void
 operator|)
 name|sigsetmask
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;

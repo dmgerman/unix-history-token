@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: csh.c,v 1.11 1997/10/07 16:27:48 eivind Exp $"
+literal|"$Id: csh.c,v 1.12 1997/12/10 22:18:21 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2261,7 +2261,7 @@ name|oparintr
 init|=
 name|parintr
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 init|=
 name|sigblock
@@ -3031,7 +3031,7 @@ name|Bin
 name|saveB
 decl_stmt|;
 specifier|volatile
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|jmp_buf
@@ -3962,16 +3962,13 @@ modifier|*
 modifier|*
 name|v
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|omask
 operator|=
 name|sigblock
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -4244,9 +4241,6 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 operator|&

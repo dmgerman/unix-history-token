@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: func.c,v 1.8 1997/08/07 21:42:09 steve Exp $"
+literal|"$Id: func.c,v 1.9 1997/08/08 00:54:03 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2299,9 +2299,6 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 operator|&
@@ -2528,7 +2525,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 init|=
 literal|0
@@ -4133,9 +4130,6 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 operator|&
@@ -4407,9 +4401,6 @@ name|sigsetmask
 argument_list|(
 name|sigblock
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 operator|&

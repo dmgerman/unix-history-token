@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: proc.c,v 1.6 1997/08/08 00:54:05 steve Exp $"
+literal|"$Id: proc.c,v 1.7 1997/10/07 16:43:16 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1038,7 +1038,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|neednote
@@ -1152,7 +1152,7 @@ decl_stmt|,
 modifier|*
 name|pp
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 comment|/*      * Here's where dead procs get flushed.      */
@@ -1307,7 +1307,7 @@ name|jobflags
 decl_stmt|,
 name|reason
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 while|while
@@ -1836,7 +1836,7 @@ name|process
 modifier|*
 name|pp
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|pjobs
@@ -1889,9 +1889,6 @@ name|void
 operator|)
 name|sigpause
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -4987,7 +4984,7 @@ name|err1
 init|=
 literal|0
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|Char
@@ -5420,7 +5417,7 @@ name|process
 modifier|*
 name|np
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 name|long
@@ -6156,7 +6153,7 @@ decl_stmt|;
 name|int
 name|pgrp
 decl_stmt|;
-name|sigset_t
+name|int
 name|omask
 decl_stmt|;
 comment|/*      * A child will be uninterruptible only under very special conditions.      * Remember that the semantics of '&' is implemented by disconnecting the      * process from the tty so signals do not need to ignored just for '&'.      * Thus signals are set to default action for children unless: we have had      * an "onintr -" (then specifically ignored) we are not playing with      * signals (inherit action)      */
@@ -6563,7 +6560,7 @@ decl_stmt|,
 name|pgrp
 decl_stmt|;
 block|{
-name|sigset_t
+name|int
 name|omask
 init|=
 literal|0
