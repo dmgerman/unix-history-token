@@ -164,18 +164,6 @@ begin_comment
 comment|/* Last place we saw a head line */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* for lint . . . */
-end_comment
-
 begin_decl_stmt
 name|char
 modifier|*
