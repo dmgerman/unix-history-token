@@ -3325,6 +3325,53 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Inverse of pmap_kenter_flags, used by bus_space_unmap().  */
+end_comment
+
+begin_function
+name|void
+name|pmap_kremove_flags
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|)
+block|{
+name|struct
+name|tte
+modifier|*
+name|tp
+decl_stmt|;
+name|tp
+operator|=
+name|tsb_kvtotte
+argument_list|(
+name|va
+argument_list|)
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_kremove: va=%#lx tp=%p data=%#lx"
+argument_list|,
+name|va
+argument_list|,
+name|tp
+argument_list|,
+name|tp
+operator|->
+name|tte_data
+argument_list|)
+expr_stmt|;
+name|TTE_ZERO
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Map a range of physical addresses into kernel virtual address space.  *  * The value passed in *virt is a suggested virtual address for the mapping.  * Architectures which can support a direct-mapped physical to virtual region  * can return the appropriate address within that region, leaving '*virt'  * unchanged.  We cannot and therefore do not; *virt is updated with the  * first usable address after the mapped region.  */
 end_comment
 

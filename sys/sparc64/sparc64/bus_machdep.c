@@ -1878,7 +1878,7 @@ name|va
 operator|+=
 name|PAGE_SIZE
 control|)
-name|pmap_kremove
+name|pmap_kremove_flags
 argument_list|(
 name|va
 argument_list|)

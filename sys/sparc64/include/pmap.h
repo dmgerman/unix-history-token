@@ -185,6 +185,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_kremove_flags
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_qenter_flags
 parameter_list|(
 name|vm_offset_t
