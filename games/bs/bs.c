@@ -4618,7 +4618,7 @@ literal|4
 case|:
 name|m
 operator|=
-literal|" You'll pick up survivors from my my %s, I hope...!"
+literal|" You'll pick up survivors from my %s, I hope...!"
 expr_stmt|;
 break|break;
 block|}
