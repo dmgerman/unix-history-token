@@ -5257,6 +5257,8 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+init|=
+name|NULL
 decl_stmt|;
 name|caddr_t
 name|req
@@ -5309,6 +5311,12 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|m_freem
 argument_list|(
 name|m
