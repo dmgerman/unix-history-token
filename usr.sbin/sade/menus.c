@@ -8560,7 +8560,7 @@ block|,
 block|{
 literal|"Australia"
 block|,
-literal|"ntp.tip.csiro.au (HP 5071A Cesium Beam)"
+literal|"ntp.nml.csiro.au (HP 5071A Cesium Beam)"
 block|,
 name|dmenuVarsCheck
 block|,
