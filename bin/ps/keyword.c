@@ -2545,10 +2545,6 @@ decl_stmt|,
 modifier|*
 name|tempstr1
 decl_stmt|;
-define|#
-directive|define
-name|FMTSEP
-value|"\t,\n"
 name|tempstr1
 operator|=
 name|tempstr
@@ -2579,6 +2575,7 @@ name|varent
 modifier|*
 name|vent
 decl_stmt|;
+comment|/* 		 * Seperate the format by commas. 		 */
 while|while
 condition|(
 operator|(
@@ -2589,7 +2586,7 @@ argument_list|(
 operator|&
 name|tempstr
 argument_list|,
-name|FMTSEP
+literal|","
 argument_list|)
 operator|)
 operator|!=
