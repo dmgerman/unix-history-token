@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)vax.c	1.3 (Berkeley) %G%"
+literal|"@(#)vax.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,13 @@ operator|)
 literal|0
 block|,
 comment|/* the pc entry point */
+operator|(
+name|unsigned
+name|long
+operator|)
+literal|0
+block|,
+comment|/* entry point aligned to histogram */
 operator|(
 name|double
 operator|)
