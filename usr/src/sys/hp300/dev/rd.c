@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.30 89/09/17$  *  *	@(#)rd.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.3 90/10/12$  *  *	@(#)rd.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1409,6 +1409,151 @@ block|,
 literal|218
 block|,
 comment|/* H=cyl 218 thru 1571 */
+block|}
+decl_stmt|,
+name|rd2200A_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+name|RDSZ
+argument_list|(
+literal|16272
+argument_list|)
+block|,
+literal|1
+block|,
+comment|/* A=cyl 1 thru 36 */
+name|RDSZ
+argument_list|(
+literal|49720
+argument_list|)
+block|,
+literal|37
+block|,
+comment|/* B=cyl 37 thru 146 */
+name|RDSZ
+argument_list|(
+literal|654948
+argument_list|)
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 1448 */
+name|RDSZ
+argument_list|(
+literal|65992
+argument_list|)
+block|,
+literal|37
+block|,
+comment|/* D=cyl 37 thru 182 */
+name|RDSZ
+argument_list|(
+literal|304648
+argument_list|)
+block|,
+literal|183
+block|,
+comment|/* E=cyl 183 thru 856 */
+name|RDSZ
+argument_list|(
+literal|267584
+argument_list|)
+block|,
+literal|857
+block|,
+comment|/* F=cyl 857 thru 1448 */
+name|RDSZ
+argument_list|(
+literal|588504
+argument_list|)
+block|,
+literal|147
+block|,
+comment|/* G=cyl 147 thru 1448 */
+name|RDSZ
+argument_list|(
+literal|572232
+argument_list|)
+block|,
+literal|183
+block|,
+comment|/* H=cyl 183 thru 1448 */
+block|}
+decl_stmt|,
+name|rd2203A_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+comment|/* modelled after the 7937; i.e. bogus */
+name|RDSZ
+argument_list|(
+literal|16272
+argument_list|)
+block|,
+literal|1
+block|,
+comment|/* A=cyl 1 thru 18 */
+name|RDSZ
+argument_list|(
+literal|67800
+argument_list|)
+block|,
+literal|19
+block|,
+comment|/* B=cyl 19 thru 93 */
+name|RDSZ
+argument_list|(
+literal|1309896
+argument_list|)
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 1448 */
+name|RDSZ
+argument_list|(
+literal|16272
+argument_list|)
+block|,
+literal|94
+block|,
+comment|/* D=cyl 19 thru 111 */
+name|RDSZ
+argument_list|(
+literal|305552
+argument_list|)
+block|,
+literal|112
+block|,
+comment|/* E=cyl 112 thru 449 */
+name|RDSZ
+argument_list|(
+literal|305552
+argument_list|)
+block|,
+literal|450
+block|,
+comment|/* F=cyl 450 thru 787 */
+name|RDSZ
+argument_list|(
+literal|1224920
+argument_list|)
+block|,
+literal|94
+block|,
+comment|/* G=cyl 94 thru 1448 */
+name|RDSZ
+argument_list|(
+literal|597544
+argument_list|)
+block|,
+literal|788
+block|,
+comment|/* H=cyl 788 thru 1448 */
 if|#
 directive|if
 name|DEV_BSIZE
@@ -1953,6 +2098,38 @@ block|,
 literal|0
 block|,
 literal|"7959B"
+block|,
+name|NRD2200ABPT
+block|,
+name|NRD2200ATRK
+block|,
+name|NRD2200ABPT
+operator|*
+name|NRD2200ATRK
+block|,
+name|rd2200A_sizes
+block|,
+name|RD2200AID
+block|,
+literal|0
+block|,
+literal|"2200A"
+block|,
+name|NRD2203ABPT
+block|,
+name|NRD2203ATRK
+block|,
+name|NRD2203ABPT
+operator|*
+name|NRD2203ATRK
+block|,
+name|rd2203A_sizes
+block|,
+name|RD2203AID
+block|,
+literal|0
+block|,
+literal|"2203A"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2310,6 +2487,28 @@ argument_list|,
 name|slave
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|rddebug
+operator|&
+name|RDB_IDENT
+condition|)
+name|printf
+argument_list|(
+literal|"hpibid(%d, %d) -> %x\n"
+argument_list|,
+name|ctlr
+argument_list|,
+name|slave
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

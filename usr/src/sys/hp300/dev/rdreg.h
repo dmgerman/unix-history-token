@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rdreg.h 1.1 90/07/09$  *  *	@(#)rdreg.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rdreg.h 1.2 90/10/12$  *  *	@(#)rdreg.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -574,6 +574,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RD2200AID
+value|0x22F
+end_define
+
+begin_define
+define|#
+directive|define
+name|RD2203AID
+value|0x230
+end_define
+
+begin_comment
+comment|/* yet another guess */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NRD7945ABPT
 value|(32>> (DEV_BSHIFT-8))
 end_define
@@ -670,7 +688,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Several HP drives have an odd number of 256 byte sectors per track.  * This makes it rather difficult to break them into 512 and 1024 byte blocks.  * So...we just do like HPUX and don't bother to respect hardware track/head  * boundries -- we just mold the disk so that we use the entire capacity.  * HPUX also sometimes doen't abide by cylinder boundries, we attempt to  * whenever possible.  *  * DISK		REAL (256 BPS)		HPUX (1024 BPS)		BSD (512 BPS)  * 		SPT x HD x CYL		SPT x HD x CYL		SPT x HD x CYL  * -----	---------------		---------------		--------------  * 7936:	123 x  7 x 1396		25 x  7 x 1716		123 x  7 x  698  * 7937:	123 x 13 x 1396		25 x 16 x 1395		123 x 13 x  698  *  * 7957A:	 63 x  5 x 1013		11 x  7 x 1036		 22 x  7 x 1036  * 7958A:	 63 x  8 x 1013		21 x  6 x 1013		 36 x  7 x 1013  *  * 7957B:	 63 x  4 x 1269		 9 x  7 x 1269		 18 x  7 x 1269  * 7958B:	 63 x  6 x 1572		21 x  9 x  786		 42 x  9 x  786  * 7959B:	 63 x 12 x 1572		21 x  9 x 1572		 42 x  9 x 1572  */
+comment|/*  * Several HP drives have an odd number of 256 byte sectors per track.  * This makes it rather difficult to break them into 512 and 1024 byte blocks.  * So...we just do like HPUX and don't bother to respect hardware track/head  * boundries -- we just mold the disk so that we use the entire capacity.  * HPUX also sometimes doen't abide by cylinder boundries, we attempt to  * whenever possible.  *  * DISK		REAL (256 BPS)		HPUX (1024 BPS)		BSD (512 BPS)  * 		SPT x HD x CYL		SPT x HD x CYL		SPT x HD x CYL  * -----	---------------		---------------		--------------  * 7936:	123 x  7 x 1396		 25 x  7 x 1716		123 x  7 x  698  * 7937:	123 x 13 x 1396		 25 x 16 x 1395		123 x 13 x  698  *  * 7957A:	 63 x  5 x 1013		 11 x  7 x 1036		 22 x  7 x 1036  * 7958A:	 63 x  8 x 1013		 21 x  6 x 1013		 36 x  7 x 1013  *  * 7957B:	 63 x  4 x 1269		  9 x  7 x 1269		 18 x  7 x 1269  * 7958B:	 63 x  6 x 1572		 21 x  9 x  786		 42 x  9 x  786  * 7959B:	 63 x 12 x 1572		 21 x  9 x 1572		 42 x  9 x 1572  *  * 2200A:	113 x  8 x 1449		113 x  2 x 1449		113 x  4 x 1449  * 2203A:	113 x 16 x 1449		113 x  4 x 1449		113 x  8 x 1449  */
 end_comment
 
 begin_if
@@ -779,6 +797,34 @@ name|NRD7959BTRK
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|NRD2200ABPT
+value|113
+end_define
+
+begin_define
+define|#
+directive|define
+name|NRD2200ATRK
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|NRD2203ABPT
+value|113
+end_define
+
+begin_define
+define|#
+directive|define
+name|NRD2203ATRK
+value|8
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -860,6 +906,34 @@ define|#
 directive|define
 name|NRD7959BTRK
 value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|NRD2200ABPT
+value|113
+end_define
+
+begin_define
+define|#
+directive|define
+name|NRD2200ATRK
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NRD2203ABPT
+value|113
+end_define
+
+begin_define
+define|#
+directive|define
+name|NRD2203ATRK
+value|4
 end_define
 
 begin_endif
