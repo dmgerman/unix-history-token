@@ -156,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscall_gate/syscall_gate.h"
+file|"syscall_gate.h"
 end_include
 
 begin_define
