@@ -30,24 +30,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|printf
+name|msgDebug
 argument_list|(
-literal|"\007Fatal signal %d caught!  I'm dead..\n"
+literal|"\007Signal %d caught!  That's bad!\n"
 argument_list|,
 name|sig
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|RunningAsInit
-condition|)
-name|pause
-argument_list|()
-expr_stmt|;
-else|else
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
