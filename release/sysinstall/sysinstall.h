@@ -877,6 +877,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_TERM
+value|"TERM"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_TAPE_BLOCKSIZE
 value|"20"
 end_define
