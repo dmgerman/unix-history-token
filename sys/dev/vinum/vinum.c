@@ -204,6 +204,13 @@ name|vinum_super_dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|dev_clone_tag
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
 end_comment
@@ -558,6 +565,8 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* and number in use */
+name|dev_clone_tag
+operator|=
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|dev_clone
@@ -980,6 +989,13 @@ name|vinum_conf
 operator|.
 name|drives_allocated
 decl_stmt|;
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|dev_clone
+argument_list|,
+name|dev_clone_tag
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|DRIVE
