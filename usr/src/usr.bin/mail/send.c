@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	1.2 %G%"
+literal|"@(#)send.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1669,6 +1669,11 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+name|rewind
+argument_list|(
+name|fi
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1748,11 +1753,6 @@ operator||
 name|GNL
 argument_list|)
 expr_stmt|;
-name|rewind
-argument_list|(
-name|fi
-argument_list|)
-expr_stmt|;
 name|c
 operator|=
 name|getc
@@ -1793,13 +1793,6 @@ block|{
 name|perror
 argument_list|(
 literal|"read"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Please notify Kurt Shoens\n"
 argument_list|)
 expr_stmt|;
 return|return
