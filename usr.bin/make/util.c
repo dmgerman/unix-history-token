@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: util.c,v 1.7 1996/08/30 17:59:44 thorpej Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
