@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/msgbuf.h>
 end_include
 
@@ -112,6 +118,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -119,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<vis.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
 end_include
 
 begin_decl_stmt
@@ -333,6 +345,20 @@ name|setgid
 argument_list|(
 name|getgid
 argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|all
+operator|&&
+name|getuid
+argument_list|()
+condition|)
+name|errx
+argument_list|(
+name|EX_NOPERM
+argument_list|,
+literal|"must be root to use -a"
 argument_list|)
 expr_stmt|;
 comment|/* Read in kernel message buffer, do sanity checks. */
