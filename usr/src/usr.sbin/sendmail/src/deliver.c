@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.28	%G%"
+literal|"@(#)deliver.c	3.29	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1016,7 +1016,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		editfcn -- function to pipe it through. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
+comment|/* **  DOFORK -- do a fork, retrying a couple of times on failure. ** **	This MUST be a macro, since after a vfork we are running **	two processes on the same stack!!! ** **	Parameters: **		none. ** **	Returns: **		From a macro???  You've got to be kidding! ** **	Side Effects: **		Modifies the ==> LOCAL<== variable 'pid', leaving: **			pid of child in parent, zero in child. **			-1 on unrecoverable error. ** **	Notes: **		I'm awfully sorry this looks so awful.  That's **		vfork for you..... */
 end_comment
 
 begin_define
@@ -1025,6 +1025,56 @@ directive|define
 name|NFORKTRIES
 value|5
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFORK
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|XFORK
+value|vfork
+end_define
+
+begin_else
+else|#
+directive|else
+else|VFORK
+end_else
+
+begin_define
+define|#
+directive|define
+name|XFORK
+value|fork
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VFORK
+end_endif
+
+begin_define
+define|#
+directive|define
+name|DOFORK
+parameter_list|(
+name|fORKfN
+parameter_list|)
+define|\
+value|{\ 	register int i;\ \ 	for (i = NFORKTRIES; i--> 0; )\ 	{\ 		pid = fORKfN();\ 		if (pid>= 0)\ 			break;\ 		sleep((unsigned) NFORKTRIES - i);\ 	}\ }
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		editfcn -- function to pipe it through. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
+end_comment
 
 begin_expr_stmt
 unit|sendoff
@@ -1160,56 +1210,13 @@ return|;
 block|}
 end_if
 
-begin_for
-for|for
-control|(
-name|i
-operator|=
-name|NFORKTRIES
-init|;
-name|i
-operator|--
-operator|>
-literal|0
-condition|;
-control|)
-block|{
-ifdef|#
-directive|ifdef
-name|VFORK
-name|pid
-operator|=
-name|vfork
-argument_list|()
-expr_stmt|;
-else|#
-directive|else
-name|pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-if|if
-condition|(
-name|pid
-operator|>=
-literal|0
-condition|)
-break|break;
-name|sleep
+begin_expr_stmt
+name|DOFORK
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|NFORKTRIES
-operator|-
-name|i
+name|XFORK
 argument_list|)
 expr_stmt|;
-block|}
-end_for
+end_expr_stmt
 
 begin_if
 if|if
@@ -1396,11 +1403,13 @@ comment|/* syserr fails because log is closed */
 comment|/* syserr("Cannot exec %s", m->m_mailer); */
 name|printf
 argument_list|(
-literal|"Cannot exec %s\n"
+literal|"Cannot exec '%s' errno=%d\n"
 argument_list|,
 name|m
 operator|->
 name|m_mailer
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2318,7 +2327,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAILFILE -- Send a message to a file. ** **	Parameters: **		filename -- the name of the file to send to. ** **	Returns: **		The exit code associated with the operation. ** **	Side Effects: **		none. ** **	Called By: **		deliver */
+comment|/* **  MAILFILE -- Send a message to a file. ** **	Parameters: **		filename -- the name of the file to send to. ** **	Returns: **		The exit code associated with the operation. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
@@ -2342,6 +2351,58 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+specifier|register
+name|int
+name|pid
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+comment|/* 	**  Fork so we can change permissions here. 	**	Note that we MUST use fork, not vfork, because of 	**	the complications of calling subroutines, etc. 	*/
+name|DOFORK
+argument_list|(
+name|fork
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|EX_OSERR
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|pid
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* child -- actually write to file */
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|fopen
@@ -2357,11 +2418,11 @@ name|f
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+name|exit
+argument_list|(
 name|EX_CANTCREAT
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 name|putmessage
 argument_list|(
 name|f
@@ -2387,11 +2448,74 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OK
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* parent -- wait for exit status */
+specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|auto
+name|int
+name|stat
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|i
+operator|=
+name|wait
+argument_list|(
+operator|&
+name|stat
+argument_list|)
+operator|)
+operator|!=
+name|pid
+condition|)
+block|{
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+block|{
+name|stat
+operator|=
+name|EX_OSERR
+operator|<<
+literal|8
+expr_stmt|;
+break|break;
+block|}
+block|}
 return|return
 operator|(
-name|EX_OK
+operator|(
+name|stat
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0377
 operator|)
 return|;
+block|}
 block|}
 end_block
 
