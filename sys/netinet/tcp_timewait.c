@@ -7818,10 +7818,6 @@ name|tcp_twrespond
 argument_list|(
 name|tw
 argument_list|,
-name|so
-argument_list|,
-name|NULL
-argument_list|,
 name|TH_ACK
 argument_list|)
 expr_stmt|;
@@ -8076,10 +8072,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * One of so and msrc must be non-NULL for use by the MAC Framework to  * construct a label for ay resulting packet.  */
-end_comment
-
 begin_function
 name|int
 name|tcp_twrespond
@@ -8088,16 +8080,6 @@ name|struct
 name|tcptw
 modifier|*
 name|tw
-parameter_list|,
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|msrc
 parameter_list|,
 name|int
 name|flags
@@ -8162,21 +8144,6 @@ name|inc_isipv6
 decl_stmt|;
 endif|#
 directive|endif
-name|KASSERT
-argument_list|(
-name|so
-operator|!=
-name|NULL
-operator|||
-name|msrc
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"tcp_twrespond: so and msrc NULL"
-operator|)
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|m_gethdr
