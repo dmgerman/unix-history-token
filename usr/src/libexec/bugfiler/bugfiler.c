@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.8 (Berkeley) 87/04/11"
+literal|"@(#)bugfiler.c	5.9 (Berkeley) 87/04/22"
 decl_stmt|;
 end_decl_stmt
 
