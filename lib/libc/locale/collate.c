@@ -227,7 +227,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Range checking already done at upper level caller */
+comment|/* Range checking not needed, encoding has fixed size */
 operator|(
 name|void
 operator|)

@@ -1494,7 +1494,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* Range checking already done at upper level caller */
+comment|/* Range checking not needed, encoding has fixed size */
 name|strcpy
 argument_list|(
 name|name

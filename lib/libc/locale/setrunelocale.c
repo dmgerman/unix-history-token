@@ -241,12 +241,11 @@ condition|(
 operator|!
 name|_PathLocale
 condition|)
-return|return
-operator|(
-name|EFAULT
-operator|)
-return|;
-comment|/* Range checking already done at upper level caller */
+name|_PathLocale
+operator|=
+name|_PATH_LOCALE
+expr_stmt|;
+comment|/* Range checking not needed, encoding has fixed size */
 operator|(
 name|void
 operator|)
