@@ -6557,9 +6557,8 @@ block|}
 block|, 		}
 block|, 	}
 block|,
-comment|/* Dell RAC Serial PPP Link */
 block|{
-literal|"Dell RAC Serial PPP Link"
+literal|"Dell RAC III Virtual UART"
 block|,
 block|{
 literal|0x1028
@@ -6590,6 +6589,44 @@ block|,
 literal|0x00
 block|,
 name|COM_FREQ
+operator|*
+literal|128
+block|}
+block|, 	    }
+block|, 	}
+block|,
+block|{
+literal|"Dell RAC IV/ERA Virtual UART"
+block|,
+block|{
+literal|0x1028
+block|,
+literal|0x0012
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x14
+block|,
+literal|0x00
+block|,
+name|DEFAULT_RCLK
 operator|*
 literal|128
 block|}
