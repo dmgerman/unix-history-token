@@ -98,6 +98,24 @@ begin_comment
 comment|/* const opaque symbol */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|linker_function_name_callback_t
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * expanded out linker_sym_t  */
 end_comment
