@@ -19,6 +19,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -30,18 +36,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
-name|int
+name|u_int16_t
 name|UINT2
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
-name|int
+name|u_int32_t
 name|UINT4
 typedef|;
 end_typedef

@@ -28,16 +28,14 @@ typedef|typedef
 struct|struct
 name|MD5Context
 block|{
-name|unsigned
-name|long
+name|u_int32_t
 name|state
 index|[
 literal|4
 index|]
 decl_stmt|;
 comment|/* state (ABCD) */
-name|unsigned
-name|long
+name|u_int32_t
 name|count
 index|[
 literal|2
