@@ -4305,6 +4305,7 @@ name|hash
 operator|=
 name|fnv_32_buf
 argument_list|(
+operator|&
 name|dh
 argument_list|,
 sizeof|sizeof
