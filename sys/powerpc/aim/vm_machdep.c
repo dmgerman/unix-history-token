@@ -700,9 +700,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{
-return|return;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -726,9 +724,31 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{
-return|return;
-block|}
+block|{ }
+end_function
+
+begin_function
+name|void
+name|cpu_thread_swapin
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|cpu_thread_swapout
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
@@ -745,9 +765,7 @@ name|thread
 modifier|*
 name|td0
 parameter_list|)
-block|{
-return|return;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -764,9 +782,7 @@ name|kse_upcall
 modifier|*
 name|ku
 parameter_list|)
-block|{
-return|return;
-block|}
+block|{ }
 end_function
 
 end_unit

@@ -1802,19 +1802,11 @@ name|i
 decl_stmt|,
 name|pages
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* 	 * Make sure we aren't fpcurthread. 	 */
-name|alpha_fpstate_save
+name|cpu_thread_swapout
 argument_list|(
 name|td
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pages
 operator|=
 name|td
@@ -2074,32 +2066,11 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* 	 * The pcb may be at a different physical address now so cache the 	 * new address. 	 */
-name|td
-operator|->
-name|td_md
-operator|.
-name|md_pcbpaddr
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|vtophys
+name|cpu_thread_swapin
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
 name|td
-operator|->
-name|td_pcb
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -642,6 +642,30 @@ end_function
 
 begin_function
 name|void
+name|cpu_thread_swapin
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|cpu_thread_swapout
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
 name|cpu_sched_exit
 parameter_list|(
 name|td
