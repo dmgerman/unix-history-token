@@ -5262,8 +5262,12 @@ return|;
 comment|/* XXX maybe transient, or error? */
 for|for
 control|(
+name|devcount
+operator|--
 init|;
 name|devcount
+operator|>=
+literal|0
 condition|;
 name|devcount
 operator|--
