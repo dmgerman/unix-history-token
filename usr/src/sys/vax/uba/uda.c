@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)uda.c	6.4	(Berkeley) %G%"
+literal|"@(#)uda.c	6.5	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1985,14 +1985,6 @@ name|uda_cp_wait
 operator|--
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|mp
 operator|->
 name|mscp_opcode
@@ -2092,6 +2084,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/*wakeup in udrsp() */
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
