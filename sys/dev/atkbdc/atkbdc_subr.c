@@ -132,6 +132,7 @@ comment|/* kbdc */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|atkbdc_devclass
 decl_stmt|;

@@ -315,12 +315,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|device_t
-name|nexus_dev
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Determine i/o configuration for a machine.  */
 end_comment

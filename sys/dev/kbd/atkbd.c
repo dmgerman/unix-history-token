@@ -743,6 +743,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|keyboard_switch_t
 name|atkbdsw
 init|=

@@ -125,6 +125,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ke_sched
 name|ke_sched

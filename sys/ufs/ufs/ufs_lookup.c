@@ -153,6 +153,7 @@ name|DIAGNOSTIC
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dirchk
 init|=
@@ -166,6 +167,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dirchk
 init|=

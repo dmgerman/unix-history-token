@@ -1083,6 +1083,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|dev_softc
 block|{
@@ -1119,6 +1120,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|dev_t
 name|devctl_dev
 decl_stmt|;

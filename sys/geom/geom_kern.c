@@ -370,6 +370,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kproc_desc
 name|g_event_kp

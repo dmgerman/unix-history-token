@@ -106,6 +106,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|atkbd_devclass
 decl_stmt|;

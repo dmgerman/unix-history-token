@@ -143,6 +143,7 @@ value|((struct ppc_data *)device_get_softc(dev))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|ppc_devclass
 decl_stmt|;

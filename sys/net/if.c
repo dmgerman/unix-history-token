@@ -479,6 +479,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|if_cloners_count
 decl_stmt|;

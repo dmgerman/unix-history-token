@@ -210,6 +210,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|uma_zone_t
 name|file_zone
 decl_stmt|;

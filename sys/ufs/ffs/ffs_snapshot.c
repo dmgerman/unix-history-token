@@ -609,6 +609,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|snapdebug
 init|=
