@@ -3,15 +3,19 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
-begin_decl_stmt
-name|ifndef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|lint
+end_ifndef
+
+begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.19 %G%"
+literal|"@(#)rval.c 1.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
