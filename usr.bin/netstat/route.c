@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.6 1995/07/12 19:21:36 bde Exp $"
+literal|"$Id: route.c,v 1.7 1995/10/26 20:31:59 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1839,7 +1839,7 @@ name|sipx_addr
 decl_stmt|;
 if|if
 condition|(
-name|ipx_nullhost
+name|ipx_nullnet
 argument_list|(
 name|satoipx_addr
 argument_list|(
@@ -3326,6 +3326,11 @@ index|[
 literal|15
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|nflag
+condition|)
 name|sp
 operator|=
 name|getservbyport
@@ -3406,6 +3411,10 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|nflag
+operator|&&
+operator|(
 name|np
 operator|=
 name|getnetbyaddr
@@ -3422,6 +3431,7 @@ name|x_net
 argument_list|,
 name|AF_IPX
 argument_list|)
+operator|)
 condition|)
 name|net
 operator|=
@@ -3518,6 +3528,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|nflag
+operator|&&
+operator|(
 name|hp
 operator|=
 name|gethostbyaddr
@@ -3535,6 +3549,7 @@ literal|6
 argument_list|,
 name|AF_IPX
 argument_list|)
+operator|)
 condition|)
 name|host
 operator|=
