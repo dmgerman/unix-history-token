@@ -94,13 +94,22 @@ argument_list|()
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* Init curses */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nCurses initialization error.\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 name|keypad
 argument_list|(
 name|stdscr
