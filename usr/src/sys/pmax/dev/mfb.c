@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)mfb.c	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)mfb.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -519,7 +519,7 @@ begin_define
 define|#
 directive|define
 name|MFB_FB_SIZE
-value|0x100000
+value|0x200000
 end_define
 
 begin_comment
