@@ -6939,6 +6939,11 @@ operator|=
 name|devfs_print
 block|,
 operator|.
+name|vop_read
+operator|=
+name|VOP_PANIC
+block|,
+operator|.
 name|vop_readdir
 operator|=
 name|VOP_PANIC
@@ -7000,6 +7005,11 @@ name|VOP_PANIC
 block|,
 operator|.
 name|vop_symlink
+operator|=
+name|VOP_PANIC
+block|,
+operator|.
+name|vop_write
 operator|=
 name|VOP_PANIC
 block|, }
