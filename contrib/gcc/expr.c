@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Convert tree expression to rtl instructions, for GNU compiler.    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Convert tree expression to rtl instructions, for GNU compiler.    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -16196,58 +16196,15 @@ argument_list|(
 name|to_rtx
 argument_list|)
 expr_stmt|;
-name|set_mem_attributes
+name|set_mem_attributes_minus_bitpos
 argument_list|(
 name|to_rtx
 argument_list|,
 name|to
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-comment|/* If we changed MEM_EXPR, that means we're now referencing 	     the COMPONENT_REF, which means that MEM_OFFSET must be 	     relative to that field.  But we've not yet reflected BITPOS 	     in TO_RTX.  This will be done in store_field.  Adjust for 	     that by biasing MEM_OFFSET by -bitpos.  */
-if|if
-condition|(
-name|MEM_EXPR
-argument_list|(
-name|to_rtx
-argument_list|)
-operator|!=
-name|old_expr
-operator|&&
-name|MEM_OFFSET
-argument_list|(
-name|to_rtx
-argument_list|)
-operator|&&
-operator|(
-name|bitpos
-operator|/
-name|BITS_PER_UNIT
-operator|)
-operator|!=
-literal|0
-condition|)
-name|set_mem_offset
-argument_list|(
-name|to_rtx
 argument_list|,
-name|GEN_INT
-argument_list|(
-name|INTVAL
-argument_list|(
-name|MEM_OFFSET
-argument_list|(
-name|to_rtx
-argument_list|)
-argument_list|)
-operator|-
-operator|(
 name|bitpos
-operator|/
-name|BITS_PER_UNIT
-operator|)
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -35407,7 +35364,7 @@ name|target
 argument_list|,
 name|tmode
 argument_list|,
-name|unsignedp
+name|modifier
 argument_list|)
 return|;
 name|this_optab

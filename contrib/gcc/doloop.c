@@ -1895,7 +1895,7 @@ operator|==
 name|NE
 operator|)
 expr_stmt|;
-comment|/* The number of iterations (prior to any loop unrolling) is given by:         n = (abs (final - initial) + abs_inc - 1) / abs_inc.       However, it is possible for the summation to overflow, and a      safer method is:         n = abs (final - initial) / abs_inc;        n += (abs (final - initial) % abs_inc) != 0;       But when abs_inc is a power of two, the summation won't overflow      except in cases where the loop never terminates.  So we don't      need to use this more costly calculation.       If the loop has been unrolled, the full calculation is         t1 = abs_inc * unroll_number;		increment per loop        n = abs (final - initial) / t1;		full loops        n += (abs (final - initial) % t1) != 0;	partial loop       However, in certain cases the unrolled loop will be preconditioned      by emitting copies of the loop body with conditional branches,      so that the unrolled loop is always a full loop and thus needs      no exit tests.  In this case we don't want to add the partial      loop count.  As above, when t1 is a power of two we don't need to      worry about overflow.       The division and modulo operations can be avoided by requiring      that the increment is a power of 2 (precondition_loop_p enforces      this requirement).  Nevertheless, the RTX_COSTS should be checked      to see if a fast divmod is available.  */
+comment|/* The number of iterations (prior to any loop unrolling) is given by:         n = (abs (final - initial) + abs_inc - 1) / abs_inc.       However, it is possible for the summation to overflow, and a      safer method is:         n = abs (final - initial) / abs_inc;        n += (abs (final - initial) % abs_inc) != 0;       But when abs_inc is a power of two, the summation won't overflow      except in cases where the loop never terminates.  So we don't      need to use this more costly calculation.       If the loop has been unrolled, the full calculation is         t1 = abs_inc * unroll_number;		        increment per loop        n = (abs (final - initial) + abs_inc - 1) / t1;    full loops        n += ((abs (final - initial) + abs_inc - 1) % t1)>= abs_inc;                                                           partial loop      which works out to be equivalent to         n = (abs (final - initial) + t1 - 1) / t1;       However, in certain cases the unrolled loop will be preconditioned      by emitting copies of the loop body with conditional branches,      so that the unrolled loop is always a full loop and thus needs      no exit tests.  In this case we don't want to add the partial      loop count.  As above, when t1 is a power of two we don't need to      worry about overflow.       The division and modulo operations can be avoided by requiring      that the increment is a power of 2 (precondition_loop_p enforces      this requirement).  Nevertheless, the RTX_COSTS should be checked      to see if a fast divmod is available.  */
 name|start_sequence
 argument_list|()
 expr_stmt|;
@@ -2142,11 +2142,38 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|loop_info
 operator|->
 name|preconditioned
 condition|)
+name|diff
+operator|=
+name|expand_simple_binop
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|diff
+argument_list|)
+argument_list|,
+name|PLUS
+argument_list|,
+name|diff
+argument_list|,
+name|GEN_INT
+argument_list|(
+name|abs_inc
+operator|-
+literal|1
+argument_list|)
+argument_list|,
+name|diff
+argument_list|,
+literal|1
+argument_list|,
+name|OPTAB_LIB_WIDEN
+argument_list|)
+expr_stmt|;
+else|else
 name|diff
 operator|=
 name|expand_simple_binop
@@ -2174,7 +2201,6 @@ argument_list|,
 name|OPTAB_LIB_WIDEN
 argument_list|)
 expr_stmt|;
-comment|/* (abs (final - initial) + abs_inc * unroll_number - 1) 	 / (abs_inc * unroll_number)  */
 name|diff
 operator|=
 name|expand_simple_binop

@@ -35369,6 +35369,9 @@ literal|0
 else|:
 name|p
 decl_stmt|;
+name|rtx
+name|note
+decl_stmt|;
 comment|/* If this is a libcall that sets a giv, skip ahead to its end.  */
 if|if
 condition|(
@@ -35380,9 +35383,8 @@ operator|==
 literal|'i'
 condition|)
 block|{
-name|rtx
 name|note
-init|=
+operator|=
 name|find_reg_note
 argument_list|(
 name|p
@@ -35391,7 +35393,7 @@ name|REG_LIBCALL
 argument_list|,
 name|NULL_RTX
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|note
@@ -35481,6 +35483,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
+comment|/* Closely examine the insn if the biv is mentioned.  */
 if|if
 condition|(
 operator|(
@@ -35551,6 +35554,45 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* If we are eliminating, kill REG_EQUAL notes mentioning the biv.  */
+if|if
+condition|(
+name|eliminate_p
+operator|&&
+operator|(
+name|note
+operator|=
+name|find_reg_note
+argument_list|(
+name|p
+argument_list|,
+name|REG_EQUAL
+argument_list|,
+name|NULL_RTX
+argument_list|)
+operator|)
+operator|!=
+name|NULL_RTX
+operator|&&
+name|reg_mentioned_p
+argument_list|(
+name|reg
+argument_list|,
+name|XEXP
+argument_list|(
+name|note
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+name|remove_note
+argument_list|(
+name|p
+argument_list|,
+name|note
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

@@ -360,9 +360,6 @@ name|CTI_UNSIGNED_WCHAR_TYPE
 block|,
 name|CTI_WINT_TYPE
 block|,
-name|CTI_C_SIZE_TYPE
-block|,
-comment|/* The type used for the size_t typedef and the 			result type of sizeof (an ordinary type without 			TYPE_IS_SIZETYPE set, unlike the internal 			sizetype).  */
 name|CTI_SIGNED_SIZE_TYPE
 block|,
 comment|/* For format checking only.  */
@@ -483,13 +480,6 @@ define|#
 directive|define
 name|wint_type_node
 value|c_global_trees[CTI_WINT_TYPE]
-end_define
-
-begin_define
-define|#
-directive|define
-name|c_size_type_node
-value|c_global_trees[CTI_C_SIZE_TYPE]
 end_define
 
 begin_define

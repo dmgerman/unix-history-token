@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Expand the basic unary and binary arithmetic operations, for GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Expand the basic unary and binary arithmetic operations, for GNU compiler.    Copyright (C) 1987, 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -107,6 +107,18 @@ begin_include
 include|#
 directive|include
 file|"real.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hard-reg-set.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"basic-block.h"
 end_include
 
 begin_comment
@@ -3532,7 +3544,7 @@ name|tmp
 expr_stmt|;
 block|}
 block|}
-comment|/* In case the insn wants input operands in modes different from 	 those of the actual operands, convert the operands.  It would 	 seem that we don't need to convert CONST_INTs, but we do, so 	 that they're properly zero-extended or sign-extended for their 	 modes; shift operations are an exception, because the second 	 operand needs not be extended to the mode of the result.  */
+comment|/* In case the insn wants input operands in modes different from 	 those of the actual operands, convert the operands.  It would 	 seem that we don't need to convert CONST_INTs, but we do, so 	 that they're properly zero-extended, sign-extended or truncated 	 for their mode.  */
 if|if
 condition|(
 name|GET_MODE
@@ -3602,12 +3614,7 @@ argument_list|(
 name|op1
 argument_list|)
 else|:
-operator|!
-name|shift_op
-condition|?
 name|mode
-else|:
-name|mode1
 argument_list|,
 name|xop1
 argument_list|,
@@ -13270,6 +13277,55 @@ name|equiv
 argument_list|)
 condition|)
 block|{
+comment|/* We can't attach the REG_LIBCALL and REG_RETVAL notes 	 when the encapsulated region would not be in one basic block, 	 i.e. when there is a control_flow_insn_p insn between FIRST and LAST.        */
+name|bool
+name|attach_libcall_retval_notes
+init|=
+name|true
+decl_stmt|;
+name|next
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|last
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|insn
+operator|=
+name|first
+init|;
+name|insn
+operator|!=
+name|next
+condition|;
+name|insn
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|insn
+argument_list|)
+control|)
+if|if
+condition|(
+name|control_flow_insn_p
+argument_list|(
+name|insn
+argument_list|)
+condition|)
+block|{
+name|attach_libcall_retval_notes
+operator|=
+name|false
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|attach_libcall_retval_notes
+condition|)
+block|{
 name|REG_NOTES
 argument_list|(
 name|first
@@ -13304,6 +13360,7 @@ name|last
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

@@ -3417,7 +3417,7 @@ name|build1
 argument_list|(
 name|NOP_EXPR
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|,
 name|size
 argument_list|)
@@ -3511,7 +3511,7 @@ name|build1
 argument_list|(
 name|NOP_EXPR
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|,
 name|size
 argument_list|)
@@ -11854,22 +11854,6 @@ argument_list|(
 name|arg
 argument_list|)
 decl_stmt|;
-name|arg
-operator|=
-name|get_unwidened
-argument_list|(
-name|arg
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|argtype
-operator|=
-name|TREE_TYPE
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
 comment|/* Compute the increment.  */
 if|if
 condition|(
@@ -11982,6 +11966,22 @@ else|else
 name|inc
 operator|=
 name|integer_one_node
+expr_stmt|;
+name|arg
+operator|=
+name|get_unwidened
+argument_list|(
+name|arg
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|argtype
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|arg
+argument_list|)
 expr_stmt|;
 name|inc
 operator|=
@@ -26227,6 +26227,14 @@ name|constructor_fields
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If the current field was the first one not yet written out, 		 it isn't now, so update.  */
+if|if
+condition|(
+name|constructor_unfilled_fields
+operator|==
+name|constructor_fields
+condition|)
+block|{
 name|constructor_unfilled_fields
 operator|=
 name|TREE_CHAIN
@@ -26260,6 +26268,7 @@ argument_list|(
 name|constructor_unfilled_fields
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|constructor_fields
 operator|=
@@ -27136,6 +27145,7 @@ argument_list|(
 name|expr
 argument_list|)
 expr_stmt|;
+comment|/* Simple asm statements are treated as volatile.  */
 name|stmt
 operator|=
 name|add_stmt
@@ -27144,7 +27154,13 @@ name|build_stmt
 argument_list|(
 name|ASM_STMT
 argument_list|,
-name|NULL_TREE
+name|ridpointers
+index|[
+operator|(
+name|int
+operator|)
+name|RID_VOLATILE
+index|]
 argument_list|,
 name|expr
 argument_list|,

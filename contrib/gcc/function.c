@@ -13052,7 +13052,6 @@ argument_list|)
 operator|!=
 name|MEM
 condition|)
-block|{
 name|put_addressof_into_stack
 argument_list|(
 name|x
@@ -13060,10 +13059,6 @@ argument_list|,
 name|ht
 argument_list|)
 expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 comment|/* We must create a copy of the rtx because it was created by 	 overwriting a REG rtx which is always shared.  */
 name|sub
 operator|=

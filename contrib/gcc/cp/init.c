@@ -3675,7 +3675,10 @@ condition|)
 block|{
 name|basetype
 operator|=
+name|TYPE_MAIN_VARIANT
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|name
 operator|=

@@ -3179,6 +3179,29 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Similar, except that BITPOS has not yet been applied to REF, so if    we alter MEM_OFFSET according to T then we should subtract BITPOS    expecting that it'll be added back in later.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_mem_attributes_minus_bitpos
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|tree
+operator|,
+name|int
+operator|,
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

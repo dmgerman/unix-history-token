@@ -8756,9 +8756,6 @@ case|case
 name|CLOBBER
 case|:
 case|case
-name|ASM_INPUT
-case|:
-case|case
 name|ADDR_VEC
 case|:
 case|case
@@ -8780,6 +8777,9 @@ comment|/* case TRAP_IF: This isn't clear yet.  */
 return|return
 literal|1
 return|;
+case|case
+name|ASM_INPUT
+case|:
 case|case
 name|ASM_OPERANDS
 case|:
@@ -8977,9 +8977,6 @@ case|case
 name|CLOBBER
 case|:
 case|case
-name|ASM_INPUT
-case|:
-case|case
 name|ADDR_VEC
 case|:
 case|case
@@ -9000,6 +8997,9 @@ literal|1
 return|;
 case|case
 name|MEM
+case|:
+case|case
+name|ASM_INPUT
 case|:
 case|case
 name|ASM_OPERANDS
@@ -9195,9 +9195,6 @@ case|case
 name|SCRATCH
 case|:
 case|case
-name|ASM_INPUT
-case|:
-case|case
 name|ADDR_VEC
 case|:
 case|case
@@ -9250,6 +9247,9 @@ literal|1
 return|;
 case|case
 name|MEM
+case|:
+case|case
+name|ASM_INPUT
 case|:
 case|case
 name|ASM_OPERANDS

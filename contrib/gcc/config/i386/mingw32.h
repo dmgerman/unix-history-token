@@ -208,15 +208,5 @@ define|\
 value|do {						\   char c;					\ 						\   putc ('\"', asm_file);			\ 						\   while ((c = *string++) != 0)			\     {						\       if (c == '\\')				\ 	c = '/';				\ 						\       if (c == '\"')				\ 	putc ('\\', asm_file);			\       putc (c, asm_file);			\     }						\ 						\   putc ('\"', asm_file);			\ } while (0)
 end_define
 
-begin_comment
-comment|/* Override Cygwin's definition. This is necessary now due to the way    Cygwin profiling code is written. Once "fixed", we can remove this.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_PROLOGUE
-end_undef
-
 end_unit
 

@@ -1904,7 +1904,7 @@ block|{
 case|case
 name|PLUS
 case|:
-comment|/* If we have a PLUS whose second operand is now a CONST_INT, use          plus_constant to try to simplify it.          ??? We may want later to remove this, once simplification is          separated from this function.  */
+comment|/* If we have a PLUS whose second operand is now a CONST_INT, use          simplify_gen_binary to try to simplify it.          ??? We may want later to remove this, once simplification is          separated from this function.  */
 if|if
 condition|(
 name|GET_CODE
@@ -1918,6 +1918,15 @@ argument_list|)
 argument_list|)
 operator|==
 name|CONST_INT
+operator|&&
+name|XEXP
+argument_list|(
+name|x
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+name|to
 condition|)
 name|validate_change
 argument_list|(

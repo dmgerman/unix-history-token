@@ -1775,7 +1775,7 @@ name|tree_cons
 argument_list|(
 name|NULL_TREE
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|,
 name|void_list_node
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* C Compatible Compiler Preprocessor (CCCP) Copyright (C) 1986, 1987, 1989, 2000, 2001 Free Software Foundation, Inc.                     Written by Paul Rubin, June 1986 		    Adapted to ANSI C, Richard Stallman, Jan 1987 		    Dusted off, polished, and adapted for use as traditional 		    preprocessor only, Zack Weinberg, Jul 2000  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* C Compatible Compiler Preprocessor (CCCP) Copyright (C) 1986, 1987, 1989, 2000, 2001, 2003 Free Software Foundation, Inc.                     Written by Paul Rubin, June 1986 		    Adapted to ANSI C, Richard Stallman, Jan 1987 		    Dusted off, polished, and adapted for use as traditional 		    preprocessor only, Zack Weinberg, Jul 2000  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -10893,18 +10893,13 @@ name|fp
 operator|->
 name|length
 expr_stmt|;
-operator|*
-name|end
-operator|=
-literal|'\r'
-expr_stmt|;
 name|p
 operator|=
 operator|(
 name|U_CHAR
 operator|*
 operator|)
-name|strchr
+name|memchr
 argument_list|(
 operator|(
 specifier|const
@@ -10916,18 +10911,17 @@ operator|->
 name|buf
 argument_list|,
 literal|'\r'
+argument_list|,
+name|fp
+operator|->
+name|length
 argument_list|)
-expr_stmt|;
-operator|*
-name|end
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
 name|p
 operator|==
-name|end
+name|NULL
 condition|)
 return|return;
 if|if

@@ -6322,6 +6322,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|processing_template_decl
+condition|)
+block|{
+if|if
+condition|(
 name|TREE_CODE
 argument_list|(
 name|init
@@ -6385,7 +6391,7 @@ name|init
 operator|==
 name|error_mark_node
 condition|)
-comment|/* We must make this look different than `error_mark_node' 	       because `decl_const_value' would mis-interpret it 	       as only meaning that this VAR_DECL is defined.  */
+comment|/* We must make this look different than `error_mark_node' 		   because `decl_const_value' would mis-interpret it 		   as only meaning that this VAR_DECL is defined.  */
 name|init
 operator|=
 name|build1
@@ -6403,12 +6409,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|processing_template_decl
-condition|)
-empty_stmt|;
-elseif|else
-if|if
-condition|(
 operator|!
 name|TREE_CONSTANT
 argument_list|(
@@ -6416,7 +6416,7 @@ name|init
 argument_list|)
 condition|)
 block|{
-comment|/* We can allow references to things that are effectively 		 static, since references are initialized with the address.  */
+comment|/* We can allow references to things that are effectively 		     static, since references are initialized with the 		     address.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -6463,6 +6463,7 @@ name|init
 operator|=
 name|error_mark_node
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -8121,7 +8122,7 @@ argument_list|(
 name|args
 argument_list|)
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|)
 condition|)
 block|{
@@ -8148,7 +8149,7 @@ name|pedwarn
 argument_list|(
 literal|"`operator new' takes type `size_t' (`%T') as first parameter"
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|)
 expr_stmt|;
 block|}
@@ -8166,7 +8167,7 @@ name|tree_cons
 argument_list|(
 name|NULL_TREE
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|,
 name|args
 argument_list|)
@@ -19650,6 +19651,9 @@ init|=
 name|NULL_TREE
 decl_stmt|;
 name|tree
+name|type
+decl_stmt|;
+name|tree
 name|current
 init|=
 name|current_scope
@@ -19817,15 +19821,19 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+name|type
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|TYPE_BINFO
 argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|decl
-argument_list|)
+name|type
 argument_list|)
 condition|)
 block|{
@@ -19834,6 +19842,48 @@ argument_list|(
 literal|"`%T' is not a class or union type"
 argument_list|,
 name|decl
+argument_list|)
+expr_stmt|;
+return|return
+name|error_mark_node
+return|;
+block|}
+comment|/* When `A' is a template class, using `class A' without template      argument is invalid unless      - we are inside the scope of the template class `A' or one of its        specialization.      - we are declaring the template class `A' itself.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|RECORD_TYPE
+operator|&&
+name|CLASSTYPE_IS_TEMPLATE
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+name|processing_template_decl
+operator|<=
+name|template_class_depth
+argument_list|(
+name|current
+argument_list|)
+operator|&&
+operator|!
+name|is_base_of_enclosing_class
+argument_list|(
+name|type
+argument_list|,
+name|current_class_type
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"template argument is required for `%T'"
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 return|return

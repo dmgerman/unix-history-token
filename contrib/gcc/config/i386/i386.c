@@ -4983,7 +4983,7 @@ literal|2
 condition|)
 name|flag_pcc_struct_return
 operator|=
-literal|1
+name|DEFAULT_PCC_STRUCT_RETURN
 expr_stmt|;
 block|}
 ifdef|#

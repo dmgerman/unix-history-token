@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Optimize jump instructions, for GNU compiler.    Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997    1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Optimize jump instructions, for GNU compiler.    Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997    1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -116,6 +116,19 @@ end_comment
 begin_comment
 comment|/* Optimize two cases of conditional jump to conditional jump?    This can never delete any instruction or make anything dead,    or even change what is live at any point.    So perhaps let combiner do it.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|next_nonnote_insn_in_loop
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -447,6 +460,73 @@ end_function
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Return the next insn after INSN that is not a NOTE and is in the loop,    i.e. when there is no such INSN before NOTE_INSN_LOOP_END return NULL_RTX.    This routine does not look inside SEQUENCEs.  */
+end_comment
+
+begin_function
+specifier|static
+name|rtx
+name|next_nonnote_insn_in_loop
+parameter_list|(
+name|insn
+parameter_list|)
+name|rtx
+name|insn
+decl_stmt|;
+block|{
+while|while
+condition|(
+name|insn
+condition|)
+block|{
+name|insn
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|insn
+operator|==
+literal|0
+operator|||
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|!=
+name|NOTE
+condition|)
+break|break;
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|NOTE
+operator|&&
+name|NOTE_LINE_NUMBER
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|NOTE_INSN_LOOP_END
+condition|)
+return|return
+name|NULL_RTX
+return|;
+block|}
+return|return
+name|insn
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|copy_loop_headers
@@ -508,7 +588,7 @@ operator|&&
 operator|(
 name|temp1
 operator|=
-name|next_nonnote_insn
+name|next_nonnote_insn_in_loop
 argument_list|(
 name|insn
 argument_list|)
@@ -1175,7 +1255,7 @@ name|NEXT_INSN
 argument_list|(
 name|JUMP_LABEL
 argument_list|(
-name|next_nonnote_insn
+name|next_nonnote_insn_in_loop
 argument_list|(
 name|loop_start
 argument_list|)

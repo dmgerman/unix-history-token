@@ -164,6 +164,15 @@ comment|/* Set of hard registers that some later allocno has a preference for.  
 name|HARD_REG_SET
 name|regs_someone_prefers
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|STACK_REGS
+comment|/* Set to true if allocno can't be allocated in the stack register.  */
+name|bool
+name|no_stack_reg
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -2502,6 +2511,18 @@ name|e
 operator|!=
 name|NULL
 condition|)
+block|{
+name|EXECUTE_IF_SET_IN_ALLOCNO_SET
+argument_list|(
+argument|allocnos_live
+argument_list|,
+argument|ax
+argument_list|,
+argument|{                   allocno[ax].no_stack_reg =
+literal|1
+argument|;                 }
+argument_list|)
+empty_stmt|;
 for|for
 control|(
 name|ax
@@ -2520,6 +2541,7 @@ argument_list|(
 name|ax
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -4661,6 +4683,29 @@ argument_list|,
 name|regno
 argument_list|)
 operator|)
+operator|)
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|STACK_REGS
+operator|&&
+operator|(
+operator|!
+name|allocno
+index|[
+name|num
+index|]
+operator|.
+name|no_stack_reg
+operator|||
+name|regno
+operator|<
+name|FIRST_STACK_REG
+operator|||
+name|regno
+operator|>
+name|LAST_STACK_REG
 operator|)
 endif|#
 directive|endif

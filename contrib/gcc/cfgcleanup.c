@@ -2025,6 +2025,8 @@ condition|)
 break|break;
 if|if
 condition|(
+name|insn
+operator|&&
 name|GET_CODE
 argument_list|(
 name|insn
