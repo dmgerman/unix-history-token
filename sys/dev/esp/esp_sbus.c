@@ -1421,6 +1421,12 @@ name|sc_maxoffset
 operator|=
 literal|15
 expr_stmt|;
+name|sc
+operator|->
+name|sc_extended_geometry
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Alas, we must now modify the value a bit, because it's 	 * only valid when can switch on FASTCLK and FASTSCSI bits   	 * in config register 3...  	 */
 switch|switch
 condition|(

@@ -1174,6 +1174,10 @@ name|int
 name|sc_maxwidth
 decl_stmt|;
 comment|/* Maximum width */
+name|int
+name|sc_extended_geom
+decl_stmt|;
+comment|/* Should we return extended geometry */
 name|struct
 name|mtx
 name|sc_lock

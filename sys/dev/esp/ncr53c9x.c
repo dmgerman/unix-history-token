@@ -3346,10 +3346,11 @@ name|ccb
 operator|->
 name|ccg
 argument_list|,
-literal|0
+name|sc
+operator|->
+name|sc_extended_geom
 argument_list|)
 expr_stmt|;
-comment|/* XXX Extended? */
 name|xpt_done
 argument_list|(
 name|ccb
