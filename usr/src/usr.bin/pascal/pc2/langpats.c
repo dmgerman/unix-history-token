@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.7 %G%"
+literal|"@(#)langpats.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,13 +90,13 @@ literal|"	popr	$0x30\n\ 	popr	$0x2\n\ 1:\n\ 	movzwl	$65535,r0\n\ 	cmpl	r5,r0\n\ 
 block|}
 block|,
 block|{
-literal|"1,_ROUND\n"
+literal|"2,_ROUND\n"
 block|,
 literal|"	cvtrdl	(sp)+,r0\n"
 block|}
 block|,
 block|{
-literal|"1,_TRUNC\n"
+literal|"2,_TRUNC\n"
 block|,
 literal|"	cvtdl	(sp)+,r0\n"
 block|}
