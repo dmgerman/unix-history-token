@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.14 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,7 +467,12 @@ name|inp
 operator|->
 name|i_isize
 operator|=
+name|roundup
+argument_list|(
 name|MINDIRSIZE
+argument_list|,
+name|DIRBLKSIZ
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -492,7 +497,9 @@ name|dp
 operator|->
 name|di_size
 operator|=
-name|MINDIRSIZE
+name|inp
+operator|->
+name|i_isize
 expr_stmt|;
 name|inodirty
 argument_list|()
@@ -504,6 +511,7 @@ name|dino
 expr_stmt|;
 block|}
 block|}
+elseif|else
 if|if
 condition|(
 operator|(
