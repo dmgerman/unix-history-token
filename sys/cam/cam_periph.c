@@ -5482,7 +5482,7 @@ operator|->
 name|ccb_h
 operator|.
 name|retry_count
-operator|>
+operator|==
 literal|0
 condition|)
 block|{
