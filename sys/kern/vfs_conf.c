@@ -182,18 +182,6 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
-name|vfs_mountroot
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|vfs_mountroot_try
 parameter_list|(
@@ -258,34 +246,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|mountroot
-argument_list|,
-name|SI_SUB_MOUNT_ROOT
-argument_list|,
-name|SI_ORDER_SECOND
-argument_list|,
-name|vfs_mountroot
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Find and mount the root filesystem  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|vfs_mountroot
 parameter_list|(
 name|void
 modifier|*
-name|junk
+name|foo
+name|__unused
 parameter_list|)
 block|{
 name|int

@@ -2171,6 +2171,23 @@ comment|/* is a vfs mounted on vp */
 end_comment
 
 begin_decl_stmt
+name|void
+name|vfs_mountroot
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mount our root filesystem */
+end_comment
+
+begin_decl_stmt
 name|int
 name|vfs_rootmountalloc
 name|__P
