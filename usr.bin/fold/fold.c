@@ -91,6 +91,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -198,6 +204,16 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|width
 operator|=
 operator|-
@@ -593,6 +609,10 @@ operator|&&
 operator|!
 name|isblank
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|buf
 index|[
 name|i
