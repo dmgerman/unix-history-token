@@ -496,15 +496,6 @@ name|ret
 operator|=
 name|EAGAIN
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|KMF_DONE
-define|#
-directive|define
-name|KMF_DONE
-value|0x04
-endif|#
-directive|endif
 if|if
 condition|(
 name|kse

@@ -260,24 +260,6 @@ parameter_list|)
 value|((kse)->k_schedq->sq_runq.pq_threads)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KMF_DONE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KMF_DONE
-value|0x04
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * We've got to keep track of everything that is allocated, not only  * to have a speedy free list, but also so they can be deallocated  * after a fork().  */
 end_comment
