@@ -990,6 +990,12 @@ operator|-
 literal|1
 operator|)
 return|;
+name|s
+operator|->
+name|s_len
+operator|+=
+name|len
+expr_stmt|;
 return|return
 operator|(
 literal|0
