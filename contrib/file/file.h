@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.34 2000/11/13 00:30:49 christos Exp $  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$Id: file.h,v 1.37 2001/07/22 21:04:15 christos Exp $  *  * Copyright (c) Ian F. Darwin, 1987.  * Written by Ian F. Darwin.  *  * This software is not subject to any license of the American Telephone  * and Telegraph Company or of the Regents of the University of California.  *  * Permission is granted to anyone to use this software for any purpose on  * any computer system, and to alter it and redistribute it freely, subject  * to the following restrictions:  *  * 1. The author is not responsible for the consequences of use of this  *    software, no matter how awful, even if they arise from flaws in it.  *  * 2. The origin of this software must not be misrepresented, either by  *    explicit claim or by omission.  Since few users ever read sources,  *    credits must appear in the documentation.  *  * 3. Altered versions must be plainly marked as such, and must not be  *    misrepresented as being the original software.  Since few users  *    ever read sources, credits must appear in the documentation.  *  * 4. This notice may not be removed or altered.  */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,36 @@ typedef|typedef
 name|unsigned
 name|int
 name|uint32
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|short
+name|int16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|uint16
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|char
+name|int8
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|uint8
 typedef|;
 end_typedef
 
@@ -102,11 +132,47 @@ begin_comment
 comment|/* max leng of "string" types */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAGICNO
+value|0xF11E041C
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERSIONNO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|COMPILE
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|magic
 block|{
-name|short
+name|uint16
+name|cont_level
+decl_stmt|;
+comment|/* level of ">" */
+name|uint8
+name|nospflag
+decl_stmt|;
+comment|/* supress space character */
+name|uint8
 name|flag
 decl_stmt|;
 define|#
@@ -121,45 +187,25 @@ value|2
 comment|/* comparison is unsigned */
 define|#
 directive|define
-name|ADD
+name|OFFADD
 value|4
 comment|/* if '>&' appears,  */
-name|short
-name|cont_level
-decl_stmt|;
-comment|/* level of ">" */
-struct|struct
-block|{
-name|unsigned
-name|char
-name|type
-decl_stmt|;
-comment|/* byte short long */
-name|int32
-name|offset
-decl_stmt|;
-comment|/* offset from indirection */
-block|}
-name|in
-struct|;
-name|int32
-name|offset
-decl_stmt|;
-comment|/* offset to magic number */
-name|unsigned
-name|char
+name|uint8
 name|reln
 decl_stmt|;
 comment|/* relation (0=eq, '>'=gt, etc) */
-name|unsigned
-name|char
-name|type
-decl_stmt|;
-comment|/* int, short, long or string. */
-name|char
+name|uint8
 name|vallen
 decl_stmt|;
 comment|/* length of string value, if any */
+name|uint8
+name|type
+decl_stmt|;
+comment|/* int, short, long or string. */
+name|uint8
+name|in_type
+decl_stmt|;
+comment|/* type of indirrection */
 define|#
 directive|define
 name|BYTE
@@ -204,6 +250,74 @@ define|#
 directive|define
 name|LEDATE
 value|12
+define|#
+directive|define
+name|PSTRING
+value|13
+define|#
+directive|define
+name|LDATE
+value|14
+define|#
+directive|define
+name|BELDATE
+value|15
+define|#
+directive|define
+name|LELDATE
+value|16
+name|uint8
+name|in_op
+decl_stmt|;
+comment|/* operator for indirection */
+name|uint8
+name|mask_op
+decl_stmt|;
+comment|/* operator for mask */
+define|#
+directive|define
+name|OPAND
+value|1
+define|#
+directive|define
+name|OPOR
+value|2
+define|#
+directive|define
+name|OPXOR
+value|3
+define|#
+directive|define
+name|OPADD
+value|4
+define|#
+directive|define
+name|OPMINUS
+value|5
+define|#
+directive|define
+name|OPMULTIPLY
+value|6
+define|#
+directive|define
+name|OPDIVIDE
+value|7
+define|#
+directive|define
+name|OPMODULO
+value|8
+define|#
+directive|define
+name|OPINVERSE
+value|0x80
+name|int32
+name|offset
+decl_stmt|;
+comment|/* offset to magic number */
+name|int32
+name|in_offset
+decl_stmt|;
+comment|/* offset from indirection */
 union|union
 name|VALUETYPE
 block|{
@@ -239,7 +353,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* 2 bytes of a fixed-endian "long" */
+comment|/* 4 bytes of a fixed-endian "long" */
 block|}
 name|value
 union|;
@@ -248,10 +362,6 @@ name|uint32
 name|mask
 decl_stmt|;
 comment|/* mask before comparison with value */
-name|char
-name|nospflag
-decl_stmt|;
-comment|/* supress space character */
 name|char
 name|desc
 index|[
@@ -314,6 +424,36 @@ directive|define
 name|CHAR_COMPACT_OPTIONAL_BLANK
 value|'b'
 end_define
+
+begin_comment
+comment|/* list of magic entries */
+end_comment
+
+begin_struct
+struct|struct
+name|mlist
+block|{
+name|struct
+name|magic
+modifier|*
+name|magic
+decl_stmt|;
+comment|/* array of magic entries */
+name|uint32
+name|nmagic
+decl_stmt|;
+comment|/* number of entries in array */
+name|struct
+name|mlist
+modifier|*
+name|next
+decl_stmt|,
+modifier|*
+name|prev
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_include
 include|#
@@ -481,6 +621,22 @@ operator|,
 expr|struct
 name|stat
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|fmttime
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -740,25 +896,13 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|magic
-modifier|*
-name|magic
+name|mlist
+name|mlist
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* array of magic entries		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nmagic
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of valid magic[]s 		*/
+comment|/* list of arrays of magic entries	*/
 end_comment
 
 begin_decl_stmt
@@ -891,6 +1035,37 @@ parameter_list|,
 name|c
 parameter_list|)
 value|strtol(a, b, c)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MMAP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_SYS_MMAN_H
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|QUICK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|QUICK
 end_define
 
 begin_endif
