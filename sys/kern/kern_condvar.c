@@ -588,7 +588,10 @@ name|WITNESS_SLEEP
 argument_list|(
 literal|0
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
@@ -787,7 +790,10 @@ name|WITNESS_SLEEP
 argument_list|(
 literal|0
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
@@ -1048,7 +1054,10 @@ name|WITNESS_SLEEP
 argument_list|(
 literal|0
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
@@ -1301,7 +1310,10 @@ name|WITNESS_SLEEP
 argument_list|(
 literal|0
 argument_list|,
+operator|&
 name|mp
+operator|->
+name|mtx_object
 argument_list|)
 expr_stmt|;
 name|WITNESS_SAVE
