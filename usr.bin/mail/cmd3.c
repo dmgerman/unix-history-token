@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)cmd3.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)cmd3.c	8.2 (Berkeley) 4/20/95";
 endif|#
 directive|endif
 end_endif
@@ -1633,7 +1633,7 @@ operator|)
 return|;
 name|exit
 argument_list|(
-name|e
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -2025,6 +2025,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|getenv
+argument_list|(
+operator|*
+name|ap
+argument_list|)
+condition|)
+name|unsetenv
+argument_list|(
+operator|*
+name|ap
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|!
@@ -2674,7 +2689,9 @@ name|NULL
 condition|)
 block|{
 name|newfileinfo
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)quit.c	8.1 (Berkeley) 6/6/93";
+unit|static char sccsid[] = "@(#)quit.c	8.2 (Berkeley) 4/28/95";
 endif|#
 directive|endif
 end_endif
@@ -1273,6 +1273,7 @@ argument_list|(
 name|ibuf
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1281,7 +1282,6 @@ argument_list|(
 name|obuf
 argument_list|)
 expr_stmt|;
-block|}
 name|trunc
 argument_list|(
 name|obuf
