@@ -2409,6 +2409,10 @@ name|int
 name|need_nl
 init|=
 literal|0
+decl_stmt|,
+name|count
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|struct
@@ -2899,6 +2903,8 @@ name|NULL
 expr_stmt|;
 comment|/* not a family, NULL */
 block|}
+name|retry
+label|:
 name|mib
 index|[
 literal|0
@@ -3024,6 +3030,38 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOMEM
+operator|&&
+name|count
+operator|++
+operator|<
+literal|10
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Routing table grew, retrying"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
 name|errx
 argument_list|(
 literal|1
@@ -3031,6 +3069,7 @@ argument_list|,
 literal|"actual retrieval of interface table"
 argument_list|)
 expr_stmt|;
+block|}
 name|lim
 operator|=
 name|buf
