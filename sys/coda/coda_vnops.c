@@ -1803,6 +1803,11 @@ name|NULL
 condition|)
 block|{
 comment|/*  	 * If we're dumping core, do the internal open. Otherwise 	 * venus won't have the correct size of the core when 	 * it's completely written. 	 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cp
@@ -1825,6 +1830,11 @@ operator|)
 operator|)
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|igot_internally
 operator|=
 literal|1
@@ -1874,6 +1884,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|opened_internally
 operator|=
 literal|1
