@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.26	82/10/03	*/
+comment|/*	uipc_socket2.c	4.27	82/10/05	*/
 end_comment
 
 begin_include
@@ -1681,12 +1681,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMINOFF
-expr_stmt|;
 name|m
 operator|->
 name|m_len
