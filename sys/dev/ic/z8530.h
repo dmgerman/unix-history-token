@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEV_UART_DEV_Z8530_H_
+name|_DEV_IC_Z8530_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DEV_UART_DEV_Z8530_H_
+name|_DEV_IC_Z8530_H_
 end_define
 
 begin_comment
@@ -2032,7 +2032,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_UART_DEV_Z8530_H_ */
+comment|/* _DEV_IC_Z8530_H_ */
 end_comment
 
 end_unit
