@@ -482,9 +482,8 @@ name|di_gen
 operator|=
 name|ei
 operator|->
-name|i_version
+name|i_generation
 expr_stmt|;
-comment|/* XXX is that true ??? */
 name|di
 operator|->
 name|di_uid
@@ -706,13 +705,12 @@ name|di_blocks
 expr_stmt|;
 name|ei
 operator|->
-name|i_version
+name|i_generation
 operator|=
 name|di
 operator|->
 name|di_gen
 expr_stmt|;
-comment|/* XXX is that true ??? */
 name|ei
 operator|->
 name|i_uid

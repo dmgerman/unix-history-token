@@ -142,36 +142,6 @@ name|EXT2FS_DEBUG
 end_undef
 
 begin_comment
-comment|/*  * Define EXT2FS_DEBUG_CACHE to produce cache debug messages  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXT2FS_DEBUG_CACHE
-end_undef
-
-begin_comment
-comment|/*  * Define EXT2FS_CHECK_CACHE to add some checks to the name cache code  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXT2FS_CHECK_CACHE
-end_undef
-
-begin_comment
-comment|/*  * Define EXT2FS_PRE_02B_COMPAT to convert ext 2 fs prior to 0.2b  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXT2FS_PRE_02B_COMPAT
-end_undef
-
-begin_comment
 comment|/*  * Define EXT2_PREALLOCATE to preallocate data blocks for expanding files  */
 end_comment
 
@@ -179,6 +149,13 @@ begin_define
 define|#
 directive|define
 name|EXT2_PREALLOCATE
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_DEFAULT_PREALLOC_BLOCKS
+value|8
 end_define
 
 begin_comment
@@ -189,14 +166,14 @@ begin_define
 define|#
 directive|define
 name|EXT2FS_DATE
-value|"95/03/19"
+value|"95/08/09"
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXT2FS_VERSION
-value|"0.5a"
+value|"0.5b"
 end_define
 
 begin_comment
@@ -318,20 +295,26 @@ begin_comment
 comment|/* Undelete directory inode */
 end_comment
 
+begin_comment
+comment|/* First non-reserved inode for old ext2 filesystems */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|EXT2_FIRST_INO
+name|EXT2_GOOD_OLD_FIRST_INO
 value|11
 end_define
 
 begin_comment
-comment|/* First non reserved inode */
-end_comment
-
-begin_comment
 comment|/*  * The second extended file system magic number  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|notyet
+end_ifndef
 
 begin_define
 define|#
@@ -339,6 +322,11 @@ directive|define
 name|EXT2_PRE_02B_MAGIC
 value|0xEF51
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -471,7 +459,7 @@ name|EXT2_BLOCK_SIZE_BITS
 parameter_list|(
 name|s
 parameter_list|)
-value|((s)->u.ext2_sb.s_es->s_log_block_size + 10)
+value|((s)->s_blocksize_bits)
 end_define
 
 begin_else
@@ -494,19 +482,86 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__KERNEL__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EXT2_ADDR_PER_BLOCK_BITS
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->u.ext2_sb.s_addr_per_block_bits)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_INODE_SIZE
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->u.ext2_sb.s_inode_size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FIRST_INO
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->u.ext2_sb.s_first_ino)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXT2_INODE_SIZE
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s)->s_rev_level == EXT2_GOOD_OLD_REV) ? \ 				 EXT2_GOOD_OLD_INODE_SIZE : \ 				 (s)->s_inode_size)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FIRST_INO
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s)->s_rev_level == EXT2_GOOD_OLD_REV) ? \ 				 EXT2_GOOD_OLD_FIRST_INO : \ 				 (s)->s_first_ino)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !notyet */
+end_comment
 
 begin_define
 define|#
@@ -518,26 +573,6 @@ parameter_list|)
 value|((s)->s_inodes_per_block)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EXT2_INODES_PER_BLOCK
-parameter_list|(
-name|s
-parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / sizeof (struct ext2_inode))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Should be sizeof(struct ext2_inode): */
 end_comment
@@ -548,6 +583,22 @@ directive|define
 name|EXT2_INODE_SIZE
 value|128
 end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FIRST_INO
+value|11
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_comment
 comment|/*  * Macro-instructions used to manage fragments  */
@@ -727,34 +778,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|ext2_old_group_desc
-block|{
-name|__u32
-name|bg_block_bitmap
-decl_stmt|;
-comment|/* Blocks bitmap block */
-name|__u32
-name|bg_inode_bitmap
-decl_stmt|;
-comment|/* Inodes bitmap block */
-name|__u32
-name|bg_inode_table
-decl_stmt|;
-comment|/* Inodes table block */
-name|__u16
-name|bg_free_blocks_count
-decl_stmt|;
-comment|/* Free blocks count */
-name|__u16
-name|bg_free_inodes_count
-decl_stmt|;
-comment|/* Free inodes count */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|ext2_group_desc
 block|{
 name|__u32
@@ -832,6 +855,16 @@ parameter_list|(
 name|s
 parameter_list|)
 value|((s)->u.ext2_sb.s_inodes_per_group)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_DESC_PER_BLOCK_BITS
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->u.ext2_sb.s_desc_per_block_bits)
 end_define
 
 begin_else
@@ -1001,6 +1034,109 @@ begin_comment
 comment|/* do not dump file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXT2_NOATIME_FL
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* do not update atime */
+end_comment
+
+begin_comment
+comment|/* Reserved for compression usage... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_DIRTY_FL
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_COMPRBLK_FL
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* One or more compressed clusters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_NOCOMP_FL
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Don't compress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_ECOMPR_FL
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Compression error */
+end_comment
+
+begin_comment
+comment|/* End compression flags --- maybe not all used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_BTREE_FL
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* btree format dir */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_RESERVED_FL
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* reserved for ext2 lib */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_FL_USER_VISIBLE
+value|0x00001FFF
+end_define
+
+begin_comment
+comment|/* User visible flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_FL_USER_MODIFIABLE
+value|0x000000FF
+end_define
+
+begin_comment
+comment|/* User modifiable flags */
+end_comment
+
 begin_comment
 comment|/*  * ioctl commands  */
 end_comment
@@ -1133,7 +1269,7 @@ index|]
 decl_stmt|;
 comment|/* Pointers to blocks */
 name|__u32
-name|i_version
+name|i_generation
 decl_stmt|;
 comment|/* File version (for NFS) */
 name|__u32
@@ -1226,6 +1362,13 @@ comment|/* OS dependent 2 */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|i_size_high
+value|i_dir_acl
+end_define
 
 begin_if
 if|#
@@ -1687,8 +1830,9 @@ name|s_errors
 decl_stmt|;
 comment|/* Behaviour when detecting errors */
 name|__u16
-name|s_pad
+name|s_minor_rev_level
 decl_stmt|;
+comment|/* minor revision level */
 name|__u32
 name|s_lastcheck
 decl_stmt|;
@@ -1713,16 +1857,122 @@ name|__u16
 name|s_def_resgid
 decl_stmt|;
 comment|/* Default gid for reserved blocks */
+comment|/* 	 * These fields are for EXT2_DYNAMIC_REV superblocks only. 	 * 	 * Note: the difference between the compatible feature set and 	 * the incompatible feature set is that if there is a bit set 	 * in the incompatible feature set that the kernel doesn't 	 * know about, it should refuse to mount the filesystem. 	 *  	 * e2fsck's requirements are more strict; if it doesn't know 	 * about a feature in either the compatible or incompatible 	 * feature set, it must abort and not try to meddle with 	 * things it doesn't understand... 	 */
+name|__u32
+name|s_first_ino
+decl_stmt|;
+comment|/* First non-reserved inode */
+name|__u16
+name|s_inode_size
+decl_stmt|;
+comment|/* size of inode structure */
+name|__u16
+name|s_block_group_nr
+decl_stmt|;
+comment|/* block group # of this superblock */
+name|__u32
+name|s_feature_compat
+decl_stmt|;
+comment|/* compatible feature set */
+name|__u32
+name|s_feature_incompat
+decl_stmt|;
+comment|/* incompatible feature set */
+name|__u32
+name|s_feature_ro_compat
+decl_stmt|;
+comment|/* readonly-compatible feature set */
+name|__u8
+name|s_uuid
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* 128-bit uuid for volume */
+name|char
+name|s_volume_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* volume name */
+name|char
+name|s_last_mounted
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* directory where last mounted */
+name|__u32
+name|s_algorithm_usage_bitmap
+decl_stmt|;
+comment|/* For compression */
+comment|/* 	 * Performance hints.  Directory preallocation should only 	 * happen if the EXT2_COMPAT_PREALLOC flag is on. 	 */
+name|__u8
+name|s_prealloc_blocks
+decl_stmt|;
+comment|/* Nr of blocks to try to preallocate*/
+name|__u8
+name|s_prealloc_dir_blocks
+decl_stmt|;
+comment|/* Nr to preallocate for dirs */
+name|__u16
+name|s_padding1
+decl_stmt|;
 name|__u32
 name|s_reserved
 index|[
-literal|235
+literal|204
 index|]
 decl_stmt|;
 comment|/* Padding to the end of the block */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__KERNEL__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EXT2_SB
+parameter_list|(
+name|sb
+parameter_list|)
+value|(&((sb)->u.ext2_sb))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Assume that user mode programs are passing in an ext2fs superblock, not  * a kernel struct super_block.  This will allow us to call the feature-test  * macros from user land. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_SB
+parameter_list|(
+name|sb
+parameter_list|)
+value|(sb)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Codes for operating systems  */
+end_comment
 
 begin_define
 define|#
@@ -1748,9 +1998,196 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT2_CURRENT_REV
+name|EXT2_OS_FREEBSD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_OS_LITES
+value|4
+end_define
+
+begin_comment
+comment|/*  * Revision levels  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_GOOD_OLD_REV
 value|0
 end_define
+
+begin_comment
+comment|/* The good old (original) format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_DYNAMIC_REV
+value|1
+end_define
+
+begin_comment
+comment|/* V2 format w/ dynamic inode sizes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_CURRENT_REV
+value|EXT2_GOOD_OLD_REV
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_MAX_SUPP_REV
+value|EXT2_DYNAMIC_REV
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_GOOD_OLD_INODE_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/*  * Feature set definitions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_HAS_COMPAT_FEATURE
+parameter_list|(
+name|sb
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|( EXT2_SB(sb)->s_feature_compat& (mask) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_HAS_RO_COMPAT_FEATURE
+parameter_list|(
+name|sb
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|( EXT2_SB(sb)->s_feature_ro_compat& (mask) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_HAS_INCOMPAT_FEATURE
+parameter_list|(
+name|sb
+parameter_list|,
+name|mask
+parameter_list|)
+define|\
+value|( EXT2_SB(sb)->s_feature_incompat& (mask) )
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_COMPAT_DIR_PREALLOC
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_RO_COMPAT_LARGE_FILE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_RO_COMPAT_BTREE_DIR
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_INCOMPAT_COMPRESSION
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_INCOMPAT_FILETYPE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_COMPAT_SUPP
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_INCOMPAT_SUPP
+value|EXT2_FEATURE_INCOMPAT_FILETYPE
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_RO_COMPAT_SUPP
+value|(EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER| \ 					 EXT2_FEATURE_RO_COMPAT_LARGE_FILE| \ 					 EXT2_FEATURE_RO_COMPAT_BTREE_DIR)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXT2_FEATURE_RO_COMPAT_SUPP
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Default values for user and/or group using reserved blocks  */
+end_comment
 
 begin_define
 define|#
@@ -1803,6 +2240,107 @@ comment|/* File name */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * The new version of the directory entry.  Since EXT2 structures are  * stored in intel byte order, and the name_len field could never be  * bigger than 255 chars, it's safe to reclaim the extra byte for the  * file_type field.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ext2_dir_entry_2
+block|{
+name|__u32
+name|inode
+decl_stmt|;
+comment|/* Inode number */
+name|__u16
+name|rec_len
+decl_stmt|;
+comment|/* Directory entry length */
+name|__u8
+name|name_len
+decl_stmt|;
+comment|/* Name length */
+name|__u8
+name|file_type
+decl_stmt|;
+name|char
+name|name
+index|[
+name|EXT2_NAME_LEN
+index|]
+decl_stmt|;
+comment|/* File name */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ext2 directory file types.  Only the low 3 bits are used.  The  * other bits are reserved for now.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_REG_FILE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_DIR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_CHRDEV
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_BLKDEV
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_FIFO
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_SOCK
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_SYMLINK
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2_FT_MAX
+value|8
+end_define
 
 begin_comment
 comment|/*  * EXT2_DIR_PAD defines the directory entries boundaries  *  * NOTE: It must be a multiple of 4  */
