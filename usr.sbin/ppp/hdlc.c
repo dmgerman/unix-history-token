@@ -847,7 +847,7 @@ name|end
 decl_stmt|;
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|m
 argument_list|)
@@ -865,7 +865,7 @@ name|pos
 operator|+
 name|m
 operator|->
-name|cnt
+name|m_len
 expr_stmt|;
 while|while
 condition|(
@@ -907,7 +907,7 @@ name|m
 operator|=
 name|m
 operator|->
-name|next
+name|m_next
 expr_stmt|;
 name|pos
 operator|=
@@ -922,7 +922,7 @@ name|pos
 operator|+
 name|m
 operator|->
-name|cnt
+name|m_len
 expr_stmt|;
 block|}
 block|}
@@ -995,7 +995,7 @@ decl_stmt|;
 name|u_short
 name|fcs
 decl_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -1024,28 +1024,28 @@ name|bp
 init|;
 name|last
 operator|->
-name|next
+name|m_next
 condition|;
 name|last
 operator|=
 name|last
 operator|->
-name|next
+name|m_next
 control|)
 empty_stmt|;
 if|if
 condition|(
 name|last
 operator|->
-name|size
+name|m_size
 operator|-
 name|last
 operator|->
-name|offset
+name|m_offset
 operator|-
 name|last
 operator|->
-name|cnt
+name|m_len
 operator|>=
 literal|2
 condition|)
@@ -1059,11 +1059,11 @@ argument_list|)
 operator|+
 name|last
 operator|->
-name|cnt
+name|m_len
 expr_stmt|;
 name|last
 operator|->
-name|cnt
+name|m_len
 operator|+=
 literal|2
 expr_stmt|;
@@ -1075,7 +1075,7 @@ name|mbuf
 modifier|*
 name|tail
 init|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 literal|2
 argument_list|,
@@ -1084,7 +1084,7 @@ argument_list|)
 decl_stmt|;
 name|last
 operator|->
-name|next
+name|m_next
 operator|=
 name|tail
 expr_stmt|;
@@ -2123,7 +2123,7 @@ name|log_DumpBp
 argument_list|(
 name|LogHDLC
 argument_list|,
-literal|"hdlc_Input:"
+literal|"hdlc_LayerPull:"
 argument_list|,
 name|bp
 argument_list|)
@@ -2139,14 +2139,14 @@ argument_list|)
 argument_list|,
 name|bp
 operator|->
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"%s: hdlc_Input: fcs = %04x (%s)\n"
+literal|"%s: hdlc_LayerPull: fcs = %04x (%s)\n"
 argument_list|,
 name|p
 operator|->
@@ -2192,7 +2192,7 @@ operator|.
 name|badfcs
 operator|++
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2211,7 +2211,7 @@ name|SaveInOctets
 operator|+=
 name|bp
 operator|->
-name|cnt
+name|m_len
 operator|+
 literal|1
 expr_stmt|;
@@ -2226,7 +2226,7 @@ operator|++
 expr_stmt|;
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -2239,7 +2239,7 @@ literal|4
 condition|)
 block|{
 comment|/* rfc1662 section 4.3 */
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2251,17 +2251,16 @@ expr_stmt|;
 block|}
 name|bp
 operator|=
-name|mbuf_Truncate
+name|m_adj
 argument_list|(
 name|bp
 argument_list|,
-name|len
 operator|-
 literal|2
 argument_list|)
 expr_stmt|;
 comment|/* discard the FCS */
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,

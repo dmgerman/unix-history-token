@@ -266,6 +266,12 @@ directive|include
 file|"bundle.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"id.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -605,7 +611,7 @@ name|int
 name|chat_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1720,7 +1726,7 @@ name|int
 name|chat_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2002,7 +2008,7 @@ name|void
 name|chat_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2734,7 +2740,7 @@ name|int
 name|chat_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -3158,7 +3164,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|chat_Setup
 parameter_list|(
 name|struct
@@ -3256,6 +3262,8 @@ name|c
 operator|->
 name|argv
 argument_list|)
+argument_list|,
+name|PARSE_NOHASH
 argument_list|)
 expr_stmt|;
 block|}
@@ -3320,6 +3328,13 @@ operator|->
 name|timeout
 argument_list|)
 expr_stmt|;
+return|return
+name|c
+operator|->
+name|argc
+operator|>=
+literal|0
+return|;
 block|}
 end_function
 
@@ -3853,6 +3868,9 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|argc
 operator|=
 name|MakeArgs
@@ -3865,8 +3883,36 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|,
+name|PARSE_REDUCE
+operator||
+name|PARSE_NOHASH
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Syntax error in exec command\n"
 argument_list|)
 expr_stmt|;
+operator|*
+name|out
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return;
+block|}
 name|command_Expand
 argument_list|(
 name|argv
@@ -4043,7 +4089,7 @@ argument_list|)
 expr_stmt|;
 name|setuid
 argument_list|(
-name|geteuid
+name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;

@@ -74,7 +74,7 @@ end_struct_decl
 
 begin_struct
 struct|struct
-name|descriptor
+name|fdescriptor
 block|{
 name|int
 name|type
@@ -86,7 +86,7 @@ name|UpdateSet
 function_decl|)
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|fd_set
@@ -109,7 +109,7 @@ name|IsSet
 function_decl|)
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 specifier|const
@@ -124,7 +124,7 @@ name|Read
 function_decl|)
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|struct
@@ -143,7 +143,7 @@ name|Write
 function_decl|)
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|struct

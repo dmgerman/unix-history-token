@@ -262,7 +262,7 @@ literal|16
 decl_stmt|;
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -371,7 +371,7 @@ argument_list|,
 literal|"vj_LayerPush: PROTO_IP -> PROTO_VJUNCOMP\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -394,7 +394,7 @@ argument_list|,
 literal|"vj_LayerPush: PROTO_IP -> PROTO_VJUNCOMP\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -412,7 +412,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -460,11 +460,6 @@ name|olen
 decl_stmt|,
 name|rlen
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|nbp
-decl_stmt|;
 name|u_char
 name|work
 index|[
@@ -476,7 +471,7 @@ decl_stmt|;
 comment|/* enough to hold TCP/IP header */
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -485,7 +480,7 @@ name|olen
 operator|=
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -548,7 +543,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -559,7 +554,7 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -645,7 +640,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -662,42 +657,28 @@ name|len
 operator|+=
 name|rlen
 expr_stmt|;
-name|nbp
+name|bp
 operator|=
-name|mbuf_Alloc
+name|m_prepend
 argument_list|(
-name|len
-argument_list|,
-name|MB_VJIN
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|MBUF_CTOP
-argument_list|(
-name|nbp
-argument_list|)
+name|bp
 argument_list|,
 name|bufp
 argument_list|,
 name|len
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
 name|MB_VJIN
 argument_list|)
 expr_stmt|;
-name|nbp
-operator|->
-name|next
-operator|=
-name|bp
-expr_stmt|;
 return|return
-name|nbp
+name|bp
 return|;
 block|}
 end_function

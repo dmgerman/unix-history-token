@@ -318,11 +318,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"id.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|chapcodes
 index|[]
 init|=
@@ -422,7 +429,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|plen
 argument_list|,
@@ -1113,6 +1120,53 @@ case|:
 name|timer_TermService
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|argc
+operator|=
+name|command_Interpret
+argument_list|(
+name|prog
+argument_list|,
+name|strlen
+argument_list|(
+name|prog
+argument_list|)
+argument_list|,
+name|argv
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"CHAP: Invalid command syntax\n"
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+block|}
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|in
@@ -1233,22 +1287,8 @@ argument_list|)
 expr_stmt|;
 name|setuid
 argument_list|(
-name|geteuid
+name|ID0realuid
 argument_list|()
-argument_list|)
-expr_stmt|;
-name|argc
-operator|=
-name|command_Interpret
-argument_list|(
-name|prog
-argument_list|,
-name|strlen
-argument_list|(
-name|prog
-argument_list|)
-argument_list|,
-name|argv
 argument_list|)
 expr_stmt|;
 name|command_Expand
@@ -1790,7 +1830,7 @@ name|int
 name|chap_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1901,7 +1941,7 @@ name|int
 name|chap_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1953,7 +1993,7 @@ name|void
 name|chap_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2381,7 +2421,7 @@ name|int
 name|chap_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -3211,7 +3251,7 @@ argument_list|,
 literal|"chap_Input: Not a physical link - dropped\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3244,7 +3284,7 @@ argument_list|,
 literal|"Unexpected chap input - dropped !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3253,7 +3293,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -3348,7 +3388,7 @@ else|else
 block|{
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -3432,7 +3472,7 @@ operator|.
 name|id
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3515,7 +3555,7 @@ argument_list|,
 literal|"Chap Input: Truncated challenge !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3660,7 +3700,7 @@ argument_list|,
 literal|"Chap Input: Truncated response !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3692,7 +3732,7 @@ argument_list|,
 literal|"Chap Input: Out of memory !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3795,7 +3835,7 @@ argument_list|,
 literal|"Chap Input: Out of memory !\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4530,7 +4570,7 @@ name|ans
 argument_list|)
 expr_stmt|;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

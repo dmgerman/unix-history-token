@@ -485,7 +485,7 @@ operator|)
 operator|||
 name|m
 operator|->
-name|cnt
+name|m_len
 operator|<
 literal|40
 condition|)
@@ -494,15 +494,19 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"??? 1 ip_off = %x, cnt = %d\n"
+literal|"??? 1 ip_off = %x, m_len = %lu\n"
 argument_list|,
 name|ip
 operator|->
 name|ip_off
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|m
 operator|->
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 name|log_DumpBp
@@ -783,7 +787,7 @@ name|hlen
 operator|>
 name|m
 operator|->
-name|cnt
+name|m_len
 condition|)
 return|return
 operator|(
@@ -877,7 +881,7 @@ name|hlen
 operator|>
 name|m
 operator|->
-name|cnt
+name|m_len
 condition|)
 return|return
 operator|(
@@ -1466,13 +1470,13 @@ expr_stmt|;
 block|}
 name|m
 operator|->
-name|cnt
+name|m_len
 operator|-=
 name|hlen
 expr_stmt|;
 name|m
 operator|->
-name|offset
+name|m_offset
 operator|+=
 name|hlen
 expr_stmt|;

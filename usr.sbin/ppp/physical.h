@@ -46,7 +46,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/* Device types */
+comment|/* Device types (don't use zero, it'll be confused with NULL in physical2iov */
 end_comment
 
 begin_define
@@ -124,22 +124,47 @@ begin_define
 define|#
 directive|define
 name|CD_VARIABLE
-value|1
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|CD_REQUIRED
-value|2
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|CD_NOTREQUIRED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD_DEFAULT
 value|3
 end_define
+
+begin_struct
+struct|struct
+name|cd
+block|{
+name|unsigned
+name|necessity
+range|:
+literal|2
+decl_stmt|;
+comment|/* A CD_ value */
+name|int
+name|delay
+decl_stmt|;
+comment|/* Wait this many seconds after login script */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -152,6 +177,10 @@ specifier|const
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|struct
+name|cd
+name|cd
 decl_stmt|;
 name|int
 function_decl|(
@@ -296,8 +325,6 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|,
-name|pid_t
 parameter_list|)
 function_decl|;
 name|int
@@ -337,7 +364,7 @@ name|link
 name|link
 decl_stmt|;
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 name|int
@@ -445,21 +472,10 @@ name|int
 name|ndev
 decl_stmt|;
 comment|/* number of devices in list */
-struct|struct
-block|{
-name|unsigned
-name|necessity
-range|:
-literal|2
-decl_stmt|;
-comment|/* A CD_ value */
-name|int
-name|delay
-decl_stmt|;
-comment|/* Wait this many seconds after login script */
-block|}
+name|struct
 name|cd
-struct|;
+name|cd
+decl_stmt|;
 block|}
 name|cfg
 struct|;
@@ -745,8 +761,20 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|,
-name|pid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|physical_LockedDevice
+parameter_list|(
+name|struct
+name|physical
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -868,7 +896,7 @@ name|int
 name|physical_doUpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|fd_set
@@ -894,7 +922,7 @@ name|int
 name|physical_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 specifier|const
@@ -910,7 +938,7 @@ name|void
 name|physical_DescriptorRead
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 parameter_list|,
 name|struct

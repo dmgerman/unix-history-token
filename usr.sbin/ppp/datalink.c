@@ -334,7 +334,7 @@ name|DATALINK_OPENING
 condition|)
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogCHAT
 argument_list|,
 literal|"%s: Redial timer expired.\n"
 argument_list|,
@@ -938,6 +938,23 @@ operator|->
 name|bundle
 operator|->
 name|CleaningUp
+operator|&&
+operator|!
+operator|(
+name|dl
+operator|->
+name|physical
+operator|->
+name|type
+operator|&
+operator|(
+name|PHYS_DIRECT
+operator||
+name|PHYS_BACKGROUND
+operator||
+name|PHYS_FOREGROUND
+operator|)
+operator|)
 condition|)
 name|datalink_StartDialTimer
 argument_list|(
@@ -1039,6 +1056,46 @@ operator|->
 name|reconnect_tries
 operator|--
 expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogCHAT
+argument_list|,
+literal|"%s: Reconnect try %d of %d\n"
+argument_list|,
+name|dl
+operator|->
+name|name
+argument_list|,
+name|dl
+operator|->
+name|cfg
+operator|.
+name|reconnect
+operator|.
+name|max
+operator|-
+name|dl
+operator|->
+name|reconnect_tries
+argument_list|,
+name|dl
+operator|->
+name|cfg
+operator|.
+name|reconnect
+operator|.
+name|max
+argument_list|)
+expr_stmt|;
+name|bundle_Notify
+argument_list|(
+name|dl
+operator|->
+name|bundle
+argument_list|,
+name|EX_RECONNECT
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1074,6 +1131,15 @@ operator|.
 name|dial
 operator|.
 name|next_timeout
+argument_list|)
+expr_stmt|;
+name|bundle_Notify
+argument_list|(
+name|dl
+operator|->
+name|bundle
+argument_list|,
+name|EX_REDIAL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1243,7 +1309,7 @@ name|phone
 condition|)
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogCHAT
 argument_list|,
 literal|"Phone: %s\n"
 argument_list|,
@@ -1353,6 +1419,9 @@ argument_list|,
 name|DATALINK_LOGOUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -1369,6 +1438,13 @@ operator|.
 name|logout
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid logout script\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1543,7 +1619,7 @@ name|int
 name|datalink_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1607,6 +1683,8 @@ name|PHYS_DEDICATED
 operator||
 name|PHYS_BACKGROUND
 operator||
+name|PHYS_FOREGROUND
+operator||
 name|PHYS_DDIAL
 operator|)
 operator|)
@@ -1618,7 +1696,7 @@ name|bundle
 operator|->
 name|CleaningUp
 condition|)
-comment|/*          * Our first time in - DEDICATED& DDIAL never come down, and          * DIRECT& BACKGROUND get deleted when they enter DATALINK_CLOSED.          * Go to DATALINK_OPENING via datalink_Up() and fall through.          */
+comment|/*          * Our first time in - DEDICATED& DDIAL never come down, and          * DIRECT, FOREGROUND& BACKGROUND get deleted when they enter          * DATALINK_CLOSED.  Go to DATALINK_OPENING via datalink_Up()          * and fall through.          */
 name|datalink_Up
 argument_list|(
 name|dl
@@ -1718,6 +1796,9 @@ argument_list|,
 name|DATALINK_DIAL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -1748,6 +1829,13 @@ name|dl
 argument_list|)
 else|:
 literal|""
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid dial script\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2010,6 +2098,15 @@ name|dl
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bundle_Notify
+argument_list|(
+name|dl
+operator|->
+name|bundle
+argument_list|,
+name|EX_REDIAL
+argument_list|)
+expr_stmt|;
 name|log_WritePrompts
 argument_list|(
 name|dl
@@ -2078,6 +2175,9 @@ argument_list|,
 name|DATALINK_LOGIN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2094,6 +2194,13 @@ operator|.
 name|login
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid login script\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2144,6 +2251,9 @@ argument_list|,
 name|DATALINK_HANGUP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2160,6 +2270,13 @@ operator|.
 name|hangup
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2292,6 +2409,9 @@ operator|->
 name|physical
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2308,6 +2428,13 @@ operator|.
 name|hangup
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2406,6 +2533,9 @@ operator|->
 name|physical
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -2422,6 +2552,13 @@ operator|.
 name|hangup
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2548,7 +2685,7 @@ name|int
 name|datalink_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2662,7 +2799,7 @@ name|void
 name|datalink_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -2810,7 +2947,7 @@ name|int
 name|datalink_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -3109,6 +3246,9 @@ argument_list|,
 name|DATALINK_HANGUP
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -3126,6 +3266,13 @@ name|hangup
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid hangup script\n"
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -3137,6 +3284,9 @@ argument_list|,
 name|DATALINK_LOGOUT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|chat_Setup
 argument_list|(
 operator|&
@@ -3153,6 +3303,13 @@ operator|.
 name|logout
 argument_list|,
 name|NULL
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Invalid logout script\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6299,6 +6456,16 @@ operator|.
 name|fsm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dl
+operator|->
+name|state
+operator|==
+name|DATALINK_OPENING
+condition|)
+return|return;
+comment|/* we're doing a callback... */
 comment|/* fall through */
 default|default:
 name|datalink_ComeDown
@@ -7771,6 +7938,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|states
 index|[]
 init|=
@@ -8569,9 +8737,6 @@ parameter_list|,
 name|int
 modifier|*
 name|nauxfd
-parameter_list|,
-name|pid_t
-name|newpid
 parameter_list|)
 block|{
 comment|/* If `dl' is NULL, we're allocating before a Fromiov() */
@@ -8673,16 +8838,11 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|dl
-condition|?
-name|dl
-else|:
-name|malloc
-argument_list|(
-sizeof|sizeof
-expr|*
-name|dl
-argument_list|)
 expr_stmt|;
 name|iov
 index|[
@@ -8718,10 +8878,7 @@ argument_list|,
 name|DATALINK_MAXNAME
 argument_list|)
 else|:
-name|malloc
-argument_list|(
-name|DATALINK_MAXNAME
-argument_list|)
+name|NULL
 expr_stmt|;
 name|iov
 index|[
@@ -8757,8 +8914,6 @@ argument_list|,
 name|auxfd
 argument_list|,
 name|nauxfd
-argument_list|,
-name|newpid
 argument_list|)
 expr_stmt|;
 if|if
@@ -9049,6 +9204,8 @@ operator|(
 name|PHYS_DDIAL
 operator||
 name|PHYS_BACKGROUND
+operator||
+name|PHYS_FOREGROUND
 operator|)
 operator|&&
 name|dl

@@ -338,13 +338,13 @@ while|while
 condition|(
 name|queue
 operator|->
-name|qlen
+name|len
 condition|)
-name|mbuf_Enqueue
+name|m_enqueue
 argument_list|(
 name|highest
 argument_list|,
-name|mbuf_Dequeue
+name|m_dequeue
 argument_list|(
 name|queue
 argument_list|)
@@ -399,9 +399,9 @@ name|queue
 operator|->
 name|top
 condition|)
-name|mbuf_Free
+name|m_freem
 argument_list|(
-name|mbuf_Dequeue
+name|m_dequeue
 argument_list|(
 name|queue
 argument_list|)
@@ -411,7 +411,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|size_t
 name|link_QueueLen
 parameter_list|(
 name|struct
@@ -422,7 +422,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
 decl_stmt|;
 for|for
@@ -454,7 +455,7 @@ index|[
 name|i
 index|]
 operator|.
-name|qlen
+name|len
 expr_stmt|;
 return|return
 name|len
@@ -463,7 +464,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|size_t
 name|link_QueueBytes
 parameter_list|(
 name|struct
@@ -474,7 +475,8 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
 decl_stmt|,
 name|bytes
@@ -518,7 +520,7 @@ index|[
 name|i
 index|]
 operator|.
-name|qlen
+name|len
 expr_stmt|;
 name|m
 operator|=
@@ -539,7 +541,7 @@ condition|)
 block|{
 name|bytes
 operator|+=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|m
 argument_list|)
@@ -548,7 +550,7 @@ name|m
 operator|=
 name|m
 operator|->
-name|pnext
+name|m_nextpkt
 expr_stmt|;
 block|}
 block|}
@@ -609,12 +611,12 @@ index|[
 name|pri
 index|]
 operator|.
-name|qlen
+name|len
 condition|)
 block|{
 name|bp
 operator|=
-name|mbuf_Dequeue
+name|m_dequeue
 argument_list|(
 name|l
 operator|->
@@ -628,10 +630,13 @@ argument_list|(
 name|LogDEBUG
 argument_list|,
 literal|"link_Dequeue: Dequeued from queue %d,"
-literal|" containing %d more packets\n"
+literal|" containing %lu more packets\n"
 argument_list|,
 name|pri
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|l
 operator|->
 name|Queue
@@ -639,7 +644,7 @@ index|[
 name|pri
 index|]
 operator|.
-name|qlen
+name|len
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1040,7 +1045,7 @@ name|link_AddOutOctets
 argument_list|(
 name|l
 argument_list|,
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -1055,7 +1060,7 @@ argument_list|,
 name|proto
 argument_list|)
 expr_stmt|;
-name|mbuf_Enqueue
+name|m_enqueue
 argument_list|(
 name|l
 operator|->
@@ -1063,7 +1068,7 @@ name|Queue
 operator|+
 name|pri
 argument_list|,
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -1120,7 +1125,7 @@ decl_stmt|;
 name|int
 name|layer
 decl_stmt|;
-comment|/*    * When we ``pull'' a packet from the link, it gets processed by the    * ``pull'' function in each layer starting at the bottom.    * Each ``pull'' may produce multiple packets, chained together using    * bp->pnext.    * Each packet that results from each pull has to be pulled through    * all of the higher layers before the next resulting packet is pulled    * through anything; this ensures that packets that depend on the    * fsm state resulting from the receipt of the previous packet aren't    * surprised.    */
+comment|/*    * When we ``pull'' a packet from the link, it gets processed by the    * ``pull'' function in each layer starting at the bottom.    * Each ``pull'' may produce multiple packets, chained together using    * bp->m_nextpkt.    * Each packet that results from each pull has to be pulled through    * all of the higher layers before the next resulting packet is pulled    * through anything; this ensures that packets that depend on the    * fsm state resulting from the receipt of the previous packet aren't    * surprised.    */
 name|link_AddInOctets
 argument_list|(
 name|l
@@ -1143,7 +1148,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|len
 argument_list|,
@@ -1215,11 +1220,11 @@ index|]
 operator|=
 name|bp
 operator|->
-name|pnext
+name|m_nextpkt
 expr_stmt|;
 name|bp
 operator|->
-name|pnext
+name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
@@ -1288,11 +1293,11 @@ name|next
 operator|=
 name|bp
 operator|->
-name|pnext
+name|m_nextpkt
 expr_stmt|;
 name|bp
 operator|->
-name|pnext
+name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
@@ -1645,7 +1650,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|proto_Prepend
 argument_list|(
@@ -1673,7 +1678,7 @@ argument_list|)
 argument_list|,
 name|bp
 operator|->
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1700,7 +1705,7 @@ name|unknownproto
 operator|++
 expr_stmt|;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

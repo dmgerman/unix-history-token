@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in_systm.h>
 end_include
 
@@ -42,13 +48,41 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<net/route.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCALRAD
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"radlib.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|<radlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -780,6 +814,31 @@ if|if
 condition|(
 name|argc
 operator|<
+literal|0
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"radius: %s: Syntax error\n"
+argument_list|,
+name|argc
+operator|==
+literal|1
+condition|?
+name|argv
+index|[
+literal|0
+index|]
+else|:
+literal|"\"\""
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|<
 literal|2
 condition|)
 name|log_Printf
@@ -1263,7 +1322,7 @@ name|void
 name|radius_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1292,7 +1351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct descriptor (descriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (descriptor.h)  */
 end_comment
 
 begin_function
@@ -1301,7 +1360,7 @@ name|int
 name|radius_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1405,7 +1464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct descriptor (descriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (descriptor.h)  */
 end_comment
 
 begin_function
@@ -1414,7 +1473,7 @@ name|int
 name|radius_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -1461,7 +1520,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Behave as a struct descriptor (descriptor.h)  */
+comment|/*  * Behave as a struct fdescriptor (descriptor.h)  */
 end_comment
 
 begin_function
@@ -1470,7 +1529,7 @@ name|int
 name|radius_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

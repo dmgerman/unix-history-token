@@ -188,7 +188,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|size_t
 name|link_QueueLen
 parameter_list|(
 name|struct
@@ -200,7 +200,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|size_t
 name|link_QueueBytes
 parameter_list|(
 name|struct

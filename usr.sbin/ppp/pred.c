@@ -818,7 +818,7 @@ name|fcs
 decl_stmt|;
 name|orglen
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -828,7 +828,7 @@ expr_stmt|;
 comment|/* add count of proto */
 name|mwp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 operator|(
 name|orglen
@@ -1024,7 +1024,7 @@ literal|8
 expr_stmt|;
 name|mwp
 operator|->
-name|cnt
+name|m_len
 operator|=
 name|wp
 operator|-
@@ -1113,7 +1113,7 @@ name|fcs
 decl_stmt|;
 name|wp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|MAX_MRU
 operator|+
@@ -1131,7 +1131,7 @@ argument_list|)
 expr_stmt|;
 name|olen
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -1242,12 +1242,12 @@ operator|->
 name|fsm
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|wp
 argument_list|)
@@ -1298,12 +1298,12 @@ operator|->
 name|fsm
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|wp
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1365,7 +1365,7 @@ name|bufp
 argument_list|,
 name|wp
 operator|->
-name|cnt
+name|m_len
 operator|=
 name|pp
 operator|-
@@ -1381,14 +1381,14 @@ condition|)
 block|{
 name|wp
 operator|->
-name|offset
+name|m_offset
 operator|+=
 literal|2
 expr_stmt|;
 comment|/* skip length */
 name|wp
 operator|->
-name|cnt
+name|m_len
 operator|-=
 literal|4
 expr_stmt|;
@@ -1417,12 +1417,12 @@ condition|)
 block|{
 name|wp
 operator|->
-name|offset
+name|m_offset
 operator|++
 expr_stmt|;
 name|wp
 operator|->
-name|cnt
+name|m_len
 operator|--
 expr_stmt|;
 block|}
@@ -1430,13 +1430,13 @@ else|else
 block|{
 name|wp
 operator|->
-name|offset
+name|m_offset
 operator|+=
 literal|2
 expr_stmt|;
 name|wp
 operator|->
-name|cnt
+name|m_len
 operator|-=
 literal|2
 expr_stmt|;
@@ -1455,7 +1455,7 @@ name|pp
 operator|++
 expr_stmt|;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -1524,13 +1524,13 @@ operator|->
 name|fsm
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|wp
 argument_list|)
 expr_stmt|;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

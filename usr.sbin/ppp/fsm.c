@@ -536,6 +536,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|StateNames
 index|[]
 init|=
@@ -726,6 +727,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|timer_names
 index|[
 literal|3
@@ -1234,7 +1236,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 name|plen
 argument_list|,
@@ -2561,7 +2563,7 @@ literal|0
 decl_stmt|;
 name|plen
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -2603,7 +2605,7 @@ argument_list|,
 name|flen
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2645,7 +2647,7 @@ block|{
 comment|/*        * ccp_SetOpenMode() leaves us in initial if we're disabling        *& denying everything.        */
 name|bp
 operator|=
-name|mbuf_Prepend
+name|m_prepend
 argument_list|(
 name|bp
 argument_list|,
@@ -2675,7 +2677,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -2696,10 +2698,10 @@ argument_list|)
 argument_list|,
 name|bp
 operator|->
-name|cnt
+name|m_len
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2732,7 +2734,7 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2757,7 +2759,7 @@ operator|->
 name|id
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2791,7 +2793,7 @@ expr_stmt|;
 case|case
 name|ST_STOPPING
 case|:
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -2834,7 +2836,7 @@ break|break;
 block|}
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -3235,7 +3237,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3553,7 +3555,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3594,7 +3596,7 @@ name|flen
 decl_stmt|;
 name|plen
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -3619,7 +3621,7 @@ operator|<
 name|flen
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3662,7 +3664,7 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3690,7 +3692,7 @@ operator|->
 name|id
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3702,7 +3704,7 @@ case|:
 case|case
 name|ST_STOPPING
 case|:
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3711,7 +3713,7 @@ return|return;
 block|}
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -3872,7 +3874,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4081,7 +4083,7 @@ expr_stmt|;
 comment|/* A delayed ST_STOPPED is now scheduled */
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4258,7 +4260,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4299,7 +4301,7 @@ name|flen
 decl_stmt|;
 name|plen
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -4324,7 +4326,7 @@ operator|<
 name|flen
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4367,7 +4369,7 @@ name|state
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4395,7 +4397,7 @@ operator|->
 name|id
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4407,7 +4409,7 @@ case|:
 case|case
 name|ST_STOPPING
 case|:
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4416,7 +4418,7 @@ return|return;
 block|}
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -4577,7 +4579,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4606,7 +4608,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4652,7 +4654,7 @@ name|proto
 decl_stmt|;
 if|if
 condition|(
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -4660,7 +4662,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4897,7 +4899,7 @@ block|}
 block|}
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -4945,12 +4947,12 @@ name|magic
 decl_stmt|;
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -5077,7 +5079,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5122,7 +5124,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5151,7 +5153,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5180,7 +5182,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5209,7 +5211,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5275,7 +5277,7 @@ argument_list|,
 name|MB_CCPOUT
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5320,7 +5322,7 @@ operator|->
 name|id
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5358,7 +5360,7 @@ name|codep
 decl_stmt|;
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -5374,7 +5376,7 @@ name|fsmheader
 argument_list|)
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -5467,7 +5469,7 @@ name|id
 decl_stmt|;
 name|bp
 operator|=
-name|mbuf_Prepend
+name|m_prepend
 argument_list|(
 name|bp
 argument_list|,
@@ -5482,7 +5484,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
@@ -5503,12 +5505,12 @@ argument_list|)
 argument_list|,
 name|bp
 operator|->
-name|cnt
+name|m_len
 argument_list|,
 name|MB_UNKNOWN
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

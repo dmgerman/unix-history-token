@@ -499,7 +499,7 @@ name|int
 name|prompt_UpdateSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -666,7 +666,7 @@ name|int
 name|prompt_IsSet
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -767,7 +767,7 @@ name|void
 name|prompt_Read
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,
@@ -899,6 +899,9 @@ name|log_PromptContext
 operator|=
 name|p
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|command_Decode
 argument_list|(
 name|bundle
@@ -914,6 +917,13 @@ operator|->
 name|src
 operator|.
 name|from
+argument_list|)
+condition|)
+name|prompt_Printf
+argument_list|(
+name|p
+argument_list|,
+literal|"Syntax error\n"
 argument_list|)
 expr_stmt|;
 name|log_PromptContext
@@ -1323,7 +1333,7 @@ name|int
 name|prompt_Write
 parameter_list|(
 name|struct
-name|descriptor
+name|fdescriptor
 modifier|*
 name|d
 parameter_list|,

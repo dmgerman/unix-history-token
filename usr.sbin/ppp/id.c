@@ -71,6 +71,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_comment
+comment|/* setproctitle() under OpenBSD (+NetBSD ?)*/
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 

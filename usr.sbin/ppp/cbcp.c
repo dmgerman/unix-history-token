@@ -621,6 +621,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|cbcpname
 index|[]
 init|=
@@ -669,7 +670,14 @@ name|s
 index|]
 return|;
 return|return
-literal|"???"
+name|HexStr
+argument_list|(
+name|s
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 return|;
 block|}
 end_function
@@ -870,7 +878,7 @@ name|bp
 decl_stmt|;
 name|bp
 operator|=
-name|mbuf_Alloc
+name|m_get
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -1005,6 +1013,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|types
 index|[]
 init|=
@@ -1036,7 +1045,14 @@ literal|0
 index|]
 condition|)
 return|return
-literal|"???"
+name|HexStr
+argument_list|(
+name|type
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
 return|;
 return|return
 name|types
@@ -3503,7 +3519,7 @@ argument_list|,
 literal|"cbcp_Input: Not a physical link - dropped\n"
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3514,14 +3530,14 @@ return|;
 block|}
 name|bp
 operator|=
-name|mbuf_Contiguous
+name|m_pullup
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|mbuf_Length
+name|m_length
 argument_list|(
 name|bp
 argument_list|)
@@ -3537,7 +3553,7 @@ name|cbcp_header
 argument_list|)
 condition|)
 block|{
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3591,7 +3607,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)
@@ -3600,7 +3616,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|mbuf_SetType
+name|m_settype
 argument_list|(
 name|bp
 argument_list|,
@@ -3610,7 +3626,7 @@ expr_stmt|;
 comment|/* XXX check the id */
 name|bp
 operator|->
-name|offset
+name|m_offset
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -3620,7 +3636,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|cnt
+name|m_len
 operator|-=
 sizeof|sizeof
 argument_list|(
@@ -4153,7 +4169,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|mbuf_Free
+name|m_freem
 argument_list|(
 name|bp
 argument_list|)

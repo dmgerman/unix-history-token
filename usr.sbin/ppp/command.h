@@ -205,6 +205,28 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|command_Expand_Interpret
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+name|vector
+index|[
+name|MAXARGS
+index|]
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|command_Interpret
 parameter_list|(
 name|char
@@ -256,7 +278,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|command_Decode
 parameter_list|(
 name|struct

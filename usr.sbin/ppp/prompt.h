@@ -75,7 +75,7 @@ struct|struct
 name|prompt
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 name|int

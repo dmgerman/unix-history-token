@@ -49,7 +49,7 @@ struct|struct
 name|chat
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 name|struct
@@ -216,7 +216,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|chat_Setup
 parameter_list|(
 name|struct

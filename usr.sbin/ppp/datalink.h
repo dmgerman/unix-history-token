@@ -152,7 +152,7 @@ struct|struct
 name|datalink
 block|{
 name|struct
-name|descriptor
+name|fdescriptor
 name|desc
 decl_stmt|;
 comment|/* We play either a physical or a chat */
@@ -501,8 +501,6 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|,
-name|pid_t
 parameter_list|)
 function_decl|;
 end_function_decl

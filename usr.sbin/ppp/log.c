@@ -86,6 +86,7 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
 name|LogNames
 index|[]
 init|=
@@ -103,6 +104,8 @@ block|,
 literal|"Connect"
 block|,
 literal|"Debug"
+block|,
+literal|"DNS"
 block|,
 literal|"HDLC"
 block|,
@@ -1506,7 +1509,7 @@ name|f
 operator|=
 name|bp
 operator|->
-name|cnt
+name|m_len
 expr_stmt|;
 name|ptr
 operator|=
@@ -1608,7 +1611,7 @@ name|bp
 operator|=
 name|bp
 operator|->
-name|next
+name|m_next
 operator|)
 operator|!=
 name|NULL

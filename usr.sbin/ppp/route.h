@@ -15,43 +15,69 @@ name|cmdargs
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|rt_msghdr
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
 name|ROUTE_STATIC
-value|0
+value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_DSTMYADDR
-value|1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_DSTHISADDR
-value|2
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUTE_DSTDNS0
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ROUTE_DSTDNS1
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_DSTANY
-value|3
+value|0x0f
 end_define
 
 begin_define
 define|#
 directive|define
 name|ROUTE_GWHISADDR
-value|4
+value|0x10
 end_define
 
 begin_comment
-comment|/* May be ORd with DST_MYADDR */
+comment|/* May be ORd with DST_* */
 end_comment
 
 begin_struct
@@ -152,9 +178,17 @@ name|in_addr
 parameter_list|,
 name|struct
 name|in_addr
-parameter_list|)
-function_decl|;
+parameter_list|,
+name|struct
+name|in_addr
+type|[
+function_decl|2]
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
@@ -248,6 +282,27 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|route_ParseHdr
+parameter_list|(
+name|struct
+name|rt_msghdr
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+type|[
+function_decl|RTAX_MAX]
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 
