@@ -65,6 +65,7 @@ value|32
 end_define
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -99,6 +100,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|shell

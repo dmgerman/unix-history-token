@@ -65,6 +65,7 @@ value|32
 end_define
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

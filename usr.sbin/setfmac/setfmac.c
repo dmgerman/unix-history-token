@@ -119,6 +119,7 @@ name|mode_t
 name|mode
 decl_stmt|;
 comment|/* mode to possibly match */
+specifier|const
 name|char
 modifier|*
 name|modestr
@@ -820,6 +821,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|chomp_line
 parameter_list|(
@@ -849,10 +851,15 @@ operator|=
 operator|*
 name|line
 init|;
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|s
 operator|-
 operator|*
 name|line
+argument_list|)
 operator|<
 operator|*
 name|linesize
