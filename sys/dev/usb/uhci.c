@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.156 2002/03/04 00:53:33 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.157 2002/03/16 16:13:41 tsutsui Exp $	*/
 end_comment
 
 begin_comment
@@ -9591,7 +9591,7 @@ name|xfer
 operator|->
 name|timeout_handle
 argument_list|,
-name|ehci_timeout
+name|uhci_timeout
 argument_list|,
 name|xfer
 argument_list|)
@@ -9623,7 +9623,7 @@ name|curproc
 condition|)
 name|panic
 argument_list|(
-literal|"ohci_abort_xfer: not in process context\n"
+literal|"uhci_abort_xfer: not in process context\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 1: Make interrupt routine and hardware ignore xfer. 	 */
