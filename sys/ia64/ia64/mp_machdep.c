@@ -1278,7 +1278,7 @@ name|vector
 decl_stmt|;
 name|pipi
 operator|=
-name|ia64_memory_address
+name|__MEMIO_ADDR
 argument_list|(
 name|ia64_lapic_address
 operator||
@@ -1322,9 +1322,6 @@ argument_list|(
 name|cpuid
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ia64_mf
-argument_list|()
 expr_stmt|;
 operator|*
 name|pipi
