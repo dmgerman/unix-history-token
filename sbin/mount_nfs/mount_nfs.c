@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.25 1997/12/24 00:58:39 imp Exp $"
+literal|"$Id: mount_nfs.c,v 1.26 1997/12/26 23:28:12 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,23 +164,11 @@ directive|include
 file|<nfs/nfsproto.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
 begin_include
 include|#
 directive|include
 file|<nfs/nfs.h>
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
 
 begin_include
 include|#
