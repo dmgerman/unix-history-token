@@ -3007,6 +3007,7 @@ name|gqr_rquota
 operator|.
 name|rq_bhardlimit
 operator|*
+operator|(
 name|gq_rslt
 operator|.
 name|getquota_rslt_u
@@ -3016,6 +3017,7 @@ operator|.
 name|rq_bsize
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 name|dqp
 operator|->
@@ -3029,6 +3031,7 @@ name|gqr_rquota
 operator|.
 name|rq_bsoftlimit
 operator|*
+operator|(
 name|gq_rslt
 operator|.
 name|getquota_rslt_u
@@ -3038,6 +3041,7 @@ operator|.
 name|rq_bsize
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 name|dqp
 operator|->
@@ -3051,6 +3055,7 @@ name|gqr_rquota
 operator|.
 name|rq_curblocks
 operator|*
+operator|(
 name|gq_rslt
 operator|.
 name|getquota_rslt_u
@@ -3060,6 +3065,7 @@ operator|.
 name|rq_bsize
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 comment|/* inodes */
 name|dqp
