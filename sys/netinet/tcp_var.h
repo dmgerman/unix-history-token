@@ -18,16 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
-end_include
-
-begin_comment
-comment|/* needed for in_conninfo, inp_gen_t */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netinet/tcp.h>
 end_include
 
@@ -726,6 +716,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_NETINET_IN_PCB_H_
+end_ifdef
+
 begin_struct
 struct|struct
 name|syncache
@@ -860,6 +856,26 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct_decl
+struct_decl|struct
+name|in_conninfo
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _NETINET_IN_PCB_H_ */
+end_comment
 
 begin_struct
 struct|struct
