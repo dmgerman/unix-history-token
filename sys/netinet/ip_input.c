@@ -1661,19 +1661,21 @@ name|defined
 argument_list|(
 name|IPFILTER_LKM
 argument_list|)
+comment|/* 	 * Check if we want to allow this packet to be processed. 	 * Consider it to be bad if not. 	 */
+if|if
+condition|(
+name|fr_check
+condition|)
 block|{
 name|struct
 name|mbuf
 modifier|*
-name|m0
+name|m1
 init|=
 name|m
 decl_stmt|;
-comment|/* 	 * Check if we want to allow this packet to be processed. 	 * Consider it to be bad if not. 	 */
 if|if
 condition|(
-name|fr_checkp
-operator|&&
 call|(
 modifier|*
 name|fr_checkp
@@ -1692,8 +1694,11 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|m0
+name|m1
 argument_list|)
+operator|||
+operator|!
+name|m1
 condition|)
 goto|goto
 name|next
@@ -1704,7 +1709,7 @@ name|mtod
 argument_list|(
 name|m
 operator|=
-name|m0
+name|m1
 argument_list|,
 expr|struct
 name|ip
