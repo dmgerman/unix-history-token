@@ -4,7 +4,7 @@ comment|/* dhclient.c     DHCP Client. */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995-2002 Internet Software Consortium.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of Internet Software Consortium nor the names  *    of its contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INTERNET SOFTWARE CONSORTIUM AND  * CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE INTERNET SOFTWARE CONSORTIUM OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This code is based on the original client state machine that was  * written by Elliot Poger.  The code has been extensively hacked on  * by Ted Lemon since then, so any mistakes you find are probably his  * fault and not Elliot's.  */
+comment|/*  * Copyright (c) 2004 by Internet Systems Consortium, Inc. ("ISC")  * Copyright (c) 1995-2003 by Internet Software Consortium  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT  * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *   Internet Systems Consortium, Inc.  *   950 Charter Street  *   Redwood City, CA 94063  *<info@isc.org>  *   http://www.isc.org/  *  * This code is based on the original client state machine that was  * written by Elliot Poger.  The code has been extensively hacked on  * by Ted Lemon since then, so any mistakes you find are probably his  * fault and not Elliot's.  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|ocopyright
 index|[]
 init|=
 literal|"$FreeBSD$\n"
-literal|"$Id: dhclient.c,v 1.129.2.16 2003/04/26 21:51:39 dhankins Exp $ Copyright (c) 1995-2002 Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.129.2.18 2004/06/10 17:59:12 dhankins Exp $ Copyright (c) 2004 Internet Systems Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,7 +260,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"Copyright 1995-2002 Internet Software Consortium."
+literal|"Copyright 2004 Internet Systems Consortium."
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +280,7 @@ name|char
 name|message
 index|[]
 init|=
-literal|"Internet Software Consortium DHCP Client"
+literal|"Internet Systems Consortium DHCP Client"
 decl_stmt|;
 end_decl_stmt
 
@@ -3744,8 +3744,42 @@ operator|->
 name|expiry
 operator|/
 literal|2
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|client
+operator|->
+name|new
+operator|->
+name|renewal
+operator|<=
+literal|0
+condition|)
+name|client
+operator|->
+name|new
+operator|->
+name|renewal
+operator|=
+name|TIME_MAX
 expr_stmt|;
 comment|/* Now introduce some randomness to the renewal time: */
+if|if
+condition|(
+name|client
+operator|->
+name|new
+operator|->
+name|renewal
+operator|<=
+name|TIME_MAX
+operator|/
+literal|3
+operator|-
+literal|3
+condition|)
 name|client
 operator|->
 name|new
@@ -3896,12 +3930,26 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|client
 operator|->
 name|new
 operator|->
 name|rebind
+operator|<=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|client
+operator|->
+name|new
+operator|->
+name|expiry
+operator|<=
+name|TIME_MAX
+operator|/
+literal|7
 condition|)
 name|client
 operator|->
@@ -3909,7 +3957,6 @@ name|new
 operator|->
 name|rebind
 operator|=
-operator|(
 name|client
 operator|->
 name|new
@@ -3917,11 +3964,27 @@ operator|->
 name|expiry
 operator|*
 literal|7
-operator|)
 operator|/
 literal|8
 expr_stmt|;
-comment|/* XXX NUMS */
+else|else
+name|client
+operator|->
+name|new
+operator|->
+name|rebind
+operator|=
+name|client
+operator|->
+name|new
+operator|->
+name|expiry
+operator|/
+literal|8
+operator|*
+literal|7
+expr_stmt|;
+block|}
 comment|/* Make sure our randomness didn't run the renewal time past the 	   rebind time. */
 if|if
 condition|(
@@ -3937,13 +4000,25 @@ name|new
 operator|->
 name|rebind
 condition|)
+block|{
+if|if
+condition|(
+name|client
+operator|->
+name|new
+operator|->
+name|rebind
+operator|<=
+name|TIME_MAX
+operator|/
+literal|3
+condition|)
 name|client
 operator|->
 name|new
 operator|->
 name|renewal
 operator|=
-operator|(
 name|client
 operator|->
 name|new
@@ -3951,10 +4026,27 @@ operator|->
 name|rebind
 operator|*
 literal|3
-operator|)
 operator|/
 literal|4
 expr_stmt|;
+else|else
+name|client
+operator|->
+name|new
+operator|->
+name|renewal
+operator|=
+name|client
+operator|->
+name|new
+operator|->
+name|rebind
+operator|/
+literal|4
+operator|*
+literal|3
+expr_stmt|;
+block|}
 name|client
 operator|->
 name|new
