@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: extract.c,v 1.7.6.8 1998/01/21 00:15:10 imp Exp $"
+literal|"$Id: extract.c,v 1.7.6.9 1998/03/09 12:31:07 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -717,6 +717,18 @@ operator|!=
 name|Directory
 condition|)
 block|{
+if|if
+condition|(
+name|last_chdir
+operator|==
+name|NULL
+condition|)
+name|PUSHOUT
+argument_list|(
+name|Directory
+argument_list|)
+expr_stmt|;
+else|else
 name|PUSHOUT
 argument_list|(
 name|last_chdir
