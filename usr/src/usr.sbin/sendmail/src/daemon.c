@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.65 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.66 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.65 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.66 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1928,12 +1928,6 @@ begin_comment
 comment|/* **  GETAUTHINFO -- get the real host name asociated with a file descriptor ** **	Uses RFC1413 protocol to try to get info from the other end. ** **	Parameters: **		fd -- the descriptor ** **	Returns: **		The user@host information associated with this descriptor. */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|IDENTPROTO
-end_if
-
 begin_decl_stmt
 specifier|static
 name|jmp_buf
@@ -1953,8 +1947,6 @@ argument_list|,
 literal|1
 argument_list|)
 block|; }
-endif|#
-directive|endif
 name|char
 operator|*
 name|getauthinfo
@@ -1976,9 +1968,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-if|#
-directive|if
-name|IDENTPROTO
 name|SOCKADDR
 name|la
 decl_stmt|;
@@ -2001,8 +1990,6 @@ name|EVENT
 modifier|*
 name|ev
 decl_stmt|;
-endif|#
-directive|endif
 specifier|static
 name|char
 name|hbuf
@@ -2118,9 +2105,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|IDENTPROTO
 if|if
 condition|(
 name|TimeOuts
@@ -2718,9 +2702,6 @@ argument_list|(
 name|ev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* IDENTPROTO */
 name|noident
 label|:
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.58 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8100,6 +8100,9 @@ operator|)
 literal|2
 name|MINUTES
 expr_stmt|;
+if|#
+directive|if
+name|IDENTPROTO
 name|TimeOuts
 operator|.
 name|to_ident
@@ -8110,6 +8113,20 @@ operator|)
 literal|30
 name|SECONDS
 expr_stmt|;
+else|#
+directive|else
+name|TimeOuts
+operator|.
+name|to_ident
+operator|=
+operator|(
+name|time_t
+operator|)
+literal|0
+name|SECONDS
+expr_stmt|;
+endif|#
+directive|endif
 name|TimeOuts
 operator|.
 name|to_fileopen
