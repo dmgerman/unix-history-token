@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.79 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.80 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.79 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.80 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3033,23 +3033,15 @@ name|nc_stat
 expr_stmt|;
 if|if
 condition|(
-name|CurEnv
-operator|->
-name|e_message
-operator|==
-name|NULL
-operator|&&
 operator|*
 name|statp
 operator|==
 name|EX_TEMPFAIL
 condition|)
 block|{
-name|sprintf
+name|usrerr
 argument_list|(
-name|hbuf
-argument_list|,
-literal|"%s: Name server timeout"
+literal|"451 %s: Name server timeout"
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -3057,15 +3049,6 @@ name|name
 argument_list|,
 literal|33
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|CurEnv
-operator|->
-name|e_message
-operator|=
-name|newstr
-argument_list|(
-name|hbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -3280,11 +3263,9 @@ condition|(
 name|UseNameServer
 condition|)
 block|{
-name|sprintf
+name|usrerr
 argument_list|(
-name|hbuf
-argument_list|,
-literal|"%s: Name server timeout"
+literal|"451 %s: Name server timeout"
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -3292,30 +3273,6 @@ name|name
 argument_list|,
 literal|33
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|message
-argument_list|(
-literal|"%s"
-argument_list|,
-name|hbuf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|CurEnv
-operator|->
-name|e_message
-operator|==
-name|NULL
-condition|)
-name|CurEnv
-operator|->
-name|e_message
-operator|=
-name|newstr
-argument_list|(
-name|hbuf
 argument_list|)
 expr_stmt|;
 block|}
