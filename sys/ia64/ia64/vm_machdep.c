@@ -207,40 +207,6 @@ return|;
 block|}
 end_function
 
-begin_struct
-struct|struct
-name|ia64_fdesc
-block|{
-name|u_int64_t
-name|func
-decl_stmt|;
-name|u_int64_t
-name|gp
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|FDESC_FUNC
-parameter_list|(
-name|fn
-parameter_list|)
-value|(((struct ia64_fdesc *) fn)->func)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FDESC_GP
-parameter_list|(
-name|fn
-parameter_list|)
-value|(((struct ia64_fdesc *) fn)->gp)
-end_define
-
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
