@@ -535,23 +535,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* XXX: should use `#if __STDC_VERSION__>= 199901'. */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|__GNUC__
-argument_list|)
+operator|>=
+literal|2
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|__STRICT_ANSI__
 argument_list|)
+operator|||
+name|__STDC_VERSION__
+operator|>=
+literal|199901
 end_if
 
 begin_define
