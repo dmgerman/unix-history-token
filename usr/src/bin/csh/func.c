@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c	5.34 (Berkeley) %G%"
+literal|"@(#)func.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7259,6 +7259,22 @@ name|short2blk
 argument_list|(
 name|v
 argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|cshout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|csherr
 argument_list|)
 expr_stmt|;
 name|blkfree
