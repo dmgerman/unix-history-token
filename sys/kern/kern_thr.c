@@ -260,6 +260,9 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|scope_sys
+decl_stmt|;
 name|p
 operator|=
 name|td
@@ -324,6 +327,11 @@ name|EPROCLIM
 operator|)
 return|;
 block|}
+comment|/* 	 * Use a local copy to close a race against the user 	 * changing thr_scope_sys. 	 */
+name|scope_sys
+operator|=
+name|thr_scope_sys
+expr_stmt|;
 comment|/* Initialize our td and new ksegrp.. */
 name|newtd
 operator|=
@@ -332,7 +340,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|thr_scope_sys
+name|scope_sys
 condition|)
 name|newkg
 operator|=
@@ -375,7 +383,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|thr_scope_sys
+name|scope_sys
 condition|)
 name|ksegrp_free
 argument_list|(
@@ -442,7 +450,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|thr_scope_sys
+name|scope_sys
 condition|)
 block|{
 name|bzero
@@ -541,7 +549,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|thr_scope_sys
+name|scope_sys
 condition|)
 name|ksegrp_free
 argument_list|(
@@ -574,7 +582,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|thr_scope_sys
+name|scope_sys
 condition|)
 block|{
 name|sched_init_concurrency
@@ -641,7 +649,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|thr_scope_sys
+name|scope_sys
 condition|)
 name|ksegrp_link
 argument_list|(
@@ -677,7 +685,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|thr_scope_sys
+name|scope_sys
 condition|)
 name|sched_fork_ksegrp
 argument_list|(
