@@ -158,6 +158,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|u_char
+modifier|*
+name|elan_mmcr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|kstack
 index|[]

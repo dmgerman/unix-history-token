@@ -1057,21 +1057,18 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Am486DX2/4 Write-Through"
+literal|"Enhanced Am486DX2 Write-Through"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|0x470
 case|:
-case|case
-literal|0x490
-case|:
 name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Enhanced Am486DX4 Write-Back"
+literal|"Enhanced Am486DX2 Write-Back"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1082,7 +1079,18 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Enhanced Am486DX4 Write-Through"
+literal|"Enhanced Am486DX4/Am5x86 Write-Through"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x490
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"Enhanced Am486DX4/Am5x86 Write-Back"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5585,6 +5593,108 @@ argument_list|,
 name|crusoe_voltage
 argument_list|,
 name|crusoe_percentage
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * The AMD Elan sc520 is a system-on-chip gadget which is used in embedded  * kind of things, see www.soekris.com for instance, and it has a few quirks  * we need to deal with.  * Unfortunately we cannot identify the gadget by CPUID output because it  * depends on strapping options and only the stepping field may be useful  * and those are undocumented from AMDs side.  *  * So instead we recognize the on-chip host-PCI bridge and call back from  * sys/i386/pci/pci_bus.c to here if we find it.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_decl_stmt
+name|u_char
+modifier|*
+name|elan_mmcr
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|init_AMD_Elan_sc520
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|new
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"Doing h0h0magic for AMD Elan sc520\n"
+argument_list|)
+expr_stmt|;
+name|elan_mmcr
+operator|=
+name|pmap_mapdev
+argument_list|(
+literal|0xfffef000
+argument_list|,
+literal|0x1000
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"MMCR at %p\n"
+argument_list|,
+name|elan_mmcr
+argument_list|)
+expr_stmt|;
+comment|/*- 	 * The i8254 is driven with a nonstandard frequency which is 	 * derived thusly: 	 *   f = 32768 * 45 * 25 / 31 = 1189161.29... 	 * We use the sysctl to get the timecounter etc into whack. 	 */
+name|new
+operator|=
+literal|1189161
+expr_stmt|;
+name|i
+operator|=
+name|kernel_sysctlbyname
+argument_list|(
+operator|&
+name|thread0
+argument_list|,
+literal|"machdep.i8254_freq"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|new
+argument_list|,
+sizeof|sizeof
+name|new
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sysctl machdep.i8254_freq=%d returns %d\n"
+argument_list|,
+name|new
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 block|}

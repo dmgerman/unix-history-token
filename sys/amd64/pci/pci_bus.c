@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cputypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pc/bios.h>
 end_include
 
@@ -605,6 +611,9 @@ case|:
 name|s
 operator|=
 literal|"AMD Elan SC520 host to PCI bridge"
+expr_stmt|;
+name|init_AMD_Elan_sc520
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
