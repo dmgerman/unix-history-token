@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	format.c	4.2	83/03/02	*/
+comment|/*	format.c	4.3	83/03/02	*/
 end_comment
 
 begin_comment
@@ -1840,11 +1840,6 @@ operator|.
 name|i_unit
 operator|/
 literal|8
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"will destroy everything on the disk, "
 argument_list|)
 expr_stmt|;
 name|cp
