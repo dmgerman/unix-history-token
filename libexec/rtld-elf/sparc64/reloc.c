@@ -2666,6 +2666,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|def
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|target
 operator|=
 call|(
