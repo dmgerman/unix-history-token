@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.4	81/11/08	*/
+comment|/*	ut.c	4.5	81/11/10	*/
 end_comment
 
 begin_include
@@ -3196,6 +3196,10 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
+specifier|register
+name|short
+name|x
+decl_stmt|;
 if|if
 condition|(
 name|sc
@@ -3231,9 +3235,8 @@ name|sc_timo
 operator|=
 name|INF
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|x
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -3248,8 +3251,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 name|timeout
