@@ -7364,7 +7364,7 @@ name|UID_ROOT
 argument_list|,
 name|GID_OPERATOR
 argument_list|,
-literal|0666
+literal|0600
 argument_list|,
 literal|"ata"
 argument_list|)
