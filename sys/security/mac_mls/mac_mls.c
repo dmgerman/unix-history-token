@@ -184,6 +184,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -457,17 +463,12 @@ parameter_list|)
 value|((struct mac_mls *)LABEL_TO_SLOT((l), mac_mls_slot).l_ptr)
 end_define
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_MACMLS
-argument_list|,
-literal|"mls label"
-argument_list|,
-literal|"MAC/MLS labels"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|uma_zone_t
+name|zone_mls
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -531,31 +532,16 @@ name|int
 name|flag
 parameter_list|)
 block|{
-name|struct
-name|mac_mls
-modifier|*
-name|mac_mls
-decl_stmt|;
-name|mac_mls
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mac_mls
-argument_list|)
-argument_list|,
-name|M_MACMLS
-argument_list|,
-name|M_ZERO
-operator||
-name|flag
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|mac_mls
+name|uma_zalloc
+argument_list|(
+name|zone_mls
+argument_list|,
+name|flag
+operator||
+name|M_ZERO
+argument_list|)
 operator|)
 return|;
 block|}
@@ -578,11 +564,11 @@ name|mac_mls
 operator|!=
 name|NULL
 condition|)
-name|free
+name|uma_zfree
 argument_list|(
-name|mac_mls
+name|zone_mls
 argument_list|,
-name|M_MACMLS
+name|mac_mls
 argument_list|)
 expr_stmt|;
 else|else
@@ -1967,7 +1953,33 @@ name|mac_policy_conf
 modifier|*
 name|conf
 parameter_list|)
-block|{  }
+block|{
+name|zone_mls
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"mac_mls"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mac_mls
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
