@@ -566,13 +566,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Treat ICMP administratively prohibited like a TCP RST  * as required by rfc1122 section 3.2.2.1  */
+comment|/*  * Treat ICMP unreachables like a TCP RST as required by rfc1122 section 3.2.2.1  *  * Administatively prohibited kill's sessions regardless of  * their current state, other unreachable by default only kill   * sessions if they are in SYN-SENT state, this ensure temporary   * routing problems doesn't kill existing TCP sessions.  * This can be overridden by icmp_like_rst_syn_sent_only.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|icmp_admin_prohib_like_rst
+name|icmp_unreach_like_rst
 init|=
 literal|1
 decl_stmt|;
@@ -585,22 +585,22 @@ name|_net_inet_tcp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|icmp_admin_prohib_like_rst
+name|icmp_unreach_like_rst
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|icmp_admin_prohib_like_rst
+name|icmp_unreach_like_rst
 argument_list|,
 literal|0
 argument_list|,
-literal|"Treat ICMP administratively prohibited messages like TCP RST, rfc1122 section 3.2.2.1"
+literal|"Treat ICMP unreachable messages like TCP RST, rfc1122 section 3.2.2.1"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * When icmp_admin_prohib_like_rst is enabled, only act on  * sessions in SYN-SENT state  */
+comment|/*  * Control if ICMP unreachable messages other that administratively prohibited  * ones will kill sessions not in SYN-SENT state.  *  * Has no effect unless icmp_unreach_like_rst is enabled.  */
 end_comment
 
 begin_decl_stmt
@@ -628,7 +628,7 @@ name|icmp_like_rst_syn_sent_only
 argument_list|,
 literal|0
 argument_list|,
-literal|"When icmp_admin_prohib_like_rst is enabled, only act on sessions in SYN-SENT state"
+literal|"When icmp_unreach_like_rst is enabled, only act on sessions in SYN-SENT state"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4859,15 +4859,23 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|icmp_admin_prohib_like_rst
+name|icmp_unreach_like_rst
 operator|==
 literal|1
 operator|)
 operator|&&
 operator|(
+operator|(
 name|cmd
 operator|==
-name|PRC_UNREACH_PORT
+name|PRC_UNREACH_HOST
+operator|)
+operator|||
+operator|(
+name|cmd
+operator|==
+name|PRC_UNREACH_ADMIN_PROHIB
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -4894,15 +4902,30 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * Only go here if the length of the IP header in the ICMP packet 		 * is 20 bytes, that is it doesn't have options, if it does have 		 * options, we will not have the first 8 bytes of the TCP header, 		 * and thus we cannot match against TCP source/destination port 		 * numbers and TCP sequence number. 		 */
+comment|/* 		 * Only go here if the length of the IP header in the ICMP packet 		 * is 20 bytes, that is it doesn't have options, if it does have 		 * options, we will not have the first 8 bytes of the TCP header, 		 * and thus we cannot match against TCP source/destination port 		 * numbers and TCP sequence number. 		 * 		 * If PRC_UNREACH_ADMIN_PROHIB drop session regardsless of current 		 * state, else we check the sysctl icmp_like_rst_syn_sent_only to 		 * see if we should drop the session only in SYN-SENT state, or 		 * in all states. 		 */
 name|tcp_seq_check
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|PRC_UNREACH_ADMIN_PROHIB
+condition|)
+block|{
+name|notify
+operator|=
+name|tcp_drop_all_states
+expr_stmt|;
+block|}
+else|else
+block|{
 name|notify
 operator|=
 name|tcp_drop_syn_sent
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -5668,6 +5691,51 @@ operator|==
 name|TCPS_SYN_SENT
 operator|)
 operator|)
+condition|)
+name|tcp_drop
+argument_list|(
+name|tp
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * When a ICMP unreachable is recieved, drop the  * TCP connection, regardless of the state.  */
+end_comment
+
+begin_function
+name|void
+name|tcp_drop_all_states
+parameter_list|(
+name|inp
+parameter_list|,
+name|errno
+parameter_list|)
+name|struct
+name|inpcb
+modifier|*
+name|inp
+decl_stmt|;
+name|int
+name|errno
+decl_stmt|;
+block|{
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+init|=
+name|intotcpcb
+argument_list|(
+name|inp
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|tp
 condition|)
 name|tcp_drop
 argument_list|(
