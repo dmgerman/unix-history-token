@@ -47,6 +47,17 @@ begin_comment
 comment|/* Bind function calls immediately */
 end_comment
 
+begin_comment
+comment|/*  * Special handle argument for dlsym().  It causes the search for the  * symbol to begin in the next shared object after the one containing  * the caller.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_NEXT
+value|((void *) -1)
+end_define
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|void
