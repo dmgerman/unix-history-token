@@ -3456,9 +3456,18 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* TODO: IPv6 IP6TOS_ECT bit on */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|FAST_IPSEC
+argument_list|)
 if|if
 condition|(
 name|ipsec_setsocket
