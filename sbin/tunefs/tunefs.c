@@ -488,7 +488,7 @@ argument_list|(
 name|device
 argument_list|)
 argument_list|,
-literal|"%s/%s"
+literal|"%s%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -515,15 +515,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|st
-operator|.
-name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|!=
-name|S_IFBLK
+name|fs
+operator|==
+name|NULL
 operator|&&
 operator|(
 name|st
@@ -532,14 +526,14 @@ name|st_mode
 operator|&
 name|S_IFMT
 operator|)
-operator|!=
-name|S_IFCHR
+operator|==
+name|S_IFDIR
 condition|)
 name|errx
 argument_list|(
 literal|10
 argument_list|,
-literal|"%s: not a block or character device"
+literal|"%s: unknown file system"
 argument_list|,
 name|special
 argument_list|)
@@ -1619,7 +1613,7 @@ name|fs_magic
 operator|!=
 name|FS_MAGIC
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|5
 argument_list|,
