@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1984, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.1.1.1 1994/09/30 05:45:06 pst Exp $  */
+comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.2 1995/01/16 18:57:45 dfr Exp $  */
 end_comment
 
 begin_include
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/filio.h>
 end_include
 
 begin_include
@@ -195,6 +201,57 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * Drain the socket of any unwanted routing messages. 		 */
+name|int
+name|n
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|512
+index|]
+decl_stmt|;
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|FIONREAD
+argument_list|,
+operator|&
+name|n
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+block|{
+name|read
+argument_list|(
+name|s
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|FIONREAD
+argument_list|,
+operator|&
+name|n
 argument_list|)
 expr_stmt|;
 block|}
@@ -1018,6 +1075,12 @@ operator|>
 literal|0
 operator|&&
 operator|(
+name|rtm
+operator|->
+name|rtm_type
+operator|!=
+name|cmd
+operator|||
 name|rtm
 operator|->
 name|rtm_seq
