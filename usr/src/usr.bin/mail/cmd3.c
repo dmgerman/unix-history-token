@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.24 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ directive|include
 file|"rcv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Still more user commands.  */
 end_comment
@@ -42,21 +48,16 @@ begin_comment
 comment|/*  * Process a shell escape by saving signals, ignoring signals,  * and forking a sh -c  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|shell
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sig_t
 name|sigint
@@ -158,7 +159,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Fork an interactive shell.  */
@@ -168,21 +169,16 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|dosh
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sig_t
 name|sigint
@@ -231,6 +227,10 @@ operator|-
 literal|1
 argument_list|,
 name|NOSTR
+argument_list|,
+name|NOSTR
+argument_list|,
+name|NOSTR
 argument_list|)
 expr_stmt|;
 operator|(
@@ -252,7 +252,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Expand the shell escape by expanding unescaped !'s into the  * last issued command where possible.  */
@@ -267,21 +267,16 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|bangexp
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|bangbuf
@@ -495,18 +490,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out a nice help message from some file or another.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|help
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|c
@@ -572,28 +565,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Change user's working directory.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|schdir
-argument_list|(
-argument|arglist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arglist
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|arglist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -655,23 +643,18 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|respond
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -700,27 +683,22 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reply to a list of messages.  Extract each name from the  * message header and send them off to mail1()  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|_respond
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|message
@@ -1137,7 +1115,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Modify the subject we are replying to to begin with Re: if  * it does not already.  */
@@ -1251,21 +1229,16 @@ begin_comment
 comment|/*  * Preserve the named messages, so that they will be sent  * back to the system mailbox.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|preserve
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1350,27 +1323,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mark all given messages as unread.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|unread
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 name|msgvec
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1427,27 +1395,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print the size of each message.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|messize
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1514,20 +1477,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Quit quickly.  If we are sourcing, just pop the input level  * by returning an error.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|rexit
-argument_list|(
-argument|e
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|e
+parameter_list|)
+name|int
+name|e
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1545,28 +1509,23 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set or display a variable value.  Syntax is similar to that  * of csh.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|set
-argument_list|(
-argument|arglist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arglist
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|arglist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1856,28 +1815,23 @@ name|errs
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unset a bunch of variable values.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|unset
-argument_list|(
-argument|arglist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arglist
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|arglist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2067,28 +2021,23 @@ name|errs
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Put add users to a group.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|group
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2425,28 +2374,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Sort the passed string vecotor into ascending dictionary  * order.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sort
-argument_list|(
-argument|list
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|list
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|list
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2484,10 +2428,6 @@ condition|)
 return|return;
 name|qsort
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|list
 argument_list|,
 name|ap
@@ -2495,37 +2435,38 @@ operator|-
 name|list
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|list
+argument_list|)
 argument_list|,
 name|diction
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Do a dictionary order comparison of the arguments from  * qsort.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|diction
-argument_list|(
+parameter_list|(
 name|a
-argument_list|,
+parameter_list|,
 name|b
-argument_list|)
-specifier|register
-name|char
-operator|*
-operator|*
+parameter_list|)
+specifier|const
+name|void
+modifier|*
 name|a
-operator|,
-operator|*
-operator|*
+decl_stmt|,
+decl|*
 name|b
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -2534,9 +2475,19 @@ operator|(
 name|strcmp
 argument_list|(
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|a
 argument_list|,
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|b
 argument_list|)
 operator|)
@@ -2552,39 +2503,38 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|null
-argument_list|(
-argument|e
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|e
+parameter_list|)
+name|int
+name|e
+decl_stmt|;
 block|{
 return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Change to another file.  With no argument, print information about  * the current file.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|file
-argument_list|(
+parameter_list|(
 name|argv
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|argv
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2623,28 +2573,23 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Expand file names like echo  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|echo
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2720,23 +2665,18 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|Respond
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2765,27 +2705,22 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reply to a series of messages by simply mailing to the senders  * and not messing around with the To: and Cc: lists as in normal  * reply.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|_Respond
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 name|msgvec
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|header
@@ -2989,28 +2924,23 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Conditional commands.  These allow one to parameterize one's  * .mailrc and do some things if sending, others if receiving.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ifcmd
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -3094,18 +3024,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Implement 'else'.  This is pretty simple -- we just  * flip over the conditional flag.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|elsecmd
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 switch|switch
 condition|(
@@ -3159,18 +3087,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * End of if statement.  Just set cond back to anything.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|endifcmd
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -3200,28 +3126,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set the list of alternate names.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|alternates
-argument_list|(
-argument|namelist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|namelist
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|namelist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -3404,7 +3325,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

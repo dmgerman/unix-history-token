@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.15 (Berkeley) %G%"
+literal|"@(#)edit.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -48,21 +54,16 @@ begin_comment
 comment|/*  * Edit a message list.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|editor
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|edit1
@@ -73,27 +74,22 @@ literal|'e'
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Invoke the visual editor on a message list.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|visual
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|edit1
@@ -104,35 +100,27 @@ literal|'v'
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Edit a message by writing the message into a funnily-named file  * (which should not exist) and forking an editor on it.  * We get the editor from the stuff above.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|edit1
-argument_list|(
-argument|msgvec
-argument_list|,
-argument|type
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|,
+name|type
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
+name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -317,10 +305,7 @@ name|fseek
 argument_list|(
 name|otf
 argument_list|,
-operator|(
-name|long
-operator|)
-literal|0
+literal|0L
 argument_list|,
 literal|2
 argument_list|)
@@ -450,7 +435,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Run an editor on the file at "fpp" of "size" bytes,  * and return a new file pointer.  * Signals must be handled by the caller.  * "Type" is 'e' for _PATH_EX, 'v' for _PATH_VI.  */
@@ -477,8 +462,10 @@ decl_stmt|;
 name|off_t
 name|size
 decl_stmt|;
-name|char
+name|int
 name|type
+decl_stmt|,
+name|readonly
 decl_stmt|;
 block|{
 specifier|register
@@ -778,6 +765,8 @@ operator|-
 literal|1
 argument_list|,
 name|tempEdit
+argument_list|,
+name|NOSTR
 argument_list|,
 name|NOSTR
 argument_list|)

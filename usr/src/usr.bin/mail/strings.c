@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strings.c	5.9 (Berkeley) %G%"
+literal|"@(#)strings.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ directive|include
 file|"rcv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Allocate size more bytes of space and return the address of the  * first byte to the caller.  An even number of bytes are always  * allocated so that the space will always be on a word boundary.  * The string spaces are of exponentially increasing size, to satisfy  * the occasional user with enormous string size requests.  */
 end_comment
@@ -49,6 +55,9 @@ name|salloc
 parameter_list|(
 name|size
 parameter_list|)
+name|int
+name|size
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -253,12 +262,10 @@ begin_comment
 comment|/*  * Reset the string area to be empty.  * Called to free all strings allocated  * since last reset.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sreset
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -331,18 +338,16 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Make the string area permanent.  * Meant to be called in main, after initialization.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|spreserve
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -378,7 +383,7 @@ operator|=
 name|NOSTR
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

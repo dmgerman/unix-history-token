@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.23 (Berkeley) %G%"
+literal|"@(#)lex.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -63,21 +69,16 @@ begin_comment
 comment|/*  * Set up editing on the given file name.  * If the first character of name is %, we are considered to be  * editing the file, otherwise we are reading our mail which has  * signficance for mbox and so forth.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|setfile
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -478,7 +479,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -501,12 +502,10 @@ begin_comment
 comment|/*  * Interpret user commands one by one.  If standard input is not a tty,  * print no prompt.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|commands
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|eofloop
@@ -792,29 +791,27 @@ condition|)
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Execute a single command.  * Command functions return 0 for success, 1 for error, and -1  * for abort.  A 1 or -1 aborts a load or source.  A -1 aborts  * the interactive command loop.  * Contxt is non-zero if called while composing mail.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|execute
-argument_list|(
-argument|linebuf
-argument_list|,
-argument|contxt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|linebuf
+parameter_list|,
+name|contxt
+parameter_list|)
 name|char
 name|linebuf
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|contxt
+decl_stmt|;
 block|{
 name|char
 name|word
@@ -1538,20 +1535,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set the size of the message vector used to construct argument  * lists to message list functions.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setmsize
-argument_list|(
-argument|sz
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|sz
+parameter_list|)
+name|int
+name|sz
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1591,7 +1589,7 @@ name|msgvec
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Find the correct command in the command table corresponding  * to the passed command "word"  */
@@ -1669,24 +1667,22 @@ begin_comment
 comment|/*  * Determine if as1 is a valid prefix of as2.  * Return true if yep.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isprefix
-argument_list|(
-argument|as1
-argument_list|,
-argument|as2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|as1
+parameter_list|,
+name|as2
+parameter_list|)
 name|char
 modifier|*
 name|as1
 decl_stmt|,
-modifier|*
+decl|*
 name|as2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1764,6 +1760,9 @@ name|intr
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 name|noreset
 operator|=
@@ -1834,6 +1833,9 @@ name|stop
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 name|sig_t
 name|old_action
@@ -1913,6 +1915,9 @@ name|hangup
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 comment|/* nothing to do? */
 name|exit
@@ -1927,12 +1932,10 @@ begin_comment
 comment|/*  * Announce the presence of the current Mail version,  * give the message count, and print a header listing.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|announce
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|vec
@@ -1999,18 +2002,16 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Announce information about the file we are editing.  * Return a likely place to set dot.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|newfileinfo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2388,7 +2389,7 @@ name|mdot
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print the current version number.  */
@@ -2398,14 +2399,15 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|pversion
-argument_list|(
-argument|e
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|e
+parameter_list|)
+name|int
+name|e
+decl_stmt|;
 block|{
 specifier|extern
 name|char
@@ -2425,27 +2427,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Load a file of user definitions.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|load
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -2508,7 +2505,7 @@ name|in
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

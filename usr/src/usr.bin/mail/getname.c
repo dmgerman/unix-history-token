@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getname.c	5.8 (Berkeley) %G%"
+literal|"@(#)getname.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"rcv.h"
 end_include
 
 begin_include
@@ -40,15 +40,15 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_comment
-comment|/*  * Getname / getuserid for those with  * hashed passwd data base).  *  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"rcv.h"
+file|"extern.h"
 end_include
+
+begin_comment
+comment|/* Getname / getuserid for those with hashed passwd data base). */
+end_comment
 
 begin_comment
 comment|/*  * Search the passwd file for a uid.  Return name through ref parameter  * if found, indicating success with 0 return.  Return -1 on error.  */
@@ -61,6 +61,9 @@ name|getname
 parameter_list|(
 name|uid
 parameter_list|)
+name|int
+name|uid
+decl_stmt|;
 block|{
 name|struct
 name|passwd
@@ -95,21 +98,16 @@ begin_comment
 comment|/*  * Convert the passed name to a user id and return it.  Return -1  * on error.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getuserid
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 name|name
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|passwd
@@ -139,7 +137,7 @@ operator|->
 name|pw_uid
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

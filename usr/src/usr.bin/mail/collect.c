@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.24 (Berkeley) %G%"
+literal|"@(#)collect.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"extern.h"
 end_include
 
 begin_comment
@@ -176,6 +176,9 @@ name|struct
 name|header
 modifier|*
 name|hp
+decl_stmt|;
+name|int
+name|printheaders
 decl_stmt|;
 block|{
 name|FILE
@@ -1495,32 +1498,27 @@ begin_comment
 comment|/*  * Write a file, ex-like if f set.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|exwrite
-argument_list|(
-argument|name
-argument_list|,
-argument|fp
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|fp
+parameter_list|,
+name|f
+parameter_list|)
 name|char
 name|name
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|f
+decl_stmt|;
 block|{
 specifier|register
 name|FILE
@@ -1733,29 +1731,27 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Edit the message being collected on fp.  * On return, make the edit file the new temp file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mesedit
-argument_list|(
-argument|fp
-argument_list|,
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|,
+name|c
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|c
+decl_stmt|;
 block|{
 name|sig_t
 name|sigint
@@ -1797,10 +1793,7 @@ name|fseek
 argument_list|(
 name|nf
 argument_list|,
-operator|(
-name|off_t
-operator|)
-literal|0
+literal|0L
 argument_list|,
 literal|2
 argument_list|)
@@ -1826,36 +1819,28 @@ name|sigint
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Pipe the message through the command.  * Old message is on stdin of command;  * New message collected from stdout.  * Sh -c must return 0 to accept the new message.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mespipe
-argument_list|(
-argument|fp
-argument_list|,
-argument|cmd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|,
+name|cmd
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|cmd
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -1927,6 +1912,10 @@ name|fileno
 argument_list|(
 name|nf
 argument_list|)
+argument_list|,
+name|NOSTR
+argument_list|,
+name|NOSTR
 argument_list|,
 name|NOSTR
 argument_list|)
@@ -2015,38 +2004,33 @@ name|sigint
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Interpolate the named messages into the current  * message, preceding each line with a tab.  * Return a count of the number of characters now in  * the message, or -1 if an error is encountered writing  * the message temporary.  The flag argument is 'm' if we  * should shift over and 'f' if not.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|forward
-argument_list|(
-argument|ms
-argument_list|,
-argument|fp
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ms
+parameter_list|,
+name|fp
+parameter_list|,
+name|f
+parameter_list|)
 name|char
 name|ms
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|f
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -2289,7 +2273,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print (continue) when continued after ^Z.  */
@@ -2305,6 +2289,9 @@ name|collstop
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 name|sig_t
 name|old_action
@@ -2390,6 +2377,9 @@ name|collint
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 comment|/* 	 * the control flow is subtle, because we can be called from ~q. 	 */
 if|if
@@ -2476,6 +2466,9 @@ name|collhup
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 name|rewind
 argument_list|(
@@ -2496,19 +2489,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|savedeadletter
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|FILE
@@ -2603,7 +2594,7 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

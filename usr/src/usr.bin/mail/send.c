@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.23 (Berkeley) %G%"
+literal|"@(#)send.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ directive|include
 file|"rcv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Mail to others.  */
 end_comment
@@ -42,48 +48,37 @@ begin_comment
 comment|/*  * Send message described by the passed pointer to the  * passed output buffer.  Return -1 on error.  * Adjust the status: field if need be.  * If doign is given, suppress ignored header fields.  * prefix is a string to prepend to each output line.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|send
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|,
+parameter_list|,
 name|obuf
-argument_list|,
+parameter_list|,
 name|doign
-argument_list|,
+parameter_list|,
 name|prefix
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|message
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|FILE
 modifier|*
 name|obuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ignoretab
 modifier|*
 name|doign
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|prefix
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|long
 name|count
@@ -836,44 +831,36 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Output a reasonable looking status field.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|statusput
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|,
+parameter_list|,
 name|obuf
-argument_list|,
+parameter_list|,
 name|prefix
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|message
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|FILE
 modifier|*
 name|obuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|prefix
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|statout
@@ -950,34 +937,32 @@ name|statout
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Interface between the argument list and the mail1 routine  * which does all the dirty work.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|mail
-argument_list|(
-argument|to
-argument_list|,
-argument|cc
-argument_list|,
-argument|bcc
-argument_list|,
-argument|smopts
-argument_list|,
-argument|subject
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|to
+parameter_list|,
+name|cc
+parameter_list|,
+name|bcc
+parameter_list|,
+name|smopts
+parameter_list|,
+name|subject
+parameter_list|)
 name|struct
 name|name
 modifier|*
 name|to
 decl_stmt|,
-modifier|*
+decl|*
 name|cc
 decl_stmt|,
 modifier|*
@@ -986,7 +971,7 @@ decl_stmt|,
 modifier|*
 name|smopts
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|char
@@ -1051,21 +1036,16 @@ begin_comment
 comment|/*  * Send mail to a bunch of user names.  The interface is through  * the mail routine below.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sendmail
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|header
@@ -1120,30 +1100,28 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mail a message on standard input to the people indicated  * in the passed header.  (Internal interface).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mail1
-argument_list|(
-argument|hp
-argument_list|,
-argument|printheaders
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hp
+parameter_list|,
+name|printheaders
+parameter_list|)
 name|struct
 name|header
 modifier|*
 name|hp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|printheaders
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -1668,38 +1646,30 @@ name|mtf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Fix the header by glopping all of the expanded names from  * the distribution list into the appropriate fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fixhead
-argument_list|(
-argument|hp
-argument_list|,
-argument|tolist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hp
+parameter_list|,
+name|tolist
+parameter_list|)
 name|struct
 name|header
 modifier|*
 name|hp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|name
 modifier|*
 name|tolist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1846,7 +1816,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Prepend a header in front of the collected stuff  * and return the new file.  */
@@ -2117,33 +2087,28 @@ begin_comment
 comment|/*  * Dump the to, subject, cc header on the  * passed file buffer.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|puthead
-argument_list|(
-argument|hp
-argument_list|,
-argument|fo
-argument_list|,
-argument|w
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hp
+parameter_list|,
+name|fo
+parameter_list|,
+name|w
+parameter_list|)
 name|struct
 name|header
 modifier|*
 name|hp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fo
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|w
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -2293,55 +2258,41 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Format the given header line to not exceed 72 characters.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fmt
-argument_list|(
-argument|str
-argument_list|,
-argument|np
-argument_list|,
-argument|fo
-argument_list|,
-argument|comma
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|np
+parameter_list|,
+name|fo
+parameter_list|,
+name|comma
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|name
 modifier|*
 name|np
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fo
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|comma
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|col
@@ -2483,7 +2434,7 @@ name|fo
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Save the outgoing mail on the passed file.  */
@@ -2493,31 +2444,23 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|savemail
-argument_list|(
-argument|name
-argument_list|,
-argument|fi
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|fi
+parameter_list|)
 name|char
 name|name
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|FILE
 modifier|*
 name|fi
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -2679,7 +2622,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

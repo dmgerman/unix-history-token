@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)list.c	5.14 (Berkeley) %G%"
+literal|"@(#)list.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Message list handling.  */
 end_comment
@@ -48,32 +54,26 @@ begin_comment
 comment|/*  * Convert the user string of message numbers and  * store the numbers into vector.  *  * Returns the count of messages picked up or -1 on error.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getmsglist
-argument_list|(
-argument|buf
-argument_list|,
-argument|vector
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|vector
+parameter_list|,
+name|flags
+parameter_list|)
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|vector
+decl_stmt|,
+name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -179,7 +179,7 @@ name|vector
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mark all messages that the user wanted from the command  * line in the message structure.  Return 0 on success, -1  * on error.  */
@@ -331,23 +331,21 @@ name|lastcolmod
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|markall
-argument_list|(
-argument|buf
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|f
+parameter_list|)
 name|char
 name|buf
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|f
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -1440,20 +1438,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Turn the character after a colon modifier into a bit  * value.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|evalcol
-argument_list|(
-argument|col
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|col
+parameter_list|)
+name|int
+name|col
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1510,22 +1509,25 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check the passed message number for legality and proper flags.  * If f is MDELETED, then either kind will do.  Otherwise, the message  * has to be undeleted.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|check
-argument_list|(
-argument|mesg
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|mesg
+parameter_list|,
+name|f
+parameter_list|)
+name|int
+name|mesg
+decl_stmt|,
+name|f
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1605,45 +1607,34 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Scan out the list of string arguments, shell style  * for a RAWLIST.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getrawlist
-argument_list|(
-argument|line
-argument_list|,
-argument|argv
-argument_list|,
-argument|argc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|,
+name|argv
+parameter_list|,
+name|argc
+parameter_list|)
 name|char
 name|line
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2066,7 +2057,7 @@ return|return
 name|argn
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * scan out a single lexical item and return its token number,  * updating the string pointer passed **p.  Also, store the value  * of the number or string scanned in lexnumber or lexstring as  * appropriate.  In any event, store the scanned `thing' in lexstring.  */
@@ -2126,22 +2117,17 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|scan
-argument_list|(
-argument|sp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sp
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|sp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -2492,20 +2478,21 @@ name|TSTRING
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unscan the named token by pushing it onto the regret stack.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|regret
-argument_list|(
-argument|token
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|token
+parameter_list|)
+name|int
+name|token
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2553,18 +2540,16 @@ operator|=
 name|lexnumber
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reset all the scanner global variables.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|scaninit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|regretp
 operator|=
@@ -2572,22 +2557,25 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Find the first message whose flags& m == f  and return  * its message number.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|first
-argument_list|(
-argument|f
-argument_list|,
-argument|m
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+name|int
+name|f
+decl_stmt|,
+name|m
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2690,29 +2678,27 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * See if the passed name sent the passed message number.  Return true  * if so.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|matchsender
-argument_list|(
-argument|str
-argument_list|,
-argument|mesg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|mesg
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|mesg
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -2811,7 +2797,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * See if the given string matches inside the subject field of the  * given message.  For the purpose of the scan, we ignore case differences.  * If it does, return true.  The string search argument is assumed to  * have the form "/search-string."  If it is of the form "/," we use the  * previous search string.  */
@@ -2826,23 +2812,21 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|matchsubj
-argument_list|(
-argument|str
-argument_list|,
-argument|mesg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|mesg
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|mesg
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2979,20 +2963,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mark the named message by setting its mark bit.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mark
-argument_list|(
-argument|mesg
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|mesg
+parameter_list|)
+name|int
+name|mesg
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -3029,20 +3014,21 @@ operator||=
 name|MMARK
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unmark the named message.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|unmark
-argument_list|(
-argument|mesg
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|mesg
+parameter_list|)
+name|int
+name|mesg
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -3080,22 +3066,25 @@ operator|~
 name|MMARK
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the message number corresponding to the passed meta character.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|metamess
-argument_list|(
-argument|meta
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|meta
+parameter_list|,
+name|f
+parameter_list|)
+name|int
+name|meta
+decl_stmt|,
+name|f
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -3306,7 +3295,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

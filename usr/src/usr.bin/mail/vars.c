@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vars.c	5.6 (Berkeley) %G%"
+literal|"@(#)vars.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ directive|include
 file|"rcv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Variable handling stuff.  */
 end_comment
@@ -42,16 +48,14 @@ begin_comment
 comment|/*  * Assign a value to a variable.  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|void
 name|assign
 argument_list|(
-argument|name
+name|name
 argument_list|,
-argument|value
+name|value
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 name|name
 index|[]
@@ -160,21 +164,16 @@ begin_comment
 comment|/*  * Free up a variable string.  We do not bother to allocate  * strings whose value is "" since they are expected to be frequent.  * Thus, we cannot free same!  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|vfree
-argument_list|(
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cp
+parameter_list|)
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -187,7 +186,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Copy a variable value into permanent (ie, not collected after each  * command) space.  Do not bother to alloc space for ""  */
@@ -480,21 +479,16 @@ begin_comment
 comment|/*  * Print a group out on stdout  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printgroup
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 name|name
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -573,25 +567,23 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Hash the passed string and return an index into  * the variable or group hash table.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|hash
-argument_list|(
+parameter_list|(
 name|name
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|name
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|h
@@ -642,7 +634,7 @@ name|HSHSIZE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

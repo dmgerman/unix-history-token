@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)head.c	5.7 (Berkeley) %G%"
+literal|"@(#)head.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ directive|include
 file|"rcv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * Routines for processing and detecting headlines.  */
 end_comment
@@ -42,21 +48,16 @@ begin_comment
 comment|/*  * See if the passed line buffer is a mail header.  * Return true if yes.  Note the extreme pains to  * accomodate all funny formats.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ishead
-argument_list|(
-argument|linebuf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|linebuf
+parameter_list|)
 name|char
 name|linebuf
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -183,22 +184,20 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|void
 name|fail
 argument_list|(
-argument|linebuf
+name|linebuf
 argument_list|,
-argument|reason
+name|reason
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 name|linebuf
 index|[]
@@ -218,18 +217,16 @@ begin_comment
 comment|/*  * Split a headline into its useful components.  * Copy the line into dynamic string space, then set  * pointers into the copied line in the passed headline  * structure.  Actually, it scans.  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|void
 name|parse
 argument_list|(
-argument|line
+name|line
 argument_list|,
-argument|hl
+name|hl
 argument_list|,
-argument|pbuf
+name|pbuf
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 name|line
 index|[]
@@ -488,21 +485,16 @@ literal|"Aaa Aaa O0 00:00:00 AAA 0000"
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|isdate
-argument_list|(
-argument|date
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|date
+parameter_list|)
 name|char
 name|date
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|cmatch
@@ -520,28 +512,29 @@ name|tmztype
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Match the given string (cp) against the given template (tp).  * Return 1 if they match, 0 if they don't  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|cmatch
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|,
+parameter_list|,
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|tp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{

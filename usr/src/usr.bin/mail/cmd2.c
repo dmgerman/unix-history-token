@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	5.14 (Berkeley) %G%"
+literal|"@(#)cmd2.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ directive|include
 file|<sys/wait.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * More user commands.  */
 end_comment
@@ -48,21 +54,16 @@ begin_comment
 comment|/*  * If any arguments were given, go to the next applicable argument  * following dot, otherwise, go to the next applicable message.  * If given as first command with no arguments, print first message.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|next
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -325,27 +326,22 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Save a message in a file.  Mark the message as saved  * so we can discard when the user quits.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|save
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 name|str
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|save1
@@ -360,27 +356,22 @@ name|saveignore
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Copy a message to a file without affected its saved-ness  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|copycmd
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 name|str
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|save1
@@ -395,48 +386,40 @@ name|saveignore
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Save/copy the indicated messages at the end of the passed file name.  * If mark is true, mark the message "saved."  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|save1
-argument_list|(
-argument|str
-argument_list|,
-argument|mark
-argument_list|,
-argument|cmd
-argument_list|,
-argument|ignore
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|mark
+parameter_list|,
+name|cmd
+parameter_list|,
+name|ignore
+parameter_list|)
 name|char
 name|str
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|int
+name|mark
+decl_stmt|;
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ignoretab
 modifier|*
 name|ignore
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -761,27 +744,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Write the indicated messages at the end of the passed  * file name, minus header and trailing blank line.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|swrite
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 name|char
 name|str
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|save1
@@ -796,7 +774,7 @@ name|ignoreall
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Snarf the file from the end of the command line and  * return a pointer to it.  If there is no file attached,  * just return NOSTR.  Put a null in front of the file  * name so that the message list processing won't see it,  * unless the file name is the only thing on the line, in  * which case, return 0 in the reference flag variable.  */
@@ -931,21 +909,16 @@ begin_comment
 comment|/*  * Delete messages.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|delete
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 name|msgvec
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|delm
 argument_list|(
@@ -956,27 +929,22 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delete messages, then type the new dot.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|deltype
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 name|msgvec
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|list
@@ -1073,27 +1041,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delete the indicated messages.  * Set dot to some nice place afterwards.  * Internal interface.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|delm
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1245,27 +1208,22 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Undelete the indicated messages.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|undelete
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1328,18 +1286,16 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Interactively dump core on "core"  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|core
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|pid
@@ -1419,28 +1375,23 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Clobber as many bytes of stack as the user requests.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clobber
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1485,20 +1436,21 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Clobber the stack.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clob1
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 name|char
 name|buf
@@ -1547,28 +1499,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Add the given header fields to the retained list.  * If no arguments, print the current list of retained fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|retfield
-argument_list|(
-argument|list
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|list
+parameter_list|)
 name|char
 modifier|*
 name|list
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|ignore1
@@ -1583,28 +1530,23 @@ literal|"retained"
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Add the given header fields to the ignored list.  * If no arguments, print the current list of ignored fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|igfield
-argument_list|(
-argument|list
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|list
+parameter_list|)
 name|char
 modifier|*
 name|list
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|ignore1
@@ -1617,24 +1559,19 @@ literal|"ignored"
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|saveretfield
-argument_list|(
-argument|list
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|list
+parameter_list|)
 name|char
 modifier|*
 name|list
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|ignore1
@@ -1649,24 +1586,19 @@ literal|"retained"
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|saveigfield
-argument_list|(
-argument|list
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|list
+parameter_list|)
 name|char
 modifier|*
 name|list
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|ignore1
@@ -1679,43 +1611,32 @@ literal|"ignored"
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ignore1
-argument_list|(
-argument|list
-argument_list|,
-argument|tab
-argument_list|,
-argument|which
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|list
+parameter_list|,
+name|tab
+parameter_list|,
+name|which
+parameter_list|)
 name|char
 modifier|*
 name|list
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ignoretab
 modifier|*
 name|tab
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|which
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|field
@@ -1872,37 +1793,29 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out all currently retained fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|igshow
-argument_list|(
-argument|tab
-argument_list|,
-argument|which
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tab
+parameter_list|,
+name|which
+parameter_list|)
 name|struct
 name|ignoretab
 modifier|*
 name|tab
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|which
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2023,10 +1936,6 @@ literal|0
 expr_stmt|;
 name|qsort
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|ring
 argument_list|,
 name|tab
@@ -2068,44 +1977,53 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compare two names for sorting ignored field list.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|igcomp
-argument_list|(
-argument|l
-argument_list|,
-argument|r
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
+parameter_list|(
+name|l
+parameter_list|,
+name|r
+parameter_list|)
+specifier|const
+name|void
 modifier|*
 name|l
 decl_stmt|,
-modifier|*
-modifier|*
+decl|*
 name|r
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
 return|return
+operator|(
 name|strcmp
 argument_list|(
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|l
 argument_list|,
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|r
 argument_list|)
+operator|)
 return|;
 block|}
 end_block

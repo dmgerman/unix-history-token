@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.26 (Berkeley) %G%"
+literal|"@(#)fio.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"rcv.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -70,6 +64,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * File I/O.  */
 end_comment
@@ -78,19 +78,17 @@ begin_comment
 comment|/*  * Set up the input pointers while copying the mail file into /tmp.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|setptr
-argument_list|(
+parameter_list|(
 name|ibuf
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|ibuf
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|extern
 name|char
@@ -588,36 +586,28 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Drop the passed line onto the passed output buffer.  * If a write error occurs, return -1, else the count of  * characters written, including the newline.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|putline
-argument_list|(
-argument|obuf
-argument_list|,
-argument|linebuf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|obuf
+parameter_list|,
+name|linebuf
+parameter_list|)
 name|FILE
 modifier|*
 name|obuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|linebuf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -677,38 +667,33 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Read up a line from the specified input into the line  * buffer.  Return the number of characters read.  Do not  * include the newline at the end.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|readline
-argument_list|(
-argument|ibuf
-argument_list|,
-argument|linebuf
-argument_list|,
-argument|linesize
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ibuf
+parameter_list|,
+name|linebuf
+parameter_list|,
+name|linesize
+parameter_list|)
 name|FILE
 modifier|*
 name|ibuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|linebuf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|linesize
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -770,7 +755,7 @@ return|return
 name|n
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return a file buffer all ready to read up the  * passed message pointer.  */
@@ -801,6 +786,9 @@ name|fseek
 argument_list|(
 name|itf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|positionof
 argument_list|(
 name|mp
@@ -841,21 +829,16 @@ begin_comment
 comment|/*  * Take the data out of the passed ghost file and toss it into  * a dynamically allocated message structure.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|makemessage
-argument_list|(
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|f
+parameter_list|)
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|size
@@ -1001,37 +984,29 @@ name|f
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Append the passed message descriptor onto the temp file.  * If the write fails, return 1, else 0  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|append
-argument_list|(
-argument|mp
-argument_list|,
-argument|f
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|,
+name|f
+parameter_list|)
 name|struct
 name|message
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|fwrite
@@ -1054,27 +1029,22 @@ operator|!=
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delete a file, but only if the file is a plain file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|rm
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|stat
@@ -1129,7 +1099,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -1153,12 +1123,10 @@ begin_comment
 comment|/*  * Hold signals SIGHUP, SIGINT, and SIGQUIT.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|holdsigs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1188,18 +1156,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Release signals SIGHUP, SIGINT, and SIGQUIT.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|relsesigs
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1214,7 +1180,7 @@ name|omask
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Determine the size of the file possessed by  * the passed buffer.  */
@@ -1813,21 +1779,16 @@ begin_comment
 comment|/*  * Determine the current folder directory name.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getfold
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1884,7 +1845,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the name of the dead.letter file.  */

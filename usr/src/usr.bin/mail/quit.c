@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.17 (Berkeley) %G%"
+literal|"@(#)quit.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|"extern.h"
 end_include
 
 begin_comment
@@ -54,12 +54,10 @@ begin_comment
 comment|/*  * The "quit" command.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|quitcmd
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* 	 * If we are sourcing, then return 1 so execute() can handle it. 	 * Otherwise, return -1 to abort command loop. 	 */
 if|if
@@ -74,18 +72,16 @@ operator|-
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Save all of the undetermined messages at the top of "mbox"  * Save all untouched messages back in the system mailbox.  * Remove the system mailbox, if none saved there.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|quit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|mcount
@@ -253,6 +249,9 @@ name|fseek
 argument_list|(
 name|fbuf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|mailsize
 argument_list|,
 literal|0
@@ -1299,25 +1298,23 @@ name|fbuf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Preserve all the appropriate messages back in the system  * mailbox, and print a nice message indicated how many were  * saved.  On any error, just return -1.  Else return 0.  * Incorporate the any new mail that we found.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|writeback
-argument_list|(
+parameter_list|(
 name|res
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|res
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1604,18 +1601,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Terminate an editing session by attempting to write out the user's  * file from the temporary.  Save any new stuff appended to the file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|edstop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|char
@@ -1950,6 +1945,9 @@ name|fseek
 argument_list|(
 name|ibuf
 argument_list|,
+operator|(
+name|long
+operator|)
 name|mailsize
 argument_list|,
 literal|0
@@ -2267,7 +2265,7 @@ name|relsesigs
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

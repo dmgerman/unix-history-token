@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.28 (Berkeley) %G%"
+literal|"@(#)main.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -75,16 +81,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -124,20 +134,6 @@ parameter_list|()
 function_decl|;
 name|sig_t
 name|prevint
-decl_stmt|;
-specifier|extern
-name|int
-name|getopt
-argument_list|()
-decl_stmt|,
-name|optind
-decl_stmt|,
-name|opterr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 name|void
 name|sigchild
@@ -767,7 +763,12 @@ end_comment
 begin_function
 name|void
 name|hdrstop
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|fflush
 argument_list|(
@@ -795,12 +796,10 @@ begin_comment
 comment|/*  * Compute what the screen size for printing headers should be.  * We use the following algorithm for the height:  *	If baud rate< 1200, use  9  *	If baud rate = 1200, use 14  *	If baud rate> 1200, use 24 or ws_row  * Width is either 80 or ws_col;  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setscreensize
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|sgttyb
@@ -936,7 +935,7 @@ operator|=
 literal|80
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

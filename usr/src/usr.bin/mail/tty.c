@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.12 (Berkeley) %G%"
+literal|"@(#)tty.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|"rcv.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -108,24 +114,22 @@ begin_comment
 comment|/*  * Read all relevant header fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|grabh
-argument_list|(
-argument|hp
-argument_list|,
-argument|gflags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hp
+parameter_list|,
+name|gflags
+parameter_list|)
 name|struct
 name|header
 modifier|*
 name|hp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|gflags
+decl_stmt|;
 block|{
 name|struct
 name|sgttyb
@@ -631,7 +635,7 @@ name|errs
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Read up a header from standard input.  * The source string has the preliminary contents to  * be read.  *  */
@@ -1182,6 +1186,9 @@ name|ttystop
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 name|sig_t
 name|old_action
@@ -1249,6 +1256,9 @@ name|ttyint
 parameter_list|(
 name|s
 parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 name|longjmp
 argument_list|(

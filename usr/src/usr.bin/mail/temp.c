@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)temp.c	5.16 (Berkeley) %G%"
+literal|"@(#)temp.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"rcv.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"rcv.h"
+file|"extern.h"
 end_include
 
 begin_comment
@@ -96,12 +102,10 @@ name|tmpdir
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|tinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -404,7 +408,7 @@ name|homedir
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

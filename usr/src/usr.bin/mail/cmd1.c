@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.22 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ directive|include
 file|"rcv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Mail -- a mail program  *  * User commands.  */
 end_comment
@@ -49,21 +55,16 @@ name|screen
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|headers
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -263,27 +264,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Scroll to the next/previous screen  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|scroll
-argument_list|(
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arg
+parameter_list|)
 name|char
 name|arg
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -403,18 +399,16 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compute screen size.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|screensize
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|s
@@ -456,27 +450,22 @@ operator|-
 literal|4
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the headlines for each message  * in the passed message list.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|from
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -527,20 +516,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the header of a specific message.  * This is a slight improvement to the standard one.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printhead
-argument_list|(
-argument|mesg
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|mesg
+parameter_list|)
+name|int
+name|mesg
+decl_stmt|;
 block|{
 name|struct
 name|message
@@ -839,18 +829,16 @@ name|subjline
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the value of dot.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|pdot
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|printf
 argument_list|(
@@ -873,18 +861,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out all the possible commands.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|pcmdlist
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1000,27 +986,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Paginate messages, honor ignored fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|more
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1035,27 +1016,22 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Paginate messages, even printing ignored fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|More
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1070,27 +1046,22 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Type out messages, honor ignored fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|type
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1105,27 +1076,22 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Type out messages, even printing ignored fields.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|Type
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1140,7 +1106,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Type out the messages requested.  */
@@ -1152,25 +1118,25 @@ name|pipestop
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|type1
-argument_list|(
-argument|msgvec
-argument_list|,
-argument|doign
-argument_list|,
-argument|page
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|,
+name|doign
+parameter_list|,
+name|page
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|doign
+decl_stmt|,
+name|page
+decl_stmt|;
 block|{
 specifier|register
 operator|*
@@ -1194,10 +1160,6 @@ name|FILE
 modifier|*
 name|obuf
 decl_stmt|;
-name|void
-name|brokpipe
-parameter_list|()
-function_decl|;
 name|obuf
 operator|=
 name|stdout
@@ -1468,7 +1430,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Respond to a broken pipe signal --  * probably caused by quitting more.  */
@@ -1477,7 +1439,12 @@ end_comment
 begin_function
 name|void
 name|brokpipe
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|longjmp
 argument_list|(
@@ -1493,21 +1460,16 @@ begin_comment
 comment|/*  * Print the top so many lines of each desired message.  * The number of lines is taken from the variable "toplines"  * and defaults to 5.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|top
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 modifier|*
 name|msgvec
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1717,27 +1679,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Touch all the given messages so that they will  * get mboxed.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|stouch
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 name|msgvec
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1790,27 +1747,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Make sure all passed messages get mboxed.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|mboxit
-argument_list|(
-argument|msgvec
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msgvec
+parameter_list|)
 name|int
 name|msgvec
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1865,18 +1817,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * List the folders the user currently has.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|folders
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|dirname
@@ -1942,13 +1892,15 @@ argument_list|,
 name|dirname
 argument_list|,
 name|NOSTR
+argument_list|,
+name|NOSTR
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.20 (Berkeley) %G%"
+literal|"@(#)aux.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,13 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|"extern.h"
 end_include
 
 begin_comment
@@ -112,30 +106,89 @@ begin_comment
 comment|/*  * Announce a fatal error and die.  */
 end_comment
 
-begin_comment
-comment|/*VARARGS1*/
-end_comment
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
 
-begin_macro
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+if|#
+directive|if
+name|__STDC__
 name|panic
-argument_list|(
-argument|fmt
-argument_list|,
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|panic
+parameter_list|(
+name|fmt
+parameter_list|,
+name|va_alist
+parameter_list|)
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+function|va_dcl
+endif|#
+directive|endif
 block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -143,53 +196,57 @@ argument_list|,
 literal|"panic: "
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
 name|fmt
 argument_list|,
-name|a
-argument_list|,
-name|b
+name|ap
 argument_list|)
 expr_stmt|;
-name|putc
+name|va_end
 argument_list|(
-literal|'\n'
-argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
 name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
-name|stdout
+name|stderr
 argument_list|)
 expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Touch the named message by setting its MTOUCH flag.  * Touched messages have the effect of not being sent  * back to the system mailbox on exit.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|touch
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|message
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|mp
 operator|->
@@ -218,27 +275,22 @@ operator||
 name|MSTATUS
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Test to see if the passed file name is a directory.  * Return true if it is.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isdir
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 name|name
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|stat
@@ -275,28 +327,23 @@ name|S_IFDIR
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Count the number of arguments in the given string raw list.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|argcount
-argument_list|(
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argv
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -326,7 +373,7 @@ operator|-
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the desired header line from the passed message  * pointer (or NOSTR if the desired header field is not available).  */
@@ -475,47 +522,36 @@ begin_comment
 comment|/*  * Return the next header field found in the given message.  * Return>= 0 if something found,< 0 elsewise.  * "colon" is set to point to the colon in the header.  * Must deal with \ continuations& other such fraud.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|gethfield
-argument_list|(
+parameter_list|(
 name|f
-argument_list|,
+parameter_list|,
 name|linebuf
-argument_list|,
+parameter_list|,
 name|rem
-argument_list|,
+parameter_list|,
 name|colon
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|f
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 name|linebuf
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|rem
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|colon
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|line2
@@ -773,7 +809,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check whether the passed line is a header line of  * the desired breed.  Return the field body, or 0.  */
@@ -875,22 +911,23 @@ begin_comment
 comment|/*  * Copy a string, lowercasing it as we go.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|istrcpy
-argument_list|(
+parameter_list|(
 name|dest
-argument_list|,
+parameter_list|,
 name|src
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|dest
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|src
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -979,22 +1016,17 @@ begin_comment
 comment|/*  * Pushdown current input file and switch to a new one.  * Set the global flag "sourcing" so that others will realize  * that they are no longer reading from a tty (in all probability).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|source
-argument_list|(
-argument|arglist
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arglist
+parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|arglist
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -1126,18 +1158,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Pop the current input back to the previous level.  * Update the "sourcing" flag as appropriate.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|unstack
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1223,27 +1253,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Touch the indicated file.  * This is nifty for the shell.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|alter
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|stat
@@ -1327,27 +1352,22 @@ name|tv
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Examine the passed line buffer and  * return true if it is all blanks and tabs.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|blankline
-argument_list|(
-argument|linebuf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|linebuf
+parameter_list|)
 name|char
 name|linebuf
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1389,7 +1409,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get sender's name from this message.  If the message has  * a bunch of arpanet stuff in it, we may have to skin the name  * before returning it.  */
@@ -1409,6 +1429,9 @@ name|struct
 name|message
 modifier|*
 name|mp
+decl_stmt|;
+name|int
+name|reptype
 decl_stmt|;
 block|{
 specifier|register
@@ -2043,6 +2066,9 @@ name|message
 modifier|*
 name|mp
 decl_stmt|;
+name|int
+name|reptype
+decl_stmt|;
 block|{
 name|char
 name|namebuf
@@ -2440,23 +2466,21 @@ begin_comment
 comment|/*  * Count the occurances of c in str  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|charcount
-argument_list|(
-argument|str
-argument_list|,
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|,
+name|c
+parameter_list|)
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|c
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -2499,28 +2523,29 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Are any of the characters in the two strings the same?  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|anyof
-argument_list|(
+parameter_list|(
 name|s1
-argument_list|,
+parameter_list|,
 name|s2
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -2553,17 +2578,16 @@ begin_comment
 comment|/*  * Convert c to upper case  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|raise
-argument_list|(
+parameter_list|(
 name|c
-argument_list|)
+parameter_list|)
 specifier|register
+name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2582,7 +2606,7 @@ return|return
 name|c
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Copy s1 to s2, return pointer to null in s2.  */
@@ -2632,23 +2656,18 @@ begin_comment
 comment|/*  * See if the given header field is supposed to be ignored.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isign
-argument_list|(
-argument|field
-argument_list|,
-argument|ignore
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|field
+parameter_list|,
+name|ignore
+parameter_list|)
 name|char
 modifier|*
 name|field
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ignoretab
 name|ignore
@@ -2656,9 +2675,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|realfld
@@ -2719,31 +2735,26 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|member
-argument_list|(
+parameter_list|(
 name|realfield
-argument_list|,
+parameter_list|,
 name|table
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|realfield
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|ignoretab
 modifier|*
 name|table
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2805,7 +2816,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

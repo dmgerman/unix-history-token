@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)names.c	5.16 (Berkeley) %G%"
+literal|"@(#)names.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,18 @@ directive|include
 file|"rcv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_comment
 comment|/*  * Allocate a single element of a name list,  * initialize its name field to the passed  * name and return it.  */
 end_comment
@@ -55,6 +67,9 @@ parameter_list|)
 name|char
 name|str
 index|[]
+decl_stmt|;
+name|int
+name|ntype
 decl_stmt|;
 block|{
 specifier|register
@@ -191,6 +206,9 @@ name|char
 name|line
 index|[]
 decl_stmt|;
+name|int
+name|ntype
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -318,6 +336,9 @@ name|struct
 name|name
 modifier|*
 name|np
+decl_stmt|;
+name|int
+name|ntype
 decl_stmt|;
 block|{
 specifier|register
@@ -1382,21 +1403,16 @@ begin_comment
 comment|/*  * Determine if the passed address is a local "send to file" address.  * If any of the network metacharacters precedes any slashes, it can't  * be a filename.  We cheat with .'s to allow path names like ./...  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isfileaddr
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1461,7 +1477,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Map all of the aliased users in the invoker's mailrc  * file and insert them into the list.  * Changed after all these months of service to recursively  * expand names (2/14/80).  */
@@ -1647,6 +1663,11 @@ name|struct
 name|grouphead
 modifier|*
 name|gh
+decl_stmt|;
+name|int
+name|metoo
+decl_stmt|,
+name|ntype
 decl_stmt|;
 block|{
 name|struct
@@ -2551,20 +2572,18 @@ begin_comment
 comment|/*  * Determine the number of undeleted elements in  * a name list and return it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|count
-argument_list|(
+parameter_list|(
 name|np
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|name
-operator|*
+modifier|*
 name|np
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -2605,7 +2624,7 @@ return|return
 name|c
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delete the given name from a namelist.  */
@@ -2760,7 +2779,7 @@ comment|/*  * Pretty print a name list  * Uncomment it if you need it.  */
 end_comment
 
 begin_comment
-comment|/* prettyprint(name) 	struct name *name; { 	register struct name *np;  	np = name; 	while (np != NIL) { 		fprintf(stderr, "%s(%d) ", np->n_name, np->n_type); 		np = np->n_flink; 	} 	fprintf(stderr, "\n"); } */
+comment|/* void prettyprint(name) 	struct name *name; { 	register struct name *np;  	np = name; 	while (np != NIL) { 		fprintf(stderr, "%s(%d) ", np->n_name, np->n_type); 		np = np->n_flink; 	} 	fprintf(stderr, "\n"); } */
 end_comment
 
 end_unit
