@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.55 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3798,6 +3798,63 @@ comment|/* DAEMON */
 block|}
 else|else
 block|{
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
+comment|/* make absolutely certain 0, 1, and 2 are in use */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|i
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* oops.... */
+name|syserr
+argument_list|(
+literal|"openmailer: fd %d not open"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0666
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* create a pipe to shove the mail through */
 if|if
 condition|(
@@ -4126,9 +4183,8 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|rpvect
@@ -4138,7 +4194,26 @@ index|]
 argument_list|,
 name|STDOUT_FILENO
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Cannot dup pipe %d for stdout"
+argument_list|,
+name|rpvect
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -4162,9 +4237,8 @@ name|HoldErrs
 condition|)
 block|{
 comment|/* put mailer output in transcript */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|fileno
@@ -4176,18 +4250,52 @@ argument_list|)
 argument_list|,
 name|STDOUT_FILENO
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Cannot dup xscript %d for stdout"
+argument_list|,
+name|fileno
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
+block|}
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|STDOUT_FILENO
 argument_list|,
 name|STDERR_FILENO
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Cannot dup stdout for stderr"
+argument_list|)
 expr_stmt|;
+name|_exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* arrange to get standard input */
 operator|(
 name|void
@@ -4217,7 +4325,12 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Cannot dup to zero!"
+literal|"Cannot dup pipe %d for stdin"
+argument_list|,
+name|mpvect
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|_exit
@@ -5905,10 +6018,42 @@ name|stat
 operator|==
 literal|0
 condition|)
+block|{
 name|statmsg
 operator|=
 literal|"250 Sent"
 expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s (%s)"
+argument_list|,
+name|statmsg
+argument_list|,
+name|e
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+name|statmsg
+operator|=
+name|buf
+expr_stmt|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(
