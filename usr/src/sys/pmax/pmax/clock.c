@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  *  *	@(#)clock.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -124,6 +124,17 @@ name|newhz
 decl_stmt|;
 block|{ }
 end_function
+
+begin_comment
+comment|/*  * This is the amount to add to the value stored in the clock chip  * to get the current year.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YR_OFFSET
+value|22
+end_define
 
 begin_comment
 comment|/*  * This code is defunct after 2099.  * Will Unix still be here then??  */
@@ -311,9 +322,8 @@ name|c
 operator|->
 name|year
 operator|+
-literal|20
+name|YR_OFFSET
 expr_stmt|;
-comment|/* must be multiple of 4 because chip knows leap */
 name|splx
 argument_list|(
 name|s
@@ -370,7 +380,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: preposterous clock chip time\n"
+literal|"WARNING: preposterous clock chip time"
 argument_list|)
 expr_stmt|;
 name|resettodr
@@ -756,9 +766,8 @@ name|year
 operator|=
 name|year
 operator|-
-literal|20
+name|YR_OFFSET
 expr_stmt|;
-comment|/* must be multiple of 4 because chip knows leap */
 name|c
 operator|->
 name|regb
