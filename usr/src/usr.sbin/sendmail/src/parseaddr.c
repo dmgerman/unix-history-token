@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.17 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5618,6 +5618,12 @@ name|tv
 operator|++
 expr_stmt|;
 block|}
+else|else
+name|setstat
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
 name|buf
 index|[
 literal|0
