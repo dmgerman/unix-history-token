@@ -1308,7 +1308,7 @@ argument_list|,
 name|i
 argument_list|)
 operator|)
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{

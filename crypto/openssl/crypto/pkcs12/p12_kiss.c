@@ -1233,6 +1233,12 @@ name|cert
 operator|=
 name|x509
 expr_stmt|;
+else|else
+name|X509_free
+argument_list|(
+name|x509
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

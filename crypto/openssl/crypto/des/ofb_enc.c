@@ -232,7 +232,7 @@ index|]
 operator|=
 name|v1
 expr_stmt|;
-name|des_encrypt
+name|des_encrypt1
 argument_list|(
 operator|(
 name|DES_LONG

@@ -688,6 +688,17 @@ name|defined
 argument_list|(
 name|NO_ASM
 argument_list|)
+name|BN_ULONG
+name|bn_div_3_words
+argument_list|(
+name|BN_ULONG
+operator|*
+argument_list|,
+name|BN_ULONG
+argument_list|,
+name|BN_ULONG
+argument_list|)
+decl_stmt|;
 name|q
 operator|=
 name|bn_div_3_words

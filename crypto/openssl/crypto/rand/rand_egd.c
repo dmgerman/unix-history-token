@@ -110,11 +110,50 @@ directive|include
 file|<sys/socket.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_SYS_UN_H
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/un.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|sockaddr_un
+block|{
+name|short
+name|sun_family
+decl_stmt|;
+comment|/* AF_UNIX */
+name|char
+name|sun_path
+index|[
+literal|108
+index|]
+decl_stmt|;
+comment|/* path name (gag) */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_SYS_UN_H */
+end_comment
 
 begin_include
 include|#
