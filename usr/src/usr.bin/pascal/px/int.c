@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)int.c 1.7 %G%"
+literal|"@(#)int.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +273,40 @@ expr_stmt|;
 name|name
 operator|=
 name|file
+expr_stmt|;
+block|}
+comment|/* 	 * kludge to check for old style objs. 	 */
+if|if
+condition|(
+name|_mode
+operator|==
+name|PX
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|file
+argument_list|,
+literal|"-"
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is obsolete and must be recompiled\n"
+argument_list|,
+name|_argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Process program header information 	 */
