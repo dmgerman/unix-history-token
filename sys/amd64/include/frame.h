@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)frame.h	5.2 (Berkeley) 1/18/91  *	$Id: frame.h,v 1.16 1999/04/28 01:03:59 luoqi Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)frame.h	5.2 (Berkeley) 1/18/91  *	$Id: frame.h,v 1.17 1999/05/11 16:29:01 luoqi Exp $  */
 end_comment
 
 begin_ifndef
@@ -334,34 +334,46 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Signal frame  */
+comment|/*  * Signal frame, arguments passed to application signal handlers.  */
 end_comment
 
 begin_struct
 struct|struct
 name|sigframe
 block|{
-name|int
+comment|/*  	 * The first three members may be used by applications. 	 */
+name|register_t
 name|sf_signum
 decl_stmt|;
-name|int
-name|sf_code
+comment|/*  	 * Either 'int' for old-style FreeBSD handler or 'siginfo_t *' 	 * pointing to sf_siginfo for SA_SIGINFO handlers.  	 */
+name|register_t
+name|sf_arg2
 decl_stmt|;
-name|struct
-name|sigcontext
-modifier|*
+comment|/* Points to sf_siginfo.si_sc. */
+name|register_t
 name|sf_scp
 decl_stmt|;
+comment|/*  	 * The following arguments are not constrained  by the  	 * function call protocol. 	 * Applications are not supposed to access these members, 	 * except using the pointers we provide in the first three 	 * arguments.  	 */
 name|char
 modifier|*
 name|sf_addr
 decl_stmt|;
-name|sig_t
+union|union
+block|{
+name|__siginfohandler_t
+modifier|*
+name|sf_action
+decl_stmt|;
+name|__sighandler_t
+modifier|*
 name|sf_handler
 decl_stmt|;
-name|struct
-name|sigcontext
-name|sf_sc
+block|}
+name|sf_ahu
+union|;
+comment|/* In the SA_SIGINFO case, sf_arg2 points here. */
+name|siginfo_t
+name|sf_siginfo
 decl_stmt|;
 block|}
 struct|;
