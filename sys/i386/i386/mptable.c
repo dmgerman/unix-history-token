@@ -9,12 +9,6 @@ directive|include
 file|"opt_cpu.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_user_ldt.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2304,9 +2298,6 @@ argument_list|(
 name|_default_ldt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USER_LDT
 name|PCPU_SET
 argument_list|(
 name|currentldt
@@ -2314,8 +2305,6 @@ argument_list|,
 name|_default_ldt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|gsel_tss
 operator|=
 name|GSEL

@@ -9,12 +9,6 @@ directive|include
 file|"opt_npx.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_user_ldt.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -411,9 +405,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USER_LDT
 if|if
 condition|(
 operator|(
@@ -487,8 +478,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 return|return;
 block|}
 ifdef|#
@@ -712,9 +701,6 @@ name|pcb_ext
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USER_LDT
 comment|/* Copy the LDT, if necessary. */
 if|if
 condition|(
@@ -759,8 +745,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_esp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to fork_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  fork_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
 block|}
 end_block
@@ -913,16 +897,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|USER_LDT
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_ldt
+condition|)
 name|user_ldt_free
 argument_list|(
 name|pcb
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|pcb

@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_user_ldt.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_userconfig.h"
 end_include
 
@@ -5015,17 +5009,17 @@ name|p_addr
 operator|->
 name|u_pcb
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USER_LDT
-comment|/* was i386_user_cleanup() in NetBSD */
+if|if
+condition|(
+name|pcb
+operator|->
+name|pcb_ldt
+condition|)
 name|user_ldt_free
 argument_list|(
 name|pcb
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 operator|(
@@ -8518,9 +8512,6 @@ argument_list|(
 name|_default_ldt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USER_LDT
 name|PCPU_SET
 argument_list|(
 name|currentldt
@@ -8528,8 +8519,6 @@ argument_list|,
 name|_default_ldt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* exceptions */
 for|for
 control|(

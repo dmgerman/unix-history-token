@@ -105,7 +105,6 @@ decl_stmt|;
 name|int
 name|gd_currentldt
 decl_stmt|;
-comment|/* only used for USER_LDT */
 name|u_int
 name|gd_cpuid
 decl_stmt|;

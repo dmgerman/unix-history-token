@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_user_ldt.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -164,12 +158,6 @@ parameter_list|)
 value|(NEW_MAX_LD(num)<< 3)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USER_LDT
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -205,11 +193,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -319,9 +302,6 @@ operator|->
 name|op
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USER_LDT
 case|case
 name|I386_GET_LDT
 case|:
@@ -352,8 +332,6 @@ name|parms
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|I386_GET_IOPERM
 case|:
@@ -1180,14 +1158,8 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USER_LDT
-end_ifdef
-
 begin_comment
-comment|/*  * Update the GDT entry pointing to the LDT to point to the LDT of the  * current process.  Do not staticize.  */
+comment|/*  * Update the GDT entry pointing to the LDT to point to the LDT of the  * current process.  */
 end_comment
 
 begin_function
@@ -2570,15 +2542,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USER_LDT */
-end_comment
 
 end_unit
 
