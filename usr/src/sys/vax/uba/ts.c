@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.22	82/02/03	*/
+comment|/*	ts.c	4.23	82/02/03	*/
 end_comment
 
 begin_include
@@ -329,6 +329,10 @@ modifier|*
 name|sc_ubaddr
 decl_stmt|;
 comment|/* Unibus address of ts_softc structure */
+name|u_short
+name|sc_uba
+decl_stmt|;
+comment|/* Unibus addr of cmd pkt for tsdb */
 name|short
 name|sc_mapped
 decl_stmt|;
