@@ -4322,7 +4322,7 @@ name|ysd
 operator|->
 name|dom_client
 argument_list|,
-literal|"yp_next: clnt_call"
+literal|"yp_all: clnt_call"
 argument_list|)
 expr_stmt|;
 name|clnt_destroy
