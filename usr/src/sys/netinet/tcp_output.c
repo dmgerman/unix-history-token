@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_output.c	6.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -409,25 +409,22 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 		 * If closing and all data acked, len will be -1; 		 * retransmit FIN if necessary. 		 * Otherwise, window shrank after we sent into it. 		 * If window shrank to 0, cancel pending retransmit 		 * and pull snd_nxt back to (closed) window. 		 * We will enter persist state below. 		 */
+comment|/* 		 * If FIN has been sent but not acked, 		 * but we haven't been called to retransmit, 		 * len will be -1; no need to transmit now. 		 * Otherwise, window shrank after we sent into it. 		 * If window shrank to 0, cancel pending retransmit 		 * and pull snd_nxt back to (closed) window. 		 * We will enter persist state below. 		 * If the window didn't close completely, 		 * just wait for an ACK. 		 */
 if|if
 condition|(
 name|flags
 operator|&
 name|TH_FIN
-condition|)
-name|len
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|||
 name|win
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|tp
 operator|->
 name|t_timer
@@ -449,13 +446,6 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-block|}
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 name|win
 operator|=
@@ -1412,9 +1402,17 @@ index|]
 argument_list|,
 name|tcp_beta
 operator|*
+operator|(
 name|tp
 operator|->
 name|t_srtt
+condition|?
+name|tp
+operator|->
+name|t_srtt
+else|:
+name|TCPTV_SRTTDFLT
+operator|)
 argument_list|,
 name|TCPTV_MIN
 argument_list|,
