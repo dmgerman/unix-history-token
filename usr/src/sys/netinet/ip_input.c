@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3809,7 +3809,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  */
+comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  *  * If not forwarding (possibly because we have only a single external  * network), just drop the packet.  This could be confusing if ipforwarding  * was zero but some routing protocol was advancing us as a gateway  * to somewhere.  However, we must let the routing protocol deal with that.  */
 end_comment
 
 begin_expr_stmt
@@ -3916,18 +3916,20 @@ operator|<=
 literal|1
 condition|)
 block|{
-comment|/* can't tell difference between net and host */
-name|type
-operator|=
-name|ICMP_UNREACH
-operator|,
-name|code
-operator|=
-name|ICMP_UNREACH_NET
+name|ipstat
+operator|.
+name|ips_cantforward
+operator|++
 expr_stmt|;
-goto|goto
-name|sendicmp
-goto|;
+name|m_freem
+argument_list|(
+name|dtom
+argument_list|(
+name|ip
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
