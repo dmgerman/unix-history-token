@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_var.h	8.2 (Berkeley) 1/9/95  *	$Id: in_var.h,v 1.18 1996/12/13 21:28:54 wollman Exp $  */
+comment|/*  * Copyright (c) 1985, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)in_var.h	8.2 (Berkeley) 1/9/95  *	$Id: in_var.h,v 1.19 1996/12/15 20:46:39 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -22,7 +22,7 @@ file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * Interface address, Internet version.  One of these structures  * is allocated for each interface with an Internet address.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
+comment|/*  * Interface address, Internet version.  One of these structures  * is allocated for each Internet address on an interface.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
 end_comment
 
 begin_struct
@@ -90,15 +90,6 @@ name|sockaddr_in
 name|ia_sockmask
 decl_stmt|;
 comment|/* reserve space for general netmask */
-name|LIST_HEAD
-argument_list|(
-argument|in_multihead
-argument_list|,
-argument|in_multi
-argument_list|)
-name|ia_multiaddrs
-expr_stmt|;
-comment|/* list of multicast addresses */
 block|}
 struct|;
 end_struct
@@ -328,7 +319,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Internet multicast address structure.  There is one of these for each IP  * multicast group to which this host belongs on a given network interface.  * They are kept in a linked list, rooted in the interface's in_ifaddr  * structure.  */
+comment|/*  * Internet multicast address structure.  There is one of these for each IP  * multicast group to which this host belongs on a given network interface.  * For every entry on the interface's if_multiaddrs list which represents  * an IP multicast group, there is one of these structures.  They are also  * kept on a system-wide list to make it easier to keep our legacy IGMP code  * compatible with the rest of the world (see IN_FIRST_MULTI et al, below).  */
 end_comment
 
 begin_struct
@@ -339,14 +330,14 @@ name|LIST_ENTRY
 argument_list|(
 argument|in_multi
 argument_list|)
-name|inm_entry
+name|inm_link
 expr_stmt|;
-comment|/* list glue */
+comment|/* queue macro glue */
 name|struct
 name|in_addr
 name|inm_addr
 decl_stmt|;
-comment|/* IP multicast address */
+comment|/* IP multicast address, convenience */
 name|struct
 name|ifnet
 modifier|*
@@ -354,15 +345,11 @@ name|inm_ifp
 decl_stmt|;
 comment|/* back pointer to ifnet */
 name|struct
-name|in_ifaddr
+name|ifmultiaddr
 modifier|*
-name|inm_ia
+name|inm_ifma
 decl_stmt|;
-comment|/* back pointer to in_ifaddr */
-name|u_int
-name|inm_refcount
-decl_stmt|;
-comment|/* no. membership claims by sockets */
+comment|/* back pointer to ifmultiaddr */
 name|u_int
 name|inm_timer
 decl_stmt|;
@@ -387,6 +374,18 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_extern
+extern|extern LIST_HEAD(in_multihead
+operator|,
+extern|in_multi
+end_extern
+
+begin_expr_stmt
+unit|)
+name|in_multihead
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Structure used by macros below to remember position when stepping through  * all of the in_multi records.  */
 end_comment
@@ -395,11 +394,6 @@ begin_struct
 struct|struct
 name|in_multistep
 block|{
-name|struct
-name|in_ifaddr
-modifier|*
-name|i_ia
-decl_stmt|;
 name|struct
 name|in_multi
 modifier|*
@@ -410,7 +404,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Macro for looking up the in_multi record for a given IP multicast address  * on a given interface.  If no matching record is found, "inm" returns NULL.  */
+comment|/*  * Macro for looking up the in_multi record for a given IP multicast address  * on a given interface.  If no matching record is found, "inm" is set null.  */
 end_comment
 
 begin_define
@@ -431,7 +425,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	register struct in_ifaddr *ia; \ \ 	IFP_TO_IA((ifp), ia); \ 	if (ia == NULL) \ 		(inm) = NULL; \ 	else \ 		for ((inm) = ia->ia_multiaddrs.lh_first; \ 		    (inm) != NULL&& (inm)->inm_addr.s_addr != (addr).s_addr; \ 		     (inm) = inm->inm_entry.le_next) \ 			 continue; \ } while(0)
+value|do { \ 	register struct ifmultiaddr *ifma; \ \ 	for (ifma = (ifp)->if_multiaddrs.lh_first; ifma; \ 	     ifma = ifma->ifma_link.le_next) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ } while(0)
 end_define
 
 begin_comment
@@ -452,7 +446,7 @@ comment|/* struct in_multistep  step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = (inm)->inm_entry.le_next; \ 	else \ 		while ((step).i_ia != NULL) { \ 			(inm) = (step).i_ia->ia_multiaddrs.lh_first; \ 			(step).i_ia = (step).i_ia->ia_link.tqe_next; \ 			if ((inm) != NULL) { \ 				(step).i_inm = (inm)->inm_entry.le_next; \ 				break; \ 			} \ 		} \ } while(0)
+value|do { \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = (step).i_inm->inm_link.le_next; \ } while(0)
 end_define
 
 begin_define
@@ -469,7 +463,7 @@ comment|/* struct in_multistep step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	(step).i_ia = in_ifaddrhead.tqh_first; \ 	(step).i_inm = NULL; \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
+value|do { \ 	(step).i_inm = in_multihead.lh_first; \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
 end_define
 
 begin_decl_stmt
