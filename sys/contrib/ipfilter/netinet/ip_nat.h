@@ -385,6 +385,10 @@ name|u_char
 name|nat_p
 decl_stmt|;
 comment|/* protocol for NAT */
+name|u_32_t
+name|nat_mssclamp
+decl_stmt|;
+comment|/* if != zero clamp MSS to this */
 name|struct
 name|ipnat
 modifier|*
@@ -519,6 +523,10 @@ name|u_32_t
 name|in_flags
 decl_stmt|;
 comment|/* From here to in_dport must be reflected */
+name|u_32_t
+name|in_mssclamp
+decl_stmt|;
+comment|/* if != zero clamp MSS to this */
 name|u_short
 name|in_spare
 decl_stmt|;

@@ -1699,45 +1699,6 @@ name|BSD
 operator|>=
 literal|199306
 operator|)
-block|<<<<<<
-operator|<
-name|ip_auth
-operator|.
-name|c
-if|if
-condition|(
-operator|!
-name|fin
-operator|->
-name|fin_out
-condition|)
-block|{
-name|ip
-operator|->
-name|ip_len
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_len
-argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|ip_off
-operator|=
-name|htons
-argument_list|(
-name|ip
-operator|->
-name|ip_off
-argument_list|)
-expr_stmt|;
-operator|==
-operator|==
-operator|==
-operator|=
 if|if
 condition|(
 name|fin
@@ -1769,10 +1730,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-operator|>>>
-operator|>>>
-operator|>
-literal|1.1.1.11
 block|}
 endif|#
 directive|endif
@@ -1795,6 +1752,9 @@ return|return
 literal|1
 return|;
 block|}
+end_function
+
+begin_function
 name|int
 name|fr_auth_ioctl
 parameter_list|(
@@ -2674,7 +2634,13 @@ return|return
 name|error
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Free all network buffer memory used to keep saved packets.  */
+end_comment
+
+begin_function
 name|void
 name|fr_authunload
 parameter_list|()
@@ -2878,7 +2844,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Slowly expire held auth records.  Timeouts are set  * in expectation of this being called twice per second.  */
+end_comment
+
+begin_function
 name|void
 name|fr_authexpire
 parameter_list|()
@@ -3146,6 +3118,9 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|int
 name|fr_preauthcmd
 parameter_list|(
@@ -3197,6 +3172,9 @@ decl|*
 modifier|*
 name|frptr
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|frauthent_t
 modifier|*
@@ -3497,7 +3475,7 @@ return|return
 name|error
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
