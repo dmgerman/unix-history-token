@@ -145,7 +145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	paren_squish.  In comments below, an expression is either a  *	simple node or a N_EXPR node containing a list of simple nodes.  */
+comment|/*  * yankexpr --  *	Removes one expression from the plan.  This is used mainly by  *	paren_squish.  In comments below, an expression is either a  *	simple node or a f_expr node containing a list of simple nodes.  */
 end_comment
 
 begin_function
@@ -184,10 +184,6 @@ modifier|*
 name|subplan
 decl_stmt|;
 comment|/* pointer to head of ( ) expression */
-name|int
-name|f_expr
-parameter_list|()
-function_decl|;
 comment|/* first pull the top node from the plan */
 if|if
 condition|(
@@ -212,9 +208,9 @@ if|if
 condition|(
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_OPENPAREN
+name|f_openparen
 condition|)
 for|for
 control|(
@@ -247,14 +243,14 @@ argument_list|,
 literal|"(: missing closing ')'"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If we find a closing ')' we store the collected 			 * subplan in our '(' node and convert the node to 			 * a N_EXPR.  The ')' we found is ignored.  Otherwise, 			 * we just continue to add whatever we get to our 			 * subplan. 			 */
+comment|/* 			 * If we find a closing ')' we store the collected 			 * subplan in our '(' node and convert the node to 			 * a f_expr.  The ')' we found is ignored.  Otherwise, 			 * we just continue to add whatever we get to our 			 * subplan. 			 */
 if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_CLOSEPAREN
+name|f_closeparen
 condition|)
 block|{
 if|if
@@ -281,13 +277,7 @@ name|subplan
 expr_stmt|;
 name|node
 operator|->
-name|type
-operator|=
-name|N_EXPR
-expr_stmt|;
-name|node
-operator|->
-name|eval
+name|execute
 operator|=
 name|f_expr
 expr_stmt|;
@@ -376,7 +366,7 @@ name|tail
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * the basic idea is to have yankexpr do all our work and just 	 * collect it's results together. 	 */
+comment|/* 	 * the basic idea is to have yankexpr do all our work and just 	 * collect its results together. 	 */
 while|while
 condition|(
 operator|(
@@ -397,9 +387,9 @@ if|if
 condition|(
 name|expr
 operator|->
-name|type
+name|execute
 operator|==
-name|N_CLOSEPAREN
+name|f_closeparen
 condition|)
 name|errx
 argument_list|(
@@ -477,7 +467,7 @@ name|PLAN
 modifier|*
 name|node
 decl_stmt|;
-comment|/* temporary node used in N_NOT processing */
+comment|/* temporary node used in f_not processing */
 specifier|register
 name|PLAN
 modifier|*
@@ -493,13 +483,10 @@ name|tail
 operator|=
 name|result
 operator|=
-name|next
-operator|=
 name|NULL
 expr_stmt|;
 while|while
 condition|(
-operator|(
 name|next
 operator|=
 name|yanknode
@@ -507,9 +494,6 @@ argument_list|(
 operator|&
 name|plan
 argument_list|)
-operator|)
-operator|!=
-name|NULL
 condition|)
 block|{
 comment|/* 		 * if we encounter a ( expression ) then look for nots in 		 * the expr subplan. 		 */
@@ -517,9 +501,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_EXPR
+name|f_expr
 condition|)
 name|next
 operator|->
@@ -543,9 +527,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_NOT
+name|f_not
 condition|)
 block|{
 name|int
@@ -569,9 +553,9 @@ name|NULL
 operator|&&
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_NOT
+name|f_not
 condition|)
 block|{
 operator|++
@@ -603,9 +587,9 @@ if|if
 condition|(
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_OR
+name|f_or
 condition|)
 name|errx
 argument_list|(
@@ -619,9 +603,9 @@ if|if
 condition|(
 name|node
 operator|->
-name|type
+name|execute
 operator|==
-name|N_EXPR
+name|f_expr
 condition|)
 name|node
 operator|->
@@ -766,9 +750,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_EXPR
+name|f_expr
 condition|)
 name|next
 operator|->
@@ -792,9 +776,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_NOT
+name|f_not
 condition|)
 name|next
 operator|->
@@ -818,9 +802,9 @@ if|if
 condition|(
 name|next
 operator|->
-name|type
+name|execute
 operator|==
-name|N_OR
+name|f_or
 condition|)
 block|{
 if|if
