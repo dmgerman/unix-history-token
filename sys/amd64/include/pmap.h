@@ -1035,7 +1035,7 @@ name|void
 modifier|*
 name|pmap_kenter_temporary
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|int
