@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.77 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.78 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.77 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.78 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3480,11 +3480,6 @@ name|NULL
 condition|)
 block|{
 specifier|extern
-name|long
-name|atol
-parameter_list|()
-function_decl|;
-specifier|extern
 name|bool
 name|strcontainedin
 parameter_list|()
@@ -4921,11 +4916,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|long
-name|atol
-parameter_list|()
-function_decl|;
 specifier|extern
 name|ADDRESS
 modifier|*

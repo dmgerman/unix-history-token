@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.82 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.83 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2903,11 +2903,6 @@ specifier|extern
 name|char
 modifier|*
 name|munchstring
-parameter_list|()
-function_decl|;
-specifier|extern
-name|long
-name|atol
 parameter_list|()
 function_decl|;
 comment|/* allocate a mailer and set up defaults */
