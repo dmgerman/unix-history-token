@@ -251,6 +251,7 @@ name|kevent
 modifier|*
 name|ulistp
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
@@ -1574,6 +1575,7 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+specifier|const
 name|struct
 name|kevent
 modifier|*
@@ -1590,6 +1592,7 @@ decl_stmt|;
 name|int
 name|nevents
 decl_stmt|;
+specifier|const
 name|struct
 name|timespec
 modifier|*
@@ -2621,6 +2624,7 @@ name|kevent
 modifier|*
 name|ulistp
 parameter_list|,
+specifier|const
 name|struct
 name|timespec
 modifier|*
