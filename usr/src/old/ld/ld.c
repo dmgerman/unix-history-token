@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.10 (Berkeley) %G%"
+literal|"@(#)ld.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -1316,7 +1322,7 @@ name|ndir
 operator|++
 index|]
 operator|=
-literal|"/lib"
+name|_PATH_LIB
 expr_stmt|;
 name|dirs
 index|[
@@ -1324,7 +1330,7 @@ name|ndir
 operator|++
 index|]
 operator|=
-literal|"/usr/lib"
+name|_PATH_USRLIB
 expr_stmt|;
 name|dirs
 index|[
@@ -1332,7 +1338,7 @@ name|ndir
 operator|++
 index|]
 operator|=
-literal|"/usr/local/lib"
+name|_PATH_LOCALLIB
 expr_stmt|;
 name|p
 operator|=
