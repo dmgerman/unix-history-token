@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: docmd.c,v 1.6 1996/09/24 08:06:21 bde Exp $"
+literal|"$Id: docmd.c,v 1.6.2.1 1997/02/23 23:44:00 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -901,6 +901,10 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lfp
+condition|)
 operator|(
 name|void
 operator|)
