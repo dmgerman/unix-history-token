@@ -506,7 +506,7 @@ name|psd
 operator|.
 name|psd_flags
 expr_stmt|;
-name|PTHREAD_NEW_STATE
+name|PTHREAD_SET_STATE
 argument_list|(
 name|curthread
 argument_list|,
