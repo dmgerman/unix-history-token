@@ -1347,19 +1347,38 @@ name|td_frame
 operator|=
 name|framep
 expr_stmt|;
-name|KASSERT
-argument_list|(
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+comment|/* see the comment in ast() */
+if|if
+condition|(
 name|td
 operator|->
 name|td_ucred
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"already have a ucred"
-operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"trap:thread got a cred while userspace"
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|td
+operator|->
+name|td_ucred_cache
+expr_stmt|;
+name|td
+operator|->
+name|td_ucred_cache
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|td
@@ -2726,25 +2745,26 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
-name|mtx_lock
+name|DIAGNOSTIC
+comment|/* see the comment in ast() */
+if|if
+condition|(
+name|td
+operator|->
+name|td_ucred_cache
+condition|)
+name|panic
 argument_list|(
-operator|&
-name|Giant
+literal|"trap:thread already has cached ucred"
 argument_list|)
 expr_stmt|;
-name|crfree
-argument_list|(
+name|td
+operator|->
+name|td_ucred_cache
+operator|=
 name|td
 operator|->
 name|td_ucred
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -2754,6 +2774,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DIAGNOSTIC */
 block|}
 return|return;
 name|dopanic
@@ -2870,19 +2891,38 @@ name|td_kse
 operator|->
 name|ke_sticks
 expr_stmt|;
-name|KASSERT
-argument_list|(
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+comment|/* see the comment in ast() */
+if|if
+condition|(
 name|td
 operator|->
 name|td_ucred
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"already have a ucred"
-operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"trap:thread got a cred while userspace"
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_ucred
+operator|=
+name|td
+operator|->
+name|td_ucred_cache
+expr_stmt|;
+name|td
+operator|->
+name|td_ucred_cache
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|td
@@ -3363,25 +3403,26 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
-name|mtx_lock
+name|DIAGNOSTIC
+comment|/* see the comment in ast() */
+if|if
+condition|(
+name|td
+operator|->
+name|td_ucred_cache
+condition|)
+name|panic
 argument_list|(
-operator|&
-name|Giant
+literal|"trap:thread already has cached ucred"
 argument_list|)
 expr_stmt|;
-name|crfree
-argument_list|(
+name|td
+operator|->
+name|td_ucred_cache
+operator|=
 name|td
 operator|->
 name|td_ucred
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -3391,6 +3432,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DIAGNOSTIC */
 ifdef|#
 directive|ifdef
 name|WITNESS

@@ -1904,6 +1904,18 @@ name|p_ucred
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+comment|/* see the comment in ast() */
+name|td2
+operator|->
+name|td_ucred_cache
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|p2
@@ -3261,25 +3273,26 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|INVARIANTS
-name|mtx_lock
+name|DIAGNOSTIC
+comment|/* see the comment in ast() */
+if|if
+condition|(
+name|td
+operator|->
+name|td_ucred_cache
+condition|)
+name|panic
 argument_list|(
-operator|&
-name|Giant
+literal|"fork_exit:thread already has cached ucred"
 argument_list|)
 expr_stmt|;
-name|crfree
-argument_list|(
+name|td
+operator|->
+name|td_ucred_cache
+operator|=
 name|td
 operator|->
 name|td_ucred
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -3289,6 +3302,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* DIAGNOSTIC */
 name|mtx_assert
 argument_list|(
 operator|&

@@ -543,6 +543,25 @@ modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+comment|/* see the comment in ast() */
+name|struct
+name|ucred
+modifier|*
+name|td_ucred_cache
+decl_stmt|;
+comment|/* (k) hide cred here for DIAGNOSTIC */
+else|#
+directive|else
+name|void
+modifier|*
+name|td_dontuse
+decl_stmt|;
+comment|/* keep the size the same if not DIAG */
+endif|#
+directive|endif
 name|struct
 name|pcb
 modifier|*
