@@ -474,7 +474,7 @@ begin_define
 define|#
 directive|define
 name|_G_HAVE_SYS_RESOURCE
-value|0
+value|1
 end_define
 
 begin_define
