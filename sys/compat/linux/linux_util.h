@@ -61,6 +61,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
 begin_function_decl
 specifier|static
 name|__inline
@@ -194,6 +200,29 @@ end_decl_stmt
 
 begin_function_decl
 name|int
+name|linux_emul_convpath
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|uio_seg
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|linux_emul_find
 parameter_list|(
 name|struct
@@ -258,6 +287,61 @@ parameter_list|,
 name|path
 parameter_list|)
 value|CHECKALT(p, sgp, path, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCONVPATH
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|,
+name|pathp
+parameter_list|,
+name|i
+parameter_list|)
+define|\
+value|do {								\ 		int _error;						\ 									\ 		_error = linux_emul_convpath(td, upath, UIO_USERSPACE,  \ 		    pathp, i);						\ 		if (*(pathp) == NULL)					\ 			return (_error);				\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCONVPATHEXIST
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|,
+name|pathp
+parameter_list|)
+value|LCONVPATH(td, upath, pathp, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCONVPATHCREAT
+parameter_list|(
+name|td
+parameter_list|,
+name|upath
+parameter_list|,
+name|pathp
+parameter_list|)
+value|LCONVPATH(td, upath, pathp, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LFREEPATH
+parameter_list|(
+name|path
+parameter_list|)
+value|free(path, M_TEMP)
 end_define
 
 begin_define
