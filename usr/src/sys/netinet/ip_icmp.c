@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_icmp.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_icmp.c	7.8.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -270,6 +270,17 @@ operator|&&
 name|type
 operator|!=
 name|ICMP_REDIRECT
+operator|&&
+name|dtom
+argument_list|(
+name|oip
+argument_list|)
+operator|->
+name|m_len
+operator|>=
+name|oiplen
+operator|+
+name|ICMP_MINLEN
 operator|&&
 name|n
 operator|->
@@ -582,6 +593,18 @@ operator|=
 name|m
 operator|->
 name|m_len
+expr_stmt|;
+name|nip
+operator|->
+name|ip_hl
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|>>
+literal|2
 expr_stmt|;
 name|nip
 operator|->
@@ -1953,6 +1976,21 @@ operator|>
 literal|0
 condition|)
 block|{
+specifier|register
+name|u_char
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|opt
+decl_stmt|,
+name|cnt
+decl_stmt|,
+name|off
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
 specifier|register
 name|u_char
 modifier|*
