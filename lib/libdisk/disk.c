@@ -2343,8 +2343,6 @@ name|device_list
 index|[]
 init|=
 block|{
-literal|"wd"
-block|,
 literal|"ad"
 block|,
 literal|"da"
