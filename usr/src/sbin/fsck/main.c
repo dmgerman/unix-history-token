@@ -4,7 +4,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.20	(Berkeley)	%G%"
+literal|"@(#)main.c	2.21	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +214,20 @@ define|#
 directive|define
 name|LNK
 value|((dp->di_mode& IFMT) == IFLNK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOCK
+value|((dp->di_mode& IFMT) == IFSOCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BADBLK
+value|((dp->di_mode& IFMT) == IFMT)
 end_define
 
 begin_define
@@ -3582,6 +3596,42 @@ name|inum
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|preen
+operator|&&
+name|BADBLK
+operator|&&
+name|reply
+argument_list|(
+literal|"HOLD BAD BLOCK"
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|dp
+operator|->
+name|di_size
+operator|=
+name|sblock
+operator|.
+name|fs_fsize
+expr_stmt|;
+name|dp
+operator|->
+name|di_mode
+operator|=
+name|IFREG
+operator||
+literal|0600
+expr_stmt|;
+name|inodirty
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|ftypeok
 argument_list|(
 name|dp
@@ -3669,7 +3719,14 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad direct addr:"
+literal|"bad direct addr: %d\n"
+argument_list|,
+name|dp
+operator|->
+name|di_db
+index|[
+name|j
+index|]
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3729,7 +3786,14 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad indirect addr:"
+literal|"bad indirect addr: %d\n"
+argument_list|,
+name|dp
+operator|->
+name|di_ib
+index|[
+name|j
+index|]
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3831,6 +3895,11 @@ expr_stmt|;
 continue|continue;
 name|unknown
 label|:
+if|if
+condition|(
+operator|!
+name|SOCK
+condition|)
 name|pfatal
 argument_list|(
 literal|"UNKNOWN FILE TYPE I=%u"
@@ -3840,6 +3909,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|preen
+operator|&&
+name|SOCK
+operator|)
+operator|||
 name|reply
 argument_list|(
 literal|"CLEAR"
@@ -11800,7 +11875,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * An inconsistency occured which shouldn't during normal operations.  * Die if preening, otw just printf.  */
+comment|/*  * An inconsistency occured which shouldn't during normal operations.  * Die if preening, otherwise just printf.  */
 end_comment
 
 begin_comment
