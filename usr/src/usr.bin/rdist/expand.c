@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.7 (Berkeley) 83/11/29"
+literal|"@(#)expand.c	4.8 (Berkeley) 83/11/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* null if expanding tilde */
+comment|/* "~user" if not expanding tilde, else "" */
 end_comment
 
 begin_decl_stmt
@@ -291,7 +291,7 @@ index|]
 expr_stmt|;
 name|tilde
 operator|=
-name|NULL
+literal|""
 expr_stmt|;
 name|argc
 operator|=
@@ -943,10 +943,18 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
+name|tpathp
+operator|=
 name|pathp
 operator|=
 name|path
 expr_stmt|;
+name|tilde
+operator|=
+literal|""
+expr_stmt|;
+block|}
 operator|*
 name|pathp
 operator|=
