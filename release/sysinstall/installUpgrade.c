@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.33.2.4 1997/01/15 13:46:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -727,6 +727,16 @@ modifier|*
 name|h
 parameter_list|)
 block|{
+name|system
+argument_list|(
+literal|"rm -rf /etc/upgrade"
+argument_list|)
+expr_stmt|;
+name|Mkdir
+argument_list|(
+literal|"/etc/upgrade"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|h
@@ -777,7 +787,7 @@ block|{
 comment|/* Move the just-loaded copy aside */
 name|vsystem
 argument_list|(
-literal|"mv /etc/%s /etc/%s.upgrade"
+literal|"mv /etc/%s /etc/upgrade/%s"
 argument_list|,
 name|h
 operator|->
@@ -1422,8 +1432,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
 name|extractingBin
-operator|&&
+operator|||
 operator|!
 operator|(
 name|Dists
@@ -1494,7 +1505,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|msgConfirm
+name|msgNotify
 argument_list|(
 literal|"First stage of upgrade completed successfully!\n\n"
 literal|"Next comes stage 2, where we attempt to resurrect your /etc\n"
@@ -1533,11 +1544,11 @@ expr_stmt|;
 block|}
 name|msgConfirm
 argument_list|(
-literal|"OK!  At this stage, we've resurrected all the /etc files we could\n"
-literal|"and moved the new copies over to<file>.update in case you want to\n"
-literal|"see what the new version looks like.  If you want to wander over\n"
-literal|"to the Emergency Holographic Shell [ALT-F4] at this point to check\n"
-literal|"on that, you may do so now.  When you're ready to reboot into\n"
+literal|"OK!  At this stage, we've resurrected all the /etc files\n"
+literal|"and moved each new copy over to /etc/update/<file> in case you want\n"
+literal|"to see what the new versions look like.  If you want to wander over\n"
+literal|"to the Emergency Holographic Shell [ALT-F4] at this point to do\n"
+literal|"that, now would be a good time.  When you're ready to reboot into\n"
 literal|"the new system, just exit the installation."
 argument_list|)
 expr_stmt|;
