@@ -100,8 +100,7 @@ name|pccard_beep_select
 name|__P
 argument_list|(
 operator|(
-expr|enum
-name|beepstate
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
