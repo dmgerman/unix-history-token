@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_vnops.c	8.2 (Berkeley) 1/21/94  * $Id: vfs_vnops.c,v 1.51 1998/04/06 17:38:42 peter Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_vnops.c	8.2 (Berkeley) 1/21/94  * $Id: vfs_vnops.c,v 1.52 1998/04/06 18:25:21 peter Exp $  */
 end_comment
 
 begin_include
@@ -594,15 +594,25 @@ name|vp
 operator|->
 name|v_type
 operator|==
-name|VSOCK
-operator|||
+name|VLNK
+condition|)
+block|{
+name|error
+operator|=
+name|ELOOP
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+if|if
+condition|(
 name|vp
 operator|->
 name|v_type
 operator|==
-name|VLNK
+name|VSOCK
 condition|)
-block|{
 name|error
 operator|=
 name|EOPNOTSUPP
@@ -611,6 +621,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_function
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -714,6 +727,9 @@ name|bad
 goto|;
 block|}
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|fmode
@@ -786,6 +802,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_if
+
+begin_expr_stmt
 name|error
 operator|=
 name|VOP_OPEN
@@ -799,6 +818,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|error
@@ -806,7 +828,13 @@ condition|)
 goto|goto
 name|bad
 goto|;
+end_if
+
+begin_comment
 comment|/* 	 * Make sure that a VM object is created for VMIO support. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|vp
@@ -839,6 +867,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|fmode
@@ -850,42 +881,57 @@ operator|->
 name|v_writecount
 operator|++
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+end_return
+
+begin_label
 name|bad
 label|:
+end_label
+
+begin_expr_stmt
 name|vput
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Check for write permissions on the specified vnode.  * Prototype text segments cannot be written.  */
 end_comment
 
-begin_function
-name|int
+begin_expr_stmt
+unit|int
 name|vn_writechk
-parameter_list|(
+argument_list|(
 name|vp
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|vnode
-modifier|*
+operator|*
 name|vp
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 comment|/* 	 * If there's shared text associated with 	 * the vnode, try to free it up once.  If 	 * we fail, we can't allow writing. 	 */
 if|if
@@ -907,7 +953,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Vnode close call  */
