@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.13 (Berkeley) %G%"
+literal|"@(#)devname.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,11 +73,27 @@ modifier|*
 name|devname
 parameter_list|(
 name|dev
+parameter_list|,
+name|type
 parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
+name|mode_t
+name|type
+decl_stmt|;
 block|{
+struct|struct
+block|{
+name|mode_t
+name|type
+decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
+block|}
+name|bkey
+struct|;
 specifier|static
 name|DB
 modifier|*
@@ -124,7 +140,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ps: no device database %s\n"
+literal|"warning: no device database %s\n"
 argument_list|,
 name|_PATH_DEVDB
 argument_list|)
@@ -143,16 +159,25 @@ operator|(
 literal|"??"
 operator|)
 return|;
+comment|/* 	 * Keys are a mode_t followed by a dev_t.  The former is the type of 	 * the file (mode& S_IFMT), the latter is the st_rdev field. 	 */
+name|bkey
+operator|.
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|bkey
+operator|.
+name|type
+operator|=
+name|type
+expr_stmt|;
 name|key
 operator|.
 name|data
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 operator|&
-name|dev
+name|bkey
 expr_stmt|;
 name|key
 operator|.
@@ -160,7 +185,7 @@ name|size
 operator|=
 sizeof|sizeof
 argument_list|(
-name|dev
+name|bkey
 argument_list|)
 expr_stmt|;
 return|return
