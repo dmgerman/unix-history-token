@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	3.4	%G%	*/
+comment|/*	vm_meter.c	3.5	%G%	*/
 end_comment
 
 begin_include
@@ -827,7 +827,7 @@ operator|&&
 name|rp
 operator|->
 name|p_pri
-operator|>=
+operator|>
 name|PZERO
 operator|||
 name|rp
@@ -1809,7 +1809,7 @@ condition|(
 name|p
 operator|->
 name|p_pri
-operator|<
+operator|<=
 name|PZERO
 condition|)
 name|nrun
@@ -1843,7 +1843,7 @@ condition|(
 name|p
 operator|->
 name|p_pri
-operator|<
+operator|<=
 name|PZERO
 condition|)
 name|total
