@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.30 1998/04/19 23:19:20 tegge Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mpapic.c,v 1.31 1998/05/17 17:32:10 tegge Exp $  */
 end_comment
 
 begin_include
@@ -467,7 +467,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|apic_pin_trigger
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -511,21 +510,17 @@ name|target
 operator|=
 name|IOART_DEST
 expr_stmt|;
-name|apic_pin_trigger
-index|[
-name|apic
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* default to edge-triggered */
 if|if
 condition|(
 name|apic
 operator|==
 literal|0
 condition|)
-block|{
+name|apic_pin_trigger
+operator|=
+literal|0
+expr_stmt|;
+comment|/* default to edge-triggered */
 name|maxpin
 operator|=
 name|REDIRCNT_IOAPIC
@@ -534,6 +529,15 @@ name|apic
 argument_list|)
 expr_stmt|;
 comment|/* pins in APIC */
+name|printf
+argument_list|(
+literal|"Programming %d pins in IOAPIC #%d\n"
+argument_list|,
+name|maxpin
+argument_list|,
+name|apic
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pin
@@ -552,6 +556,8 @@ name|int
 name|bus
 decl_stmt|,
 name|bustype
+decl_stmt|,
+name|irq
 decl_stmt|;
 comment|/* we only deal with vectored INTs here */
 if|if
@@ -564,6 +570,22 @@ name|pin
 argument_list|)
 operator|!=
 literal|0
+condition|)
+continue|continue;
+name|irq
+operator|=
+name|apic_irq
+argument_list|(
+name|apic
+argument_list|,
+name|pin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|irq
+operator|==
+literal|0xff
 condition|)
 continue|continue;
 comment|/* determine the bus type for this pin */
@@ -607,10 +629,7 @@ name|IOAPIC_ISA_INTS
 operator|)
 operator|&&
 operator|(
-name|isa_apic_pin
-argument_list|(
-name|pin
-argument_list|)
+name|irq
 operator|==
 name|pin
 operator|)
@@ -669,14 +688,11 @@ operator|==
 literal|1
 condition|)
 name|apic_pin_trigger
-index|[
-name|apic
-index|]
 operator||=
 operator|(
 literal|1
 operator|<<
-name|pin
+name|irq
 operator|)
 expr_stmt|;
 name|polarity
@@ -693,6 +709,27 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* program the appropriate registers */
+if|if
+condition|(
+name|apic
+operator|!=
+literal|0
+operator|||
+name|pin
+operator|!=
+name|irq
+condition|)
+name|printf
+argument_list|(
+literal|"IOAPIC #%d intpint %d -> irq %d\n"
+argument_list|,
+name|apic
+argument_list|,
+name|pin
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
 name|select
 operator|=
 name|pin
@@ -706,7 +743,7 @@ name|vector
 operator|=
 name|NRSVIDT
 operator|+
-name|pin
+name|irq
 expr_stmt|;
 comment|/* IDT vec */
 name|io_apic_write
@@ -731,32 +768,6 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-comment|/* program entry according to MP table. */
-else|else
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTIPLE_IOAPICS
-argument_list|)
-error|#
-directive|error
-error|MULTIPLE_IOAPICSXXX
-else|#
-directive|else
-name|panic
-argument_list|(
-literal|"io_apic_setup: apic #%d"
-argument_list|,
-name|apic
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* MULTIPLE_IOAPICS */
 block|}
 comment|/* return GOOD status */
 return|return

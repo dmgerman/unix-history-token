@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.42 1998/04/01 21:07:36 tegge Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.43 1998/05/17 22:12:05 tegge Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -563,6 +563,44 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|APIC_INTMAPSIZE
+value|24
+end_define
+
+begin_struct
+struct|struct
+name|apic_intmapinfo
+block|{
+name|int
+name|ioapic
+decl_stmt|;
+name|int
+name|int_pin
+decl_stmt|;
+specifier|volatile
+name|void
+modifier|*
+name|apic_address
+decl_stmt|;
+name|int
+name|redirindex
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|apic_intmapinfo
+name|int_to_apicintpin
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -653,7 +691,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|isa_apic_pin
+name|isa_apic_irq
 name|__P
 argument_list|(
 operator|(
@@ -665,7 +703,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pci_apic_pin
+name|pci_apic_irq
 name|__P
 argument_list|(
 operator|(
@@ -681,7 +719,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|next_apic_pin
+name|apic_irq
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|next_apic_irq
 name|__P
 argument_list|(
 operator|(
@@ -965,26 +1017,6 @@ name|lapic
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MULTIPLE_IOAPICS
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-error|MULTIPLE_IOAPICSXXX
-end_error
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|extern
 specifier|volatile
@@ -994,15 +1026,6 @@ name|ioapic
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MULTIPLE_IOAPICS */
-end_comment
 
 begin_comment
 comment|/* functions in mpapic.c */
