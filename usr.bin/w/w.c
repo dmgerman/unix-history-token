@@ -2112,6 +2112,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|__CONCAT
 argument_list|(
@@ -2125,6 +2127,18 @@ argument_list|(
 name|nowp
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|buf
+index|[
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 operator|(
 name|void
