@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.27 1997/09/03 02:08:20 brian Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.28 1997/10/26 01:03:26 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -1181,13 +1181,6 @@ condition|(
 name|linkup
 condition|)
 block|{
-name|FsmDown
-argument_list|(
-operator|&
-name|CcpFsm
-argument_list|)
-expr_stmt|;
-comment|/* CCP must come down */
 name|s
 operator|=
 operator|(
@@ -1226,6 +1219,13 @@ name|IpcpFsm
 argument_list|)
 expr_stmt|;
 comment|/* IPCP must come down */
+name|FsmDown
+argument_list|(
+operator|&
+name|CcpFsm
+argument_list|)
+expr_stmt|;
+comment|/* CCP must come down */
 if|if
 condition|(
 operator|!
@@ -1963,42 +1963,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
-name|void
-name|OsCloseLink
-parameter_list|(
-name|int
-name|flag
-parameter_list|)
-block|{
-name|HangupModem
-argument_list|(
-name|flag
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|OsAddInOctets
-parameter_list|(
-name|int
-name|cnt
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|OsAddOutOctets
-parameter_list|(
-name|int
-name|cnt
-parameter_list|)
-block|{ }
 end_function
 
 end_unit

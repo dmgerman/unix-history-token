@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.40 1997/10/26 01:02:57 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.41 1997/10/26 12:42:11 brian Exp $  *  * TODO:  *      o Validate magic number received from peer.  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -1620,31 +1620,18 @@ argument_list|,
 literal|"LcpLayerFinish\n"
 argument_list|)
 expr_stmt|;
-name|OsCloseLink
+name|HangupModem
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|NewPhase
-argument_list|(
-name|PHASE_DEAD
+literal|0
 argument_list|)
 expr_stmt|;
 name|StopAllTimers
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|OsInterfaceDown
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* We're down at last.  Lets tell background and direct mode to get out */
 name|NewPhase
 argument_list|(
-name|PHASE_TERMINATE
+name|PHASE_DEAD
 argument_list|)
 expr_stmt|;
 name|LcpInit
@@ -1797,21 +1784,19 @@ name|LcpFailedMagic
 operator|=
 literal|0
 expr_stmt|;
-name|NewPhase
-argument_list|(
-name|PHASE_DEAD
-argument_list|)
-expr_stmt|;
-name|StopAllTimers
-argument_list|()
-expr_stmt|;
 name|FsmDown
 argument_list|(
 operator|&
 name|LcpFsm
 argument_list|)
 expr_stmt|;
-comment|/*    * We now wait for the FsmDown() to result in a LcpLayerDown() (if we're    * open).    */
+comment|/* FsmDown() results in a LcpLayerDown() if we're currently open. */
+name|LcpLayerFinish
+argument_list|(
+operator|&
+name|LcpFsm
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1847,6 +1832,16 @@ name|void
 name|LcpClose
 parameter_list|()
 block|{
+name|NewPhase
+argument_list|(
+name|PHASE_TERMINATE
+argument_list|)
+expr_stmt|;
+name|OsInterfaceDown
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|FsmClose
 argument_list|(
 operator|&

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: $  */
+comment|/*  * $Id: phase.c,v 1.1 1997/10/26 01:03:31 brian Exp $  */
 end_comment
 
 begin_include
@@ -285,7 +285,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|PHASE_TERMINATE
+name|PHASE_DEAD
 case|:
 if|if
 condition|(
