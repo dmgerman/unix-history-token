@@ -122,24 +122,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1163,22 +1145,6 @@ goto|;
 return|return
 literal|0
 return|;
-block|}
-if|if
-condition|(
-operator|(
-name|u_long
-operator|)
-name|sa
-operator|<
-name|KERNBASE
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"accept1 bad sa"
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
