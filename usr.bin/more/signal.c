@@ -613,6 +613,19 @@ name|SIGTSTP
 argument_list|)
 expr_stmt|;
 comment|/* 		 * ... Bye bye. ... 		 * Hopefully we'll be back later and resume here... 		 * Reset the terminal and arrange to repaint the 		 * screen when we get back to the main command loop. 		 */
+if|if
+condition|(
+name|sigs
+operator|&
+name|S_STOP
+condition|)
+name|sigs
+operator|&=
+operator|~
+operator|(
+name|S_STOP
+operator|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
