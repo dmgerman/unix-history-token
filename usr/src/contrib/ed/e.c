@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)e.c	5.3 (Berkeley) %G%"
+literal|"@(#)e.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,20 @@ argument_list|)
 expr_stmt|;
 comment|/* unable to create buffer */
 block|}
+name|fwrite
+argument_list|(
+literal|"R"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|fhtmp
+argument_list|)
+expr_stmt|;
 name|file_seek
 operator|=
 literal|0
