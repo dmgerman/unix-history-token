@@ -337,7 +337,7 @@ parameter_list|(
 name|struct
 name|trapframe
 modifier|*
-name|framep
+name|tf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1188,7 +1188,7 @@ parameter_list|,
 name|struct
 name|trapframe
 modifier|*
-name|framep
+name|tf
 parameter_list|,
 name|int
 name|isfatal
@@ -1245,7 +1245,7 @@ name|printf
 argument_list|(
 literal|"    cr.iip      = 0x%lx\n"
 argument_list|,
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1256,7 +1256,7 @@ name|printf
 argument_list|(
 literal|"    cr.ipsr     = 0x%lx ("
 argument_list|,
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1265,7 +1265,7 @@ argument_list|)
 expr_stmt|;
 name|printpsr
 argument_list|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1281,7 +1281,7 @@ name|printf
 argument_list|(
 literal|"    cr.isr      = 0x%lx ("
 argument_list|,
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1290,7 +1290,7 @@ argument_list|)
 expr_stmt|;
 name|printisr
 argument_list|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1306,7 +1306,7 @@ name|printf
 argument_list|(
 literal|"    cr.ifa      = 0x%lx\n"
 argument_list|,
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1315,7 +1315,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1508,7 +1508,7 @@ parameter_list|,
 name|struct
 name|trapframe
 modifier|*
-name|framep
+name|tf
 parameter_list|)
 block|{
 name|struct
@@ -1538,7 +1538,7 @@ name|user
 operator|=
 name|TRAPF_USERMODE
 argument_list|(
-name|framep
+name|tf
 argument_list|)
 condition|?
 literal|1
@@ -1590,7 +1590,7 @@ name|td
 operator|->
 name|td_frame
 operator|=
-name|framep
+name|tf
 expr_stmt|;
 if|if
 condition|(
@@ -1648,7 +1648,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1666,7 +1666,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1681,7 +1681,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1693,7 +1693,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1711,7 +1711,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1729,7 +1729,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1743,7 +1743,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1754,7 +1754,7 @@ condition|)
 block|{
 name|break_syscall
 argument_list|(
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1763,7 +1763,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1783,7 +1783,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|framep
+name|tf
 operator|->
 name|tf_scratch
 operator|.
@@ -1817,7 +1817,7 @@ comment|/* Don't call do_ast()!!! */
 block|}
 name|ucode
 operator|=
-name|framep
+name|tf
 operator|->
 name|tf_scratch
 operator|.
@@ -1830,7 +1830,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1856,7 +1856,7 @@ name|kdb_trap
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 condition|)
 return|return;
@@ -1871,7 +1871,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1913,7 +1913,7 @@ name|va
 operator|=
 name|trunc_page
 argument_list|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1975,7 +1975,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -1990,7 +1990,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2118,7 +2118,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2130,7 +2130,7 @@ name|td_pcb
 operator|->
 name|pcb_onfault
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2155,7 +2155,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 block|}
@@ -2211,7 +2211,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2244,7 +2244,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 name|critical_enter
@@ -2270,7 +2270,7 @@ argument_list|(
 literal|"XXX: bogusly disabled high FP regs\n"
 argument_list|)
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2424,7 +2424,7 @@ name|pcb_fpcpu
 operator|=
 name|pcpup
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2433,7 +2433,7 @@ operator|&=
 operator|~
 name|IA64_PSR_MFH
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2459,7 +2459,7 @@ case|:
 case|case
 name|IA64_VEC_SINGLE_STEP_TRAP
 case|:
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2483,7 +2483,7 @@ name|kdb_trap
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 condition|)
 return|return;
@@ -2498,7 +2498,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2522,7 +2522,7 @@ name|sig
 operator|=
 name|unaligned_fixup
 argument_list|(
-name|framep
+name|tf
 argument_list|,
 name|td
 argument_list|)
@@ -2538,7 +2538,7 @@ name|out
 goto|;
 name|ucode
 operator|=
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2564,7 +2564,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2576,7 +2576,7 @@ name|td_pcb
 operator|->
 name|pcb_onfault
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2601,7 +2601,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 block|}
@@ -2632,7 +2632,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 if|if
@@ -2661,7 +2661,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2716,7 +2716,7 @@ operator|.
 name|fp_low_volatile
 operator|=
 operator|&
-name|framep
+name|tf
 operator|->
 name|tf_scratch_fp
 operator|.
@@ -2751,35 +2751,35 @@ operator|&
 name|bundle
 argument_list|,
 operator|&
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
 name|psr
 argument_list|,
 operator|&
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
 name|fpsr
 argument_list|,
 operator|&
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
 name|isr
 argument_list|,
 operator|&
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
 name|pr
 argument_list|,
 operator|&
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2808,7 +2808,7 @@ decl_stmt|;
 name|ei
 operator|=
 operator|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2827,7 +2827,7 @@ literal|0
 condition|)
 block|{
 comment|/* no template for this case */
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2836,7 +2836,7 @@ operator|&=
 operator|~
 name|IA64_ISR_EI
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2854,7 +2854,7 @@ literal|1
 condition|)
 block|{
 comment|/* MFI or MFB */
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2863,7 +2863,7 @@ operator|&=
 operator|~
 name|IA64_ISR_EI
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2881,7 +2881,7 @@ literal|2
 condition|)
 block|{
 comment|/* MMF */
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2890,7 +2890,7 @@ operator|&=
 operator|~
 name|IA64_ISR_EI
 expr_stmt|;
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -2985,7 +2985,7 @@ case|:
 switch|switch
 condition|(
 operator|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -3068,7 +3068,7 @@ case|:
 name|ucode
 operator|=
 operator|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -3102,7 +3102,7 @@ name|IA32_EXCEPTION_ALIGNMENT_CHECK
 case|:
 name|ucode
 operator|=
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -3132,7 +3132,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3146,7 +3146,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 case|case
@@ -3157,7 +3157,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -3174,7 +3174,7 @@ condition|)
 block|{
 name|ia32_syscall
 argument_list|(
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3184,7 +3184,7 @@ block|}
 name|ucode
 operator|=
 operator|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -3206,7 +3206,7 @@ name|trap_panic
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3230,7 +3230,7 @@ name|printtrap
 argument_list|(
 name|vector
 argument_list|,
-name|framep
+name|tf
 argument_list|,
 literal|1
 argument_list|,
@@ -3257,7 +3257,7 @@ name|userret
 argument_list|(
 name|td
 argument_list|,
-name|framep
+name|tf
 argument_list|,
 name|sticks
 argument_list|)
@@ -3282,7 +3282,7 @@ endif|#
 directive|endif
 name|do_ast
 argument_list|(
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 block|}
@@ -4090,7 +4090,7 @@ parameter_list|(
 name|struct
 name|trapframe
 modifier|*
-name|framep
+name|tf
 parameter_list|)
 block|{
 name|caddr_t
@@ -4163,7 +4163,7 @@ name|td
 operator|->
 name|td_frame
 operator|=
-name|framep
+name|tf
 expr_stmt|;
 if|if
 condition|(
@@ -4186,7 +4186,7 @@ call|(
 name|caddr_t
 call|)
 argument_list|(
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -4210,7 +4210,7 @@ argument_list|)
 expr_stmt|;
 name|code
 operator|=
-name|framep
+name|tf
 operator|->
 name|tf_scratch
 operator|.
@@ -4241,7 +4241,7 @@ operator|->
 name|sv_prepsyscall
 call|)
 argument_list|(
-name|framep
+name|tf
 argument_list|,
 name|args
 argument_list|,
@@ -4491,7 +4491,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|framep
+name|tf
 operator|->
 name|tf_scratch
 operator|.
@@ -4530,7 +4530,7 @@ block|{
 case|case
 literal|0
 case|:
-name|framep
+name|tf
 operator|->
 name|tf_scratch
 operator|.
@@ -4544,7 +4544,7 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* eax */
-name|framep
+name|tf
 operator|->
 name|tf_scratch
 operator|.
@@ -4572,7 +4572,7 @@ case|case
 name|ERESTART
 case|:
 comment|/* 		 * Reconstruct pc, assuming lcall $X,y is 7 bytes, 		 * int 0x80 is 2 bytes. XXX Assume int 0x80. 		 */
-name|framep
+name|tf
 operator|->
 name|tf_special
 operator|.
@@ -4624,7 +4624,7 @@ name|error
 index|]
 expr_stmt|;
 block|}
-name|framep
+name|tf
 operator|->
 name|tf_scratch
 operator|.
@@ -4702,7 +4702,7 @@ name|userret
 argument_list|(
 name|td
 argument_list|,
-name|framep
+name|tf
 argument_list|,
 name|sticks
 argument_list|)

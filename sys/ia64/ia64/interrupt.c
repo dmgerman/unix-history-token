@@ -252,7 +252,7 @@ parameter_list|,
 name|struct
 name|trapframe
 modifier|*
-name|framep
+name|tf
 parameter_list|)
 block|{
 name|printf
@@ -607,7 +607,7 @@ parameter_list|,
 name|struct
 name|trapframe
 modifier|*
-name|framep
+name|tf
 parameter_list|)
 block|{
 name|struct
@@ -778,7 +778,7 @@ expr|struct
 name|clockframe
 operator|*
 operator|)
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 else|else
@@ -789,7 +789,7 @@ expr|struct
 name|clockframe
 operator|*
 operator|)
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 if|if
@@ -805,7 +805,7 @@ expr|struct
 name|clockframe
 operator|*
 operator|)
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 name|statclock
@@ -815,7 +815,7 @@ expr|struct
 name|clockframe
 operator|*
 operator|)
-name|framep
+name|tf
 argument_list|)
 expr_stmt|;
 name|delta
@@ -1194,7 +1194,7 @@ operator|++
 expr_stmt|;
 name|ia64_dispatch_intr
 argument_list|(
-name|framep
+name|tf
 argument_list|,
 name|vector
 argument_list|)
@@ -1214,7 +1214,7 @@ return|return
 operator|(
 name|TRAPF_USERMODE
 argument_list|(
-name|framep
+name|tf
 argument_list|)
 operator|)
 return|;
