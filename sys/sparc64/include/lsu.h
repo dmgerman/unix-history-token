@@ -15,6 +15,10 @@ directive|define
 name|_MACHINE_LSU_H_
 end_define
 
+begin_comment
+comment|/*  * Definitions for the Load-Store-Unit Control Register. This is called  * Data Cache Unit Control Register (DCUCR) for UltraSPARC-III.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -42,6 +46,10 @@ directive|define
 name|LSU_DM
 value|(1UL<< 3)
 end_define
+
+begin_comment
+comment|/* Parity control mask, UltraSPARC-I and II series only. */
+end_comment
 
 begin_define
 define|#
@@ -132,6 +140,73 @@ define|#
 directive|define
 name|LSU_PR
 value|(1UL<< 24)
+end_define
+
+begin_comment
+comment|/* The following bits are valid for the UltraSPARC-III series only. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSU_WE
+value|(1UL<< 41)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_SL
+value|(1UL<< 42)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_SPE
+value|(1UL<< 43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_HPE
+value|(1UL<< 44)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_PE
+value|(1UL<< 45)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_RE
+value|(1UL<< 46)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_ME
+value|(1UL<< 47)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_CV
+value|(1UL<< 48)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSU_CP
+value|(1UL<< 49)
 end_define
 
 begin_endif
