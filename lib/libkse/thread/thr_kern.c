@@ -5448,14 +5448,13 @@ name|active
 operator|=
 literal|1
 expr_stmt|;
-name|kse_set_curthread
-argument_list|(
 name|newthread
 operator|->
 name|kse
-argument_list|,
+operator|->
+name|k_curthread
+operator|=
 name|newthread
-argument_list|)
 expr_stmt|;
 name|newthread
 operator|->
