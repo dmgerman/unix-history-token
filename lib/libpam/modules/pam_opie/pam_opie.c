@@ -578,14 +578,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-comment|/* Chained pam_unix expected */
 name|retval
 operator|=
 name|pwok
 condition|?
-name|PAM_SUCCESS
-else|:
 name|PAM_AUTH_ERR
+else|:
+name|PAM_CRED_ERR
 expr_stmt|;
 else|else
 name|retval
