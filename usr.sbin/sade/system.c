@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.13 1995/05/18 02:42:33 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.14 1995/05/18 09:02:02 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE"  * license, so buy him a beer if you like it!  Buy him a beer for me, too!  */
 end_comment
 
 begin_include
@@ -894,7 +894,7 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|PIO_FONT8x14
+name|PIO_FONT8x16
 argument_list|,
 name|font
 argument_list|)
@@ -959,8 +959,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
-name|OnSerial
+name|OnVTY
 condition|)
 block|{
 if|if
@@ -986,7 +985,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*    setterm(color); */
+name|reset_shell_mode
+argument_list|()
+expr_stmt|;
+name|setterm
+argument_list|(
+name|color
+argument_list|)
+expr_stmt|;
+name|init_acs
+argument_list|()
+expr_stmt|;
+name|cbreak
+argument_list|()
+expr_stmt|;
+name|noecho
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1008,50 +1023,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/*    setterm(mono); */
-block|}
-block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|systemChangeScreenmap
-parameter_list|(
-specifier|const
-name|u_char
-name|newmap
-index|[]
-parameter_list|)
-block|{
-if|if
-condition|(
-name|OnVTY
-condition|)
-block|{
-if|if
-condition|(
-name|ioctl
+name|reset_shell_mode
+argument_list|()
+expr_stmt|;
+name|setterm
 argument_list|(
-literal|0
-argument_list|,
-name|PIO_SCRNMAP
-argument_list|,
-name|newmap
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"Sorry!  Unable to load the screenmap for %s"
-argument_list|,
-name|getenv
-argument_list|(
-literal|"LANG"
-argument_list|)
+name|mono
 argument_list|)
 expr_stmt|;
+name|init_acs
+argument_list|()
+expr_stmt|;
+name|cbreak
+argument_list|()
+expr_stmt|;
+name|noecho
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
