@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Id: if_edreg.h,v 1.10 1994/01/11 21:28:29 ats Exp $  *  * Modification history  *  * Revision 2.2  1993/11/29  16:33:39  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.1  1993/11/22  10:52:33  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.0  93/09/29  00:37:15  davidg  * changed double buffering flag to multi buffering  * made changes/additions for 3c503 multi-buffering  * ...companion to Rev. 2.0 of 'ed' driver.  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
+comment|/*  * National Semiconductor DS8390 NIC register definitions   *  * $Id: if_edreg.h,v 1.11 1994/01/25 22:52:09 ats Exp $  *  * Modification history  *  * Revision 2.2  1993/11/29  16:33:39  davidg  * From Thomas Sandford<t.d.g.sandford@comp.brad.ac.uk>  * Add support for the 8013W board type  *  * Revision 2.1  1993/11/22  10:52:33  davidg  * patch to add support for SMC8216 (Elite-Ultra) boards  * from Glen H. Lowe  *  * Revision 2.0  93/09/29  00:37:15  davidg  * changed double buffering flag to multi buffering  * made changes/additions for 3c503 multi-buffering  * ...companion to Rev. 2.0 of 'ed' driver.  *   * Revision 1.1  93/06/23  03:01:07  davidg  * Initial revision  *   */
 end_comment
 
 begin_comment
@@ -2012,6 +2012,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ED_TYPE_WD8003W
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
 name|ED_TYPE_WD8013W
 value|0x26
 end_define
@@ -2033,13 +2040,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ED_TYPE_WD8013EBP
-value|0x2c
-end_define
-
-begin_define
-define|#
-directive|define
 name|ED_TYPE_WD8013EPC
 value|0x29
 end_define
@@ -2056,6 +2056,13 @@ define|#
 directive|define
 name|ED_TYPE_SMC8216C
 value|0x2b
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_TYPE_WD8013EBP
+value|0x2c
 end_define
 
 begin_comment
