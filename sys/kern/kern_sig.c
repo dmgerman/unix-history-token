@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/namei.h>
 end_include
 
@@ -108,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -127,6 +127,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ktrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
@@ -7447,6 +7453,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+condition|)
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|coredump
 argument_list|(
 name|p
@@ -7509,6 +7530,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -7529,6 +7551,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+block|}
 name|exit1
 argument_list|(
 name|p
