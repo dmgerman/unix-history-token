@@ -168,9 +168,11 @@ condition|(
 operator|(
 name|pp
 operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|physio_proc_freet
-operator|.
-name|tqh_first
+argument_list|)
 operator|)
 operator|==
 name|NULL
