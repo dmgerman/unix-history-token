@@ -8165,11 +8165,9 @@ name|IPSEC
 name|match
 operator|=
 operator|(
-name|ipsec_gethist
+name|ipsec_getnhist
 argument_list|(
 name|m
-argument_list|,
-name|NULL
 argument_list|)
 operator|!=
 name|NULL
