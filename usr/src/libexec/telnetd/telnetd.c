@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.9 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2591,7 +2591,10 @@ expr_stmt|;
 name|neturg
 operator|=
 name|nfrontp
+operator|-
+literal|1
 expr_stmt|;
+comment|/* off by one XXX */
 break|break;
 block|}
 comment|/* 			 * Erase Character and 			 * Erase Line 			 */
