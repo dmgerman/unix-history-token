@@ -2332,6 +2332,7 @@ comment|/* Integral FPU */
 literal|"\002VME"
 comment|/* Extended VM86 mode support */
 literal|"\003DE"
+comment|/* Debugging Extensions (CR4.DE) */
 literal|"\004PSE"
 comment|/* 4MByte page tables */
 literal|"\005TSC"
@@ -2348,11 +2349,13 @@ literal|"\012APIC"
 comment|/* SMP local APIC */
 literal|"\013oldMTRR"
 literal|"\014SEP"
+comment|/* Fast System Call */
 literal|"\015MTRR"
 comment|/* Memory Type Range Registers */
 literal|"\016PGE"
 comment|/* PG_G (global bit) support */
 literal|"\017MCA"
+comment|/* Machine Check Architecture */
 literal|"\020CMOV"
 comment|/* CMOV instruction */
 literal|"\021PAT"
@@ -2361,20 +2364,26 @@ literal|"\022PSE36"
 comment|/* 36 bit address space support */
 literal|"\023PN"
 comment|/* Processor Serial number */
-literal|"\024<b19>"
+literal|"\024CLFLUSH"
+comment|/* Has the CLFLUSH instruction */
 literal|"\025<b20>"
-literal|"\026<b21>"
-literal|"\027<b22>"
+literal|"\026DTS"
+comment|/* Debug Trace Store */
+literal|"\027ACPI"
+comment|/* ACPI support */
 literal|"\030MMX"
 comment|/* MMX instructions */
 literal|"\031FXSR"
 comment|/* FXSAVE/FXRSTOR */
-literal|"\032XMM"
-comment|/* Katmai SIMD/MMX2 instructions */
-literal|"\033<b26>"
-literal|"\034<b27>"
+literal|"\032SSE"
+comment|/* Streaming SIMD Extensions */
+literal|"\033SSE2"
+comment|/* Streaming SIMD Extensions #2 */
+literal|"\034SS"
+comment|/* Self snoop */
 literal|"\035<b28>"
-literal|"\036<b29>"
+literal|"\036ACC"
+comment|/* Auto Clock Correction (TCC/ACPI) */
 literal|"\037<b30>"
 literal|"\040<b31>"
 argument_list|)
