@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uba.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,14 +136,27 @@ begin_comment
 comment|/* IPL 17 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BDPMASK
+value|0xf0000000
+end_define
+
 begin_comment
-comment|/*  * Do transfer on device argument.  The controller  * and uba involved are implied by the device.  * We queue for resource wait in the uba code if necessary.  * We return 1 if the transfer was started, 0 if it was not.  * If you call this routine with the head of the queue for a  * UBA, it will automatically remove the device from the UBA  * queue before it returns.  If some other device is given  * as argument, it will be added to the request queue if the  * request cannot be started immediately.  This means that  * passing a device which is on the queue but not at the head  * of the request queue is likely to be a disaster.  */
+comment|/* see ubavar.h */
+end_comment
+
+begin_comment
+comment|/*  * Do transfer on device argument.  The controller  * and uba involved are implied by the device.  * We queue for resource wait in the uba code if necessary.  * We return 1 if the transfer was started, 0 if it was not.  *  * The onq argument must be zero iff the device is not on the  * queue for this UBA.  If onq is set, the device must be at the  * head of the queue.  In any case, if the transfer is started,  * the device will be off the queue, and if not, it will be on.  *  * Drivers that allocate one BDP and hold it for some time should  * set ud_keepbdp.  In this case um_bdp tells which BDP is allocated  * to the controller, unless it is zero, indicating that the controller  * does not now have a BDP.  */
 end_comment
 
 begin_expr_stmt
-name|ubago
+name|ubaqueue
 argument_list|(
 name|ui
+argument_list|,
+name|onq
 argument_list|)
 specifier|register
 expr|struct
@@ -152,6 +165,12 @@ operator|*
 name|ui
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|onq
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -172,6 +191,12 @@ modifier|*
 name|uh
 decl_stmt|;
 specifier|register
+name|struct
+name|uba_driver
+modifier|*
+name|ud
+decl_stmt|;
+specifier|register
 name|int
 name|s
 decl_stmt|,
@@ -187,16 +212,21 @@ operator|->
 name|um_ubanum
 index|]
 expr_stmt|;
+name|ud
+operator|=
+name|um
+operator|->
+name|um_driver
+expr_stmt|;
 name|s
 operator|=
 name|spluba
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Honor exclusive BDP use requests. 	 */
 if|if
 condition|(
-name|um
-operator|->
-name|um_driver
+name|ud
 operator|->
 name|ud_xclu
 operator|&&
@@ -213,6 +243,87 @@ condition|)
 goto|goto
 name|rwait
 goto|;
+if|if
+condition|(
+name|ud
+operator|->
+name|ud_keepbdp
+condition|)
+block|{
+comment|/* 		 * First get just a BDP (though in fact it comes with 		 * one map register too). 		 */
+if|if
+condition|(
+name|um
+operator|->
+name|um_bdp
+operator|==
+literal|0
+condition|)
+block|{
+name|um
+operator|->
+name|um_bdp
+operator|=
+name|uballoc
+argument_list|(
+name|um
+operator|->
+name|um_ubanum
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|UBA_NEEDBDP
+operator||
+name|UBA_CANTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|um
+operator|->
+name|um_bdp
+operator|==
+literal|0
+condition|)
+goto|goto
+name|rwait
+goto|;
+block|}
+comment|/* now share it with this transfer */
+name|um
+operator|->
+name|um_ubinfo
+operator|=
+name|ubasetup
+argument_list|(
+name|um
+operator|->
+name|um_ubanum
+argument_list|,
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|->
+name|b_actf
+argument_list|,
+name|um
+operator|->
+name|um_bdp
+operator||
+name|UBA_HAVEBDP
+operator||
+name|UBA_CANTWAIT
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|um
 operator|->
 name|um_ubinfo
@@ -254,9 +365,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|um
-operator|->
-name|um_driver
+name|ud
 operator|->
 name|ud_xclu
 condition|)
@@ -318,11 +427,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|uh
-operator|->
-name|uh_actf
-operator|==
-name|ui
+name|onq
 condition|)
 name|uh
 operator|->
@@ -334,9 +439,7 @@ name|ui_forw
 expr_stmt|;
 call|(
 modifier|*
-name|um
-operator|->
-name|um_driver
+name|ud
 operator|->
 name|ud_dgo
 call|)
@@ -353,11 +456,8 @@ name|rwait
 label|:
 if|if
 condition|(
-name|uh
-operator|->
-name|uh_actf
-operator|!=
-name|ui
+operator|!
+name|onq
 condition|)
 block|{
 name|ui
@@ -457,6 +557,22 @@ operator|->
 name|uh_users
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|um
+operator|->
+name|um_driver
+operator|->
+name|ud_keepbdp
+condition|)
+name|um
+operator|->
+name|um_ubinfo
+operator|&=
+operator|~
+name|BDPMASK
+expr_stmt|;
+comment|/* keep BDP for misers */
 name|ubarelse
 argument_list|(
 name|um
@@ -1437,11 +1553,13 @@ name|uh
 operator|->
 name|uh_actf
 operator|&&
-name|ubago
+name|ubaqueue
 argument_list|(
 name|uh
 operator|->
 name|uh_actf
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 empty_stmt|;
