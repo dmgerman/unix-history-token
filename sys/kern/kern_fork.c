@@ -419,6 +419,24 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
+comment|/* Don't allow kernel only flags. */
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|RFKERNELONLY
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|error
 operator|=
 name|fork1
