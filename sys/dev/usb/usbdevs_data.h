@@ -3355,6 +3355,18 @@ literal|"DSS 150 Digital Speaker System"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_PHILIPS
+block|,
+name|USB_PRODUCT_PHILIPS_DIVAUSB
+block|,
+literal|0
+block|,
+literal|"Philips"
+block|,
+literal|"DIVA USB mp3 player"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_PHILIPSSEMI
 block|,
 name|USB_PRODUCT_PHILIPSSEMI_HUB1122

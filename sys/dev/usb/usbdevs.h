@@ -6299,6 +6299,17 @@ begin_comment
 comment|/* DSS 150 Digital Speaker System */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_PHILIPS_DIVAUSB
+value|0x1801
+end_define
+
+begin_comment
+comment|/* DIVA USB mp3 player */
+end_comment
+
 begin_comment
 comment|/* Philips Semiconductor products */
 end_comment
