@@ -103,186 +103,310 @@ block|{
 name|PCI_DEVICE_ID_PCIC_CLPD6729
 block|,
 literal|"Cirrus Logic PD6729/6730 PC-Card Controller"
+block|,
+name|PCIC_PD672X
+block|,
+name|PCIC_PD_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_CLPD6832
 block|,
 literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
+block|,
+name|PCIC_PD672X
+block|,
+name|PCIC_PD_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_CLPD6833
 block|,
 literal|"Cirrus Logic PD6833 PCI-CardBus Bridge"
+block|,
+name|PCIC_PD672X
+block|,
+name|PCIC_PD_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6729
 block|,
 literal|"O2micro OZ6729 PC-Card Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6730
 block|,
 literal|"O2micro OZ6730 PC-Card Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6832
 block|,
 literal|"O2micro 6832/6833 PCI-Cardbus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6860
 block|,
 literal|"O2micro 6860/6836 PCI-Cardbus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_OZ6872
 block|,
 literal|"O2micro 6812/6872 PCI-Cardbus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_RICOH_RL5C465
 block|,
 literal|"Ricoh RL5C465 PCI-CardBus Bridge"
+block|,
+name|PCIC_RF5C296
+block|,
+name|PCIC_RICOH_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_RICOH_RL5C475
 block|,
 literal|"Ricoh RL5C475 PCI-CardBus Bridge"
+block|,
+name|PCIC_RF5C296
+block|,
+name|PCIC_RICOH_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_RICOH_RL5C476
 block|,
 literal|"Ricoh RL5C476 PCI-CardBus Bridge"
+block|,
+name|PCIC_RF5C296
+block|,
+name|PCIC_RICOH_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_RICOH_RL5C477
 block|,
 literal|"Ricoh RL5C477 PCI-CardBus Bridge"
+block|,
+name|PCIC_RF5C296
+block|,
+name|PCIC_RICOH_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_RICOH_RL5C478
 block|,
 literal|"Ricoh RL5C478 PCI-CardBus Bridge"
+block|,
+name|PCIC_RF5C296
+block|,
+name|PCIC_RICOH_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1031
 block|,
 literal|"TI PCI-1031 PCI-PCMCIA Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1130
 block|,
 literal|"TI PCI-1130 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1131
 block|,
 literal|"TI PCI-1131 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1211
 block|,
 literal|"TI PCI-1211 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1220
 block|,
 literal|"TI PCI-1220 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1221
 block|,
 literal|"TI PCI-1221 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1225
 block|,
 literal|"TI PCI-1225 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1250
 block|,
 literal|"TI PCI-1250 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1251
 block|,
 literal|"TI PCI-1251 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1251B
 block|,
 literal|"TI PCI-1251B PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1410
 block|,
 literal|"TI PCI-1410 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1420
 block|,
 literal|"TI PCI-1420 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1450
 block|,
 literal|"TI PCI-1450 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI1451
 block|,
 literal|"TI PCI-1451 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_PCIC_TI4451
 block|,
 literal|"TI PCI-4451 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365SL_DF
+block|,
+name|PCIC_DF_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC95
 block|,
 literal|"Toshiba ToPIC95 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC97
 block|,
 literal|"Toshiba ToPIC97 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
 name|PCI_DEVICE_ID_TOSHIBA_TOPIC100
 block|,
 literal|"Toshiba ToPIC100 PCI-CardBus Bridge"
+block|,
+name|PCIC_I82365
+block|,
+name|PCIC_AB_POWER
 block|}
 block|,
 block|{
