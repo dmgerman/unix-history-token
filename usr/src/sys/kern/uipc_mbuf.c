@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.30	82/03/09	*/
+comment|/*	uipc_mbuf.c	1.31	82/03/12	*/
 end_comment
 
 begin_include
@@ -422,6 +422,19 @@ argument_list|(
 name|M_PGFREE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|addr
+operator|=
+name|addr
+expr_stmt|;
+name|n
+operator|=
+name|n
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
