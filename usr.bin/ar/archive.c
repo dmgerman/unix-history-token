@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -1236,6 +1237,8 @@ name|int
 name|from
 decl_stmt|,
 name|nr
+init|=
+literal|0
 decl_stmt|,
 name|nw
 decl_stmt|,
