@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|char
 modifier|*
 modifier|*
