@@ -268,9 +268,9 @@ name|void
 name|sched_add
 parameter_list|(
 name|struct
-name|kse
+name|thread
 modifier|*
-name|ke
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -291,9 +291,9 @@ name|void
 name|sched_clock
 parameter_list|(
 name|struct
-name|kse
+name|thread
 modifier|*
-name|ke
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -337,9 +337,9 @@ name|void
 name|sched_rem
 parameter_list|(
 name|struct
-name|kse
+name|thread
 modifier|*
-name|ke
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -353,9 +353,9 @@ name|fixpt_t
 name|sched_pctcpu
 parameter_list|(
 name|struct
-name|kse
+name|thread
 modifier|*
-name|ke
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl

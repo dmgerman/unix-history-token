@@ -570,7 +570,7 @@ name|td
 expr_stmt|;
 name|sched_add
 argument_list|(
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 name|CTR2
@@ -649,12 +649,12 @@ comment|/* Bring its kse with it, leave the thread attached */
 end_comment
 
 begin_comment
-unit|sched_rem(ke); 		ke->ke_state = KES_THREAD;  		return; 	}    	td3 = TAILQ_PREV(td, threadqueue, td_runq); 	TAILQ_REMOVE(&kg->kg_runq, td, td_runq); 	if (ke) {
+unit|sched_rem(td); 		ke->ke_state = KES_THREAD;  		return; 	}    	td3 = TAILQ_PREV(td, threadqueue, td_runq); 	TAILQ_REMOVE(&kg->kg_runq, td, td_runq); 	if (ke) {
 comment|/* 		 * This thread has been assigned to a KSE. 		 * We need to dissociate it and try assign the 		 * KSE to the next available thread. Then, we should 		 * see if we need to move the KSE in the run queues. 		 */
 end_comment
 
 begin_endif
-unit|sched_rem(ke); 		ke->ke_state = KES_THREAD;  		td2 = kg->kg_last_assigned; 		KASSERT((td2 != NULL), ("last assigned has wrong value")); 		if (td2 == td)  			kg->kg_last_assigned = td3; 		kse_reassign(ke); 	} }
+unit|sched_rem(td); 		ke->ke_state = KES_THREAD;  		td2 = kg->kg_last_assigned; 		KASSERT((td2 != NULL), ("last assigned has wrong value")); 		if (td2 == td)  			kg->kg_last_assigned = td3; 		kse_reassign(ke); 	} }
 endif|#
 directive|endif
 end_endif
@@ -761,12 +761,12 @@ condition|)
 block|{
 name|sched_rem
 argument_list|(
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 name|sched_add
 argument_list|(
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -819,7 +819,7 @@ expr_stmt|;
 block|}
 name|sched_rem
 argument_list|(
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -950,8 +950,6 @@ comment|/* 		 * Common path optimisation: Only one of everything 		 * and the KS
 name|sched_add
 argument_list|(
 name|td
-operator|->
-name|td_kse
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1069,7 +1067,7 @@ argument_list|)
 expr_stmt|;
 name|sched_rem
 argument_list|(
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 block|}
@@ -1262,6 +1260,8 @@ block|}
 name|sched_add
 argument_list|(
 name|ke
+operator|->
+name|ke_thread
 argument_list|)
 expr_stmt|;
 block|}

@@ -1257,11 +1257,6 @@ modifier|*
 name|td
 decl_stmt|;
 name|struct
-name|kse
-modifier|*
-name|ke
-decl_stmt|;
-name|struct
 name|proc
 modifier|*
 name|p
@@ -1286,12 +1281,6 @@ name|sched_lock
 argument_list|,
 name|MTX_QUIET
 argument_list|)
-expr_stmt|;
-name|ke
-operator|=
-name|td
-operator|->
-name|td_kse
 expr_stmt|;
 if|if
 condition|(
@@ -1322,9 +1311,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|ke
+name|td
 operator|->
-name|ke_ksegrp
+name|td_ksegrp
 operator|->
 name|kg_nice
 operator|>
@@ -1429,7 +1418,7 @@ block|}
 block|}
 name|sched_clock
 argument_list|(
-name|ke
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* Update resource usage integrals and maximums. */
