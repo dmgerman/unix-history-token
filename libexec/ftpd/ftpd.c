@@ -1697,6 +1697,35 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* OLD_SETPROCTITLE */
+comment|/* 	 * Prevent diagnostic messages from appearing on stderr. 	 * We run as a daemon or from inetd; in both cases, there's 	 * more reason in logging to syslog. 	 */
+operator|(
+name|void
+operator|)
+name|freopen
+argument_list|(
+name|_PATH_DEVNULL
+argument_list|,
+literal|"w"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|opterr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * LOG_NDELAY sets up the logging connection immediately, 	 * necessary for anonymous ftp's that chroot and can't do it later. 	 */
+name|openlog
+argument_list|(
+literal|"ftpd"
+argument_list|,
+name|LOG_PID
+operator||
+name|LOG_NDELAY
+argument_list|,
+name|LOG_FTP
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1952,8 +1981,10 @@ name|val
 operator|<
 literal|0
 condition|)
-name|warnx
+name|syslog
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"bad value for -u"
 argument_list|)
 expr_stmt|;
@@ -1988,8 +2019,10 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|warnx
+name|syslog
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"unknown flag -%c ignored"
 argument_list|,
 name|optopt
@@ -2006,30 +2039,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
-name|freopen
-argument_list|(
-name|_PATH_DEVNULL
-argument_list|,
-literal|"w"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-comment|/* 	 * LOG_NDELAY sets up the logging connection immediately, 	 * necessary for anonymous ftp's that chroot and can't do it later. 	 */
-name|openlog
-argument_list|(
-literal|"ftpd"
-argument_list|,
-name|LOG_PID
-operator||
-name|LOG_NDELAY
-argument_list|,
-name|LOG_FTP
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|daemon_mode
