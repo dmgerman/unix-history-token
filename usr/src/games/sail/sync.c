@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	1.4 83/10/14"
+literal|"@(#)sync.c	1.5 83/10/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -1117,17 +1117,9 @@ condition|(
 name|isplayer
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|putchar
-argument_list|(
-literal|'\7'
-argument_list|)
-expr_stmt|;
 name|Signal
 argument_list|(
-literal|"%s (%c%c): %s"
+literal|"\7%s (%c%c): %s"
 argument_list|,
 name|ship
 argument_list|,
