@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	2.11 %G%"
+literal|"@(#)cmd3.c	2.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1177,9 +1177,10 @@ name|detract
 argument_list|(
 name|np
 argument_list|,
-literal|0
+name|GCOMMA
 argument_list|)
 expr_stmt|;
+comment|/* do it with commas */
 if|if
 condition|(
 name|cp
@@ -1202,7 +1203,7 @@ name|strcat
 argument_list|(
 name|buf
 argument_list|,
-literal|" "
+literal|", "
 argument_list|)
 expr_stmt|;
 name|strcat
