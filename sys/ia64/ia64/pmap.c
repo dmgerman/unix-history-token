@@ -5216,6 +5216,9 @@ block|}
 block|}
 name|out
 label|:
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_install
 argument_list|(
 name|oldpmap
@@ -5225,9 +5228,6 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -5657,6 +5657,9 @@ operator|+=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_install
 argument_list|(
 name|oldpmap
@@ -5666,9 +5669,6 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function

@@ -6451,6 +6451,10 @@ operator|==
 literal|0
 condition|)
 return|return;
+name|anyvalid
+operator|=
+literal|0
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -6504,10 +6508,6 @@ name|out
 goto|;
 block|}
 block|}
-name|anyvalid
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -6727,6 +6727,11 @@ condition|)
 break|break;
 block|}
 block|}
+name|out
+label|:
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|anyvalid
@@ -6735,11 +6740,6 @@ name|pmap_invalidate_all
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|out
-label|:
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -7443,6 +7443,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|anychanged
@@ -7451,9 +7454,6 @@ name|pmap_invalidate_all
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
