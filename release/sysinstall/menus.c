@@ -2640,7 +2640,7 @@ block|,
 name|NULL
 block|,
 name|VAR_DESKSTYLE
-literal|"=fvwm"
+literal|"=fvwm2"
 block|}
 block|,
 block|{
