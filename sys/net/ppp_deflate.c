@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_deflate.c,v 1.9 1998/03/25 14:28:28 peter Exp $	*/
+comment|/*	$Id: ppp_deflate.c,v 1.10 1998/06/20 16:28:03 peter Exp $	*/
 end_comment
 
 begin_comment
@@ -1721,7 +1721,7 @@ operator|.
 name|avail_out
 operator|)
 expr_stmt|;
-comment|/*      * See if we managed to reduce the size of the packet.      * If the compressor just gave us a single zero byte, it means      * the packet was incompressible.      */
+comment|/*      * See if we managed to reduce the size of the packet.      */
 if|if
 condition|(
 name|m
@@ -1731,20 +1731,6 @@ operator|&&
 name|olen
 operator|<
 name|orig_len
-operator|&&
-operator|!
-operator|(
-name|olen
-operator|==
-name|PPP_HDRLEN
-operator|+
-literal|3
-operator|&&
-operator|*
-name|wptr
-operator|==
-literal|0
-operator|)
 condition|)
 block|{
 name|state
