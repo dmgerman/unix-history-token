@@ -3130,6 +3130,12 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|cdevsw_add
+argument_list|(
+operator|&
+name|vn_cdevsw
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -3201,12 +3207,6 @@ begin_expr_stmt
 name|DEV_MODULE
 argument_list|(
 name|vn
-argument_list|,
-name|CDEV_MAJOR
-argument_list|,
-name|BDEV_MAJOR
-argument_list|,
-name|vn_cdevsw
 argument_list|,
 name|vn_modevent
 argument_list|,

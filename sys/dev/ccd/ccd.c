@@ -1192,6 +1192,12 @@ name|ccddevice
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|cdevsw_add
+argument_list|(
+operator|&
+name|ccd_cdevsw
+argument_list|)
+expr_stmt|;
 comment|/* XXX: is this necessary? */
 for|for
 control|(
@@ -1287,12 +1293,6 @@ begin_expr_stmt
 name|DEV_MODULE
 argument_list|(
 name|ccd
-argument_list|,
-name|CDEV_MAJOR
-argument_list|,
-name|BDEV_MAJOR
-argument_list|,
-name|ccd_cdevsw
 argument_list|,
 name|ccd_modevent
 argument_list|,

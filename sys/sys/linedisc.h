@@ -1068,12 +1068,6 @@ modifier|*
 name|chainarg
 decl_stmt|;
 comment|/* arg for next event handler */
-name|struct
-name|cdevsw
-modifier|*
-name|cdevsw
-decl_stmt|;
-comment|/* device functions */
 comment|/* Do not initialize fields hereafter */
 block|}
 struct|;
@@ -1086,18 +1080,12 @@ name|DEV_MODULE
 parameter_list|(
 name|name
 parameter_list|,
-name|cmaj
-parameter_list|,
-name|bmaj
-parameter_list|,
-name|devsw
-parameter_list|,
 name|evh
 parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|static struct devsw_module_data name##_devsw_mod = {			\     evh, arg,&devsw							\ };									\ 									\ static moduledata_t name##_mod = {					\     #name,								\     devsw_module_handler,						\&name##_devsw_mod							\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE+cmaj*256+bmaj)
+value|static struct devsw_module_data name##_devsw_mod = {			\     evh, arg,								\ };									\ 									\ static moduledata_t name##_mod = {					\     #name,								\     devsw_module_handler,						\&name##_devsw_mod							\ };									\ DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_decl_stmt
