@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_search.c	5.5 (Berkeley) %G%"
+literal|"@(#)rec_search.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,11 @@ decl_stmt|;
 name|int
 name|serrno
 decl_stmt|;
+name|BT_CLR
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|pg

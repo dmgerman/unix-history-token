@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_put.c	5.6 (Berkeley) %G%"
+literal|"@(#)rec_put.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -724,11 +724,6 @@ operator|==
 name|RET_ERROR
 condition|)
 block|{
-name|BT_CLR
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
 name|mpool_put
 argument_list|(
 name|t
