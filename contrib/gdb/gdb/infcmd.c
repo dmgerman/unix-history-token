@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Memory-access and commands for "inferior" process, for GDB.    Copyright 1986, 1987, 1988, 1989, 1991, 1992, 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Memory-access and commands for "inferior" process, for GDB.    Copyright 1986, 87, 88, 89, 91, 92, 95, 96, 1998     Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -87,8 +81,72 @@ directive|include
 file|"language.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"symfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"objfiles.h"
+end_include
+
+begin_comment
+comment|/* Functions exported for general use: */
+end_comment
+
 begin_decl_stmt
-specifier|static
+name|void
+name|nofp_registers_info
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|all_registers_info
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|registers_info
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Local functions: */
+end_comment
+
+begin_decl_stmt
 name|void
 name|continue_command
 name|PARAMS
@@ -212,53 +270,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|nofp_registers_info
-name|PARAMS
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
+name|DO_REGISTERS_INFO
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|all_registers_info
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|registers_info
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -274,6 +294,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -406,7 +431,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|nexti_command
 name|PARAMS
@@ -422,7 +446,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|stepi_command
 name|PARAMS
@@ -484,6 +507,49 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_initialize_infcmd
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|GO_USAGE
+value|"Usage: go<location>\n"
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CALL_DUMMY_BREAKPOINT_OFFSET
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|breakpoint_auto_delete_contents
+name|PARAMS
+argument_list|(
+operator|(
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -749,6 +815,10 @@ expr_stmt|;
 if|if
 condition|(
 name|inferior_pid
+operator|!=
+literal|0
+operator|&&
+name|target_has_execution
 condition|)
 block|{
 if|if
@@ -767,6 +837,20 @@ expr_stmt|;
 name|target_kill
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOLIB_RESTART
+argument_list|)
+name|SOLIB_RESTART
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|init_wait_for_inferior
+argument_list|()
+expr_stmt|;
 block|}
 name|clear_breakpoint_hit_counts
 argument_list|()
@@ -780,6 +864,15 @@ operator|)
 name|get_exec_file
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Purge old solib objfiles. */
+name|objfile_purge_solibs
+argument_list|()
+expr_stmt|;
+name|do_run_cleanups
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* The exec file is re-read every time we do a generic_mourn_inferior, so      we just have to worry about the symbol file.  */
@@ -877,11 +970,48 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|run_no_args_command
+parameter_list|(
+name|args
+parameter_list|,
+name|from_tty
+parameter_list|)
+name|char
+modifier|*
+name|args
+decl_stmt|;
+name|int
+name|from_tty
+decl_stmt|;
+block|{
+name|execute_command
+argument_list|(
+literal|"set args"
+argument_list|,
+name|from_tty
+argument_list|)
+expr_stmt|;
+name|run_command
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+name|from_tty
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
 begin_function
-specifier|static
 name|void
 name|continue_command
 parameter_list|(
@@ -1091,7 +1221,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|stepi_command
 parameter_list|(
@@ -1124,7 +1253,6 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|nexti_command
 parameter_list|(
@@ -1221,6 +1349,9 @@ name|cleanups
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|disable_longjmp_breakpoint
 argument_list|,
 literal|0
@@ -1597,6 +1728,58 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+if|if
+condition|(
+name|sfn
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fixup_symbol_section
+argument_list|(
+name|sfn
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|section_is_overlay
+argument_list|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|sfn
+argument_list|)
+argument_list|)
+operator|&&
+operator|!
+name|section_is_mapped
+argument_list|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|sfn
+argument_list|)
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|query
+argument_list|(
+literal|"WARNING!!!  Destination is in unmapped overlay!  Jump anyway? "
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Not confirmed."
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+block|}
+block|}
 name|addr
 operator|=
 name|sal
@@ -1642,6 +1825,72 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Go to line or address in current procedure */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|go_command
+parameter_list|(
+name|line_no
+parameter_list|,
+name|from_tty
+parameter_list|)
+name|char
+modifier|*
+name|line_no
+decl_stmt|;
+name|int
+name|from_tty
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|line_no
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+operator|||
+operator|!
+operator|*
+name|line_no
+condition|)
+name|printf_filtered
+argument_list|(
+name|GO_USAGE
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|tbreak_command
+argument_list|(
+name|line_no
+argument_list|,
+name|from_tty
+argument_list|)
+expr_stmt|;
+name|jump_command
+argument_list|(
+name|line_no
+argument_list|,
+name|from_tty
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Continue program giving it specified signal.  */
@@ -1785,7 +2034,14 @@ begin_comment
 comment|/* Call breakpoint_auto_delete on the current contents of the bpstat    pointed to by arg (which is really a bpstat *).  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CALL_DUMMY_BREAKPOINT_OFFSET
+end_ifdef
+
 begin_function
+specifier|static
 name|void
 name|breakpoint_auto_delete_contents
 parameter_list|(
@@ -1807,6 +2063,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CALL_DUMMY_BREAKPOINT_OFFSET */
+end_comment
 
 begin_comment
 comment|/* Execute a "stack dummy", a piece of code stored in the stack    by the debugger to be executed in the inferior.     To call: first, do PUSH_DUMMY_FRAME.    Then push the contents of the dummy.  It should end with a breakpoint insn.    Then call here, passing address at which to start the dummy.     The contents of all registers are saved before the dummy frame is popped    and copied into the buffer BUFFER.     The dummy's frame is automatically popped whenever that break is hit.    If that is the first time the program stops, run_stack_dummy    returns to its caller with that frame already gone and returns 0.    Otherwise, run_stack-dummy returns 1 (the frame will eventually be popped    when we do hit that breakpoint).  */
@@ -1887,6 +2152,13 @@ name|struct
 name|symtab_and_line
 name|sal
 decl_stmt|;
+name|INIT_SAL
+argument_list|(
+operator|&
+name|sal
+argument_list|)
+expr_stmt|;
+comment|/* initialize to zeroes */
 if|#
 directive|if
 name|CALL_DUMMY_LOCATION
@@ -1915,15 +2187,14 @@ endif|#
 directive|endif
 name|sal
 operator|.
-name|symtab
+name|section
 operator|=
-name|NULL
-expr_stmt|;
+name|find_pc_overlay
+argument_list|(
 name|sal
 operator|.
-name|line
-operator|=
-literal|0
+name|pc
+argument_list|)
 expr_stmt|;
 comment|/* Set up a FRAME for the dummy frame so we can pass it to        set_momentary_breakpoint.  We need to give the breakpoint a        frame in case there is only one copy of the dummy (e.g.        CALL_DUMMY_LOCATION == AFTER_TEXT_END).  */
 name|flush_cached_frames
@@ -1974,6 +2245,9 @@ block|}
 endif|#
 directive|endif
 comment|/* CALL_DUMMY_BREAKPOINT_OFFSET.  */
+name|disable_watchpoints_before_interactive_call_start
+argument_list|()
+expr_stmt|;
 name|proceed_to_finish
 operator|=
 literal|1
@@ -1987,6 +2261,9 @@ name|TARGET_SIGNAL_0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|enable_watchpoints_after_interactive_call_stop
+argument_list|()
 expr_stmt|;
 name|discard_cleanups
 argument_list|(
@@ -2364,6 +2641,9 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|delete_breakpoint
 argument_list|,
 name|breakpoint
@@ -2447,6 +2727,9 @@ decl_stmt|;
 name|CORE_ADDR
 name|funcaddr
 decl_stmt|;
+name|int
+name|struct_return
+decl_stmt|;
 name|value_type
 operator|=
 name|TYPE_TARGET_TYPE
@@ -2487,14 +2770,8 @@ name|function
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|val
+name|struct_return
 operator|=
-name|value_being_returned
-argument_list|(
-name|value_type
-argument_list|,
-name|stop_registers
-argument_list|,
 name|using_struct_return
 argument_list|(
 name|value_of_variable
@@ -2519,6 +2796,22 @@ name|function
 argument_list|)
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|struct_return
+condition|)
+block|{
+name|val
+operator|=
+name|value_being_returned
+argument_list|(
+name|value_type
+argument_list|,
+name|stop_registers
+argument_list|,
+name|struct_return
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -2547,6 +2840,74 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* elz: we cannot determine the contents of the structure because 	  it is on the stack, and we don't know where, since we did not 	  initiate the call, as opposed to the call_function_by_hand case */
+ifdef|#
+directive|ifdef
+name|VALUE_RETURNED_FROM_STACK
+name|val
+operator|=
+literal|0
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"Value returned has type: %s."
+argument_list|,
+name|TYPE_NAME
+argument_list|(
+name|value_type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|" Cannot determine contents\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|val
+operator|=
+name|value_being_returned
+argument_list|(
+name|value_type
+argument_list|,
+name|stop_registers
+argument_list|,
+name|struct_return
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"Value returned is $%d = "
+argument_list|,
+name|record_latest_value
+argument_list|(
+name|val
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|value_print
+argument_list|(
+name|val
+argument_list|,
+name|gdb_stdout
+argument_list|,
+literal|0
+argument_list|,
+name|Val_no_prettyprint
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 name|do_cleanups
 argument_list|(
@@ -2655,11 +3016,18 @@ name|num
 operator|<
 literal|0
 condition|)
+block|{
 name|printf_filtered
 argument_list|(
-literal|"It stopped at a breakpoint that has since been deleted.\n"
+literal|"It stopped at a breakpoint that has "
 argument_list|)
 expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"since been deleted.\n"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|printf_filtered
 argument_list|(
@@ -2707,11 +3075,18 @@ condition|(
 operator|!
 name|from_tty
 condition|)
+block|{
 name|printf_filtered
 argument_list|(
-literal|"Type \"info stack\" or \"info registers\" for more information.\n"
+literal|"Type \"info stack\" or \"info registers\" "
 argument_list|)
 expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"for more information.\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3077,7 +3452,12 @@ condition|)
 block|{
 name|printf_filtered
 argument_list|(
-literal|"Setting environment variable \"%s\" to null value.\n"
+literal|"Setting environment variable "
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\"%s\" to null value.\n"
 argument_list|,
 name|var
 argument_list|)
@@ -3329,19 +3709,26 @@ end_function
 begin_escape
 end_escape
 
-begin_comment
-comment|/* The array of register names.  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGISTER_NAMES
+end_ifdef
 
 begin_decl_stmt
 name|char
 modifier|*
-name|reg_names
+name|gdb_register_names
 index|[]
 init|=
 name|REGISTER_NAMES
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Print out the machine register regnum. If regnum is -1,    print all registers (fpregs == 1) or all non-float registers    (fpregs == 0).     For most machines, having all_registers_info() print the    register(s) one per line is good enough. If a different format    is required, (eg, for MIPS or Pyramid 90x, which both have    lots of regs), or there is an existing convention for showing    all the registers, define the macro DO_REGISTERS_INFO(regnum, fp)    to provide that format.  */
@@ -3459,19 +3846,19 @@ block|}
 comment|/* If the register name is empty, it is undefined for this 	 processor, so don't display anything.  */
 if|if
 condition|(
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 operator|==
 name|NULL
 operator|||
 operator|*
 operator|(
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 operator|)
 operator|==
 literal|'\0'
@@ -3479,10 +3866,10 @@ condition|)
 continue|continue;
 name|fputs_filtered
 argument_list|(
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|,
 name|gdb_stdout
 argument_list|)
@@ -3493,10 +3880,10 @@ literal|15
 operator|-
 name|strlen
 argument_list|(
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|)
 argument_list|,
 name|gdb_stdout
@@ -3515,7 +3902,7 @@ condition|)
 block|{
 name|printf_filtered
 argument_list|(
-literal|"Invalid register contents\n"
+literal|"*value not available*\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3614,6 +4001,8 @@ name|virtual_buffer
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|gdb_stdout
 argument_list|,
 literal|0
@@ -3646,6 +4035,26 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
+specifier|register
+name|int
+name|idx
+init|=
+name|TARGET_BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+condition|?
+name|j
+else|:
+name|REGISTER_RAW_SIZE
+argument_list|(
+name|i
+argument_list|)
+operator|-
+literal|1
+operator|-
+name|j
+decl_stmt|;
 name|printf_filtered
 argument_list|(
 literal|"%02x"
@@ -3656,10 +4065,11 @@ name|char
 operator|)
 name|raw_buffer
 index|[
-name|j
+name|idx
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|printf_filtered
 argument_list|(
 literal|")"
@@ -3735,7 +4145,9 @@ argument_list|(
 name|i
 argument_list|)
 argument_list|,
-name|raw_buffer
+name|virtual_buffer
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3762,7 +4174,9 @@ argument_list|(
 name|i
 argument_list|)
 argument_list|,
-name|raw_buffer
+name|virtual_buffer
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -3807,8 +4221,23 @@ begin_comment
 comment|/* no DO_REGISTERS_INFO.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|target_map_name_to_register
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
-specifier|static
 name|void
 name|registers_info
 parameter_list|(
@@ -3913,51 +4342,30 @@ name|numregs
 operator|=
 name|ARCH_NUM_REGS
 expr_stmt|;
-for|for
-control|(
 name|regnum
 operator|=
-literal|0
-init|;
-name|regnum
-operator|<
-name|numregs
-condition|;
-name|regnum
-operator|++
-control|)
+name|target_map_name_to_register
+argument_list|(
+name|addr_exp
+argument_list|,
+name|end
+operator|-
+name|addr_exp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
-name|strncmp
-argument_list|(
-name|addr_exp
-argument_list|,
-name|reg_names
-index|[
 name|regnum
-index|]
-argument_list|,
-name|end
-operator|-
-name|addr_exp
-argument_list|)
-operator|&&
-name|strlen
-argument_list|(
-name|reg_names
-index|[
-name|regnum
-index|]
-argument_list|)
-operator|==
-name|end
-operator|-
-name|addr_exp
+operator|>=
+literal|0
 condition|)
 goto|goto
 name|found
 goto|;
+name|regnum
+operator|=
+name|numregs
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -4037,7 +4445,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|all_registers_info
 parameter_list|(
@@ -4064,7 +4471,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|nofp_registers_info
 parameter_list|(
@@ -4117,9 +4523,24 @@ name|int
 name|from_tty
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|SOLIB_ADD
 specifier|extern
 name|int
 name|auto_solib_add
+decl_stmt|;
+endif|#
+directive|endif
+name|char
+modifier|*
+name|exec_file
+decl_stmt|;
+name|char
+modifier|*
+name|full_exec_path
+init|=
+name|NULL
 decl_stmt|;
 name|dont_repeat
 argument_list|()
@@ -4182,6 +4603,76 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*    * If no exec file is yet known, try to determine it from the    * process itself.    */
+name|exec_file
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|get_exec_file
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|exec_file
+condition|)
+block|{
+name|exec_file
+operator|=
+name|target_pid_to_exec_file
+argument_list|(
+name|inferior_pid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|exec_file
+condition|)
+block|{
+comment|/* It's possible we don't have a full path, but rather just a          filename.  Some targets, such as HP-UX, don't provide the          full path, sigh.           Attempt to qualify the filename against the source path.          (If that fails, we'll just fall back on the original          filename.  Not much more we can do...)          */
+if|if
+condition|(
+operator|!
+name|source_full_path_of
+argument_list|(
+name|exec_file
+argument_list|,
+operator|&
+name|full_exec_path
+argument_list|)
+condition|)
+name|full_exec_path
+operator|=
+name|savestring
+argument_list|(
+name|exec_file
+argument_list|,
+name|strlen
+argument_list|(
+name|exec_file
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exec_file_attach
+argument_list|(
+name|full_exec_path
+argument_list|,
+name|from_tty
+argument_list|)
+expr_stmt|;
+name|symbol_file_command
+argument_list|(
+name|full_exec_path
+argument_list|,
+name|from_tty
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 ifdef|#
 directive|ifdef
 name|SOLIB_ADD
@@ -4201,12 +4692,8 @@ literal|0
 argument_list|,
 name|from_tty
 argument_list|,
-operator|(
-expr|struct
-name|target_ops
-operator|*
-operator|)
-literal|0
+operator|&
+name|current_target
 argument_list|)
 expr_stmt|;
 name|re_enable_breakpoints_in_shlibs
@@ -4215,6 +4702,12 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* Take any necessary post-attaching actions for this platform.      */
+name|target_post_attach
+argument_list|(
+name|inferior_pid
+argument_list|)
+expr_stmt|;
 name|normal_stop
 argument_list|()
 expr_stmt|;
@@ -4253,6 +4746,17 @@ argument_list|,
 name|from_tty
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOLIB_RESTART
+argument_list|)
+name|SOLIB_RESTART
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4320,7 +4824,12 @@ decl_stmt|;
 block|{
 name|printf_filtered
 argument_list|(
-literal|"\"unset\" must be followed by the name of an unset subcommand.\n"
+literal|"\"unset\" must be followed by the name of "
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"an unset subcommand.\n"
 argument_list|)
 expr_stmt|;
 name|help_list
@@ -4376,7 +4885,7 @@ operator|)
 operator|&
 name|inferior_args
 argument_list|,
-literal|"Set arguments to give program being debugged when it is started.\n\ Follow this command with any number of args, to be passed to the program."
+literal|"Set argument list to give program being debugged when it is started.\n\ Follow this command with any number of args, to be passed to the program."
 argument_list|,
 operator|&
 name|setlist
@@ -4514,7 +5023,7 @@ name|class_run
 argument_list|,
 name|attach_command
 argument_list|,
-literal|"Attach to a process or file outside of GDB.\n\ This command attaches to another target, of the same type as your last\n\ `target' command (`info files' will show your target stack).\n\ The command may take as argument a process id or a device file.\n\ For a process id, you must have permission to send the process a signal,\n\ and it must have the same effective uid as the debugger.\n\ When using \"attach\", you should use the \"file\" command to specify\n\ the program running in the process, and to load its symbol table."
+literal|"Attach to a process or file outside of GDB.\n\ This command attaches to another target, of the same type as your last\n\ \"target\" command (\"info files\" will show your target stack).\n\ The command may take as argument a process id or a device file.\n\ For a process id, you must have permission to send the process a signal,\n\ and it must have the same effective uid as the debugger.\n\ When using \"attach\" with a process id, the debugger finds the\n\ program running in the process, looking first in the current working\n\ directory, or (if not found there) using the source file search path\n\ (see the \"directory\" command).  You can also use the \"file\" command\n\ to specify the program, and to load its symbol table."
 argument_list|)
 expr_stmt|;
 name|add_com
@@ -4525,7 +5034,7 @@ name|class_run
 argument_list|,
 name|detach_command
 argument_list|,
-literal|"Detach a process or file previously attached.\n\ If a process, it is no longer traced, and it continues its execution.  If you\n\ were debugging a file, the file is closed and gdb no longer accesses it."
+literal|"Detach a process or file previously attached.\n\ If a process, it is no longer traced, and it continues its execution.  If\n\ you were debugging a file, the file is closed and gdb no longer accesses it."
 argument_list|)
 expr_stmt|;
 name|add_com
@@ -4616,6 +5125,21 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xdb_commands
+condition|)
+name|add_com_alias
+argument_list|(
+literal|"S"
+argument_list|,
+literal|"next"
+argument_list|,
+name|class_run
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|add_com
 argument_list|(
 literal|"step"
@@ -4673,6 +5197,32 @@ argument_list|)
 expr_stmt|;
 name|add_com
 argument_list|(
+literal|"go"
+argument_list|,
+name|class_run
+argument_list|,
+name|go_command
+argument_list|,
+literal|"Usage: go<location>\n\ Continue program being debugged, stopping at specified line or \n\ address.\n\ Give as argument either LINENUM or *ADDR, where ADDR is an \n\ expression for an address to start at.\n\ This command is a combination of tbreak and jump."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xdb_commands
+condition|)
+name|add_com_alias
+argument_list|(
+literal|"g"
+argument_list|,
+literal|"g"
+argument_list|,
+name|class_run
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|add_com
+argument_list|(
 literal|"continue"
 argument_list|,
 name|class_run
@@ -4726,6 +5276,21 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|xdb_commands
+condition|)
+name|add_com
+argument_list|(
+literal|"R"
+argument_list|,
+name|class_run
+argument_list|,
+name|run_no_args_command
+argument_list|,
+literal|"Start debugged program with no arguments."
+argument_list|)
+expr_stmt|;
 name|add_info
 argument_list|(
 literal|"registers"
@@ -4733,6 +5298,21 @@ argument_list|,
 name|nofp_registers_info
 argument_list|,
 literal|"List of integer registers and their contents, for selected stack frame.\n\ Register name as argument means describe only that register."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xdb_commands
+condition|)
+name|add_com
+argument_list|(
+literal|"lr"
+argument_list|,
+name|class_info
+argument_list|,
+name|nofp_registers_info
+argument_list|,
+literal|"List of integer registers and their contents, for selected stack frame.\n\   Register name as argument means describe only that register."
 argument_list|)
 expr_stmt|;
 name|add_info

@@ -237,7 +237,7 @@ parameter_list|,
 name|SP
 parameter_list|)
 define|\
-value|{ (SP) -= sizeof (ADDR);		\     write_memory ((SP), (char *)&(ADDR), sizeof (ADDR)); }
+value|{ char buf[REGISTER_SIZE];	\     (SP) -= sizeof (ADDR);	\     store_address (buf, sizeof (ADDR), ADDR);	\     write_memory ((SP), buf, sizeof (ADDR)); }
 end_define
 
 begin_comment

@@ -75,14 +75,23 @@ directive|define
 name|HAVE_TERMIOS
 end_define
 
-begin_elif
-elif|#
-directive|elif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! defined (HAVE_TERMIOS_H) */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|HAVE_TERMIO_H
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
@@ -90,14 +99,23 @@ directive|define
 name|HAVE_TERMIO
 end_define
 
-begin_elif
-elif|#
-directive|elif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! defined (HAVE_TERMIO_H) */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|HAVE_SGTTY_H
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
@@ -110,15 +128,45 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* ! defined (HAVE_SGTTY_H) */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! defined (HAVE_TERMIO_H) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! defined (HAVE_TERMIOS_H) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined (HAVE_TERMIOS)&& !defined(HAVE_TERMIO)&& !defined(HAVE_SGTTY) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! defined (__GO32__) */
+end_comment
 
 begin_if
 if|#
@@ -152,7 +200,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__WIN32__
+name|_WIN32
 argument_list|)
 operator|&&
 operator|!

@@ -27,7 +27,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"xm-i386mach3.h"
+file|"i386/xm-i386m3.h"
 end_include
 
 end_unit

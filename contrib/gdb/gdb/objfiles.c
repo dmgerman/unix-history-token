@@ -90,10 +90,9 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|NO_MMALLOC
+name|USE_MMALLOC
 argument_list|)
 operator|&&
 name|defined
@@ -143,12 +142,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|CORE_ADDR
-name|map_to_address
+name|PTR
+name|map_to_file
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -160,8 +159,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(NO_MMALLOC)&& defined(HAVE_MMAP) */
+comment|/* defined(USE_MMALLOC)&& defined(HAVE_MMAP) */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|add_to_objfile_sections
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|sec_ptr
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Externally visible variables that are owned by this module.    See declarations in objfile.h for more info. */
@@ -229,6 +246,27 @@ begin_comment
 comment|/* Locate all mappable sections of a BFD file.     objfile_p_char is a char * to get it through    bfd_map_over_sections; we cast it back to its proper type.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TARGET_KEEP_SECTION
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TARGET_KEEP_SECTION
+parameter_list|(
+name|ASECT
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -287,6 +325,14 @@ name|aflag
 operator|&
 name|SEC_ALLOC
 operator|)
+operator|&&
+operator|!
+operator|(
+name|TARGET_KEEP_SECTION
+argument_list|(
+name|asect
+argument_list|)
+operator|)
 condition|)
 return|return;
 if|if
@@ -318,6 +364,12 @@ operator|.
 name|the_bfd_section
 operator|=
 name|asect
+expr_stmt|;
+name|section
+operator|.
+name|ovly_mapped
+operator|=
+literal|0
 expr_stmt|;
 name|section
 operator|.
@@ -471,7 +523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a pointer to an initialized bfd (ABFD) and a flag that indicates    whether or not an objfile is to be mapped (MAPPED), allocate a new objfile    struct, fill it in as best we can, link it into the list of all known    objfiles, and return a pointer to the new objfile struct. */
+comment|/* Given a pointer to an initialized bfd (ABFD) and a flag that indicates    whether or not an objfile is to be mapped (MAPPED), allocate a new objfile    struct, fill it in as best we can, link it into the list of all known    objfiles, and return a pointer to the new objfile struct.     USER_LOADED is simply recorded in the objfile.  This record offers a way for    run_command to remove old objfile entries which are no longer valid (i.e.,    are associated with an old inferior), but to preserve ones that the user    explicitly loaded via the add-symbol-file command.     IS_SOLIB is also simply recorded in the objfile. */
 end_comment
 
 begin_function
@@ -483,6 +535,10 @@ parameter_list|(
 name|abfd
 parameter_list|,
 name|mapped
+parameter_list|,
+name|user_loaded
+parameter_list|,
+name|is_solib
 parameter_list|)
 name|bfd
 modifier|*
@@ -490,6 +546,12 @@ name|abfd
 decl_stmt|;
 name|int
 name|mapped
+decl_stmt|;
+name|int
+name|user_loaded
+decl_stmt|;
+name|int
+name|is_solib
 decl_stmt|;
 block|{
 name|struct
@@ -512,16 +574,21 @@ name|mapped_symbol_files
 expr_stmt|;
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|NO_MMALLOC
+name|USE_MMALLOC
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
 name|HAVE_MMAP
 argument_list|)
+if|if
+condition|(
+name|abfd
+operator|!=
+name|NULL
+condition|)
 block|{
 comment|/* If we can support mapped symbol files, try to open/reopen the        mapped file that corresponds to the file from which we wish to        read symbols.  If the objfile is to be mapped, we must malloc        the structure itself using the mmap version, and arrange that        all memory allocation for the objfile uses the mmap routines.        If we are reusing an existing mapped file, from which we get        our objfile pointer, we have to make sure that we update the        pointers to the alloc/free functions in the obstack, in case        these functions have moved within the current gdb.  */
 name|int
@@ -551,42 +618,21 @@ operator|>=
 literal|0
 condition|)
 block|{
-name|CORE_ADDR
-name|mapto
-decl_stmt|;
 name|PTR
 name|md
 decl_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
-name|mapto
-operator|=
-name|map_to_address
-argument_list|()
-operator|)
-operator|==
-literal|0
-operator|)
-operator|||
-operator|(
-operator|(
 name|md
 operator|=
-name|mmalloc_attach
+name|map_to_file
 argument_list|(
 name|fd
-argument_list|,
-operator|(
-name|PTR
-operator|)
-name|mapto
 argument_list|)
 operator|)
 operator|==
 name|NULL
-operator|)
 condition|)
 block|{
 name|close
@@ -911,7 +957,7 @@ block|}
 block|}
 else|#
 directive|else
-comment|/* defined(NO_MMALLOC) || !defined(HAVE_MMAP) */
+comment|/* !defined(USE_MMALLOC) || !defined(HAVE_MMAP) */
 if|if
 condition|(
 name|mapped
@@ -930,7 +976,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !defined(NO_MMALLOC)&& defined(HAVE_MMAP) */
+comment|/* defined(USE_MMALLOC)&& defined(HAVE_MMAP) */
 comment|/* If we don't support mapped symbol files, didn't ask for the file to be      mapped, or failed to open the mapped file for some reason, then revert      back to an unmapped objfile. */
 if|if
 condition|(
@@ -1069,6 +1115,13 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|abfd
+operator|!=
+name|NULL
+condition|)
+block|{
 name|objfile
 operator|->
 name|name
@@ -1119,6 +1172,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* Add this file onto the tail of the linked list of other such files. */
 name|objfile
 operator|->
@@ -1162,6 +1216,20 @@ operator|=
 name|objfile
 expr_stmt|;
 block|}
+comment|/* Record whether this objfile was created because the user explicitly      caused it (e.g., used the add-symbol-file command).      */
+name|objfile
+operator|->
+name|user_loaded
+operator|=
+name|user_loaded
+expr_stmt|;
+comment|/* Record whether this objfile definitely represents a solib. */
+name|objfile
+operator|->
+name|is_solib
+operator|=
+name|is_solib
+expr_stmt|;
 return|return
 operator|(
 name|objfile
@@ -1480,10 +1548,9 @@ expr_stmt|;
 comment|/* The last thing we do is free the objfile struct itself for the      non-reusable case, or detach from the mapped file for the reusable      case.  Note that the mmalloc_detach or the mfree is the last thing      we can do with this objfile. */
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|NO_MMALLOC
+name|USE_MMALLOC
 argument_list|)
 operator|&&
 name|defined
@@ -1528,7 +1595,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !defined(NO_MMALLOC)&& defined(HAVE_MMAP) */
+comment|/* defined(USE_MMALLOC)&& defined(HAVE_MMAP) */
 comment|/* If we still have an objfile, then either we don't support reusable      objfiles or this one was not reusable.  So free it normally. */
 if|if
 condition|(
@@ -2021,6 +2088,13 @@ name|sym
 argument_list|)
 operator|==
 name|LOC_STATIC
+operator|||
+name|SYMBOL_CLASS
+argument_list|(
+name|sym
+argument_list|)
+operator|==
+name|LOC_INDIRECT
 operator|)
 operator|&&
 name|SYMBOL_SECTION
@@ -2475,6 +2549,9 @@ operator|.
 name|entry_point
 operator|!=
 operator|~
+operator|(
+name|CORE_ADDR
+operator|)
 literal|0
 condition|)
 name|objfile
@@ -2604,6 +2681,10 @@ name|SECT_OFF_TEXT
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Relocate breakpoints as necessary, after things are relocated. */
+name|breakpoint_re_set
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2689,6 +2770,53 @@ block|}
 end_function
 
 begin_comment
+comment|/* This operations deletes all objfile entries that represent solibs that    weren't explicitly loaded by the user, via e.g., the add-symbol-file    command.    */
+end_comment
+
+begin_function
+name|void
+name|objfile_purge_solibs
+parameter_list|()
+block|{
+name|struct
+name|objfile
+modifier|*
+name|objf
+decl_stmt|;
+name|struct
+name|objfile
+modifier|*
+name|temp
+decl_stmt|;
+name|ALL_OBJFILES_SAFE
+argument_list|(
+argument|objf
+argument_list|,
+argument|temp
+argument_list|)
+block|{
+comment|/* We assume that the solib package has been purged already, or will        be soon.        */
+if|if
+condition|(
+operator|!
+name|objf
+operator|->
+name|user_loaded
+operator|&&
+name|objf
+operator|->
+name|is_solib
+condition|)
+name|free_objfile
+argument_list|(
+name|objf
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/* Many places in gdb want to test just to see if we have any minimal    symbols available.  This function returns zero if none are currently    available, nonzero otherwise. */
 end_comment
 
@@ -2730,10 +2858,9 @@ end_function
 begin_if
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|NO_MMALLOC
+name|USE_MMALLOC
 argument_list|)
 operator|&&
 name|defined
@@ -3056,61 +3183,171 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Return the base address at which we would like the next objfile's    mapped data to start.     For now, we use the kludge that the configuration specifies a base    address to which it is safe to map the first mmalloc heap, and an    increment to add to this address for each successive heap.  There are    a lot of issues to deal with here to make this work reasonably, including:       Avoid memory collisions with existing mapped address spaces       Reclaim address spaces when their mmalloc heaps are unmapped       When mmalloc heaps are shared between processes they have to be      mapped at the same addresses in each       Once created, a mmalloc heap that is to be mapped back in must be      mapped at the original address.  I.E. each objfile will expect to      be remapped at it's original address.  This becomes a problem if      the desired address is already in use.       etc, etc, etc.   */
-end_comment
-
 begin_function
 specifier|static
-name|CORE_ADDR
-name|map_to_address
-parameter_list|()
+name|PTR
+name|map_to_file
+parameter_list|(
+name|fd
+parameter_list|)
+name|int
+name|fd
+decl_stmt|;
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MMAP_BASE_ADDRESS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MMAP_INCREMENT
-argument_list|)
-specifier|static
-name|CORE_ADDR
-name|next
-init|=
-name|MMAP_BASE_ADDRESS
+name|PTR
+name|md
 decl_stmt|;
 name|CORE_ADDR
 name|mapto
-init|=
-name|next
 decl_stmt|;
-name|next
-operator|+=
-name|MMAP_INCREMENT
-expr_stmt|;
-return|return
+name|md
+operator|=
+name|mmalloc_attach
+argument_list|(
+name|fd
+argument_list|,
 operator|(
-name|mapto
+name|PTR
 operator|)
-return|;
-else|#
-directive|else
-name|warning
-argument_list|(
-literal|"need to recompile gdb with MMAP_BASE_ADDRESS and MMAP_INCREMENT defined"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|md
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mapto
+operator|=
+operator|(
+name|CORE_ADDR
+operator|)
+name|mmalloc_getkey
+argument_list|(
+name|md
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|md
+operator|=
+name|mmalloc_detach
+argument_list|(
+name|md
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|md
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* FIXME: should figure out why detach failed */
+name|md
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|mapto
+operator|!=
+operator|(
+name|CORE_ADDR
+operator|)
+name|NULL
+condition|)
+block|{
+comment|/* This mapping file needs to be remapped at "mapto" */
+name|md
+operator|=
+name|mmalloc_attach
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|PTR
+operator|)
+name|mapto
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* This is a freshly created mapping file. */
+name|mapto
+operator|=
+operator|(
+name|CORE_ADDR
+operator|)
+name|mmalloc_findbase
+argument_list|(
+literal|20
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mapto
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* To avoid reusing the freshly created mapping file, at the  		 address selected by mmap, we must truncate it before trying 		 to do an attach at the address we want. */
+name|ftruncate
+argument_list|(
+name|fd
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|md
+operator|=
+name|mmalloc_attach
+argument_list|(
+name|fd
+argument_list|,
+operator|(
+name|PTR
+operator|)
+name|mapto
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|md
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mmalloc_setkey
+argument_list|(
+name|md
+argument_list|,
+literal|1
+argument_list|,
+operator|(
+name|PTR
+operator|)
+name|mapto
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+block|}
+return|return
+operator|(
+name|md
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3120,23 +3357,30 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(NO_MMALLOC)&& defined(HAVE_MMAP) */
+comment|/* defined(USE_MMALLOC)&& defined(HAVE_MMAP) */
 end_comment
 
 begin_comment
-comment|/* Returns a section whose range includes PC or NULL if none found. */
+comment|/* Returns a section whose range includes PC and SECTION,     or NULL if none found.  Note the distinction between the return type,     struct obj_section (which is defined in gdb), and the input type    struct sec (which is a bfd-defined data type).  The obj_section    contains a pointer to the bfd struct sec section.  */
 end_comment
 
 begin_function
 name|struct
 name|obj_section
 modifier|*
-name|find_pc_section
+name|find_pc_sect_section
 parameter_list|(
 name|pc
+parameter_list|,
+name|section
 parameter_list|)
 name|CORE_ADDR
 name|pc
+decl_stmt|;
+name|struct
+name|sec
+modifier|*
+name|section
 decl_stmt|;
 block|{
 name|struct
@@ -3170,8 +3414,54 @@ condition|;
 operator|++
 name|s
 control|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HPUXHPPA
+argument_list|)
 if|if
 condition|(
+operator|(
+name|section
+operator|==
+literal|0
+operator|||
+name|section
+operator|==
+name|s
+operator|->
+name|the_bfd_section
+operator|)
+operator|&&
+name|s
+operator|->
+name|addr
+operator|<=
+name|pc
+operator|&&
+name|pc
+operator|<=
+name|s
+operator|->
+name|endaddr
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|section
+operator|==
+literal|0
+operator|||
+name|section
+operator|==
+name|s
+operator|->
+name|the_bfd_section
+operator|)
+operator|&&
 name|s
 operator|->
 name|addr
@@ -3184,6 +3474,8 @@ name|s
 operator|->
 name|endaddr
 condition|)
+endif|#
+directive|endif
 return|return
 operator|(
 name|s
@@ -3193,6 +3485,36 @@ return|return
 operator|(
 name|NULL
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns a section whose range includes PC or NULL if none found.     Backward compatibility, no section.  */
+end_comment
+
+begin_function
+name|struct
+name|obj_section
+modifier|*
+name|find_pc_section
+parameter_list|(
+name|pc
+parameter_list|)
+name|CORE_ADDR
+name|pc
+decl_stmt|;
+block|{
+return|return
+name|find_pc_sect_section
+argument_list|(
+name|pc
+argument_list|,
+name|find_pc_mapped_section
+argument_list|(
+name|pc
+argument_list|)
+argument_list|)
 return|;
 block|}
 end_function

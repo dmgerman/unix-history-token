@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Build symbol tables in GDB's internal format.    Copyright (C) 1986-1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Build symbol tables in GDB's internal format.    Copyright 1986-1993, 1996-1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -21,7 +21,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* This module provides definitions used for creating and adding to    the symbol table.  These routines are called from various symbol-    file-reading routines.       They originated in dbxread.c of gdb-4.2, and were split out to    make xcoffread.c more maintainable by sharing code.     Variables declared in this file can be defined by #define-ing    the name EXTERN to null.  It is used to declare variables that    are normally extern, but which get defined in a single module    using this technique.  */
+comment|/* This module provides definitions used for creating and adding to    the symbol table.  These routines are called from various symbol-    file-reading routines.     They originated in dbxread.c of gdb-4.2, and were split out to    make xcoffread.c more maintainable by sharing code.     Variables declared in this file can be defined by #define-ing the    name EXTERN to null.  It is used to declare variables that are    normally extern, but which get defined in a single module using    this technique.  */
 end_comment
 
 begin_ifndef
@@ -50,11 +50,11 @@ value|127
 end_define
 
 begin_comment
-comment|/* Size of things hashed via hashname() */
+comment|/* Size of things hashed via 				   hashname() */
 end_comment
 
 begin_comment
-comment|/* Name of source file whose symbol data we are now processing.    This comes from a symbol of type N_SO. */
+comment|/* Name of source file whose symbol data we are now processing.  This    comes from a symbol of type N_SO. */
 end_comment
 
 begin_decl_stmt
@@ -66,7 +66,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Core address of start of text of current source file.    This too comes from the N_SO symbol. */
+comment|/* Core address of start of text of current source file.  This too    comes from the N_SO symbol. */
 end_comment
 
 begin_decl_stmt
@@ -77,7 +77,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The list of sub-source-files within the current individual compilation.    Each file gets its own symtab with its own linetable and associated info,    but they all share one blockvector.  */
+comment|/* The list of sub-source-files within the current individual    compilation.  Each file gets its own symtab with its own linetable    and associated info, but they all share one blockvector.  */
 end_comment
 
 begin_struct
@@ -108,6 +108,10 @@ decl_stmt|;
 name|enum
 name|language
 name|language
+decl_stmt|;
+name|char
+modifier|*
+name|debugformat
 decl_stmt|;
 block|}
 struct|;
@@ -156,6 +160,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* elz: added this flag to know when a block is compiled with HP    compilers (cc, aCC). This is necessary because of the macro    COERCE_FLOAT_TO_DOUBLE defined in tm_hppa.h, which causes a    coercion of float to double to always occur in parameter passing    for a function called by gdb (see the function value_arg_coerce in    valops.c). This is necessary only if the target was compiled with    gcc, not with HP compilers or with g++ */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|unsigned
+name|char
+name|processing_hp_compilation
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Count symbols as they are processed, for error messages.  */
 end_comment
 
@@ -168,7 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Record the symbols defined for each context in a list.    We don't create a struct block for the context until we    know how long to make it.  */
+comment|/* Record the symbols defined for each context in a list.  We don't    create a struct block for the context until we know how long to    make it.  */
 end_comment
 
 begin_define
@@ -203,20 +219,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* List of free `struct pending' structures for reuse.  */
+comment|/* Here are the three lists that symbols are put on.  */
 end_comment
 
-begin_decl_stmt
-name|EXTERN
-name|struct
-name|pending
-modifier|*
-name|free_pendings
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Here are the three lists that symbols are put on.  */
+comment|/* static at top level, and types */
 end_comment
 
 begin_decl_stmt
@@ -229,7 +236,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* static at top level, and types */
+comment|/* global functions and variables */
 end_comment
 
 begin_decl_stmt
@@ -242,7 +249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* global functions and variables */
+comment|/* everything local to lexical context */
 end_comment
 
 begin_decl_stmt
@@ -255,11 +262,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* everything local to lexic context */
+comment|/* func params local to lexical  context */
 end_comment
 
+begin_decl_stmt
+name|EXTERN
+name|struct
+name|pending
+modifier|*
+name|param_symbols
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Stack representing unclosed lexical contexts    (that will become blocks, eventually).  */
+comment|/* Stack representing unclosed lexical contexts (that will become    blocks, eventually).  */
 end_comment
 
 begin_struct
@@ -272,13 +288,19 @@ name|pending
 modifier|*
 name|locals
 decl_stmt|;
+comment|/* Pending func params at the time we entered */
+name|struct
+name|pending
+modifier|*
+name|params
+decl_stmt|;
 comment|/* Pointer into blocklist as of entry */
 name|struct
 name|pending_block
 modifier|*
 name|old_blocks
 decl_stmt|;
-comment|/* Name of function, if any, defining context*/
+comment|/* Name of function, if any, defining context */
 name|struct
 name|symbol
 modifier|*
@@ -332,7 +354,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Macro "function" for popping contexts from the stack.  Pushing is done    by a real function, push_context.  This returns a pointer to a struct    context_stack.  */
+comment|/* Macro "function" for popping contexts from the stack.  Pushing is    done by a real function, push_context.  This returns a pointer to a    struct context_stack.  */
 end_comment
 
 begin_define
@@ -344,7 +366,7 @@ value|(&context_stack[--context_stack_depth]);
 end_define
 
 begin_comment
-comment|/* Nonzero if within a function (so symbols should be local,    if nothing says specifically).  */
+comment|/* Nonzero if within a function (so symbols should be local, if    nothing says specifically).  */
 end_comment
 
 begin_decl_stmt
@@ -375,6 +397,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Pointer to the head of a linked list of symbol blocks which have    already been finalized (lexical contexts already closed) and which    are just waiting to be built into a blockvector when finalizing the    associated symtab. */
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -428,27 +454,24 @@ begin_comment
 comment|/* Function to invoke get the next symbol.  Return the symbol name. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|EXTERN
 name|char
 modifier|*
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|next_symbol_text_func
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+function_decl|)
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Vector of types defined so far, indexed by their type numbers.    Used for both stabs and coff.    (In newer sun systems, dbx uses a pair of numbers in parens,     as in "(SUBFILENUM,NUMWITHINSUBFILE)".  Then these numbers must be     translated through the type_translations hash table to get     the index into the type vector.)  */
+comment|/* Vector of types defined so far, indexed by their type numbers.    Used for both stabs and coff.  (In newer sun systems, dbx uses a    pair of numbers in parens, as in "(SUBFILENUM,NUMWITHINSUBFILE)".    Then these numbers must be translated through the type_translations    hash table to get the index into the type vector.)  */
 end_comment
 
 begin_decl_stmt
@@ -473,7 +496,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initial size of type vector.  Is realloc'd larger if needed,    and realloc'd down to the size actually used, when completed.  */
+comment|/* Initial size of type vector.  Is realloc'd larger if needed, and    realloc'd down to the size actually used, when completed.  */
 end_comment
 
 begin_define
@@ -483,288 +506,358 @@ name|INITIAL_TYPE_VECTOR_LENGTH
 value|160
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|add_symbol_to_list
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symbol
-operator|*
-operator|,
-expr|struct
+modifier|*
+name|symbol
+parameter_list|,
+name|struct
 name|pending
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+name|listhead
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symbol
 modifier|*
 name|find_symbol_in_list
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|pending
-operator|*
-operator|,
+modifier|*
+name|list
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+name|name
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|finish_block
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|symbol
-operator|*
-operator|,
-expr|struct
+modifier|*
+name|symbol
+parameter_list|,
+name|struct
 name|pending
-operator|*
-operator|*
-operator|,
-expr|struct
+modifier|*
+modifier|*
+name|listhead
+parameter_list|,
+name|struct
 name|pending_block
-operator|*
-operator|,
+modifier|*
+name|old_blocks
+parameter_list|,
 name|CORE_ADDR
-operator|,
+name|start
+parameter_list|,
 name|CORE_ADDR
-operator|,
-expr|struct
+name|end
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|objfile
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|really_free_pendings
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|foo
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|start_subfile
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+name|name
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|dirname
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|patch_subfile_names
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|subfile
-operator|*
+modifier|*
 name|subfile
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|push_subfile
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|pop_subfile
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|symtab
 modifier|*
 name|end_symtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CORE_ADDR
-operator|,
-expr|struct
+name|end_addr
+parameter_list|,
+name|struct
 name|objfile
-operator|*
-operator|,
+modifier|*
+name|objfile
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|section
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_comment
+comment|/* Defined in stabsread.c.  */
+end_comment
+
+begin_function_decl
 specifier|extern
 name|void
 name|scan_file_globals
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objfile
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|objfile
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|buildsym_new_init
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|buildsym_init
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|context_stack
 modifier|*
 name|push_context
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+name|desc
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|valu
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|record_line
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|subfile
-operator|*
-operator|,
+modifier|*
+name|subfile
+parameter_list|,
 name|int
-operator|,
+name|line
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|start_symtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+name|name
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+name|dirname
+parameter_list|,
 name|CORE_ADDR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+name|start_addr
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|hashname
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|free_pending_blocks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* FIXME: Note that this is used only in buildsym.c and dstread.c,    which should be fixed to not need direct access to    make_blockvector. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|blockvector
+modifier|*
+name|make_blockvector
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* FIXME: Note that this is used only in buildsym.c and dstread.c,    which should be fixed to not need direct access to    record_pending_block. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|record_pending_block
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|,
+name|struct
+name|block
+modifier|*
+name|block
+parameter_list|,
+name|struct
+name|pending_block
+modifier|*
+name|opblock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|record_debugformat
+parameter_list|(
+name|char
+modifier|*
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|merge_symbol_lists
+parameter_list|(
+name|struct
+name|pending
+modifier|*
+modifier|*
+name|srclist
+parameter_list|,
+name|struct
+name|pending
+modifier|*
+modifier|*
+name|targetlist
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_undef
 undef|#

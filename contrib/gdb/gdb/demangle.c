@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Basic C++ demangling support for GDB.    Copyright 1991, 1992, 1996 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Basic C++ demangling support for GDB.    Copyright 1991, 1992, 1996, 1999 Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/*  This file contains support code for C++ demangling that is common     to a styles of demangling, and GDB specific. */
+comment|/*  This file contains support code for C++ demangling that is common    to a styles of demangling, and GDB specific. */
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ file|"gdb_string.h"
 end_include
 
 begin_comment
-comment|/* Select the default C++ demangling style to use.  The default is "auto",    which allows gdb to attempt to pick an appropriate demangling style for    the executable it has loaded.  It can be set to a specific style ("gnu",    "lucid", "arm", etc.) in which case gdb will never attempt to do auto    selection of the style unless you do an explicit "set demangle auto".    To select one of these as the default, set DEFAULT_DEMANGLING_STYLE in    the appropriate target configuration file. */
+comment|/* Select the default C++ demangling style to use.  The default is "auto",    which allows gdb to attempt to pick an appropriate demangling style for    the executable it has loaded.  It can be set to a specific style ("gnu",    "lucid", "arm", "hp", etc.) in which case gdb will never attempt to do auto    selection of the style unless you do an explicit "set demangle auto".    To select one of these as the default, set DEFAULT_DEMANGLING_STYLE in    the appropriate target configuration file. */
 end_comment
 
 begin_ifndef
@@ -60,7 +60,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* String name for the current demangling style.  Set by the "set demangling"    command, printed as part of the output by the "show demangling" command. */
+comment|/* String name for the current demangling style.  Set by the    "set demangle-style" command, printed as part of the output by the    "show demangle-style" command. */
 end_comment
 
 begin_decl_stmt
@@ -130,6 +130,13 @@ block|,
 literal|"ARM style demangling"
 block|}
 block|,
+if|#
+directive|if
+literal|0
+comment|/* XXX remove when binutils 2.9.2 is imported */
+block|{     HP_DEMANGLING_STYLE_STRING,       hp_demangling,       "HP (aCC) style demangling"   }   ,   {     EDG_DEMANGLING_STYLE_STRING,       edg_demangling,       "EDG style demangling"   }   ,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -141,8 +148,28 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|void
+name|set_demangling_command
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+expr|struct
+name|cmd_list_element
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* set current demangling style.  called by the "set demangling" command    after it has updated the current_demangling_style_string to match    what the user has entered.     if the user has entered a string that matches a known demangling style    name in the demanglers[] array then just leave the string alone and update    the current_demangling_style enum value to match.     if the user has entered a string that doesn't match, including an empty    string, then print a list of the currently known styles and restore    the current_demangling_style_string to match the current_demangling_style    enum value.     Note:  Assumes that current_demangling_style_string always points to    a malloc'd string, even if it is a null-string. */
+comment|/* Set current demangling style.  Called by the "set demangle-style"    command after it has updated the current_demangling_style_string to    match what the user has entered.     If the user has entered a string that matches a known demangling style    name in the demanglers[] array then just leave the string alone and update    the current_demangling_style enum value to match.     If the user has entered a string that doesn't match, including an empty    string, then print a list of the currently known styles and restore    the current_demangling_style_string to match the current_demangling_style    enum value.     Note:  Assumes that current_demangling_style_string always points to    a malloc'd string, even if it is a null-string. */
 end_comment
 
 begin_function
@@ -175,7 +202,7 @@ name|demangler
 modifier|*
 name|dem
 decl_stmt|;
-comment|/*  First just try to match whatever style name the user supplied with       one of the known ones.  Don't bother special casing for an empty       name, we just treat it as any other style name that doesn't match.       If we match, update the current demangling style enum. */
+comment|/*  First just try to match whatever style name the user supplied with      one of the known ones.  Don't bother special casing for an empty      name, we just treat it as any other style name that doesn't match.      If we match, update the current demangling style enum. */
 for|for
 control|(
 name|dem
@@ -357,7 +384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fake a "set demangling" command. */
+comment|/* Fake a "set demangle-style" command. */
 end_comment
 
 begin_function
@@ -405,6 +432,13 @@ operator|)
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+operator|(
+expr|struct
+name|cmd_list_element
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

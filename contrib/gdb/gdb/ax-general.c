@@ -4,7 +4,7 @@ comment|/* Functions for manipulating expressions designed to be executed on the
 end_comment
 
 begin_comment
-comment|/* $Id: ax-general.c,v 1.3 1998/12/02 23:22:58 msnyder Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment

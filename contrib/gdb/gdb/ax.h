@@ -4,7 +4,7 @@ comment|/* Definitions for expressions designed to be executed on the agent    C
 end_comment
 
 begin_comment
-comment|/* $Id: ax.h,v 1.3.20.1 1999/04/01 17:33:04 jimb Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef

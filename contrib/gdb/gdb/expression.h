@@ -20,26 +20,15 @@ name|EXPRESSION_H
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|block
-struct_decl|;
-end_struct_decl
+begin_include
+include|#
+directive|include
+file|"symtab.h"
+end_include
 
 begin_comment
-comment|/* Forward declaration for prototypes */
+comment|/* Needed for "struct block" type. */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Definitions for saved C expressions.  */
@@ -569,20 +558,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* To enable dumping of all parsed expressions in a human readable    form, define DEBUG_EXPRESSIONS.  This is a compile time constant    at the moment, since it's not clear that this feature is important    enough to include by default. */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG_EXPRESSIONS
+name|MAINTENANCE_CMDS
 end_ifdef
 
 begin_decl_stmt
 specifier|extern
 name|void
-name|dump_expression
+name|dump_prefix_expression
 name|PARAMS
 argument_list|(
 operator|(
@@ -600,41 +585,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|DUMP_EXPRESSION
-parameter_list|(
-name|exp
-parameter_list|,
-name|file
-parameter_list|,
-name|note
-parameter_list|)
-value|dump_expression ((exp), (file), (note))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DUMP_EXPRESSION
-parameter_list|(
-name|exp
-parameter_list|,
-name|file
-parameter_list|,
-name|note
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* Null expansion */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|void
+name|dump_postfix_expression
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|expression
+operator|*
+operator|,
+name|GDB_FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -642,7 +612,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DEBUG_EXPRESSIONS */
+comment|/* MAINTENANCE_CMDS */
 end_comment
 
 begin_endif

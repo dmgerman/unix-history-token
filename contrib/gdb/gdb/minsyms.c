@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GDB routines for manipulating the minimal symbol tables.    Copyright 1992, 1993, 1994, 1996, 1996 Free Software Foundation, Inc.    Contributed by Cygnus Support, using pieces from other GDB modules.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GDB routines for manipulating the minimal symbol tables.    Copyright 1992, 93, 94, 96, 97, 1998 Free Software Foundation, Inc.    Contributed by Cygnus Support, using pieces from other GDB modules.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -866,47 +866,46 @@ block|}
 end_function
 
 begin_comment
-comment|/* Search through the minimal symbol table for each objfile and find the    symbol whose address is the largest address that is still less than or    equal to PC.  Returns a pointer to the minimal symbol if such a symbol    is found, or NULL if PC is not in a suitable range.  Note that we need    to look through ALL the minimal symbol tables before deciding on the    symbol that comes closest to the specified PC.  This is because objfiles    can overlap, for example objfile A has .text at 0x100 and .data at 0x40000    and objfile B has .text at 0x234 and .data at 0x40048.  */
+comment|/* Search through the minimal symbol table for each objfile and find    the symbol whose address is the largest address that is still less    than or equal to PC, and matches SECTION (if non-null).  Returns a    pointer to the minimal symbol if such a symbol is found, or NULL if    PC is not in a suitable range.  Note that we need to look through    ALL the minimal symbol tables before deciding on the symbol that    comes closest to the specified PC.  This is because objfiles can    overlap, for example objfile A has .text at 0x100 and .data at    0x40000 and objfile B has .text at 0x234 and .data at 0x40048.  */
 end_comment
 
 begin_function
 name|struct
 name|minimal_symbol
 modifier|*
-name|lookup_minimal_symbol_by_pc
+name|lookup_minimal_symbol_by_pc_section
 parameter_list|(
 name|pc
+parameter_list|,
+name|section
 parameter_list|)
-specifier|register
 name|CORE_ADDR
 name|pc
 decl_stmt|;
+name|asection
+modifier|*
+name|section
+decl_stmt|;
 block|{
-specifier|register
 name|int
 name|lo
 decl_stmt|;
-specifier|register
 name|int
 name|hi
 decl_stmt|;
-specifier|register
 name|int
 name|new
 decl_stmt|;
-specifier|register
 name|struct
 name|objfile
 modifier|*
 name|objfile
 decl_stmt|;
-specifier|register
 name|struct
 name|minimal_symbol
 modifier|*
 name|msymbol
 decl_stmt|;
-specifier|register
 name|struct
 name|minimal_symbol
 modifier|*
@@ -914,6 +913,19 @@ name|best_symbol
 init|=
 name|NULL
 decl_stmt|;
+comment|/* pc has to be in a known section. This ensures that anything beyond      the end of the last segment doesn't appear to be part of the last      function in the last segment.  */
+if|if
+condition|(
+name|find_pc_section
+argument_list|(
+name|pc
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 for|for
 control|(
 name|objfile
@@ -958,7 +970,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* This code assumes that the minimal symbols are sorted by 	     ascending address values.  If the pc value is greater than or 	     equal to the first symbol's address, then some symbol in this 	     minimal symbol table is a suitable candidate for being the 	     "best" symbol.  This includes the last real symbol, for cases 	     where the pc value is larger than any address in this vector.  	     By iterating until the address associated with the current 	     hi index (the endpoint of the test interval) is less than 	     or equal to the desired pc value, we accomplish two things: 	     (1) the case where the pc value is larger than any minimal 	     symbol address is trivially solved, (2) the address associated 	     with the hi index is always the one we want when the interation 	     terminates.  In essence, we are iterating the test interval 	     down until the pc value is pushed out of it from the high end.  	     Warning: this code is trickier than it would appear at first. */
-comment|/* Should also requires that pc is<= end of objfile.  FIXME! */
+comment|/* Should also require that pc is<= end of objfile.  FIXME! */
 if|if
 condition|(
 name|pc
@@ -1090,6 +1102,32 @@ condition|)
 operator|--
 name|hi
 expr_stmt|;
+comment|/* If "section" specified, skip any symbol from wrong section */
+comment|/* This is the new code that distinguishes it from the old function */
+if|if
+condition|(
+name|section
+condition|)
+while|while
+condition|(
+name|hi
+operator|>=
+literal|0
+operator|&&
+name|SYMBOL_BFD_SECTION
+argument_list|(
+operator|&
+name|msymbol
+index|[
+name|hi
+index|]
+argument_list|)
+operator|!=
+name|section
+condition|)
+operator|--
+name|hi
+expr_stmt|;
 if|if
 condition|(
 name|hi
@@ -1137,6 +1175,36 @@ return|return
 operator|(
 name|best_symbol
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Backward compatibility: search through the minimal symbol table     for a matching PC (no section given) */
+end_comment
+
+begin_function
+name|struct
+name|minimal_symbol
+modifier|*
+name|lookup_minimal_symbol_by_pc
+parameter_list|(
+name|pc
+parameter_list|)
+name|CORE_ADDR
+name|pc
+decl_stmt|;
+block|{
+return|return
+name|lookup_minimal_symbol_by_pc_section
+argument_list|(
+name|pc
+argument_list|,
+name|find_pc_mapped_section
+argument_list|(
+name|pc
+argument_list|)
+argument_list|)
 return|;
 block|}
 end_function
@@ -1215,7 +1283,7 @@ name|alloca
 argument_list|(
 name|n
 operator|+
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|strncpy
@@ -1247,6 +1315,44 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msym
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Sun Fortran appends an underscore to the minimal symbol name, 	 try again with an appended underscore if the minimal symbol 	 was not found.  */
+name|p
+index|[
+name|n
+index|]
+operator|=
+literal|'_'
+expr_stmt|;
+name|p
+index|[
+name|n
+operator|+
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|msym
+operator|=
+name|lookup_minimal_symbol
+argument_list|(
+name|p
+argument_list|,
+name|pst
+operator|->
+name|filename
+argument_list|,
+name|objfile
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|msym
 operator|==
@@ -1459,6 +1565,8 @@ name|NULL
 argument_list|,
 name|section
 argument_list|,
+name|NULL
+argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
@@ -1485,6 +1593,8 @@ name|info
 parameter_list|,
 name|section
 parameter_list|,
+name|bfd_section
+parameter_list|,
 name|objfile
 parameter_list|)
 specifier|const
@@ -1505,6 +1615,10 @@ name|info
 decl_stmt|;
 name|int
 name|section
+decl_stmt|;
+name|asection
+modifier|*
+name|bfd_section
 decl_stmt|;
 name|struct
 name|objfile
@@ -1662,11 +1776,24 @@ argument_list|(
 name|msymbol
 argument_list|)
 operator|=
+name|obsavestring
+argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|name
+argument_list|,
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+argument_list|,
+operator|&
+name|objfile
+operator|->
+name|symbol_obstack
+argument_list|)
 expr_stmt|;
 name|SYMBOL_INIT_LANGUAGE_SPECIFIC
 argument_list|(
@@ -1688,6 +1815,13 @@ name|msymbol
 argument_list|)
 operator|=
 name|section
+expr_stmt|;
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|msymbol
+argument_list|)
+operator|=
+name|bfd_section
 expr_stmt|;
 name|MSYMBOL_TYPE
 argument_list|(
@@ -1726,7 +1860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compare two minimal symbols by address and return a signed result based    on unsigned comparisons, so that we sort into unsigned numeric order.  */
+comment|/* Compare two minimal symbols by address and return a signed result based    on unsigned comparisons, so that we sort into unsigned numeric order.      Within groups with the same address, sort by name.  */
 end_comment
 
 begin_function
@@ -1800,6 +1934,7 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* addr 1 is less than addr 2 */
 block|}
 elseif|else
 if|if
@@ -1820,14 +1955,70 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* addr 1 is greater than addr 2 */
 block|}
 else|else
+comment|/* addrs are equal: sort by name */
 block|{
+name|char
+modifier|*
+name|name1
+init|=
+name|SYMBOL_NAME
+argument_list|(
+name|fn1
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|name2
+init|=
+name|SYMBOL_NAME
+argument_list|(
+name|fn2
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|name1
+operator|&&
+name|name2
+condition|)
+comment|/* both have names */
+return|return
+name|strcmp
+argument_list|(
+name|name1
+argument_list|,
+name|name2
+argument_list|)
+return|;
+elseif|else
+if|if
+condition|(
+name|name2
+condition|)
+return|return
+literal|1
+return|;
+comment|/* fn1 has no name, so it is "less" */
+elseif|else
+if|if
+condition|(
+name|name1
+condition|)
+comment|/* fn2 has no name, so it is "less" */
+return|return
+operator|-
+literal|1
+return|;
+else|else
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+comment|/* neither has a name, so they're equal. */
 block|}
 block|}
 end_function

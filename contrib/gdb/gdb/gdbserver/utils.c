@@ -15,6 +15,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/* Generally useful subroutines used throughout the program.  */
 end_comment
@@ -128,6 +134,7 @@ name|NORETURN
 name|void
 name|error
 argument_list|(
+specifier|const
 name|char
 operator|*
 name|string

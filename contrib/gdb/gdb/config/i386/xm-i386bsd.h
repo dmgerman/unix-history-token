@@ -17,7 +17,7 @@ file|<machine/limits.h>
 end_include
 
 begin_comment
-comment|/* for INT_MIN, to avoid "INT_MIN 					   redefined" warnings from defs.h */
+comment|/* for INT_MIN */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DWARF debugging format support for GDB.    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  Portions based on dbxread.c,    mipsread.c, coffread.c, and dwarfread.c from a Data General SVR4 gdb port.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DWARF debugging format support for GDB.    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1998    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.  Portions based on dbxread.c,    mipsread.c, coffread.c, and dwarfread.c from a Data General SVR4 gdb port.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -88,23 +88,6 @@ include|#
 directive|include
 file|"gdb_string.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_SYS_FILE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Some macros to provide DIE info for complaints. */
@@ -911,6 +894,26 @@ name|short_element_list
 range|:
 literal|1
 decl_stmt|;
+comment|/* Kludge to identify register variables */
+name|unsigned
+name|int
+name|isreg
+decl_stmt|;
+comment|/* Kludge to identify optimized out variables */
+name|unsigned
+name|int
+name|optimized_out
+decl_stmt|;
+comment|/* Kludge to identify basereg references.      Nonzero if we have an offset relative to a basereg.  */
+name|unsigned
+name|int
+name|offreg
+decl_stmt|;
+comment|/* Kludge to identify which base register is it relative to.  */
+name|unsigned
+name|int
+name|basereg
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -984,50 +987,6 @@ end_decl_stmt
 begin_comment
 comment|/* Base pointer to line section */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|isreg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Kludge to identify register variables */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|optimized_out
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Kludge to identify optimized out variables */
-end_comment
-
-begin_comment
-comment|/* Kludge to identify basereg references.  Nonzero if we have an offset    relative to a basereg.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|offreg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Which base register is it relative to?  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|basereg
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* This value is added to each symbol value.  FIXME:  Generalize to     the section_offsets structure used by dbxread (once this is done,    pass the appropriate section number to end_symtab).  */
@@ -1215,6 +1174,19 @@ end_decl_stmt
 begin_comment
 comment|/* Forward declarations of static functions so we don't have to worry    about ordering within this file.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|free_utypes
+name|PARAMS
+argument_list|(
+operator|(
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1937,7 +1909,8 @@ name|locval
 name|PARAMS
 argument_list|(
 operator|(
-name|char
+expr|struct
+name|dieinfo
 operator|*
 operator|)
 argument_list|)
@@ -2118,6 +2091,17 @@ name|language_m2
 expr_stmt|;
 break|break;
 case|case
+name|LANG_FORTRAN77
+case|:
+case|case
+name|LANG_FORTRAN90
+case|:
+name|cu_language
+operator|=
+name|language_fortran
+expr_stmt|;
+break|break;
+case|case
 name|LANG_ADA83
 case|:
 case|case
@@ -2125,12 +2109,6 @@ name|LANG_COBOL74
 case|:
 case|case
 name|LANG_COBOL85
-case|:
-case|case
-name|LANG_FORTRAN77
-case|:
-case|case
-name|LANG_FORTRAN90
 case|:
 case|case
 name|LANG_PASCAL83
@@ -2864,7 +2842,7 @@ name|dwarf_fundamental_type
 argument_list|(
 name|current_objfile
 argument_list|,
-name|FT_INTEGER
+name|FT_VOID
 argument_list|)
 expr_stmt|;
 block|}
@@ -3252,11 +3230,12 @@ operator|->
 name|type_obstack
 argument_list|)
 expr_stmt|;
+name|FIELD_TYPE
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|type
+argument_list|)
 operator|=
 name|decode_die_type
 argument_list|(
@@ -3264,27 +3243,28 @@ operator|&
 name|mbr
 argument_list|)
 expr_stmt|;
+name|FIELD_BITPOS
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|bitpos
+argument_list|)
 operator|=
 literal|8
 operator|*
 name|locval
 argument_list|(
+operator|&
 name|mbr
-operator|.
-name|at_location
 argument_list|)
 expr_stmt|;
 comment|/* Handle bit fields. */
+name|FIELD_BITSIZE
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|bitsize
+argument_list|)
 operator|=
 name|mbr
 operator|.
@@ -3296,11 +3276,12 @@ name|BITS_BIG_ENDIAN
 condition|)
 block|{
 comment|/* For big endian bits, the at_bit_offset gives the 		 additional bit offset from the MSB of the containing 		 anonymous object to the MSB of the field.  We don't 		 have to do anything special since we don't need to 		 know the size of the anonymous object. */
+name|FIELD_BITPOS
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|bitpos
+argument_list|)
 operator|+=
 name|mbr
 operator|.
@@ -3349,11 +3330,12 @@ name|type
 argument_list|)
 expr_stmt|;
 block|}
+name|FIELD_BITPOS
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|bitpos
+argument_list|)
 operator|+=
 name|anonymous_size
 operator|*
@@ -4460,17 +4442,15 @@ operator|=
 name|utype
 expr_stmt|;
 comment|/* We assume the machine has only one representation for pointers!  */
-comment|/* FIXME:  This confuses host<->target data representations, and is a 	 poor assumption besides. */
+comment|/* FIXME:  Possably a poor assumption  */
 name|TYPE_LENGTH
 argument_list|(
 name|utype
 argument_list|)
 operator|=
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
+name|TARGET_PTR_BIT
+operator|/
+name|TARGET_CHAR_BIT
 expr_stmt|;
 name|TYPE_CODE
 argument_list|(
@@ -5170,27 +5150,30 @@ name|list
 operator|=
 name|new
 expr_stmt|;
+name|FIELD_TYPE
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|type
+argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
+name|FIELD_BITSIZE
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|bitsize
+argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|FIELD_BITPOS
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|bitpos
+argument_list|)
 operator|=
 name|target_to_host
 argument_list|(
@@ -5333,11 +5316,12 @@ argument_list|(
 name|sym
 argument_list|)
 operator|=
+name|FIELD_BITPOS
+argument_list|(
 name|list
 operator|->
 name|field
-operator|.
-name|bitpos
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5696,6 +5680,47 @@ name|producer
 decl_stmt|;
 block|{
 comment|/* If this compilation unit was compiled with g++ or gcc, then set the      processing_gcc_compilation flag. */
+if|if
+condition|(
+name|STREQN
+argument_list|(
+name|producer
+argument_list|,
+name|GCC_PRODUCER
+argument_list|,
+name|strlen
+argument_list|(
+name|GCC_PRODUCER
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|char
+name|version
+init|=
+name|producer
+index|[
+name|strlen
+argument_list|(
+name|GCC_PRODUCER
+argument_list|)
+index|]
+decl_stmt|;
+name|processing_gcc_compilation
+operator|=
+operator|(
+name|version
+operator|==
+literal|'2'
+condition|?
+literal|2
+else|:
+literal|1
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|processing_gcc_compilation
 operator|=
 name|STREQN
@@ -5721,19 +5746,8 @@ argument_list|(
 name|CHILL_PRODUCER
 argument_list|)
 argument_list|)
-operator|||
-name|STREQN
-argument_list|(
-name|producer
-argument_list|,
-name|GCC_PRODUCER
-argument_list|,
-name|strlen
-argument_list|(
-name|GCC_PRODUCER
-argument_list|)
-argument_list|)
 expr_stmt|;
+block|}
 comment|/* Select a demangling style if we can identify the producer and if      the current style is auto.  We leave the current style alone if it      is not auto.  We also leave the demangling style alone if we find a      gcc (cc1) producer, as opposed to a g++ (cc1plus) producer. */
 if|if
 condition|(
@@ -5983,6 +5997,11 @@ argument_list|,
 name|dip
 operator|->
 name|at_low_pc
+argument_list|)
+expr_stmt|;
+name|record_debugformat
+argument_list|(
+literal|"DWARF 1"
 argument_list|)
 expr_stmt|;
 name|decode_line_numbers
@@ -6538,7 +6557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	locval -- compute the value of a location attribute  SYNOPSIS  	static int locval (char *loc)  DESCRIPTION  	Given pointer to a string of bytes that define a location, compute 	the location and return the value. 	A location description containing no atoms indicates that the 	object is optimized out. The global optimized_out flag is set for 	those, the return value is meaningless.  	When computing values involving the current value of the frame pointer, 	the value zero is used, which results in a value relative to the frame 	pointer, rather than the absolute value.  This is what GDB wants 	anyway.      	When the result is a register number, the global isreg flag is set, 	otherwise it is cleared.  This is a kludge until we figure out a better 	way to handle the problem.  Gdb's design does not mesh well with the 	DWARF notion of a location computing interpreter, which is a shame 	because the flexibility goes unused.  NOTES  	Note that stack[0] is unused except as a default error return. 	Note that stack overflow is not yet handled.  */
+comment|/*  LOCAL FUNCTION  	locval -- compute the value of a location attribute  SYNOPSIS  	static int locval (struct dieinfo *dip)  DESCRIPTION  	Given pointer to a string of bytes that define a location, compute 	the location and return the value. 	A location description containing no atoms indicates that the 	object is optimized out. The optimized_out flag is set for those, 	the return value is meaningless.  	When computing values involving the current value of the frame pointer, 	the value zero is used, which results in a value relative to the frame 	pointer, rather than the absolute value.  This is what GDB wants 	anyway.      	When the result is a register number, the isreg flag is set, otherwise 	it is cleared.  This is a kludge until we figure out a better 	way to handle the problem.  Gdb's design does not mesh well with the 	DWARF notion of a location computing interpreter, which is a shame 	because the flexibility goes unused.  NOTES  	Note that stack[0] is unused except as a default error return. 	Note that stack overflow is not yet handled.  */
 end_comment
 
 begin_function
@@ -6546,11 +6565,12 @@ specifier|static
 name|int
 name|locval
 parameter_list|(
-name|loc
+name|dip
 parameter_list|)
-name|char
+name|struct
+name|dieinfo
 modifier|*
-name|loc
+name|dip
 decl_stmt|;
 block|{
 name|unsigned
@@ -6573,6 +6593,10 @@ name|stacki
 decl_stmt|;
 name|char
 modifier|*
+name|loc
+decl_stmt|;
+name|char
+modifier|*
 name|end
 decl_stmt|;
 name|int
@@ -6581,6 +6605,12 @@ decl_stmt|;
 name|int
 name|loc_value_size
 decl_stmt|;
+name|loc
+operator|=
+name|dip
+operator|->
+name|at_location
+expr_stmt|;
 name|nbytes
 operator|=
 name|attribute_size
@@ -6622,14 +6652,20 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|dip
+operator|->
 name|isreg
 operator|=
 literal|0
 expr_stmt|;
+name|dip
+operator|->
 name|offreg
 operator|=
 literal|0
 expr_stmt|;
+name|dip
+operator|->
 name|optimized_out
 operator|=
 literal|1
@@ -6648,6 +6684,8 @@ operator|<
 name|end
 condition|)
 block|{
+name|dip
+operator|->
 name|optimized_out
 operator|=
 literal|0
@@ -6711,6 +6749,8 @@ name|loc
 operator|+=
 name|loc_value_size
 expr_stmt|;
+name|dip
+operator|->
 name|isreg
 operator|=
 literal|1
@@ -6721,10 +6761,14 @@ name|OP_BASEREG
 case|:
 comment|/* push value of register (number) */
 comment|/* Actually, we compute the value as if register has 0, so the 	       value ends up being the offset from that register.  */
+name|dip
+operator|->
 name|offreg
 operator|=
 literal|1
 expr_stmt|;
+name|dip
+operator|->
 name|basereg
 operator|=
 name|target_to_host
@@ -7357,6 +7401,9 @@ name|old_chain
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|really_free_pendings
 argument_list|,
 literal|0
@@ -8851,6 +8898,22 @@ name|sym
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dip
+operator|->
+name|at_prototyped
+condition|)
+name|TYPE_FLAGS
+argument_list|(
+name|SYMBOL_TYPE
+argument_list|(
+name|sym
+argument_list|)
+argument_list|)
+operator||=
+name|TYPE_FLAG_PROTOTYPED
+expr_stmt|;
 name|SYMBOL_CLASS
 argument_list|(
 name|sym
@@ -8899,7 +8962,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SYMBOL_VALUE
+name|SYMBOL_VALUE_ADDRESS
 argument_list|(
 name|sym
 argument_list|)
@@ -8907,8 +8970,6 @@ operator|=
 name|locval
 argument_list|(
 name|dip
-operator|->
-name|at_location
 argument_list|)
 expr_stmt|;
 name|add_symbol_to_list
@@ -8947,27 +9008,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|SYMBOL_VALUE
-argument_list|(
-name|sym
-argument_list|)
-operator|=
+name|int
+name|loc
+init|=
 name|locval
 argument_list|(
 name|dip
-operator|->
-name|at_location
 argument_list|)
-expr_stmt|;
-name|add_symbol_to_list
-argument_list|(
-name|sym
-argument_list|,
-name|list_in_scope
-argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
+name|dip
+operator|->
 name|optimized_out
 condition|)
 block|{
@@ -8982,6 +9034,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|dip
+operator|->
 name|isreg
 condition|)
 block|{
@@ -8996,6 +9050,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|dip
+operator|->
 name|offreg
 condition|)
 block|{
@@ -9011,6 +9067,8 @@ argument_list|(
 name|sym
 argument_list|)
 operator|=
+name|dip
+operator|->
 name|basereg
 expr_stmt|;
 block|}
@@ -9031,6 +9089,42 @@ operator|+=
 name|baseaddr
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|SYMBOL_CLASS
+argument_list|(
+name|sym
+argument_list|)
+operator|==
+name|LOC_STATIC
+condition|)
+block|{
+comment|/* LOC_STATIC address class MUST use SYMBOL_VALUE_ADDRESS, 		     which may store to a bigger location than SYMBOL_VALUE. */
+name|SYMBOL_VALUE_ADDRESS
+argument_list|(
+name|sym
+argument_list|)
+operator|=
+name|loc
+expr_stmt|;
+block|}
+else|else
+block|{
+name|SYMBOL_VALUE
+argument_list|(
+name|sym
+argument_list|)
+operator|=
+name|loc
+expr_stmt|;
+block|}
+name|add_symbol_to_list
+argument_list|(
+name|sym
+argument_list|,
+name|list_in_scope
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -9053,8 +9147,6 @@ operator|=
 name|locval
 argument_list|(
 name|dip
-operator|->
-name|at_location
 argument_list|)
 expr_stmt|;
 block|}
@@ -9067,6 +9159,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dip
+operator|->
 name|isreg
 condition|)
 block|{
@@ -9081,6 +9175,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|dip
+operator|->
 name|offreg
 condition|)
 block|{
@@ -9096,6 +9192,8 @@ argument_list|(
 name|sym
 argument_list|)
 operator|=
+name|dip
+operator|->
 name|basereg
 expr_stmt|;
 block|}

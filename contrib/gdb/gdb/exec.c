@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Work with executable files, for GDB.     Copyright 1988, 1989, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Work with executable files, for GDB.     Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1997, 1998              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -67,12 +67,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -145,6 +139,24 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|void
+argument_list|(
+argument|*file_changed_hook
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Prototypes for local functions */
@@ -229,9 +241,79 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|void
+name|bfdsec_to_vmap
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|sec_ptr
+operator|,
+name|PTR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ignore
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|init_exec_ops
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_initialize_exec
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|info_verbose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The target vector for executable files.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|target_ops
+name|exec_ops
 decl_stmt|;
 end_decl_stmt
 
@@ -264,11 +346,23 @@ begin_comment
 comment|/* Text start and end addresses (KLUDGE) if needed */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NEED_TEXT_START_END
-end_ifdef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NEED_TEXT_START_END
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|CORE_ADDR
@@ -286,28 +380,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|vmap
 modifier|*
 name|vmap
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Forward decl */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|target_ops
-name|exec_ops
 decl_stmt|;
 end_decl_stmt
 
@@ -513,12 +590,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Process the first arg in ARGS as the new exec file.      Note that we have to explicitly ignore additional args, since we can     be called from file_command(), which also calls symbol_file_command()     which can take multiple args. */
+comment|/*  Process the first arg in ARGS as the new exec file.      This function is intended to be behave essentially the same     as exec_file_command, except that the latter will detect when     a target is being debugged, and will ask the user whether it     should be shut down first.  (If the answer is "no", then the     new file is ignored.)      This file is used by exec_file_command, to do the work of opening     and processing the exec file after any prompting has happened.      And, it is used by child_attach, when the attach command was     given a pid but not a exec pathname, and the attach command could     figure out the pathname from the pid.  (In this case, we shouldn't     ask the user whether the current target should be shut down --     we're supplying the exec pathname late for good reason.) */
 end_comment
 
 begin_function
 name|void
-name|exec_file_command
+name|exec_file_attach
 parameter_list|(
 name|args
 parameter_list|,
@@ -541,11 +618,6 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|target_preopen
-argument_list|(
-name|from_tty
-argument_list|)
-expr_stmt|;
 comment|/* Remove any previous exec file.  */
 name|unpush_target
 argument_list|(
@@ -587,6 +659,9 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|freeargv
 argument_list|,
 operator|(
@@ -676,6 +751,82 @@ operator|&
 name|scratch_pathname
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GO32__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+if|if
+condition|(
+name|scratch_chan
+operator|<
+literal|0
+condition|)
+block|{
+name|char
+modifier|*
+name|exename
+init|=
+name|alloca
+argument_list|(
+name|strlen
+argument_list|(
+name|filename
+argument_list|)
+operator|+
+literal|5
+argument_list|)
+decl_stmt|;
+name|strcat
+argument_list|(
+name|strcpy
+argument_list|(
+name|exename
+argument_list|,
+name|filename
+argument_list|)
+argument_list|,
+literal|".exe"
+argument_list|)
+expr_stmt|;
+name|scratch_chan
+operator|=
+name|openp
+argument_list|(
+name|getenv
+argument_list|(
+literal|"PATH"
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|exename
+argument_list|,
+name|write_files
+condition|?
+name|O_RDWR
+operator||
+name|O_BINARY
+else|:
+name|O_RDONLY
+operator||
+name|O_BINARY
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|scratch_pathname
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|scratch_chan
@@ -851,18 +1002,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|NEED_TEXT_START_END
 comment|/* text_end is sometimes used for where to put call dummies.  A 	 few ports use these for other purposes too.  */
+if|if
+condition|(
+name|NEED_TEXT_START_END
+condition|)
 block|{
 name|struct
 name|section_table
 modifier|*
 name|p
 decl_stmt|;
-comment|/* Set text_start to the lowest address of the start of any 	   readonly code section and set text_end to the highest 	   address of the end of any readonly code section.  */
-comment|/* FIXME: The comment above does not match the code.  The code 	   checks for sections with are either code *or* readonly.  */
+comment|/* Set text_start to the lowest address of the start of any 	     readonly code section and set text_end to the highest 	     address of the end of any readonly code section.  */
+comment|/* FIXME: The comment above does not match the code.  The 	     code checks for sections with are either code *or* 	     readonly.  */
 name|text_start
 operator|=
 operator|~
@@ -945,12 +1097,10 @@ name|endaddr
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 name|validate_files
 argument_list|()
 expr_stmt|;
-name|set_endian_from_file
+name|set_gdbarch_from_file
 argument_list|(
 name|exec_bfd
 argument_list|)
@@ -982,7 +1132,51 @@ name|from_tty
 condition|)
 name|printf_unfiltered
 argument_list|(
-literal|"No exec file now.\n"
+literal|"No executable file now.\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  Process the first arg in ARGS as the new exec file.      Note that we have to explicitly ignore additional args, since we can     be called from file_command(), which also calls symbol_file_command()     which can take multiple args. */
+end_comment
+
+begin_function
+name|void
+name|exec_file_command
+parameter_list|(
+name|args
+parameter_list|,
+name|from_tty
+parameter_list|)
+name|char
+modifier|*
+name|args
+decl_stmt|;
+name|int
+name|from_tty
+decl_stmt|;
+block|{
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+name|char
+modifier|*
+name|filename
+decl_stmt|;
+name|target_preopen
+argument_list|(
+name|from_tty
+argument_list|)
+expr_stmt|;
+name|exec_file_attach
+argument_list|(
+name|args
+argument_list|,
+name|from_tty
 argument_list|)
 expr_stmt|;
 block|}
@@ -1022,6 +1216,15 @@ argument_list|(
 name|arg
 argument_list|,
 name|from_tty
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|file_changed_hook
+condition|)
+name|file_changed_hook
+argument_list|(
+name|arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1364,7 +1567,12 @@ name|vp
 operator|->
 name|tstart
 operator|=
-literal|0
+name|bfd_section_vma
+argument_list|(
+name|abfd
+argument_list|,
+name|sect
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->
@@ -1381,21 +1589,24 @@ argument_list|,
 name|sect
 argument_list|)
 expr_stmt|;
-comment|/* When it comes to this adjustment value, in contrast to our previous 	 belief shared objects should behave the same as the main load segment. 	 This is the offset from the beginning of text section to the first 	 real instruction. */
 name|vp
 operator|->
-name|tadj
+name|tvma
 operator|=
-name|sect
-operator|->
-name|filepos
-operator|-
 name|bfd_section_vma
 argument_list|(
 name|abfd
 argument_list|,
 name|sect
 argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|toffs
+operator|=
+name|sect
+operator|->
+name|filepos
 expr_stmt|;
 block|}
 elseif|else
@@ -1418,7 +1629,12 @@ name|vp
 operator|->
 name|dstart
 operator|=
-literal|0
+name|bfd_section_vma
+argument_list|(
+name|abfd
+argument_list|,
+name|sect
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->
@@ -1429,6 +1645,17 @@ operator|->
 name|dstart
 operator|+
 name|bfd_section_size
+argument_list|(
+name|abfd
+argument_list|,
+name|sect
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|dvma
+operator|=
+name|bfd_section_vma
 argument_list|(
 name|abfd
 argument_list|,
@@ -1675,6 +1902,10 @@ name|bfd_size_type
 operator|)
 argument_list|)
 expr_stmt|;
+name|asection
+modifier|*
+name|section
+decl_stmt|;
 if|if
 condition|(
 name|len
@@ -1684,6 +1915,37 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|overlay_debugging
+condition|)
+block|{
+name|section
+operator|=
+name|find_pc_overlay
+argument_list|(
+name|memaddr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pc_in_unmapped_range
+argument_list|(
+name|memaddr
+argument_list|,
+name|section
+argument_list|)
+condition|)
+name|memaddr
+operator|=
+name|overlay_mapped_address
+argument_list|(
+name|memaddr
+argument_list|,
+name|section
+argument_list|)
+expr_stmt|;
+block|}
 name|memend
 operator|=
 name|memaddr
@@ -1702,6 +1964,19 @@ name|nextsectaddr
 operator|=
 name|memend
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Stu's implementation */
+comment|/* If a section has been specified, try to use it.  Note that we cannot use the    specified section directly.  This is because it usually comes from the    symbol file, which may be different from the exec or core file.  Instead, we    have to lookup the specified section by name in the bfd associated with    to_sections.  */
+block|if (target_memory_bfd_section)     {       asection *s;       bfd *abfd;       asection *target_section;       bfd *target_bfd;        s = target_memory_bfd_section;       abfd = s->owner;        target_bfd = target->to_sections->bfd;       target_section = bfd_get_section_by_name (target_bfd, bfd_section_name (abfd, s));        if (target_section) 	{ 	  bfd_vma sec_addr; 	  bfd_size_type sec_size;  	  sec_addr = bfd_section_vma (target_bfd, target_section); 	  sec_size = target_section->_raw_size;
+comment|/* Make sure the requested memory starts inside the section.  */
+block|if (memaddr>= sec_addr&& memaddr< sec_addr + sec_size) 	    {
+comment|/* Cut back length in case request overflows the end of the section. */
+block|len = min (len, sec_addr + sec_size - memaddr);  	      res = xfer_fn (target_bfd, target_section, myaddr, memaddr - sec_addr, len);  	      return res ? len : 0; 	    } 	}     }
+endif|#
+directive|endif
+comment|/* 0, Stu's implementation */
 for|for
 control|(
 name|p
@@ -1722,19 +1997,46 @@ control|)
 block|{
 if|if
 condition|(
+name|overlay_debugging
+operator|&&
+name|section
+operator|&&
+name|p
+operator|->
+name|the_bfd_section
+operator|&&
+name|strcmp
+argument_list|(
+name|section
+operator|->
+name|name
+argument_list|,
+name|p
+operator|->
+name|the_bfd_section
+operator|->
+name|name
+argument_list|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+comment|/* not the section we need */
+if|if
+condition|(
+name|memaddr
+operator|>=
 name|p
 operator|->
 name|addr
-operator|<=
-name|memaddr
 condition|)
 if|if
 condition|(
+name|memend
+operator|<=
 name|p
 operator|->
 name|endaddr
-operator|>=
-name|memend
 condition|)
 block|{
 comment|/* Entire transfer is within this section.  */
@@ -1776,11 +2078,11 @@ block|}
 elseif|else
 if|if
 condition|(
+name|memaddr
+operator|>=
 name|p
 operator|->
 name|endaddr
-operator|<=
-name|memaddr
 condition|)
 block|{
 comment|/* This section ends before the transfer starts.  */
@@ -1832,20 +2134,17 @@ else|:
 literal|0
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|p
-operator|->
-name|addr
-operator|<
-name|nextsectaddr
-condition|)
+else|else
 name|nextsectaddr
 operator|=
+name|min
+argument_list|(
+name|nextsectaddr
+argument_list|,
 name|p
 operator|->
 name|addr
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -2491,7 +2790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If mourn is being called in all the right places, this could be say    `gdb internal error' (since generic_mourn calls breakpoint_init_inferior).  */
+comment|/* If mourn is being called in all the right places, this could be say    `gdb internal error' (since generic_mourn calls    breakpoint_init_inferior).  */
 end_comment
 
 begin_function
@@ -2517,135 +2816,119 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|struct
-name|target_ops
-name|exec_ops
-init|=
+begin_comment
+comment|/* Fill in the exec file target vector.  Very few entries need to be    defined.  */
+end_comment
+
+begin_function
+name|void
+name|init_exec_ops
+parameter_list|()
 block|{
+name|exec_ops
+operator|.
+name|to_shortname
+operator|=
 literal|"exec"
-block|,
-comment|/* to_shortname */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_longname
+operator|=
 literal|"Local exec file"
-block|,
-comment|/* to_longname */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_doc
+operator|=
 literal|"Use an executable file as a target.\n\ Specify the filename of the executable file."
-block|,
-comment|/* to_doc */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_open
+operator|=
 name|exec_file_command
-block|,
-comment|/* to_open */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_close
+operator|=
 name|exec_close
-block|,
-comment|/* to_close */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_attach
+operator|=
 name|find_default_attach
-block|,
-comment|/* to_attach */
-literal|0
-block|,
-comment|/* to_detach */
-literal|0
-block|,
-comment|/* to_resume */
-literal|0
-block|,
-comment|/* to_wait */
-literal|0
-block|,
-comment|/* to_fetch_registers */
-literal|0
-block|,
-comment|/* to_store_registers */
-literal|0
-block|,
-comment|/* to_prepare_to_store */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_require_attach
+operator|=
+name|find_default_require_attach
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_require_detach
+operator|=
+name|find_default_require_detach
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_xfer_memory
+operator|=
 name|xfer_memory
-block|,
-comment|/* to_xfer_memory */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_files_info
+operator|=
 name|exec_files_info
-block|,
-comment|/* to_files_info */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_insert_breakpoint
+operator|=
 name|ignore
-block|,
-comment|/* to_insert_breakpoint */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_remove_breakpoint
+operator|=
 name|ignore
-block|,
-comment|/* to_remove_breakpoint */
-literal|0
-block|,
-comment|/* to_terminal_init */
-literal|0
-block|,
-comment|/* to_terminal_inferior */
-literal|0
-block|,
-comment|/* to_terminal_ours_for_output */
-literal|0
-block|,
-comment|/* to_terminal_ours */
-literal|0
-block|,
-comment|/* to_terminal_info */
-literal|0
-block|,
-comment|/* to_kill */
-literal|0
-block|,
-comment|/* to_load */
-literal|0
-block|,
-comment|/* to_lookup_symbol */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_create_inferior
+operator|=
 name|find_default_create_inferior
-block|,
-comment|/* to_create_inferior */
-literal|0
-block|,
-comment|/* to_mourn_inferior */
-literal|0
-block|,
-comment|/* to_can_run */
-literal|0
-block|,
-comment|/* to_notice_signals */
-literal|0
-block|,
-comment|/* to_thread_alive */
-literal|0
-block|,
-comment|/* to_stop */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_clone_and_follow_inferior
+operator|=
+name|find_default_clone_and_follow_inferior
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_stratum
+operator|=
 name|file_stratum
-block|,
-comment|/* to_stratum */
-literal|0
-block|,
-comment|/* to_next */
-literal|0
-block|,
-comment|/* to_has_all_memory */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_has_memory
+operator|=
 literal|1
-block|,
-comment|/* to_has_memory */
-literal|0
-block|,
-comment|/* to_has_stack */
-literal|0
-block|,
-comment|/* to_has_registers */
-literal|0
-block|,
-comment|/* to_has_execution */
-literal|0
-block|,
-comment|/* to_sections */
-literal|0
-block|,
-comment|/* to_sections_end */
+expr_stmt|;
+name|exec_ops
+operator|.
+name|to_magic
+operator|=
 name|OPS_MAGIC
-block|,
-comment|/* to_magic */
+expr_stmt|;
 block|}
-decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_function
 name|void
@@ -2657,6 +2940,15 @@ name|cmd_list_element
 modifier|*
 name|c
 decl_stmt|;
+name|init_exec_ops
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dbx_commands
+condition|)
+block|{
 name|c
 operator|=
 name|add_cmd
@@ -2679,6 +2971,7 @@ name|completer
 operator|=
 name|filename_completer
 expr_stmt|;
+block|}
 name|c
 operator|=
 name|add_cmd

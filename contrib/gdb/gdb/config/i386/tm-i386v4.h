@@ -43,7 +43,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FRAME_CHAIN_VALID_ALTERNATE
+name|FRAME_CHAIN_VALID
+parameter_list|(
+name|fp
+parameter_list|,
+name|fi
+parameter_list|)
+value|alternate_frame_chain_valid (fp, fi)
 end_define
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/* GDB-specific functions for operating on agent expressions    Copyrigh
 end_comment
 
 begin_comment
-comment|/* $Id: ax-gdb.c,v 1.8 1998/12/03 05:34:24 cagney Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Shared code to pre-read a stab (dbx-style), when building a psymtab.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Shared code to pre-read a stab (dbx-style), when building a psymtab.    Copyright 1986, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -280,6 +280,8 @@ argument_list|,
 name|dependency_list
 argument_list|,
 name|dependencies_used
+argument_list|,
+name|textlow_not_set
 argument_list|)
 expr_stmt|;
 name|pst
@@ -401,9 +403,7 @@ if|if
 condition|(
 name|processing_acc_compilation
 operator|&&
-name|bufp
-operator|->
-name|n_strx
+name|CUR_SYMBOL_STRX
 operator|==
 literal|1
 condition|)
@@ -421,9 +421,7 @@ name|next_file_string_table_offset
 operator|=
 name|file_string_table_offset
 operator|+
-name|bufp
-operator|->
-name|n_value
+name|CUR_SYMBOL_VALUE
 expr_stmt|;
 if|if
 condition|(
@@ -526,6 +524,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|prev_textlow_not_set
+decl_stmt|;
 name|valu
 operator|=
 name|CUR_SYMBOL_VALUE
@@ -537,6 +538,10 @@ argument_list|,
 name|SECT_OFF_TEXT
 argument_list|)
 expr_stmt|;
+name|prev_textlow_not_set
+operator|=
+name|textlow_not_set
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SOFUN_ADDRESS_MAYBE_MISSING
@@ -547,7 +552,24 @@ name|CUR_SYMBOL_VALUE
 operator|==
 literal|0
 condition|)
+block|{
+name|textlow_not_set
+operator|=
+literal|1
+expr_stmt|;
 name|valu
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+name|textlow_not_set
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
+name|textlow_not_set
 operator|=
 literal|0
 expr_stmt|;
@@ -603,6 +625,8 @@ argument_list|,
 name|dependency_list
 argument_list|,
 name|dependencies_used
+argument_list|,
+name|prev_textlow_not_set
 argument_list|)
 expr_stmt|;
 name|pst
@@ -746,6 +770,26 @@ name|psymtab_language
 operator|=
 name|tmp_language
 expr_stmt|;
+if|if
+condition|(
+name|pst
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* FIXME: we should not get here without a PST to work on. 		   Attempt to recover.  */
+name|complain
+argument_list|(
+operator|&
+name|unclaimed_bincl_complaint
+argument_list|,
+name|namestring
+argument_list|,
+name|symnum
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|add_bincl_to_list
 argument_list|(
 name|pst
@@ -1000,13 +1044,10 @@ name|CUR_SYMBOL_TYPE
 operator|==
 name|N_FUN
 operator|&&
-operator|!
-name|strcmp
-argument_list|(
+operator|*
 name|namestring
-argument_list|,
-literal|""
-argument_list|)
+operator|==
+literal|'\000'
 condition|)
 block|{
 name|unsigned
@@ -1595,15 +1636,9 @@ if|if
 condition|(
 name|pst
 operator|&&
-name|pst
-operator|->
-name|textlow
-operator|==
-literal|0
-operator|&&
-operator|!
-name|symfile_relocatable
+name|textlow_not_set
 condition|)
+block|{
 name|pst
 operator|->
 name|textlow
@@ -1617,6 +1652,11 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
+name|textlow_not_set
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|#
@@ -1629,11 +1669,7 @@ comment|/* End kludge.  */
 comment|/* In reordered executables this function may lie outside 		 the bounds created by N_SO symbols.  If that's the case 		 use the address of this function as the low bound for 		 the partial symbol table.  */
 if|if
 condition|(
-name|pst
-operator|->
-name|textlow
-operator|==
-literal|0
+name|textlow_not_set
 operator|||
 operator|(
 name|CUR_SYMBOL_VALUE
@@ -1652,12 +1688,18 @@ name|SECT_OFF_TEXT
 argument_list|)
 operator|)
 condition|)
+block|{
 name|pst
 operator|->
 name|textlow
 operator|=
 name|CUR_SYMBOL_VALUE
 expr_stmt|;
+name|textlow_not_set
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DBXREAD_ONLY */
@@ -1678,9 +1720,9 @@ name|objfile
 operator|->
 name|static_psymbols
 argument_list|,
-name|CUR_SYMBOL_VALUE
-argument_list|,
 literal|0
+argument_list|,
+name|CUR_SYMBOL_VALUE
 argument_list|,
 name|psymtab_language
 argument_list|,
@@ -1722,15 +1764,9 @@ if|if
 condition|(
 name|pst
 operator|&&
-name|pst
-operator|->
-name|textlow
-operator|==
-literal|0
-operator|&&
-operator|!
-name|symfile_relocatable
+name|textlow_not_set
 condition|)
+block|{
 name|pst
 operator|->
 name|textlow
@@ -1744,6 +1780,11 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
+name|textlow_not_set
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|#
@@ -1756,11 +1797,7 @@ comment|/* End kludge.  */
 comment|/* In reordered executables this function may lie outside 		 the bounds created by N_SO symbols.  If that's the case 		 use the address of this function as the low bound for 		 the partial symbol table.  */
 if|if
 condition|(
-name|pst
-operator|->
-name|textlow
-operator|==
-literal|0
+name|textlow_not_set
 operator|||
 operator|(
 name|CUR_SYMBOL_VALUE
@@ -1779,12 +1816,18 @@ name|SECT_OFF_TEXT
 argument_list|)
 operator|)
 condition|)
+block|{
 name|pst
 operator|->
 name|textlow
 operator|=
 name|CUR_SYMBOL_VALUE
 expr_stmt|;
+name|textlow_not_set
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* DBXREAD_ONLY */
@@ -1805,9 +1848,9 @@ name|objfile
 operator|->
 name|global_psymbols
 argument_list|,
-name|CUR_SYMBOL_VALUE
-argument_list|,
 literal|0
+argument_list|,
+name|CUR_SYMBOL_VALUE
 argument_list|,
 name|psymtab_language
 argument_list|,
@@ -1855,6 +1898,19 @@ case|:
 case|case
 literal|'-'
 case|:
+case|case
+literal|'#'
+case|:
+comment|/* for symbol identification (used in live ranges) */
+comment|/* added to support cfront stabs strings */
+case|case
+literal|'Z'
+case|:
+comment|/* for definition continuations */
+case|case
+literal|'P'
+case|:
+comment|/* for prototypes */
 continue|continue;
 case|case
 literal|':'
@@ -2088,6 +2144,8 @@ argument_list|,
 name|dependency_list
 argument_list|,
 name|dependencies_used
+argument_list|,
+name|textlow_not_set
 argument_list|)
 expr_stmt|;
 name|pst
@@ -2189,6 +2247,14 @@ case|case
 name|N_DEFD
 case|:
 comment|/* GNU Modula-2 */
+if|#
+directive|if
+literal|0
+comment|/* XXX remove when binutils 2.9.2 is imported */
+block|case N_ALIAS:
+comment|/* SunPro F77: alias name, ignore for now.  */
+endif|#
+directive|endif
 case|case
 name|N_OBJ
 case|:

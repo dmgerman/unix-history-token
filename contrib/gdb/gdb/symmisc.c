@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Do various things to symbol tables (other than lookup), for GDB.    Copyright 1986, 1987, 1989, 1991, 1992, 1993, 1994, 1995, 1996    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Do various things to symbol tables (other than lookup), for GDB.    Copyright 1986, 87, 89, 91, 92, 93, 94, 95, 96, 1998    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -238,6 +238,37 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|free_symtab_block
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|objfile
+operator|*
+operator|,
+expr|struct
+name|block
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_initialize_symmisc
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_struct
 struct|struct
 name|print_symbol_args
@@ -265,8 +296,7 @@ name|print_symbol
 name|PARAMS
 argument_list|(
 operator|(
-name|char
-operator|*
+name|PTR
 operator|)
 argument_list|)
 decl_stmt|;
@@ -596,6 +626,27 @@ operator|->
 name|fullname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|debugformat
+operator|!=
+name|NULL
+condition|)
+name|mfree
+argument_list|(
+name|s
+operator|->
+name|objfile
+operator|->
+name|md
+argument_list|,
+name|s
+operator|->
+name|debugformat
+argument_list|)
+expr_stmt|;
 name|mfree
 argument_list|(
 name|s
@@ -726,7 +777,7 @@ literal|0
 condition|)
 name|printf_filtered
 argument_list|(
-literal|"  Number of \"minimal symbols read: %d\n"
+literal|"  Number of \"minimal\" symbols read: %d\n"
 argument_list|,
 name|OBJSTAT
 argument_list|(
@@ -749,7 +800,7 @@ literal|0
 condition|)
 name|printf_filtered
 argument_list|(
-literal|"  Number of \"partial symbols read: %d\n"
+literal|"  Number of \"partial\" symbols read: %d\n"
 argument_list|,
 name|OBJSTAT
 argument_list|(
@@ -772,7 +823,7 @@ literal|0
 condition|)
 name|printf_filtered
 argument_list|(
-literal|"  Number of \"full symbols read: %d\n"
+literal|"  Number of \"full\" symbols read: %d\n"
 argument_list|,
 name|OBJSTAT
 argument_list|(
@@ -795,7 +846,7 @@ literal|0
 condition|)
 name|printf_filtered
 argument_list|(
-literal|"  Number of \"types defined: %d\n"
+literal|"  Number of \"types\" defined: %d\n"
 argument_list|,
 name|OBJSTAT
 argument_list|(
@@ -1296,20 +1347,60 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"[%2d] %c %#10lx %s"
+literal|"[%2d] %c "
 argument_list|,
 name|index
 argument_list|,
 name|ms_type
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
 name|SYMBOL_VALUE_ADDRESS
 argument_list|(
 name|msymbol
 argument_list|)
 argument_list|,
+literal|1
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|" %s"
+argument_list|,
 name|SYMBOL_NAME
 argument_list|(
 name|msymbol
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|msymbol
+argument_list|)
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|" section %s"
+argument_list|,
+name|bfd_section_name
+argument_list|(
+name|objfile
+operator|->
+name|obfd
+argument_list|,
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|msymbol
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1848,6 +1939,23 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|symtab
+operator|->
+name|dirname
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|"Compilation directory is %s\n"
+argument_list|,
+name|symtab
+operator|->
+name|dirname
+argument_list|)
+expr_stmt|;
 name|fprintf_filtered
 argument_list|(
 name|outfile
@@ -1968,7 +2076,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Now print the block info.  */
+comment|/* Now print the block info, but only for primary symtabs since we will      print lots of duplicate info otherwise. */
+if|if
+condition|(
+name|symtab
+operator|->
+name|primary
+condition|)
+block|{
 name|fprintf_filtered
 argument_list|(
 name|outfile
@@ -2033,7 +2148,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"block #%03d (object "
+literal|"block #%03d, object at "
 argument_list|,
 name|i
 argument_list|)
@@ -2045,18 +2160,46 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BLOCK_SUPERBLOCK
+argument_list|(
+name|b
+argument_list|)
+condition|)
+block|{
 name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|") "
+literal|" under "
+argument_list|)
+expr_stmt|;
+name|gdb_print_address
+argument_list|(
+name|BLOCK_SUPERBLOCK
+argument_list|(
+name|b
+argument_list|)
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
+block|}
+name|blen
+operator|=
+name|BLOCK_NSYMS
+argument_list|(
+name|b
 argument_list|)
 expr_stmt|;
 name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"["
+literal|", %d syms in "
+argument_list|,
+name|blen
 argument_list|)
 expr_stmt|;
 name|print_address_numeric
@@ -2090,46 +2233,6 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
-argument_list|(
-name|outfile
-argument_list|,
-literal|"]"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|BLOCK_SUPERBLOCK
-argument_list|(
-name|b
-argument_list|)
-condition|)
-block|{
-name|fprintf_filtered
-argument_list|(
-name|outfile
-argument_list|,
-literal|" (under "
-argument_list|)
-expr_stmt|;
-name|gdb_print_address
-argument_list|(
-name|BLOCK_SUPERBLOCK
-argument_list|(
-name|b
-argument_list|)
-argument_list|,
-name|outfile
-argument_list|)
-expr_stmt|;
-name|fprintf_filtered
-argument_list|(
-name|outfile
-argument_list|,
-literal|")"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|BLOCK_FUNCTION
@@ -2142,7 +2245,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|" %s"
+literal|", function %s"
 argument_list|,
 name|SYMBOL_NAME
 argument_list|(
@@ -2170,7 +2273,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|" %s"
+literal|", %s"
 argument_list|,
 name|SYMBOL_DEMANGLED_NAME
 argument_list|(
@@ -2194,7 +2297,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|" gcc%d compiled"
+literal|", compiled with gcc%d"
 argument_list|,
 name|BLOCK_GCC_COMPILED
 argument_list|(
@@ -2209,13 +2312,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|blen
-operator|=
-name|BLOCK_NSYMS
-argument_list|(
-name|b
-argument_list|)
-expr_stmt|;
+comment|/* Now print each symbol in this block */
 for|for
 control|(
 name|j
@@ -2280,6 +2377,17 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|"\nBlockvector same as previous symtab\n\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2376,6 +2484,9 @@ name|cleanups
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|freeargv
 argument_list|,
 operator|(
@@ -2458,12 +2569,16 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|fclose
+operator|(
+name|make_cleanup_func
+operator|)
+name|gdb_fclose
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
+operator|&
 name|outfile
 argument_list|)
 expr_stmt|;
@@ -2524,8 +2639,7 @@ name|print_symbol
 parameter_list|(
 name|args
 parameter_list|)
-name|char
-modifier|*
+name|PTR
 name|args
 decl_stmt|;
 block|{
@@ -2615,6 +2729,36 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|" section %s\n"
+argument_list|,
+name|bfd_section_name
+argument_list|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+operator|->
+name|owner
+argument_list|,
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf_filtered
 argument_list|(
 name|outfile
@@ -2823,7 +2967,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"const %ld (0x%lx),"
+literal|"const %ld (0x%lx)"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -2903,13 +3047,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
-argument_list|(
-name|outfile
-argument_list|,
-literal|","
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -2934,11 +3071,63 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+condition|)
 name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|","
+literal|" section %s"
+argument_list|,
+name|bfd_section_name
+argument_list|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+operator|->
+name|owner
+argument_list|,
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LOC_INDIRECT
+case|:
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|"extern global at *("
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|SYMBOL_VALUE_ADDRESS
+argument_list|(
+name|symbol
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|"),"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2949,7 +3138,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"register %ld,"
+literal|"register %ld"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -2965,7 +3154,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"arg at offset 0x%lx,"
+literal|"arg at offset 0x%lx"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -2981,7 +3170,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"arg at offset 0x%lx from fp,"
+literal|"arg at offset 0x%lx from fp"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -2997,7 +3186,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"reference arg at 0x%lx,"
+literal|"reference arg at 0x%lx"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -3013,7 +3202,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"parameter register %ld,"
+literal|"parameter register %ld"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -3029,7 +3218,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"address parameter register %ld,"
+literal|"address parameter register %ld"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -3045,7 +3234,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"local at offset 0x%lx,"
+literal|"local at offset 0x%lx"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -3082,7 +3271,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"arg at 0x%lx from register %d,"
+literal|"arg at 0x%lx from register %d"
 argument_list|,
 name|SYMBOL_VALUE
 argument_list|(
@@ -3122,6 +3311,35 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|" section %s"
+argument_list|,
+name|bfd_section_name
+argument_list|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+operator|->
+name|owner
+argument_list|,
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|LOC_BLOCK
@@ -3130,7 +3348,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|"block (object "
+literal|"block object "
 argument_list|)
 expr_stmt|;
 name|gdb_print_address
@@ -3147,7 +3365,7 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|") starting at "
+literal|", "
 argument_list|)
 expr_stmt|;
 name|print_address_numeric
@@ -3169,7 +3387,51 @@ name|fprintf_filtered
 argument_list|(
 name|outfile
 argument_list|,
-literal|","
+literal|".."
+argument_list|)
+expr_stmt|;
+name|print_address_numeric
+argument_list|(
+name|BLOCK_END
+argument_list|(
+name|SYMBOL_BLOCK_VALUE
+argument_list|(
+name|symbol
+argument_list|)
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|" section %s"
+argument_list|,
+name|bfd_section_name
+argument_list|(
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+operator|->
+name|owner
+argument_list|,
+name|SYMBOL_BFD_SECTION
+argument_list|(
+name|symbol
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3317,6 +3579,9 @@ name|cleanups
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|freeargv
 argument_list|,
 operator|(
@@ -3399,8 +3664,12 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|fclose
+operator|(
+name|make_cleanup_func
+operator|)
+name|gdb_fclose
 argument_list|,
+operator|&
 name|outfile
 argument_list|)
 expr_stmt|;
@@ -3643,6 +3912,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|LOC_INDIRECT
+case|:
+name|fputs_filtered
+argument_list|(
+literal|"extern global"
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|LOC_REGISTER
 case|:
 name|fputs_filtered
@@ -3802,18 +4082,24 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
-comment|/* FIXME-32x64: Need to use SYMBOL_VALUE_ADDRESS, etc.; this 	 could be 32 bits when some of the other fields in the union 	 are 64.  */
-name|fprintf_filtered
+name|print_address_numeric
 argument_list|(
-name|outfile
-argument_list|,
-literal|"0x%lx\n"
-argument_list|,
-name|SYMBOL_VALUE
+name|SYMBOL_VALUE_ADDRESS
 argument_list|(
 operator|*
 name|p
 argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
+name|fprintf_filtered
+argument_list|(
+name|outfile
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3911,6 +4197,9 @@ name|cleanups
 operator|=
 name|make_cleanup
 argument_list|(
+operator|(
+name|make_cleanup_func
+operator|)
 name|freeargv
 argument_list|,
 name|argv
@@ -3989,8 +4278,12 @@ argument_list|)
 expr_stmt|;
 name|make_cleanup
 argument_list|(
-name|fclose
+operator|(
+name|make_cleanup_func
+operator|)
+name|gdb_fclose
 argument_list|,
+operator|&
 name|outfile
 argument_list|)
 expr_stmt|;
@@ -4408,7 +4701,7 @@ name|textlow
 argument_list|,
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -4424,7 +4717,7 @@ name|texthigh
 argument_list|,
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -4489,7 +4782,7 @@ name|textlow
 argument_list|,
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -4505,7 +4798,7 @@ name|texthigh
 argument_list|,
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -4522,7 +4815,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -4539,7 +4832,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 name|printf_filtered

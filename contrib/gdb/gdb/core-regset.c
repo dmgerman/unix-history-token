@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Machine independent GDB support for core files on systems using "regsets".    Copyright 1993-1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Machine independent GDB support for core files on systems using "regsets".    Copyright 1993-1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -78,8 +78,40 @@ directive|include
 file|"gdbcore.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|fetch_core_registers
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|int
+operator|,
+name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_initialize_core_regset
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  GLOBAL FUNCTION  	fetch_core_registers -- fetch current registers from core file  SYNOPSIS  	void fetch_core_registers (char *core_reg_sect, 					  unsigned core_reg_size, 					  int which, unsigned in reg_addr)  DESCRIPTION  	Read the values of either the general register set (WHICH equals 0) 	or the floating point register set (WHICH equals 2) from the core 	file data (pointed to by CORE_REG_SECT), and update gdb's idea of 	their current values.  The CORE_REG_SIZE parameter is ignored.  NOTES  	Use the indicated sizes to validate the gregset and fpregset 	structures. */
+comment|/*  GLOBAL FUNCTION  	fetch_core_registers -- fetch current registers from core file  SYNOPSIS  	void fetch_core_registers (char *core_reg_sect, 					  unsigned core_reg_size, 					  int which, CORE_ADDR reg_addr)  DESCRIPTION  	Read the values of either the general register set (WHICH equals 0) 	or the floating point register set (WHICH equals 2) from the core 	file data (pointed to by CORE_REG_SECT), and update gdb's idea of 	their current values.  The CORE_REG_SIZE parameter is ignored.  NOTES  	Use the indicated sizes to validate the gregset and fpregset 	structures. */
 end_comment
 
 begin_function
@@ -105,8 +137,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
-name|int
+name|CORE_ADDR
 name|reg_addr
 decl_stmt|;
 comment|/* Unused in this version */

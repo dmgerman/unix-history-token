@@ -1,28 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* C language support definitions for GDB, the GNU debugger.    Copyright 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* C language support definitions for GDB, the GNU debugger.    Copyright 1992, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|C_LANG_H
+argument_list|)
+end_if
 
-begin_comment
-comment|/* Forward decls for prototypes */
-end_comment
+begin_define
+define|#
+directive|define
+name|C_LANG_H
+value|1
+end_define
 
-begin_struct_decl
-struct_decl|struct
-name|value
-struct_decl|;
-end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"value.h"
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -99,6 +101,8 @@ operator|,
 name|char
 operator|*
 operator|,
+name|int
+operator|,
 name|CORE_ADDR
 operator|,
 name|GDB_FILE
@@ -169,14 +173,21 @@ argument_list|(
 operator|(
 name|GDB_FILE
 operator|*
+name|stream
 operator|,
 name|char
 operator|*
+name|string
 operator|,
 name|unsigned
 name|int
+name|length
 operator|,
 name|int
+name|width
+operator|,
+name|int
+name|force_ellipses
 operator|)
 argument_list|)
 decl_stmt|;
@@ -207,15 +218,13 @@ name|struct
 name|type
 modifier|*
 modifier|*
-function_decl|const (
+name|CONST_PTR
+parameter_list|(
 name|c_builtin_types
-function_decl|[]
+index|[]
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* These are in c-typeprint.c: */
@@ -265,63 +274,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|cp_type_print_method_args
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|type
-operator|*
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|GDB_FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* These are in cp-valprint.c */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|cp_type_print_method_args
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|type
-operator|*
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|GDB_FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -333,6 +288,13 @@ end_decl_stmt
 begin_comment
 comment|/* Controls printing of vtbl's */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|static_field_print
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -390,8 +352,14 @@ expr|struct
 name|type
 operator|*
 operator|,
+expr|struct
+name|type
+operator|*
+operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|,
 name|CORE_ADDR
 operator|,
@@ -445,6 +413,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined (C_LANG_H) */
+end_comment
 
 end_unit
 

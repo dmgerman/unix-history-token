@@ -92,6 +92,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Chain containing all defined toggle subcommands. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cmd_list_element
+modifier|*
+name|togglelist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Chain containing all defined stop subcommands. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cmd_list_element
+modifier|*
+name|stoplist
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Chain containing all defined "enable breakpoint" subcommands. */
 end_comment
 

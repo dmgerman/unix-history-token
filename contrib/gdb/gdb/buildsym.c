@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support routines for building symbol tables in GDB's internal format.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1995, 1996              Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support routines for building symbol tables in GDB's internal format.    Copyright 1986-1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -105,47 +105,56 @@ directive|include
 file|"stabsread.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|compare_line_numbers
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|void
-operator|*
-operator|,
-specifier|const
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* List of free `struct pending' structures for reuse.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|blockvector
+name|pending
 modifier|*
-name|make_blockvector
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|objfile
-operator|*
-operator|)
-argument_list|)
+name|free_pendings
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Non-zero if symtab has line number info.  This prevents an    otherwise empty symtab from being tossed.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|have_line_numbers
 decl_stmt|;
 end_decl_stmt
 
 begin_escape
 end_escape
 
+begin_function_decl
+specifier|static
+name|int
+name|compare_line_numbers
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|ln1p
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|ln2p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_escape
+end_escape
+
 begin_comment
-comment|/* Initial sizes of data structures.  These are realloc'd larger if needed,    and realloc'd down to the size actually used, when completed.  */
+comment|/* Initial sizes of data structures.  These are realloc'd larger if    needed, and realloc'd down to the size actually used, when    completed.  */
 end_comment
 
 begin_define
@@ -172,6 +181,36 @@ end_comment
 begin_decl_stmt
 name|struct
 name|complaint
+name|block_end_complaint
+init|=
+block|{
+literal|"block end address less than block start address in %s (patched it)"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|complaint
+name|anon_block_end_complaint
+init|=
+block|{
+literal|"block end address 0x%lx less than block start address 0x%lx (patched it)"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|complaint
 name|innerblock_complaint
 init|=
 block|{
@@ -190,7 +229,7 @@ name|complaint
 name|innerblock_anon_complaint
 init|=
 block|{
-literal|"inner block not inside outer block"
+literal|"inner block (0x%lx-0x%lx) not inside outer block (0x%lx-0x%lx)"
 block|,
 literal|0
 block|,
@@ -229,21 +268,17 @@ begin_function
 name|void
 name|add_symbol_to_list
 parameter_list|(
-name|symbol
-parameter_list|,
-name|listhead
-parameter_list|)
 name|struct
 name|symbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|struct
 name|pending
 modifier|*
 modifier|*
 name|listhead
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -251,7 +286,28 @@ name|pending
 modifier|*
 name|link
 decl_stmt|;
-comment|/* We keep PENDINGSIZE symbols in each link of the list.      If we don't have a link with room in it, add a new link.  */
+comment|/* If this is an alias for another symbol, don't add it.  */
+if|if
+condition|(
+name|symbol
+operator|->
+name|ginfo
+operator|.
+name|name
+operator|&&
+name|symbol
+operator|->
+name|ginfo
+operator|.
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+return|return;
+comment|/* We keep PENDINGSIZE symbols in each link of the list. If we      don't have a link with room in it, add a new link.  */
 if|if
 condition|(
 operator|*
@@ -345,7 +401,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find a symbol named NAME on a LIST.  NAME need not be '\0'-terminated;    LENGTH is the length of the name.  */
+comment|/* Find a symbol named NAME on a LIST.  NAME need not be    '\0'-terminated; LENGTH is the length of the name.  */
 end_comment
 
 begin_function
@@ -354,24 +410,18 @@ name|symbol
 modifier|*
 name|find_symbol_in_list
 parameter_list|(
-name|list
-parameter_list|,
-name|name
-parameter_list|,
-name|length
-parameter_list|)
 name|struct
 name|pending
 modifier|*
 name|list
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|j
@@ -469,7 +519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* At end of reading syms, or in case of quit,    really free as many `struct pending's as we can easily find. */
+comment|/* At end of reading syms, or in case of quit, really free as many    `struct pending's as we can easily find. */
 end_comment
 
 begin_comment
@@ -480,11 +530,9 @@ begin_function
 name|void
 name|really_free_pendings
 parameter_list|(
-name|foo
-parameter_list|)
 name|int
 name|foo
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|pending
@@ -494,12 +542,6 @@ decl_stmt|,
 modifier|*
 name|next1
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct pending_block *bnext, *bnext1;
-endif|#
-directive|endif
 for|for
 control|(
 name|next
@@ -522,7 +564,8 @@ expr_stmt|;
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|next
 argument_list|)
@@ -532,16 +575,8 @@ name|free_pendings
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Now we make the links in the symbol_obstack, so don't free them.  */
-block|for (bnext = pending_blocks; bnext; bnext = bnext1)     {       bnext1 = bnext->next;       free ((PTR)bnext);     }
-endif|#
-directive|endif
-name|pending_blocks
-operator|=
-name|NULL
+name|free_pending_blocks
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -567,7 +602,8 @@ expr_stmt|;
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|next
 argument_list|)
@@ -601,7 +637,8 @@ expr_stmt|;
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|next
 argument_list|)
@@ -615,51 +652,65 @@ block|}
 end_function
 
 begin_comment
-comment|/* Take one of the lists of symbols and make a block from it.    Keep the order the symbols have in the list (reversed from the input file).    Put the block on the list of pending blocks.  */
+comment|/* This function is called to discard any pending blocks. */
+end_comment
+
+begin_function
+name|void
+name|free_pending_blocks
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+literal|0
+comment|/* Now we make the links in the 				   symbol_obstack, so don't free 				   them.  */
+block|struct pending_block *bnext, *bnext1;    for (bnext = pending_blocks; bnext; bnext = bnext1)     {       bnext1 = bnext->next;       free ((void *) bnext);     }
+endif|#
+directive|endif
+name|pending_blocks
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Take one of the lists of symbols and make a block from it.  Keep    the order the symbols have in the list (reversed from the input    file).  Put the block on the list of pending blocks.  */
 end_comment
 
 begin_function
 name|void
 name|finish_block
 parameter_list|(
-name|symbol
-parameter_list|,
-name|listhead
-parameter_list|,
-name|old_blocks
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|,
-name|objfile
-parameter_list|)
 name|struct
 name|symbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|struct
 name|pending
 modifier|*
 modifier|*
 name|listhead
-decl_stmt|;
+parameter_list|,
 name|struct
 name|pending_block
 modifier|*
 name|old_blocks
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|start
-decl_stmt|,
+parameter_list|,
+name|CORE_ADDR
 name|end
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -722,7 +773,7 @@ operator|->
 name|next
 control|)
 block|{
-comment|/*EMPTY*/
+comment|/* EMPTY */
 empty_stmt|;
 block|}
 name|block
@@ -891,7 +942,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-comment|/* No parameter type information is recorded with the function's 	     type.  Set that from the type of the parameter symbols. */
+comment|/* No parameter type information is recorded with the 	     function's type.  Set that from the type of the 	     parameter symbols. */
 name|int
 name|nparams
 init|=
@@ -950,6 +1001,12 @@ case|:
 case|case
 name|LOC_REGPARM_ADDR
 case|:
+case|case
+name|LOC_BASEREG_ARG
+case|:
+case|case
+name|LOC_LOCAL_ARG
+case|:
 name|nparams
 operator|++
 expr_stmt|;
@@ -962,6 +1019,9 @@ name|LOC_CONST
 case|:
 case|case
 name|LOC_STATIC
+case|:
+case|case
+name|LOC_INDIRECT
 case|:
 case|case
 name|LOC_REGISTER
@@ -982,13 +1042,7 @@ case|case
 name|LOC_CONST_BYTES
 case|:
 case|case
-name|LOC_LOCAL_ARG
-case|:
-case|case
 name|LOC_BASEREG
-case|:
-case|case
-name|LOC_BASEREG_ARG
 case|:
 case|case
 name|LOC_UNRESOLVED
@@ -1082,6 +1136,12 @@ case|:
 case|case
 name|LOC_REGPARM_ADDR
 case|:
+case|case
+name|LOC_BASEREG_ARG
+case|:
+case|case
+name|LOC_LOCAL_ARG
+case|:
 name|TYPE_FIELD_TYPE
 argument_list|(
 name|ftype
@@ -1108,6 +1168,9 @@ case|case
 name|LOC_STATIC
 case|:
 case|case
+name|LOC_INDIRECT
+case|:
+case|case
 name|LOC_REGISTER
 case|:
 case|case
@@ -1126,13 +1189,7 @@ case|case
 name|LOC_CONST_BYTES
 case|:
 case|case
-name|LOC_LOCAL_ARG
-case|:
-case|case
 name|LOC_BASEREG
-case|:
-case|case
-name|LOC_BASEREG_ARG
 case|:
 case|case
 name|LOC_UNRESOLVED
@@ -1194,7 +1251,74 @@ name|listhead
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Install this block as the superblock      of all blocks made since the start of this scope      that don't have superblocks yet.  */
+if|#
+directive|if
+literal|1
+comment|/* Check to be sure that the blocks have an end address that is      greater than starting address */
+if|if
+condition|(
+name|BLOCK_END
+argument_list|(
+name|block
+argument_list|)
+operator|<
+name|BLOCK_START
+argument_list|(
+name|block
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|symbol
+condition|)
+block|{
+name|complain
+argument_list|(
+operator|&
+name|block_end_complaint
+argument_list|,
+name|SYMBOL_SOURCE_NAME
+argument_list|(
+name|symbol
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|complain
+argument_list|(
+operator|&
+name|anon_block_end_complaint
+argument_list|,
+name|BLOCK_END
+argument_list|(
+name|block
+argument_list|)
+argument_list|,
+name|BLOCK_START
+argument_list|(
+name|block
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Better than nothing */
+name|BLOCK_END
+argument_list|(
+name|block
+argument_list|)
+operator|=
+name|BLOCK_START
+argument_list|(
+name|block
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* Install this block as the superblock of all blocks made since the      start of this scope that don't have superblocks yet.  */
 name|opblock
 operator|=
 name|NULL
@@ -1231,7 +1355,7 @@ block|{
 if|#
 directive|if
 literal|1
-comment|/* Check to be sure the blocks are nested as we receive them.  	     If the compiler/assembler/linker work, this just burns a small 	     amount of time.  */
+comment|/* Check to be sure the blocks are nested as we receive 	     them. If the compiler/assembler/linker work, this just 	     burns a small amount of time.  */
 if|if
 condition|(
 name|BLOCK_START
@@ -1282,9 +1406,47 @@ name|complain
 argument_list|(
 operator|&
 name|innerblock_anon_complaint
+argument_list|,
+name|BLOCK_START
+argument_list|(
+name|pblock
+operator|->
+name|block
+argument_list|)
+argument_list|,
+name|BLOCK_END
+argument_list|(
+name|pblock
+operator|->
+name|block
+argument_list|)
+argument_list|,
+name|BLOCK_START
+argument_list|(
+name|block
+argument_list|)
+argument_list|,
+name|BLOCK_END
+argument_list|(
+name|block
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|BLOCK_START
+argument_list|(
+name|pblock
+operator|->
+name|block
+argument_list|)
+operator|<
+name|BLOCK_START
+argument_list|(
+name|block
+argument_list|)
+condition|)
 name|BLOCK_START
 argument_list|(
 name|pblock
@@ -1297,6 +1459,20 @@ argument_list|(
 name|block
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BLOCK_END
+argument_list|(
+name|pblock
+operator|->
+name|block
+argument_list|)
+operator|>
+name|BLOCK_END
+argument_list|(
+name|block
+argument_list|)
+condition|)
 name|BLOCK_END
 argument_list|(
 name|pblock
@@ -1327,8 +1503,48 @@ operator|=
 name|pblock
 expr_stmt|;
 block|}
-comment|/* Record this block on the list of all blocks in the file.      Put it after opblock, or at the beginning if opblock is 0.      This puts the block in the list after all its subblocks.  */
-comment|/* Allocate in the symbol_obstack to save time.      It wastes a little space.  */
+name|record_pending_block
+argument_list|(
+name|objfile
+argument_list|,
+name|block
+argument_list|,
+name|opblock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Record BLOCK on the list of all blocks in the file.  Put it after    OPBLOCK, or at the beginning if opblock is NULL.  This puts the    block in the list after all its subblocks.     Allocate the pending block struct in the symbol_obstack to save    time.  This wastes a little space.  FIXME: Is it worth it?  */
+end_comment
+
+begin_function
+name|void
+name|record_pending_block
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|,
+name|struct
+name|block
+modifier|*
+name|block
+parameter_list|,
+name|struct
+name|pending_block
+modifier|*
+name|opblock
+parameter_list|)
+block|{
+specifier|register
+name|struct
+name|pending_block
+modifier|*
+name|pblock
+decl_stmt|;
 name|pblock
 operator|=
 operator|(
@@ -1392,20 +1608,21 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* Note that this is only used in this file and in dstread.c, which    should be fixed to not need direct access to this function.  When    that is done, it can be made static again. */
+end_comment
+
 begin_function
-specifier|static
 name|struct
 name|blockvector
 modifier|*
 name|make_blockvector
 parameter_list|(
-name|objfile
-parameter_list|)
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -1484,7 +1701,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Copy the blocks into the blockvector.      This is done in reverse order, which happens to put      the blocks into the proper order (ascending starting address).      finish_block has hair to insert each block into the list      after its subblocks in order to make sure this is true.  */
+comment|/* Copy the blocks into the blockvector. This is done in reverse      order, which happens to put the blocks into the proper order      (ascending starting address). finish_block has hair to insert      each block into the list after its subblocks in order to make      sure this is true.  */
 name|BLOCKVECTOR_NBLOCKS
 argument_list|(
 name|blockvector
@@ -1523,7 +1740,7 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/* Now we make the links in the obstack, so don't free them.  */
+comment|/* Now we make the links in the 				   obstack, so don't free them.  */
 comment|/* Now free the links of the list, and empty the list.  */
 block|for (next = pending_blocks; next; next = next1)     {       next1 = next->next;       free (next);     }
 endif|#
@@ -1535,8 +1752,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/* FIXME, shut this off after a while to speed up symbol reading.  */
-comment|/* Some compilers output blocks in the wrong order, but we depend      on their being in the right order so we can binary search.       Check the order and moan about it.  FIXME.  */
+comment|/* FIXME, shut this off after a while 				   to speed up symbol reading.  */
+comment|/* Some compilers output blocks in the wrong order, but we depend on      their being in the right order so we can binary search. Check the      order and moan about it.  FIXME.  */
 if|if
 condition|(
 name|BLOCKVECTOR_NBLOCKS
@@ -1589,7 +1806,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* FIXME-32x64: loses if CORE_ADDR doesn't fit in a 		 long.  Possible solutions include a version of 		 complain which takes a callback, a 		 sprintf_address_numeric to match 		 print_address_numeric, or a way to set up a GDB_FILE 		 * which causes sprintf rather than fprintf to be 		 called.  */
+comment|/* FIXME-32x64: loses if CORE_ADDR doesn't fit in a 	         long.  Possible solutions include a version of 	         complain which takes a callback, a 	         sprintf_address_numeric to match 	         print_address_numeric, or a way to set up a GDB_FILE 	         which causes sprintf rather than fprintf to be 	         called.  */
 name|complain
 argument_list|(
 operator|&
@@ -1627,25 +1844,21 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Start recording information about source code that came from an included    (or otherwise merged-in) source file with a different name.  NAME is    the name of the file (cannot be NULL), DIRNAME is the directory in which    it resides (or NULL if not known).  */
+comment|/* Start recording information about source code that came from an    included (or otherwise merged-in) source file with a different    name.  NAME is the name of the file (cannot be NULL), DIRNAME is    the directory in which it resides (or NULL if not known).  */
 end_comment
 
 begin_function
 name|void
 name|start_subfile
 parameter_list|(
+name|char
+modifier|*
 name|name
 parameter_list|,
+name|char
+modifier|*
 name|dirname
 parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|char
-modifier|*
-name|dirname
-decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1653,7 +1866,7 @@ name|subfile
 modifier|*
 name|subfile
 decl_stmt|;
-comment|/* See if this subfile is already known as a subfile of the      current main source file.  */
+comment|/* See if this subfile is already known as a subfile of the current      main source file.  */
 for|for
 control|(
 name|subfile
@@ -1688,7 +1901,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* This subfile is not known.  Add an entry for it.      Make an entry for this subfile in the list of all subfiles      of the current main source file.  */
+comment|/* This subfile is not known.  Add an entry for it. Make an entry      for this subfile in the list of all subfiles of the current main      source file.  */
 name|subfile
 operator|=
 operator|(
@@ -1771,7 +1984,7 @@ name|line_vector
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Default the source language to whatever can be deduced from      the filename.  If nothing can be deduced (such as for a C/C++      include file with a ".h" extension), then inherit whatever      language the previous subfile had.  This kludgery is necessary      because there is no standard way in some object formats to      record the source language.  Also, when symtabs are allocated      we try to deduce a language then as well, but it is too late      for us to use that information while reading symbols, since      symtabs aren't allocated until after all the symbols have      been processed for a given source file. */
+comment|/* Default the source language to whatever can be deduced from the      filename.  If nothing can be deduced (such as for a C/C++ include      file with a ".h" extension), then inherit whatever language the      previous subfile had.  This kludgery is necessary because there      is no standard way in some object formats to record the source      language.  Also, when symtabs are allocated we try to deduce a      language then as well, but it is too late for us to use that      information while reading symbols, since symtabs aren't allocated      until after all the symbols have been processed for a given      source file. */
 name|subfile
 operator|->
 name|language
@@ -1809,7 +2022,14 @@ operator|->
 name|language
 expr_stmt|;
 block|}
-comment|/* cfront output is a C program, so in most ways it looks like a C      program.  But to demangle we need to set the language to C++.  We      can distinguish cfront code by the fact that it has #line      directives which specify a file name ending in .C.       So if the filename of this subfile ends in .C, then change the language      of any pending subfiles from C to C++.  We also accept any other C++      suffixes accepted by deduce_language_from_filename (in particular,      some people use .cxx with cfront).  */
+comment|/* Initialize the debug format string to NULL.  We may supply it      later via a call to record_debugformat. */
+name|subfile
+operator|->
+name|debugformat
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* cfront output is a C program, so in most ways it looks like a C      program.  But to demangle we need to set the language to C++.  We      can distinguish cfront code by the fact that it has #line      directives which specify a file name ending in .C.         So if the filename of this subfile ends in .C, then change the      language of any pending subfiles from C to C++.  We also accept      any other C++ suffixes accepted by deduce_language_from_filename      (in particular, some people use .cxx with cfront).  */
 comment|/* Likewise for f2c.  */
 if|if
 condition|(
@@ -1924,26 +2144,22 @@ block|}
 end_function
 
 begin_comment
-comment|/* For stabs readers, the first N_SO symbol is assumed to be the source    file name, and the subfile struct is initialized using that assumption.    If another N_SO symbol is later seen, immediately following the first    one, then the first one is assumed to be the directory name and the    second one is really the source file name.     So we have to patch up the subfile struct by moving the old name value to    dirname and remembering the new name.  Some sanity checking is performed    to ensure that the state of the subfile struct is reasonable and that the    old name we are assuming to be a directory name actually is (by checking    for a trailing '/'). */
+comment|/* For stabs readers, the first N_SO symbol is assumed to be the    source file name, and the subfile struct is initialized using that    assumption.  If another N_SO symbol is later seen, immediately    following the first one, then the first one is assumed to be the    directory name and the second one is really the source file name.     So we have to patch up the subfile struct by moving the old name    value to dirname and remembering the new name.  Some sanity    checking is performed to ensure that the state of the subfile    struct is reasonable and that the old name we are assuming to be a    directory name actually is (by checking for a trailing '/'). */
 end_comment
 
 begin_function
 name|void
 name|patch_subfile_names
 parameter_list|(
-name|subfile
-parameter_list|,
-name|name
-parameter_list|)
 name|struct
 name|subfile
 modifier|*
 name|subfile
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2006,7 +2222,7 @@ name|last_source_file
 operator|=
 name|name
 expr_stmt|;
-comment|/* Default the source language to whatever can be deduced from 	 the filename.  If nothing can be deduced (such as for a C/C++ 	 include file with a ".h" extension), then inherit whatever 	 language the previous subfile had.  This kludgery is necessary 	 because there is no standard way in some object formats to 	 record the source language.  Also, when symtabs are allocated 	 we try to deduce a language then as well, but it is too late 	 for us to use that information while reading symbols, since 	 symtabs aren't allocated until after all the symbols have 	 been processed for a given source file. */
+comment|/* Default the source language to whatever can be deduced from          the filename.  If nothing can be deduced (such as for a C/C++          include file with a ".h" extension), then inherit whatever          language the previous subfile had.  This kludgery is          necessary because there is no standard way in some object          formats to record the source language.  Also, when symtabs          are allocated we try to deduce a language then as well, but          it is too late for us to use that information while reading          symbols, since symtabs aren't allocated until after all the          symbols have been processed for a given source file. */
 name|subfile
 operator|->
 name|language
@@ -2052,13 +2268,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Handle the N_BINCL and N_EINCL symbol types    that act like N_SOL for switching source files    (different subfiles, as we call them) within one object file,    but using a stack rather than in an arbitrary order.  */
+comment|/* Handle the N_BINCL and N_EINCL symbol types that act like N_SOL for    switching source files (different subfiles, as we call them) within    one object file, but using a stack rather than in an arbitrary    order.  */
 end_comment
 
 begin_function
 name|void
 name|push_subfile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2122,7 +2340,9 @@ begin_function
 name|char
 modifier|*
 name|pop_subfile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -2163,7 +2383,8 @@ expr_stmt|;
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|link
 argument_list|)
@@ -2180,31 +2401,25 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Add a linetable entry for line number LINE and address PC to the line    vector for SUBFILE.  */
+comment|/* Add a linetable entry for line number LINE and address PC to the    line vector for SUBFILE.  */
 end_comment
 
 begin_function
 name|void
 name|record_line
 parameter_list|(
-name|subfile
-parameter_list|,
-name|line
-parameter_list|,
-name|pc
-parameter_list|)
 specifier|register
 name|struct
 name|subfile
 modifier|*
 name|subfile
-decl_stmt|;
+parameter_list|,
 name|int
 name|line
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|linetable_entry
@@ -2272,6 +2487,10 @@ name|nitems
 operator|=
 literal|0
 expr_stmt|;
+name|have_line_numbers
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2320,6 +2539,7 @@ expr|struct
 name|linetable
 argument_list|)
 operator|+
+operator|(
 name|subfile
 operator|->
 name|line_vector_length
@@ -2329,6 +2549,7 @@ argument_list|(
 expr|struct
 name|linetable_entry
 argument_list|)
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2372,18 +2593,16 @@ specifier|static
 name|int
 name|compare_line_numbers
 parameter_list|(
+specifier|const
+name|void
+modifier|*
 name|ln1p
 parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|ln2p
 parameter_list|)
-specifier|const
-name|PTR
-name|ln1p
-decl_stmt|;
-specifier|const
-name|PTR
-name|ln2p
-decl_stmt|;
 block|{
 name|struct
 name|linetable_entry
@@ -2454,30 +2673,24 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Start a new symtab for a new source file.    Called, for example, when a stabs symbol of type N_SO is seen, or when    a DWARF TAG_compile_unit DIE is seen.    It indicates the start of data for one original source file.  */
+comment|/* Start a new symtab for a new source file.  Called, for example,    when a stabs symbol of type N_SO is seen, or when a DWARF    TAG_compile_unit DIE is seen.  It indicates the start of data for    one original source file.  */
 end_comment
 
 begin_function
 name|void
 name|start_symtab
 parameter_list|(
-name|name
-parameter_list|,
-name|dirname
-parameter_list|,
-name|start_addr
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|dirname
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|start_addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|last_source_file
 operator|=
@@ -2499,7 +2712,11 @@ name|within_function
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Context stack is initially empty.  Allocate first one with room for      10 levels; reuse it forever afterward.  */
+name|have_line_numbers
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Context stack is initially empty.  Allocate first one with room      for 10 levels; reuse it forever afterward.  */
 if|if
 condition|(
 name|context_stack
@@ -2534,7 +2751,7 @@ name|context_stack_depth
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Initialize the list of sub source files with one entry      for this file (the top-level source file).  */
+comment|/* Initialize the list of sub source files with one entry for this      file (the top-level source file).  */
 name|subfiles
 operator|=
 name|NULL
@@ -2554,7 +2771,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Finish the symbol definitions for one main source file,    close off all the lexical contexts for that file    (creating struct block's for them), then make the struct symtab    for that file and put it in the list of all such.     END_ADDR is the address of the end of the file's text.    SECTION is the section number (in objfile->section_offsets) of    the blockvector and linetable.     Note that it is possible for end_symtab() to return NULL.  In particular,    for the DWARF case at least, it will return NULL when it finds a    compilation unit that has exactly one DIE, a TAG_compile_unit DIE.  This    can happen when we link in an object file that was compiled from an empty    source file.  Returning NULL is probably not the correct thing to do,    because then gdb will never know about this empty file (FIXME). */
+comment|/* Finish the symbol definitions for one main source file, close off    all the lexical contexts for that file (creating struct block's for    them), then make the struct symtab for that file and put it in the    list of all such.     END_ADDR is the address of the end of the file's text.  SECTION is    the section number (in objfile->section_offsets) of the blockvector    and linetable.     Note that it is possible for end_symtab() to return NULL.  In    particular, for the DWARF case at least, it will return NULL when    it finds a compilation unit that has exactly one DIE, a    TAG_compile_unit DIE.  This can happen when we link in an object    file that was compiled from an empty source file.  Returning NULL    is probably not the correct thing to do, because then gdb will    never know about this empty file (FIXME). */
 end_comment
 
 begin_function
@@ -2563,23 +2780,17 @@ name|symtab
 modifier|*
 name|end_symtab
 parameter_list|(
-name|end_addr
-parameter_list|,
-name|objfile
-parameter_list|,
-name|section
-parameter_list|)
 name|CORE_ADDR
 name|end_addr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|objfile
 modifier|*
 name|objfile
-decl_stmt|;
+parameter_list|,
 name|int
 name|section
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2612,7 +2823,7 @@ name|subfile
 modifier|*
 name|nextsub
 decl_stmt|;
-comment|/* Finish the lexical context of the last function in the file;      pop the context stack.  */
+comment|/* Finish the lexical context of the last function in the file; pop      the context stack.  */
 if|if
 condition|(
 name|context_stack_depth
@@ -2620,16 +2831,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|context_stack_depth
-operator|--
-expr_stmt|;
 name|cstk
 operator|=
-operator|&
-name|context_stack
-index|[
-name|context_stack_depth
-index|]
+name|pop_context
+argument_list|()
 expr_stmt|;
 comment|/* Make a block for the local symbols within.  */
 name|finish_block
@@ -2661,7 +2866,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* This is said to happen with SCO.  The old coffread.c code 	     simply emptied the context stack, so we do the same.  FIXME: 	     Find out why it is happening.  This is not believed to happen 	     in most cases (even for coffread.c); it used to be an abort().  */
+comment|/* This is said to happen with SCO.  The old coffread.c 	     code simply emptied the context stack, so we do the 	     same.  FIXME: Find out why it is happening.  This is not 	     believed to happen in most cases (even for coffread.c); 	     it used to be an abort().  */
 specifier|static
 name|struct
 name|complaint
@@ -2701,7 +2906,7 @@ operator|&&
 name|pending_blocks
 condition|)
 block|{
-comment|/* FIXME!  Remove this horrid bubble sort and use qsort!!! 	 It'd be a whole lot easier if they weren't in a linked list!!! */
+comment|/* FIXME!  Remove this horrid bubble sort and use merge sort!!! */
 name|int
 name|swapped
 decl_stmt|;
@@ -2798,7 +3003,7 @@ name|swapped
 condition|)
 do|;
 block|}
-comment|/* Cleanup any undefined types that have been left hanging around      (this needs to be done before the finish_blocks so that      file_symbols is still good).       Both cleanup_undefined_types and finish_global_stabs are stabs      specific, but harmless for other symbol readers, since on gdb      startup or when finished reading stabs, the state is set so these      are no-ops.  FIXME: Is this handled right in case of QUIT?  Can      we make this cleaner?  */
+comment|/* Cleanup any undefined types that have been left hanging around      (this needs to be done before the finish_blocks so that      file_symbols is still good).         Both cleanup_undefined_types and finish_global_stabs are stabs      specific, but harmless for other symbol readers, since on gdb      startup or when finished reading stabs, the state is set so these      are no-ops.  FIXME: Is this handled right in case of QUIT?  Can      we make this cleaner?  */
 name|cleanup_undefined_types
 argument_list|()
 expr_stmt|;
@@ -2820,9 +3025,13 @@ operator|&&
 name|global_symbols
 operator|==
 name|NULL
+operator|&&
+name|have_line_numbers
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* Ignore symtabs that have no functions with real debugging info */
+comment|/* Ignore symtabs that have no functions with real debugging          info.  */
 name|blockvector
 operator|=
 name|NULL
@@ -2830,7 +3039,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Define the STATIC_BLOCK& GLOBAL_BLOCK, and build the blockvector. */
+comment|/* Define the STATIC_BLOCK& GLOBAL_BLOCK, and build the          blockvector.  */
 name|finish_block
 argument_list|(
 literal|0
@@ -2871,15 +3080,19 @@ name|objfile
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|PROCESS_LINENUMBER_HOOK
+define|#
+directive|define
+name|PROCESS_LINENUMBER_HOOK
+parameter_list|()
+endif|#
+directive|endif
 name|PROCESS_LINENUMBER_HOOK
 argument_list|()
 expr_stmt|;
 comment|/* Needed for xcoff. */
-endif|#
-directive|endif
 comment|/* Now create the symtab objects proper, one for each subfile.  */
 comment|/* (The main file is the last one on the chain.)  */
 for|for
@@ -2900,11 +3113,11 @@ name|linetablesize
 init|=
 literal|0
 decl_stmt|;
-comment|/* If we have blocks of symbols, make a symtab. 	 Otherwise, just ignore this file and any line number info in it.  */
 name|symtab
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* If we have blocks of symbols, make a symtab. Otherwise, just          ignore this file and any line number info in it.  */
 if|if
 condition|(
 name|blockvector
@@ -2940,12 +3153,12 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* I think this is artifact from before it went on the obstack. 		 I doubt we'll need the memory between now and when we 		 free it later in this function.  */
+comment|/* I think this is artifact from before it went on the 	         obstack. I doubt we'll need the memory between now 	         and when we free it later in this function.  */
 comment|/* First, shrink the linetable to make more memory.  */
 block|subfile->line_vector = (struct linetable *) 		xrealloc ((char *) subfile->line_vector, linetablesize);
 endif|#
 directive|endif
-comment|/* Like the pending blocks, the line table may be scrambled 		 in reordered executables.  Sort it if OBJF_REORDERED is 		 true.  */
+comment|/* Like the pending blocks, the line table may be 	         scrambled in reordered executables.  Sort it if 	         OBJF_REORDERED is true.  */
 if|if
 condition|(
 name|objfile
@@ -3119,7 +3332,7 @@ name|free_ptr
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Use whatever language we have been using for this subfile, 	     not the one that was deduced in allocate_symtab from the 	     filename.  We already did our own deducing when we created 	     the subfile, and we may have altered our opinion of what 	     language it is from things we found in the symbols. */
+comment|/* Use whatever language we have been using for this 	     subfile, not the one that was deduced in allocate_symtab 	     from the filename.  We already did our own deducing when 	     we created the subfile, and we may have altered our 	     opinion of what language it is from things we found in 	     the symbols. */
 name|symtab
 operator|->
 name|language
@@ -3128,7 +3341,41 @@ name|subfile
 operator|->
 name|language
 expr_stmt|;
-comment|/* All symtabs for the main file and the subfiles share a 	     blockvector, so we need to clear primary for everything but 	     the main file.  */
+comment|/* Save the debug format string (if any) in the symtab */
+if|if
+condition|(
+name|subfile
+operator|->
+name|debugformat
+operator|!=
+name|NULL
+condition|)
+block|{
+name|symtab
+operator|->
+name|debugformat
+operator|=
+name|obsavestring
+argument_list|(
+name|subfile
+operator|->
+name|debugformat
+argument_list|,
+name|strlen
+argument_list|(
+name|subfile
+operator|->
+name|debugformat
+argument_list|)
+argument_list|,
+operator|&
+name|objfile
+operator|->
+name|symbol_obstack
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* All symtabs for the main file and the subfiles share a 	     blockvector, so we need to clear primary for everything 	     but the main file.  */
 name|symtab
 operator|->
 name|primary
@@ -3148,7 +3395,8 @@ block|{
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|subfile
 operator|->
@@ -3168,7 +3416,8 @@ block|{
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|subfile
 operator|->
@@ -3188,11 +3437,33 @@ block|{
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|subfile
 operator|->
 name|line_vector
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|subfile
+operator|->
+name|debugformat
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|subfile
+operator|->
+name|debugformat
 argument_list|)
 expr_stmt|;
 block|}
@@ -3205,7 +3476,8 @@ expr_stmt|;
 name|free
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|subfile
 argument_list|)
@@ -3233,15 +3505,13 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-operator|(
 name|symtab
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* Push a context block.  Args are an identifying nesting level (checkable    when you pop it), and the starting PC address of this context.  */
+comment|/* Push a context block.  Args are an identifying nesting level    (checkable when you pop it), and the starting PC address of this    context.  */
 end_comment
 
 begin_function
@@ -3250,16 +3520,12 @@ name|context_stack
 modifier|*
 name|push_context
 parameter_list|(
-name|desc
-parameter_list|,
-name|valu
-parameter_list|)
 name|int
 name|desc
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|valu
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -3328,6 +3594,12 @@ name|local_symbols
 expr_stmt|;
 name|new
 operator|->
+name|params
+operator|=
+name|param_symbols
+expr_stmt|;
+name|new
+operator|->
 name|old_blocks
 operator|=
 name|pending_blocks
@@ -3348,10 +3620,12 @@ name|local_symbols
 operator|=
 name|NULL
 expr_stmt|;
+name|param_symbols
+operator|=
+name|NULL
+expr_stmt|;
 return|return
-operator|(
 name|new
-operator|)
 return|;
 block|}
 end_function
@@ -3367,12 +3641,10 @@ begin_function
 name|int
 name|hashname
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -3471,8 +3743,140 @@ end_function
 begin_escape
 end_escape
 
+begin_function
+name|void
+name|record_debugformat
+parameter_list|(
+name|char
+modifier|*
+name|format
+parameter_list|)
+block|{
+name|current_subfile
+operator|->
+name|debugformat
+operator|=
+name|savestring
+argument_list|(
+name|format
+argument_list|,
+name|strlen
+argument_list|(
+name|format
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/* Initialize anything that needs initializing when starting to read    a fresh piece of a symbol file, e.g. reading in the stuff corresponding    to a psymtab.  */
+comment|/* Merge the first symbol list SRCLIST into the second symbol list    TARGETLIST by repeated calls to add_symbol_to_list().  This    procedure "frees" each link of SRCLIST by adding it to the    free_pendings list.  Caller must set SRCLIST to a null list after    calling this function.     Void return. */
+end_comment
+
+begin_function
+name|void
+name|merge_symbol_lists
+parameter_list|(
+name|struct
+name|pending
+modifier|*
+modifier|*
+name|srclist
+parameter_list|,
+name|struct
+name|pending
+modifier|*
+modifier|*
+name|targetlist
+parameter_list|)
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|srclist
+operator|||
+operator|!
+operator|*
+name|srclist
+condition|)
+return|return;
+comment|/* Merge in elements from current link.  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+operator|*
+name|srclist
+operator|)
+operator|->
+name|nsyms
+condition|;
+name|i
+operator|++
+control|)
+name|add_symbol_to_list
+argument_list|(
+operator|(
+operator|*
+name|srclist
+operator|)
+operator|->
+name|symbol
+index|[
+name|i
+index|]
+argument_list|,
+name|targetlist
+argument_list|)
+expr_stmt|;
+comment|/* Recurse on next.  */
+name|merge_symbol_lists
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|srclist
+operator|)
+operator|->
+name|next
+argument_list|,
+name|targetlist
+argument_list|)
+expr_stmt|;
+comment|/* "Free" the current link.  */
+operator|(
+operator|*
+name|srclist
+operator|)
+operator|->
+name|next
+operator|=
+name|free_pendings
+expr_stmt|;
+name|free_pendings
+operator|=
+operator|(
+operator|*
+name|srclist
+operator|)
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Initialize anything that needs initializing when starting to read a    fresh piece of a symbol file, e.g. reading in the stuff    corresponding to a psymtab.  */
 end_comment
 
 begin_function
@@ -3512,17 +3916,6 @@ name|buildsym_init
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|/* Initializer for this module */
-end_comment
-
-begin_function
-name|void
-name|_initialize_buildsym
-parameter_list|()
-block|{ }
 end_function
 
 end_unit
