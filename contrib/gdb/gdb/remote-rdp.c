@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging for the ARM RDP interface.    Copyright 1994, 1995 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.      */
+comment|/* Remote debugging for the ARM RDP interface.    Copyright 1994, 1995 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.      */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
 
 begin_include
@@ -42,34 +42,6 @@ include|#
 directive|include
 file|"command.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -101,28 +73,28 @@ directive|include
 file|"gdb_string.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gdbcore.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_UNISTD_H
+name|HAVE_TIME_H
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<time.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"gdbcore.h"
-end_include
 
 begin_decl_stmt
 specifier|extern
@@ -756,8 +728,10 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"[%02x]\n"
 argument_list|,
 name|c
@@ -870,8 +844,10 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"(%02x)\n"
 argument_list|,
 name|val
@@ -947,8 +923,10 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"(%04x)"
 argument_list|,
 name|val
@@ -1064,7 +1042,7 @@ argument_list|,
 name|baudtry
 argument_list|)
 expr_stmt|;
-comment|/*       ** It seems necessary to reset an EmbeddedICE to get it going.       ** This has the side benefit of displaying the startup banner.       */
+comment|/*          ** It seems necessary to reset an EmbeddedICE to get it going.          ** This has the side benefit of displaying the startup banner.        */
 if|if
 condition|(
 name|cold
@@ -1178,8 +1156,10 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"[%02x]\n"
 argument_list|,
 name|restype
@@ -1301,8 +1281,10 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"[%02x]\n"
 argument_list|,
 name|resval
@@ -1363,36 +1345,16 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|send_rdp
-argument_list|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|template
-argument_list|,
-operator|...
-argument_list|)
-else|#
-directive|else
-name|void
-name|send_rdp
-argument_list|(
-name|char
-operator|*
-name|template
-argument_list|,
-name|va_alist
-argument_list|)
-name|va_dcl
-endif|#
-directive|endif
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1409,9 +1371,6 @@ decl_stmt|;
 name|va_list
 name|alist
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|alist
@@ -1419,15 +1378,6 @@ argument_list|,
 name|template
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|alist
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 operator|*
@@ -1806,7 +1756,7 @@ block|}
 block|}
 name|va_end
 argument_list|(
-name|args
+name|alist
 argument_list|)
 expr_stmt|;
 if|if
@@ -1819,7 +1769,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
@@ -2535,7 +2485,7 @@ modifier|*
 name|args
 decl_stmt|;
 block|{
-comment|/*   ** We could use RDP_INFO_SET_CMDLINE to send this, but EmbeddedICE systems   ** don't implement that, and get all confused at the unexpected text.   ** Instead, just keep a copy, and send it when the target does a SWI_GetEnv   */
+comment|/*      ** We could use RDP_INFO_SET_CMDLINE to send this, but EmbeddedICE systems      ** don't implement that, and get all confused at the unexpected text.      ** Instead, just keep a copy, and send it when the target does a SWI_GetEnv    */
 if|if
 condition|(
 name|commandline
@@ -2602,7 +2552,7 @@ name|void
 name|rdp_catch_vectors
 parameter_list|()
 block|{
-comment|/*   ** We want the target monitor to intercept the abort vectors   ** i.e. stop the program if any of these are used.   */
+comment|/*      ** We want the target monitor to intercept the abort vectors      ** i.e. stop the program if any of these are used.    */
 name|send_rdp
 argument_list|(
 literal|"bww-SZ"
@@ -2611,7 +2561,7 @@ name|RDP_INFO
 argument_list|,
 name|RDP_INFO_VECTOR_CATCH
 argument_list|,
-comment|/* 	    ** Specify a bitmask including 	    **  the reset vector 	    **  the undefined instruction vector 	    **  the prefetch abort vector 	    **  the data abort vector 	    **  the address exception vector 	    */
+comment|/*      ** Specify a bitmask including      **  the reset vector      **  the undefined instruction vector      **  the prefetch abort vector      **  the data abort vector      **  the address exception vector    */
 operator|(
 literal|1
 operator|<<
@@ -4357,7 +4307,7 @@ comment|/* Need to set up the vector interception state */
 name|rdp_catch_vectors
 argument_list|()
 expr_stmt|;
-comment|/*   ** If it's an EmbeddedICE, we need to set the processor config.   ** Assume we can always have ARM7TDI...   */
+comment|/*      ** If it's an EmbeddedICE, we need to set the processor config.      ** Assume we can always have ARM7TDI...    */
 name|send_rdp
 argument_list|(
 literal|"bw-SB"
@@ -4421,7 +4371,7 @@ name|ICEversion
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* command line initialised on 'run'*/
+comment|/* command line initialised on 'run' */
 name|push_target
 argument_list|(
 operator|&
@@ -5105,7 +5055,7 @@ name|insert_breakpoints
 argument_list|()
 expr_stmt|;
 comment|/* Needed to get correct instruction in cache */
-comment|/*   ** RDP targets don't provide any facility to set the top of memory,   ** so we don't bother to look for MEMSIZE in the environment.   */
+comment|/*      ** RDP targets don't provide any facility to set the top of memory,      ** so we don't bother to look for MEMSIZE in the environment.    */
 comment|/* Let's go! */
 name|proceed
 argument_list|(

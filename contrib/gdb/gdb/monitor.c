@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for boot monitors, for GDB.    Copyright 1990, 1991, 1992, 1993, 1995, 1996, 1997, 1999    Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Rob Savoye for Cygnus.    Resurrected from the ashes by Stu Grossman.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for boot monitors, for GDB.    Copyright 1990-1993, 1995-1997, 1999-2000 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Rob Savoye for Cygnus.    Resurrected from the ashes by Stu Grossman.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -32,36 +32,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -120,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gnu-regex.h"
+file|"gdb_regex.h"
 end_include
 
 begin_include
@@ -191,24 +163,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|monitor_command
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|args
-operator|,
-name|int
-name|fromtty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|monitor_fetch_register
 name|PARAMS
 argument_list|(
@@ -234,52 +188,53 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|int
+name|void
 name|monitor_printable_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
+modifier|*
 name|newstr
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|oldstr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|monitor_error
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-name|format
-operator|,
+modifier|*
+name|function
+parameter_list|,
+name|char
+modifier|*
+name|message
+parameter_list|,
 name|CORE_ADDR
 name|memaddr
-operator|,
+parameter_list|,
 name|int
 name|len
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|string
-operator|,
+parameter_list|,
 name|int
 name|final_char
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -779,41 +734,13 @@ begin_comment
 comment|/* Old SIGINT signal handler */
 end_comment
 
-begin_comment
-comment|/* Extra remote debugging for developing a new rom monitor variation */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|EXTRA_RDEBUG
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|EXTRA_RDEBUG
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|RDEBUG
-parameter_list|(
-name|stuff
-parameter_list|)
-value|{ if (EXTRA_RDEBUG&& remote_debug) printf stuff ; }
-end_define
+begin_decl_stmt
+specifier|static
+name|CORE_ADDR
+modifier|*
+name|breakaddr
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Descriptor for I/O to remote machine.  Initialize it to NULL so    that monitor_open knows that we don't have a file open when the    program starts.  */
@@ -897,53 +824,166 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* is this the first time we're executing after  					gaving created the child proccess? */
+comment|/* is this the first time we're executing after  				   gaving created the child proccess? */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TARGET_BUF_SIZE
+value|2048
+end_define
+
 begin_comment
-comment|/* Convert a string into a printable representation, Return # byte in the    new string.  */
+comment|/* Monitor specific debugging information.  Typically only useful to    the developer of a new monitor interface. */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|monitor_debug
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|ATTR_FORMAT
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|monitor_debug_p
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* NOTE: This file alternates between monitor_debug_p and remote_debug    when determining if debug information is printed.  Perhaphs this    could be simplified. */
 end_comment
 
 begin_function
 specifier|static
-name|int
-name|monitor_printable_string
+name|void
+name|monitor_debug
 parameter_list|(
-name|newstr
+specifier|const
+name|char
+modifier|*
+name|fmt
 parameter_list|,
-name|oldstr
+modifier|...
 parameter_list|)
-name|char
-modifier|*
-name|newstr
-decl_stmt|;
-name|char
-modifier|*
-name|oldstr
-decl_stmt|;
 block|{
-name|char
-modifier|*
-name|save
-init|=
-name|newstr
-decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
-while|while
+if|if
 condition|(
-operator|(
-name|ch
-operator|=
-operator|*
-name|oldstr
-operator|++
-operator|)
-operator|!=
-literal|'\0'
+name|monitor_debug_p
 condition|)
 block|{
+name|va_list
+name|args
+decl_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vfprintf_filtered
+argument_list|(
+name|gdb_stdlog
+argument_list|,
+name|fmt
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Convert a string into a printable representation, Return # byte in    the new string.  When LEN is>0 it specifies the size of the    string.  Otherwize strlen(oldstr) is used. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|monitor_printable_string
+parameter_list|(
+name|char
+modifier|*
+name|newstr
+parameter_list|,
+name|char
+modifier|*
+name|oldstr
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+block|{
+name|int
+name|ch
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|oldstr
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|len
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|ch
+operator|=
+name|oldstr
+index|[
+name|i
+index|]
+expr_stmt|;
 switch|switch
 condition|(
 name|ch
@@ -1102,11 +1142,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return
-name|newstr
-operator|-
-name|save
-return|;
 block|}
 end_function
 
@@ -1119,33 +1154,27 @@ specifier|static
 name|void
 name|monitor_error
 parameter_list|(
-name|format
-parameter_list|,
-name|memaddr
-parameter_list|,
-name|len
-parameter_list|,
-name|string
-parameter_list|,
-name|final_char
-parameter_list|)
 name|char
 modifier|*
-name|format
-decl_stmt|;
+name|function
+parameter_list|,
+name|char
+modifier|*
+name|message
+parameter_list|,
 name|CORE_ADDR
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|final_char
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|real_len
@@ -1186,42 +1215,31 @@ operator|+
 literal|1
 argument_list|)
 decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
-name|int
-name|safe_len
-init|=
 name|monitor_printable_string
 argument_list|(
 name|safe_string
 argument_list|,
 name|string
+argument_list|,
+name|real_len
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|final_char
 condition|)
 name|error
 argument_list|(
-name|format
+literal|"%s (0x%s): %s: %s%c"
 argument_list|,
-operator|(
-name|int
-operator|)
+name|function
+argument_list|,
+name|paddr_nz
+argument_list|(
 name|memaddr
+argument_list|)
 argument_list|,
-name|p
-operator|-
-name|safe_string
+name|message
 argument_list|,
 name|safe_string
 argument_list|,
@@ -1231,16 +1249,16 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-name|format
+literal|"%s (0x%s): %s: %s"
 argument_list|,
-operator|(
-name|int
-operator|)
+name|function
+argument_list|,
+name|paddr_nz
+argument_list|(
 name|memaddr
+argument_list|)
 argument_list|,
-name|p
-operator|-
-name|safe_string
+name|message
 argument_list|,
 name|safe_string
 argument_list|)
@@ -1326,7 +1344,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* monitor_vsprintf - similar to vsprintf but handles 64-bit addresses     This function exists to get around the problem that many host platforms    don't have a printf that can print 64-bit addresses.  The %A format    specification is recognized as a special case, and causes the argument    to be printed as a 64-bit hexadecimal address.     Only format specifiers of the form "[0-9]*[a-z]" are recognized.    If it is a '%s' format, the argument is a string; otherwise the    argument is assumed to be a long integer.     %% is also turned into a single %. */
+comment|/* monitor_vsprintf - similar to vsprintf but handles 64-bit addresses     This function exists to get around the problem that many host platforms    don't have a printf that can print 64-bit addresses.  The %A format    specification is recognized as a special case, and causes the argument    to be printed as a 64-bit hexadecimal address.     Only format specifiers of the form "[0-9]*[a-z]" are recognized.    If it is a '%s' format, the argument is a string; otherwise the    argument is assumed to be a long integer.     %% is also turned into a single %.  */
 end_comment
 
 begin_function
@@ -1585,9 +1603,6 @@ end_comment
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|monitor_printf_noecho
 parameter_list|(
 name|char
@@ -1596,15 +1611,6 @@ name|pattern
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|monitor_printf_noecho
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
@@ -1618,9 +1624,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-if|#
-directive|if
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -1628,29 +1631,6 @@ argument_list|,
 name|pattern
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|pattern
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|pattern
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|monitor_vsprintf
 argument_list|(
 name|sndbuf
@@ -1679,17 +1659,9 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (remote_debug> 0)     puts_debug ("sent -->", sndbuf, "<--");
-endif|#
-directive|endif
 if|if
 condition|(
-name|EXTRA_RDEBUG
-operator|&&
-name|remote_debug
+name|monitor_debug_p
 condition|)
 block|{
 name|char
@@ -1719,10 +1691,14 @@ argument_list|(
 name|safe_string
 argument_list|,
 name|sndbuf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"sent[%s]\n"
 argument_list|,
 name|safe_string
@@ -1745,9 +1721,6 @@ end_comment
 
 begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|monitor_printf
 parameter_list|(
 name|char
@@ -1756,15 +1729,6 @@ name|pattern
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|monitor_printf
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
@@ -1778,9 +1742,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -1788,29 +1749,6 @@ argument_list|,
 name|pattern
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|pattern
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|pattern
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|monitor_vsprintf
 argument_list|(
 name|sndbuf
@@ -1839,17 +1777,9 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (remote_debug> 0)     puts_debug ("sent -->", sndbuf, "<--");
-endif|#
-directive|endif
 if|if
 condition|(
-name|EXTRA_RDEBUG
-operator|&&
-name|remote_debug
+name|monitor_debug_p
 condition|)
 block|{
 name|char
@@ -1876,10 +1806,14 @@ argument_list|(
 name|safe_string
 argument_list|,
 name|sndbuf
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"sent[%s]\n"
 argument_list|,
 name|safe_string
@@ -1894,12 +1828,11 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* We used to expect that the next immediate output was the characters we      just output, but sometimes some extra junk appeared before the characters      we expected, like an extra prompt, or a portmaster sending telnet negotiations.      So, just start searching for what we sent, and skip anything unknown.  */
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"ExpectEcho\n"
-argument|)
 argument_list|)
+expr_stmt|;
 name|monitor_expect
 argument_list|(
 name|sndbuf
@@ -2099,13 +2032,44 @@ name|c
 operator|&=
 literal|0x7f
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* This seems to interfere with proper function of the 	     input stream */
-block|if (remote_debug> 0) 	    { 	      char buf[2]; 	      buf[0] = c; 	      buf[1] = '\0'; 	      puts_debug ("read -->", buf, "<--"); 	    }
-endif|#
-directive|endif
+if|if
+condition|(
+name|monitor_debug_p
+operator|||
+name|remote_debug
+condition|)
+block|{
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+name|c
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|puts_debug
+argument_list|(
+literal|"read -->"
+argument_list|,
+name|buf
+argument_list|,
+literal|"<--"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* Canonicialize \n\r combinations into one \r */
 if|if
@@ -2211,7 +2175,6 @@ condition|)
 if|#
 directive|if
 literal|0
-comment|/* MAINTENANCE_CMDS */
 comment|/* I fail to see how detaching here can be useful */
 then|if (in_monitor_wait)
 comment|/* Watchdog went off */
@@ -2279,9 +2242,7 @@ name|targ_ops
 decl_stmt|;
 if|if
 condition|(
-name|EXTRA_RDEBUG
-operator|&&
-name|remote_debug
+name|monitor_debug_p
 condition|)
 block|{
 name|char
@@ -2311,10 +2272,14 @@ argument_list|(
 name|safe_string
 argument_list|,
 name|string
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"MON Expecting '%s'\n"
 argument_list|,
 name|safe_string
@@ -2479,19 +2444,75 @@ continue|continue;
 block|}
 else|else
 block|{
+comment|/* We got a character that doesn't match the string.  We need to 	     back up p, but how far?  If we're looking for "..howdy" and the 	     monitor sends "...howdy"?  There's certainly a match in there, 	     but when we receive the third ".", we won't find it if we just 	     restart the matching at the beginning of the string.  	     This is a Boyer-Moore kind of situation.  We want to reset P to 	     the end of the longest prefix of STRING that is a suffix of 	     what we've read so far.  In the example above, that would be 	     ".." --- the longest prefix of "..howdy" that is a suffix of 	     "...".  This longest prefix could be the empty string, if C 	     is nowhere to be found in STRING.  	     If this longest prefix is not the empty string, it must contain 	     C, so let's search from the end of STRING for instances of C, 	     and see if the portion of STRING before that is a suffix of 	     what we read before C.  Actually, we can search backwards from 	     p, since we know no prefix can be longer than that.  	     Note that we can use STRING itself, along with C, as a record 	     of what we've received so far.  :) */
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+operator|(
+name|p
+operator|-
+name|string
+operator|)
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+if|if
+condition|(
+name|string
+index|[
+name|i
+index|]
+operator|==
+name|c
+condition|)
+block|{
+comment|/* Is this prefix a suffix of what we've read so far? 		   In other words, does                      string[0 .. i-1] == string[p - i, p - 1]? */
+if|if
+condition|(
+operator|!
+name|memcmp
+argument_list|(
+name|string
+argument_list|,
+name|p
+operator|-
+name|i
+argument_list|,
+name|i
+argument_list|)
+condition|)
+block|{
 name|p
 operator|=
 name|string
+operator|+
+name|i
+operator|+
+literal|1
 expr_stmt|;
+break|break;
+block|}
+block|}
 if|if
 condition|(
-name|c
-operator|==
-operator|*
-name|p
+name|i
+operator|<
+literal|0
 condition|)
 name|p
-operator|++
+operator|=
+name|string
 expr_stmt|;
 block|}
 block|}
@@ -2534,11 +2555,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"MON Expecting regexp\n"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2555,12 +2574,12 @@ name|mybuf
 operator|=
 name|alloca
 argument_list|(
-literal|1024
+name|TARGET_BUF_SIZE
 argument_list|)
 expr_stmt|;
 name|buflen
 operator|=
-literal|1024
+name|TARGET_BUF_SIZE
 expr_stmt|;
 block|}
 name|p
@@ -2673,12 +2692,11 @@ name|int
 name|buflen
 decl_stmt|;
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"MON Expecting prompt\n"
-argument|)
 argument_list|)
+expr_stmt|;
 return|return
 name|monitor_expect
 argument_list|(
@@ -2705,7 +2723,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static unsigned long get_hex_word () {   unsigned long val;   int i;   int ch;    do     ch = readchar (timeout);   while (isspace(ch));    val = from_hex (ch);    for (i = 7; i>= 1; i--)     {       ch = readchar (timeout);       if (!isxdigit (ch)) 	break;       val = (val<< 4) | from_hex (ch);     }    return val; }
+unit|static unsigned long get_hex_word () {   unsigned long val;   int i;   int ch;    do     ch = readchar (timeout);   while (isspace (ch));    val = from_hex (ch);    for (i = 7; i>= 1; i--)     {       ch = readchar (timeout);       if (!isxdigit (ch)) 	break;       val = (val<< 4) | from_hex (ch);     }    return val; }
 endif|#
 directive|endif
 end_endif
@@ -3037,11 +3055,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"EXP Open echo\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|monitor_expect_prompt
@@ -3071,7 +3087,7 @@ name|p
 operator|++
 control|)
 block|{
-comment|/* Some of the characters we send may not be echoed, 	 but we hope to get a prompt at the end of it all. */
+comment|/* Some of the characters we send may not be echoed,          but we hope to get a prompt at the end of it all. */
 if|if
 condition|(
 operator|(
@@ -3110,6 +3126,65 @@ argument_list|(
 name|monitor_desc
 argument_list|)
 expr_stmt|;
+comment|/* Alloc breakpoints */
+if|if
+condition|(
+name|mon_ops
+operator|->
+name|set_break
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|mon_ops
+operator|->
+name|num_breakpoints
+operator|==
+literal|0
+condition|)
+name|mon_ops
+operator|->
+name|num_breakpoints
+operator|=
+literal|8
+expr_stmt|;
+name|breakaddr
+operator|=
+operator|(
+name|CORE_ADDR
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+name|mon_ops
+operator|->
+name|num_breakpoints
+operator|*
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|breakaddr
+argument_list|,
+literal|0
+argument_list|,
+name|mon_ops
+operator|->
+name|num_breakpoints
+operator|*
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Remove all breakpoints */
 if|if
 condition|(
@@ -3220,6 +3295,24 @@ argument_list|(
 name|monitor_desc
 argument_list|)
 expr_stmt|;
+comment|/* Free breakpoint memory */
+if|if
+condition|(
+name|breakaddr
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|breakaddr
+argument_list|)
+expr_stmt|;
+name|breakaddr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|monitor_desc
 operator|=
 name|NULL
@@ -3287,8 +3380,7 @@ modifier|*
 name|valstr
 decl_stmt|;
 block|{
-name|unsigned
-name|int
+name|ULONGEST
 name|val
 decl_stmt|;
 name|unsigned
@@ -3304,36 +3396,107 @@ name|p
 decl_stmt|;
 name|val
 operator|=
-name|strtoul
-argument_list|(
-name|valstr
-argument_list|,
-operator|&
+literal|0
+expr_stmt|;
 name|p
-argument_list|,
-literal|16
+operator|=
+name|valstr
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\r'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\n'
+condition|)
+block|{
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|p
+operator|++
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+block|{
+name|p
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|isxdigit
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'x'
+condition|)
+block|{
+break|break;
+block|}
+name|val
+operator|<<=
+literal|4
+expr_stmt|;
+name|val
+operator|+=
+name|fromhex
+argument_list|(
+operator|*
+name|p
+operator|++
 argument_list|)
 expr_stmt|;
-name|RDEBUG
+block|}
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"Supplying Register %d %s\n"
-operator|,
+argument_list|,
 name|regno
-operator|,
+argument_list|,
 name|valstr
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|val
-operator|==
-literal|0
-operator|&&
-name|valstr
-operator|==
+operator|*
 name|p
+operator|!=
+literal|'\0'
 condition|)
 name|error
 argument_list|(
@@ -3409,11 +3572,9 @@ name|sig
 decl_stmt|;
 block|{
 comment|/* Some monitors require a different command when starting a program */
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"MON resume\n"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3529,12 +3690,11 @@ name|int
 name|len
 decl_stmt|;
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"MON Parsing  register dump\n"
-argument|)
 argument_list|)
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -3552,7 +3712,7 @@ decl_stmt|,
 modifier|*
 name|val
 decl_stmt|;
-comment|/* Element 0 points to start of register name, and element 1 	 points to the start of the register value.  */
+comment|/* Element 0 points to start of register name, and element 1          points to the start of the register value.  */
 name|struct
 name|re_registers
 name|register_strings
@@ -3708,10 +3868,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|monitor_debug_p
+operator|||
 name|remote_debug
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"monitor_interrupt called\n"
 argument_list|)
 expr_stmt|;
@@ -3894,6 +4058,8 @@ comment|/* Print any output characters that were preceded by ^O.  */
 comment|/* FIXME - This would be great as a user settabgle flag */
 if|if
 condition|(
+name|monitor_debug_p
+operator|||
 name|remote_debug
 operator|||
 name|current_monitor
@@ -3973,7 +4139,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|1024
+name|TARGET_BUF_SIZE
 index|]
 decl_stmt|;
 name|int
@@ -4008,16 +4174,14 @@ operator|&
 name|old_timeout
 argument_list|)
 expr_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"MON wait\n"
-argument|)
 argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* MAINTENANCE_CMDS */
 comment|/* This is somthing other than a maintenance command */
 block|in_monitor_wait = 1;   timeout = watchdog> 0 ? watchdog : -1;
 else|#
@@ -4095,7 +4259,7 @@ comment|/* Transferred to monitor wait filter */
 block|do     {       resp_len = monitor_expect_prompt (buf, sizeof (buf));        if (resp_len<= 0) 	fprintf_unfiltered (gdb_stderr, "monitor_wait:  excessive response from monitor: %s.", buf);     }   while (resp_len< 0);
 comment|/* Print any output characters that were preceded by ^O.  */
 comment|/* FIXME - This would be great as a user settabgle flag */
-block|if (remote_debug ||       current_monitor->flags& MO_PRINT_PROGRAM_OUTPUT)     {       int i;        for (i = 0; i< resp_len - 1; i++) 	if (buf[i] == 0x0f) 	  putchar_unfiltered (buf[++i]);     }
+block|if (monitor_debug_p || remote_debug       || current_monitor->flags& MO_PRINT_PROGRAM_OUTPUT)     {       int i;        for (i = 0; i< resp_len - 1; i++) 	if (buf[i] == 0x0f) 	  putchar_unfiltered (buf[++i]);     }
 endif|#
 directive|endif
 name|signal
@@ -4115,11 +4279,9 @@ literal|0
 block|if (dump_reg_flag&& current_monitor->dump_registers)     {       dump_reg_flag = 0;       monitor_printf (current_monitor->dump_registers);       resp_len = monitor_expect_prompt (buf, sizeof (buf));     }    if (current_monitor->register_pattern)     parse_register_dump (buf, resp_len);
 else|#
 directive|else
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"Wait fetching registers after stop\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|monitor_dump_regs
@@ -4208,12 +4370,19 @@ index|[
 name|regno
 index|]
 expr_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"MON fetchreg %d '%s'\n"
-argument|,regno,name)
+argument_list|,
+name|regno
+argument_list|,
+name|name
+condition|?
+name|name
+else|:
+literal|"(null name)"
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4227,12 +4396,13 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"No register known for %d\n"
-argument|,regno)
+argument_list|,
+name|regno
 argument_list|)
+expr_stmt|;
 name|supply_register
 argument_list|(
 name|regno
@@ -4264,12 +4434,11 @@ operator|.
 name|resp_delim
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"EXP getreg.resp_delim\n"
-argument|)
 argument_list|)
+expr_stmt|;
 name|monitor_expect
 argument_list|(
 name|current_monitor
@@ -4292,22 +4461,22 @@ name|flags
 operator|&
 name|MO_32_REGS_PAIRED
 operator|&&
+operator|(
 name|regno
 operator|&
 literal|1
-operator|==
-literal|1
+operator|)
+operator|!=
+literal|0
 operator|&&
 name|regno
 operator|<
 literal|32
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"EXP getreg.resp_delim\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|monitor_expect
@@ -4457,13 +4626,11 @@ operator|=
 literal|'\000'
 expr_stmt|;
 comment|/* terminate the number */
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"REGVAL '%s'\n"
-operator|,
+argument_list|,
 name|regbuf
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* If TERM is present, we wait for that to show up.  Also, (if TERM      is present), we will send TERM_CMD if that is present.  In any      case, we collect all of the output into buf, and then wait for      the normal prompt.  */
@@ -4476,12 +4643,11 @@ operator|.
 name|term
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"EXP getreg.term\n"
-argument|)
 argument_list|)
+expr_stmt|;
 name|monitor_expect
 argument_list|(
 name|current_monitor
@@ -4506,12 +4672,11 @@ operator|.
 name|term_cmd
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"EMIT getreg.term.cmd\n"
-argument|)
 argument_list|)
+expr_stmt|;
 name|monitor_printf
 argument_list|(
 name|current_monitor
@@ -4562,7 +4727,7 @@ comment|/* Sometimes, it takes several commands to dump the registers */
 end_comment
 
 begin_comment
-comment|/* This is a primitive for use by variations of monitor interfaces in    case they need to compose the operation.    */
+comment|/* This is a primitive for use by variations of monitor interfaces in    case they need to compose the operation.  */
 end_comment
 
 begin_function
@@ -4577,7 +4742,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|1024
+name|TARGET_BUF_SIZE
 index|]
 decl_stmt|;
 name|int
@@ -4630,7 +4795,7 @@ block|{
 name|char
 name|buf
 index|[
-literal|1024
+name|TARGET_BUF_SIZE
 index|]
 decl_stmt|;
 name|int
@@ -4709,11 +4874,9 @@ name|int
 name|regno
 decl_stmt|;
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"MON fetchregs\n"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4786,8 +4949,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|unsigned
-name|int
+name|ULONGEST
 name|val
 decl_stmt|;
 name|name
@@ -4812,12 +4974,11 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"MON Cannot store unknown register\n"
-argument|)
 argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|val
@@ -4827,12 +4988,18 @@ argument_list|(
 name|regno
 argument_list|)
 expr_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
-literal|"MON storeg %d %08x\n"
-argument|,regno,(unsigned int)val)
+literal|"MON storeg %d %s\n"
+argument_list|,
+name|regno
+argument_list|,
+name|preg
+argument_list|(
+name|val
 argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* send the register deposit command */
 if|if
 condition|(
@@ -4898,12 +5065,11 @@ operator|.
 name|term
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"EXP setreg.term\n"
-argument|)
 argument_list|)
+expr_stmt|;
 name|monitor_expect
 argument_list|(
 name|current_monitor
@@ -4927,9 +5093,12 @@ name|MO_SETREG_INTERACTIVE
 condition|)
 name|monitor_printf
 argument_list|(
-literal|"%x\r"
+literal|"%s\r"
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|val
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|monitor_expect_prompt
@@ -4958,11 +5127,9 @@ name|term_cmd
 condition|)
 comment|/* Mode exit required */
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"EXP setreg_termcmd\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|monitor_printf
@@ -5115,12 +5282,18 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
-literal|"MON write %d %08x\n"
-argument|,len,(unsigned long)memaddr)
+literal|"MON write %d %s\n"
+argument_list|,
+name|len
+argument_list|,
+name|paddr
+argument_list|(
+name|memaddr
 argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|current_monitor
@@ -5175,12 +5348,13 @@ literal|4
 condition|)
 comment|/* More than 4 zeros is worth doing */
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"MON FILL %d\n"
-argument|,i)
+argument_list|,
+name|i
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|current_monitor
@@ -5351,15 +5525,13 @@ operator|*
 operator|)
 name|myaddr
 expr_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"Hostval(%08x) val(%08x)\n"
-operator|,
+argument_list|,
 name|hostval
-operator|,
+argument_list|,
 name|val
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5406,11 +5578,9 @@ operator|.
 name|term
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"EXP setmem.term"
-operator|)
 argument_list|)
 expr_stmt|;
 name|monitor_expect
@@ -5566,12 +5736,16 @@ name|written
 operator|+=
 literal|4
 expr_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
-literal|" @ %08x\n"
-argument|,memaddr)
+literal|" @ %s\n"
+argument_list|,
+name|paddr
+argument_list|(
+name|memaddr
 argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* If we wanted to, here we could validate the address */
 name|monitor_expect_prompt
 argument_list|(
@@ -5936,19 +6110,21 @@ if|if
 condition|(
 name|leadzero
 condition|)
+block|{
 if|if
 condition|(
 name|c
 operator|==
 literal|0
 condition|)
-continue|continue ;
+continue|continue;
 else|else
 name|leadzero
 operator|=
 literal|0
 expr_stmt|;
 comment|/* henceforth we print even zeroes */
+block|}
 name|nib
 operator|=
 name|c
@@ -5994,7 +6170,7 @@ comment|/* longlong_hexchars */
 end_comment
 
 begin_comment
-comment|/* I am only going to call this when writing virtual byte streams.    Which possably entails endian conversions    */
+comment|/* I am only going to call this when writing virtual byte streams.    Which possably entails endian conversions  */
 end_comment
 
 begin_function
@@ -6173,7 +6349,7 @@ comment|/* ----- MONITOR_WRITE_MEMORY_BLOCK ---------------------------- */
 end_comment
 
 begin_comment
-comment|/* This is for the large blocks of memory which may occur in downloading.    And for monitors which use interactive entry,    And for monitors which do not have other downloading methods.    Without this, we will end up calling monitor_write_memory many times    and do the entry and exit of the sub mode many times    This currently assumes...      MO_SETMEM_INTERACTIVE      ! MO_NO_ECHO_ON_SETMEM      To use this, the you have to patch the monitor_cmds block with      this function. Otherwise, its not tuned up for use by all      monitor variations.    */
+comment|/* This is for the large blocks of memory which may occur in downloading.    And for monitors which use interactive entry,    And for monitors which do not have other downloading methods.    Without this, we will end up calling monitor_write_memory many times    and do the entry and exit of the sub mode many times    This currently assumes...    MO_SETMEM_INTERACTIVE    ! MO_NO_ECHO_ON_SETMEM    To use this, the you have to patch the monitor_cmds block with    this function. Otherwise, its not tuned up for use by all    monitor variations.  */
 end_comment
 
 begin_function
@@ -6252,9 +6428,9 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|if (len> 4)     {       int sublen ;       written = monitor_write_even_block(memaddr,myaddr,len) ;
+block|if (len> 4)     {       int sublen;       written = monitor_write_even_block (memaddr, myaddr, len);
 comment|/* Adjust calling parameters by written amount */
-block|memaddr += written ;       myaddr += written ;       len -= written ;     }
+block|memaddr += written;       myaddr += written;       len -= written;     }
 endif|#
 directive|endif
 name|written
@@ -6328,11 +6504,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"MON read single\n"
-operator|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -6444,11 +6618,9 @@ operator|.
 name|resp_delim
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"EXP getmem.resp_delim\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|monitor_expect_regexp
@@ -6521,7 +6693,9 @@ empty_stmt|;
 else|else
 name|monitor_error
 argument_list|(
-literal|"monitor_read_memory_single (0x%x):  bad response from monitor: %.*s%c."
+literal|"monitor_read_memory_single"
+argument_list|,
+literal|"bad response from monitor"
 argument_list|,
 name|memaddr
 argument_list|,
@@ -6581,7 +6755,9 @@ condition|)
 continue|continue;
 name|monitor_error
 argument_list|(
-literal|"monitor_read_memory_single (0x%x):  bad response from monitor: %.*s%c."
+literal|"monitor_read_memory_single"
+argument_list|,
+literal|"bad response from monitor"
 argument_list|,
 name|memaddr
 argument_list|,
@@ -6697,7 +6873,9 @@ name|p
 condition|)
 name|monitor_error
 argument_list|(
-literal|"monitor_read_memory_single (0x%x):  bad value from monitor: %s."
+literal|"monitor_read_memory_single"
+argument_list|,
+literal|"bad value from monitor"
 argument_list|,
 name|memaddr
 argument_list|,
@@ -6783,33 +6961,25 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"Zero length call to monitor_read_memory\n"
-operator|)
 argument_list|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-if|if
-condition|(
-name|remote_debug
-condition|)
-name|printf
+name|monitor_debug
 argument_list|(
-literal|"MON read block ta(%08x) ha(%08x) %d\n"
+literal|"MON read block ta(%s) ha(%lx) %d\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|paddr_nz
+argument_list|(
 name|memaddr
+argument_list|)
 argument_list|,
 operator|(
-name|unsigned
 name|long
 operator|)
 name|myaddr
@@ -6859,7 +7029,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/* Some dumpers align the first data with the preceeding 16      byte boundary. Some print blanks and start at the      requested boundary. EXACT_DUMPADDR      */
+comment|/* Some dumpers align the first data with the preceeding 16      byte boundary. Some print blanks and start at the      requested boundary. EXACT_DUMPADDR    */
 name|dumpaddr
 operator|=
 operator|(
@@ -6936,8 +7106,6 @@ argument_list|,
 name|memaddr
 operator|+
 name|len
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -7009,7 +7177,9 @@ literal|0
 condition|)
 name|monitor_error
 argument_list|(
-literal|"monitor_read_memory (0x%x):  excessive response from monitor: %.*s."
+literal|"monitor_read_memory"
+argument_list|,
+literal|"excessive response from monitor"
 argument_list|,
 name|memaddr
 argument_list|,
@@ -7093,17 +7263,15 @@ name|struct
 name|re_registers
 name|resp_strings
 decl_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"MON getmem.resp_delim %s\n"
-operator|,
+argument_list|,
 name|current_monitor
 operator|->
 name|getmem
 operator|.
 name|resp_delim
-operator|)
 argument_list|)
 expr_stmt|;
 name|memset
@@ -7154,7 +7322,9 @@ literal|0
 condition|)
 name|monitor_error
 argument_list|(
-literal|"monitor_read_memory (0x%x):  bad response from monitor: %.*s."
+literal|"monitor_read_memory"
+argument_list|,
+literal|"bad response from monitor"
 argument_list|,
 name|memaddr
 argument_list|,
@@ -7177,20 +7347,19 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|p = strstr (p, current_monitor->getmem.resp_delim);       if (!p) 	monitor_error ("monitor_read_memory (0x%x):  bad response from monitor: %.*s.", 		       memaddr, resp_len, buf, 0);       p += strlen (current_monitor->getmem.resp_delim);
+block|p = strstr (p, current_monitor->getmem.resp_delim);       if (!p) 	monitor_error ("monitor_read_memory", 		       "bad response from monitor", 		       memaddr, resp_len, buf, 0);       p += strlen (current_monitor->getmem.resp_delim);
 endif|#
 directive|endif
 block|}
-if|if
-condition|(
-name|remote_debug
-condition|)
-name|printf
+name|monitor_debug
 argument_list|(
-literal|"MON scanning  %d ,%08x '%s'\n"
+literal|"MON scanning  %d ,%lx '%s'\n"
 argument_list|,
 name|len
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 argument_list|,
 name|p
@@ -7294,10 +7463,14 @@ name|val
 expr_stmt|;
 if|if
 condition|(
+name|monitor_debug_p
+operator|||
 name|remote_debug
 condition|)
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"[%02x]"
 argument_list|,
 name|val
@@ -7340,10 +7513,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|monitor_debug_p
+operator|||
 name|remote_debug
 condition|)
-name|printf
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -7352,11 +7529,9 @@ name|fetched
 return|;
 comment|/* Return the number of bytes actually read */
 block|}
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"MON scanning bytes\n"
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -7407,7 +7582,9 @@ literal|'\r'
 condition|)
 name|monitor_error
 argument_list|(
-literal|"monitor_read_memory (0x%x):  badly terminated response from monitor: %.*s"
+literal|"monitor_read_memory"
+argument_list|,
+literal|"badly terminated response from monitor"
 argument_list|,
 name|memaddr
 argument_list|,
@@ -7446,7 +7623,9 @@ name|p1
 condition|)
 name|monitor_error
 argument_list|(
-literal|"monitor_read_memory (0x%x):  bad value from monitor: %.*s."
+literal|"monitor_read_memory"
+argument_list|,
+literal|"bad value from monitor"
 argument_list|,
 name|memaddr
 argument_list|,
@@ -7633,27 +7812,6 @@ comment|/* Do all the proper things now */
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|NUM_MONITOR_BREAKPOINTS
-value|8
-end_define
-
-begin_decl_stmt
-specifier|static
-name|CORE_ADDR
-name|breakaddr
-index|[
-name|NUM_MONITOR_BREAKPOINTS
-index|]
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Tell the monitor to add a breakpoint.  */
 end_comment
@@ -7686,12 +7844,16 @@ decl_stmt|;
 name|int
 name|bplen
 decl_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
-literal|"MON inst bkpt %08x\n"
-argument|,addr)
+literal|"MON inst bkpt %s\n"
+argument_list|,
+name|paddr
+argument_list|(
+name|addr
 argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|current_monitor
@@ -7740,7 +7902,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MONITOR_BREAKPOINTS
+name|current_monitor
+operator|->
+name|num_breakpoints
 condition|;
 name|i
 operator|++
@@ -7797,7 +7961,9 @@ name|error
 argument_list|(
 literal|"Too many breakpoints (> %d) for monitor."
 argument_list|,
-name|NUM_MONITOR_BREAKPOINTS
+name|current_monitor
+operator|->
+name|num_breakpoints
 argument_list|)
 expr_stmt|;
 block|}
@@ -7827,12 +7993,16 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
-literal|"MON rmbkpt %08x\n"
-argument|,addr)
+literal|"MON rmbkpt %s\n"
+argument_list|,
+name|paddr
+argument_list|(
+name|addr
 argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|current_monitor
@@ -7869,7 +8039,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MONITOR_BREAKPOINTS
+name|current_monitor
+operator|->
+name|num_breakpoints
 condition|;
 name|i
 operator|++
@@ -7956,9 +8128,12 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
-literal|"Can't find breakpoint associated with 0x%x\n"
+literal|"Can't find breakpoint associated with 0x%s\n"
 argument_list|,
+name|paddr_nz
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -7978,8 +8153,6 @@ name|monitor_wait_srec_ack
 parameter_list|()
 block|{
 name|int
-name|i
-decl_stmt|,
 name|ch
 decl_stmt|;
 if|if
@@ -8110,12 +8283,11 @@ argument_list|(
 name|remote_dcache
 argument_list|)
 expr_stmt|;
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-argument|(
 literal|"MON load\n"
-argument|)
 argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|current_monitor
@@ -8270,11 +8442,9 @@ name|void
 name|monitor_stop
 parameter_list|()
 block|{
-name|RDEBUG
+name|monitor_debug
 argument_list|(
-operator|(
 literal|"MON stop\n"
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -8311,25 +8481,23 @@ block|}
 end_function
 
 begin_comment
-comment|/* Put a command string, in args, out to MONITOR.  Output from MONITOR    is placed on the users terminal until the prompt is seen. FIXME: We    read the characters ourseleves here cause of a nasty echo.  */
+comment|/* Put a COMMAND string out to MONITOR.  Output from MONITOR is placed    in OUTPUT until the prompt is seen. FIXME: We read the characters    ourseleves here cause of a nasty echo.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|monitor_command
+name|monitor_rcmd
 parameter_list|(
-name|args
-parameter_list|,
-name|from_tty
-parameter_list|)
 name|char
 modifier|*
-name|args
-decl_stmt|;
-name|int
-name|from_tty
-decl_stmt|;
+name|command
+parameter_list|,
+name|struct
+name|ui_file
+modifier|*
+name|outbuf
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -8367,9 +8535,9 @@ argument_list|(
 literal|"%s\r"
 argument_list|,
 operator|(
-name|args
+name|command
 condition|?
-name|args
+name|command
 else|:
 literal|""
 operator|)
@@ -8389,7 +8557,7 @@ name|fputs_unfiltered
 argument_list|(
 name|buf
 argument_list|,
-name|gdb_stdout
+name|outbuf
 argument_list|)
 expr_stmt|;
 comment|/* Output the response */
@@ -8407,7 +8575,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int from_hex (a)      int a; {     if (a>= '0'&& a<= '9')     return a - '0';   if (a>= 'a'&& a<= 'f')     return a - 'a' + 10;   if (a>= 'A'&& a<= 'F')     return a - 'A' + 10;    error ("Reply contains invalid hex digit 0x%x", a); }
+unit|static int from_hex (a)      int a; {   if (a>= '0'&& a<= '9')     return a - '0';   if (a>= 'a'&& a<= 'f')     return a - 'a' + 10;   if (a>= 'A'&& a<= 'F')     return a - 'A' + 10;    error ("Reply contains invalid hex digit 0x%x", a); }
 endif|#
 directive|endif
 end_endif
@@ -8748,6 +8916,12 @@ name|monitor_stop
 expr_stmt|;
 name|monitor_ops
 operator|.
+name|to_rcmd
+operator|=
+name|monitor_rcmd
+expr_stmt|;
+name|monitor_ops
+operator|.
 name|to_pid_to_exec_file
 operator|=
 name|NULL
@@ -8905,15 +9079,31 @@ operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
-name|add_com
+name|add_show_from_set
+argument_list|(
+name|add_set_cmd
 argument_list|(
 literal|"monitor"
 argument_list|,
-name|class_obscure
+name|no_class
 argument_list|,
-name|monitor_command
+name|var_zinteger
 argument_list|,
-literal|"Send a command to the debug monitor."
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|monitor_debug_p
+argument_list|,
+literal|"Set debugging of remote monitor communication.\n\ When enabled, communication between GDB and the remote monitor\n\ is displayed."
+argument_list|,
+operator|&
+name|setdebuglist
+argument_list|)
+argument_list|,
+operator|&
+name|showdebuglist
 argument_list|)
 expr_stmt|;
 block|}

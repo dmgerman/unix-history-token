@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle OSF/1 shared libraries for GDB, the GNU Debugger.    Copyright 1993, 94, 95, 96, 98, 1999 Free Software Foundation, Inc.     This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Handle OSF/1 shared libraries for GDB, the GNU Debugger.    Copyright 1993, 94, 95, 96, 98, 1999 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"gnu-regex.h"
+file|"gdb_regex.h"
 end_include
 
 begin_include
@@ -121,7 +121,7 @@ comment|/* FIXME: Should be dynamic */
 end_comment
 
 begin_comment
-comment|/* When handling shared libraries, GDB has to find out the pathnames    of all shared libraries that are currently loaded (to read in their    symbols) and where the shared libraries are loaded in memory    (to relocate them properly from their prelinked addresses to the    current load address).     Under OSF/1 there are two possibilities to get at this information:    1) Peek around in the runtime loader structures.       These are not documented, and they are not defined in the system       header files. The definitions below were obtained by experimentation,       but they seem stable enough.    2) Use the undocumented libxproc.a library, which contains the       equivalent ldr_* routines.       This approach is somewhat cleaner, but it requires that the GDB       executable is dynamically linked. In addition it requires a       NAT_CLIBS= -lxproc -Wl,-expect_unresolved,ldr_process_context       linker specification for GDB and all applications that are using       libgdb.    We will use the peeking approach until it becomes unwieldy.  */
+comment|/* When handling shared libraries, GDB has to find out the pathnames    of all shared libraries that are currently loaded (to read in their    symbols) and where the shared libraries are loaded in memory    (to relocate them properly from their prelinked addresses to the    current load address).     Under OSF/1 there are two possibilities to get at this information:    1) Peek around in the runtime loader structures.    These are not documented, and they are not defined in the system    header files. The definitions below were obtained by experimentation,    but they seem stable enough.    2) Use the undocumented libxproc.a library, which contains the    equivalent ldr_* routines.    This approach is somewhat cleaner, but it requires that the GDB    executable is dynamically linked. In addition it requires a    NAT_CLIBS= -lxproc -Wl,-expect_unresolved,ldr_process_context    linker specification for GDB and all applications that are using    libgdb.    We will use the peeking approach until it becomes unwieldy.  */
 end_comment
 
 begin_ifndef
@@ -668,7 +668,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	solib_map_sections -- open bfd and build sections for shared lib  SYNOPSIS  	static int solib_map_sections (struct so_list *so)  DESCRIPTION  	Given a pointer to one of the shared objects in our list 	of mapped objects, use the recorded name to open a bfd 	descriptor for the object, build a section table, and then 	relocate all the section addresses by the base address at 	which the shared object was mapped.  FIXMES  	In most (all?) cases the shared object file name recorded in the 	dynamic linkage tables will be a fully qualified pathname.  For 	cases where it isn't, do we really mimic the systems search 	mechanism correctly in the below code (particularly the tilde 	expansion stuff?).  */
+comment|/*     LOCAL FUNCTION     solib_map_sections -- open bfd and build sections for shared lib     SYNOPSIS     static int solib_map_sections (struct so_list *so)     DESCRIPTION     Given a pointer to one of the shared objects in our list    of mapped objects, use the recorded name to open a bfd    descriptor for the object, build a section table, and then    relocate all the section addresses by the base address at    which the shared object was mapped.     FIXMES     In most (all?) cases the shared object file name recorded in the    dynamic linkage tables will be a fully qualified pathname.  For    cases where it isn't, do we really mimic the systems search    mechanism correctly in the below code (particularly the tilde    expansion stuff?).  */
 end_comment
 
 begin_function
@@ -930,7 +930,7 @@ name|p
 operator|++
 control|)
 block|{
-comment|/* Relocate the section binding addresses as recorded in the shared 	 object's file by the offset to get the address to which the 	 object was actually mapped.  */
+comment|/* Relocate the section binding addresses as recorded in the shared          object's file by the offset to get the address to which the          object was actually mapped.  */
 name|p
 operator|->
 name|addr
@@ -1004,7 +1004,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	first_link_map_member -- locate first member in dynamic linker's map  SYNOPSIS  	static struct link_map *first_link_map_member (void)  DESCRIPTION  	Read in a copy of the first member in the inferior's dynamic 	link map from the inferior's dynamic linker structures, and return 	a pointer to the copy in our address space. */
+comment|/*     LOCAL FUNCTION     first_link_map_member -- locate first member in dynamic linker's map     SYNOPSIS     static struct link_map *first_link_map_member (void)     DESCRIPTION     Read in a copy of the first member in the inferior's dynamic    link map from the inferior's dynamic linker structures, and return    a pointer to the copy in our address space.  */
 end_comment
 
 begin_function
@@ -1863,7 +1863,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	find_solib -- step through list of shared objects  SYNOPSIS  	struct so_list *find_solib (struct so_list *so_list_ptr)  DESCRIPTION  	This module contains the routine which finds the names of any 	loaded "images" in the current process. The argument in must be 	NULL on the first call, and then the returned value must be passed 	in on subsequent calls. This provides the capability to "step" down 	the list of loaded objects. On the last object, a NULL value is 	returned.  	The arg and return value are "struct link_map" pointers, as defined 	in<link.h>.  */
+comment|/*     LOCAL FUNCTION     find_solib -- step through list of shared objects     SYNOPSIS     struct so_list *find_solib (struct so_list *so_list_ptr)     DESCRIPTION     This module contains the routine which finds the names of any    loaded "images" in the current process. The argument in must be    NULL on the first call, and then the returned value must be passed    in on subsequent calls. This provides the capability to "step" down    the list of loaded objects. On the last object, a NULL value is    returned.     The arg and return value are "struct link_map" pointers, as defined    in<link.h>.  */
 end_comment
 
 begin_function
@@ -1930,7 +1930,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* We have been called before, and are in the process of walking 	 the shared library list.  Advance to the next shared object. */
+comment|/* We have been called before, and are in the process of walking          the shared library list.  Advance to the next shared object. */
 name|lm
 operator|=
 name|next_link_map_member
@@ -1960,7 +1960,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-comment|/* Get next link map structure from inferior image and build a local 	 abbreviated load_map structure */
+comment|/* Get next link map structure from inferior image and build a local          abbreviated load_map structure */
 name|new
 operator|=
 operator|(
@@ -2000,7 +2000,7 @@ name|lmaddr
 operator|=
 name|lm
 expr_stmt|;
-comment|/* Add the new node as the next node in the list, or as the root 	 node if this is the first one. */
+comment|/* Add the new node as the next node in the list, or as the root          node if this is the first one. */
 if|if
 condition|(
 name|so_list_ptr
@@ -2077,6 +2077,23 @@ name|text_addr
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|section_addr_info
+name|section_addrs
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|section_addrs
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|section_addrs
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|so
@@ -2105,7 +2122,7 @@ name|asection
 modifier|*
 name|lowest_sect
 decl_stmt|;
-comment|/* If we didn't find a mapped non zero sized .text section, set up 	 text_addr so that the relocation in symbol_file_add does no harm.  */
+comment|/* If we didn't find a mapped non zero sized .text section, set up          text_addr so that the relocation in symbol_file_add does no harm.  */
 name|lowest_sect
 operator|=
 name|bfd_get_section_by_name
@@ -2159,6 +2176,12 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
+name|section_addrs
+operator|.
+name|text_addr
+operator|=
+name|text_addr
+expr_stmt|;
 name|so
 operator|->
 name|objfile
@@ -2173,17 +2196,12 @@ name|so
 operator|->
 name|from_tty
 argument_list|,
-name|text_addr
+operator|&
+name|section_addrs
 argument_list|,
 literal|0
 argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|1
+name|OBJF_SHARED
 argument_list|)
 expr_stmt|;
 return|return
@@ -2195,7 +2213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  GLOBAL FUNCTION  	solib_add -- add a shared library file to the symtab and section list  SYNOPSIS  	void solib_add (char *arg_string, int from_tty, 			struct target_ops *target)  DESCRIPTION  */
+comment|/*     GLOBAL FUNCTION     solib_add -- add a shared library file to the symtab and section list     SYNOPSIS     void solib_add (char *arg_string, int from_tty,    struct target_ops *target)     DESCRIPTION   */
 end_comment
 
 begin_function
@@ -2330,140 +2348,16 @@ condition|(
 name|count
 condition|)
 block|{
-name|int
-name|update_coreops
-decl_stmt|;
-comment|/* We must update the to_sections field in the core_ops structure 	     here, otherwise we dereference a potential dangling pointer 	     for each call to target_read/write_memory within this routine.  */
-name|update_coreops
-operator|=
-name|core_ops
-operator|.
-name|to_sections
-operator|==
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-comment|/* Reallocate the target's section table including the new size.  */
-if|if
-condition|(
-name|target
-operator|->
-name|to_sections
-condition|)
-block|{
-name|old
-operator|=
-name|target
-operator|->
-name|to_sections_end
-operator|-
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-name|target
-operator|->
-name|to_sections
-operator|=
-operator|(
-expr|struct
-name|section_table
-operator|*
-operator|)
-name|xrealloc
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|target
-operator|->
-name|to_sections
-argument_list|,
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_table
-argument_list|)
-operator|)
-operator|*
-operator|(
-name|count
-operator|+
-name|old
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|old
-operator|=
-literal|0
-expr_stmt|;
-name|target
-operator|->
-name|to_sections
-operator|=
-operator|(
-expr|struct
-name|section_table
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-operator|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|section_table
-argument_list|)
-operator|)
-operator|*
-name|count
-argument_list|)
-expr_stmt|;
-block|}
-name|target
-operator|->
-name|to_sections_end
-operator|=
-name|target
-operator|->
-name|to_sections
-operator|+
-operator|(
-name|count
-operator|+
-name|old
-operator|)
-expr_stmt|;
-comment|/* Update the to_sections field in the core_ops structure 	     if needed.  */
-if|if
-condition|(
-name|update_coreops
-condition|)
-block|{
-name|core_ops
-operator|.
-name|to_sections
-operator|=
-name|target
-operator|->
-name|to_sections
-expr_stmt|;
-name|core_ops
-operator|.
-name|to_sections_end
-operator|=
-name|target
-operator|->
-name|to_sections_end
-expr_stmt|;
-block|}
 comment|/* Add these section table entries to the target's table.  */
+name|old
+operator|=
+name|target_resize_to_sections
+argument_list|(
+name|target
+argument_list|,
+name|count
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2644,7 +2538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	info_sharedlibrary_command -- code for "info sharedlibrary"  SYNOPSIS  	static void info_sharedlibrary_command ()  DESCRIPTION  	Walk through the shared library list and print information 	about each attached library. */
+comment|/*     LOCAL FUNCTION     info_sharedlibrary_command -- code for "info sharedlibrary"     SYNOPSIS     static void info_sharedlibrary_command ()     DESCRIPTION     Walk through the shared library list and print information    about each attached library.  */
 end_comment
 
 begin_function
@@ -2687,7 +2581,7 @@ condition|)
 block|{
 name|printf_unfiltered
 argument_list|(
-literal|"No exec file.\n"
+literal|"No executable file.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2848,7 +2742,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  GLOBAL FUNCTION  	solib_address -- check to see if an address is in a shared lib  SYNOPSIS  	char *solib_address (CORE_ADDR address)  DESCRIPTION  	Provides a hook for other gdb routines to discover whether or 	not a particular address is within the mapped address space of 	a shared library.  Any address between the base mapping address 	and the first address beyond the end of the last mapping, is 	considered to be within the shared library address space, for 	our purposes.  	For example, this routine is called at one point to disable 	breakpoints which are in shared libraries that are not currently 	mapped in.  */
+comment|/*     GLOBAL FUNCTION     solib_address -- check to see if an address is in a shared lib     SYNOPSIS     char *solib_address (CORE_ADDR address)     DESCRIPTION     Provides a hook for other gdb routines to discover whether or    not a particular address is within the mapped address space of    a shared library.  Any address between the base mapping address    and the first address beyond the end of the last mapping, is    considered to be within the shared library address space, for    our purposes.     For example, this routine is called at one point to disable    breakpoints which are in shared libraries that are not currently    mapped in.  */
 end_comment
 
 begin_function
@@ -3071,7 +2965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    GLOBAL FUNCTION    	solib_create_inferior_hook -- shared library startup support    SYNOPSIS    	void solib_create_inferior_hook()    DESCRIPTION  	When gdb starts up the inferior, it nurses it along (through the 	shell) until it is ready to execute it's first instruction.  At this 	point, this function gets called via expansion of the macro 	SOLIB_CREATE_INFERIOR_HOOK. 	For a statically bound executable, this first instruction is the 	one at "_start", or a similar text label. No further processing is 	needed in that case. 	For a dynamically bound executable, this first instruction is somewhere 	in the rld, and the actual user executable is not yet mapped in. 	We continue the inferior again, rld then maps in the actual user 	executable and any needed shared libraries and then sends 	itself a SIGTRAP. 	At that point we discover the names of all shared libraries and 	read their symbols in.  FIXME  	This code does not properly handle hitting breakpoints which the 	user might have set in the rld itself.  Proper handling would have 	to check if the SIGTRAP happened due to a kill call.  	Also, what if child has exit()ed?  Must exit loop somehow.   */
+comment|/*     GLOBAL FUNCTION     solib_create_inferior_hook -- shared library startup support     SYNOPSIS     void solib_create_inferior_hook()     DESCRIPTION     When gdb starts up the inferior, it nurses it along (through the    shell) until it is ready to execute it's first instruction.  At this    point, this function gets called via expansion of the macro    SOLIB_CREATE_INFERIOR_HOOK.    For a statically bound executable, this first instruction is the    one at "_start", or a similar text label. No further processing is    needed in that case.    For a dynamically bound executable, this first instruction is somewhere    in the rld, and the actual user executable is not yet mapped in.    We continue the inferior again, rld then maps in the actual user    executable and any needed shared libraries and then sends    itself a SIGTRAP.    At that point we discover the names of all shared libraries and    read their symbols in.     FIXME     This code does not properly handle hitting breakpoints which the    user might have set in the rld itself.  Proper handling would have    to check if the SIGTRAP happened due to a kill call.     Also, what if child has exit()ed?  Must exit loop somehow.  */
 end_comment
 
 begin_function
@@ -3143,7 +3037,7 @@ operator|!=
 name|TARGET_SIGNAL_TRAP
 condition|)
 do|;
-comment|/*  solib_add will call reinit_frame_cache.       But we are stopped in the runtime loader and we do not have symbols       for the runtime loader. So heuristic_proc_start will be called       and will put out an annoying warning.       Delaying the resetting of stop_soon_quietly until after symbol loading       suppresses the warning.  */
+comment|/*  solib_add will call reinit_frame_cache.      But we are stopped in the runtime loader and we do not have symbols      for the runtime loader. So heuristic_proc_start will be called      and will put out an annoying warning.      Delaying the resetting of stop_soon_quietly until after symbol loading      suppresses the warning.  */
 if|if
 condition|(
 name|auto_solib_add
@@ -3174,7 +3068,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  LOCAL FUNCTION  	sharedlibrary_command -- handle command to explicitly add library  SYNOPSIS  	static void sharedlibrary_command (char *args, int from_tty)  DESCRIPTION  */
+comment|/*     LOCAL FUNCTION     sharedlibrary_command -- handle command to explicitly add library     SYNOPSIS     static void sharedlibrary_command (char *args, int from_tty)     DESCRIPTION   */
 end_comment
 
 begin_function

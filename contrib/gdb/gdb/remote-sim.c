@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic remote debugging interface for simulators.    Copyright 1993, 1994, 1996, 1997 Free Software Foundation, Inc.    Contributed by Cygnus Support.    Steve Chamberlain (sac@cygnus.com).  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic remote debugging interface for simulators.    Copyright 1993, 1994, 1996, 1997, 2000 Free Software Foundation, Inc.    Contributed by Cygnus Support.    Steve Chamberlain (sac@cygnus.com).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
 
 begin_include
@@ -108,6 +108,35 @@ end_include
 begin_comment
 comment|/* Prototypes */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_initialize_remote_sim
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern int (*ui_loop_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|signo
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -683,7 +712,7 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
-literal|"\t0x%x"
+literal|"\t0x%lx"
 argument_list|,
 name|l
 index|[
@@ -931,55 +960,15 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|b
-index|[
-literal|0
-index|]
-operator|=
-name|buf
-index|[
-name|i
-index|]
-expr_stmt|;
-name|b
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|target_output_hook
-condition|)
-name|target_output_hook
+name|ui_file_write
 argument_list|(
-name|b
-argument_list|)
-expr_stmt|;
-else|else
-name|fputs_filtered
-argument_list|(
-name|b
+name|gdb_stdtarg
 argument_list|,
-name|gdb_stdout
+name|buf
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|len
 return|;
@@ -1004,7 +993,7 @@ decl_stmt|;
 block|{
 name|gdb_flush
 argument_list|(
-name|gdb_stdout
+name|gdb_stdtarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1078,21 +1067,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|target_output_hook
-condition|)
-name|target_output_hook
-argument_list|(
-name|b
-argument_list|)
-expr_stmt|;
-else|else
-name|fputs_filtered
+name|fputs_unfiltered
 argument_list|(
 name|b
 argument_list|,
-name|gdb_stderr
+name|gdb_stdtarg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1130,16 +1109,9 @@ begin_comment
 comment|/* GDB version of printf_filtered callback.  */
 end_comment
 
-begin_comment
-comment|/* VARARGS */
-end_comment
-
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|gdb_os_printf_filtered
 parameter_list|(
 name|host_callback
@@ -1153,28 +1125,10 @@ name|format
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|gdb_os_printf_filtered
-parameter_list|(
-name|p
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|host_callback
-modifier|*
-name|p
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -1182,29 +1136,6 @@ argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|format
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|format
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vfprintf_filtered
 argument_list|(
 name|gdb_stdout
@@ -1226,16 +1157,9 @@ begin_comment
 comment|/* GDB version of error vprintf_filtered.  */
 end_comment
 
-begin_comment
-comment|/* VARARGS */
-end_comment
-
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|gdb_os_vprintf_filtered
 parameter_list|(
 name|host_callback
@@ -1250,29 +1174,6 @@ parameter_list|,
 name|va_list
 name|ap
 parameter_list|)
-else|#
-directive|else
-function|gdb_os_vprintf_filtered
-parameter_list|(
-name|p
-parameter_list|,
-name|format
-parameter_list|,
-name|ap
-parameter_list|)
-name|host_callback
-modifier|*
-name|p
-decl_stmt|;
-name|char
-modifier|*
-name|format
-decl_stmt|;
-name|va_list
-name|ap
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|vfprintf_filtered
 argument_list|(
@@ -1290,16 +1191,9 @@ begin_comment
 comment|/* GDB version of error evprintf_filtered.  */
 end_comment
 
-begin_comment
-comment|/* VARARGS */
-end_comment
-
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|gdb_os_evprintf_filtered
 parameter_list|(
 name|host_callback
@@ -1314,29 +1208,6 @@ parameter_list|,
 name|va_list
 name|ap
 parameter_list|)
-else|#
-directive|else
-function|gdb_os_evprintf_filtered
-parameter_list|(
-name|p
-parameter_list|,
-name|format
-parameter_list|,
-name|ap
-parameter_list|)
-name|host_callback
-modifier|*
-name|p
-decl_stmt|;
-name|char
-modifier|*
-name|format
-decl_stmt|;
-name|va_list
-name|ap
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|vfprintf_filtered
 argument_list|(
@@ -1354,16 +1225,9 @@ begin_comment
 comment|/* GDB version of error callback.  */
 end_comment
 
-begin_comment
-comment|/* VARARGS */
-end_comment
-
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|gdb_os_error
 parameter_list|(
 name|host_callback
@@ -1377,21 +1241,6 @@ name|format
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|gdb_os_error
-parameter_list|(
-name|p
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|host_callback
-modifier|*
-name|p
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 if|if
 condition|(
@@ -1408,9 +1257,6 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -1418,46 +1264,11 @@ argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|format
-decl_stmt|;
-name|va_start
+name|verror
 argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|format
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|error_begin
-argument_list|()
-expr_stmt|;
-name|vfprintf_filtered
-argument_list|(
-name|gdb_stderr
-argument_list|,
 name|format
 argument_list|,
 name|args
-argument_list|)
-expr_stmt|;
-name|fprintf_filtered
-argument_list|(
-name|gdb_stderr
-argument_list|,
-literal|"\n"
 argument_list|)
 expr_stmt|;
 name|va_end
@@ -1465,14 +1276,30 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
-name|return_to_top_level
-argument_list|(
-name|RETURN_ERROR
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|REGISTER_SIM_REGNO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|REGISTER_SIM_REGNO
+parameter_list|(
+name|N
+parameter_list|)
+value|(N)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1545,12 +1372,26 @@ index|]
 decl_stmt|;
 name|int
 name|nr_bytes
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|REGISTER_SIM_REGNO
+argument_list|(
+name|regno
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|nr_bytes
+operator|=
 name|sim_fetch_register
 argument_list|(
 name|gdbsim_desc
 argument_list|,
+name|REGISTER_SIM_REGNO
+argument_list|(
 name|regno
+argument_list|)
 argument_list|,
 name|buf
 argument_list|,
@@ -1559,7 +1400,12 @@ argument_list|(
 name|regno
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+else|else
+name|nr_bytes
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|nr_bytes
@@ -1593,9 +1439,11 @@ operator|&&
 name|warn_user
 condition|)
 block|{
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
-literal|"Size of register %s (%d) incorrect (%d instead of %d))"
+name|gdb_stderr
+argument_list|,
+literal|"Size of register %s (%d/%d) incorrect (%d instead of %d))"
 argument_list|,
 name|REGISTER_NAME
 argument_list|(
@@ -1603,6 +1451,11 @@ name|regno
 argument_list|)
 argument_list|,
 name|regno
+argument_list|,
+name|REGISTER_SIM_REGNO
+argument_list|(
+name|regno
+argument_list|)
 argument_list|,
 name|nr_bytes
 argument_list|,
@@ -1708,6 +1561,13 @@ name|regno
 argument_list|)
 operator|!=
 literal|'\0'
+operator|&&
+name|REGISTER_SIM_REGNO
+argument_list|(
+name|regno
+argument_list|)
+operator|>=
+literal|0
 condition|)
 block|{
 name|char
@@ -1732,7 +1592,10 @@ name|sim_store_register
 argument_list|(
 name|gdbsim_desc
 argument_list|,
+name|REGISTER_SIM_REGNO
+argument_list|(
 name|regno
+argument_list|)
 argument_list|,
 name|tmp
 argument_list|,
@@ -1755,7 +1618,7 @@ argument_list|(
 name|regno
 argument_list|)
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
 literal|"Register size different to expected"
 argument_list|)
@@ -2004,7 +1867,7 @@ argument_list|)
 operator|+
 literal|1
 operator|+
-comment|/*slop*/
+comment|/*slop */
 literal|10
 expr_stmt|;
 name|arg_buf
@@ -2053,13 +1916,8 @@ argument_list|(
 name|arg_buf
 argument_list|)
 expr_stmt|;
-name|make_cleanup
+name|make_cleanup_freeargv
 argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|freeargv
-argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
@@ -2263,7 +2121,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fatal
+name|internal_error
 argument_list|(
 literal|"Value of TARGET_BYTE_ORDER unknown"
 argument_list|)
@@ -2334,13 +2192,8 @@ argument_list|(
 literal|"Insufficient memory available to allocate simulator arg list."
 argument_list|)
 expr_stmt|;
-name|make_cleanup
+name|make_cleanup_freeargv
 argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|freeargv
-argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
@@ -2447,6 +2300,9 @@ name|NULL
 expr_stmt|;
 block|}
 name|end_callbacks
+argument_list|()
+expr_stmt|;
+name|generic_mourn_inferior
 argument_list|()
 expr_stmt|;
 block|}
@@ -2584,7 +2440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Notify the simulator of an asynchronous request to stop.        The simulator shall ensure that the stop request is eventually    delivered to the simulator.  If the call is made while the    simulator is not running then the stop request is processed when    the simulator is next resumed.     For simulators that do not support this operation, just abort */
+comment|/* Notify the simulator of an asynchronous request to stop.     The simulator shall ensure that the stop request is eventually    delivered to the simulator.  If the call is made while the    simulator is not running then the stop request is processed when    the simulator is next resumed.     For simulators that do not support this operation, just abort */
 end_comment
 
 begin_function
@@ -2625,6 +2481,17 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|ui_loop_hook
+operator|!=
+name|NULL
+condition|)
+name|ui_loop_hook
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|notice_quit
 argument_list|()
 expr_stmt|;
@@ -2905,7 +2772,7 @@ name|kind
 operator|=
 name|TARGET_WAITKIND_SIGNALLED
 expr_stmt|;
-comment|/* The signal in sigrc is a host signal.  That probably 	 should be fixed.  */
+comment|/* The signal in sigrc is a host signal.  That probably          should be fixed.  */
 name|status
 operator|->
 name|value
@@ -2998,13 +2865,27 @@ name|sr_get_debug
 argument_list|()
 condition|)
 block|{
+comment|/* FIXME: Send to something other than STDOUT? */
 name|printf_filtered
 argument_list|(
-literal|"gdbsim_xfer_inferior_memory: myaddr 0x%x, memaddr 0x%x, len %d, write %d\n"
-argument_list|,
+literal|"gdbsim_xfer_inferior_memory: myaddr 0x"
+argument_list|)
+expr_stmt|;
+name|gdb_print_host_address
+argument_list|(
 name|myaddr
 argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|", memaddr 0x%s, len %d, write %d\n"
+argument_list|,
+name|paddr_nz
+argument_list|(
 name|memaddr
+argument_list|)
 argument_list|,
 name|len
 argument_list|,

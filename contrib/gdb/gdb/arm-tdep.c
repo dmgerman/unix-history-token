@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target-dependent code for the Acorn Risc Machine, for GDB, the GNU Debugger.    Copyright (C) 1988, 1989, 1991, 1992, 1993, 1995, 1996, 1998, 1999    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Common target dependent code for GDB on ARM systems.    Copyright 1988, 1989, 1991, 1992, 1993, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -55,12 +55,248 @@ begin_comment
 comment|/* Internal format of COFF symbols in BFD */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"dis-asm.h"
+end_include
+
 begin_comment
-comment|/*   The following macros are actually wrong.  Neither arm nor thumb can   or should set the lsb on addr.   The thumb addresses are mod 2, so (addr& 2) would be a good heuristic   to use when checking for thumb (see arm_pc_is_thumb() below).   Unfortunately, something else depends on these (incorrect) macros, so   fixing them actually breaks gdb.  I didn't have time to investigate. Z.R. */
+comment|/* For register flavors. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_comment
+comment|/* for isupper () */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|_initialize_arm_tdep
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Number of different reg name sets (options). */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|num_flavor_options
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* We have more registers than the disassembler as gdb can print the value    of special registers as well.    The general register names are overwritten by whatever is being used by    the disassembler at the moment. We also adjust the case of cpsr and fps. */
 end_comment
 
 begin_comment
-comment|/* Thumb function addresses are odd (bit 0 is set).  Here are some    macros to test, set, or clear bit 0 of addresses.  */
+comment|/* Initial value: Register names used in ARM's ISA documentation. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|arm_register_name_strings
+index|[]
+init|=
+block|{
+literal|"r0"
+block|,
+literal|"r1"
+block|,
+literal|"r2"
+block|,
+literal|"r3"
+block|,
+comment|/*  0  1  2  3 */
+literal|"r4"
+block|,
+literal|"r5"
+block|,
+literal|"r6"
+block|,
+literal|"r7"
+block|,
+comment|/*  4  5  6  7 */
+literal|"r8"
+block|,
+literal|"r9"
+block|,
+literal|"r10"
+block|,
+literal|"r11"
+block|,
+comment|/*  8  9 10 11 */
+literal|"r12"
+block|,
+literal|"sp"
+block|,
+literal|"lr"
+block|,
+literal|"pc"
+block|,
+comment|/* 12 13 14 15 */
+literal|"f0"
+block|,
+literal|"f1"
+block|,
+literal|"f2"
+block|,
+literal|"f3"
+block|,
+comment|/* 16 17 18 19 */
+literal|"f4"
+block|,
+literal|"f5"
+block|,
+literal|"f6"
+block|,
+literal|"f7"
+block|,
+comment|/* 20 21 22 23 */
+literal|"fps"
+block|,
+literal|"cpsr"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 24 25       */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|arm_register_names
+init|=
+name|arm_register_name_strings
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Valid register name flavors.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|valid_flavors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Disassembly flavor to use. Default to "std" register names. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|disassembly_flavor
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|current_option
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Index to that option in the opcodes table. */
+end_comment
+
+begin_comment
+comment|/* This is used to keep the bfd arch_info in sync with the disassembly    flavor.  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|set_disassembly_flavor_sfunc
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|cmd_list_element
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|set_disassembly_flavor
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|convert_from_extended
+parameter_list|(
+name|void
+modifier|*
+name|ptr
+parameter_list|,
+name|void
+modifier|*
+name|dbl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Define other aspects of the stack frame.  We keep the offsets of    all saved registers, 'cause we need 'em a lot!  We also keep the    current size of the stack frame, and the offset of the frame    pointer from the stack pointer (for frameless functions, and when    we're still in the prologue of a function with a frame) */
+end_comment
+
+begin_struct
+struct|struct
+name|frame_extra_info
+block|{
+name|struct
+name|frame_saved_regs
+name|fsr
+decl_stmt|;
+name|int
+name|framesize
+decl_stmt|;
+name|int
+name|frameoffset
+decl_stmt|;
+name|int
+name|framereg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Addresses for calling Thumb functions have the bit 0 set.    Here are some macros to test, set, or clear bit 0 of addresses.  */
 end_comment
 
 begin_define
@@ -93,68 +329,196 @@ parameter_list|)
 value|((addr)& ~1)
 end_define
 
-begin_comment
-comment|/* Macros to round N up or down to the next A boundary; A must be    a power of two. */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ROUND_DOWN
+name|SWAP_TARGET_AND_HOST
 parameter_list|(
-name|n
+name|buffer
 parameter_list|,
-name|a
+name|len
 parameter_list|)
-value|((n)& ~((a) - 1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROUND_UP
-parameter_list|(
-name|n
-parameter_list|,
-name|a
-parameter_list|)
-value|(((n) + (a) - 1)& ~((a) - 1))
+define|\
+value|do									\     {									\       if (TARGET_BYTE_ORDER != HOST_BYTE_ORDER)				\ 	{								\ 	  char tmp;							\ 	  char *p = (char *)(buffer);					\ 	  char *q = ((char *)(buffer)) + len - 1;		   	\ 	  for (; p< q; p++, q--)				 	\ 	    {								\ 	      tmp = *q;							\ 	      *q = *p;							\ 	      *p = tmp;							\ 	    }								\ 	}								\     }									\   while (0)
 end_define
 
 begin_comment
-comment|/* Should call_function allocate stack space for a struct return?  */
-end_comment
-
-begin_comment
-comment|/* The system C compiler uses a similar structure return convention to gcc */
+comment|/* Will a function return an aggregate type in memory or in a    register?  Return 0 if an aggregate type can be returned in a    register, 1 if it must be returned in memory.  */
 end_comment
 
 begin_function
 name|int
 name|arm_use_struct_convention
 parameter_list|(
-name|gcc_p
-parameter_list|,
-name|type
-parameter_list|)
 name|int
 name|gcc_p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
-return|return
-operator|(
+name|int
+name|nRc
+decl_stmt|;
+specifier|register
+name|enum
+name|type_code
+name|code
+decl_stmt|;
+comment|/* In the ARM ABI, "integer" like aggregate types are returned in      registers.  For an aggregate type to be integer like, its size      must be less than or equal to REGISTER_SIZE and the offset of      each addressable subfield must be zero.  Note that bit fields are      not addressable, and all addressable subfields of unions always      start at offset zero.       This function is based on the behaviour of GCC 2.95.1.      See: gcc/arm.c: arm_return_in_memory() for details.       Note: All versions of GCC before GCC 2.95.2 do not set up the      parameters correctly for a function returning the following      structure: struct { float f;}; This should be returned in memory,      not a register.  Richard Earnshaw sent me a patch, but I do not      know of any way to detect if a function like the above has been      compiled with the correct calling convention.  */
+comment|/* All aggregate types that won't fit in a register must be returned      in memory.  */
+if|if
+condition|(
 name|TYPE_LENGTH
 argument_list|(
 name|type
 argument_list|)
 operator|>
-literal|4
+name|REGISTER_SIZE
+condition|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+comment|/* The only aggregate types that can be returned in a register are      structs and unions.  Arrays must be returned in memory.  */
+name|code
+operator|=
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|TYPE_CODE_STRUCT
+operator|!=
+name|code
 operator|)
+operator|&&
+operator|(
+name|TYPE_CODE_UNION
+operator|!=
+name|code
+operator|)
+condition|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+comment|/* Assume all other aggregate types can be returned in a register.      Run a check for structures, unions and arrays.  */
+name|nRc
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|TYPE_CODE_STRUCT
+operator|==
+name|code
+operator|)
+operator|||
+operator|(
+name|TYPE_CODE_UNION
+operator|==
+name|code
+operator|)
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* Need to check if this struct/union is "integer" like.  For          this to be true, its size must be less than or equal to          REGISTER_SIZE and the offset of each addressable subfield          must be zero.  Note that bit fields are not addressable, and          unions always start at offset zero.  If any of the subfields          is a floating point type, the struct/union cannot be an          integer type.  */
+comment|/* For each field in the object, check:          1) Is it FP? --> yes, nRc = 1;          2) Is it addressable (bitpos != 0) and          not packed (bitsize == 0)?          --> yes, nRc = 1          */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|TYPE_NFIELDS
+argument_list|(
+name|type
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|enum
+name|type_code
+name|field_type_code
+decl_stmt|;
+name|field_type_code
+operator|=
+name|TYPE_CODE
+argument_list|(
+name|TYPE_FIELD_TYPE
+argument_list|(
+name|type
+argument_list|,
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Is it a floating point type field?  */
+if|if
+condition|(
+name|field_type_code
+operator|==
+name|TYPE_CODE_FLT
+condition|)
+block|{
+name|nRc
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+comment|/* If bitpos != 0, then we have to care about it.  */
+if|if
+condition|(
+name|TYPE_FIELD_BITPOS
+argument_list|(
+name|type
+argument_list|,
+name|i
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Bitfields are not addressable.  If the field bitsize is  	         zero, then the field is not packed.  Hence it cannot be 	         a bitfield or any other packed type.  */
+if|if
+condition|(
+name|TYPE_FIELD_BITSIZE
+argument_list|(
+name|type
+argument_list|,
+name|i
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|nRc
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+block|}
+return|return
+name|nRc
 return|;
 block|}
 end_function
@@ -163,24 +527,15 @@ begin_function
 name|int
 name|arm_frame_chain_valid
 parameter_list|(
-name|chain
-parameter_list|,
-name|thisframe
-parameter_list|)
 name|CORE_ADDR
 name|chain
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_info
 modifier|*
 name|thisframe
-decl_stmt|;
+parameter_list|)
 block|{
-define|#
-directive|define
-name|LOWEST_PC
-value|0x20
-comment|/* the first 0x20 bytes are the trap vectors. */
 return|return
 operator|(
 name|chain
@@ -213,7 +568,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag set by arm_fix_call_dummy that tells whether the target function    is a Thumb function.  This flag is checked by arm_push_arguments.    FIXME: Change the PUSH_ARGUMENTS macro (and its use in valops.c) to    pass the function address as an additional parameter.  */
+comment|/* Flag set by arm_fix_call_dummy that tells whether the target    function is a Thumb function.  This flag is checked by    arm_push_arguments.  FIXME: Change the PUSH_ARGUMENTS macro (and    its use in valops.c) to pass the function address as an additional    parameter.  */
 end_comment
 
 begin_decl_stmt
@@ -224,7 +579,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag set by arm_fix_call_dummy that tells whether the calling function    is a Thumb function.  This flag is checked by arm_pc_is_thumb    and arm_call_dummy_breakpoint_offset.  */
+comment|/* Flag set by arm_fix_call_dummy that tells whether the calling    function is a Thumb function.  This flag is checked by    arm_pc_is_thumb and arm_call_dummy_breakpoint_offset.  */
 end_comment
 
 begin_decl_stmt
@@ -235,28 +590,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Tell if the program counter value in MEMADDR is in a Thumb function.  */
+comment|/* Determine if the program counter specified in MEMADDR is in a Thumb    function.  */
 end_comment
 
 begin_function
 name|int
 name|arm_pc_is_thumb
 parameter_list|(
-name|memaddr
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|minimal_symbol
 modifier|*
 name|sym
 decl_stmt|;
-name|CORE_ADDR
-name|sp
-decl_stmt|;
-comment|/* If bit 0 of the address is set, assume this is a Thumb address. */
+comment|/* If bit 0 of the address is set, assume this is a Thumb address.  */
 if|if
 condition|(
 name|IS_THUMB_ADDR
@@ -267,7 +617,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Thumb function have a "special" bit set in minimal symbols */
+comment|/* Thumb functions have a "special" bit set in minimal symbols.  */
 name|sym
 operator|=
 name|lookup_minimal_symbol_by_pc
@@ -290,25 +640,25 @@ operator|)
 return|;
 block|}
 else|else
+block|{
 return|return
 literal|0
 return|;
 block|}
+block|}
 end_function
 
 begin_comment
-comment|/* Tell if the program counter value in MEMADDR is in a call dummy that    is being called from a Thumb function.  */
+comment|/* Determine if the program counter specified in MEMADDR is in a call    dummy being called from a Thumb function.  */
 end_comment
 
 begin_function
 name|int
 name|arm_pc_is_thumb_dummy
 parameter_list|(
-name|memaddr
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|sp
@@ -316,6 +666,7 @@ init|=
 name|read_sp
 argument_list|()
 decl_stmt|;
+comment|/* FIXME: Until we switch for the new call dummy macros, this heuristic      is the best we can do.  We are trying to determine if the pc is on      the stack, which (hopefully) will only happen in a call dummy.      We hope the current stack pointer is not so far alway from the dummy      frame location (true if we have not pushed large data structures or      gone too many levels deep) and that our 1024 is not enough to consider      code regions as part of the stack (true for most practical purposes) */
 if|if
 condition|(
 name|PC_IN_CALL_DUMMY
@@ -326,7 +677,7 @@ name|sp
 argument_list|,
 name|sp
 operator|+
-literal|64
+literal|1024
 argument_list|)
 condition|)
 return|return
@@ -343,11 +694,9 @@ begin_function
 name|CORE_ADDR
 name|arm_addr_bits_remove
 parameter_list|(
-name|val
-parameter_list|)
 name|CORE_ADDR
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -390,13 +739,11 @@ begin_function
 name|CORE_ADDR
 name|arm_saved_pc_after_call
 parameter_list|(
-name|frame
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|ADDR_BITS_REMOVE
@@ -410,8 +757,65 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|arm_frameless_function_invocation
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+name|fi
+parameter_list|)
+block|{
+name|CORE_ADDR
+name|func_start
+decl_stmt|,
+name|after_prologue
+decl_stmt|;
+name|int
+name|frameless
+decl_stmt|;
+name|func_start
+operator|=
+operator|(
+name|get_pc_function_start
+argument_list|(
+operator|(
+name|fi
+operator|)
+operator|->
+name|pc
+argument_list|)
+operator|+
+name|FUNCTION_START_OFFSET
+operator|)
+expr_stmt|;
+name|after_prologue
+operator|=
+name|SKIP_PROLOGUE
+argument_list|(
+name|func_start
+argument_list|)
+expr_stmt|;
+comment|/* There are some frameless functions whose first two instructions      follow the standard APCS form, in which case after_prologue will      be func_start + 8. */
+name|frameless
+operator|=
+operator|(
+name|after_prologue
+operator|<
+name|func_start
+operator|+
+literal|12
+operator|)
+expr_stmt|;
+return|return
+name|frameless
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/* A typical Thumb prologue looks like this:         push    {r7, lr}         add     sp, sp, #-28         add     r7, sp, #12    Sometimes the latter instruction may be replaced by:         mov     r7, sp  */
+comment|/* A typical Thumb prologue looks like this:    push    {r7, lr}    add     sp, sp, #-28    add     r7, sp, #12    Sometimes the latter instruction may be replaced by:    mov     r7, sp        or like this:    push    {r7, lr}    mov     r7, sp    sub	   sp, #12        or, on tpcs, like this:    sub     sp,#16    push    {r7, lr}    (many instructions)    mov     r7, sp    sub	   sp, #12     There is always one instruction of three classes:    1 - push    2 - setting of r7    3 - adjusting of sp        When we have found at least one of each class we are done with the prolog.    Note that the "sub sp, #NN" before the push does not count.    */
 end_comment
 
 begin_function
@@ -419,15 +823,22 @@ specifier|static
 name|CORE_ADDR
 name|thumb_skip_prologue
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|,
+name|CORE_ADDR
+name|func_end
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|current_pc
 decl_stmt|;
+name|int
+name|findmask
+init|=
+literal|0
+decl_stmt|;
+comment|/* findmask:       			   bit 0 - push { rlist } 			   bit 1 - mov r7, sp  OR  add r7, sp, #imm  (setting of r7)       			   bit 2 - sub sp, #simm  OR  add sp, #simm  (adjusting of sp) 			*/
 for|for
 control|(
 name|current_pc
@@ -435,10 +846,16 @@ operator|=
 name|pc
 init|;
 name|current_pc
+operator|+
+literal|2
+operator|<
+name|func_end
+operator|&&
+name|current_pc
 operator|<
 name|pc
 operator|+
-literal|20
+literal|40
 condition|;
 name|current_pc
 operator|+=
@@ -463,43 +880,86 @@ name|insn
 operator|&
 literal|0xfe00
 operator|)
-operator|!=
+operator|==
 literal|0xb400
-comment|/* push {..., r7, lr} */
-operator|&&
-operator|(
-name|insn
-operator|&
-literal|0xff00
-operator|)
-operator|!=
-literal|0xb000
-comment|/* add sp, #simm */
-operator|&&
-operator|(
-name|insn
-operator|&
-literal|0xff00
-operator|)
-operator|!=
-literal|0xaf00
-comment|/* add r7, sp, #imm */
-operator|&&
-name|insn
-operator|!=
-literal|0x466f
-comment|/* mov r7, sp */
-operator|&&
-operator|(
-name|insn
-operator|&
-literal|0xffc0
-operator|)
-operator|!=
-literal|0x4640
 condition|)
-comment|/* mov r0-r7, r8-r15 */
-break|break;
+comment|/* push { rlist } */
+block|{
+name|findmask
+operator||=
+literal|1
+expr_stmt|;
+comment|/* push found */
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0xff00
+operator|)
+operator|==
+literal|0xb000
+condition|)
+comment|/* add sp, #simm  OR  sub sp, #simm */
+block|{
+if|if
+condition|(
+operator|(
+name|findmask
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* before push ? */
+continue|continue;
+else|else
+name|findmask
+operator||=
+literal|4
+expr_stmt|;
+comment|/* add/sub sp found */
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0xff00
+operator|)
+operator|==
+literal|0xaf00
+condition|)
+comment|/* add r7, sp, #imm */
+block|{
+name|findmask
+operator||=
+literal|2
+expr_stmt|;
+comment|/* setting of r7 found */
+block|}
+elseif|else
+if|if
+condition|(
+name|insn
+operator|==
+literal|0x466f
+condition|)
+comment|/* mov r7, sp */
+block|{
+name|findmask
+operator||=
+literal|2
+expr_stmt|;
+comment|/* setting of r7 found */
+block|}
+else|else
+continue|continue;
+comment|/* something in the prolog that we don't care about or some 	  		   instruction from outside the prolog scheduled here for optimization */
 block|}
 return|return
 name|current_pc
@@ -508,18 +968,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* APCS (ARM procedure call standard) defines the following prologue:     mov		ip, sp   [stmfd	sp!, {a1,a2,a3,a4}]    stmfd	sp!, {...,fp,ip,lr,pc}   [stfe		f7, [sp, #-12]!]   [stfe		f6, [sp, #-12]!]   [stfe		f5, [sp, #-12]!]   [stfe		f4, [sp, #-12]!]    sub		fp, ip, #nn	// nn == 20 or 4 depending on second ins */
+comment|/* The APCS (ARM Procedure Call Standard) defines the following    prologue:     mov          ip, sp    [stmfd       sp!, {a1,a2,a3,a4}]    stmfd        sp!, {...,fp,ip,lr,pc}    [stfe        f7, [sp, #-12]!]    [stfe        f6, [sp, #-12]!]    [stfe        f5, [sp, #-12]!]    [stfe        f4, [sp, #-12]!]    sub fp, ip, #nn @@ nn == 20 or 4 depending on second insn */
 end_comment
 
 begin_function
 name|CORE_ADDR
 name|arm_skip_prologue
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -537,7 +995,7 @@ name|struct
 name|symtab_and_line
 name|sal
 decl_stmt|;
-comment|/* See what the symbol table says. */
+comment|/* See what the symbol table says.  */
 if|if
 condition|(
 name|find_pc_partial_function
@@ -565,17 +1023,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|sal
 operator|.
 name|line
 operator|!=
 literal|0
+operator|)
 operator|&&
+operator|(
 name|sal
 operator|.
 name|end
 operator|<
 name|func_end
+operator|)
 condition|)
 return|return
 name|sal
@@ -595,6 +1057,8 @@ return|return
 name|thumb_skip_prologue
 argument_list|(
 name|pc
+argument_list|,
+name|func_end
 argument_list|)
 return|;
 comment|/* Can't find the prologue end in the symbol table, try it the hard way      by disassembling the instructions. */
@@ -687,8 +1151,8 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Any insns after this point may float into the code, if it makes      for better instruction scheduling, so we skip them only if      we find them, but still consdier the function to be frame-ful  */
-comment|/* We may have either one sfmfd instruction here, or several stfe insns,      depending on the version of floating point code we support.  */
+comment|/* Any insns after this point may float into the code, if it makes      for better instruction scheduling, so we skip them only if we      find them, but still consdier the function to be frame-ful.  */
+comment|/* We may have either one sfmfd instruction here, or several stfe      insns, depending on the version of floating point code we      support.  */
 if|if
 condition|(
 operator|(
@@ -766,7 +1230,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: thumb_scan_prologue (helper function for arm_scan_prologue)    This function decodes a Thumb function prologue to determine:      1) the size of the stack frame      2) which registers are saved on it      3) the offsets of saved regs      4) the offset from the stack pointer to the frame pointer    This information is stored in the "extra" fields of the frame_info.     A typical Thumb function prologue might look like this: 	push {r7, lr} 	sub  sp, #28, 	add  r7, sp, #12    Which would create this stack frame (offsets relative to FP)      old SP ->	24  stack parameters 		20  LR 		16  R7      R7 ->       0  local variables (16 bytes)      SP ->     -12  additional stack space (12 bytes)    The frame size would thus be 36 bytes, and the frame offset would be    12 bytes.  The frame register is R7.  */
+comment|/* *INDENT-OFF* */
+end_comment
+
+begin_comment
+comment|/* Function: thumb_scan_prologue (helper function for arm_scan_prologue)    This function decodes a Thumb function prologue to determine:      1) the size of the stack frame      2) which registers are saved on it      3) the offsets of saved regs      4) the offset from the stack pointer to the frame pointer    This information is stored in the "extra" fields of the frame_info.     A typical Thumb function prologue would create this stack frame    (offsets relative to FP)      old SP ->	24  stack parameters 		20  LR 		16  R7      R7 ->       0  local variables (16 bytes)      SP ->     -12  additional stack space (12 bytes)    The frame size would thus be 36 bytes, and the frame offset would be    12 bytes.  The frame register is R7.         The comments for thumb_skip_prolog() describe the algorithm we use to detect    the end of the prolog */
+end_comment
+
+begin_comment
+comment|/* *INDENT-ON* */
 end_comment
 
 begin_function
@@ -774,13 +1246,11 @@ specifier|static
 name|void
 name|thumb_scan_prologue
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|prologue_start
@@ -798,6 +1268,12 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* which register has been copied to register n? */
+name|int
+name|findmask
+init|=
+literal|0
+decl_stmt|;
+comment|/* findmask:       			   bit 0 - push { rlist } 			   bit 1 - mov r7, sp  OR  add r7, sp, #imm  (setting of r7)       			   bit 2 - sub sp, #simm  OR  add sp, #simm  (adjusting of sp) 			*/
 name|int
 name|i
 decl_stmt|;
@@ -904,7 +1380,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|/* Search the prologue looking for instructions that set up the      frame pointer, adjust the stack pointer, and save registers.  */
+comment|/* Search the prologue looking for instructions that set up the      frame pointer, adjust the stack pointer, and save registers.      Do this until all basic prolog instructions are found.  */
 name|fi
 operator|->
 name|framesize
@@ -917,9 +1393,21 @@ name|current_pc
 operator|=
 name|prologue_start
 init|;
+operator|(
 name|current_pc
 operator|<
 name|prologue_end
+operator|)
+operator|&&
+operator|(
+operator|(
+name|findmask
+operator|&
+literal|7
+operator|)
+operator|!=
+literal|7
+operator|)
 condition|;
 name|current_pc
 operator|+=
@@ -957,10 +1445,17 @@ literal|0xb400
 condition|)
 comment|/* push { rlist } */
 block|{
-comment|/* Bits 0-7 contain a mask for registers R0-R7.  Bit 8 says 	     whether to save LR (R14).  */
 name|int
 name|mask
-init|=
+decl_stmt|;
+name|findmask
+operator||=
+literal|1
+expr_stmt|;
+comment|/* push found */
+comment|/* Bits 0-7 contain a mask for registers R0-R7.  Bit 8 says 	     whether to save LR (R14).  */
+name|mask
+operator|=
 operator|(
 name|insn
 operator|&
@@ -976,7 +1471,7 @@ operator|)
 operator|<<
 literal|6
 operator|)
-decl_stmt|;
+expr_stmt|;
 comment|/* Calculate offsets of saved R0-R7 and LR. */
 for|for
 control|(
@@ -1048,8 +1543,26 @@ operator|)
 operator|==
 literal|0xb000
 condition|)
-comment|/* add sp, #simm */
+comment|/* add sp, #simm  OR  sub sp, #simm */
 block|{
+if|if
+condition|(
+operator|(
+name|findmask
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* before push ? */
+continue|continue;
+else|else
+name|findmask
+operator||=
+literal|4
+expr_stmt|;
+comment|/* add/sub sp found */
 name|offset
 operator|=
 operator|(
@@ -1067,12 +1580,20 @@ name|insn
 operator|&
 literal|0x80
 condition|)
-comment|/* is it signed? */
+comment|/* is it signed? (==subtracting) */
+block|{
+name|fi
+operator|->
+name|frameoffset
+operator|+=
+name|offset
+expr_stmt|;
 name|offset
 operator|=
 operator|-
 name|offset
 expr_stmt|;
+block|}
 name|fi
 operator|->
 name|framesize
@@ -1093,6 +1614,11 @@ literal|0xaf00
 condition|)
 comment|/* add r7, sp, #imm */
 block|{
+name|findmask
+operator||=
+literal|2
+expr_stmt|;
+comment|/* setting of r7 found */
 name|fi
 operator|->
 name|framereg
@@ -1122,6 +1648,11 @@ literal|0x466f
 condition|)
 comment|/* mov r7, sp */
 block|{
+name|findmask
+operator||=
+literal|2
+expr_stmt|;
+comment|/* setting of r7 found */
 name|fi
 operator|->
 name|framereg
@@ -1189,14 +1720,14 @@ expr_stmt|;
 comment|/* remember hi reg was saved */
 block|}
 else|else
-break|break;
-comment|/* anything else isn't prologue */
+continue|continue;
+comment|/* something in the prolog that we don't care about or some 	  		   instruction from outside the prolog scheduled here for optimization */
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Function: check_prologue_cache    Check if prologue for this frame's PC has already been scanned.    If it has, copy the relevant information about that prologue and    return non-zero.  Otherwise do not copy anything and return zero.     The information saved in the cache includes:      * the frame register number;      * the size of the stack frame;      * the offsets of saved regs (relative to the old SP); and      * the offset from the stack pointer to the frame pointer     The cache contains only one entry, since this is adequate    for the typical sequence of prologue scan requests we get.    When performing a backtrace, GDB will usually ask to scan    the same function twice in a row (once to get the frame chain,    and once to fill in the extra frame information). */
+comment|/* Check if prologue for this frame's PC has already been scanned.  If    it has, copy the relevant information about that prologue and    return non-zero.  Otherwise do not copy anything and return zero.     The information saved in the cache includes:    * the frame register number;    * the size of the stack frame;    * the offsets of saved regs (relative to the old SP); and    * the offset from the stack pointer to the frame pointer     The cache contains only one entry, since this is adequate for the    typical sequence of prologue scan requests we get.  When performing    a backtrace, GDB will usually ask to scan the same function twice    in a row (once to get the frame chain, and once to fill in the    extra frame information).  */
 end_comment
 
 begin_decl_stmt
@@ -1212,13 +1743,11 @@ specifier|static
 name|int
 name|check_prologue_cache
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1301,7 +1830,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: save_prologue_cache    Copy the prologue information from fi to the prologue cache. */
+comment|/* Copy the prologue information from fi to the prologue cache.  */
 end_comment
 
 begin_function
@@ -1309,13 +1838,11 @@ specifier|static
 name|void
 name|save_prologue_cache
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1387,7 +1914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: arm_scan_prologue    This function decodes an ARM function prologue to determine:      1) the size of the stack frame      2) which registers are saved on it      3) the offsets of saved regs      4) the offset from the stack pointer to the frame pointer    This information is stored in the "extra" fields of the frame_info.     A typical Arm function prologue might look like this: 	mov    ip, sp 	stmfd  sp!, {fp, ip, lr, pc} 	sub    fp, ip, #4 	sub    sp, sp, #16    Which would create this stack frame (offsets relative to FP):      IP ->   4	(caller's stack)      FP ->   0	PC (points to address of stmfd instruction + 12 in callee) 	    -4	LR (return address in caller) 	    -8	IP (copy of caller's SP)      	   -12	FP (caller's FP)      SP -> -28	Local variables    The frame size would thus be 32 bytes, and the frame offset would be    28 bytes.  */
+comment|/* This function decodes an ARM function prologue to determine:    1) the size of the stack frame    2) which registers are saved on it    3) the offsets of saved regs    4) the offset from the stack pointer to the frame pointer    This information is stored in the "extra" fields of the frame_info.     There are two basic forms for the ARM prologue.  The fixed argument    function call will look like:     mov    ip, sp    stmfd  sp!, {fp, ip, lr, pc}    sub    fp, ip, #4    [sub sp, sp, #4]     Which would create this stack frame (offsets relative to FP):    IP ->   4    (caller's stack)    FP ->   0    PC (points to address of stmfd instruction + 8 in callee)    -4   LR (return address in caller)    -8   IP (copy of caller's SP)    -12  FP (caller's FP)    SP -> -28    Local variables     The frame size would thus be 32 bytes, and the frame offset would be    28 bytes.  The stmfd call can also save any of the vN registers it    plans to use, which increases the frame size accordingly.     Note: The stored PC is 8 off of the STMFD instruction that stored it    because the ARM Store instructions always store PC + 8 when you read    the PC register.     A variable argument function call will look like:     mov    ip, sp    stmfd  sp!, {a1, a2, a3, a4}    stmfd  sp!, {fp, ip, lr, pc}    sub    fp, ip, #20     Which would create this stack frame (offsets relative to FP):    IP ->  20    (caller's stack)    16  A4    12  A3    8  A2    4  A1    FP ->   0    PC (points to address of stmfd instruction + 8 in callee)    -4   LR (return address in caller)    -8   IP (copy of caller's SP)    -12  FP (caller's FP)    SP -> -28    Local variables     The frame size would thus be 48 bytes, and the frame offset would be    28 bytes.     There is another potential complication, which is that the optimizer    will try to separate the store of fp in the "stmfd" instruction from    the "sub fp, ip, #NN" instruction.  Almost anything can be there, so    we just key on the stmfd, and then scan for the "sub fp, ip, #NN"...     Also, note, the original version of the ARM toolchain claimed that there    should be an     instruction at the end of the prologue.  I have never seen GCC produce    this, and the ARM docs don't mention it.  We still test for it below in    case it happens...   */
 end_comment
 
 begin_function
@@ -1395,13 +1922,11 @@ specifier|static
 name|void
 name|arm_scan_prologue
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regno
@@ -1534,10 +2059,11 @@ comment|/* (probably means no prologue)  */
 block|}
 else|else
 block|{
-comment|/* Get address of the stmfd in the prologue of the callee; the saved          PC is the address of the stmfd + 12.  */
+comment|/* Get address of the stmfd in the prologue of the callee; the saved          PC is the address of the stmfd + 8.  */
 name|prologue_start
 operator|=
-operator|(
+name|ADDR_BITS_REMOVE
+argument_list|(
 name|read_memory_integer
 argument_list|(
 name|fi
@@ -1546,32 +2072,45 @@ name|frame
 argument_list|,
 literal|4
 argument_list|)
-operator|&
-literal|0x03fffffc
-operator|)
+argument_list|)
 operator|-
-literal|12
+literal|8
 expr_stmt|;
 name|prologue_end
 operator|=
 name|prologue_start
 operator|+
-literal|40
+literal|64
 expr_stmt|;
-comment|/* FIXME: should be big enough */
+comment|/* This is all the insn's 						   that could be in the prologue, 						   plus room for 5 insn's inserted 						   by the scheduler.  */
 block|}
-comment|/* Now search the prologue looking for instructions that set up the      frame pointer, adjust the stack pointer, and save registers.  */
+comment|/* Now search the prologue looking for instructions that set up the      frame pointer, adjust the stack pointer, and save registers.       Be careful, however, and if it doesn't look like a prologue,      don't try to scan it.  If, for instance, a frameless function      begins with stmfd sp!, then we will tell ourselves there is      a frame, which will confuse stack traceback, as well ad"finish"       and other operations that rely on a knowledge of the stack      traceback.       In the APCS, the prologue should start with  "mov ip, sp" so      if we don't see this as the first insn, we will stop.  */
 name|sp_offset
 operator|=
 name|fp_offset
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|read_memory_unsigned_integer
+argument_list|(
+name|prologue_start
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0xe1a0c00d
+condition|)
+comment|/* mov ip, sp */
+block|{
 for|for
 control|(
 name|current_pc
 operator|=
 name|prologue_start
+operator|+
+literal|4
 init|;
 name|current_pc
 operator|<
@@ -1603,7 +2142,7 @@ operator|)
 operator|==
 literal|0xe92d0000
 condition|)
-comment|/* stmfd sp!, {..., r7, lr} */
+comment|/* stmfd sp!, {..., fp, ip, lr, pc} 	       or 	       stmfd sp!, {a1, a2, a3, a4}  */
 block|{
 name|int
 name|mask
@@ -1819,15 +2358,134 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|insn
+operator|&
+literal|0xffbf0fff
+operator|)
 operator|==
-literal|0xe1a0c00d
+literal|0xec2d0200
 condition|)
-comment|/* mov ip, sp */
-continue|continue;
+comment|/* sfmfd f0, 4, [sp!] */
+block|{
+name|int
+name|n_saved_fp_regs
+decl_stmt|;
+name|unsigned
+name|int
+name|fp_start_reg
+decl_stmt|,
+name|fp_bound_reg
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0x800
+operator|)
+operator|==
+literal|0x800
+condition|)
+comment|/* N0 is set */
+block|{
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0x40000
+operator|)
+operator|==
+literal|0x40000
+condition|)
+comment|/* N1 is set */
+name|n_saved_fp_regs
+operator|=
+literal|3
+expr_stmt|;
 else|else
-break|break;
-comment|/* not a recognized prologue instruction */
+name|n_saved_fp_regs
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0x40000
+operator|)
+operator|==
+literal|0x40000
+condition|)
+comment|/* N1 is set */
+name|n_saved_fp_regs
+operator|=
+literal|2
+expr_stmt|;
+else|else
+name|n_saved_fp_regs
+operator|=
+literal|4
+expr_stmt|;
+block|}
+name|fp_start_reg
+operator|=
+name|F0_REGNUM
+operator|+
+operator|(
+operator|(
+name|insn
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0x7
+operator|)
+expr_stmt|;
+name|fp_bound_reg
+operator|=
+name|fp_start_reg
+operator|+
+name|n_saved_fp_regs
+expr_stmt|;
+for|for
+control|(
+init|;
+name|fp_start_reg
+operator|<
+name|fp_bound_reg
+condition|;
+name|fp_start_reg
+operator|++
+control|)
+block|{
+name|sp_offset
+operator|-=
+literal|12
+expr_stmt|;
+name|fi
+operator|->
+name|fsr
+operator|.
+name|regs
+index|[
+name|fp_start_reg
+operator|++
+index|]
+operator|=
+name|sp_offset
+expr_stmt|;
+block|}
+block|}
+else|else
+comment|/* The optimizer might shove anything into the prologue, 	       so we just skip what we don't recognize. */
+continue|continue;
+block|}
 block|}
 comment|/* The frame size is just the negative of the offset (from the original SP)      of the last thing thing we pushed on the stack.  The frame offset is      [new FP] - [new SP].  */
 name|fi
@@ -1854,7 +2512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: find_callers_reg    Find REGNUM on the stack.  Otherwise, it's in an active register.  One thing    we might want to do here is to check REGNUM against the clobber mask, and    somehow flag it as invalid if it isn't saved on the stack somewhere.  This    would provide a graceful failure mode when trying to get the value of    caller-saves registers for an inner frame.  */
+comment|/* Find REGNUM on the stack.  Otherwise, it's in an active register.    One thing we might want to do here is to check REGNUM against the    clobber mask, and somehow flag it as invalid if it isn't saved on    the stack somewhere.  This would provide a graceful failure mode    when trying to get the value of caller-saves registers for an inner    frame.  */
 end_comment
 
 begin_function
@@ -1862,18 +2520,14 @@ specifier|static
 name|CORE_ADDR
 name|arm_find_callers_reg
 parameter_list|(
-name|fi
-parameter_list|,
-name|regnum
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|,
 name|int
 name|regnum
-decl_stmt|;
+parameter_list|)
 block|{
 for|for
 control|(
@@ -1934,20 +2588,26 @@ block|}
 end_function
 
 begin_comment
+comment|/* *INDENT-OFF* */
+end_comment
+
+begin_comment
 comment|/* Function: frame_chain    Given a GDB frame, determine the address of the calling function's frame.    This will be used to create a new GDB frame struct, and then    INIT_EXTRA_FRAME_INFO and INIT_FRAME_PC will be called for the new frame.    For ARM, we save the frame size when we initialize the frame_info.     The original definition of this function was a macro in tm-arm.h:       { In the case of the ARM, the frame's nominal address is the FP value, 	 and 12 bytes before comes the saved previous FP value as a 4-byte word.  }        #define FRAME_CHAIN(thisframe)  \ 	((thisframe)->pc>= LOWEST_PC ?    \ 	 read_memory_integer ((thisframe)->frame - 12, 4) :\ 	 0) */
+end_comment
+
+begin_comment
+comment|/* *INDENT-ON* */
 end_comment
 
 begin_function
 name|CORE_ADDR
 name|arm_frame_chain
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1958,9 +2618,9 @@ comment|/* is this a dummy frame? */
 block|if (PC_IN_CALL_DUMMY (fi->pc, fi->frame, fi->frame))     return fi->frame;
 comment|/* dummy frame same as caller's frame */
 comment|/* is caller-of-this a dummy frame? */
-block|callers_pc = FRAME_SAVED_PC(fi);
+block|callers_pc = FRAME_SAVED_PC (fi);
 comment|/* find out who called us: */
-block|fp = arm_find_callers_reg (fi, FP_REGNUM);   if (PC_IN_CALL_DUMMY (callers_pc, fp, fp))	     return fp;
+block|fp = arm_find_callers_reg (fi, FP_REGNUM);   if (PC_IN_CALL_DUMMY (callers_pc, fp, fp))     return fp;
 comment|/* dummy frame's frame may bear no relation to ours */
 block|if (find_pc_partial_function (fi->pc, 0,&fn_start, 0))     if (fn_start == entry_point_address ())       return 0;
 comment|/* in _start fn, don't chain further */
@@ -2106,20 +2766,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: init_extra_frame_info    This function actually figures out the frame address for a given pc and    sp.  This is tricky  because we sometimes don't use an explicit    frame pointer, and the previous stack pointer isn't necessarily recorded    on the stack.  The only reliable way to get this info is to    examine the prologue.  */
+comment|/* This function actually figures out the frame address for a given pc    and sp.  This is tricky because we sometimes don't use an explicit    frame pointer, and the previous stack pointer isn't necessarily    recorded on the stack.  The only reliable way to get this info is    to examine the prologue.  FROMLEAF is a little confusing, it means    this is the next frame up the chain AFTER a frameless function.  If    this is true, then the frame value for this frame is still in the    fp register.  */
 end_comment
 
 begin_function
 name|void
 name|arm_init_extra_frame_info
 parameter_list|(
-name|fi
-parameter_list|)
+name|int
+name|fromleaf
+parameter_list|,
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|reg
@@ -2164,8 +2825,8 @@ directive|if
 literal|0
 comment|/* FIXME: enable this code if we convert to new call dummy scheme.  */
 block|if (PC_IN_CALL_DUMMY (fi->pc, fi->frame, fi->frame))     {
-comment|/* We need to setup fi->frame here because run_stack_dummy gets it wrong 	 by assuming it's always FP.  */
-block|fi->frame       = generic_read_register_dummy (fi->pc, fi->frame, SP_REGNUM);       fi->framesize   = 0;       fi->frameoffset = 0;       return;     }   else
+comment|/* We need to setup fi->frame here because run_stack_dummy gets it wrong          by assuming it's always FP.  */
+block|fi->frame = generic_read_register_dummy (fi->pc, fi->frame, SP_REGNUM);       fi->framesize = 0;       fi->frameoffset = 0;       return;     }   else
 endif|#
 directive|endif
 block|{
@@ -2194,8 +2855,6 @@ name|framereg
 argument_list|)
 expr_stmt|;
 elseif|else
-comment|/* not the innermost frame */
-comment|/* If we have an FP,  the callee saved it. */
 if|if
 condition|(
 name|fi
@@ -2210,6 +2869,9 @@ name|framereg
 operator|==
 name|THUMB_FP_REGNUM
 condition|)
+block|{
+comment|/* not the innermost frame */
+comment|/* If we have an FP, the callee saved it. */
 if|if
 condition|(
 name|fi
@@ -2249,7 +2911,21 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Calculate actual addresses of saved registers using offsets determined          by arm_scan_prologue.  */
+elseif|else
+if|if
+condition|(
+name|fromleaf
+condition|)
+comment|/* If we were called by a frameless fn.  then our frame is 	       still in the frame pointer register on the board... */
+name|fi
+operator|->
+name|frame
+operator|=
+name|read_fp
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* Calculate actual addresses of saved registers using offsets          determined by arm_scan_prologue.  */
 for|for
 control|(
 name|reg
@@ -2302,20 +2978,18 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: frame_saved_pc    Find the caller of this frame.  We do this by seeing if LR_REGNUM is saved    in the stack anywhere, otherwise we get it from the registers.     The old definition of this function was a macro:      #define FRAME_SAVED_PC(FRAME) \ 	ADDR_BITS_REMOVE (read_memory_integer ((FRAME)->frame - 4, 4)) */
+comment|/* Find the caller of this frame.  We do this by seeing if LR_REGNUM    is saved in the stack anywhere, otherwise we get it from the    registers.     The old definition of this function was a macro:    #define FRAME_SAVED_PC(FRAME) \    ADDR_BITS_REMOVE (read_memory_integer ((FRAME)->frame - 4, 4)) */
 end_comment
 
 begin_function
 name|CORE_ADDR
 name|arm_frame_saved_pc
 parameter_list|(
-name|fi
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -2359,7 +3033,9 @@ end_comment
 begin_function
 name|CORE_ADDR
 name|arm_target_read_fp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2390,27 +3066,23 @@ block|}
 end_function
 
 begin_comment
-comment|/* Calculate the frame offsets of the saved registers (ARM version). */
+comment|/* Calculate the frame offsets of the saved registers (ARM version).  */
 end_comment
 
 begin_function
 name|void
 name|arm_frame_find_saved_regs
 parameter_list|(
-name|fi
-parameter_list|,
-name|regaddr
-parameter_list|)
 name|struct
 name|frame_info
 modifier|*
 name|fi
-decl_stmt|;
+parameter_list|,
 name|struct
 name|frame_saved_regs
 modifier|*
 name|regaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|memcpy
 argument_list|(
@@ -2434,7 +3106,9 @@ end_function
 begin_function
 name|void
 name|arm_push_dummy_frame
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|old_sp
@@ -2480,7 +3154,7 @@ argument_list|,
 literal|0xe92ddfff
 argument_list|)
 expr_stmt|;
-comment|/* push a pointer to the dummy prologue + 12, because when      stm instruction stores the PC, it stores the address of the stm      instruction itself plus 12.  */
+comment|/* Push a pointer to the dummy prologue + 12, because when stm      instruction stores the PC, it stores the address of the stm      instruction itself plus 12.  */
 name|fp
 operator|=
 name|sp
@@ -2578,52 +3252,38 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fix up the call dummy, based on whether the processor is currently    in Thumb or ARM mode, and whether the target function is Thumb    or ARM.  There are three different situations requiring three    different dummies:     * ARM calling ARM: uses the call dummy in tm-arm.h, which has already      been copied into the dummy parameter to this function.    * ARM calling Thumb: uses the call dummy in tm-arm.h, but with the      "mov pc,r4" instruction patched to be a "bx r4" instead.    * Thumb calling anything: uses the Thumb dummy defined below, which      works for calling both ARM and Thumb functions.     All three call dummies expect to receive the target function address    in R4, with the low bit set if it's a Thumb function. */
+comment|/* Fix up the call dummy, based on whether the processor is currently    in Thumb or ARM mode, and whether the target function is Thumb or    ARM.  There are three different situations requiring three    different dummies:     * ARM calling ARM: uses the call dummy in tm-arm.h, which has already    been copied into the dummy parameter to this function.    * ARM calling Thumb: uses the call dummy in tm-arm.h, but with the    "mov pc,r4" instruction patched to be a "bx r4" instead.    * Thumb calling anything: uses the Thumb dummy defined below, which    works for calling both ARM and Thumb functions.     All three call dummies expect to receive the target function    address in R4, with the low bit set if it's a Thumb function.  */
 end_comment
 
 begin_function
 name|void
 name|arm_fix_call_dummy
 parameter_list|(
-name|dummy
-parameter_list|,
-name|pc
-parameter_list|,
-name|fun
-parameter_list|,
-name|nargs
-parameter_list|,
-name|args
-parameter_list|,
-name|type
-parameter_list|,
-name|gcc_p
-parameter_list|)
 name|char
 modifier|*
 name|dummy
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|fun
-decl_stmt|;
+parameter_list|,
 name|int
 name|nargs
-decl_stmt|;
+parameter_list|,
 name|value_ptr
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|struct
 name|type
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|int
 name|gcc_p
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|short
@@ -2637,13 +3297,13 @@ literal|0xf000
 block|,
 literal|0xf801
 block|,
-comment|/*	  bl      label */
+comment|/*        bl      label */
 literal|0xdf18
 block|,
-comment|/*	  swi     24 */
+comment|/*        swi     24 */
 literal|0x4720
 block|,
-comment|/* label: bx	  r4 */
+comment|/* label: bx      r4 */
 block|}
 decl_stmt|;
 specifier|static
@@ -2663,7 +3323,7 @@ name|read_pc
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/* If the target function is Thumb, set the low bit of the function address.      And if the CPU is currently in ARM mode, patch the second instruction      of call dummy to use a BX instruction to switch to Thumb mode.  */
+comment|/* If the target function is Thumb, set the low bit of the function      address.  And if the CPU is currently in ARM mode, patch the      second instruction of call dummy to use a BX instruction to      switch to Thumb mode.  */
 name|target_is_thumb
 operator|=
 name|arm_pc_is_thumb
@@ -2775,7 +3435,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Put the target address in r4; the call dummy will copy this to the PC. */
+comment|/* Put the target address in r4; the call dummy will copy this to      the PC. */
 name|write_register
 argument_list|(
 literal|4
@@ -2787,13 +3447,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the offset in the call dummy of the instruction that needs    to have a breakpoint placed on it.  This is the offset of the 'swi 24'    instruction, which is no longer actually used, but simply acts    as a place-holder now.     This implements the CALL_DUMMY_BREAK_OFFSET macro. */
+comment|/* Return the offset in the call dummy of the instruction that needs    to have a breakpoint placed on it.  This is the offset of the 'swi    24' instruction, which is no longer actually used, but simply acts    as a place-holder now.     This implements the CALL_DUMMY_BREAK_OFFSET macro.  */
 end_comment
 
 begin_function
 name|int
 name|arm_call_dummy_breakpoint_offset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2809,120 +3471,61 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Note: ScottB     This function does not support passing parameters using the FPA    variant of the APCS.  It passes any floating point arguments in the    general registers and/or on the stack.  */
+end_comment
+
 begin_function
 name|CORE_ADDR
 name|arm_push_arguments
 parameter_list|(
-name|nargs
-parameter_list|,
-name|args
-parameter_list|,
-name|sp
-parameter_list|,
-name|struct_return
-parameter_list|,
-name|struct_addr
-parameter_list|)
 name|int
 name|nargs
-decl_stmt|;
+parameter_list|,
 name|value_ptr
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|sp
-decl_stmt|;
+parameter_list|,
 name|int
 name|struct_return
-decl_stmt|;
+parameter_list|,
 name|CORE_ADDR
 name|struct_addr
-decl_stmt|;
-block|{
-name|int
-name|argreg
-decl_stmt|;
-name|int
-name|float_argreg
-decl_stmt|;
-name|int
-name|argnum
-decl_stmt|;
-name|int
-name|stack_offset
-decl_stmt|;
-struct|struct
-name|stack_arg
+parameter_list|)
 block|{
 name|char
 modifier|*
-name|val
+name|fp
 decl_stmt|;
 name|int
-name|len
-decl_stmt|;
-name|int
-name|offset
-decl_stmt|;
-block|}
-struct|;
-name|struct
-name|stack_arg
-modifier|*
-name|stack_args
-init|=
-operator|(
-expr|struct
-name|stack_arg
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|nargs
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|stack_arg
-argument_list|)
-argument_list|)
-decl_stmt|;
-name|int
-name|nstack_args
-init|=
-literal|0
-decl_stmt|;
-comment|/* Initialize the integer and float register pointers.  */
+name|argnum
+decl_stmt|,
 name|argreg
+decl_stmt|,
+name|nstack_size
+decl_stmt|;
+comment|/* Walk through the list of args and determine how large a temporary      stack is required.  Need to take care here as structs may be      passed on the stack, and we have to to push them.  */
+name|nstack_size
 operator|=
-name|A1_REGNUM
+operator|-
+literal|4
+operator|*
+name|REGISTER_SIZE
 expr_stmt|;
-name|float_argreg
-operator|=
-name|F0_REGNUM
-expr_stmt|;
-comment|/* the struct_return pointer occupies the first parameter-passing reg */
+comment|/* Some arguments go into A1-A4.  */
 if|if
 condition|(
 name|struct_return
 condition|)
-name|write_register
-argument_list|(
-name|argreg
-operator|++
-argument_list|,
-name|struct_addr
-argument_list|)
-expr_stmt|;
-comment|/* The offset onto the stack at which we will start copying parameters      (after the registers are used up) begins at 16 in the old ABI.      This leaves room for the "home" area for register parameters.  */
-name|stack_offset
-operator|=
+comment|/* The struct address goes in A1.  */
+name|nstack_size
+operator|+=
 name|REGISTER_SIZE
-operator|*
-literal|4
 expr_stmt|;
-comment|/* Process args from left to right.  Store as many as allowed in 	registers, save the rest to be pushed on the stack */
+comment|/* Walk through the arguments and add their size to nstack_size.  */
 for|for
 control|(
 name|argnum
@@ -2937,64 +3540,175 @@ name|argnum
 operator|++
 control|)
 block|{
-name|char
-modifier|*
-name|val
-decl_stmt|;
-name|value_ptr
-name|arg
-init|=
-name|args
-index|[
-name|argnum
-index|]
+name|int
+name|len
 decl_stmt|;
 name|struct
 name|type
 modifier|*
 name|arg_type
-init|=
+decl_stmt|;
+name|arg_type
+operator|=
 name|check_typedef
 argument_list|(
 name|VALUE_TYPE
 argument_list|(
-name|arg
+name|args
+index|[
+name|argnum
+index|]
 argument_list|)
 argument_list|)
-decl_stmt|;
-name|struct
-name|type
-modifier|*
-name|target_type
-init|=
-name|TYPE_TARGET_TYPE
-argument_list|(
-name|arg_type
-argument_list|)
-decl_stmt|;
-name|int
+expr_stmt|;
 name|len
-init|=
+operator|=
 name|TYPE_LENGTH
 argument_list|(
 name|arg_type
 argument_list|)
-decl_stmt|;
-name|enum
-name|type_code
-name|typecode
-init|=
+expr_stmt|;
+comment|/* ANSI C code passes float arguments as integers, K&R code          passes float arguments as doubles.  Correct for this here.  */
+if|if
+condition|(
+name|TYPE_CODE_FLT
+operator|==
 name|TYPE_CODE
 argument_list|(
 name|arg_type
 argument_list|)
+operator|&&
+name|REGISTER_SIZE
+operator|==
+name|len
+condition|)
+name|nstack_size
+operator|+=
+name|FP_REGISTER_VIRTUAL_SIZE
+expr_stmt|;
+else|else
+name|nstack_size
+operator|+=
+name|len
+expr_stmt|;
+block|}
+comment|/* Allocate room on the stack, and initialize our stack frame      pointer.  */
+name|fp
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|nstack_size
+operator|>
+literal|0
+condition|)
+block|{
+name|sp
+operator|-=
+name|nstack_size
+expr_stmt|;
+name|fp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|sp
+expr_stmt|;
+block|}
+comment|/* Initialize the integer argument register pointer.  */
+name|argreg
+operator|=
+name|A1_REGNUM
+expr_stmt|;
+comment|/* The struct_return pointer occupies the first parameter passing      register.  */
+if|if
+condition|(
+name|struct_return
+condition|)
+name|write_register
+argument_list|(
+name|argreg
+operator|++
+argument_list|,
+name|struct_addr
+argument_list|)
+expr_stmt|;
+comment|/* Process arguments from left to right.  Store as many as allowed      in the parameter passing registers (A1-A4), and save the rest on      the temporary stack.  */
+for|for
+control|(
+name|argnum
+operator|=
+literal|0
+init|;
+name|argnum
+operator|<
+name|nargs
+condition|;
+name|argnum
+operator|++
+control|)
+block|{
+name|int
+name|len
+decl_stmt|;
+name|char
+modifier|*
+name|val
+decl_stmt|;
+name|double
+name|dbl_arg
 decl_stmt|;
 name|CORE_ADDR
 name|regval
 decl_stmt|;
-name|int
-name|newarg
+name|enum
+name|type_code
+name|typecode
 decl_stmt|;
+name|struct
+name|type
+modifier|*
+name|arg_type
+decl_stmt|,
+modifier|*
+name|target_type
+decl_stmt|;
+name|arg_type
+operator|=
+name|check_typedef
+argument_list|(
+name|VALUE_TYPE
+argument_list|(
+name|args
+index|[
+name|argnum
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|target_type
+operator|=
+name|TYPE_TARGET_TYPE
+argument_list|(
+name|arg_type
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|TYPE_LENGTH
+argument_list|(
+name|arg_type
+argument_list|)
+expr_stmt|;
+name|typecode
+operator|=
+name|TYPE_CODE
+argument_list|(
+name|arg_type
+argument_list|)
+expr_stmt|;
 name|val
 operator|=
 operator|(
@@ -3003,37 +3717,182 @@ operator|*
 operator|)
 name|VALUE_CONTENTS
 argument_list|(
-name|arg
+name|args
+index|[
+name|argnum
+index|]
 argument_list|)
 expr_stmt|;
-comment|/* If the argument is a pointer to a function, and it's a Thumb          function, set the low bit of the pointer.  */
+comment|/* ANSI C code passes float arguments as integers, K&R code          passes float arguments as doubles.  The .stabs record for           for ANSI prototype floating point arguments records the          type as FP_INTEGER, while a K&R style (no prototype)          .stabs records the type as FP_FLOAT.  In this latter case          the compiler converts the float arguments to double before          calling the function.  */
 if|if
 condition|(
-name|typecode
+name|TYPE_CODE_FLT
 operator|==
+name|typecode
+operator|&&
+name|REGISTER_SIZE
+operator|==
+name|len
+condition|)
+block|{
+name|float
+name|f
+decl_stmt|;
+name|double
+name|d
+decl_stmt|;
+name|char
+modifier|*
+name|bufo
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|d
+decl_stmt|;
+name|char
+modifier|*
+name|bufd
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|dbl_arg
+decl_stmt|;
+name|len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|double
+argument_list|)
+expr_stmt|;
+name|f
+operator|=
+operator|*
+operator|(
+name|float
+operator|*
+operator|)
+name|val
+expr_stmt|;
+name|SWAP_TARGET_AND_HOST
+argument_list|(
+operator|&
+name|f
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|float
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* adjust endianess */
+name|d
+operator|=
+name|f
+expr_stmt|;
+comment|/* We must revert the longwords so they get loaded into the 	     the right registers. */
+name|memcpy
+argument_list|(
+name|bufd
+argument_list|,
+name|bufo
+operator|+
+name|len
+operator|/
+literal|2
+argument_list|,
+name|len
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+name|SWAP_TARGET_AND_HOST
+argument_list|(
+name|bufd
+argument_list|,
+name|len
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* adjust endianess */
+name|memcpy
+argument_list|(
+name|bufd
+operator|+
+name|len
+operator|/
+literal|2
+argument_list|,
+name|bufo
+argument_list|,
+name|len
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+name|SWAP_TARGET_AND_HOST
+argument_list|(
+name|bufd
+operator|+
+name|len
+operator|/
+literal|2
+argument_list|,
+name|len
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* adjust endianess */
+name|val
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|dbl_arg
+expr_stmt|;
+block|}
+if|#
+directive|if
+literal|1
+comment|/* I don't know why this code was disable. The only logical use          for a function pointer is to call that function, so setting          the mode bit is perfectly fine. FN */
+comment|/* If the argument is a pointer to a function, and it is a Thumb          function, set the low bit of the pointer.  */
+if|if
+condition|(
 name|TYPE_CODE_PTR
+operator|==
+name|typecode
 operator|&&
-name|target_type
-operator|!=
 name|NULL
+operator|!=
+name|target_type
 operator|&&
+name|TYPE_CODE_FUNC
+operator|==
 name|TYPE_CODE
 argument_list|(
 name|target_type
 argument_list|)
-operator|==
-name|TYPE_CODE_FUNC
 condition|)
 block|{
+name|CORE_ADDR
 name|regval
-operator|=
+init|=
 name|extract_address
 argument_list|(
 name|val
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|arm_pc_is_thumb
@@ -3054,65 +3913,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|MAPCS_FLOAT
-value|0
-comment|/* --mapcs-float not implemented by the compiler yet */
-if|#
-directive|if
-name|MAPCS_FLOAT
-comment|/* Up to four floating point arguments can be passed in floating          point registers on ARM (not on Thumb).  */
-if|if
-condition|(
-name|typecode
-operator|==
-name|TYPE_CODE_FLT
-operator|&&
-name|float_argreg
-operator|<=
-name|ARM_LAST_FP_ARG_REGNUM
-operator|&&
-operator|!
-name|target_is_thumb
-condition|)
-block|{
-comment|/* This is a floating point value that fits entirely 	     in a single register.  */
-name|regval
-operator|=
-name|extract_address
-argument_list|(
-name|val
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|write_register
-argument_list|(
-name|float_argreg
-operator|++
-argument_list|,
-name|regval
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 endif|#
 directive|endif
-block|{
-comment|/* Copy the argument to general registers or the stack in 	     register-sized pieces.  Large arguments are split between 	     registers and stack.  */
+comment|/* Copy the argument to general registers or the stack in          register-sized pieces.  Large arguments are split between          registers and stack.  */
 while|while
 condition|(
 name|len
 operator|>
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|argreg
-operator|<=
-name|ARM_LAST_ARG_REGNUM
 condition|)
 block|{
 name|int
@@ -3126,6 +3934,14 @@ name|len
 else|:
 name|REGISTER_SIZE
 decl_stmt|;
+if|if
+condition|(
+name|argreg
+operator|<=
+name|ARM_LAST_ARG_REGNUM
+condition|)
+block|{
+comment|/* It's an argument being passed in a general register.  */
 name|regval
 operator|=
 name|extract_address
@@ -3135,17 +3951,35 @@ argument_list|,
 name|partial_len
 argument_list|)
 expr_stmt|;
-comment|/* It's a simple argument being passed in a general 		     register.  */
 name|write_register
 argument_list|(
 name|argreg
+operator|++
 argument_list|,
 name|regval
 argument_list|)
 expr_stmt|;
-name|argreg
-operator|++
+block|}
+else|else
+block|{
+comment|/* Push the arguments onto the stack.  */
+name|write_memory
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|)
+name|fp
+argument_list|,
+name|val
+argument_list|,
+name|REGISTER_SIZE
+argument_list|)
 expr_stmt|;
+name|fp
+operator|+=
+name|REGISTER_SIZE
+expr_stmt|;
+block|}
 name|len
 operator|-=
 name|partial_len
@@ -3155,68 +3989,6 @@ operator|+=
 name|partial_len
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* keep for later pushing */
-name|stack_args
-index|[
-name|nstack_args
-index|]
-operator|.
-name|val
-operator|=
-name|val
-expr_stmt|;
-name|stack_args
-index|[
-name|nstack_args
-operator|++
-index|]
-operator|.
-name|len
-operator|=
-name|len
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
-block|}
-comment|/* now do the real stack pushing, process args right to left */
-while|while
-condition|(
-name|nstack_args
-operator|--
-condition|)
-block|{
-name|sp
-operator|-=
-name|stack_args
-index|[
-name|nstack_args
-index|]
-operator|.
-name|len
-expr_stmt|;
-name|write_memory
-argument_list|(
-name|sp
-argument_list|,
-name|stack_args
-index|[
-name|nstack_args
-index|]
-operator|.
-name|val
-argument_list|,
-name|stack_args
-index|[
-name|nstack_args
-index|]
-operator|.
-name|len
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Return adjusted stack pointer.  */
 return|return
@@ -3228,8 +4000,13 @@ end_function
 begin_function
 name|void
 name|arm_pop_frame
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|int
+name|regnum
+decl_stmt|;
 name|struct
 name|frame_info
 modifier|*
@@ -3238,9 +4015,36 @@ init|=
 name|get_current_frame
 argument_list|()
 decl_stmt|;
-name|int
-name|regnum
+if|if
+condition|(
+operator|!
+name|PC_IN_CALL_DUMMY
+argument_list|(
+name|frame
+operator|->
+name|pc
+argument_list|,
+name|frame
+operator|->
+name|frame
+argument_list|,
+name|read_fp
+argument_list|()
+argument_list|)
+condition|)
+block|{
+name|CORE_ADDR
+name|old_SP
 decl_stmt|;
+name|old_SP
+operator|=
+name|read_register
+argument_list|(
+name|frame
+operator|->
+name|framereg
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|regnum
@@ -3300,14 +4104,122 @@ name|write_register
 argument_list|(
 name|SP_REGNUM
 argument_list|,
+name|old_SP
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|CORE_ADDR
+name|sp
+decl_stmt|;
+name|sp
+operator|=
 name|read_register
 argument_list|(
-name|frame
-operator|->
-name|framereg
+name|FP_REGNUM
+argument_list|)
+expr_stmt|;
+name|sp
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+expr_stmt|;
+comment|/* we don't care about this first word */
+name|write_register
+argument_list|(
+name|PC_REGNUM
+argument_list|,
+name|read_memory_integer
+argument_list|(
+name|sp
+argument_list|,
+literal|4
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sp
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+expr_stmt|;
+name|write_register
+argument_list|(
+name|SP_REGNUM
+argument_list|,
+name|read_memory_integer
+argument_list|(
+name|sp
+argument_list|,
+literal|4
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sp
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+expr_stmt|;
+name|write_register
+argument_list|(
+name|FP_REGNUM
+argument_list|,
+name|read_memory_integer
+argument_list|(
+name|sp
+argument_list|,
+literal|4
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sp
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|regnum
+operator|=
+literal|10
+init|;
+name|regnum
+operator|>=
+literal|0
+condition|;
+name|regnum
+operator|--
+control|)
+block|{
+name|write_register
+argument_list|(
+name|regnum
+argument_list|,
+name|read_memory_integer
+argument_list|(
+name|sp
+argument_list|,
+literal|4
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sp
+operator|-=
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|flush_cached_frames
 argument_list|()
 expr_stmt|;
@@ -3319,11 +4231,9 @@ specifier|static
 name|void
 name|print_fpu_flags
 parameter_list|(
-name|flags
-parameter_list|)
 name|int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3421,7 +4331,9 @@ end_function
 begin_function
 name|void
 name|arm_float_info
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|unsigned
@@ -3496,210 +4408,51 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|original_register_names
-index|[]
-init|=
-block|{
-literal|"a1"
-block|,
-literal|"a2"
-block|,
-literal|"a3"
-block|,
-literal|"a4"
-block|,
-comment|/*  0  1  2  3 */
-literal|"v1"
-block|,
-literal|"v2"
-block|,
-literal|"v3"
-block|,
-literal|"v4"
-block|,
-comment|/*  4  5  6  7 */
-literal|"v5"
-block|,
-literal|"v6"
-block|,
-literal|"sl"
-block|,
-literal|"fp"
-block|,
-comment|/*  8  9 10 11 */
-literal|"ip"
-block|,
-literal|"sp"
-block|,
-literal|"lr"
-block|,
-literal|"pc"
-block|,
-comment|/* 12 13 14 15 */
-literal|"f0"
-block|,
-literal|"f1"
-block|,
-literal|"f2"
-block|,
-literal|"f3"
-block|,
-comment|/* 16 17 18 19 */
-literal|"f4"
-block|,
-literal|"f5"
-block|,
-literal|"f6"
-block|,
-literal|"f7"
-block|,
-comment|/* 20 21 22 23 */
-literal|"fps"
-block|,
-literal|"ps"
-block|}
-comment|/* 24 25       */
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
-comment|/* These names are the ones which gcc emits, and     I find them less confusing.  Toggle between them    using the `othernames' command. */
+comment|/* FIXME:  The generated assembler works but sucks.  Instead of using    r0, r1 it pushes them on the stack, then loads them into r3, r4 and    uses those registers.  I must be missing something.  ScottB  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|additional_register_names
-index|[]
-init|=
-block|{
-literal|"r0"
-block|,
-literal|"r1"
-block|,
-literal|"r2"
-block|,
-literal|"r3"
-block|,
-comment|/*  0  1  2  3 */
-literal|"r4"
-block|,
-literal|"r5"
-block|,
-literal|"r6"
-block|,
-literal|"r7"
-block|,
-comment|/*  4  5  6  7 */
-literal|"r8"
-block|,
-literal|"r9"
-block|,
-literal|"sl"
-block|,
-literal|"fp"
-block|,
-comment|/*  8  9 10 11 */
-literal|"ip"
-block|,
-literal|"sp"
-block|,
-literal|"lr"
-block|,
-literal|"pc"
-block|,
-comment|/* 12 13 14 15 */
-literal|"f0"
-block|,
-literal|"f1"
-block|,
-literal|"f2"
-block|,
-literal|"f3"
-block|,
-comment|/* 16 17 18 19 */
-literal|"f4"
-block|,
-literal|"f5"
-block|,
-literal|"f6"
-block|,
-literal|"f7"
-block|,
-comment|/* 20 21 22 23 */
-literal|"fps"
-block|,
-literal|"ps"
-block|}
-comment|/* 24 25       */
-decl_stmt|;
-end_decl_stmt
+begin_comment
+unit|void convert_from_extended (void *ptr, void *dbl) {   __asm__ (" 	   ldfe f0,[%0] 	   stfd f0,[%1] " :
+comment|/* no output */
+end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|arm_register_names
-init|=
-name|original_register_names
-decl_stmt|;
-end_decl_stmt
+begin_comment
+unit|:	   "r" (ptr), "r" (dbl)); }  void convert_to_extended (void *dbl, void *ptr) {   __asm__ (" 	   ldfd f0,[%0] 	   stfe f0,[%1] " :
+comment|/* no output */
+end_comment
+
+begin_else
+unit|:	   "r" (dbl), "r" (ptr)); }
+else|#
+directive|else
+end_else
 
 begin_function
 specifier|static
-name|void
-name|arm_othernames
-parameter_list|()
-block|{
-specifier|static
-name|int
-name|toggle
-decl_stmt|;
-name|arm_register_names
-operator|=
-operator|(
-name|toggle
-condition|?
-name|additional_register_names
-else|:
-name|original_register_names
-operator|)
-expr_stmt|;
-name|toggle
-operator|=
-operator|!
-name|toggle
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* FIXME:  Fill in with the 'right thing', see asm     template in arm-convert.s */
-end_comment
-
-begin_function
 name|void
 name|convert_from_extended
 parameter_list|(
-name|ptr
-parameter_list|,
-name|dbl
-parameter_list|)
 name|void
 modifier|*
 name|ptr
-decl_stmt|;
-name|double
+parameter_list|,
+name|void
 modifier|*
 name|dbl
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
+operator|(
+name|double
+operator|*
+operator|)
 name|dbl
 operator|=
 operator|*
@@ -3716,18 +4469,14 @@ begin_function
 name|void
 name|convert_to_extended
 parameter_list|(
+name|void
+modifier|*
 name|dbl
 parameter_list|,
-name|ptr
-parameter_list|)
 name|void
 modifier|*
 name|ptr
-decl_stmt|;
-name|double
-modifier|*
-name|dbl
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 operator|(
@@ -3737,7 +4486,145 @@ operator|)
 name|ptr
 operator|=
 operator|*
+operator|(
+name|double
+operator|*
+operator|)
 name|dbl
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Nonzero if register N requires conversion from raw format to    virtual format.  */
+end_comment
+
+begin_function
+name|int
+name|arm_register_convertible
+parameter_list|(
+name|unsigned
+name|int
+name|regnum
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|regnum
+operator|-
+name|F0_REGNUM
+operator|)
+operator|<
+literal|8
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Convert data from raw format for register REGNUM in buffer FROM to    virtual format with type TYPE in buffer TO.  */
+end_comment
+
+begin_function
+name|void
+name|arm_register_convert_to_virtual
+parameter_list|(
+name|unsigned
+name|int
+name|regnum
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|from
+parameter_list|,
+name|void
+modifier|*
+name|to
+parameter_list|)
+block|{
+name|double
+name|val
+decl_stmt|;
+name|convert_from_extended
+argument_list|(
+name|from
+argument_list|,
+operator|&
+name|val
+argument_list|)
+expr_stmt|;
+name|store_floating
+argument_list|(
+name|to
+argument_list|,
+name|TYPE_LENGTH
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Convert data from virtual format with type TYPE in buffer FROM to    raw format for register REGNUM in buffer TO.  */
+end_comment
+
+begin_function
+name|void
+name|arm_register_convert_to_raw
+parameter_list|(
+name|unsigned
+name|int
+name|regnum
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|from
+parameter_list|,
+name|void
+modifier|*
+name|to
+parameter_list|)
+block|{
+name|double
+name|val
+init|=
+name|extract_floating
+argument_list|(
+name|from
+argument_list|,
+name|TYPE_LENGTH
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|convert_to_extended
+argument_list|(
+operator|&
+name|val
+argument_list|,
+name|to
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3747,18 +4634,14 @@ specifier|static
 name|int
 name|condition_true
 parameter_list|(
+name|unsigned
+name|long
 name|cond
 parameter_list|,
+name|unsigned
+name|long
 name|status_reg
 parameter_list|)
-name|unsigned
-name|long
-name|cond
-decl_stmt|;
-name|unsigned
-name|long
-name|status_reg
-decl_stmt|;
 block|{
 if|if
 condition|(
@@ -4138,29 +5021,21 @@ name|unsigned
 name|long
 name|shifted_reg_val
 parameter_list|(
-name|inst
-parameter_list|,
-name|carry
-parameter_list|,
-name|pc_val
-parameter_list|,
-name|status_reg
-parameter_list|)
 name|unsigned
 name|long
 name|inst
-decl_stmt|;
+parameter_list|,
 name|int
 name|carry
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|pc_val
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|status_reg
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -4433,12 +5308,10 @@ specifier|static
 name|int
 name|bitcount
 parameter_list|(
-name|val
-parameter_list|)
 name|unsigned
 name|long
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|nbits
@@ -4474,11 +5347,9 @@ specifier|static
 name|CORE_ADDR
 name|thumb_get_next_pc
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -4759,11 +5630,9 @@ begin_function
 name|CORE_ADDR
 name|arm_get_next_pc
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -5065,7 +5934,7 @@ block|{
 case|case
 literal|0x0
 case|:
-comment|/*and*/
+comment|/*and */
 name|result
 operator|=
 name|operand1
@@ -5076,7 +5945,7 @@ break|break;
 case|case
 literal|0x1
 case|:
-comment|/*eor*/
+comment|/*eor */
 name|result
 operator|=
 name|operand1
@@ -5087,7 +5956,7 @@ break|break;
 case|case
 literal|0x2
 case|:
-comment|/*sub*/
+comment|/*sub */
 name|result
 operator|=
 name|operand1
@@ -5098,7 +5967,7 @@ break|break;
 case|case
 literal|0x3
 case|:
-comment|/*rsb*/
+comment|/*rsb */
 name|result
 operator|=
 name|operand2
@@ -5109,7 +5978,7 @@ break|break;
 case|case
 literal|0x4
 case|:
-comment|/*add*/
+comment|/*add */
 name|result
 operator|=
 name|operand1
@@ -5120,7 +5989,7 @@ break|break;
 case|case
 literal|0x5
 case|:
-comment|/*adc*/
+comment|/*adc */
 name|result
 operator|=
 name|operand1
@@ -5133,7 +6002,7 @@ break|break;
 case|case
 literal|0x6
 case|:
-comment|/*sbc*/
+comment|/*sbc */
 name|result
 operator|=
 name|operand1
@@ -5146,7 +6015,7 @@ break|break;
 case|case
 literal|0x7
 case|:
-comment|/*rsc*/
+comment|/*rsc */
 name|result
 operator|=
 name|operand2
@@ -5181,7 +6050,7 @@ break|break;
 case|case
 literal|0xc
 case|:
-comment|/*orr*/
+comment|/*orr */
 name|result
 operator|=
 name|operand1
@@ -5192,7 +6061,7 @@ break|break;
 case|case
 literal|0xd
 case|:
-comment|/*mov*/
+comment|/*mov */
 comment|/* Always step into a function.  */
 name|result
 operator|=
@@ -5202,7 +6071,7 @@ break|break;
 case|case
 literal|0xe
 case|:
-comment|/*bic*/
+comment|/*bic */
 name|result
 operator|=
 name|operand1
@@ -5214,7 +6083,7 @@ break|break;
 case|case
 literal|0xf
 case|:
-comment|/*mvn*/
+comment|/*mvn */
 name|result
 operator|=
 operator|~
@@ -5378,6 +6247,8 @@ argument_list|,
 name|c
 argument_list|,
 name|pc_val
+argument_list|,
+name|status
 argument_list|)
 else|:
 name|bits
@@ -5691,17 +6562,13 @@ specifier|static
 name|int
 name|gdb_print_insn_arm
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5850,61 +6717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Sequence of bytes for breakpoint instruction.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARM_LE_BREAKPOINT
-value|{0xFE,0xDE,0xFF,0xE7}
-end_define
-
-begin_comment
-comment|/* Recognized illegal opcodes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARM_BE_BREAKPOINT
-value|{0xE7,0xFF,0xDE,0xFE}
-end_define
-
-begin_define
-define|#
-directive|define
-name|THUMB_LE_BREAKPOINT
-value|{0xfe,0xdf}
-end_define
-
-begin_define
-define|#
-directive|define
-name|THUMB_BE_BREAKPOINT
-value|{0xdf,0xfe}
-end_define
-
-begin_comment
-comment|/* The following has been superseded by BREAKPOINT_FOR_PC, but    is defined merely to keep mem-break.c happy.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LITTLE_BREAKPOINT
-value|ARM_LE_BREAKPOINT
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIG_BREAKPOINT
-value|ARM_BE_BREAKPOINT
-end_define
-
-begin_comment
-comment|/* This function implements the BREAKPOINT_FROM_PC macro.  It uses the program    counter value to determine whether a 16- or 32-bit breakpoint should be    used.  It returns a pointer to a string of bytes that encode a breakpoint    instruction, stores the length of the string to *lenptr, and adjusts pc    (if necessary) to point to the actual memory location where the    breakpoint should be inserted.  */
+comment|/* This function implements the BREAKPOINT_FROM_PC macro.  It uses the    program counter value to determine whether a 16-bit or 32-bit    breakpoint should be used.  It returns a pointer to a string of    bytes that encode a breakpoint instruction, stores the length of    the string to *lenptr, and adjusts the program counter (if    necessary) to point to the actual memory location where the    breakpoint should be inserted.  */
 end_comment
 
 begin_function
@@ -5913,18 +6726,14 @@ name|char
 modifier|*
 name|arm_breakpoint_from_pc
 parameter_list|(
-name|pcptr
-parameter_list|,
-name|lenptr
-parameter_list|)
 name|CORE_ADDR
 modifier|*
 name|pcptr
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|lenptr
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6061,29 +6870,95 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if the PC is inside a call thunk (aka stub or trampoline).    This implements the IN_SOLIB_CALL_TRAMPOLINE macro.  */
+comment|/* Extract from an array REGBUF containing the (raw) register state a    function return value of type TYPE, and copy that, in virtual    format, into VALBUF.  */
+end_comment
+
+begin_function
+name|void
+name|arm_extract_return_value
+parameter_list|(
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|,
+name|char
+name|regbuf
+index|[
+name|REGISTER_BYTES
+index|]
+parameter_list|,
+name|char
+modifier|*
+name|valbuf
+parameter_list|)
+block|{
+if|if
+condition|(
+name|TYPE_CODE_FLT
+operator|==
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|convert_from_extended
+argument_list|(
+operator|&
+name|regbuf
+index|[
+name|REGISTER_BYTE
+argument_list|(
+name|F0_REGNUM
+argument_list|)
+index|]
+argument_list|,
+name|valbuf
+argument_list|)
+expr_stmt|;
+else|else
+name|memcpy
+argument_list|(
+name|valbuf
+argument_list|,
+operator|&
+name|regbuf
+index|[
+name|REGISTER_BYTE
+argument_list|(
+name|A1_REGNUM
+argument_list|)
+index|]
+argument_list|,
+name|TYPE_LENGTH
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Return non-zero if the PC is inside a thumb call thunk.  */
 end_comment
 
 begin_function
 name|int
 name|arm_in_call_stub
 parameter_list|(
-name|pc
-parameter_list|,
-name|name
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|CORE_ADDR
 name|start_addr
 decl_stmt|;
-comment|/* Find the starting address of the function containing the PC.  If the      caller didn't give us a name, look it up at the same time.  */
+comment|/* Find the starting address of the function containing the PC.  If      the caller didn't give us a name, look it up at the same time.  */
 if|if
 condition|(
 name|find_pc_partial_function
@@ -6124,18 +6999,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* If PC is in a Thumb call or return stub, return the address of the target    PC, which is in a register.  The thunk functions are called _called_via_xx,    where x is the register name.  The possible names are r0-r9, sl, fp, ip,    sp, and lr. */
+comment|/* If PC is in a Thumb call or return stub, return the address of the    target PC, which is in a register.  The thunk functions are called    _called_via_xx, where x is the register name.  The possible names    are r0-r9, sl, fp, ip, sp, and lr.  */
 end_comment
 
 begin_function
 name|CORE_ADDR
 name|arm_skip_stub
 parameter_list|(
-name|pc
-parameter_list|)
 name|CORE_ADDR
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6180,7 +7053,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Use the name suffix to determine which register contains          the target PC.  */
+comment|/* Use the name suffix to determine which register contains the          target PC.  */
 specifier|static
 name|char
 modifier|*
@@ -6269,24 +7142,510 @@ comment|/* not a stub */
 block|}
 end_function
 
+begin_comment
+comment|/* If the user changes the register disassembly flavor used for info register    and other commands, we have to also switch the flavor used in opcodes    for disassembly output.    This function is run in the set disassembly_flavor command, and does that. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|set_disassembly_flavor_sfunc
+parameter_list|(
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|int
+name|from_tty
+parameter_list|,
+name|struct
+name|cmd_list_element
+modifier|*
+name|c
+parameter_list|)
+block|{
+name|set_disassembly_flavor
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_function
+specifier|static
+name|void
+name|set_disassembly_flavor
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|setname
+decl_stmt|,
+modifier|*
+name|setdesc
+decl_stmt|,
+modifier|*
+modifier|*
+name|regnames
+decl_stmt|;
+name|int
+name|numregs
+decl_stmt|,
+name|j
+decl_stmt|;
+comment|/* Find the flavor that the user wants in the opcodes table. */
+name|int
+name|current
+init|=
+literal|0
+decl_stmt|;
+name|numregs
+operator|=
+name|get_arm_regnames
+argument_list|(
+name|current
+argument_list|,
+operator|&
+name|setname
+argument_list|,
+operator|&
+name|setdesc
+argument_list|,
+operator|&
+name|regnames
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|disassembly_flavor
+operator|!=
+name|setname
+operator|)
+operator|&&
+operator|(
+name|current
+operator|<
+name|num_flavor_options
+operator|)
+condition|)
+name|get_arm_regnames
+argument_list|(
+operator|++
+name|current
+argument_list|,
+operator|&
+name|setname
+argument_list|,
+operator|&
+name|setdesc
+argument_list|,
+operator|&
+name|regnames
+argument_list|)
+expr_stmt|;
+name|current_option
+operator|=
+name|current
+expr_stmt|;
+comment|/* Fill our copy. */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|numregs
+condition|;
+name|j
+operator|++
+control|)
+name|arm_register_names
+index|[
+name|j
+index|]
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|regnames
+index|[
+name|j
+index|]
+expr_stmt|;
+comment|/* Adjust case. */
+if|if
+condition|(
+name|isupper
+argument_list|(
+operator|*
+name|regnames
+index|[
+name|PC_REGNUM
+index|]
+argument_list|)
+condition|)
+block|{
+name|arm_register_names
+index|[
+name|FPS_REGNUM
+index|]
+operator|=
+literal|"FPS"
+expr_stmt|;
+name|arm_register_names
+index|[
+name|PS_REGNUM
+index|]
+operator|=
+literal|"CPSR"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|arm_register_names
+index|[
+name|FPS_REGNUM
+index|]
+operator|=
+literal|"fps"
+expr_stmt|;
+name|arm_register_names
+index|[
+name|PS_REGNUM
+index|]
+operator|=
+literal|"cpsr"
+expr_stmt|;
+block|}
+comment|/* Synchronize the disassembler. */
+name|set_arm_regname_option
+argument_list|(
+name|current
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* arm_othernames implements the "othernames" command.  This is kind    of hacky, and I prefer the set-show disassembly-flavor which is    also used for the x86 gdb.  I will keep this around, however, in    case anyone is actually using it. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|arm_othernames
+parameter_list|(
+name|char
+modifier|*
+name|names
+parameter_list|,
+name|int
+name|n
+parameter_list|)
+block|{
+comment|/* Circle through the various flavors. */
+name|current_option
+operator|=
+operator|(
+name|current_option
+operator|+
+literal|1
+operator|)
+operator|%
+name|num_flavor_options
+expr_stmt|;
+name|disassembly_flavor
+operator|=
+name|valid_flavors
+index|[
+name|current_option
+index|]
+expr_stmt|;
+name|set_disassembly_flavor
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 name|void
 name|_initialize_arm_tdep
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|struct
+name|ui_file
+modifier|*
+name|stb
+decl_stmt|;
+name|long
+name|length
+decl_stmt|;
+name|struct
+name|cmd_list_element
+modifier|*
+name|new_cmd
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|setname
+decl_stmt|,
+modifier|*
+name|setdesc
+decl_stmt|,
+modifier|*
+modifier|*
+name|regnames
+decl_stmt|;
+name|int
+name|numregs
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|helptext
+decl_stmt|;
 name|tm_print_insn
 operator|=
 name|gdb_print_insn_arm
 expr_stmt|;
-name|add_com
+comment|/* Get the number of possible sets of register names defined in opcodes. */
+name|num_flavor_options
+operator|=
+name|get_arm_regname_num_options
+argument_list|()
+expr_stmt|;
+comment|/* Sync the opcode insn printer with our register viewer: */
+name|parse_arm_disassembler_option
 argument_list|(
-literal|"othernames"
+literal|"reg-names-std"
+argument_list|)
+expr_stmt|;
+comment|/* Begin creating the help text. */
+name|stb
+operator|=
+name|mem_fileopen
+argument_list|()
+expr_stmt|;
+name|fprintf_unfiltered
+argument_list|(
+name|stb
 argument_list|,
-name|class_obscure
+literal|"Set the disassembly flavor.\n\ The valid values are:\n"
+argument_list|)
+expr_stmt|;
+comment|/* Initialize the array that will be passed to add_set_enum_cmd(). */
+name|valid_flavors
+operator|=
+name|xmalloc
+argument_list|(
+operator|(
+name|num_flavor_options
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|num_flavor_options
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|numregs
+operator|=
+name|get_arm_regnames
+argument_list|(
+name|i
 argument_list|,
-name|arm_othernames
+operator|&
+name|setname
 argument_list|,
-literal|"Switch to the other set of register names."
+operator|&
+name|setdesc
+argument_list|,
+operator|&
+name|regnames
+argument_list|)
+expr_stmt|;
+name|valid_flavors
+index|[
+name|i
+index|]
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|setname
+expr_stmt|;
+name|fprintf_unfiltered
+argument_list|(
+name|stb
+argument_list|,
+literal|"%s - %s\n"
+argument_list|,
+name|setname
+argument_list|,
+name|setdesc
+argument_list|)
+expr_stmt|;
+comment|/* Copy the default names (if found) and synchronize disassembler. */
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|setname
+argument_list|,
+literal|"std"
+argument_list|)
+condition|)
+block|{
+name|disassembly_flavor
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|setname
+expr_stmt|;
+name|current_option
+operator|=
+name|i
+expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|numregs
+condition|;
+name|j
+operator|++
+control|)
+name|arm_register_names
+index|[
+name|j
+index|]
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|regnames
+index|[
+name|j
+index|]
+expr_stmt|;
+name|set_arm_regname_option
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Mark the end of valid options. */
+name|valid_flavors
+index|[
+name|num_flavor_options
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Finish the creation of the help text. */
+name|fprintf_unfiltered
+argument_list|(
+name|stb
+argument_list|,
+literal|"The default is \"std\"."
+argument_list|)
+expr_stmt|;
+name|helptext
+operator|=
+name|ui_file_xstrdup
+argument_list|(
+name|stb
+argument_list|,
+operator|&
+name|length
+argument_list|)
+expr_stmt|;
+name|ui_file_delete
+argument_list|(
+name|stb
+argument_list|)
+expr_stmt|;
+comment|/* Add the disassembly-flavor command */
+name|new_cmd
+operator|=
+name|add_set_enum_cmd
+argument_list|(
+literal|"disassembly-flavor"
+argument_list|,
+name|no_class
+argument_list|,
+name|valid_flavors
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|disassembly_flavor
+argument_list|,
+name|helptext
+argument_list|,
+operator|&
+name|setlist
+argument_list|)
+expr_stmt|;
+name|new_cmd
+operator|->
+name|function
+operator|.
+name|sfunc
+operator|=
+name|set_disassembly_flavor_sfunc
+expr_stmt|;
+name|add_show_from_set
+argument_list|(
+name|new_cmd
+argument_list|,
+operator|&
+name|showlist
 argument_list|)
 expr_stmt|;
 comment|/* ??? Maybe this should be a boolean.  */
@@ -6317,11 +7676,23 @@ operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
+comment|/* Add the deprecated "othernames" command */
+name|add_com
+argument_list|(
+literal|"othernames"
+argument_list|,
+name|class_obscure
+argument_list|,
+name|arm_othernames
+argument_list|,
+literal|"Switch to the next set of register names."
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Test whether the coff symbol specific value corresponds to a Thumb function */
+comment|/* Test whether the coff symbol specific value corresponds to a Thumb    function.  */
 end_comment
 
 begin_function

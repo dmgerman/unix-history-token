@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface to bare machine for GDB running as kernel debugger.    Copyright (C) 1986, 1989, 1991 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Interface to bare machine for GDB running as kernel debugger.    Copyright (C) 1986, 1989, 1991 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
 
 begin_escape
@@ -123,23 +123,23 @@ argument_list|)
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
 name|int
 argument_list|(
-argument|* signal ()
+argument|*signal ()
 argument_list|)
 end_macro
 
 begin_expr_stmt
 operator|(
 operator|)
-block|{}
+block|{ }
 name|kill
 argument_list|()
-block|{}
+block|{ }
 name|getpid
 argument_list|()
 block|{
@@ -155,7 +155,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -164,7 +164,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_function
@@ -242,7 +242,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Reading "files".  The contents of some files are written into kdb's    data area before it is run.  These files are used to contain the    symbol table for kdb to load, and the source files (in case the    kdb user wants to print them).  The symbols are stored in a file    named "kdb-symbols" in a.out format (except that all the text and    data have been stripped to save room).     The files are stored in the following format:    int     number of bytes of data for this file, including these four.    char[]  name of the file, ending with a null.    padding to multiple of 4 boundary.    char[]  file contents.  The length can be deduced from what was            specified before.  There is no terminating null here.     If the int at the front is zero, it means there are no more files.     Opening a file in kdb returns a nonzero value to indicate success,    but the value does not matter.  Only one file can be open, and only    for reading.  All the primitives for input from the file know    which file is open and ignore what is specified for the descriptor    or for the stdio stream.     Input with fgetc can be done either on the file that is open    or on stdin (which reads from the terminal through tty_input ()  */
+comment|/* Reading "files".  The contents of some files are written into kdb's    data area before it is run.  These files are used to contain the    symbol table for kdb to load, and the source files (in case the    kdb user wants to print them).  The symbols are stored in a file    named "kdb-symbols" in a.out format (except that all the text and    data have been stripped to save room).     The files are stored in the following format:    int     number of bytes of data for this file, including these four.    char[]  name of the file, ending with a null.    padding to multiple of 4 boundary.    char[]  file contents.  The length can be deduced from what was    specified before.  There is no terminating null here.     If the int at the front is zero, it means there are no more files.     Opening a file in kdb returns a nonzero value to indicate success,    but the value does not matter.  Only one file can be open, and only    for reading.  All the primitives for input from the file know    which file is open and ignore what is specified for the descriptor    or for the stdio stream.     Input with fgetc can be done either on the file that is open    or on stdin (which reads from the terminal through tty_input ()  */
 end_comment
 
 begin_comment
@@ -1190,7 +1190,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1199,7 +1199,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_function
@@ -1257,7 +1257,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1266,7 +1266,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1275,7 +1275,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1284,7 +1284,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1293,7 +1293,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1510,7 +1510,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1519,7 +1519,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1528,7 +1528,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_macro
@@ -1537,7 +1537,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{}
+block|{ }
 end_block
 
 begin_escape
@@ -2015,7 +2015,7 @@ operator|*
 operator|)
 name|next
 control|)
-block|{}
+block|{     }
 comment|/* That is where free storage starts for sbrk to give out.  */
 name|next_free
 operator|=

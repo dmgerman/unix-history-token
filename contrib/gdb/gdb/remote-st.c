@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for Tandem ST2000 phone switch, for GDB.    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Jim Kingdon for Cygnus.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for Tandem ST2000 phone switch, for GDB.    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Jim Kingdon for Cygnus.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file was derived from remote-eb.c, which did a similar job, but for    an AMD-29K running EBMON.  That file was in turn derived from remote.c    as mentioned in the following comment (left in for comic relief):    "This is like remote.c but is for an esoteric situation--    having an a29k board in a PC hooked up to a unix machine with    a serial line, and running ctty com1 on the PC, through which    the unix machine can run ebmon.  Not to mention that the PC    has PC/NFS, so it can access the same executables that gdb can,    over the net in real time."     In reality, this module talks to a debug monitor called 'STDEBUG', which    runs in a phone switch.  We communicate with STDEBUG via either a direct    serial line, or a TCP (or possibly TELNET) stream to a terminal multiplexor,    which in turn talks to the phone switch. */
+comment|/* This file was derived from remote-eb.c, which did a similar job, but for    an AMD-29K running EBMON.  That file was in turn derived from remote.c    as mentioned in the following comment (left in for comic relief):     "This is like remote.c but is for an esoteric situation--    having an a29k board in a PC hooked up to a unix machine with    a serial line, and running ctty com1 on the PC, through which    the unix machine can run ebmon.  Not to mention that the PC    has PC/NFS, so it can access the same executables that gdb can,    over the net in real time."     In reality, this module talks to a debug monitor called 'STDEBUG', which    runs in a phone switch.  We communicate with STDEBUG via either a direct    serial line, or a TCP (or possibly TELNET) stream to a terminal multiplexor,    which in turn talks to the phone switch. */
 end_comment
 
 begin_include
@@ -28,36 +28,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -174,9 +146,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|printf_stdebug
 parameter_list|(
 name|char
@@ -185,15 +154,6 @@ name|pattern
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|printf_stdebug
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
@@ -204,9 +164,6 @@ index|[
 literal|200
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -214,29 +171,6 @@ argument_list|,
 name|pattern
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|pattern
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|pattern
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vsprintf
 argument_list|(
 name|buf
@@ -2207,7 +2141,7 @@ comment|/* Connect the user directly to STDBUG.  This command acts just like the
 end_comment
 
 begin_comment
-comment|/*static struct ttystate ttystate;*/
+comment|/*static struct ttystate ttystate; */
 end_comment
 
 begin_function
@@ -2221,7 +2155,7 @@ argument_list|(
 literal|"\r\n[Exiting connect mode]\r\n"
 argument_list|)
 expr_stmt|;
-comment|/*  SERIAL_RESTORE(0,&ttystate);*/
+comment|/*  SERIAL_RESTORE(0,&ttystate); */
 block|}
 end_function
 
@@ -2236,12 +2170,12 @@ comment|/* This all should now be in serial.c */
 end_comment
 
 begin_comment
-unit|static void connect_command (args, fromtty)      char	*args;      int	fromtty; {   fd_set readfds;   int numfds;   int c;   char cur_esc = 0;    dont_repeat();    if (st2000_desc< 0)     error("st2000 target not open.");      if (args)     fprintf("This command takes no args.  They have been ignored.\n"); 	   printf("[Entering connect mode.  Use ~. or ~^D to escape]\n");    serial_raw(0,&ttystate);    make_cleanup(cleanup_tty, 0);    FD_ZERO(&readfds);    while (1)     {       do 	{ 	  FD_SET(0,&readfds); 	  FD_SET(st2000_desc,&readfds); 	  numfds = select(sizeof(readfds)*8,&readfds, 0, 0, 0); 	}       while (numfds == 0);        if (numfds< 0) 	perror_with_name("select");        if (FD_ISSET(0,&readfds)) 	{
+unit|static void connect_command (args, fromtty)      char *args;      int fromtty; {   fd_set readfds;   int numfds;   int c;   char cur_esc = 0;    dont_repeat ();    if (st2000_desc< 0)     error ("st2000 target not open.");    if (args)     fprintf ("This command takes no args.  They have been ignored.\n");    printf ("[Entering connect mode.  Use ~. or ~^D to escape]\n");    serial_raw (0,&ttystate);    make_cleanup (cleanup_tty, 0);    FD_ZERO (&readfds);    while (1)     {       do 	{ 	  FD_SET (0,&readfds); 	  FD_SET (DEPRECATED_SERIAL_FD (st2000_desc),&readfds); 	  numfds = select (sizeof (readfds) * 8,&readfds, 0, 0, 0); 	}       while (numfds == 0);        if (numfds< 0) 	perror_with_name ("select");        if (FD_ISSET (0,&readfds)) 	{
 comment|/* tty input, send to stdebug */
 end_comment
 
 begin_endif
-unit|c = getchar(); 	  if (c< 0) 	    perror_with_name("connect");  	  printf_stdebug("%c", c); 	  switch (cur_esc) 	    { 	    case 0: 	      if (c == '\r') 		cur_esc = c; 	      break; 	    case '\r': 	      if (c == '~') 		cur_esc = c; 	      else 		cur_esc = 0; 	      break; 	    case '~': 	      if (c == '.' || c == '\004') 		return; 	      else 		cur_esc = 0; 	    } 	}        if (FD_ISSET(st2000_desc,&readfds)) 	{ 	  while (1) 	    { 	      c = readchar(0); 	      if (c< 0) 		break; 	      putchar(c); 	    } 	  fflush(stdout); 	}     } }
+unit|c = getchar (); 	  if (c< 0) 	    perror_with_name ("connect");  	  printf_stdebug ("%c", c); 	  switch (cur_esc) 	    { 	    case 0: 	      if (c == '\r') 		cur_esc = c; 	      break; 	    case '\r': 	      if (c == '~') 		cur_esc = c; 	      else 		cur_esc = 0; 	      break; 	    case '~': 	      if (c == '.' || c == '\004') 		return; 	      else 		cur_esc = 0; 	    } 	}        if (FD_ISSET (DEPRECATED_SERIAL_FD (st2000_desc),&readfds)) 	{ 	  while (1) 	    { 	      c = readchar (0); 	      if (c< 0) 		break; 	      putchar (c); 	    } 	  fflush (stdout); 	}     } }
 endif|#
 directive|endif
 end_endif

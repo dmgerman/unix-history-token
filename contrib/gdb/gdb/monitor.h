@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for remote debugging interface for ROM monitors.     Copyright 1990, 1991, 1992, 1996 Free Software Foundation, Inc.     Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.       This file is part of GDB.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.       This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.       You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Definitions for remote debugging interface for ROM monitors.    Copyright 1990, 1991, 1992, 1996 Free Software Foundation, Inc.    Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -117,7 +117,7 @@ name|char
 modifier|*
 name|set_break
 decl_stmt|;
-comment|/* set a breakpoint */
+comment|/* set a breakpoint. If NULL, monitor implementation 				   sets its own to_insert_breakpoint method. */
 name|char
 modifier|*
 name|clr_break
@@ -153,7 +153,7 @@ name|regrw_cmd
 name|getreg
 decl_stmt|;
 comment|/* get a register */
-comment|/* Some commands can dump a bunch of registers 				   at once.  This comes as a set of REG=VAL 				   pairs.  This should be called for each pair 				   of registers that we can parse to supply 				   GDB with the value of a register.  */
+comment|/* Some commands can dump a bunch of registers        at once.  This comes as a set of REG=VAL        pairs.  This should be called for each pair        of registers that we can parse to supply        GDB with the value of a register.  */
 name|char
 modifier|*
 name|dump_registers
@@ -298,6 +298,10 @@ modifier|*
 name|regnames
 decl_stmt|;
 comment|/* array of register names in ascii */
+name|int
+name|num_breakpoints
+decl_stmt|;
+comment|/* If set_break != NULL, number of supported 				   breakpoints */
 name|int
 name|magic
 decl_stmt|;
@@ -564,7 +568,7 @@ value|0x200000
 end_define
 
 begin_comment
-comment|/* Some dump bytes commands align the first data with the preceeding 16 byte boundary. Some print blanks and start at the exactly the requested boundary. */
+comment|/* Some dump bytes commands align the first data with the preceeding    16 byte boundary. Some print blanks and start at the exactly the    requested boundary. */
 end_comment
 
 begin_define
@@ -575,7 +579,7 @@ value|0x400000
 end_define
 
 begin_comment
-comment|/* Rather entering and exiting the write memory dialog for each word byte,    we can save time by transferring the whole block without exiting    the memory editing mode. You only need to worry about this    if you are doing memory downloading.    This engages a new write function registered with dcache.    */
+comment|/* Rather entering and exiting the write memory dialog for each word byte,    we can save time by transferring the whole block without exiting    the memory editing mode. You only need to worry about this    if you are doing memory downloading.    This engages a new write function registered with dcache.  */
 end_comment
 
 begin_define

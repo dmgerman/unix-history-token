@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target-dependent code for the Fujitsu FR30.    Copyright 1999, Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target-dependent code for the Fujitsu FR30.    Copyright 1999, Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -62,6 +62,70 @@ include|#
 directive|include
 file|"symfile.h"
 end_include
+
+begin_comment
+comment|/* An expression that tells us whether the function invocation represented    by FI does not have a frame on the stack associated with it.  */
+end_comment
+
+begin_function
+name|int
+name|fr30_frameless_function_invocation
+parameter_list|(
+name|fi
+parameter_list|)
+name|struct
+name|frame_info
+modifier|*
+name|fi
+decl_stmt|;
+block|{
+name|int
+name|frameless
+decl_stmt|;
+name|CORE_ADDR
+name|func_start
+decl_stmt|,
+name|after_prologue
+decl_stmt|;
+name|func_start
+operator|=
+operator|(
+name|get_pc_function_start
+argument_list|(
+operator|(
+name|fi
+operator|)
+operator|->
+name|pc
+argument_list|)
+operator|+
+name|FUNCTION_START_OFFSET
+operator|)
+expr_stmt|;
+name|after_prologue
+operator|=
+name|func_start
+expr_stmt|;
+name|after_prologue
+operator|=
+name|SKIP_PROLOGUE
+argument_list|(
+name|after_prologue
+argument_list|)
+expr_stmt|;
+name|frameless
+operator|=
+operator|(
+name|after_prologue
+operator|==
+name|func_start
+operator|)
+expr_stmt|;
+return|return
+name|frameless
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Function: pop_frame    This routine gets called when either the user uses the `return'    command, or the call dummy breakpoint gets hit.  */
@@ -192,6 +256,110 @@ block|}
 end_function
 
 begin_comment
+comment|/* Function: fr30_store_return_value    Put a value where a caller expects to see it.  Used by the 'return'    command.  */
+end_comment
+
+begin_function
+name|void
+name|fr30_store_return_value
+parameter_list|(
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|,
+name|char
+modifier|*
+name|valbuf
+parameter_list|)
+block|{
+comment|/* Here's how the FR30 returns values (gleaned from gcc/config/      fr30/fr30.h):       If the return value is 32 bits long or less, it goes in r4.       If the return value is 64 bits long or less, it goes in r4 (most      significant word) and r5 (least significant word.       If the function returns a structure, of any size, the caller      passes the function an invisible first argument where the callee      should store the value.  But GDB doesn't let you do that anyway.       If you're returning a value smaller than a word, it's not really      necessary to zero the upper bytes of the register; the caller is      supposed to ignore them.  However, the FR30 typically keeps its      values extended to the full register width, so we should emulate      that.  */
+comment|/* The FR30 is big-endian, so if we return a small value (like a      short or a char), we need to position it correctly within the      register.  We round the size up to a register boundary, and then      adjust the offset so as to place the value at the right end.  */
+name|int
+name|value_size
+init|=
+name|TYPE_LENGTH
+argument_list|(
+name|type
+argument_list|)
+decl_stmt|;
+name|int
+name|returned_size
+init|=
+operator|(
+name|value_size
+operator|+
+name|FR30_REGSIZE
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+operator|(
+name|FR30_REGSIZE
+operator|-
+literal|1
+operator|)
+decl_stmt|;
+name|int
+name|offset
+init|=
+operator|(
+name|REGISTER_BYTE
+argument_list|(
+name|RETVAL_REG
+argument_list|)
+operator|+
+operator|(
+name|returned_size
+operator|-
+name|value_size
+operator|)
+operator|)
+decl_stmt|;
+name|char
+modifier|*
+name|zeros
+init|=
+name|alloca
+argument_list|(
+name|returned_size
+argument_list|)
+decl_stmt|;
+name|memset
+argument_list|(
+name|zeros
+argument_list|,
+literal|0
+argument_list|,
+name|returned_size
+argument_list|)
+expr_stmt|;
+name|write_register_bytes
+argument_list|(
+name|REGISTER_BYTE
+argument_list|(
+name|RETVAL_REG
+argument_list|)
+argument_list|,
+name|zeros
+argument_list|,
+name|returned_size
+argument_list|)
+expr_stmt|;
+name|write_register_bytes
+argument_list|(
+name|offset
+argument_list|,
+name|valbuf
+argument_list|,
+name|value_size
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Function: skip_prologue    Return the address of the first code past the prologue of the function.  */
 end_comment
 
@@ -268,7 +436,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: push_arguments    Setup arguments and RP for a call to the target.  First four args    go in FIRST_ARGREG -> LAST_ARGREG, subsequent args go on stack...    Structs are passed by reference.  XXX not right now Z.R.    64 bit quantities (doubles and long longs) may be split between    the regs and the stack.    When calling a function that returns a struct, a pointer to the struct    is passed in as a secret first argument (always in FIRST_ARGREG).     Stack space for the args has NOT been allocated: that job is up to us. */
+comment|/* Function: push_arguments    Setup arguments and RP for a call to the target.  First four args    go in FIRST_ARGREG -> LAST_ARGREG, subsequent args go on stack...    Structs are passed by reference.  XXX not right now Z.R.    64 bit quantities (doubles and long longs) may be split between    the regs and the stack.    When calling a function that returns a struct, a pointer to the struct    is passed in as a secret first argument (always in FIRST_ARGREG).     Stack space for the args has NOT been allocated: that job is up to us.  */
 end_comment
 
 begin_function
@@ -373,7 +541,7 @@ name|stack_offset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Process args from left to right.  Store as many as allowed in 	registers, save the rest to be pushed on the stack */
+comment|/* Process args from left to right.  Store as many as allowed in      registers, save the rest to be pushed on the stack */
 for|for
 control|(
 name|argnum
@@ -458,7 +626,7 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|{
-comment|/* Copy the argument to general registers or the stack in 	     register-sized pieces.  Large arguments are split between 	     registers and stack.  */
+comment|/* Copy the argument to general registers or the stack in 	   register-sized pieces.  Large arguments are split between 	   registers and stack.  */
 while|while
 condition|(
 name|len
@@ -493,7 +661,7 @@ argument_list|,
 name|partial_len
 argument_list|)
 expr_stmt|;
-comment|/* It's a simple argument being passed in a general 		     register.  */
+comment|/* It's a simple argument being passed in a general 		   register.  */
 name|write_register
 argument_list|(
 name|argreg
@@ -583,32 +751,42 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_decl_stmt
+name|void
 name|_initialize_fr30_tdep
-argument_list|()
-end_macro
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_function
+name|void
+name|_initialize_fr30_tdep
+parameter_list|()
 block|{
 specifier|extern
 name|int
 name|print_insn_fr30
-parameter_list|(
+argument_list|(
 name|bfd_vma
-parameter_list|,
+argument_list|,
 name|disassemble_info
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|)
+decl_stmt|;
 name|tm_print_insn
 operator|=
 name|print_insn_fr30
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* Function: check_prologue_cache    Check if prologue for this frame's PC has already been scanned.    If it has, copy the relevant information about that prologue and    return non-zero.  Otherwise do not copy anything and return zero.     The information saved in the cache includes:      * the frame register number;      * the size of the stack frame;      * the offsets of saved regs (relative to the old SP); and      * the offset from the stack pointer to the frame pointer     The cache contains only one entry, since this is adequate    for the typical sequence of prologue scan requests we get.    When performing a backtrace, GDB will usually ask to scan    the same function twice in a row (once to get the frame chain,    and once to fill in the extra frame information). */
+comment|/* Function: check_prologue_cache    Check if prologue for this frame's PC has already been scanned.    If it has, copy the relevant information about that prologue and    return non-zero.  Otherwise do not copy anything and return zero.     The information saved in the cache includes:    * the frame register number;    * the size of the stack frame;    * the offsets of saved regs (relative to the old SP); and    * the offset from the stack pointer to the frame pointer     The cache contains only one entry, since this is adequate    for the typical sequence of prologue scan requests we get.    When performing a backtrace, GDB will usually ask to scan    the same function twice in a row (once to get the frame chain,    and once to fill in the extra frame information).  */
 end_comment
 
 begin_decl_stmt
@@ -713,7 +891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: save_prologue_cache    Copy the prologue information from fi to the prologue cache. */
+comment|/* Function: save_prologue_cache    Copy the prologue information from fi to the prologue cache.  */
 end_comment
 
 begin_function
@@ -1445,7 +1623,7 @@ name|frame
 argument_list|)
 condition|)
 block|{
-comment|/* We need to setup fi->frame here because run_stack_dummy gets it wrong 	 by assuming it's always FP.  */
+comment|/* We need to setup fi->frame here because run_stack_dummy gets it wrong          by assuming it's always FP.  */
 name|fi
 operator|->
 name|frame
@@ -1551,7 +1729,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Calculate actual addresses of saved registers using offsets determined          by fr30_scan_prologue.  */
+comment|/* Calculate actual addresses of saved registers using offsets determined      by fr30_scan_prologue.  */
 for|for
 control|(
 name|reg
@@ -1972,7 +2150,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Function: fix_call_dummy    Pokes the callee function's address into the CALL_DUMMY assembly stub.    Assumes that the CALL_DUMMY looks like this: 	jarl<offset24>, r31 	trap    */
+comment|/* Function: fix_call_dummy    Pokes the callee function's address into the CALL_DUMMY assembly stub.    Assumes that the CALL_DUMMY looks like this:    jarl<offset24>, r31    trap  */
 end_comment
 
 begin_function

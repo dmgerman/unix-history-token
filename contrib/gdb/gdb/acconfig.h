@@ -1,49 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Whether malloc must be declared even if<stdlib.h> is included.  */
+comment|/* Define if compiling on Solaris 7. */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|NEED_DECLARATION_MALLOC
+name|_MSE_INT_H
 end_undef
-
-begin_comment
-comment|/* Whether realloc must be declared even if<stdlib.h> is included.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_DECLARATION_REALLOC
-end_undef
-
-begin_comment
-comment|/* Whether free must be declared even if<stdlib.h> is included.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_DECLARATION_FREE
-end_undef
-
-begin_comment
-comment|/* Whether strerror must be declared even if<string.h> is included.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_DECLARATION_STRERROR
-end_undef
-
-begin_expr_stmt
-unit|@
-name|TOP
-expr|@
-end_expr_stmt
 
 begin_comment
 comment|/* Define if pstatus_t type is available */
@@ -86,6 +50,66 @@ name|HAVE_GREGSET_T
 end_undef
 
 begin_comment
+comment|/* Define if<sys/procfs.h> has prgregset_t. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PRGREGSET_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has prfpregset_t. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PRFPREGSET_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has lwpid_t. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LWPID_T
+end_undef
+
+begin_comment
+comment|/* Define if<sys/procfs.h> has psaddr_t. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PSADDR_T
+end_undef
+
+begin_comment
+comment|/* Define if the prfpregset_t type is broken. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PRFPREGSET_T_BROKEN
+end_undef
+
+begin_comment
+comment|/* Define if you want to use new multi-fd /proc interface    (replaces HAVE_MULTIPLE_PROC_FDS as well as other macros). */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NEW_PROC_API
+end_undef
+
+begin_comment
 comment|/* Define if ioctl argument PIOCSET is available. */
 end_comment
 
@@ -93,16 +117,6 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_PROCFS_PIOCSET
-end_undef
-
-begin_comment
-comment|/* /proc PID entries are directories containing the files    ctl as map status */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_MULTIPLE_PROC_FDS
 end_undef
 
 begin_comment
@@ -282,26 +296,54 @@ name|TARGET_CPU_DEFAULT
 end_undef
 
 begin_comment
+comment|/* Define if the simulator is being linked in.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WITH_SIM
+end_undef
+
+begin_comment
 comment|/* Set to true if the save_state_t structure is present */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE_STRUCT_SAVE_STATE_T
-value|0
-end_define
+end_undef
 
 begin_comment
 comment|/* Set to true if the save_state_t structure has the ss_wide member */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|HAVE_STRUCT_MEMBER_SS_WIDE
-value|0
-end_define
+end_undef
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PTRACE_GETREGS request.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PTRACE_GETREGS
+end_undef
+
+begin_comment
+comment|/* Define if<sys/ptrace.h> defines the PTRACE_GETXFPREGS request.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PTRACE_GETXFPREGS
+end_undef
 
 end_unit
 

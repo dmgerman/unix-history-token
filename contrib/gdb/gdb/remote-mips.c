@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for MIPS remote debugging protocol.    Copyright 1993, 1994, 1995 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Ian Lance Taylor<ian@cygnus.com>.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for MIPS remote debugging protocol.    Copyright 1993-1995, 2000 Free Software Foundation, Inc.    Contributed by Cygnus Support.  Written by Ian Lance Taylor<ian@cygnus.com>.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wait.h"
+file|"gdb_wait.h"
 end_include
 
 begin_include
@@ -87,34 +87,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Microsoft C's stat.h doesn't define all the POSIX file modes.  */
 end_comment
@@ -136,22 +108,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|mips_set_processor_type_command
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_escape
 end_escape
@@ -1042,7 +998,15 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The MIPS remote debugging interface is built on top of a simple    packet protocol.  Each packet is organized as follows:     SYN	The first character is always a SYN (ASCII 026, or ^V).  SYN 	may not appear anywhere else in the packet.  Any time a SYN is 	seen, a new packet should be assumed to have begun.     TYPE_LEN 	This byte contains the upper five bits of the logical length 	of the data section, plus a single bit indicating whether this 	is a data packet or an acknowledgement.  The documentation 	indicates that this bit is 1 for a data packet, but the actual 	board uses 1 for an acknowledgement.  The value of the byte is 		0x40 + (ack ? 0x20 : 0) + (len>> 6) 	(we always have 0<= len< 1024).  Acknowledgement packets do 	not carry data, and must have a data length of 0.     LEN1 This byte contains the lower six bits of the logical length of 	the data section.  The value is 	 	0x40 + (len& 0x3f)     SEQ	This byte contains the six bit sequence number of the packet. 	The value is 		0x40 + seq 	An acknowlegment packet contains the sequence number of the 	packet being acknowledged plus 1 modulo 64.  Data packets are 	transmitted in sequence.  There may only be one outstanding 	unacknowledged data packet at a time.  The sequence numbers 	are independent in each direction.  If an acknowledgement for 	the previous packet is received (i.e., an acknowledgement with 	the sequence number of the packet just sent) the packet just 	sent should be retransmitted.  If no acknowledgement is 	received within a timeout period, the packet should be 	retransmitted.  This has an unfortunate failure condition on a 	high-latency line, as a delayed acknowledgement may lead to an 	endless series of duplicate packets.     DATA	The actual data bytes follow.  The following characters are 	escaped inline with DLE (ASCII 020, or ^P): 		SYN (026)	DLE S 		DLE (020)	DLE D 		^C  (003)	DLE C 		^S  (023)	DLE s 		^Q  (021)	DLE q 	The additional DLE characters are not counted in the logical 	length stored in the TYPE_LEN and LEN1 bytes.     CSUM1    CSUM2    CSUM3 	These bytes contain an 18 bit checksum of the complete 	contents of the packet excluding the SEQ byte and the 	CSUM[123] bytes.  The checksum is simply the twos complement 	addition of all the bytes treated as unsigned characters.  The 	values of the checksum bytes are: 		CSUM1: 0x40 + ((cksum>> 12)& 0x3f) 		CSUM2: 0x40 + ((cksum>> 6)& 0x3f) 		CSUM3: 0x40 + (cksum& 0x3f)     It happens that the MIPS remote debugging protocol always    communicates with ASCII strings.  Because of this, this    implementation doesn't bother to handle the DLE quoting mechanism,    since it will never be required.  */
+comment|/* *INDENT-OFF* */
+end_comment
+
+begin_comment
+comment|/* The MIPS remote debugging interface is built on top of a simple    packet protocol.  Each packet is organized as follows:     SYN  The first character is always a SYN (ASCII 026, or ^V).  SYN    may not appear anywhere else in the packet.  Any time a SYN is    seen, a new packet should be assumed to have begun.     TYPE_LEN    This byte contains the upper five bits of the logical length    of the data section, plus a single bit indicating whether this    is a data packet or an acknowledgement.  The documentation    indicates that this bit is 1 for a data packet, but the actual    board uses 1 for an acknowledgement.  The value of the byte is    0x40 + (ack ? 0x20 : 0) + (len>> 6)    (we always have 0<= len< 1024).  Acknowledgement packets do    not carry data, and must have a data length of 0.     LEN1 This byte contains the lower six bits of the logical length of    the data section.  The value is    0x40 + (len& 0x3f)     SEQ  This byte contains the six bit sequence number of the packet.    The value is    0x40 + seq    An acknowlegment packet contains the sequence number of the    packet being acknowledged plus 1 modulo 64.  Data packets are    transmitted in sequence.  There may only be one outstanding    unacknowledged data packet at a time.  The sequence numbers    are independent in each direction.  If an acknowledgement for    the previous packet is received (i.e., an acknowledgement with    the sequence number of the packet just sent) the packet just    sent should be retransmitted.  If no acknowledgement is    received within a timeout period, the packet should be    retransmitted.  This has an unfortunate failure condition on a    high-latency line, as a delayed acknowledgement may lead to an    endless series of duplicate packets.     DATA The actual data bytes follow.  The following characters are    escaped inline with DLE (ASCII 020, or ^P):    SYN (026)    DLE S    DLE (020)    DLE D    ^C  (003)    DLE C    ^S  (023)    DLE s    ^Q  (021)    DLE q    The additional DLE characters are not counted in the logical    length stored in the TYPE_LEN and LEN1 bytes.     CSUM1    CSUM2    CSUM3    These bytes contain an 18 bit checksum of the complete    contents of the packet excluding the SEQ byte and the    CSUM[123] bytes.  The checksum is simply the twos complement    addition of all the bytes treated as unsigned characters.  The    values of the checksum bytes are:    CSUM1: 0x40 + ((cksum>> 12)& 0x3f)    CSUM2: 0x40 + ((cksum>> 6)& 0x3f)    CSUM3: 0x40 + (cksum& 0x3f)     It happens that the MIPS remote debugging protocol always    communicates with ASCII strings.  Because of this, this    implementation doesn't bother to handle the DLE quoting mechanism,    since it will never be required.  */
+end_comment
+
+begin_comment
+comment|/* *INDENT-ON* */
 end_comment
 
 begin_comment
@@ -1439,7 +1403,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The monitor prompt text.  If the user sets the PMON prompt    to some new value, the GDB `set monitor-prompt' command must also    be used to inform GDB about the expected prompt.  Otherwise, GDB    will not be able to connect to PMON in mips_initialize().    If the `set monitor-prompt' command is not used, the expected    default prompt will be set according the target: 	target		prompt 	-----		----- 	pmon		PMON>  	ddb		NEC010> 	lsi		PMON> */
+comment|/* The monitor prompt text.  If the user sets the PMON prompt    to some new value, the GDB `set monitor-prompt' command must also    be used to inform GDB about the expected prompt.  Otherwise, GDB    will not be able to connect to PMON in mips_initialize().    If the `set monitor-prompt' command is not used, the expected    default prompt will be set according the target:    target               prompt    -----                -----    pmon         PMON>     ddb          NEC010>    lsi          PMON>  */
 end_comment
 
 begin_decl_stmt
@@ -1685,13 +1649,14 @@ begin_comment
 comment|/* If non-zero, monitor supports breakpoint commands. */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|monitor_supports_breakpoints
-operator|=
+init|=
 literal|0
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Data cache header.  */
@@ -1725,7 +1690,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Table of breakpoints/watchpoints (used only on LSI PMON target).    The table is indexed by a breakpoint number, which is an integer    from 0 to 255 returned by the LSI PMON when a breakpoint is set. */
+comment|/* Table of breakpoints/watchpoints (used only on LSI PMON target).    The table is indexed by a breakpoint number, which is an integer    from 0 to 255 returned by the LSI PMON when a breakpoint is set.  */
 end_comment
 
 begin_define
@@ -2032,9 +1997,6 @@ begin_function
 specifier|static
 name|NORETURN
 name|void
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|mips_error
 parameter_list|(
 name|char
@@ -2043,22 +2005,10 @@ name|string
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|mips_error
-parameter_list|(
-name|va_alist
-parameter_list|)
-function|va_dcl
-endif|#
-directive|endif
 block|{
 name|va_list
 name|args
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
 name|va_start
 argument_list|(
 name|args
@@ -2066,29 +2016,6 @@ argument_list|,
 name|string
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|char
-modifier|*
-name|string
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|string
-operator|=
-name|va_arg
-argument_list|(
-name|args
-argument_list|,
-name|char
-operator|*
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|target_terminal_ours
 argument_list|()
 expr_stmt|;
@@ -2167,12 +2094,19 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|putc_readable
+name|fputc_readable
 parameter_list|(
 name|ch
+parameter_list|,
+name|file
 parameter_list|)
 name|int
 name|ch
+decl_stmt|;
+name|struct
+name|ui_file
+modifier|*
+name|file
 decl_stmt|;
 block|{
 if|if
@@ -2181,9 +2115,11 @@ name|ch
 operator|==
 literal|'\n'
 condition|)
-name|putchar_unfiltered
+name|fputc_unfiltered
 argument_list|(
 literal|'\n'
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2193,8 +2129,10 @@ name|ch
 operator|==
 literal|'\r'
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|file
+argument_list|,
 literal|"\\r"
 argument_list|)
 expr_stmt|;
@@ -2206,8 +2144,10 @@ operator|<
 literal|0x20
 condition|)
 comment|/* ASCII control character */
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|file
+argument_list|,
 literal|"^%c"
 argument_list|,
 name|ch
@@ -2223,8 +2163,10 @@ operator|>=
 literal|0x7f
 condition|)
 comment|/* non-ASCII characters (rubout or greater) */
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|file
+argument_list|,
 literal|"[%02x]"
 argument_list|,
 name|ch
@@ -2233,9 +2175,11 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 else|else
-name|putchar_unfiltered
+name|fputc_unfiltered
 argument_list|(
 name|ch
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 block|}
@@ -2248,13 +2192,20 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|puts_readable
+name|fputs_readable
 parameter_list|(
 name|string
+parameter_list|,
+name|file
 parameter_list|)
 name|char
 modifier|*
 name|string
+decl_stmt|;
+name|struct
+name|ui_file
+modifier|*
+name|file
 decl_stmt|;
 block|{
 name|int
@@ -2272,16 +2223,18 @@ operator|)
 operator|!=
 literal|'\0'
 condition|)
-name|putc_readable
+name|fputc_readable
 argument_list|(
 name|c
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Wait until STRING shows up in mips_desc.  Returns 1 if successful, else 0 if    timed out.  TIMEOUT specifies timeout value in seconds. */
+comment|/* Wait until STRING shows up in mips_desc.  Returns 1 if successful, else 0 if    timed out.  TIMEOUT specifies timeout value in seconds.  */
 end_comment
 
 begin_function
@@ -2311,18 +2264,24 @@ condition|(
 name|remote_debug
 condition|)
 block|{
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Expected \""
 argument_list|)
 expr_stmt|;
-name|puts_readable
+name|fputs_readable
 argument_list|(
 name|string
+argument_list|,
+name|gdb_stdlog
 argument_list|)
 expr_stmt|;
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"\", got \""
 argument_list|)
 expr_stmt|;
@@ -2360,8 +2319,10 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"\": FAIL\n"
 argument_list|)
 expr_stmt|;
@@ -2373,9 +2334,11 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|putc_readable
+name|fputc_readable
 argument_list|(
 name|c
+argument_list|,
+name|gdb_stdlog
 argument_list|)
 expr_stmt|;
 if|if
@@ -2403,8 +2366,10 @@ if|if
 condition|(
 name|remote_debug
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"\": OK\n"
 argument_list|)
 expr_stmt|;
@@ -2435,7 +2400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Wait until STRING shows up in mips_desc.  Returns 1 if successful, else 0 if    timed out.  The timeout value is hard-coded to 2 seconds.  Use    mips_expect_timeout if a different timeout value is needed. */
+comment|/* Wait until STRING shows up in mips_desc.  Returns 1 if successful, else 0 if    timed out.  The timeout value is hard-coded to 2 seconds.  Use    mips_expect_timeout if a different timeout value is needed.  */
 end_comment
 
 begin_function
@@ -2577,9 +2542,6 @@ argument_list|(
 name|mips_monitor_prompt
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|MAINTENANCE_CMDS
 block|{
 name|int
 name|i
@@ -2604,8 +2566,6 @@ operator|=
 name|watchdog
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|state
@@ -2625,9 +2585,6 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MAINTENANCE_CMDS
 if|if
 condition|(
 name|ch
@@ -2650,8 +2607,6 @@ literal|"Watchdog has expired.  Target detached.\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ch
@@ -2686,15 +2641,17 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* Don't use _filtered; we can't deal with a QUIT out of 	 target_wait, and I think this might be called from there.  */
+comment|/* Don't use _filtered; we can't deal with a QUIT out of          target_wait, and I think this might be called from there.  */
 if|if
 condition|(
 name|ch
 operator|!=
 name|SERIAL_TIMEOUT
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Read '%c' %d 0x%x\n"
 argument_list|,
 name|ch
@@ -2705,8 +2662,10 @@ name|ch
 argument_list|)
 expr_stmt|;
 else|else
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Timed out in read\n"
 argument_list|)
 expr_stmt|;
@@ -2742,8 +2701,10 @@ operator|>
 literal|0
 condition|)
 comment|/* Don't use _filtered; we can't deal with a QUIT out of 	   target_wait, and I think this might be called from there.  */
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Reinitializing MIPS debugging mode\n"
 argument_list|)
 expr_stmt|;
@@ -2758,7 +2719,7 @@ name|state
 operator|=
 literal|0
 expr_stmt|;
-comment|/* At this point, about the only thing we can do is abort the command 	 in progress and get back to command level as quickly as possible. */
+comment|/* At this point, about the only thing we can do is abort the command          in progress and get back to command level as quickly as possible. */
 name|error
 argument_list|(
 literal|"Remote board reset, debug protocol re-initialized."
@@ -2829,7 +2790,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* Wait for a SYN.  mips_syn_garbage is intended to prevent 	 sitting here indefinitely if the board sends us one garbage 	 character per second.  ch may already have a value from the 	 last time through the loop.  */
+comment|/* Wait for a SYN.  mips_syn_garbage is intended to prevent          sitting here indefinitely if the board sends us one garbage          character per second.  ch may already have a value from the          last time through the loop.  */
 while|while
 condition|(
 name|ch
@@ -2861,7 +2822,7 @@ operator|!=
 name|SYN
 condition|)
 block|{
-comment|/* Printing the character here lets the user of gdb see 		 what the program is outputting, if the debugging is 		 being done on the console port.  Don't use _filtered; 		 we can't deal with a QUIT out of target_wait.  */
+comment|/* Printing the character here lets the user of gdb see 	         what the program is outputting, if the debugging is 	         being done on the console port.  Don't use _filtered; 	         we can't deal with a QUIT out of target_wait.  */
 if|if
 condition|(
 operator|!
@@ -2872,14 +2833,16 @@ operator|>
 literal|0
 condition|)
 block|{
-name|putc_readable
+name|fputc_readable
 argument_list|(
 name|ch
+argument_list|,
+name|gdb_stdlog
 argument_list|)
 expr_stmt|;
 name|gdb_flush
 argument_list|(
-name|gdb_stdout
+name|gdb_stdlog
 argument_list|)
 expr_stmt|;
 block|}
@@ -2961,7 +2924,7 @@ operator|=
 name|ch
 expr_stmt|;
 block|}
-comment|/* If we got the complete header, we can return.  Otherwise we 	 loop around and keep looking for SYN.  */
+comment|/* If we got the complete header, we can return.  Otherwise we          loop around and keep looking for SYN.  */
 if|if
 condition|(
 name|i
@@ -3429,8 +3392,10 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Writing \"%s\"\n"
 argument_list|,
 name|packet
@@ -3548,7 +3513,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Ignore any errors raised whilst attempting to ignore                packet. */
+comment|/* Ignore any errors raised whilst attempting to ignore 	         packet. */
 name|len
 operator|=
 name|HDR_GET_LEN
@@ -3624,7 +3589,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* We don't bother checking the checksum, or providing an                ACK to the packet. */
+comment|/* We don't bother checking the checksum, or providing an 	         ACK to the packet. */
 continue|continue;
 block|}
 comment|/* If the length is not 0, this is a garbled packet.  */
@@ -3715,9 +3680,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Don't use _filtered; we can't deal with a QUIT out of 		 target_wait, and I think this might be called from there.  */
-name|printf_unfiltered
+comment|/* Don't use _filtered; we can't deal with a QUIT out of 	         target_wait, and I think this might be called from there.  */
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Got ack %d \"%s%s\"\n"
 argument_list|,
 name|HDR_GET_SEQ
@@ -3911,7 +3878,7 @@ argument_list|(
 name|hdr
 argument_list|)
 expr_stmt|;
-comment|/* Check if the length is valid for an ACK, we may aswell              try and read the remainder of the packet: */
+comment|/* Check if the length is valid for an ACK, we may aswell 	     try and read the remainder of the packet: */
 if|if
 condition|(
 name|len
@@ -3919,7 +3886,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Ignore the error condition, since we are going to                  ignore the packet anyway. */
+comment|/* Ignore the error condition, since we are going to 	         ignore the packet anyway. */
 operator|(
 name|void
 operator|)
@@ -3944,8 +3911,10 @@ name|remote_debug
 operator|>
 literal|0
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Ignoring unexpected ACK\n"
 argument_list|)
 expr_stmt|;
@@ -4039,8 +4008,10 @@ name|remote_debug
 operator|>
 literal|0
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Got new SYN after %d chars (wanted %d)\n"
 argument_list|,
 name|i
@@ -4103,8 +4074,10 @@ name|remote_debug
 operator|>
 literal|0
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Got SYN when wanted trailer\n"
 argument_list|)
 expr_stmt|;
@@ -4128,8 +4101,10 @@ name|remote_debug
 operator|>
 literal|0
 condition|)
-name|printf_unfiltered
+name|fprintf_unfiltered
 argument_list|(
+name|gdb_stdlog
+argument_list|,
 literal|"Ignoring sequence number %d (want %d)\n"
 argument_list|,
 name|HDR_GET_SEQ
@@ -4185,7 +4160,7 @@ name|trlr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* The checksum failed.  Send an acknowledgement for the 	 previous packet to tell the remote to resend the packet.  */
+comment|/* The checksum failed.  Send an acknowledgement for the          previous packet to tell the remote to resend the packet.  */
 name|ack
 index|[
 name|HDR_INDX_SYN
@@ -4374,7 +4349,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Don't use _filtered; we can't deal with a QUIT out of 	 target_wait, and I think this might be called from there.  */
+comment|/* Don't use _filtered; we can't deal with a QUIT out of          target_wait, and I think this might be called from there.  */
 name|printf_unfiltered
 argument_list|(
 literal|"Got packet \"%s\"\n"
@@ -4518,7 +4493,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Don't use _filtered; we can't deal with a QUIT out of 	 target_wait, and I think this might be called from there.  */
+comment|/* Don't use _filtered; we can't deal with a QUIT out of          target_wait, and I think this might be called from there.  */
 name|printf_unfiltered
 argument_list|(
 literal|"Writing ack %d \"%s\"\n"
@@ -4577,7 +4552,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Optionally send a request to the remote system and optionally wait    for the reply.  This implements the remote debugging protocol,    which is built on top of the packet protocol defined above.  Each    request has an ADDR argument and a DATA argument.  The following    requests are defined:     \0	don't send a request; just wait for a reply    i	read word from instruction space at ADDR    d	read word from data space at ADDR    I	write DATA to instruction space at ADDR    D	write DATA to data space at ADDR    r	read register number ADDR    R	set register number ADDR to value DATA    c	continue execution (if ADDR != 1, set pc to ADDR)    s	single step (if ADDR != 1, set pc to ADDR)     The read requests return the value requested.  The write requests    return the previous value in the changed location.  The execution    requests return a UNIX wait value (the approximate signal which    caused execution to stop is in the upper eight bits).     If PERR is not NULL, this function waits for a reply.  If an error    occurs, it sets *PERR to 1 and sets errno according to what the    target board reports.  */
+comment|/* Optionally send a request to the remote system and optionally wait    for the reply.  This implements the remote debugging protocol,    which is built on top of the packet protocol defined above.  Each    request has an ADDR argument and a DATA argument.  The following    requests are defined:     \0   don't send a request; just wait for a reply    i    read word from instruction space at ADDR    d    read word from data space at ADDR    I    write DATA to instruction space at ADDR    D    write DATA to data space at ADDR    r    read register number ADDR    R    set register number ADDR to value DATA    c    continue execution (if ADDR != 1, set pc to ADDR)    s    single step (if ADDR != 1, set pc to ADDR)     The read requests return the value requested.  The write requests    return the previous value in the changed location.  The execution    requests return a UNIX wait value (the approximate signal which    caused execution to stop is in the upper eight bits).     If PERR is not NULL, this function waits for a reply.  If an error    occurs, it sets *PERR to 1 and sets errno according to what the    target board reports.  */
 end_comment
 
 begin_function
@@ -4667,7 +4642,7 @@ if|if
 condition|(
 name|mips_need_reply
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
 literal|"mips_request: Trying to send command before reply"
 argument_list|)
@@ -4721,7 +4696,7 @@ condition|(
 operator|!
 name|mips_need_reply
 condition|)
-name|fatal
+name|internal_error
 argument_list|(
 literal|"mips_request: Trying to get reply before command"
 argument_list|)
@@ -4798,7 +4773,7 @@ name|perr
 operator|=
 literal|1
 expr_stmt|;
-comment|/* FIXME: This will returns MIPS errno numbers, which may or may 	 not be the same as errno values used on other systems.  If 	 they stick to common errno values, they will be the same, but 	 if they don't, they must be translated.  */
+comment|/* FIXME: This will returns MIPS errno numbers, which may or may          not be the same as errno values used on other systems.  If          they stick to common errno values, they will be the same, but          if they don't, they must be translated.  */
 name|errno
 operator|=
 name|rresponse
@@ -5277,7 +5252,7 @@ index|[
 literal|7
 index|]
 decl_stmt|;
-comment|/* We shouldn't need to send multiple termination                    sequences, since the target performs line (or                    block) reads, and then processes those                    packets. In-case we were downloading a large packet                    we flush the output buffer before inserting a                    termination sequence. */
+comment|/* We shouldn't need to send multiple termination 		   sequences, since the target performs line (or 		   block) reads, and then processes those 		   packets. In-case we were downloading a large packet 		   we flush the output buffer before inserting a 		   termination sequence. */
 name|SERIAL_FLUSH_OUTPUT
 argument_list|(
 name|mips_desc
@@ -5311,7 +5286,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* We are possibly in binary download mode, having                    aborted in the middle of an S-record.  ^C won't                    work because of binary mode.  The only reliable way                    out is to send enough termination packets (8 bytes)                    to fill up and then overflow the largest size                    S-record (255 bytes in this case).  This amounts to                    256/8 + 1 packets.                    */
+comment|/* We are possibly in binary download mode, having 		   aborted in the middle of an S-record.  ^C won't 		   work because of binary mode.  The only reliable way 		   out is to send enough termination packets (8 bytes) 		   to fill up and then overflow the largest size 		   S-record (255 bytes in this case).  This amounts to 		   256/8 + 1 packets. 		 */
 name|mips_make_srec
 argument_list|(
 name|srec
@@ -5390,7 +5365,7 @@ operator|!=
 name|MON_IDT
 condition|)
 block|{
-comment|/* Sometimes PMON ignores the first few characters in the first          command sent after a load.  Sending a blank command gets 	 around that.  */
+comment|/* Sometimes PMON ignores the first few characters in the first          command sent after a load.  Sending a blank command gets          around that.  */
 name|mips_send_command
 argument_list|(
 literal|"\r"
@@ -5632,13 +5607,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|make_cleanup
+name|make_cleanup_freeargv
 argument_list|(
-operator|(
-name|make_cleanup_func
-operator|)
-name|freeargv
-argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
@@ -6677,11 +6647,11 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* If this is an LSI PMON target, see if we just hit a hardrdware watchpoint. 	 Right now, PMON doesn't give us enough information to determine which 	 breakpoint we hit.  So we have to look up the PC in our own table 	 of breakpoints, and if found, assume it's just a normal instruction 	 fetch breakpoint, not a data watchpoint.  FIXME when PMON 	 provides some way to tell us what type of breakpoint it is.  */
-block|int i;       CORE_ADDR pc = read_pc();        hit_watchpoint = 1;       for (i = 0; i< MAX_LSI_BREAKPOINTS; i++) 	{ 	  if (lsi_breakpoints[i].addr == pc&& lsi_breakpoints[i].type == BREAK_FETCH) 	    { 	      hit_watchpoint = 0; 	      break; 	    } 	}
+comment|/* If this is an LSI PMON target, see if we just hit a hardrdware watchpoint.          Right now, PMON doesn't give us enough information to determine which          breakpoint we hit.  So we have to look up the PC in our own table          of breakpoints, and if found, assume it's just a normal instruction          fetch breakpoint, not a data watchpoint.  FIXME when PMON          provides some way to tell us what type of breakpoint it is.  */
+block|int i;       CORE_ADDR pc = read_pc ();        hit_watchpoint = 1;       for (i = 0; i< MAX_LSI_BREAKPOINTS; i++) 	{ 	  if (lsi_breakpoints[i].addr == pc&& lsi_breakpoints[i].type == BREAK_FETCH) 	    { 	      hit_watchpoint = 0; 	      break; 	    } 	}
 else|#
 directive|else
-comment|/* If a data breakpoint was hit, PMON returns the following packet: 	     0x1 c 0x0 0x57f 0x1 	 The return packet from an ordinary breakpoint doesn't have the 	 extra 0x01 field tacked onto the end.  */
+comment|/* If a data breakpoint was hit, PMON returns the following packet:          0x1 c 0x0 0x57f 0x1          The return packet from an ordinary breakpoint doesn't have the          extra 0x01 field tacked onto the end.  */
 if|if
 condition|(
 name|nfields
@@ -6699,7 +6669,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* NOTE: The following (sig) numbers are defined by PMON:      	SPP_SIGTRAP     5       breakpoint         SPP_SIGINT      2         SPP_SIGSEGV     11         SPP_SIGBUS      10         SPP_SIGILL      4         SPP_SIGFPE      8         SPP_SIGTERM     15 */
+comment|/* NOTE: The following (sig) numbers are defined by PMON:      SPP_SIGTRAP     5       breakpoint      SPP_SIGINT      2      SPP_SIGSEGV     11      SPP_SIGBUS      10      SPP_SIGILL      4      SPP_SIGFPE      8      SPP_SIGTERM     15 */
 comment|/* Translate a MIPS waitstatus.  We use constants here rather than WTERMSIG      and so on, because the constants we want here are determined by the      MIPS protocol and have nothing to do with what host we are running on.  */
 if|if
 condition|(
@@ -6774,7 +6744,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* If the stop PC is in the _exit function, assume          we hit the 'break 0x3ff' instruction in _exit, so this 	 is not a normal breakpoint.  */
+comment|/* If the stop PC is in the _exit function, assume          we hit the 'break 0x3ff' instruction in _exit, so this          is not a normal breakpoint.  */
 if|if
 condition|(
 name|strcmp
@@ -8221,12 +8191,12 @@ comment|/* PMON does not support debug level breakpoint set/remove: */
 end_comment
 
 begin_comment
-unit|if (mips_exit_debug ())         mips_error ("Failed to exit debug mode");        sprintf (tbuff, "b %08x\r", addr);       mips_send_command (tbuff, 0);        mips_expect ("Bpt ");        if (!mips_getstring (tbuff, 2))         return 1;       tbuff[2] = '\0';
+unit|if (mips_exit_debug ()) 	mips_error ("Failed to exit debug mode");        sprintf (tbuff, "b %08x\r", addr);       mips_send_command (tbuff, 0);        mips_expect ("Bpt ");        if (!mips_getstring (tbuff, 2)) 	return 1;       tbuff[2] = '\0';
 comment|/* terminate the string */
 end_comment
 
 begin_comment
-unit|if (sscanf (tbuff, "%d",&bpnum) != 1)         {           fprintf_unfiltered (gdb_stderr, 			      "Invalid decimal breakpoint number from target: %s\n", tbuff);           return 1;         }        mips_expect (" = ");
+unit|if (sscanf (tbuff, "%d",&bpnum) != 1) 	{ 	  fprintf_unfiltered (gdb_stderr, 	      "Invalid decimal breakpoint number from target: %s\n", tbuff); 	  return 1; 	}        mips_expect (" = ");
 comment|/* Lead in the hex number we are expecting: */
 end_comment
 
@@ -8236,17 +8206,17 @@ comment|/* FIXME!! only 8 bytes!  need to expand for Bfd64;           which targ
 end_comment
 
 begin_comment
-unit|if (!mips_getstring (&tbuff[2], 8))         return 1;       tbuff[10] = '\0';
+unit|if (!mips_getstring (&tbuff[2], 8)) 	return 1;       tbuff[10] = '\0';
 comment|/* terminate the string */
 end_comment
 
 begin_comment
-unit|if (sscanf (tbuff, "0x%08x",&bpaddr) != 1)         {           fprintf_unfiltered (gdb_stderr, 			      "Invalid hex address from target: %s\n", tbuff);           return 1;         }        if (bpnum>= PMON_MAX_BP)         {           fprintf_unfiltered (gdb_stderr, 			      "Error: Returned breakpoint number %d outside acceptable range (0..%d)\n",                               bpnum, PMON_MAX_BP - 1);           return 1;         }        if (bpaddr != addr)         fprintf_unfiltered (gdb_stderr, "Warning: Breakpoint addresses do not match: 0x%x != 0x%x\n", addr, bpaddr);        mips_pmon_bp_info[bpnum] = bpaddr;        mips_expect ("\r\n");       mips_expect (mips_monitor_prompt);        mips_enter_debug ();        return 0;     }    return mips_store_word (addr, BREAK_INSN, contents_cache); }  static int pmon_remove_breakpoint (addr, contents_cache)      CORE_ADDR addr;      char *contents_cache; {   if (monitor_supports_breakpoints)     {       int bpnum;       char tbuff[7];
+unit|if (sscanf (tbuff, "0x%08x",&bpaddr) != 1) 	{ 	  fprintf_unfiltered (gdb_stderr, 			    "Invalid hex address from target: %s\n", tbuff); 	  return 1; 	}        if (bpnum>= PMON_MAX_BP) 	{ 	  fprintf_unfiltered (gdb_stderr, 			      "Error: Returned breakpoint number %d outside acceptable range (0..%d)\n", 			      bpnum, PMON_MAX_BP - 1); 	  return 1; 	}        if (bpaddr != addr) 	fprintf_unfiltered (gdb_stderr, "Warning: Breakpoint addresses do not match: 0x%x != 0x%x\n", addr, bpaddr);        mips_pmon_bp_info[bpnum] = bpaddr;        mips_expect ("\r\n");       mips_expect (mips_monitor_prompt);        mips_enter_debug ();        return 0;     }    return mips_store_word (addr, BREAK_INSN, contents_cache); }  static int pmon_remove_breakpoint (addr, contents_cache)      CORE_ADDR addr;      char *contents_cache; {   if (monitor_supports_breakpoints)     {       int bpnum;       char tbuff[7];
 comment|/* enough for delete breakpoint command */
 end_comment
 
 begin_comment
-unit|for (bpnum = 0; bpnum< PMON_MAX_BP; bpnum++)         if (mips_pmon_bp_info[bpnum] == addr)           break;        if (bpnum>= PMON_MAX_BP)         {           fprintf_unfiltered (gdb_stderr, 	    "pmon_remove_breakpoint: Failed to find breakpoint at address 0x%s\n", 	    paddr_nz (addr));           return 1;         }        if (mips_exit_debug ())         mips_error ("Failed to exit debug mode");        sprintf (tbuff, "db %02d\r", bpnum);        mips_send_command (tbuff, -1);
+unit|for (bpnum = 0; bpnum< PMON_MAX_BP; bpnum++) 	if (mips_pmon_bp_info[bpnum] == addr) 	  break;        if (bpnum>= PMON_MAX_BP) 	{ 	  fprintf_unfiltered (gdb_stderr, 			      "pmon_remove_breakpoint: Failed to find breakpoint at address 0x%s\n", 			      paddr_nz (addr)); 	  return 1; 	}        if (mips_exit_debug ()) 	mips_error ("Failed to exit debug mode");        sprintf (tbuff, "db %02d\r", bpnum);        mips_send_command (tbuff, -1);
 comment|/* NOTE: If the breakpoint does not exist then a "Bpt<dd> not          set" message will be returned. */
 end_comment
 
@@ -8551,7 +8521,9 @@ end_function
 begin_function
 name|int
 name|remote_mips_stopped_by_watchpoint
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|hit_watchpoint
@@ -8843,7 +8815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This routine sends a breakpoint command to the remote target.<SET> is 1 if setting a breakpoint, or 0 if clearing a breakpoint.<ADDR> is the address of the breakpoint.<LEN> the length of the region to break on.<TYPE> is the type of breakpoint:      0 = write			(BREAK_WRITE)      1 = read			(BREAK_READ)      2 = read/write		(BREAK_ACCESS)      3 = instruction fetch	(BREAK_FETCH)     Return 0 if successful; otherwise 1.  */
+comment|/* This routine sends a breakpoint command to the remote target.<SET> is 1 if setting a breakpoint, or 0 if clearing a breakpoint.<ADDR> is the address of the breakpoint.<LEN> the length of the region to break on.<TYPE> is the type of breakpoint:    0 = write                    (BREAK_WRITE)    1 = read                     (BREAK_READ)    2 = read/write               (BREAK_ACCESS)    3 = instruction fetch        (BREAK_FETCH)     Return 0 if successful; otherwise 1.  */
 end_comment
 
 begin_function
@@ -8920,7 +8892,7 @@ literal|0
 condition|)
 comment|/* clear breakpoint */
 block|{
-comment|/* The LSI PMON "clear breakpoint" has this form:<pid> 'b'<bptn> 0x0 	       reply:<pid> 'b' 0x0<code><bptn> is a breakpoint number returned by an earlier 'B' command. 	     Possible return codes: OK, E_BPT.  */
+comment|/* The LSI PMON "clear breakpoint" has this form:<pid> 'b'<bptn> 0x0 	     reply:<pid> 'b' 0x0<code><bptn> is a breakpoint number returned by an earlier 'B' command. 	     Possible return codes: OK, E_BPT.  */
 name|int
 name|i
 decl_stmt|;
@@ -9075,7 +9047,7 @@ block|}
 else|else
 comment|/* set a breakpoint */
 block|{
-comment|/* The LSI PMON "set breakpoint" command has this form:<pid> 'B'<addr> 0x0 	       reply:<pid> 'B'<bptn><code>  	     The "set data breakpoint" command has this form:<pid> 'A'<addr1><type> [<addr2>  [<value>]]  		where: type= "0x1" = read 	             "0x2" = write 	             "0x3" = access (read or write)  	     The reply returns two values: 		     bptn - a breakpoint number, which is a small integer with 			    possible values of zero through 255. 		     code - an error return code, a value of zero indicates a 			    succesful completion, other values indicate various 			    errors and warnings. 	       	     Possible return codes: OK, W_QAL, E_QAL, E_OUT, E_NON.    	  */
+comment|/* The LSI PMON "set breakpoint" command has this form:<pid> 'B'<addr> 0x0 	     reply:<pid> 'B'<bptn><code>  	     The "set data breakpoint" command has this form:<pid> 'A'<addr1><type> [<addr2>  [<value>]]  	     where: type= "0x1" = read 	     "0x2" = write 	     "0x3" = access (read or write)  	     The reply returns two values: 	     bptn - a breakpoint number, which is a small integer with 	     possible values of zero through 255. 	     code - an error return code, a value of zero indicates a 	     succesful completion, other values indicate various 	     errors and warnings.  	     Possible return codes: OK, W_QAL, E_QAL, E_OUT, E_NON.    	   */
 if|if
 condition|(
 name|type
@@ -9266,7 +9238,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* On non-LSI targets, the breakpoint command has this form: 	   0x0<CMD><ADDR><MASK><FLAGS><MASK> is a don't care mask for addresses.<FLAGS> is any combination of `r', `w', or `f' for read/write/fetch.        */
+comment|/* On non-LSI targets, the breakpoint command has this form:          0x0<CMD><ADDR><MASK><FLAGS><MASK> is a don't care mask for addresses.<FLAGS> is any combination of `r', `w', or `f' for read/write/fetch.        */
 name|unsigned
 name|long
 name|mask
@@ -9573,9 +9545,12 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
-literal|"Download got a NACK at byte %d!  Retrying.\n"
+literal|"Download got a NACK at byte %s!  Retrying.\n"
 argument_list|,
+name|paddr_u
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -9736,19 +9711,26 @@ name|unsigned
 name|int
 name|numbytes
 decl_stmt|;
-comment|/* FIXME!  vma too small?? */
+comment|/* FIXME!  vma too small????? */
 name|printf_filtered
 argument_list|(
-literal|"%s\t: 0x%4x .. 0x%4x  "
+literal|"%s\t: 0x%4lx .. 0x%4lx  "
 argument_list|,
 name|s
 operator|->
 name|name
 argument_list|,
+operator|(
+name|long
+operator|)
 name|s
 operator|->
 name|vma
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|s
 operator|->
 name|vma
@@ -9756,6 +9738,7 @@ operator|+
 name|s
 operator|->
 name|_raw_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gdb_flush
@@ -9911,7 +9894,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mips_make_srec -- make an srecord. This writes each line, one at a  *	time, each with it's own header and trailer line.  *	An srecord looks like this:  *  * byte count-+     address  * start ---+ |        |       data        +- checksum  *	    | |        |                   |  *	  S01000006F6B692D746573742E73726563E4  *	  S315000448600000000000000000FC00005900000000E9  *	  S31A0004000023C1400037DE00F023604000377B009020825000348D  *	  S30B0004485A0000000000004E  *	  S70500040000F6  *  *	S<type><length><address><data><checksum>  *  *      Where  *      - length  *        is the number of bytes following upto the checksum. Note that  *        this is not the number of chars following, since it takes two  *        chars to represent a byte.  *      - type  *        is one of:  *        0) header record  *        1) two byte address data record  *        2) three byte address data record  *        3) four byte address data record  *        7) four byte address termination record  *        8) three byte address termination record  *        9) two byte address termination record  *         *      - address  *        is the start address of the data following, or in the case of  *        a termination record, the start address of the image  *      - data  *        is the data.  *      - checksum  *	  is the sum of all the raw byte data in the record, from the length  *        upwards, modulo 256 and subtracted from 255.  *  * This routine returns the length of the S-record.  *  */
+comment|/*  * mips_make_srec -- make an srecord. This writes each line, one at a  *      time, each with it's own header and trailer line.  *      An srecord looks like this:  *  * byte count-+     address  * start ---+ |        |       data        +- checksum  *          | |        |                   |  *        S01000006F6B692D746573742E73726563E4  *        S315000448600000000000000000FC00005900000000E9  *        S31A0004000023C1400037DE00F023604000377B009020825000348D  *        S30B0004485A0000000000004E  *        S70500040000F6  *  *      S<type><length><address><data><checksum>  *  *      Where  *      - length  *        is the number of bytes following upto the checksum. Note that  *        this is not the number of chars following, since it takes two  *        chars to represent a byte.  *      - type  *        is one of:  *        0) header record  *        1) two byte address data record  *        2) three byte address data record  *        3) four byte address data record  *        7) four byte address termination record  *        8) three byte address termination record  *        9) two byte address termination record  *         *      - address  *        is the start address of the data following, or in the case of  *        a termination record, the start address of the image  *      - data  *        is the data.  *      - checksum  *        is the sum of all the raw byte data in the record, from the length  *        upwards, modulo 256 and subtracted from 255.  *  * This routine returns the length of the S-record.  *  */
 end_comment
 
 begin_function
@@ -10090,7 +10073,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* The PMON fast-download uses an encoded packet format constructed of    3byte data packets (encoded as 4 printable ASCII characters), and    escape sequences (preceded by a '/'):  	'K'     clear checksum 	'C'     compare checksum (12bit value, not included in checksum calculation) 	'S'     define symbol name (for addr) terminated with "," and padded to 4char boundary 	'Z'     zero fill multiple of 3bytes 	'B'     byte (12bit encoded value, of 8bit data) 	'A'     address (36bit encoded value) 	'E'     define entry as original address, and exit load     The packets are processed in 4 character chunks, so the escape    sequences that do not have any data (or variable length data)    should be padded to a 4 character boundary.  The decoder will give    an error if the complete message block size is not a multiple of    4bytes (size of record).     The encoding of numbers is done in 6bit fields.  The 6bit value is    used to index into this string to get the specific character    encoding for the value: */
+comment|/* The PMON fast-download uses an encoded packet format constructed of    3byte data packets (encoded as 4 printable ASCII characters), and    escape sequences (preceded by a '/'):     'K'     clear checksum    'C'     compare checksum (12bit value, not included in checksum calculation)    'S'     define symbol name (for addr) terminated with "," and padded to 4char boundary    'Z'     zero fill multiple of 3bytes    'B'     byte (12bit encoded value, of 8bit data)    'A'     address (36bit encoded value)    'E'     define entry as original address, and exit load     The packets are processed in 4 character chunks, so the escape    sequences that do not have any data (or variable length data)    should be padded to a 4 character boundary.  The decoder will give    an error if the complete message block size is not a multiple of    4bytes (size of record).     The encoding of numbers is done in 6bit fields.  The 6bit value is    used to index into this string to get the specific character    encoding for the value: */
 end_comment
 
 begin_decl_stmt
@@ -10748,7 +10731,7 @@ literal|2
 index|]
 operator|)
 decl_stmt|;
-comment|/* Simple check for zero data. TODO: A better check would be          to check the last, and then the middle byte for being zero          (if the first byte is not). We could then check for          following runs of zeros, and if above a certain size it is          worth the 4 or 8 character hit of the byte insertions used          to pad to the start of the zeroes. NOTE: This also depends          on the alignment at the end of the zero run. */
+comment|/* Simple check for zero data. TODO: A better check would be 	     to check the last, and then the middle byte for being zero 	     (if the first byte is not). We could then check for 	     following runs of zeros, and if above a certain size it is 	     worth the 4 or 8 character hit of the byte insertions used 	     to pad to the start of the zeroes. NOTE: This also depends 	     on the alignment at the end of the zero run. */
 if|if
 condition|(
 name|value
@@ -11788,7 +11771,7 @@ argument_list|,
 name|binamount
 argument_list|)
 expr_stmt|;
-comment|/* This keeps a rolling checksum, until we decide to output               the line: */
+comment|/* This keeps a rolling checksum, until we decide to output 		   the line: */
 for|for
 control|(
 init|;
@@ -11948,7 +11931,7 @@ operator|&
 name|csum
 argument_list|)
 expr_stmt|;
-comment|/* Currently pmon_checkset outputs the line terminator by               default, so we write out the buffer so far: */
+comment|/* Currently pmon_checkset outputs the line terminator by 		   default, so we write out the buffer so far: */
 name|pmon_download
 argument_list|(
 name|buffer
@@ -12085,7 +12068,7 @@ operator|!=
 name|MON_IDT
 condition|)
 block|{
-comment|/* Work around problem where PMON monitor updates the PC after a load 	 to a different value than GDB thinks it has. The following ensures 	 that the write_pc() WILL update the PC value: */
+comment|/* Work around problem where PMON monitor updates the PC after a load          to a different value than GDB thinks it has. The following ensures          that the write_pc() WILL update the PC value: */
 name|register_valid
 index|[
 name|PC_REGNUM

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/****************************************************************************  *  Header: remcom.c,v 1.34 91/03/09 12:29:49 glenne Exp $  *  *  Module name: remcom.c $  *  Revision: 1.34 $  *  Date: 91/03/09 12:29:49 $  *  Contributor:     Lake Stevens Instrument Division$  *  *  Description:     low level support for gdb debugger. $  *  *  Considerations:  only works on target hardware $  *  *  Written by:      Glenn Engel $  *  ModuleState:     Experimental $  *  *  NOTES:           See Below $  *  *  Modified for 386 by Jim Kingdon, Cygnus Support.  *  *  To enable debugger support, two things need to happen.  One, a  *  call to set_debug_traps() is necessary in order to allow any breakpoints  *  or error conditions to be properly intercepted and reported to gdb.  *  Two, a breakpoint needs to be generated to begin communication.  This  *  is most easily accomplished by a call to breakpoint().  Breakpoint()  *  simulates a breakpoint by executing a trap #1.  *  *  The external function exceptionHandler() is  *  used to attach a specific handler to a specific 386 vector number.  *  It should use the same privilege level it runs at.  It should  *  install it as an interrupt gate so that interrupts are masked  *  while the handler runs.  *  Also, need to assign exceptionHook and oldExceptionHook.  *  *  Because gdb will sometimes write to the stack area to execute function  *  calls, this program cannot rely on using the supervisor stack so it  *  uses it's own stack area reserved in the int array remcomStack.  *  *************  *  *    The following gdb commands are supported:  *  * command          function                               Return value  *  *    g             return the value of the CPU registers  hex data or ENN  *    G             set the value of the CPU registers     OK or ENN  *  *    mAA..AA,LLLL  Read LLLL bytes at address AA..AA      hex data or ENN  *    MAA..AA,LLLL: Write LLLL bytes at address AA.AA      OK or ENN  *  *    c             Resume at current address              SNN   ( signal NN)  *    cAA..AA       Continue at address AA..AA             SNN  *  *    s             Step one instruction                   SNN  *    sAA..AA       Step one instruction from AA..AA       SNN  *  *    k             kill  *  *    ?             What was the last sigval ?             SNN   (signal NN)  *  * All commands and responses are sent with a packet which includes a  * checksum.  A packet consists of  *  * $<packet info>#<checksum>.  *  * where  *<packet info> ::<characters representing the command or response>  *<checksum>    ::< two hex digits computed as modulo 256 sum of<packetinfo>>  *  * When a packet is received, it is first acknowledged with either '+' or '-'.  * '+' indicates a successful transfer.  '-' indicates a failed transfer.  *  * Example:  *  * Host:                  Reply:  * $m0,10#2a               +$00010203040506070809101112131415#42  *  ****************************************************************************/
+comment|/****************************************************************************  *  Header: remcom.c,v 1.34 91/03/09 12:29:49 glenne Exp $  *  *  Module name: remcom.c $  *  Revision: 1.34 $  *  Date: 91/03/09 12:29:49 $  *  Contributor:     Lake Stevens Instrument Division$  *  *  Description:     low level support for gdb debugger. $  *  *  Considerations:  only works on target hardware $  *  *  Written by:      Glenn Engel $  *  ModuleState:     Experimental $  *  *  NOTES:           See Below $  *  *  Modified for 386 by Jim Kingdon, Cygnus Support.  *  *  To enable debugger support, two things need to happen.  One, a  *  call to set_debug_traps() is necessary in order to allow any breakpoints  *  or error conditions to be properly intercepted and reported to gdb.  *  Two, a breakpoint needs to be generated to begin communication.  This  *  is most easily accomplished by a call to breakpoint().  Breakpoint()  *  simulates a breakpoint by executing a trap #1.  *  *  The external function exceptionHandler() is  *  used to attach a specific handler to a specific 386 vector number.  *  It should use the same privilege level it runs at.  It should  *  install it as an interrupt gate so that interrupts are masked  *  while the handler runs.  *  *  Because gdb will sometimes write to the stack area to execute function  *  calls, this program cannot rely on using the supervisor stack so it  *  uses it's own stack area reserved in the int array remcomStack.  *  *************  *  *    The following gdb commands are supported:  *  * command          function                               Return value  *  *    g             return the value of the CPU registers  hex data or ENN  *    G             set the value of the CPU registers     OK or ENN  *  *    mAA..AA,LLLL  Read LLLL bytes at address AA..AA      hex data or ENN  *    MAA..AA,LLLL: Write LLLL bytes at address AA.AA      OK or ENN  *  *    c             Resume at current address              SNN   ( signal NN)  *    cAA..AA       Continue at address AA..AA             SNN  *  *    s             Step one instruction                   SNN  *    sAA..AA       Step one instruction from AA..AA       SNN  *  *    k             kill  *  *    ?             What was the last sigval ?             SNN   (signal NN)  *  * All commands and responses are sent with a packet which includes a  * checksum.  A packet consists of  *  * $<packet info>#<checksum>.  *  * where  *<packet info> ::<characters representing the command or response>  *<checksum>    ::< two hex digits computed as modulo 256 sum of<packetinfo>>  *  * When a packet is received, it is first acknowledged with either '+' or '-'.  * '+' indicates a successful transfer.  '-' indicates a failed transfer.  *  * Example:  *  * Host:                  Reply:  * $m0,10#2a               +$00010203040506070809101112131415#42  *  ****************************************************************************/
 end_comment
 
 begin_include
@@ -21,38 +21,6 @@ end_include
 
 begin_comment
 comment|/************************************************************************  *  * external low-level support routines  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|ExceptionHook
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/* pointer to function with int parm */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|Function
-function_decl|)
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/* pointer to a function */
 end_comment
 
 begin_function_decl
@@ -81,25 +49,14 @@ end_comment
 
 begin_function_decl
 specifier|extern
-name|Function
+name|void
 name|exceptionHandler
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* assign an exception handler */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|ExceptionHook
-name|exceptionHook
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hook variable for errors/exceptions */
+comment|/* assign an exception handler   */
 end_comment
 
 begin_comment
@@ -141,13 +98,6 @@ end_decl_stmt
 begin_comment
 comment|/*  debug>  0 prints ill-formed commands in valid packets& checksum errors */
 end_comment
-
-begin_function_decl
-name|void
-name|waitabit
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -275,17 +225,6 @@ argument_list|)
 operator|-
 literal|1
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * In many cases, the system will want to continue exception processing  * when a continue command is given.  * oldExceptionHook is a function to invoke in this case.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|ExceptionHook
-name|oldExceptionHook
 decl_stmt|;
 end_decl_stmt
 
@@ -1509,21 +1448,48 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+name|remcomInBuffer
+index|[
+name|BUFMAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|remcomOutBuffer
+index|[
+name|BUFMAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* scan for the sequence $<data>#<checksum>     */
 end_comment
 
 begin_function
-name|void
+name|unsigned
+name|char
+modifier|*
 name|getpacket
-parameter_list|(
-name|buffer
-parameter_list|)
+parameter_list|()
+block|{
+name|unsigned
 name|char
 modifier|*
 name|buffer
+init|=
+operator|&
+name|remcomInBuffer
+index|[
+literal|0
+index|]
 decl_stmt|;
-block|{
 name|unsigned
 name|char
 name|checksum
@@ -1533,15 +1499,15 @@ name|char
 name|xmitcsum
 decl_stmt|;
 name|int
-name|i
-decl_stmt|;
-name|int
 name|count
 decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
-do|do
+while|while
+condition|(
+literal|1
+condition|)
 block|{
 comment|/* wait around for the start character, ignore all other characters */
 while|while
@@ -1549,17 +1515,15 @@ condition|(
 operator|(
 name|ch
 operator|=
-operator|(
 name|getDebugChar
 argument_list|()
-operator|&
-literal|0x7f
-operator|)
 operator|)
 operator|!=
 literal|'$'
 condition|)
 empty_stmt|;
+name|retry
+label|:
 name|checksum
 operator|=
 literal|0
@@ -1585,9 +1549,16 @@ name|ch
 operator|=
 name|getDebugChar
 argument_list|()
-operator|&
-literal|0x7f
 expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|==
+literal|'$'
+condition|)
+goto|goto
+name|retry
+goto|;
 if|if
 condition|(
 name|ch
@@ -1629,39 +1600,42 @@ operator|==
 literal|'#'
 condition|)
 block|{
+name|ch
+operator|=
+name|getDebugChar
+argument_list|()
+expr_stmt|;
 name|xmitcsum
 operator|=
 name|hex
 argument_list|(
-name|getDebugChar
-argument_list|()
-operator|&
-literal|0x7f
+name|ch
 argument_list|)
 operator|<<
 literal|4
+expr_stmt|;
+name|ch
+operator|=
+name|getDebugChar
+argument_list|()
 expr_stmt|;
 name|xmitcsum
 operator|+=
 name|hex
 argument_list|(
-name|getDebugChar
-argument_list|()
-operator|&
-literal|0x7f
+name|ch
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|remote_debug
-operator|)
-operator|&&
-operator|(
 name|checksum
 operator|!=
 name|xmitcsum
-operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|remote_debug
 condition|)
 block|{
 name|fprintf
@@ -1678,18 +1652,13 @@ name|buffer
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|checksum
-operator|!=
-name|xmitcsum
-condition|)
 name|putDebugChar
 argument_list|(
 literal|'-'
 argument_list|)
 expr_stmt|;
 comment|/* failed checksum */
+block|}
 else|else
 block|{
 name|putDebugChar
@@ -1725,50 +1694,24 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* remove sequence chars from buffer */
-name|count
-operator|=
-name|strlen
-argument_list|(
-name|buffer
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|3
-init|;
-name|i
-operator|<=
-name|count
-condition|;
-name|i
-operator|++
-control|)
+return|return
+operator|&
 name|buffer
 index|[
-name|i
-operator|-
 literal|3
 index|]
-operator|=
+return|;
+block|}
+return|return
+operator|&
 name|buffer
 index|[
-name|i
+literal|0
 index|]
-expr_stmt|;
+return|;
 block|}
 block|}
 block|}
-block|}
-do|while
-condition|(
-name|checksum
-operator|!=
-name|xmitcsum
-condition|)
-do|;
 block|}
 end_function
 
@@ -1782,6 +1725,7 @@ name|putpacket
 parameter_list|(
 name|buffer
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|buffer
@@ -1865,43 +1809,14 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-operator|(
 name|getDebugChar
 argument_list|()
-operator|&
-literal|0x7f
-operator|)
 operator|!=
 literal|'+'
 condition|)
 do|;
 block|}
 end_function
-
-begin_decl_stmt
-name|char
-name|remcomInBuffer
-index|[
-name|BUFMAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|remcomOutBuffer
-index|[
-name|BUFMAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|short
-name|error
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -2566,6 +2481,8 @@ parameter_list|)
 block|{
 name|int
 name|sigval
+decl_stmt|,
+name|stepping
 decl_stmt|;
 name|int
 name|addr
@@ -2655,6 +2572,10 @@ argument_list|(
 name|remcomOutBuffer
 argument_list|)
 expr_stmt|;
+name|stepping
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -2662,10 +2583,6 @@ operator|==
 literal|1
 condition|)
 block|{
-name|error
-operator|=
-literal|0
-expr_stmt|;
 name|remcomOutBuffer
 index|[
 literal|0
@@ -2673,17 +2590,16 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|ptr
+operator|=
 name|getpacket
-argument_list|(
-name|remcomInBuffer
-argument_list|)
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
-name|remcomInBuffer
-index|[
-literal|0
-index|]
+operator|*
+name|ptr
+operator|++
 condition|)
 block|{
 case|case
@@ -2766,11 +2682,7 @@ case|:
 comment|/* set the value of the CPU registers - return OK */
 name|hex2mem
 argument_list|(
-operator|&
-name|remcomInBuffer
-index|[
-literal|1
-index|]
+name|ptr
 argument_list|,
 operator|(
 name|char
@@ -2799,14 +2711,6 @@ block|{
 name|int
 name|regno
 decl_stmt|;
-name|ptr
-operator|=
-operator|&
-name|remcomInBuffer
-index|[
-literal|1
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|hexToInt
@@ -2877,14 +2781,6 @@ case|case
 literal|'m'
 case|:
 comment|/* TRY TO READ %x,%x.  IF SUCCEED, SET PTR = 0 */
-name|ptr
-operator|=
-operator|&
-name|remcomInBuffer
-index|[
-literal|1
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|hexToInt
@@ -2972,13 +2868,6 @@ argument_list|,
 literal|"E01"
 argument_list|)
 expr_stmt|;
-name|debug_error
-argument_list|(
-literal|"malformed read memory command: %s"
-argument_list|,
-name|remcomInBuffer
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 comment|/* MAA..AA,LLLL: Write LLLL bytes at address AA.AA return OK */
@@ -2986,14 +2875,6 @@ case|case
 literal|'M'
 case|:
 comment|/* TRY TO READ '%x,%x:'.  IF SUCCEED, SET PTR = 0 */
-name|ptr
-operator|=
-operator|&
-name|remcomInBuffer
-index|[
-literal|1
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|hexToInt
@@ -3101,32 +2982,21 @@ argument_list|,
 literal|"E02"
 argument_list|)
 expr_stmt|;
-name|debug_error
-argument_list|(
-literal|"malformed write memory command: %s"
-argument_list|,
-name|remcomInBuffer
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 comment|/* cAA..AA    Continue at address AA..AA(optional) */
 comment|/* sAA..AA   Step one instruction from AA..AA(optional) */
 case|case
-literal|'c'
-case|:
-case|case
 literal|'s'
 case|:
-comment|/* try to read optional parameter, pc unchanged if no parm */
-name|ptr
+name|stepping
 operator|=
-operator|&
-name|remcomInBuffer
-index|[
 literal|1
-index|]
 expr_stmt|;
+case|case
+literal|'c'
+case|:
+comment|/* try to read optional parameter, pc unchanged if no parm */
 if|if
 condition|(
 name|hexToInt
@@ -3163,12 +3033,7 @@ expr_stmt|;
 comment|/* set the trace bit if we're stepping */
 if|if
 condition|(
-name|remcomInBuffer
-index|[
-literal|0
-index|]
-operator|==
-literal|'s'
+name|stepping
 condition|)
 name|registers
 index|[
@@ -3177,17 +3042,6 @@ index|]
 operator||=
 literal|0x100
 expr_stmt|;
-comment|/*            * If we found a match for the PC AND we are not returning            * as a result of a breakpoint (33),            * trace exception (9), nmi (31), jmp to            * the old exception handler as if this code never ran.            */
-if|#
-directive|if
-literal|0
-comment|/* Don't really think we need this, except maybe for protection 	     exceptions.  */
-comment|/*                    * invoke the previous handler.                    */
-block|if (oldExceptionHook)                       (*oldExceptionHook) (frame->exceptionVector);                   newPC = registers[ PC ];
-comment|/* pc may have changed  */
-endif|#
-directive|endif
-comment|/* 0 */
 name|_returnFromException
 argument_list|()
 expr_stmt|;
@@ -3355,28 +3209,6 @@ argument_list|,
 name|_catchException16
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|exceptionHook
-operator|!=
-name|remcomHandler
-condition|)
-block|{
-name|oldExceptionHook
-operator|=
-name|exceptionHook
-expr_stmt|;
-name|exceptionHook
-operator|=
-name|remcomHandler
-expr_stmt|;
-block|}
-comment|/* In case GDB is started before us, ack any packets (presumably      "$?#xx") sitting there.  */
-name|putDebugChar
-argument_list|(
-literal|'+'
-argument_list|)
-expr_stmt|;
 name|initialized
 operator|=
 literal|1
@@ -3397,53 +3229,9 @@ if|if
 condition|(
 name|initialized
 condition|)
-if|#
-directive|if
-literal|0
-then|handle_exception(3);
-else|#
-directive|else
 name|BREAKPOINT
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-name|waitabit
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_decl_stmt
-name|int
-name|waitlimit
-init|=
-literal|1000000
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|void
-name|waitabit
-parameter_list|()
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|waitlimit
-condition|;
-name|i
-operator|++
-control|)
-empty_stmt|;
 block|}
 end_function
 
