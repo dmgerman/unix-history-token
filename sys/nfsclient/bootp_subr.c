@@ -8728,6 +8728,13 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|rootdevnames
+index|[
+literal|0
+index|]
+operator|=
+literal|"nfs:"
+expr_stmt|;
 name|mountopts
 argument_list|(
 operator|&
@@ -9552,6 +9559,22 @@ name|error
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|bootp_rootconf
+argument_list|,
+name|SI_SUB_ROOT_CONF
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|bootpc_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
