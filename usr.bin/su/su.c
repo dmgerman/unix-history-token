@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.14.2.2 1997/05/10 22:07:58 davidn Exp $"
+literal|"$Id: su.c,v 1.14.2.3 1997/08/13 06:38:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,6 +606,15 @@ index|]
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|user
+operator|==
+name|NULL
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
