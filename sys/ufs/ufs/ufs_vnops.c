@@ -5478,7 +5478,7 @@ name|cn_cred
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|PRISON_ROOT
 argument_list|)
 operator|&&
 name|tcnp
@@ -10135,9 +10135,9 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|PRISON_ROOT
 argument_list|)
 condition|)
 name|ip
