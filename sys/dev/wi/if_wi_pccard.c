@@ -482,24 +482,6 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-name|PCMCIA_CARD
-argument_list|(
-name|NWN
-argument_list|,
-name|WLAN_550
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|PCMCIA_CARD
-argument_list|(
-name|NWN
-argument_list|,
-name|WLAN_1148
-argument_list|,
-literal|0
-argument_list|)
-block|,
 comment|/* Now that we do PRISM detection, I don't think we need these - imp */
 name|PCMCIA_CARD2
 argument_list|(
