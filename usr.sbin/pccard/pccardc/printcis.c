@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* set tab=4  *	dump CIS tuples.  */
+comment|/*  *	dump CIS tuples.  */
 end_comment
 
 begin_include
@@ -1792,7 +1792,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*  *	IRQ descriptor  */
+comment|/* IRQ descriptor */
 if|if
 condition|(
 name|feat
@@ -2083,7 +2083,7 @@ operator|+=
 literal|4
 expr_stmt|;
 break|break;
-comment|/*  *	Memory descriptors.  */
+comment|/* Memory descriptors. */
 case|case
 literal|3
 case|:

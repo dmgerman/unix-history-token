@@ -568,7 +568,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *	Map the memory and I/O contexts.  */
+comment|/* Map the memory and I/O contexts. */
 if|if
 condition|(
 name|drv
