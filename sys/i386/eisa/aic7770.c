@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.26 1996/03/31 03:04:38 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7770.c,v 1.27 1996/04/20 21:21:47 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -828,8 +828,10 @@ block|{
 comment|/* XXX 		 * All values are automagically intialized at 		 * POST for these cards, so we can always rely 		 * on the Scratch Ram values.  However, we should 		 * read the SEEPROM here (Dan has the code to do 		 * it) so we can say what kind of translation the 		 * BIOS is using.  Printing out the geometry could 		 * save a lot of users the grief of failed installs. 		 */
 break|break;
 block|}
+default|default:
+break|break;
 block|}
-comment|/*       	 * See if we have a Rev E or higher aic7770. Anything below a 	 * Rev E will have a R/O autoflush disable configuration bit. 	 * Its still not clear exactly what is differenent about the Rev E. 	 * We think it has more QINFIFO and QOUTFIFO space to support 	 * "paging" SCBs so you can have more than 4 commands active at 	 * once.  We may use this information later. 	 */
+comment|/*       	 * See if we have a Rev E or higher aic7770. Anything below a 	 * Rev E will have a R/O autoflush disable configuration bit. 	 * Its still not clear exactly what is differenent about the Rev E. 	 * We think it allows 8 bit entries in the QOUTFIFO to support 	 * "paging" SCBs so you can have more than 4 commands active at 	 * once. 	 */
 block|{
 name|char
 modifier|*
@@ -899,6 +901,13 @@ name|iobase
 argument_list|,
 name|sblkctl
 argument_list|)
+expr_stmt|;
+comment|/* Allow paging on this adapter */
+name|ahc
+operator|->
+name|flags
+operator||=
+name|AHC_PAGESCBS
 expr_stmt|;
 block|}
 else|else
