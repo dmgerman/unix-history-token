@@ -279,6 +279,7 @@ modifier|*
 modifier|*
 name|brk_string
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -298,10 +299,13 @@ name|ch
 decl_stmt|;
 name|char
 name|inquote
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|start
 decl_stmt|,
