@@ -1737,7 +1737,7 @@ expr_stmt|;
 name|ifp
 operator|->
 name|if_capabilities
-operator||=
+operator|=
 name|IFCAP_VLAN_HWTAGGING
 expr_stmt|;
 comment|/* see if we can enable hardware checksumming */
@@ -1749,11 +1749,10 @@ name|gx_vflags
 operator|&
 name|GXF_CSUM
 condition|)
-block|{
 name|ifp
 operator|->
 name|if_capabilities
-operator|=
+operator||=
 name|IFCAP_HWCSUM
 expr_stmt|;
 name|ifp
@@ -1764,7 +1763,6 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
-block|}
 comment|/* figure out transciever type */
 if|if
 condition|(
