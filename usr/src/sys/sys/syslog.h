@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)syslog.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -838,7 +838,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|_VA_LIST_
+name|_BSD_VA_LIST_
 operator|)
 argument_list|)
 decl_stmt|;

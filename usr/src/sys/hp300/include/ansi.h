@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ansi.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ansi.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -16,13 +16,13 @@ name|_ANSI_H_
 end_define
 
 begin_comment
-comment|/*  * Types which are fundamental to the implementation and may appear in  * more than one standard header are defined here.  Standard headers  * then use:  *	#ifdef	_SIZE_T_  *	typedef	_SIZE_T_ size_t;  *	#undef	_SIZE_T_  *	#endif  *  * Thanks, ANSI!  */
+comment|/*  * Types which are fundamental to the implementation and may appear in  * more than one standard header are defined here.  Standard headers  * then use:  *	#ifdef	_BSD_SIZE_T_  *	typedef	_BSD_SIZE_T_ size_t;  *	#undef	_BSD_SIZE_T_  *	#endif  *  * Thanks, ANSI!  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|_CLOCK_T_
+name|_BSD_CLOCK_T_
 value|unsigned long
 end_define
 
@@ -33,7 +33,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_PTRDIFF_T_
+name|_BSD_PTRDIFF_T_
 value|int
 end_define
 
@@ -44,7 +44,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_SIZE_T_
+name|_BSD_SIZE_T_
 value|unsigned int
 end_define
 
@@ -55,7 +55,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_SSIZE_T_
+name|_BSD_SSIZE_T_
 value|int
 end_define
 
@@ -66,7 +66,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_TIME_T_
+name|_BSD_TIME_T_
 value|long
 end_define
 
@@ -77,7 +77,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_VA_LIST_
+name|_BSD_VA_LIST_
 value|char *
 end_define
 
@@ -88,7 +88,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_WCHAR_T_
+name|_BSD_WCHAR_T_
 value|unsigned short
 end_define
 
