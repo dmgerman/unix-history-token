@@ -5921,10 +5921,6 @@ operator|->
 name|next
 control|)
 block|{
-name|d
-operator|=
-name|deferments
-expr_stmt|;
 name|link_res
 operator|=
 name|link_to_maj_min_ino
