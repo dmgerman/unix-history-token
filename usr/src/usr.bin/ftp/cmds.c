@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,8 +175,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|hostent
+name|char
 modifier|*
 name|host
 decl_stmt|,
