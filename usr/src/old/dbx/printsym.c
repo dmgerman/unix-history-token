@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c	5.2 (Berkeley) %G%"
+literal|"@(#)printsym.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2129,7 +2129,7 @@ name|language_op
 argument_list|(
 name|findlanguage
 argument_list|(
-literal|".s"
+literal|".c"
 argument_list|)
 argument_list|,
 name|L_PRINTVAL
