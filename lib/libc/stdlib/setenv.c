@@ -55,6 +55,15 @@ directive|include
 file|<string.h>
 end_include
 
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|_findenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * setenv --  *	Set the value of the environmental variable "name" to be  *	"value".  If rewrite is set, replace any current value.  */
 end_comment
@@ -114,11 +123,6 @@ name|l_value
 decl_stmt|,
 name|offset
 decl_stmt|;
-name|char
-modifier|*
-name|_findenv
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|*
