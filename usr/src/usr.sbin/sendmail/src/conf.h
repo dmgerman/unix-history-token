@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -401,6 +401,17 @@ begin_comment
 comment|/* use System V style timezones */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname system call */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -537,6 +548,76 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UNAME
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/utsname.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|newstr
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|newstr
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! UNAME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NODE_LENGTH
+value|32
+end_define
+
+begin_struct
+struct|struct
+name|utsname
+block|{
+name|char
+name|nodename
+index|[
+name|NODE_LENGTH
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* UNAME */
+end_comment
 
 end_unit
 
