@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ski.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -132,6 +138,24 @@ include|#
 directive|include
 file|<vm/vm_pager.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SKI_ROOT_FILESYSTEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SKI_ROOT_FILESYSTEM
+value|"ia64-root.fs"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1280,7 +1304,7 @@ argument_list|(
 operator|(
 name|u_int64_t
 operator|)
-literal|"/vol/v7/dfr/moo.fs"
+name|SKI_ROOT_FILESYSTEM
 argument_list|)
 argument_list|,
 literal|1
