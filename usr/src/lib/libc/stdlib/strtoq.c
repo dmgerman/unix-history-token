@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strtoq.c	5.1 (Berkeley) %G%"
+literal|"@(#)strtoq.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,17 +413,19 @@ condition|)
 operator|*
 name|endptr
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|any
 condition|?
 name|s
 operator|-
 literal|1
 else|:
-operator|(
-name|char
-operator|*
-operator|)
 name|nptr
+operator|)
 expr_stmt|;
 return|return
 operator|(
