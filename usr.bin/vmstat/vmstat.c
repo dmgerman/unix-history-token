@@ -634,7 +634,8 @@ specifier|static
 name|void
 name|dovmstat
 parameter_list|(
-name|u_int
+name|unsigned
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -750,7 +751,8 @@ name|c
 decl_stmt|,
 name|todo
 decl_stmt|;
-name|u_int
+name|unsigned
+name|int
 name|interval
 decl_stmt|;
 name|int
@@ -2415,7 +2417,8 @@ specifier|static
 name|void
 name|dovmstat
 parameter_list|(
-name|u_int
+name|unsigned
+name|int
 name|interval
 parameter_list|,
 name|int
@@ -2899,7 +2902,8 @@ argument_list|(
 literal|"%4lu "
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -2921,7 +2925,8 @@ argument_list|(
 literal|"%3lu "
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -2943,7 +2948,8 @@ argument_list|(
 literal|"%3lu "
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -2975,7 +2981,8 @@ argument_list|(
 literal|"%3lu "
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -3007,7 +3014,8 @@ argument_list|(
 literal|"%3lu "
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -3029,7 +3037,8 @@ argument_list|(
 literal|"%3lu "
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -3054,7 +3063,8 @@ argument_list|(
 literal|"%4lu %4lu %3lu "
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -3068,7 +3078,8 @@ name|v_intr
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -3082,7 +3093,8 @@ name|v_syscall
 argument_list|)
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|rate
 argument_list|(
@@ -3381,7 +3393,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
+name|unsigned
+name|int
 name|pgintime
 decl_stmt|,
 name|rectime
@@ -4675,7 +4688,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_long
+name|unsigned
+name|long
 modifier|*
 name|intrcnt
 decl_stmt|,
@@ -4917,10 +4931,11 @@ block|}
 block|}
 name|nintr
 operator|/=
-sizeof|sizeof
-argument_list|(
-name|u_long
-argument_list|)
+expr|sizeof
+operator|(
+name|unsigned
+name|long
+operator|)
 expr_stmt|;
 name|tintrname
 operator|=
