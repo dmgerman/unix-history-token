@@ -3114,7 +3114,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"<%.40s> at ata%d-%s %s\n"
+literal|"<%.40s/%.8s> at ata%d-%s %s\n"
 argument_list|,
 name|cdp
 operator|->
@@ -3123,6 +3123,14 @@ operator|->
 name|param
 operator|->
 name|model
+argument_list|,
+name|cdp
+operator|->
+name|device
+operator|->
+name|param
+operator|->
+name|revision
 argument_list|,
 name|device_get_unit
 argument_list|(

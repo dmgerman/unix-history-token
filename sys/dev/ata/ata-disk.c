@@ -2230,7 +2230,7 @@ name|adp
 operator|->
 name|device
 argument_list|,
-literal|"%lluMB<%.40s> [%lld/%d/%d] at ata%d-%s %s"
+literal|"%lluMB<%.40s/%.8s> [%lld/%d/%d] at ata%d-%s %s"
 argument_list|,
 call|(
 name|unsigned
@@ -2260,6 +2260,14 @@ operator|->
 name|param
 operator|->
 name|model
+argument_list|,
+name|adp
+operator|->
+name|device
+operator|->
+name|param
+operator|->
+name|revision
 argument_list|,
 call|(
 name|unsigned

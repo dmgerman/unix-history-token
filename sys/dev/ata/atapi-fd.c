@@ -1212,7 +1212,7 @@ name|fdp
 operator|->
 name|device
 argument_list|,
-literal|"REMOVABLE<%.40s> at ata%d-%s %s\n"
+literal|"REMOVABLE<%.40s/%.8s> at ata%d-%s %s\n"
 argument_list|,
 name|fdp
 operator|->
@@ -1221,6 +1221,14 @@ operator|->
 name|param
 operator|->
 name|model
+argument_list|,
+name|fdp
+operator|->
+name|device
+operator|->
+name|param
+operator|->
+name|revision
 argument_list|,
 name|device_get_unit
 argument_list|(

@@ -1655,7 +1655,7 @@ name|stp
 operator|->
 name|device
 argument_list|,
-literal|"TAPE<%.40s> at ata%d-%s %s\n"
+literal|"TAPE<%.40s/%.8s> at ata%d-%s %s\n"
 argument_list|,
 name|stp
 operator|->
@@ -1664,6 +1664,14 @@ operator|->
 name|param
 operator|->
 name|model
+argument_list|,
+name|stp
+operator|->
+name|device
+operator|->
+name|param
+operator|->
+name|revision
 argument_list|,
 name|device_get_unit
 argument_list|(
