@@ -1419,10 +1419,155 @@ name|int
 name|plexindex
 decl_stmt|;
 name|int
-name|sdno
+name|objno
 decl_stmt|;
+name|enum
+name|objecttype
+name|type
+decl_stmt|;
+comment|/* type returned */
+if|if
+condition|(
+name|history
+condition|)
+name|fflush
+argument_list|(
+name|history
+argument_list|)
+expr_stmt|;
+comment|/* don't let all the kids do it. */
+for|for
+control|(
+name|plexindex
+operator|=
+literal|0
+init|;
+name|plexindex
+operator|<
+name|argc
+condition|;
+name|plexindex
+operator|++
+control|)
+block|{
+name|objno
+operator|=
+name|find_object
+argument_list|(
+name|argv
+index|[
+name|plexindex
+index|]
+argument_list|,
+operator|&
+name|type
+argument_list|)
+expr_stmt|;
+comment|/* find the object */
+if|if
+condition|(
+name|objno
+operator|<
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"Can't find %s\n"
+argument_list|,
+name|argv
+index|[
+name|plexindex
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|volume_object
+case|:
+name|initvol
+argument_list|(
+name|objno
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|plex_object
+case|:
+name|initplex
+argument_list|(
+name|objno
+argument_list|,
+name|argv
+index|[
+name|plexindex
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|sd_object
+case|:
+name|initsd
+argument_list|(
+name|objno
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Can't initalize %s: wrong object type\n"
+argument_list|,
+name|argv
+index|[
+name|plexindex
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|initvol
+parameter_list|(
+name|int
+name|volno
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"Not implemented yet\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|initplex
+parameter_list|(
 name|int
 name|plexno
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|int
+name|sdno
 decl_stmt|;
 name|int
 name|plexfh
@@ -1433,11 +1578,290 @@ comment|/* file handle for plex */
 name|pid_t
 name|pid
 decl_stmt|;
-name|enum
-name|objecttype
-name|type
+name|char
+name|filename
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
-comment|/* type returned */
+comment|/* create a file name here */
+comment|/* Variables for use by children */
+name|int
+name|failed
+init|=
+literal|0
+decl_stmt|;
+comment|/* set if a child dies badly */
+name|sprintf
+argument_list|(
+name|filename
+argument_list|,
+name|VINUM_DIR
+literal|"/plex/%s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|plexfh
+operator|=
+name|open
+argument_list|(
+name|filename
+argument_list|,
+name|O_RDWR
+argument_list|,
+name|S_IRWXU
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* got a plex, open it */
+comment|/* 	   * We don't actually write anything to the 	   * plex.  We open it to ensure that nobody 	   * else tries to open it while we initialize 	   * its subdisks. 	 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"can't open plex %s: %s\n"
+argument_list|,
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
+block|{
+name|pid
+operator|=
+name|fork
+argument_list|()
+expr_stmt|;
+comment|/* into the background with you */
+if|if
+condition|(
+name|pid
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* I'm the parent, or we failed */
+if|if
+condition|(
+name|pid
+operator|<
+literal|0
+condition|)
+comment|/* failure */
+name|printf
+argument_list|(
+literal|"Couldn't fork: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|plexfh
+argument_list|)
+expr_stmt|;
+comment|/* we don't need this any more */
+return|return;
+block|}
+block|}
+comment|/*      * If we get here, we're either the first-level child      * (if we're not waiting) or we're going to wait.      */
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|plex
+operator|.
+name|subdisks
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+comment|/* initialize each subdisk */
+name|get_plex_sd_info
+argument_list|(
+operator|&
+name|sd
+argument_list|,
+name|plexno
+argument_list|,
+name|sdno
+argument_list|)
+expr_stmt|;
+name|initsd
+argument_list|(
+name|sd
+operator|.
+name|sdno
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Now wait for them to complete */
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|int
+name|status
+decl_stmt|;
+name|pid
+operator|=
+name|wait
+argument_list|(
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|int
+operator|)
+name|pid
+operator|==
+operator|-
+literal|1
+operator|)
+operator|&&
+operator|(
+name|errno
+operator|==
+name|ECHILD
+operator|)
+condition|)
+comment|/* all gone */
+break|break;
+if|if
+condition|(
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* oh, oh */
+name|printf
+argument_list|(
+literal|"child %d exited with status 0x%x\n"
+argument_list|,
+name|pid
+argument_list|,
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|failed
+operator|++
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|failed
+operator|==
+literal|0
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+block|message->index = plexno;
+comment|/* pass object number */
+block|message->type = plex_object;
+comment|/* and type of object */
+block|message->state = object_up; 	message->force = 1;
+comment|/* insist */
+block|ioctl(superdev, VINUM_SETSTATE, message);
+endif|#
+directive|endif
+name|syslog
+argument_list|(
+name|LOG_INFO
+operator||
+name|LOG_KERN
+argument_list|,
+literal|"plex %s initialized"
+argument_list|,
+name|plex
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+operator||
+name|LOG_KERN
+argument_list|,
+literal|"couldn't initialize plex %s, %d processes died"
+argument_list|,
+name|plex
+operator|.
+name|name
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dowait
+operator|==
+literal|0
+condition|)
+comment|/* we're the waiting child, */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* we've done our dash */
+block|}
+end_function
+
+begin_function
+name|void
+name|initsd
+parameter_list|(
+name|int
+name|sdno
+parameter_list|)
+block|{
+name|pid_t
+name|pid
+decl_stmt|;
 name|struct
 name|_ioctl_reply
 name|reply
@@ -1464,12 +1888,6 @@ decl_stmt|;
 comment|/* create a file name here */
 comment|/* Variables for use by children */
 name|int
-name|failed
-init|=
-literal|0
-decl_stmt|;
-comment|/* set if a child dies badly */
-name|int
 name|sdfh
 decl_stmt|;
 comment|/* and for subdisk */
@@ -1495,140 +1913,39 @@ decl_stmt|;
 comment|/* size of subdisk */
 if|if
 condition|(
-name|history
-condition|)
-name|fflush
-argument_list|(
-name|history
-argument_list|)
-expr_stmt|;
-comment|/* don't let all the kids do it. */
-for|for
-control|(
-name|plexindex
-operator|=
-literal|0
-init|;
-name|plexindex
-operator|<
-name|argc
-condition|;
-name|plexindex
-operator|++
-control|)
-block|{
-name|plexno
-operator|=
-name|find_object
-argument_list|(
-name|argv
-index|[
-name|plexindex
-index|]
-argument_list|,
-operator|&
-name|type
-argument_list|)
-expr_stmt|;
-comment|/* find the object */
-if|if
-condition|(
-name|plexno
-operator|<
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"Can't find %s\n"
-argument_list|,
-name|argv
-index|[
-name|plexindex
-index|]
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|type
-operator|!=
-name|plex_object
-condition|)
-block|{
-comment|/* XXX Consider doing this for all plexes in 		 * a volume, etc. */
-name|printf
-argument_list|(
-literal|"%s is not a plex\n"
-argument_list|,
-name|argv
-index|[
-name|plexindex
-index|]
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-elseif|else
-if|if
-condition|(
-name|plex
-operator|.
-name|state
+name|dowait
 operator|==
-name|plex_unallocated
+literal|0
 condition|)
-comment|/* not a real plex, */
-name|printf
-argument_list|(
-literal|"%s is not allocated, can't initialize\n"
-argument_list|,
-name|plex
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-else|else
 block|{
-name|sprintf
-argument_list|(
-name|filename
-argument_list|,
-name|VINUM_DIR
-literal|"/plex/%s"
-argument_list|,
-name|argv
-index|[
-name|plexindex
-index|]
-argument_list|)
+name|pid
+operator|=
+name|fork
+argument_list|()
 expr_stmt|;
+comment|/* into the background with you */
 if|if
 condition|(
-operator|(
-name|plexfh
-operator|=
-name|open
-argument_list|(
-name|filename
-argument_list|,
-name|O_RDWR
-argument_list|,
-name|S_IRWXU
-argument_list|)
-operator|)
+name|pid
+operator|>
+literal|0
+condition|)
+comment|/* I'm the parent */
+return|return;
+elseif|else
+if|if
+condition|(
+name|pid
 operator|<
 literal|0
 condition|)
 block|{
-comment|/* got a plex, open it */
-comment|/* We don't actually write anything to the plex, 		       * since the system will try to format it.  We open 		       * it to ensure that nobody else tries to open it 		       * while we initialize its subdisks */
-name|fprintf
+comment|/* failure */
+name|printf
 argument_list|(
-name|stderr
+literal|"couldn't fork for subdisk %d: %s"
 argument_list|,
-literal|"can't open plex %s: %s\n"
-argument_list|,
-name|filename
+name|sdno
 argument_list|,
 name|strerror
 argument_list|(
@@ -1639,54 +1956,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|if
-condition|(
-name|dowait
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* don't wait for completion */
-name|pid
-operator|=
-name|fork
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|pid
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* non-waiting parent */
-name|close
-argument_list|(
-name|plexfh
-argument_list|)
-expr_stmt|;
-comment|/* we don't need this any more */
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* give them a chance to print */
-return|return;
-comment|/* and go on about our business */
-block|}
-block|}
-comment|/* 	     * If we get here, we're either the first-level child 	     * (if we're not waiting) or we're going to wait. 	     */
-name|bzero
-argument_list|(
-name|zeros
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|zeros
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|openlog
 argument_list|(
 literal|"vinum"
@@ -1700,44 +1969,20 @@ argument_list|,
 name|LOG_KERN
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|sdno
-operator|=
-literal|0
-init|;
-name|sdno
-operator|<
-name|plex
-operator|.
-name|subdisks
-condition|;
-name|sdno
-operator|++
-control|)
-block|{
-comment|/* initialize each subdisk */
-comment|/* We already have the plex data in global 		 * plex from the call to find_object */
-name|pid
-operator|=
-name|fork
-argument_list|()
+name|bzero
+argument_list|(
+name|zeros
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|zeros
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* into the background with you */
-if|if
-condition|(
-name|pid
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* I'm the child */
-name|get_plex_sd_info
+name|get_sd_info
 argument_list|(
 operator|&
 name|sd
-argument_list|,
-name|plexno
 argument_list|,
 name|sdno
 argument_list|)
@@ -1918,7 +2163,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX Grrrr why doesn't this thing recognize EOF? */
 elseif|else
 if|if
 condition|(
@@ -1962,6 +2206,13 @@ name|state
 operator|=
 name|object_up
 expr_stmt|;
+name|message
+operator|->
+name|force
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't insist */
 name|ioctl
 argument_list|(
 name|superdev
@@ -1976,157 +2227,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|pid
-operator|<
-literal|0
-condition|)
-comment|/* failure */
-name|printf
-argument_list|(
-literal|"couldn't fork for subdisk %d: %s"
-argument_list|,
-name|sdno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Now wait for them to complete */
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-name|int
-name|status
-decl_stmt|;
-name|pid
-operator|=
-name|wait
-argument_list|(
-operator|&
-name|status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|int
-operator|)
-name|pid
-operator|==
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|errno
-operator|==
-name|ECHILD
-operator|)
-condition|)
-comment|/* all gone */
-break|break;
-if|if
-condition|(
-name|WEXITSTATUS
-argument_list|(
-name|status
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* oh, oh */
-name|printf
-argument_list|(
-literal|"child %d exited with status 0x%x\n"
-argument_list|,
-name|pid
-argument_list|,
-name|WEXITSTATUS
-argument_list|(
-name|status
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|failed
-operator|++
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-name|failed
-operator|==
-literal|0
-condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|message->index = plexno;
-comment|/* pass object number */
-block|message->type = plex_object;
-comment|/* and type of object */
-block|message->state = object_up; 		message->force = 1;
-comment|/* insist */
-block|ioctl(superdev, VINUM_SETSTATE, message);
-endif|#
-directive|endif
-name|syslog
-argument_list|(
-name|LOG_INFO
-operator||
-name|LOG_KERN
-argument_list|,
-literal|"plex %s initialized"
-argument_list|,
-name|plex
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|syslog
-argument_list|(
-name|LOG_ERR
-operator||
-name|LOG_KERN
-argument_list|,
-literal|"couldn't initialize plex %s, %d processes died"
-argument_list|,
-name|plex
-operator|.
-name|name
-argument_list|,
-name|failed
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dowait
-operator|==
-literal|0
-condition|)
-comment|/* we're the waiting child, */
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* we've done our dash */
-block|}
-block|}
 block|}
 end_function
 
@@ -2672,7 +2772,7 @@ name|sd
 operator|.
 name|state
 operator|<=
-name|sd_stale
+name|sd_reviving
 operator|)
 condition|)
 block|{
@@ -5647,64 +5747,6 @@ name|argv0
 index|[]
 parameter_list|)
 block|{
-name|int
-name|maxlen
-decl_stmt|;
-name|struct
-name|vinum_rename_msg
-name|msg
-decl_stmt|;
-name|struct
-name|_ioctl_reply
-modifier|*
-name|reply
-init|=
-operator|(
-expr|struct
-name|_ioctl_reply
-operator|*
-operator|)
-operator|&
-name|msg
-decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|!=
-literal|2
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: \trename<drive><drive>\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|superdev
-argument_list|,
-name|VINUM_GETCONFIG
-argument_list|,
-operator|&
-name|vinum_conf
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"Can't get vinum config"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -8650,6 +8692,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
