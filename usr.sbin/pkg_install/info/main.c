@@ -427,11 +427,16 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|strcpy
+name|strncpy
 argument_list|(
 name|PlayPen
 argument_list|,
 name|optarg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|PlayPen
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
