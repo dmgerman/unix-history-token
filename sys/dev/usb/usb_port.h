@@ -1804,7 +1804,7 @@ end_ifdef
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_debug_usb
+name|_hw_usb
 argument_list|)
 expr_stmt|;
 end_expr_stmt

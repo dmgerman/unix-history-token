@@ -315,7 +315,7 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
-name|_debug
+name|_hw
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -369,11 +369,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_debug_usb
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|usb
+name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,

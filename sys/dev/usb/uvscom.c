@@ -214,13 +214,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_NODE
 argument_list|(
-name|_debug_usb
+name|_hw_usb
 argument_list|,
 name|OID_AUTO
 argument_list|,
 name|uvscom
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"USB uvscom"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_usb_uvscom
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
