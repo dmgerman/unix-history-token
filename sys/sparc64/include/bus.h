@@ -4840,13 +4840,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BUS_DMA_NOWRITE
-value|0x008
-end_define
-
-begin_define
-define|#
-directive|define
 name|BUS_DMA_BUS1
 value|0x010
 end_define
@@ -4873,58 +4866,21 @@ value|0x080
 end_define
 
 begin_comment
-comment|/*  * The following flags are from NetBSD, but are not implemented for all  * architetures, and should therefore not be used in MI code.  * Some have different values than under NetBSD.  */
+comment|/* The following two flags are non-standard. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BUS_DMA_STREAMING
+name|BUS_DMA_NOWRITE
 value|0x100
 end_define
-
-begin_comment
-comment|/* hint: sequential, unidirectional */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUS_DMA_READ
-value|0x200
-end_define
-
-begin_comment
-comment|/* mapping is device -> memory only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUS_DMA_WRITE
-value|0x400
-end_define
-
-begin_comment
-comment|/* mapping is memory -> device only */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|BUS_DMA_NOCACHE
-value|BUS_DMA_BUS1
-end_define
-
-begin_comment
-comment|/* Don't bother with alignment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BUS_DMA_DVMA
-value|BUS_DMA_BUS2
+value|0x200
 end_define
 
 begin_comment

@@ -106,6 +106,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Callers of the bus_dma interfaces must always protect their tags and maps  * appropriately against concurrent access. However, when a map is on a LRU  * queue, there is a second access path to it; for this case, the locking rules  * are given in the parenthesized comments below:  *	q - locked by the mutex protecting the queue.  *	p - private to the owner of the map, no access through the queue.  *	* - comment refers to pointer target.  * Only the owner of the map is allowed to insert the map into a queue. Removal  * and repositioning (i.e. temporal removal and reinsertion) is allowed to all  * if the queue lock is held.  */
+end_comment
+
 begin_struct
 struct|struct
 name|bus_dmamap
@@ -116,6 +120,7 @@ argument|bus_dmamap
 argument_list|)
 name|dm_maplruq
 expr_stmt|;
+comment|/* (q) */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
@@ -123,15 +128,44 @@ argument|bus_dmamap_res
 argument_list|)
 name|dm_reslist
 expr_stmt|;
+comment|/* (q, *q) */
 name|int
 name|dm_onq
 decl_stmt|;
+comment|/* (q) */
 name|int
-name|dm_loaded
+name|dm_flags
 decl_stmt|;
+comment|/* (p) */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Flag values. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMF_LOADED
+value|1
+end_define
+
+begin_comment
+comment|/* Map is loaded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMF_COHERENT
+value|2
+end_define
+
+begin_comment
+comment|/* Coherent mapping requested */
+end_comment
 
 begin_function_decl
 name|int

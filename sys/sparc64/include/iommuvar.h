@@ -57,7 +57,7 @@ value|trunc_page(x)
 end_define
 
 begin_comment
-comment|/*  * per-IOMMU state  */
+comment|/*  * Per-IOMMU state. The parenthesized comments indicate the locking strategy:  *	i - protected by iommu_mtx.  *	r - read-only after initialization.  *	* - comment refers to pointer target / target hardware registers  *	    (for bus_addr_t).  * iommu_map_lruq is also locked by iommu_mtx. Elements of iommu_tsb may only  * be accessed from functions operating on the map owning the corresponding  * resource, so the locking the user is required to do to protect the map is  * sufficient. As soon as the TSBs are divorced, these will be moved into struct  * iommu_state, and each state struct will get its own lock.  * iommu_dvma_rman needs to be moved there too, but has its own internal lock.  */
 end_comment
 
 begin_struct
@@ -67,20 +67,22 @@ block|{
 name|int
 name|is_tsbsize
 decl_stmt|;
-comment|/* 0 = 8K, ... */
+comment|/* (r) 0 = 8K, ... */
 name|u_int64_t
 name|is_dvmabase
 decl_stmt|;
+comment|/* (r) */
 name|int64_t
 name|is_cr
 decl_stmt|;
-comment|/* IOMMU control register value */
+comment|/* (r) Control reg value */
 name|vm_paddr_t
 name|is_flushpa
 index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/* (r) */
 specifier|volatile
 name|int64_t
 modifier|*
@@ -89,7 +91,8 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* 	 * When a flush is completed, 64 bytes will be stored at the given 	 * location, the first double word being 1, to indicate completion. 	 * The lower 6 address bits are ignored, so the addresses need to be 	 * suitably aligned; over-allocate a large enough margin to be able 	 * to adjust it. 	 * Two such buffers are needed. 	 * Needs to be volatile or egcs optimizes away loads. 	 */
+comment|/* (r, *i) */
+comment|/* 	 * (i) 	 * When a flush is completed, 64 bytes will be stored at the given 	 * location, the first double word being 1, to indicate completion. 	 * The lower 6 address bits are ignored, so the addresses need to be 	 * suitably aligned; over-allocate a large enough margin to be able 	 * to adjust it. 	 * Two such buffers are needed. 	 */
 specifier|volatile
 name|char
 name|is_flush
@@ -105,47 +108,54 @@ comment|/* copies of our parents state, to allow us to be self contained */
 name|bus_space_tag_t
 name|is_bustag
 decl_stmt|;
-comment|/* our bus tag */
+comment|/* (r) Our bus tag */
 name|bus_space_handle_t
 name|is_bushandle
 decl_stmt|;
+comment|/* (r) */
 name|bus_addr_t
 name|is_iommu
 decl_stmt|;
-comment|/* IOMMU registers */
+comment|/* (r, *i) IOMMU registers */
 name|bus_addr_t
 name|is_sb
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* streaming buffer */
+comment|/* (r, *i) Streaming buffer */
+comment|/* Tag diagnostics access */
 name|bus_addr_t
 name|is_dtag
 decl_stmt|;
-comment|/* tag diagnostics access */
+comment|/* (r, *r) */
+comment|/* Data RAM diagnostic access */
 name|bus_addr_t
 name|is_ddram
 decl_stmt|;
-comment|/* data ram diag. access */
+comment|/* (r, *r) */
+comment|/* LRU queue diag. access */
 name|bus_addr_t
 name|is_dqueue
 decl_stmt|;
-comment|/* LRU queue diag. access */
+comment|/* (r, *r) */
+comment|/* Virtual address diagnostics register */
 name|bus_addr_t
 name|is_dva
 decl_stmt|;
-comment|/* VA diag. register */
+comment|/* (r, *r) */
+comment|/* Tag compare diagnostics access */
 name|bus_addr_t
 name|is_dtcmp
 decl_stmt|;
-comment|/* tag compare diag. access */
+comment|/* (r, *r) */
 name|STAILQ_ENTRY
 argument_list|(
 argument|iommu_state
 argument_list|)
 name|is_link
 expr_stmt|;
+comment|/* (r) */
 block|}
 struct|;
 end_struct
@@ -181,38 +191,6 @@ parameter_list|(
 name|struct
 name|iommu_state
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|iommu_enter
-parameter_list|(
-name|struct
-name|iommu_state
-modifier|*
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_paddr_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|iommu_remove
-parameter_list|(
-name|struct
-name|iommu_state
-modifier|*
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
