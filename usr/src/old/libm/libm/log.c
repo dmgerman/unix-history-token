@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	4.4 (Berkeley) %G%"
+literal|"@(#)log.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* LOG(X)  * RETURN THE LOGARITHM OF x   * DOUBLE PRECISION (VAX D FORMAT 56 bits or IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/19/85;  * REVISED BY K.C. NG on 2/7/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions:  *	scalb(x,n)  *	copysign(x,y)  *	logb(x)	  *	finite(x)  *  * Required kernel function:  *	log__L(z)   *  * Method :  *	1. Argument Reduction: find k and f such that   *			x = 2^k * (1+f),   *	   where  sqrt(2)/2< 1+f< sqrt(2) .  *  *	2. Let s = f/(2+f) ; based on log(1+f) = log(1+s) - log(1-s)  *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,  *	   log(1+f) is computed by  *  *	     		log(1+f) = 2s + s*log__L(s*s)  *	   where  *		log__L(z) = z*(L1 + z*(L2 + z*(... (L6 + z*L7)...)))  *  *	   See log__L() for the values of the coefficients.  *  *	3. Finally,  log(x) = k*ln2 + log(1+f).  (Here n*ln2 will be stored  *	   in two floating point number: n*ln2hi + n*ln2lo, n*ln2hi is exact  *	   since the last 20 bits of ln2hi is 0.)  *  * Special cases:  *	log(x) is NAN with signal if x< 0 (including -INF) ;   *	log(+INF) is +INF; log(0) is -INF with signal;  *	log(NAN) is that NAN with no signal.  *  * Accuracy:  *	log(x) returns the exact log(x) nearly rounded. In a test run with  *	1,536,000 random arguments on a VAX, the maximum observed error was  *	.826 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* LOG(X)  * RETURN THE LOGARITHM OF x   * DOUBLE PRECISION (VAX D FORMAT 56 bits or IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/19/85;  * REVISED BY K.C. NG on 2/7/85, 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions:  *	scalb(x,n)  *	copysign(x,y)  *	logb(x)	  *	finite(x)  *  * Required kernel function:  *	log__L(z)   *  * Method :  *	1. Argument Reduction: find k and f such that   *			x = 2^k * (1+f),   *	   where  sqrt(2)/2< 1+f< sqrt(2) .  *  *	2. Let s = f/(2+f) ; based on log(1+f) = log(1+s) - log(1-s)  *		 = 2s + 2/3 s**3 + 2/5 s**5 + .....,  *	   log(1+f) is computed by  *  *	     		log(1+f) = 2s + s*log__L(s*s)  *	   where  *		log__L(z) = z*(L1 + z*(L2 + z*(... (L6 + z*L7)...)))  *  *	   See log__L() for the values of the coefficients.  *  *	3. Finally,  log(x) = k*ln2 + log(1+f).  (Here n*ln2 will be stored  *	   in two floating point number: n*ln2hi + n*ln2lo, n*ln2hi is exact  *	   since the last 20 bits of ln2hi is 0.)  *  * Special cases:  *	log(x) is NaN with signal if x< 0 (including -INF) ;   *	log(+INF) is +INF; log(0) is -INF with signal;  *	log(NaN) is that NaN with no signal.  *  * Accuracy:  *	log(x) returns the exact log(x) nearly rounded. In a test run with  *	1,536,000 random arguments on a VAX, the maximum observed error was  *	.826 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -44,31 +44,6 @@ include|#
 directive|include
 file|<errno.h>
 end_include
-
-begin_extern
-extern|extern errno;
-end_extern
-
-begin_decl_stmt
-specifier|static
-name|long
-name|NaN_
-index|[]
-init|=
-block|{
-literal|0x8000
-block|,
-literal|0x0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|NaN
-value|(*(double *) NaN_)
-end_define
 
 begin_comment
 comment|/* double static */
@@ -155,7 +130,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double format */
+comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
@@ -244,6 +219,9 @@ decl_stmt|,
 name|finite
 argument_list|()
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VAX
 if|if
 condition|(
 name|x
@@ -255,6 +233,9 @@ operator|(
 name|x
 operator|)
 return|;
+comment|/* x is NaN */
+endif|#
+directive|endif
 if|if
 condition|(
 name|finite
@@ -401,17 +382,40 @@ block|{
 ifdef|#
 directive|ifdef
 name|VAX
-name|errno
-operator|=
-name|EDOM
-expr_stmt|;
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
+if|if
+condition|(
+name|x
+operator|==
+name|zero
+condition|)
 return|return
 operator|(
-name|NaN
+name|infnan
+argument_list|(
+operator|-
+name|ERANGE
+argument_list|)
 operator|)
 return|;
+comment|/* -INF */
+else|else
+return|return
+operator|(
+name|infnan
+argument_list|(
+name|EDOM
+argument_list|)
+operator|)
+return|;
+comment|/* NaN */
 else|#
 directive|else
+comment|/* IEEE double */
 comment|/* zero argument, return -INF with signal */
 if|if
 condition|(
@@ -426,7 +430,7 @@ operator|/
 name|zero
 operator|)
 return|;
-comment|/* negative argument, return NAN with signal */
+comment|/* negative argument, return NaN with signal */
 else|else
 return|return
 operator|(
@@ -441,7 +445,7 @@ block|}
 block|}
 comment|/* end of if (finite(x)) */
 comment|/* NOT REACHED ifdef VAX */
-comment|/* log(-INF) is NAN with signal */
+comment|/* log(-INF) is NaN with signal */
 elseif|else
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	4.4 (Berkeley) %G%"
+literal|"@(#)pow.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/* POW(X,Y)    * RETURN X**Y   * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 5/12/85.  *  * Required system supported functions:  *      scalb(x,n)        *      logb(x)           *	copysign(x,y)	  *	finite(x)	  *	drem(x,y)  *  * Required kernel functions:  *	exp__E(a,c)	...return  exp(a+c) - 1 - a*a/2  *	log__L(x)	...return  (log(1+x) - 2s)/s, s=x/(2+x)   *	pow_p(x,y)	...return  +(anything)**(finite non zero)  *  * Method  *	1. Compute and return log(x) in three pieces:  *		log(x) = n*ln2 + hi + lo,  *	   where n is an integer.  *	2. Perform y*log(x) by simulating muti-precision arithmetic and   *	   return the answer in three pieces:  *		y*log(x) = m*ln2 + hi + lo,  *	   where m is an integer.  *	3. Return x**y = exp(y*log(x))  *		= 2^m * ( exp(hi+lo) ).  *  * Special cases:  *	(anything) ** 0  is 1 ;  *	(anything) ** 1  is itself;  *	(anything) ** NAN is NAN;  *	NAN ** (anything except 0) is NAN;  *	+-(anything> 1) ** +INF is +INF;  *	+-(anything> 1) ** -INF is +0;  *	+-(anything< 1) ** +INF is +0;  *	+-(anything< 1) ** -INF is +INF;  *	+-1 ** +-INF is NAN and signal INVALID;  *	+0 ** +(anything except 0, NAN)  is +0;  *	-0 ** +(anything except 0, NAN, odd integer)  is +0;  *	+0 ** -(anything except 0, NAN)  is +INF and signal DIV-BY-ZERO;  *	-0 ** -(anything except 0, NAN, odd integer)  is +INF with signal;  *	-0 ** (odd integer) = -( +0 ** (odd integer) );  *	+INF ** +(anything except 0,NAN) is +INF;  *	+INF ** -(anything except 0,NAN) is +0;  *	-INF ** (odd integer) = -( +INF ** (odd integer) );  *	-INF ** (even integer) = ( +INF ** (even integer) );  *	-INF ** -(anything except integer,NAN) is NAN with signal;  *	-(x=anything) ** (k=integer) is (-1)**k * (x ** k);  *	-(anything except 0) ** (non-integer) is NAN with signal;  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular, on a SUN, a VAX,  *	and a Zilog Z8000,  *			pow(integer,integer)  *	always returns the correct integer provided it is representable.  *	In a test run with 100,000 random arguments with 0< x, y< 20.0  *	on a VAX, the maximum observed error was 1.79 ulps (units in the   *	last place).  *  * Constants :  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
+comment|/* POW(X,Y)    * RETURN X**Y   * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 1/8/85;   * REVISED BY K.C. NG on 7/10/85.  *  * Required system supported functions:  *      scalb(x,n)        *      logb(x)           *	copysign(x,y)	  *	finite(x)	  *	drem(x,y)  *  * Required kernel functions:  *	exp__E(a,c)	...return  exp(a+c) - 1 - a*a/2  *	log__L(x)	...return  (log(1+x) - 2s)/s, s=x/(2+x)   *	pow_p(x,y)	...return  +(anything)**(finite non zero)  *  * Method  *	1. Compute and return log(x) in three pieces:  *		log(x) = n*ln2 + hi + lo,  *	   where n is an integer.  *	2. Perform y*log(x) by simulating muti-precision arithmetic and   *	   return the answer in three pieces:  *		y*log(x) = m*ln2 + hi + lo,  *	   where m is an integer.  *	3. Return x**y = exp(y*log(x))  *		= 2^m * ( exp(hi+lo) ).  *  * Special cases:  *	(anything) ** 0  is 1 ;  *	(anything) ** 1  is itself;  *	(anything) ** NaN is NaN;  *	NaN ** (anything except 0) is NaN;  *	+-(anything> 1) ** +INF is +INF;  *	+-(anything> 1) ** -INF is +0;  *	+-(anything< 1) ** +INF is +0;  *	+-(anything< 1) ** -INF is +INF;  *	+-1 ** +-INF is NaN and signal INVALID;  *	+0 ** +(anything except 0, NaN)  is +0;  *	-0 ** +(anything except 0, NaN, odd integer)  is +0;  *	+0 ** -(anything except 0, NaN)  is +INF and signal DIV-BY-ZERO;  *	-0 ** -(anything except 0, NaN, odd integer)  is +INF with signal;  *	-0 ** (odd integer) = -( +0 ** (odd integer) );  *	+INF ** +(anything except 0,NaN) is +INF;  *	+INF ** -(anything except 0,NaN) is +0;  *	-INF ** (odd integer) = -( +INF ** (odd integer) );  *	-INF ** (even integer) = ( +INF ** (even integer) );  *	-INF ** -(anything except integer,NaN) is NaN with signal;  *	-(x=anything) ** (k=integer) is (-1)**k * (x ** k);  *	-(anything except 0) ** (non-integer) is NaN with signal;  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular, on a SUN, a VAX,  *	and a Zilog Z8000,  *			pow(integer,integer)  *	always returns the correct integer provided it is representable.  *	In a test run with 100,000 random arguments with 0< x, y< 20.0  *	on a VAX, the maximum observed error was 1.79 ulps (units in the   *	last place).  *  * Constants :  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
 begin_ifdef
@@ -45,30 +45,13 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_extern
-extern|extern errno;
-end_extern
-
-begin_decl_stmt
-specifier|static
-name|long
-name|NaN_
-index|[]
-init|=
-block|{
-literal|0x8000
-block|,
-literal|0x0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|NaN
-value|(*(double *) NaN_)
-end_define
+begin_function_decl
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* double static */
@@ -180,7 +163,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE double format */
+comment|/* IEEE double */
 end_comment
 
 begin_decl_stmt
@@ -295,17 +278,25 @@ condition|(
 name|y
 operator|==
 name|one
+ifndef|#
+directive|ifndef
+name|VAX
 operator|||
 name|x
 operator|!=
 name|x
+endif|#
+directive|endif
 condition|)
 return|return
 operator|(
 name|x
 operator|)
 return|;
-comment|/* if x is NAN or y=1 */
+comment|/* if x is NaN or y=1 */
+ifndef|#
+directive|ifndef
+name|VAX
 elseif|else
 if|if
 condition|(
@@ -318,7 +309,9 @@ operator|(
 name|y
 operator|)
 return|;
-comment|/* if y is NAN */
+comment|/* if y is NaN */
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -521,21 +514,22 @@ operator|)
 return|;
 else|else
 block|{
-comment|/* return NAN */
+comment|/* return NaN */
 ifdef|#
 directive|ifdef
 name|VAX
-name|errno
-operator|=
-name|EDOM
-expr_stmt|;
 return|return
 operator|(
-name|NaN
+name|infnan
+argument_list|(
+name|EDOM
+argument_list|)
 operator|)
 return|;
+comment|/* NaN */
 else|#
 directive|else
+comment|/* IEEE double */
 return|return
 operator|(
 name|zero
@@ -629,18 +623,25 @@ comment|/* if x is +INF or +0 */
 ifdef|#
 directive|ifdef
 name|VAX
-if|if
-condition|(
+return|return
+operator|(
+operator|(
 name|y
-operator|<
+operator|>
 name|zero
-condition|)
-name|errno
-operator|=
+operator|)
+condition|?
+name|x
+else|:
+name|infnan
+argument_list|(
 name|ERANGE
-expr_stmt|;
-endif|#
-directive|endif
+argument_list|)
+operator|)
+return|;
+comment|/* if y<zero, return +INF */
+else|#
+directive|else
 return|return
 operator|(
 operator|(
@@ -656,7 +657,21 @@ operator|/
 name|x
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
+if|if
+condition|(
+name|x
+operator|==
+literal|1.0
+condition|)
+return|return
+operator|(
+name|x
+operator|)
+return|;
+comment|/* if x=1.0, return 1 since y is finite */
 comment|/* reduce x to z in [sqrt(1/2)-1, sqrt(2)-1] */
 name|z
 operator|=
@@ -678,6 +693,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|VAX
+comment|/* IEEE double */
 comment|/* subnormal number */
 if|if
 condition|(
@@ -1021,12 +1037,18 @@ return|;
 block|}
 comment|/* end of if log(y*log(x))> -60.0 */
 else|else
-comment|/* exp(+- tiny) = 1 */
+comment|/* exp(+- tiny) = 1 with inexact flag */
+block|{
+name|ln2hi
+operator|+
+name|ln2lo
+expr_stmt|;
 return|return
 operator|(
 name|one
 operator|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(

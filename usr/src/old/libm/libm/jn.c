@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	@(#)jn.c	4.1	%G%	*/
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)jn.c	4.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|not lint
+end_endif
 
 begin_comment
 comment|/* 	floating point Bessel's function of 	the first and second kinds and of 	integer order.  	int n; 	double x; 	jn(n,x);  	returns the value of Jn(x) for all 	integer values of n and all real values 	of x.  	There are no error returns. 	Calls j0, j1.  	For n=0, j0(x) is called, 	for n=1, j1(x) is called, 	for n<x, forward recursion us used starting 	from values of j0(x) and j1(x). 	for n>x, a continued fraction approximation to 	j(n,x)/j(n-1,x) is evaluated and then backward 	recursion is used starting from a supposed value 	for j(n,x). The resulting value of j(0,x) is 	compared with the actual value to correct the 	supposed value of j(n,x).  	yn(n,x) is similar in all respects, except 	that forward recursion is used for all 	values of n>1. */
@@ -13,17 +31,40 @@ directive|include
 file|<math.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* IEEE double */
+end_comment
+
 begin_decl_stmt
-name|int
-name|errno
+specifier|static
+name|double
+name|zero
+init|=
+literal|0.e0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|double
@@ -341,16 +382,36 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|errno
-operator|=
-name|EDOM
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VAX
+specifier|extern
+name|double
+name|infnan
+parameter_list|()
+function_decl|;
 return|return
 operator|(
-operator|-
-name|HUGE
+name|infnan
+argument_list|(
+name|EDOM
+argument_list|)
 operator|)
 return|;
+comment|/* NaN */
+else|#
+directive|else
+comment|/* IEEE double */
+return|return
+operator|(
+name|zero
+operator|/
+name|zero
+operator|)
+return|;
+comment|/* IEEE machines: invalid operation */
+endif|#
+directive|endif
 block|}
 name|sign
 operator|=
