@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.13 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,7 +451,7 @@ name|SETINO
 argument_list|(
 name|ROOTINO
 argument_list|,
-name|usedinomap
+name|dumpinomap
 argument_list|)
 expr_stmt|;
 return|return
