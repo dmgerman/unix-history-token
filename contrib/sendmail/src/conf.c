@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.450 (Berkeley) 12/17/1998"
+literal|"@(#)conf.c	8.452 (Berkeley) 1/26/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,13 +1121,9 @@ name|DoubleBounceAddr
 operator|=
 literal|"postmaster"
 expr_stmt|;
-name|MaxHeaderLines
+name|MaxHeadersLength
 operator|=
-name|MAXHDRLINES
-expr_stmt|;
-name|MaxHeaderLineLength
-operator|=
-name|MAXHDRLINELEN
+name|MAXHDRSLEN
 expr_stmt|;
 name|snprintf
 argument_list|(

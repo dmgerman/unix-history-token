@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)conf.h	8.380 (Berkeley) 11/9/1998  */
+comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)conf.h	8.385 (Berkeley) 1/28/1999  */
 end_comment
 
 begin_comment
@@ -390,40 +390,18 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MAXHDRLINES
+name|MAXHDRSLEN
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MAXHDRLINES
-value|1000
+name|MAXHDRSLEN
+value|(32 * 1024)
 end_define
 
 begin_comment
-comment|/* max lines in a message header */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXHDRLINELEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXHDRLINELEN
-value|SMTPLINELIM
-end_define
-
-begin_comment
-comment|/* max length of a header line */
+comment|/* max size of message headers */
 end_comment
 
 begin_endif
@@ -7732,6 +7710,28 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|TZ_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TZ_TYPE
+value|TZ_NONE
+end_define
+
+begin_comment
+comment|/* no standard for Linux */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_PATH_SENDMAILPID
 end_ifndef
 
@@ -7746,13 +7746,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|TZ_TYPE
-value|TZ_TZNAME
-end_define
 
 begin_include
 include|#

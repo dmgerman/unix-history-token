@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	8.28 (Berkeley) 9/14/1998"
+literal|"@(#)mailstats.c	8.29 (Berkeley) 1/25/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -1348,7 +1348,7 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|>
+operator|>=
 literal|0
 condition|)
 name|close
