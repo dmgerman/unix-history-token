@@ -599,6 +599,15 @@ name|vm_page_t
 operator|)
 name|mapped
 expr_stmt|;
+name|phys_avail
+index|[
+name|biggestone
+operator|+
+literal|1
+index|]
+operator|=
+name|new_end
+expr_stmt|;
 comment|/* 	 * Clear all of the page structures 	 */
 name|bzero
 argument_list|(
@@ -662,17 +671,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-name|biggestone
-condition|)
-name|last_pa
-operator|=
-name|new_end
-expr_stmt|;
-else|else
 name|last_pa
 operator|=
 name|phys_avail
