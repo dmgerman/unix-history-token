@@ -341,7 +341,7 @@ operator|>
 literal|0
 condition|)
 do|;
-asm|__asm __volatile ("isync");
+asm|__asm __volatile ("sync; isync");
 block|}
 end_function
 
