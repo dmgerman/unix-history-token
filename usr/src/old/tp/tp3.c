@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tp3.c	4.1 %G%"
+literal|"@(#)tp3.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1139,10 +1139,6 @@ name|s
 decl_stmt|;
 name|int
 name|count
-decl_stmt|,
-modifier|*
-name|localtime
-argument_list|()
 decl_stmt|;
 name|char
 name|work
@@ -1352,6 +1348,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_expr_stmt
 name|extract
 argument_list|(
@@ -1372,6 +1374,13 @@ name|count
 operator|,
 name|id
 expr_stmt|;
+name|struct
+name|timeval
+name|times
+index|[
+literal|2
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|d
@@ -1534,6 +1543,43 @@ operator|->
 name|d_gid
 operator|&
 literal|0377
+argument_list|)
+expr_stmt|;
+name|times
+index|[
+literal|0
+index|]
+operator|.
+name|tv_sec
+operator|=
+name|d
+operator|->
+name|d_time
+expr_stmt|;
+name|times
+index|[
+literal|0
+index|]
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
+name|times
+index|[
+literal|1
+index|]
+operator|=
+name|times
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|utimes
+argument_list|(
+name|name
+argument_list|,
+name|times
 argument_list|)
 expr_stmt|;
 block|}
