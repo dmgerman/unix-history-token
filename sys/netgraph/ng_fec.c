@@ -1404,12 +1404,11 @@ condition|)
 block|{
 name|ifa
 operator|=
-name|TAILQ_FIRST
+name|ifaddr_byindex
 argument_list|(
-operator|&
 name|ifp
 operator|->
-name|if_addrhead
+name|if_index
 argument_list|)
 expr_stmt|;
 name|sdl
@@ -1506,12 +1505,11 @@ expr_stmt|;
 comment|/* Set up phony MAC address. */
 name|ifa
 operator|=
-name|TAILQ_FIRST
+name|ifaddr_byindex
 argument_list|(
-operator|&
 name|bifp
 operator|->
-name|if_addrhead
+name|if_index
 argument_list|)
 expr_stmt|;
 name|sdl
@@ -1789,12 +1787,11 @@ name|bifp
 expr_stmt|;
 name|ifa
 operator|=
-name|TAILQ_FIRST
+name|ifaddr_byindex
 argument_list|(
-operator|&
 name|bifp
 operator|->
-name|if_addrhead
+name|if_index
 argument_list|)
 expr_stmt|;
 name|sdl
@@ -4296,6 +4293,7 @@ operator|->
 name|if_addrhead
 argument_list|)
 expr_stmt|;
+comment|/* XXX useless - done in if_attach */
 comment|/* Give this node the same name as the interface (if possible) */
 name|bzero
 argument_list|(
