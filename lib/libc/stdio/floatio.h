@@ -37,5 +37,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|char
+modifier|*
+name|__ldtoa
+parameter_list|(
+name|long
+name|double
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 
