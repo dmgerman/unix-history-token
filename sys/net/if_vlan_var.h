@@ -163,7 +163,7 @@ name|_t
 parameter_list|,
 name|_errcase
 parameter_list|)
-value|do {		\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_DONTWAIT);		\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	*(u_int *)(mtag+1) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ } while (0)
+value|do {		\ 	struct m_tag *mtag;					\ 	mtag = m_tag_alloc(MTAG_VLAN, MTAG_VLAN_TAG,		\ 			   sizeof (u_int), M_NOWAIT);		\ 	if (mtag == NULL) {					\ 		(_ifp)->if_ierrors++;				\ 		m_freem(_m);					\ 		_errcase;					\ 	}							\ 	*(u_int *)(mtag+1) = (_t);				\ 	m_tag_prepend((_m), mtag);				\ } while (0)
 end_define
 
 begin_define
