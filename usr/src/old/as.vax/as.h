@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)as.h 4.5 %G%" */
+comment|/* "@(#)as.h 4.6 %G%" */
 end_comment
 
 begin_ifdef
@@ -517,17 +517,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACCA
-value|(8<<3)
-end_define
-
-begin_comment
-comment|/* address only */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACCR
 value|(1<<3)
 end_define
@@ -550,17 +539,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACCM
-value|(3<<3)
-end_define
-
-begin_comment
-comment|/* modify */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ACCB
 value|(4<<3)
 end_define
@@ -572,12 +550,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACCA
+value|(8<<3)
+end_define
+
+begin_comment
+comment|/* address only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACCM
+value|(ACCR | ACCW)
+end_define
+
+begin_comment
+comment|/* modify */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACCI
-value|(5<<3)
+value|(ACCB | ACCR)
 end_define
 
 begin_comment
 comment|/* XFC code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AMASK
+value|(ACCA | ACCR | ACCW | ACCB)
+end_define
+
+begin_comment
+comment|/* the mask */
 end_comment
 
 begin_comment
