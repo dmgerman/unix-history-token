@@ -13,12 +13,6 @@ directive|include
 file|"opt_devfs.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NODEVFS
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -3474,15 +3468,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NODEVFS */
-end_comment
 
 end_unit
 
