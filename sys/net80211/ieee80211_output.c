@@ -608,18 +608,9 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ic
-operator|->
-name|ic_opmode
-operator|!=
-name|IEEE80211_M_STA
-condition|)
-block|{
 name|ni
 operator|=
-name|ieee80211_find_node
+name|ieee80211_find_txnode
 argument_list|(
 name|ic
 argument_list|,
@@ -635,31 +626,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * When not in station mode the destination 			 * address should always be in the node table 			 * if the device sends management frames to us; 			 * unless this is a multicast/broadcast frame. 			 * For devices that don't send management frames 			 * to the host we have to cheat; use the bss 			 * node instead; the card will/should clobber 			 * the bssid address as necessary. 			 * 			 * XXX this handles AHDEMO because all devices 			 *     that support it don't send mgmt frames; 			 *     but it might be better to test explicitly 			 */
-if|if
-condition|(
-operator|!
-name|IEEE80211_IS_MULTICAST
-argument_list|(
-name|eh
-operator|.
-name|ether_dhost
-argument_list|)
-operator|&&
-operator|(
-name|ic
-operator|->
-name|ic_caps
-operator|&
-name|IEEE80211_C_RCVMGT
-operator|)
-condition|)
-block|{
 name|IEEE80211_DPRINTF
 argument_list|(
 operator|(
-literal|"%s: no node for dst %s, "
-literal|"discard frame\n"
+literal|"%s: no node for dst %s, discard frame\n"
 operator|,
 name|__func__
 operator|,
@@ -683,21 +653,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|ni
-operator|=
-name|ic
-operator|->
-name|ic_bss
-expr_stmt|;
-block|}
-block|}
-else|else
-name|ni
-operator|=
-name|ic
-operator|->
-name|ic_bss
-expr_stmt|;
 name|ni
 operator|->
 name|ni_inact
