@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.9	87/03/10	*/
+comment|/*	vdreg.h	1.10	87/04/02	*/
 end_comment
 
 begin_comment
@@ -825,9 +825,9 @@ begin_comment
 comment|/* read/write trailer */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|trrw
 block|{
 name|u_long
 name|memadr
@@ -842,9 +842,8 @@ name|disk
 decl_stmt|;
 comment|/* disk address */
 block|}
-name|trrw
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* scatter/gather trailer */
@@ -854,17 +853,19 @@ begin_define
 define|#
 directive|define
 name|VDMAXPAGES
-value|32
+value|(MAXPHYS / NBPG)
 end_define
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|trsg
 block|{
+name|struct
 name|trrw
 name|start_addr
 decl_stmt|;
 struct|struct
+name|addr_chain
 block|{
 name|u_long
 name|nxt_addr
@@ -881,33 +882,31 @@ literal|1
 index|]
 struct|;
 block|}
-name|trsg
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* seek trailer format */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|trseek
 block|{
 name|dskadr
 name|skaddr
 decl_stmt|;
 block|}
-name|trseek
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* format trailer */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|trfmt
 block|{
 name|char
 modifier|*
@@ -927,17 +926,16 @@ name|hdr
 decl_stmt|;
 comment|/* header address info */
 block|}
-name|trfmt
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_comment
 comment|/* reset/configure trailer */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|treset
 block|{
 name|long
 name|ncyl
@@ -960,9 +958,29 @@ name|recovery
 decl_stmt|;
 comment|/* recovery flags */
 block|}
-name|treset
-typedef|;
-end_typedef
+struct|;
+end_struct
+
+begin_comment
+comment|/* ident trailer */
+end_comment
+
+begin_struct
+struct|struct
+name|trid
+block|{
+name|long
+name|name
+decl_stmt|;
+name|long
+name|id
+decl_stmt|;
+name|long
+name|date
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * DCB layout.  */
@@ -1032,26 +1050,116 @@ decl_stmt|;
 comment|/* error cylinder adr */
 union|union
 block|{
+name|struct
+name|trid
+name|idtrail
+decl_stmt|;
+comment|/* ident command trailer */
+name|struct
 name|trseek
 name|sktrail
 decl_stmt|;
 comment|/* seek command trailer */
+name|struct
 name|trsg
 name|sgtrail
 decl_stmt|;
 comment|/* scatter/gather trailer */
+name|struct
 name|trrw
 name|rwtrail
 decl_stmt|;
 comment|/* read/write trailer */
+name|struct
 name|trfmt
 name|fmtrail
 decl_stmt|;
 comment|/* format trailer */
+name|struct
 name|treset
 name|rstrail
 decl_stmt|;
 comment|/* reset/configure trailer */
+block|}
+name|trail
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * smaller DCB with seek trailer only (no scatter-gather).  */
+end_comment
+
+begin_struct
+struct|struct
+name|skdcb
+block|{
+name|struct
+name|dcb
+modifier|*
+name|nxtdcb
+decl_stmt|;
+comment|/* next dcb */
+name|short
+name|intflg
+decl_stmt|;
+comment|/* interrupt settings and flags */
+name|short
+name|opcode
+decl_stmt|;
+comment|/* DCB command code etc... */
+name|long
+name|operrsta
+decl_stmt|;
+comment|/* error& status info */
+name|short
+name|fill
+decl_stmt|;
+comment|/* not used */
+name|char
+name|devselect
+decl_stmt|;
+comment|/* drive selection */
+name|char
+name|trailcnt
+decl_stmt|;
+comment|/* trailer Word Count */
+name|long
+name|err_memadr
+decl_stmt|;
+comment|/* error memory address */
+name|char
+name|err_code
+decl_stmt|;
+comment|/* error codes for SMD/E */
+name|char
+name|fill2
+decl_stmt|;
+comment|/* not used */
+name|short
+name|err_wcount
+decl_stmt|;
+comment|/* error word count */
+name|char
+name|err_trk
+decl_stmt|;
+comment|/* error track/sector */
+name|char
+name|err_sec
+decl_stmt|;
+comment|/* error track/sector */
+name|short
+name|err_cyl
+decl_stmt|;
+comment|/* error cylinder adr */
+union|union
+block|{
+name|struct
+name|trseek
+name|sktrail
+decl_stmt|;
+comment|/* seek command trailer */
 block|}
 name|trail
 union|;
@@ -1303,6 +1411,17 @@ end_define
 
 begin_comment
 comment|/* get drive status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOP_IDENT
+value|0x700
+end_define
+
+begin_comment
+comment|/* identify controller */
 end_comment
 
 begin_define
