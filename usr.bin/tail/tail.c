@@ -193,7 +193,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|long
+name|off_t
 name|off
 decl_stmt|;
 name|enum
@@ -220,7 +220,7 @@ name|forward
 parameter_list|,
 name|backward
 parameter_list|)
-value|{					\ 	if (style)							\ 		usage();						\ 	off = strtol(optarg,&p, 10) * (units);				\ 	if (*p)								\ 		errx(1, "illegal offset -- %s", optarg);		\ 	switch(optarg[0]) {						\ 	case '+':							\ 		if (off)						\ 			off -= (units);					\ 			style = (forward);				\ 		break;							\ 	case '-':							\ 		off = -off;						\
+value|{					\ 	if (style)							\ 		usage();						\ 	off = strtoll(optarg,&p, 10) * (units);                        \ 	if (*p)								\ 		errx(1, "illegal offset -- %s", optarg);		\ 	switch(optarg[0]) {						\ 	case '+':							\ 		if (off)						\ 			off -= (units);					\ 			style = (forward);				\ 		break;							\ 	case '-':							\ 		off = -off;						\
 comment|/* FALLTHROUGH */
 value|\ 	default:							\ 		style = (backward);					\ 		break;							\ 	}								\ }
 name|obsolete
@@ -650,7 +650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert the obsolete argument form into something that getopt can handle.  * This means that anything of the form [+-][0-9][0-9]*[lbc][fr] that isn't  * the option argument for a -b, -c or -n option gets converted.  */
+comment|/*  * Convert the obsolete argument form into something that getopt can handle.  * This means that anything of the form [+-][0-9][0-9]*[lbc][Ffr] that isn't  * the option argument for a -b, -c or -n option gets converted.  */
 end_comment
 
 begin_function
@@ -814,6 +814,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|t
+operator|==
+literal|'F'
+operator|||
 operator|*
 name|t
 operator|==
@@ -982,6 +987,9 @@ name|argv
 expr_stmt|;
 comment|/* FALLTHROUGH */
 comment|/* Options w/o arguments, continue with the next option. */
+case|case
+literal|'F'
+case|:
 case|case
 literal|'f'
 case|:

@@ -79,7 +79,7 @@ operator|,
 expr|enum
 name|STYLE
 operator|,
-name|long
+name|off_t
 operator|,
 expr|struct
 name|stat
@@ -101,7 +101,7 @@ operator|,
 expr|enum
 name|STYLE
 operator|,
-name|long
+name|off_t
 operator|,
 expr|struct
 name|stat
