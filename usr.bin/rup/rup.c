@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rup.c,v 1.6 1993/09/23 18:37:28 jtc Exp $"
+literal|"$Id: rup.c,v 1.2 1993/09/23 18:45:57 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,6 +390,23 @@ name|raddrp
 operator|->
 name|sin_addr
 argument_list|)
+expr_stmt|;
+comment|/* truncate hostname to fit nicely into field */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|host
+argument_list|)
+operator|>
+name|HOST_WIDTH
+condition|)
+name|host
+index|[
+name|HOST_WIDTH
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
