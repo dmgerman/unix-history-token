@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)globals.c	1.3 83/05/20"
+literal|"@(#)globals.c	1.4 83/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"externs.h"
 end_include
 
@@ -36,11 +30,10 @@ begin_decl_stmt
 name|struct
 name|scenario
 name|scene
-index|[
-name|NUMOFSCENES
-index|]
+index|[]
 init|=
 block|{
+comment|/* 	 * int winddir; 	 * int windspeed; 	 * int windchange; 	 * int turn; 	 * int people; 	 * int time; 	 * int vessels; 	 * char *name; 	 * struct ship ship[NSHIP]; 	 */
 literal|5
 block|,
 literal|3
@@ -61,6 +54,8 @@ block|{
 block|{
 literal|"Ranger"
 block|,
+name|specs
+operator|+
 literal|0
 block|,
 literal|0
@@ -77,6 +72,8 @@ block|,
 block|{
 literal|"Drake"
 block|,
+name|specs
+operator|+
 literal|1
 block|,
 literal|1
@@ -111,6 +108,8 @@ block|{
 block|{
 literal|"Bonhomme Rich"
 block|,
+name|specs
+operator|+
 literal|2
 block|,
 literal|0
@@ -127,6 +126,8 @@ block|,
 block|{
 literal|"Serapis"
 block|,
+name|specs
+operator|+
 literal|3
 block|,
 literal|1
@@ -161,6 +162,8 @@ block|{
 block|{
 literal|"America"
 block|,
+name|specs
+operator|+
 literal|4
 block|,
 literal|1
@@ -177,6 +180,8 @@ block|,
 block|{
 literal|"Befford"
 block|,
+name|specs
+operator|+
 literal|5
 block|,
 literal|1
@@ -193,6 +198,8 @@ block|,
 block|{
 literal|"Adamant"
 block|,
+name|specs
+operator|+
 literal|6
 block|,
 literal|1
@@ -209,6 +216,8 @@ block|,
 block|{
 literal|"London"
 block|,
+name|specs
+operator|+
 literal|7
 block|,
 literal|1
@@ -225,6 +234,8 @@ block|,
 block|{
 literal|"Royal Oak"
 block|,
+name|specs
+operator|+
 literal|8
 block|,
 literal|1
@@ -242,6 +253,8 @@ block|,
 block|{
 literal|"Neptune"
 block|,
+name|specs
+operator|+
 literal|9
 block|,
 literal|3
@@ -258,6 +271,8 @@ block|,
 block|{
 literal|"Duc Bougogne"
 block|,
+name|specs
+operator|+
 literal|10
 block|,
 literal|3
@@ -274,6 +289,8 @@ block|,
 block|{
 literal|"Conquerant"
 block|,
+name|specs
+operator|+
 literal|48
 block|,
 literal|3
@@ -290,6 +307,8 @@ block|,
 block|{
 literal|"Provence"
 block|,
+name|specs
+operator|+
 literal|11
 block|,
 literal|3
@@ -306,6 +325,8 @@ block|,
 block|{
 literal|"Romulus"
 block|,
+name|specs
+operator|+
 literal|12
 block|,
 literal|3
@@ -340,6 +361,8 @@ block|{
 block|{
 literal|"Monmouth"
 block|,
+name|specs
+operator|+
 literal|52
 block|,
 literal|1
@@ -356,6 +379,8 @@ block|,
 block|{
 literal|"Hero"
 block|,
+name|specs
+operator|+
 literal|5
 block|,
 literal|1
@@ -372,6 +397,8 @@ block|,
 block|{
 literal|"Isis"
 block|,
+name|specs
+operator|+
 literal|6
 block|,
 literal|1
@@ -388,6 +415,8 @@ block|,
 block|{
 literal|"Superb"
 block|,
+name|specs
+operator|+
 literal|50
 block|,
 literal|1
@@ -404,6 +433,8 @@ block|,
 block|{
 literal|"Burford"
 block|,
+name|specs
+operator|+
 literal|48
 block|,
 literal|1
@@ -420,6 +451,8 @@ block|,
 block|{
 literal|"Flamband"
 block|,
+name|specs
+operator|+
 literal|13
 block|,
 literal|3
@@ -436,6 +469,8 @@ block|,
 block|{
 literal|"Annibal"
 block|,
+name|specs
+operator|+
 literal|9
 block|,
 literal|3
@@ -452,6 +487,8 @@ block|,
 block|{
 literal|"Severe"
 block|,
+name|specs
+operator|+
 literal|11
 block|,
 literal|3
@@ -468,6 +505,8 @@ block|,
 block|{
 literal|"Brilliant"
 block|,
+name|specs
+operator|+
 literal|49
 block|,
 literal|3
@@ -485,6 +524,8 @@ block|,
 block|{
 literal|"Sphinx"
 block|,
+name|specs
+operator|+
 literal|51
 block|,
 literal|3
@@ -520,6 +561,8 @@ block|{
 block|{
 literal|"Nymphe"
 block|,
+name|specs
+operator|+
 literal|14
 block|,
 literal|1
@@ -536,6 +579,8 @@ block|,
 block|{
 literal|"Cleopatre"
 block|,
+name|specs
+operator|+
 literal|15
 block|,
 literal|3
@@ -570,6 +615,8 @@ block|{
 block|{
 literal|"Mars"
 block|,
+name|specs
+operator|+
 literal|16
 block|,
 literal|1
@@ -586,6 +633,8 @@ block|,
 block|{
 literal|"Hercule"
 block|,
+name|specs
+operator|+
 literal|17
 block|,
 literal|3
@@ -620,6 +669,8 @@ block|{
 block|{
 literal|"Ambuscade"
 block|,
+name|specs
+operator|+
 literal|18
 block|,
 literal|1
@@ -636,6 +687,8 @@ block|,
 block|{
 literal|"Baionnaise"
 block|,
+name|specs
+operator|+
 literal|19
 block|,
 literal|3
@@ -670,6 +723,8 @@ block|{
 block|{
 literal|"Constellation"
 block|,
+name|specs
+operator|+
 literal|20
 block|,
 literal|0
@@ -686,6 +741,8 @@ block|,
 block|{
 literal|"Insurgent"
 block|,
+name|specs
+operator|+
 literal|22
 block|,
 literal|3
@@ -720,6 +777,8 @@ block|{
 block|{
 literal|"Constellation"
 block|,
+name|specs
+operator|+
 literal|20
 block|,
 literal|0
@@ -736,6 +795,8 @@ block|,
 block|{
 literal|"Vengeance"
 block|,
+name|specs
+operator|+
 literal|21
 block|,
 literal|3
@@ -770,6 +831,8 @@ block|{
 block|{
 literal|"Amphion"
 block|,
+name|specs
+operator|+
 literal|23
 block|,
 literal|1
@@ -786,6 +849,8 @@ block|,
 block|{
 literal|"Active"
 block|,
+name|specs
+operator|+
 literal|24
 block|,
 literal|1
@@ -802,6 +867,8 @@ block|,
 block|{
 literal|"Volage"
 block|,
+name|specs
+operator|+
 literal|25
 block|,
 literal|1
@@ -818,6 +885,8 @@ block|,
 block|{
 literal|"Cerberus"
 block|,
+name|specs
+operator|+
 literal|26
 block|,
 literal|1
@@ -834,6 +903,8 @@ block|,
 block|{
 literal|"Favorite"
 block|,
+name|specs
+operator|+
 literal|27
 block|,
 literal|3
@@ -850,6 +921,8 @@ block|,
 block|{
 literal|"Flore"
 block|,
+name|specs
+operator|+
 literal|21
 block|,
 literal|3
@@ -866,6 +939,8 @@ block|,
 block|{
 literal|"Danae"
 block|,
+name|specs
+operator|+
 literal|64
 block|,
 literal|3
@@ -882,6 +957,8 @@ block|,
 block|{
 literal|"Bellona"
 block|,
+name|specs
+operator|+
 literal|28
 block|,
 literal|3
@@ -898,6 +975,8 @@ block|,
 block|{
 literal|"Corona"
 block|,
+name|specs
+operator|+
 literal|29
 block|,
 literal|3
@@ -914,6 +993,8 @@ block|,
 block|{
 literal|"Carolina"
 block|,
+name|specs
+operator|+
 literal|30
 block|,
 literal|3
@@ -948,6 +1029,8 @@ block|{
 block|{
 literal|"Constitution"
 block|,
+name|specs
+operator|+
 literal|31
 block|,
 literal|0
@@ -964,6 +1047,8 @@ block|,
 block|{
 literal|"Guerriere"
 block|,
+name|specs
+operator|+
 literal|32
 block|,
 literal|1
@@ -998,6 +1083,8 @@ block|{
 block|{
 literal|"United States"
 block|,
+name|specs
+operator|+
 literal|33
 block|,
 literal|0
@@ -1014,6 +1101,8 @@ block|,
 block|{
 literal|"Macedonian"
 block|,
+name|specs
+operator|+
 literal|34
 block|,
 literal|1
@@ -1048,6 +1137,8 @@ block|{
 block|{
 literal|"Constitution"
 block|,
+name|specs
+operator|+
 literal|31
 block|,
 literal|0
@@ -1064,6 +1155,8 @@ block|,
 block|{
 literal|"Java"
 block|,
+name|specs
+operator|+
 literal|35
 block|,
 literal|1
@@ -1098,6 +1191,8 @@ block|{
 block|{
 literal|"Chesapeake"
 block|,
+name|specs
+operator|+
 literal|36
 block|,
 literal|0
@@ -1114,6 +1209,8 @@ block|,
 block|{
 literal|"Shannon"
 block|,
+name|specs
+operator|+
 literal|37
 block|,
 literal|1
@@ -1148,6 +1245,8 @@ block|{
 block|{
 literal|"Lawrence"
 block|,
+name|specs
+operator|+
 literal|38
 block|,
 literal|0
@@ -1164,6 +1263,8 @@ block|,
 block|{
 literal|"Niagara"
 block|,
+name|specs
+operator|+
 literal|42
 block|,
 literal|0
@@ -1180,6 +1281,8 @@ block|,
 block|{
 literal|"Lady Prevost"
 block|,
+name|specs
+operator|+
 literal|39
 block|,
 literal|1
@@ -1191,11 +1294,13 @@ block|,
 literal|2
 block|,
 literal|0
-block|,  }
+block|}
 block|,
 block|{
 literal|"Detroit"
 block|,
+name|specs
+operator|+
 literal|40
 block|,
 literal|1
@@ -1212,6 +1317,8 @@ block|,
 block|{
 literal|"Q. Charlotte"
 block|,
+name|specs
+operator|+
 literal|41
 block|,
 literal|1
@@ -1246,6 +1353,8 @@ block|{
 block|{
 literal|"Wasp"
 block|,
+name|specs
+operator|+
 literal|42
 block|,
 literal|0
@@ -1262,6 +1371,8 @@ block|,
 block|{
 literal|"Reindeer"
 block|,
+name|specs
+operator|+
 literal|43
 block|,
 literal|1
@@ -1296,6 +1407,8 @@ block|{
 block|{
 literal|"Constitution"
 block|,
+name|specs
+operator|+
 literal|31
 block|,
 literal|0
@@ -1312,6 +1425,8 @@ block|,
 block|{
 literal|"Cyane"
 block|,
+name|specs
+operator|+
 literal|44
 block|,
 literal|1
@@ -1328,6 +1443,8 @@ block|,
 block|{
 literal|"Levant"
 block|,
+name|specs
+operator|+
 literal|45
 block|,
 literal|1
@@ -1362,6 +1479,8 @@ block|{
 block|{
 literal|"Indefatigable"
 block|,
+name|specs
+operator|+
 literal|46
 block|,
 literal|1
@@ -1378,6 +1497,8 @@ block|,
 block|{
 literal|"Amazon"
 block|,
+name|specs
+operator|+
 literal|47
 block|,
 literal|1
@@ -1394,6 +1515,8 @@ block|,
 block|{
 literal|"Droits L'Hom"
 block|,
+name|specs
+operator|+
 literal|48
 block|,
 literal|3
@@ -1428,6 +1551,8 @@ block|{
 block|{
 literal|"Caesar"
 block|,
+name|specs
+operator|+
 literal|49
 block|,
 literal|1
@@ -1444,6 +1569,8 @@ block|,
 block|{
 literal|"Pompee"
 block|,
+name|specs
+operator|+
 literal|50
 block|,
 literal|1
@@ -1460,6 +1587,8 @@ block|,
 block|{
 literal|"Spencer"
 block|,
+name|specs
+operator|+
 literal|5
 block|,
 literal|1
@@ -1476,6 +1605,8 @@ block|,
 block|{
 literal|"Hannibal"
 block|,
+name|specs
+operator|+
 literal|7
 block|,
 literal|1
@@ -1492,6 +1623,8 @@ block|,
 block|{
 literal|"Real-Carlos"
 block|,
+name|specs
+operator|+
 literal|53
 block|,
 literal|2
@@ -1508,6 +1641,8 @@ block|,
 block|{
 literal|"San Fernando"
 block|,
+name|specs
+operator|+
 literal|54
 block|,
 literal|2
@@ -1524,6 +1659,8 @@ block|,
 block|{
 literal|"Argonauta"
 block|,
+name|specs
+operator|+
 literal|55
 block|,
 literal|2
@@ -1540,6 +1677,8 @@ block|,
 block|{
 literal|"San Augustine"
 block|,
+name|specs
+operator|+
 literal|56
 block|,
 literal|2
@@ -1556,6 +1695,8 @@ block|,
 block|{
 literal|"Indomptable"
 block|,
+name|specs
+operator|+
 literal|51
 block|,
 literal|3
@@ -1572,6 +1713,8 @@ block|,
 block|{
 literal|"Desaix"
 block|,
+name|specs
+operator|+
 literal|52
 block|,
 literal|3
@@ -1606,6 +1749,8 @@ block|{
 block|{
 literal|"Saratoga"
 block|,
+name|specs
+operator|+
 literal|60
 block|,
 literal|0
@@ -1622,6 +1767,8 @@ block|,
 block|{
 literal|"Eagle"
 block|,
+name|specs
+operator|+
 literal|61
 block|,
 literal|0
@@ -1638,6 +1785,8 @@ block|,
 block|{
 literal|"Ticonderoga"
 block|,
+name|specs
+operator|+
 literal|62
 block|,
 literal|0
@@ -1654,6 +1803,8 @@ block|,
 block|{
 literal|"Preble"
 block|,
+name|specs
+operator|+
 literal|63
 block|,
 literal|0
@@ -1670,6 +1821,8 @@ block|,
 block|{
 literal|"Confiance"
 block|,
+name|specs
+operator|+
 literal|57
 block|,
 literal|1
@@ -1686,6 +1839,8 @@ block|,
 block|{
 literal|"Linnet"
 block|,
+name|specs
+operator|+
 literal|58
 block|,
 literal|1
@@ -1702,6 +1857,8 @@ block|,
 block|{
 literal|"Chubb"
 block|,
+name|specs
+operator|+
 literal|59
 block|,
 literal|1
@@ -1736,6 +1893,8 @@ block|{
 block|{
 literal|"President"
 block|,
+name|specs
+operator|+
 literal|67
 block|,
 literal|0
@@ -1752,6 +1911,8 @@ block|,
 block|{
 literal|"Endymion"
 block|,
+name|specs
+operator|+
 literal|64
 block|,
 literal|1
@@ -1768,6 +1929,8 @@ block|,
 block|{
 literal|"Pomone"
 block|,
+name|specs
+operator|+
 literal|65
 block|,
 literal|1
@@ -1784,6 +1947,8 @@ block|,
 block|{
 literal|"Tenedos"
 block|,
+name|specs
+operator|+
 literal|66
 block|,
 literal|1
@@ -1819,6 +1984,8 @@ block|{
 block|{
 literal|"Lydia"
 block|,
+name|specs
+operator|+
 literal|68
 block|,
 literal|1
@@ -1835,6 +2002,8 @@ block|,
 block|{
 literal|"Natividad"
 block|,
+name|specs
+operator|+
 literal|69
 block|,
 literal|2
@@ -1869,6 +2038,8 @@ block|{
 block|{
 literal|"Piece of Cake"
 block|,
+name|specs
+operator|+
 literal|19
 block|,
 literal|2
@@ -1885,6 +2056,8 @@ block|,
 block|{
 literal|"Flying Dutchy"
 block|,
+name|specs
+operator|+
 literal|71
 block|,
 literal|3
@@ -1919,6 +2092,8 @@ block|{
 block|{
 literal|"USS Scurvy"
 block|,
+name|specs
+operator|+
 literal|70
 block|,
 literal|0
@@ -1935,6 +2110,8 @@ block|,
 block|{
 literal|"HMS Tahiti"
 block|,
+name|specs
+operator|+
 literal|71
 block|,
 literal|1
@@ -1951,6 +2128,8 @@ block|,
 block|{
 literal|"Australian"
 block|,
+name|specs
+operator|+
 literal|18
 block|,
 literal|2
@@ -1967,6 +2146,8 @@ block|,
 block|{
 literal|"Bikini Atoll"
 block|,
+name|specs
+operator|+
 literal|63
 block|,
 literal|3
@@ -2001,6 +2182,8 @@ block|{
 block|{
 literal|"Sutherland"
 block|,
+name|specs
+operator|+
 literal|5
 block|,
 literal|1
@@ -2017,6 +2200,8 @@ block|,
 block|{
 literal|"Turenne"
 block|,
+name|specs
+operator|+
 literal|10
 block|,
 literal|3
@@ -2033,6 +2218,8 @@ block|,
 block|{
 literal|"Nightmare"
 block|,
+name|specs
+operator|+
 literal|9
 block|,
 literal|3
@@ -2049,6 +2236,8 @@ block|,
 block|{
 literal|"Paris"
 block|,
+name|specs
+operator|+
 literal|53
 block|,
 literal|3
@@ -2065,6 +2254,8 @@ block|,
 block|{
 literal|"Napolean"
 block|,
+name|specs
+operator|+
 literal|56
 block|,
 literal|3
@@ -2099,6 +2290,8 @@ block|{
 block|{
 literal|"Concord"
 block|,
+name|specs
+operator|+
 literal|51
 block|,
 literal|0
@@ -2115,6 +2308,8 @@ block|,
 block|{
 literal|"Berkeley"
 block|,
+name|specs
+operator|+
 literal|7
 block|,
 literal|0
@@ -2131,6 +2326,8 @@ block|,
 block|{
 literal|"Thames"
 block|,
+name|specs
+operator|+
 literal|71
 block|,
 literal|1
@@ -2147,6 +2344,8 @@ block|,
 block|{
 literal|"Madrid"
 block|,
+name|specs
+operator|+
 literal|53
 block|,
 literal|2
@@ -2163,6 +2362,8 @@ block|,
 block|{
 literal|"Musket"
 block|,
+name|specs
+operator|+
 literal|10
 block|,
 literal|3
@@ -2197,6 +2398,8 @@ block|{
 block|{
 literal|"Alligator"
 block|,
+name|specs
+operator|+
 literal|71
 block|,
 literal|0
@@ -2213,6 +2416,8 @@ block|,
 block|{
 literal|"Firefly"
 block|,
+name|specs
+operator|+
 literal|50
 block|,
 literal|1
@@ -2229,6 +2434,8 @@ block|,
 block|{
 literal|"Cypress"
 block|,
+name|specs
+operator|+
 literal|46
 block|,
 literal|1
@@ -2263,6 +2470,8 @@ block|{
 block|{
 literal|"Shark"
 block|,
+name|specs
+operator|+
 literal|11
 block|,
 literal|1
@@ -2279,6 +2488,8 @@ block|,
 block|{
 literal|"Coral Snake"
 block|,
+name|specs
+operator|+
 literal|31
 block|,
 literal|3
@@ -2295,6 +2506,8 @@ block|,
 block|{
 literal|"Sea Lion"
 block|,
+name|specs
+operator|+
 literal|33
 block|,
 literal|3
@@ -2329,6 +2542,8 @@ block|{
 block|{
 literal|"Seaview"
 block|,
+name|specs
+operator|+
 literal|71
 block|,
 literal|0
@@ -2345,6 +2560,8 @@ block|,
 block|{
 literal|"Flying Sub"
 block|,
+name|specs
+operator|+
 literal|64
 block|,
 literal|0
@@ -2361,6 +2578,8 @@ block|,
 block|{
 literal|"Mermaid"
 block|,
+name|specs
+operator|+
 literal|70
 block|,
 literal|1
@@ -2377,6 +2596,8 @@ block|,
 block|{
 literal|"Giant Squid"
 block|,
+name|specs
+operator|+
 literal|53
 block|,
 literal|2
@@ -2411,6 +2632,8 @@ block|{
 block|{
 literal|"Killdeer"
 block|,
+name|specs
+operator|+
 literal|21
 block|,
 literal|0
@@ -2427,6 +2650,8 @@ block|,
 block|{
 literal|"Sandpiper"
 block|,
+name|specs
+operator|+
 literal|27
 block|,
 literal|1
@@ -2443,6 +2668,8 @@ block|,
 block|{
 literal|"Curlew"
 block|,
+name|specs
+operator|+
 literal|34
 block|,
 literal|2
@@ -2477,9 +2704,11 @@ block|{
 block|{
 literal|"Enterprise"
 block|,
+name|specs
+operator|+
 literal|49
 block|,
-literal|0
+name|N_A
 block|,
 literal|10
 block|,
@@ -2493,9 +2722,11 @@ block|,
 block|{
 literal|"Yorktown"
 block|,
+name|specs
+operator|+
 literal|51
 block|,
-literal|0
+name|N_A
 block|,
 literal|3
 block|,
@@ -2509,9 +2740,11 @@ block|,
 block|{
 literal|"Hornet"
 block|,
+name|specs
+operator|+
 literal|52
 block|,
-literal|0
+name|N_A
 block|,
 literal|6
 block|,
@@ -2525,9 +2758,11 @@ block|,
 block|{
 literal|"Akagi"
 block|,
+name|specs
+operator|+
 literal|53
 block|,
-literal|3
+name|N_J
 block|,
 literal|6
 block|,
@@ -2541,9 +2776,11 @@ block|,
 block|{
 literal|"Kaga"
 block|,
+name|specs
+operator|+
 literal|54
 block|,
-literal|3
+name|N_J
 block|,
 literal|4
 block|,
@@ -2557,9 +2794,11 @@ block|,
 block|{
 literal|"Soryu"
 block|,
+name|specs
+operator|+
 literal|55
 block|,
-literal|3
+name|N_J
 block|,
 literal|2
 block|,
@@ -2571,151 +2810,7 @@ literal|0
 block|}
 block|}
 block|,
-literal|4
-block|,
-literal|3
-block|,
-literal|4
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
-literal|8
-block|,
-literal|"Star Trek"
-block|,
-block|{
-block|{
-literal|"Enterprise"
-block|,
-literal|72
-block|,
-literal|0
-block|,
-literal|20
-block|,
-literal|4
-block|,
-literal|2
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Yorktown"
-block|,
-literal|72
-block|,
-literal|0
-block|,
-literal|19
-block|,
-literal|2
-block|,
-literal|2
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Reliant"
-block|,
-literal|73
-block|,
-literal|0
-block|,
-literal|18
-block|,
-literal|3
-block|,
-literal|2
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Galileo"
-block|,
-literal|74
-block|,
-literal|0
-block|,
-literal|20
-block|,
-literal|6
-block|,
-literal|2
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Kobayashi Maru"
-block|,
-literal|75
-block|,
-literal|3
-block|,
-literal|31
-block|,
-literal|11
-block|,
-literal|5
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Klingon two"
-block|,
-literal|75
-block|,
-literal|3
-block|,
-literal|31
-block|,
-literal|11
-block|,
-literal|5
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Klingon three"
-block|,
-literal|75
-block|,
-literal|3
-block|,
-literal|31
-block|,
-literal|11
-block|,
-literal|5
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Blue Orion"
-block|,
-literal|63
-block|,
-literal|2
-block|,
-literal|31
-block|,
-literal|11
-block|,
-literal|5
-block|,
-literal|0
-block|}
-block|}
+comment|/* 	4, 3, 4, 0, 1, 0, 8, "Star Trek", 	{ 		{ "Enterprise",		specs+72, 0, 20,  4, 2, 0 }, 		{ "Yorktown",		specs+72, 0, 19,  2, 2, 0 }, 		{ "Reliant",		specs+73, 0, 18,  3, 2, 0 }, 		{ "Galileo",		specs+74, 0, 20,  6, 2, 0 }, 		{ "Kobayashi Maru",	specs+75, 3, 31, 11, 5, 0 }, 		{ "Klingon two",	specs+75, 3, 31, 11, 5, 0 }, 		{ "Klingon three",	specs+75, 3, 31, 11, 5, 0 }, 		{ "Blue Orion",		specs+63, 2, 31, 11, 5, 0 } 	} 	*/
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8015,91 +8110,199 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|loaded
-decl_stmt|,
-name|fired
-decl_stmt|,
-name|changed
-decl_stmt|,
-name|repaired
-decl_stmt|,
-name|buffercount
-decl_stmt|,
-name|xlast
-decl_stmt|,
-name|ylast
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|lastsync
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|winddir
-decl_stmt|,
-name|windspeed
-decl_stmt|,
-name|turn
-decl_stmt|,
-name|viewrow
-decl_stmt|,
-name|viewcol
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|player
+name|rangeofshot
+index|[]
 init|=
-operator|-
+block|{
+literal|0
+block|,
 literal|1
-decl_stmt|,
-name|nation
-index|[
-literal|5
-index|]
-decl_stmt|,
-name|scroll
-init|=
-literal|18
-decl_stmt|,
-name|game
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|MIGHTYCAPTAIN
+block|,
+comment|/* grape */
+literal|3
+block|,
+comment|/* chain */
+literal|10
+block|,
+comment|/* round */
+literal|1
+comment|/* double */
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|Outbuf
-index|[
-name|BUFSIZE
-index|]
-decl_stmt|,
-name|movebuf
-index|[
-literal|10
-index|]
-decl_stmt|,
-name|loadwith
-index|[
-literal|20
-index|]
+modifier|*
+name|countryname
+index|[]
+init|=
+block|{
+literal|"American"
+block|,
+literal|"British"
+block|,
+literal|"Spanish"
+block|,
+literal|"French"
+block|,
+literal|"Japanese"
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FILE
+name|char
 modifier|*
-name|syncfile
+name|classname
+index|[]
+init|=
+block|{
+literal|"Drift wood"
+block|,
+literal|"Ship of the Line"
+block|,
+literal|"Ship of the Line"
+block|,
+literal|"Frigate"
+block|,
+literal|"Corvette"
+block|,
+literal|"Sloop"
+block|,
+literal|"Brig"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|directionname
+index|[]
+init|=
+block|{
+literal|"dead ahead"
+block|,
+literal|"off the starboard bow"
+block|,
+literal|"off the starboard beam"
+block|,
+literal|"off the starboard quarter"
+block|,
+literal|"dead astern"
+block|,
+literal|"off the port quarter"
+block|,
+literal|"off the port beam"
+block|,
+literal|"off the port bow"
+block|,
+literal|"dead ahead"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|qualname
+index|[]
+init|=
+block|{
+literal|"dead"
+block|,
+literal|"mutinous"
+block|,
+literal|"green"
+block|,
+literal|"mundane"
+block|,
+literal|"crack"
+block|,
+literal|"elite"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|loadname
+index|[]
+init|=
+block|{
+literal|'-'
+block|,
+literal|'G'
+block|,
+literal|'C'
+block|,
+literal|'R'
+block|,
+literal|'D'
+block|,
+literal|'E'
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|dr
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|dc
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
