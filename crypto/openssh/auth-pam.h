@@ -119,10 +119,12 @@ begin_function_decl
 name|int
 name|do_pam_account
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|username
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|remote_user
@@ -134,6 +136,7 @@ begin_function_decl
 name|void
 name|do_pam_session
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|username
