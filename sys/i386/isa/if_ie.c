@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman,  *	by William F. Jolitz, by the University of California,  *	Berkeley, by Larwence Berkeley Laboratory, by Charles M. Hannum,  *	and their contributors.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.27 1995/10/13 19:47:47 wollman Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993, University of Vermont and State  *  Agricultural College.  * Copyright (c) 1992, 1993, Garrett A. Wollman.  *  * Portions:  * Copyright (c) 1990, 1991, William F. Jolitz  * Copyright (c) 1990, The Regents of the University of California  *  * 3Com 3C507 support:  * Copyright (c) 1993, 1994, Charles M. Hannum  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	Vermont and State Agricultural College and Garrett A. Wollman,  *	by William F. Jolitz, by the University of California,  *	Berkeley, by Larwence Berkeley Laboratory, by Charles M. Hannum,  *	and their contributors.  * 4. Neither the names of the Universities nor the names of the authors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE UNIVERSITY OR AUTHORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ie.c,v 1.28 1995/10/26 20:29:43 julian Exp $  */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
 end_include
 
 begin_include
@@ -286,6 +292,26 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|check_ie_present
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+name|caddr_t
+name|where
+operator|,
+name|unsigned
+name|size
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|mbuf
@@ -423,6 +449,20 @@ name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ie_stop
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -575,6 +615,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|void
+name|chan_attn_timeout
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|rock
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int
@@ -595,6 +650,25 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|void
+name|run_tdr
+name|__P
+argument_list|(
+operator|(
+name|int
+name|unit
+operator|,
+expr|struct
+name|ie_tdr_cmd
+operator|*
+name|cmd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -6759,7 +6833,8 @@ name|chan_attn_timeout
 parameter_list|(
 name|rock
 parameter_list|)
-name|caddr_t
+name|void
+modifier|*
 name|rock
 decl_stmt|;
 block|{
