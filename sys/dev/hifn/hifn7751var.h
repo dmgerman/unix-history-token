@@ -282,12 +282,8 @@ struct|struct
 name|hifn_session
 block|{
 name|int
-name|hs_state
+name|hs_used
 decl_stmt|;
-name|int
-name|hs_prev_op
-decl_stmt|;
-comment|/* XXX collapse into hs_flags? */
 name|u_int8_t
 name|hs_iv
 index|[
@@ -402,43 +398,6 @@ value|bus_dmamap_sync((sc)->sc_dmat, (sc)->sc_dmamap, (f))
 end_define
 
 begin_comment
-comment|/* We use a state machine to on sessions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HS_STATE_FREE
-value|0
-end_define
-
-begin_comment
-comment|/* unused session entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HS_STATE_USED
-value|1
-end_define
-
-begin_comment
-comment|/* allocated, but key not on card */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HS_STATE_KEY
-value|2
-end_define
-
-begin_comment
-comment|/* allocated and key is on card */
-end_comment
-
-begin_comment
 comment|/*  * Holds data specific to a single HIFN board.  */
 end_comment
 
@@ -536,6 +495,14 @@ name|sc_cid
 decl_stmt|;
 name|int
 name|sc_maxses
+decl_stmt|;
+name|int
+name|sc_nsessions
+decl_stmt|;
+name|struct
+name|hifn_session
+modifier|*
+name|sc_sessions
 decl_stmt|;
 name|int
 name|sc_ramsize
@@ -637,13 +604,6 @@ decl_stmt|;
 comment|/* # ops submitted w/o int */
 name|int
 name|sc_suspended
-decl_stmt|;
-name|struct
-name|hifn_session
-name|sc_sessions
-index|[
-literal|2048
-index|]
 decl_stmt|;
 block|}
 struct|;
