@@ -7476,6 +7476,12 @@ name|P_THREADED
 operator|)
 operator|==
 literal|0
+operator|&&
+name|p
+operator|->
+name|p_numthreads
+operator|==
+literal|1
 condition|)
 return|return
 operator|(
@@ -7697,6 +7703,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* XXX If you recursed this is broken. */
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -7937,11 +7944,22 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_THREADED
+condition|)
 name|thread_exit
 argument_list|()
 expr_stmt|;
+else|else
+name|thr_exit1
+argument_list|()
+expr_stmt|;
 block|}
-comment|/* 		 * When a thread suspends, it just 		 * moves to the processes's suspend queue 		 * and stays there. 		 */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -7950,6 +7968,7 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
+comment|/* 		 * When a thread suspends, it just 		 * moves to the processes's suspend queue 		 * and stays there. 		 */
 name|thread_suspend_one
 argument_list|(
 name|td

@@ -416,7 +416,7 @@ literal|"Going nowhere without my init!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXXKSE: MUST abort all other threads before proceeding past here. 	 */
+comment|/* 	 * MUST abort all other threads before proceeding past here. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -429,13 +429,25 @@ operator|->
 name|p_flag
 operator|&
 name|P_THREADED
+operator|||
+name|p
+operator|->
+name|p_numthreads
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 		 * First check if some other thread got here before us.. 		 * if so, act apropriatly, (exit or suspend); 		 */
+name|DROP_GIANT
+argument_list|()
+expr_stmt|;
 name|thread_suspend_check
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|PICKUP_GIANT
+argument_list|()
 expr_stmt|;
 comment|/* 		 * Kill off the other threads. This requires 		 * Some co-operation from other parts of the kernel 		 * so it may not be instant. 		 * With this state set: 		 * Any thread entering the kernel from userspace will 		 * thread_exit() in trap().  Any thread attempting to 		 * sleep will return immediatly 		 * with EINTR or EWOULDBLOCK, which will hopefully force them 		 * to back out to userland, freeing resources as they go, and 		 * anything attempting to return to userland will thread_exit() 		 * from userret().  thread_exit() will unsuspend us 		 * when the last other thread exits. 		 */
 if|if

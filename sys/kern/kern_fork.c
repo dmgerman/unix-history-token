@@ -1048,6 +1048,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Note 1:1 allows for forking with one thread coming out on the 	 * other side with the expectation that the process is about to 	 * exec. 	 */
 if|if
 condition|(
 name|p1

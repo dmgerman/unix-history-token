@@ -557,6 +557,12 @@ operator|->
 name|p_flag
 operator|&
 name|P_THREADED
+operator|||
+name|p
+operator|->
+name|p_numthreads
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 		 * Just don't bother if we are exiting 		 * and not the exiting thread or thread was marked as 		 * interrupted. 		 */

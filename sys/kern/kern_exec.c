@@ -879,6 +879,12 @@ operator|->
 name|p_flag
 operator|&
 name|P_THREADED
+operator|||
+name|p
+operator|->
+name|p_numthreads
+operator|>
+literal|1
 condition|)
 block|{
 if|if
