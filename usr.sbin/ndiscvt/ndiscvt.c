@@ -578,7 +578,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:s:o"
+literal|"i:s:o:"
 argument_list|)
 operator|)
 operator|!=
