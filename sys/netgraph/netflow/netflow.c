@@ -946,6 +946,9 @@ name|r
 parameter_list|,
 name|int
 name|plen
+parameter_list|,
+name|uint8_t
+name|tcp_flags
 parameter_list|)
 block|{
 name|struct
@@ -1026,13 +1029,13 @@ name|packets
 operator|=
 literal|1
 expr_stmt|;
-name|priv
+name|fle
 operator|->
-name|info
+name|f
 operator|.
-name|nfinfo_bytes
-operator|+=
-name|plen
+name|tcp_flags
+operator|=
+name|tcp_flags
 expr_stmt|;
 name|fle
 operator|->
@@ -2422,6 +2425,8 @@ operator|&
 name|r
 argument_list|,
 name|plen
+argument_list|,
+name|tcp_flags
 argument_list|)
 return|;
 block|}
