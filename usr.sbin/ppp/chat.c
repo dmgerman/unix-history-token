@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.11.2.9 1997/06/10 09:43:11 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.11.2.10 1997/06/23 23:14:01 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -2694,26 +2694,18 @@ name|ChatEnv
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-operator|*
-name|ohup
-argument_list|)
-argument_list|(
-name|int
-argument_list|)
-decl_stmt|,
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|oint
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|int
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -2771,7 +2763,7 @@ name|n
 decl_stmt|,
 name|state
 decl_stmt|;
-comment|/* While we're chatting, we want a HUP/INT to fail us */
+comment|/* While we're chatting, we want an INT to fail us */
 if|if
 condition|(
 name|setjmp
@@ -2780,13 +2772,6 @@ name|ChatEnv
 argument_list|)
 condition|)
 block|{
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|ohup
-argument_list|)
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -2801,31 +2786,8 @@ literal|1
 operator|)
 return|;
 block|}
-name|ohup
-operator|=
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
 name|oint
 operator|=
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|StopDial
-argument_list|)
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -3004,13 +2966,6 @@ name|NOMATCH
 case|:
 name|signal
 argument_list|(
-name|SIGHUP
-argument_list|,
-name|ohup
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
 name|SIGINT
 argument_list|,
 name|oint
@@ -3023,13 +2978,6 @@ operator|)
 return|;
 block|}
 block|}
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|ohup
-argument_list|)
-expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
