@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	7.2 (Berkeley) %G%"
+literal|"@(#)genassym.c	7.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,6 +468,13 @@ operator|&
 name|vm
 operator|->
 name|v_align
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tMCLBYTES %d\n"
+argument_list|,
+name|MCLBYTES
 argument_list|)
 expr_stmt|;
 name|printf
