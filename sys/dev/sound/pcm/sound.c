@@ -244,7 +244,7 @@ end_decl_stmt
 begin_expr_stmt
 name|TUNABLE_INT_DECL
 argument_list|(
-literal|"hw.sndunit"
+literal|"hw.snd.unit"
 argument_list|,
 literal|0
 argument_list|,
