@@ -973,6 +973,16 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__ia64__
+name|td2_mbx
+operator|=
+literal|0
+expr_stmt|;
+comment|/* pacify gcc (!) */
+endif|#
+directive|endif
 comment|/* Export the register contents. */
 name|error
 operator|=
