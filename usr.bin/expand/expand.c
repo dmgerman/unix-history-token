@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: expand.c,v 1.1.1.1.8.1 1997/07/02 06:21:42 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,8 @@ index|]
 index|[
 literal|0
 index|]
+operator|==
+literal|'-'
 operator|&&
 name|isdigit
 argument_list|(
