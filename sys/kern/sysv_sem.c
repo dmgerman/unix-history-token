@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.10 1995/10/21 19:49:59 bde Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.11 1995/12/14 08:31:52 phk Exp $ */
 end_comment
 
 begin_comment
@@ -78,16 +78,21 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct_decl
 struct_decl|struct
-name|semctl_args
+name|__semctl_args
 struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
-name|semctl
+name|__semctl
 name|__P
 argument_list|(
 operator|(
@@ -97,7 +102,7 @@ operator|*
 name|p
 operator|,
 expr|struct
-name|semctl_args
+name|__semctl_args
 operator|*
 name|uap
 operator|,
@@ -116,7 +121,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
 name|semget
 name|__P
@@ -147,7 +151,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
 name|semop
 name|__P
@@ -178,7 +181,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
 name|semconfig
 name|__P
@@ -201,6 +203,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -300,7 +307,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|semctl
+name|__semctl
 block|,
 operator|(
 name|sy_call_t
@@ -636,6 +643,12 @@ begin_comment
 comment|/*  * Lock or unlock the entire semaphore facility.  *  * This will probably eventually evolve into a general purpose semaphore  * facility status enquiry mechanism (I don't like the "read /dev/kmem"  * approach currently taken by ipcs and the amount of info that we want  * to be able to extract for ipcs is probably beyond what the capability  * of the getkerninfo facility.  *  * At the time that the current version of semconfig was written, ipcs is  * the only user of the semconfig facility.  It uses it to ensure that the  * semaphore facility data structures remain static while it fishes around  * in /dev/kmem.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|semconfig_args
@@ -647,8 +660,12 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|semconfig
 parameter_list|(
@@ -1422,9 +1439,19 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Note that the user-mode half of this passes a union, not a pointer  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
-name|semctl_args
+name|__semctl_args
 block|{
 name|int
 name|semid
@@ -1444,10 +1471,14 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
-name|semctl
+name|__semctl
 parameter_list|(
 name|p
 parameter_list|,
@@ -1462,7 +1493,7 @@ name|p
 decl_stmt|;
 specifier|register
 name|struct
-name|semctl_args
+name|__semctl_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -2590,6 +2621,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|semget_args
@@ -2607,8 +2644,12 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|semget
 parameter_list|(
@@ -3258,6 +3299,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|semop_args
@@ -3277,8 +3324,12 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|semop
 parameter_list|(

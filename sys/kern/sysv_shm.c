@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.13 1995/12/07 12:46:55 davidg Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.14 1995/12/14 08:31:54 phk Exp $ */
 end_comment
 
 begin_comment
@@ -118,6 +118,12 @@ include|#
 directive|include
 file|<vm/vm_extern.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
 
 begin_struct_decl
 struct_decl|struct
@@ -242,6 +248,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -943,6 +954,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|shmdt_args
@@ -954,6 +971,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -1071,6 +1093,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|shmat_args
@@ -1088,6 +1116,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -1831,6 +1864,12 @@ directive|endif
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|shmctl_args
@@ -1844,11 +1883,16 @@ decl_stmt|;
 name|struct
 name|shmid_ds
 modifier|*
-name|ubuf
+name|buf
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -1956,7 +2000,7 @@ name|shmseg
 argument_list|,
 name|uap
 operator|->
-name|ubuf
+name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2002,7 +2046,7 @@ name|copyin
 argument_list|(
 name|uap
 operator|->
-name|ubuf
+name|buf
 argument_list|,
 operator|(
 name|caddr_t
@@ -2165,6 +2209,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|shmget_args
@@ -2181,6 +2231,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

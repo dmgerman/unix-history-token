@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.9 1995/10/21 19:49:57 bde Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.10 1995/12/14 08:31:51 phk Exp $ */
 end_comment
 
 begin_comment
@@ -90,6 +90,12 @@ directive|undef
 name|MSG_DEBUG_OK
 end_undef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct_decl
 struct_decl|struct
 name|msgctl_args
@@ -97,7 +103,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
 name|msgctl
 name|__P
@@ -128,7 +133,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
 name|msgget
 name|__P
@@ -159,7 +163,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
 name|msgsnd
 name|__P
@@ -190,7 +193,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-specifier|static
 name|int
 name|msgrcv
 name|__P
@@ -213,6 +215,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -850,6 +857,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|msgctl_args
@@ -863,14 +876,18 @@ decl_stmt|;
 name|struct
 name|msqid_ds
 modifier|*
-name|user_msqptr
+name|buf
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|msgctl
 parameter_list|(
@@ -917,7 +934,7 @@ name|user_msqptr
 init|=
 name|uap
 operator|->
-name|user_msqptr
+name|buf
 decl_stmt|;
 name|struct
 name|ucred
@@ -1502,6 +1519,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|msgget_args
@@ -1516,8 +1539,12 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|msgget
 parameter_list|(
@@ -2019,6 +2046,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|msgsnd_args
@@ -2028,7 +2061,7 @@ name|msqid
 decl_stmt|;
 name|void
 modifier|*
-name|user_msgp
+name|msgp
 decl_stmt|;
 name|size_t
 name|msgsz
@@ -2040,8 +2073,12 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|msgsnd
 parameter_list|(
@@ -2080,7 +2117,7 @@ name|user_msgp
 init|=
 name|uap
 operator|->
-name|user_msgp
+name|msgp
 decl_stmt|;
 name|size_t
 name|msgsz
@@ -3329,6 +3366,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_SYSPROTO_H_
+end_ifndef
+
 begin_struct
 struct|struct
 name|msgrcv_args
@@ -3353,8 +3396,12 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|static
 name|int
 name|msgrcv
 parameter_list|(
