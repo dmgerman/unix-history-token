@@ -3510,7 +3510,6 @@ operator|)
 return|;
 comment|/* Do not add this value */
 block|}
-comment|/* 	 * XXX - In the following, should the warnings be fatal errors? 	 *	Historically they have been warnings, but I expect errors 	 *	would be more appropriate.  A warning message might be 	 *	missed in a long `ps' listing, and the user would not 	 *	realize that they had mistyped a userid.  Also, Solaris 	 *	and Linux treat these as errors.  On the other hand, I 	 *	can imagine that some users *might* be used to the 	 *	present behavior. 	 */
 name|pwd
 operator|=
 name|getpwnam
@@ -3610,7 +3609,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX: optfatal = 1;		-- (see the above XXX) */
+comment|/* 		 * These used to be treated as minor warnings (and the 		 * option was simply ignored), but now they are fatal 		 * errors (and the command will be aborted). 		 */
+name|optfatal
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
