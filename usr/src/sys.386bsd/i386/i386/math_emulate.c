@@ -12,7 +12,7 @@ comment|/*  * Limited emulation 27.12.91 - mostly loads/stores, which gcc wants 
 end_comment
 
 begin_comment
-comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00046  * --------------------         -----   ----------------------  *  * 19 Sep 92	Ishii Masahiro		Fix 0x1fd instruction  *		kym@bingsuns.cc.binghamton.edu		Fix fscale  */
+comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00060  * --------------------         -----   ----------------------  *  * 19 Sep 92	Ishii Masahiro		Fix 0x1fd instruction  *		kym@bingsuns.cc.binghamton.edu		Fix fscale  * 28 Nov 92	Poul-Henning Kamp	Reduce kernel size if you have  *					a 387 or 486 chip  */
 end_comment
 
 begin_include
@@ -328,21 +328,61 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|i486
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|i387
+argument_list|)
+name|panic
+argument_list|(
+literal|"math_emulate(), shouldn't happen with -Di486 or -Di387"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
 name|unsigned
 name|short
 name|code
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|temp_real
 name|tmp
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|address
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|u_long
 name|oldeip
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* ever used fp? */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -399,6 +439,9 @@ operator|=
 literal|0x0000
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|I387
@@ -424,13 +467,22 @@ name|swd
 operator|&=
 literal|0x7fff
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|oldeip
 operator|=
 name|info
 operator|->
 name|tf_eip
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 0x001f means user code space */
+end_comment
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -463,6 +515,9 @@ literal|"?Math emulation needed in kernel?"
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|code
 operator|=
 name|get_fs_word
@@ -475,21 +530,33 @@ operator|)
 name|oldeip
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bswapw
 argument_list|(
 name|code
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|code
 operator|&=
 literal|0x7ff
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|I387
 operator|.
 name|fip
 operator|=
 name|oldeip
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 operator|(
 name|unsigned
@@ -508,6 +575,9 @@ name|info
 operator|->
 name|tf_cs
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|*
 operator|(
 literal|1
@@ -525,12 +595,18 @@ operator|)
 operator|=
 name|code
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|info
 operator|->
 name|tf_eip
 operator|+=
 literal|2
 expr_stmt|;
+end_expr_stmt
+
+begin_switch
 switch|switch
 condition|(
 name|code
@@ -1063,6 +1139,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_switch
+
+begin_switch
 switch|switch
 condition|(
 name|code
@@ -2301,6 +2380,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_switch
+
+begin_switch
 switch|switch
 condition|(
 operator|(
@@ -3005,6 +3087,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_switch
+
+begin_switch
 switch|switch
 condition|(
 name|code
@@ -3068,6 +3153,9 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
+end_switch
+
+begin_switch
 switch|switch
 condition|(
 operator|(
@@ -3340,6 +3428,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_switch
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -3372,6 +3463,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_if
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Unknown math-insns: %04x:%08x %04x\n\r"
@@ -3390,6 +3484,9 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|math_abort
 argument_list|(
 name|info
@@ -3397,11 +3494,10 @@ argument_list|,
 name|SIGFPE
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|fpop
 parameter_list|(
@@ -7919,6 +8015,15 @@ asm|__asm__("addl %0,%0 ; adcl %1,%1" 			:"=r" (b->a),"=r" (b->b) 			:"0" (b->a)
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(i486) || defined(i387) */
+end_comment
 
 end_unit
 
