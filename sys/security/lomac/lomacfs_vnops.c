@@ -2416,7 +2416,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|EPERM
+name|EIO
 expr_stmt|;
 return|return
 operator|(
