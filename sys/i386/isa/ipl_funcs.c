@@ -649,17 +649,56 @@ end_define
 begin_define
 define|#
 directive|define
-name|SPIN_COUNT
-value|unsigned z = 0;
+name|SPIN_VAR
+value|unsigned z;
 end_define
+
+begin_define
+define|#
+directive|define
+name|SPIN_RESET
+value|z = 0;
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
 directive|define
 name|SPIN_SPL
 define|\
-value|if (++z>= MAXZ) {				\ 				bsp_apic_ready = 0;			\ 				panic("\ncil: 0x%08x", cil);		\ 			}
+value|if (++z>= MAXZ) {				\
+comment|/* XXX allow lock-free panic */
+value|\ 				bsp_apic_ready = 0;			\ 				panic("\ncil: 0x%08x", cil);		\ 			}
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SPIN_SPL
+define|\
+value|if (++z>= MAXZ) {				\
+comment|/* XXX allow lock-free panic */
+value|\ 				bsp_apic_ready = 0;			\ 				printf("\ncil: 0x%08x", cil);		\ 				breakpoint();				\ 			}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 0/1 */
+end_comment
 
 begin_else
 else|#
@@ -673,7 +712,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPIN_COUNT
+name|SPIN_VAR
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPIN_RESET
 end_define
 
 begin_define
@@ -716,7 +761,7 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|unsigned NAME(void)							\ {									\ 	unsigned x, y;							\ 	SPIN_COUNT;							\ 									\ 	if (!bsp_apic_ready) {						\ 		x = cpl;						\ 		cpl OP MODIFIER;					\ 		return (x);						\ 	}								\ 									\ 	for (;;) {							\ 		IFCPL_LOCK();
+value|unsigned NAME(void)							\ {									\ 	unsigned x, y;							\ 	SPIN_VAR;							\ 									\ 	if (!bsp_apic_ready) {						\ 		x = cpl;						\ 		cpl OP MODIFIER;					\ 		return (x);						\ 	}								\ 									\ 	for (;;) {							\ 		IFCPL_LOCK();
 comment|/* MP-safe */
 value|\ 		x = y = cpl;
 comment|/* current value */
@@ -728,7 +773,7 @@ value|\ 		if (cil& y) {
 comment|/* not now */
 value|\ 			IFCPL_UNLOCK();
 comment|/* allow cil to change */
-value|\ 			while (cil& y)					\ 				SPIN_SPL				\ 			continue;
+value|\ 			SPIN_RESET;					\ 			while (cil& y)					\ 				SPIN_SPL				\ 			continue;
 comment|/* try again */
 value|\ 		}							\ 		break;							\ 	}								\ 	cpl OP MODIFIER;
 comment|/* make the change */
@@ -1091,7 +1136,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INTR_SPL
-name|SPIN_COUNT
+name|SPIN_VAR
 expr_stmt|;
 for|for
 control|(
@@ -1119,6 +1164,8 @@ name|IFCPL_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* allow cil to change */
+name|SPIN_RESET
+expr_stmt|;
 while|while
 condition|(
 name|cil
@@ -1181,7 +1228,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INTR_SPL
-name|SPIN_COUNT
+name|SPIN_VAR
 expr_stmt|;
 endif|#
 directive|endif
@@ -1247,6 +1294,8 @@ name|IFCPL_UNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* allow cil to change */
+name|SPIN_RESET
+expr_stmt|;
 while|while
 condition|(
 name|cil
