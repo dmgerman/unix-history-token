@@ -1391,6 +1391,8 @@ name|am_obj
 argument_list|,
 literal|0
 argument_list|,
+name|VM_ALLOC_WIRED
+operator||
 name|VM_ALLOC_ZERO
 operator||
 name|VM_ALLOC_RETRY
@@ -1415,11 +1417,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
-expr_stmt|;
-name|vm_page_wire
-argument_list|(
-name|m
-argument_list|)
 expr_stmt|;
 name|mem
 operator|->
