@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cmds.c	4.8	82/01/06	*/
+comment|/*	cmds.c	4.9	82/07/29	*/
 end_comment
 
 begin_include
@@ -1154,6 +1154,8 @@ modifier|*
 name|pc
 decl_stmt|,
 name|lastc
+decl_stmt|,
+name|rc
 decl_stmt|;
 name|int
 name|c
@@ -1419,7 +1421,20 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|any
+argument_list|(
+name|c
+argument_list|,
+name|value
+argument_list|(
+name|EXCEPTIONS
+argument_list|)
+argument_list|)
+condition|)
 continue|continue;
 block|}
 name|send
@@ -1485,7 +1500,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|c
+name|rc
 argument_list|,
 literal|1
 argument_list|)
@@ -1519,7 +1534,7 @@ block|}
 do|while
 condition|(
 operator|(
-name|c
+name|rc
 operator|&
 literal|0177
 operator|)
@@ -1821,7 +1836,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|char
 name|cc
 decl_stmt|;
 name|int

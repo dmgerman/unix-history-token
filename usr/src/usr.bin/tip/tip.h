@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.h	4.6	81/12/16	*/
+comment|/*	tip.h	4.7	82/07/29	*/
 end_comment
 
 begin_comment
@@ -483,10 +483,10 @@ block|{
 name|int
 name|zz_number
 decl_stmt|;
-name|short
+name|int
 name|zz_boolean
 decl_stmt|;
-name|char
+name|int
 name|zz_character
 decl_stmt|;
 name|int
