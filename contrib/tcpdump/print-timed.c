@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-timed.c,v 1.1 2000/10/06 05:35:37 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-timed.c,v 1.3 2001/05/17 18:33:23 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,30 +63,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"udp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tcp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"timed.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -99,24 +75,14 @@ end_include
 begin_include
 include|#
 directive|include
+file|"timed.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"interface.h"
 end_include
-
-begin_include
-include|#
-directive|include
-file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"extract.h"
-end_include
-
-begin_comment
-comment|/* must come after interface.h */
-end_comment
 
 begin_decl_stmt
 specifier|static

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.11 2000/10/09 01:53:19 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/ppp.h,v 1.12 2001/02/04 02:17:55 fenner Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -174,6 +174,17 @@ end_define
 
 begin_comment
 comment|/* IPv6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_COMP
+value|0x00fd
+end_define
+
+begin_comment
+comment|/* Compressed Datagram */
 end_comment
 
 begin_define

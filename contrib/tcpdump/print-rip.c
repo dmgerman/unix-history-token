@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rip.c,v 1.47 2000/10/03 04:19:07 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rip.c,v 1.49 2001/05/10 05:30:22 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -874,7 +874,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 		 * RFC 1058. 		 * 		 * XXX - RFC 1058 says 		 * 		 * 0  Datagrams whose version number is zero are to be ignored. 		 *    These are from a previous version of the protocol, whose 		 *    packet format was machine-specific. 		 * 		 * so perhaps we should just dump the first few words of 		 * the packet, in hex.                  */
+comment|/* 		 * RFC 1058. 		 * 		 * XXX - RFC 1058 says 		 * 		 * 0  Datagrams whose version number is zero are to be ignored. 		 *    These are from a previous version of the protocol, whose 		 *    packet format was machine-specific. 		 * 		 * so perhaps we should just dump the first few words of 		 * the packet, in hex. 		 */
 name|printf
 argument_list|(
 literal|" RIPv0: "
@@ -1116,7 +1116,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-literal|"\"\n"
+literal|"\""
 argument_list|,
 name|stdout
 argument_list|)

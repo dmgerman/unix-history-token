@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/l2tp.h,v 1.4 2000/12/17 23:07:49 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/l2tp.h,v 1.5 2001/11/05 10:03:27 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -278,7 +278,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L2TP_AUTHEN_TYPE_MSCHAP
+name|L2TP_AUTHEN_TYPE_MSCHAPv1
 value|0x0005
 end_define
 
@@ -292,78 +292,6 @@ directive|define
 name|L2TP_PROXY_AUTH_ID_MASK
 value|0x00ff
 end_define
-
-begin_struct
-struct|struct
-name|l2tp_avp_vec
-block|{
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|print
-function_decl|)
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|l2tp_call_errors
-block|{
-name|u_int16_t
-name|reserved
-decl_stmt|;
-name|u_int32_t
-name|crc_errs
-decl_stmt|;
-name|u_int32_t
-name|framing_errs
-decl_stmt|;
-name|u_int32_t
-name|hardware_overruns
-decl_stmt|;
-name|u_int32_t
-name|buffer_overruns
-decl_stmt|;
-name|u_int32_t
-name|timeout_errs
-decl_stmt|;
-name|u_int32_t
-name|alignment_errs
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|l2tp_accm
-block|{
-name|u_int16_t
-name|reserved
-decl_stmt|;
-name|u_int32_t
-name|send_accm
-decl_stmt|;
-name|u_int32_t
-name|recv_accm
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 end_unit
 

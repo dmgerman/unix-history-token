@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.27 2000/09/29 04:58:41 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ipx.c,v 1.32 2001/10/08 21:25:20 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -482,6 +482,18 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPDUMP_DO_SMB
+name|ipx_netbios_print
+argument_list|(
+name|datap
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|IPX_SKT_DIAGNOSTICS
@@ -492,6 +504,46 @@ operator|)
 name|printf
 argument_list|(
 literal|" ipx-diags %d"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IPX_SKT_NWLINK_DGM
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" ipx-nwlink-dgm %d"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCPDUMP_DO_SMB
+name|ipx_netbios_print
+argument_list|(
+name|datap
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
+case|case
+name|IPX_SKT_EIGRP
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" ipx-eigrp %d"
 argument_list|,
 name|length
 argument_list|)
@@ -589,18 +641,11 @@ argument_list|(
 literal|"ipx-sap-nearest-req"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|length
-operator|>
-literal|0
-condition|)
-block|{
 name|TCHECK
 argument_list|(
 name|ipx
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
@@ -609,7 +654,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %x '"
+literal|" %x"
 argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
@@ -621,37 +666,6 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fn_print
-argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|ipx
-index|[
-literal|1
-index|]
-argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
-name|ipx
-index|[
-literal|1
-index|]
-operator|+
-literal|48
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\''
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|2
@@ -704,10 +718,10 @@ name|TCHECK2
 argument_list|(
 name|ipx
 index|[
-literal|27
+literal|25
 index|]
 argument_list|,
-literal|1
+literal|10
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1016,6 +1030,7 @@ argument_list|,
 name|command
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 return|return;
 name|trunc

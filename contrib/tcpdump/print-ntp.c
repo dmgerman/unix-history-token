@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.31 2000/10/06 04:23:13 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ntp.c,v 1.32 2001/08/20 15:36:57 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,13 +198,6 @@ decl_stmt|,
 name|version
 decl_stmt|,
 name|leapind
-decl_stmt|;
-specifier|static
-name|char
-name|rclock
-index|[
-literal|5
-index|]
 decl_stmt|;
 name|bp
 operator|=
@@ -550,10 +543,8 @@ break|break;
 case|case
 name|PRIM_REF
 case|:
-name|strncpy
+name|fn_printn
 argument_list|(
-name|rclock
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -566,20 +557,8 @@ name|refid
 operator|)
 argument_list|,
 literal|4
-argument_list|)
-expr_stmt|;
-name|rclock
-index|[
-literal|4
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|fputs
-argument_list|(
-name|rclock
 argument_list|,
-name|stdout
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

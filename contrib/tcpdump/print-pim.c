@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.23 2000/10/03 02:55:00 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.29 2001/07/04 21:36:15 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,12 +418,26 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n Upstream Nbr: %s"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" Upstream Nbr: %s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
@@ -441,12 +455,26 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n Hold time: "
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" Hold time: "
 argument_list|)
 expr_stmt|;
 name|relts_print
@@ -461,6 +489,13 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+return|return;
 name|bp
 operator|+=
 literal|8
@@ -647,19 +682,15 @@ name|njp
 operator|<
 name|njoin
 condition|)
-block|{
 name|type
 operator|=
 literal|"Join "
 expr_stmt|;
-block|}
 else|else
-block|{
 name|type
 operator|=
 literal|"Prune"
 expr_stmt|;
-block|}
 name|TCHECK2
 argument_list|(
 name|bp
@@ -1057,7 +1088,6 @@ if|if
 condition|(
 name|vflag
 condition|)
-block|{
 name|pimv1_join_prune_print
 argument_list|(
 operator|&
@@ -1071,7 +1101,6 @@ operator|-
 literal|8
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|4
@@ -1321,7 +1350,6 @@ if|if
 condition|(
 name|vflag
 condition|)
-block|{
 name|pimv1_join_prune_print
 argument_list|(
 operator|&
@@ -1335,7 +1363,6 @@ operator|-
 literal|8
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|7
@@ -1352,7 +1379,6 @@ if|if
 condition|(
 name|vflag
 condition|)
-block|{
 name|pimv1_join_prune_print
 argument_list|(
 operator|&
@@ -1366,7 +1392,6 @@ operator|-
 literal|8
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|8
@@ -1437,7 +1462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * auto-RP is a cisco protocol, documented at  * ftp://ftpeng.cisco.com/ipmulticast/pim-autorp-spec01.txt  */
+comment|/*  * auto-RP is a cisco protocol, documented at  * ftp://ftpeng.cisco.com/ipmulticast/specs/pim-autorp-spec01.txt  *  * This implements version 1+, dated Sept 9, 1998.  */
 end_comment
 
 begin_function
@@ -1605,7 +1630,7 @@ operator|-=
 literal|8
 expr_stmt|;
 comment|/*XXX skip unless -v? */
-comment|/*      * Rest of packet:      * numrps entries of the form:      * 32 bits: RP      * 6 bits: reserved      * 2 bits: PIM version supported, bit 0 is "supports v1", 1 is "v2".      * 8 bits: # of entries for this RP      * each entry: 7 bits: reserved, 1 bit: negative,      *			8 bits: mask 32 bits: source      * lather, rinse, repeat.      */
+comment|/* 	 * Rest of packet: 	 * numrps entries of the form: 	 * 32 bits: RP 	 * 6 bits: reserved 	 * 2 bits: PIM version supported, bit 0 is "supports v1", 1 is "v2". 	 * 8 bits: # of entries for this RP 	 * each entry: 7 bits: reserved, 1 bit: negative, 	 *	       8 bits: mask 32 bits: source 	 * lather, rinse, repeat. 	 */
 while|while
 condition|(
 name|numrps
@@ -1696,6 +1721,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|bp
+index|[
+literal|4
+index|]
+operator|&
+literal|0xfc
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" [rsvd=0x%02x]"
+argument_list|,
+name|bp
+index|[
+literal|4
+index|]
+operator|&
+literal|0xfc
+argument_list|)
+expr_stmt|;
 name|TCHECK
 argument_list|(
 name|bp
@@ -1775,6 +1824,30 @@ name|bp
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+index|[
+literal|0
+index|]
+operator|&
+literal|0xfe
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"[rsvd=0x%02x]"
+argument_list|,
+name|bp
+index|[
+literal|0
+index|]
+operator|&
+literal|0xfe
 argument_list|)
 expr_stmt|;
 name|s
@@ -1944,18 +2017,6 @@ name|pimv2_source
 block|}
 enum|;
 end_enum
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char *addrtypestr[] = { 	"unicast", "group", "source" };
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * | Addr Family   | Encoding Type |     Unicast Address           |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+++++++  *  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * | Addr Family   | Encoding Type |   Reserved    |  Mask Len     |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                Group multicast Address                        |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * | Addr Family   | Encoding Type | Rsrvd   |S|W|R|  Mask Len     |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                        Source Address                         |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
@@ -2696,9 +2757,8 @@ literal|")"
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* XXX 			 * draft-ietf-idmr-pimv2-dr-priority-00.txt 			 * says that DR-Priority is option 19. 			 * draft-ietf-pim-v2-sm-00.txt says it's 18. 			 */
 case|case
-literal|18
+literal|19
 case|:
 comment|/* DR-Priority */
 operator|(
@@ -2706,35 +2766,35 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (DR-Priority: %d)"
-argument_list|,
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
-name|bp
-index|[
-literal|4
-index|]
-argument_list|)
+literal|" (DR-Priority: "
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|19
-case|:
-comment|/* Bidir-Capable */
 if|if
 condition|(
 name|olen
-operator|==
+operator|!=
 literal|4
 condition|)
+block|{
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (OLD-DR-Priority: %d)"
+literal|"!olen=%d!)"
+argument_list|,
+name|olen
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%d)"
 argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
@@ -2746,15 +2806,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|" (bidir-capable)"
-argument_list|)
-expr_stmt|;
+block|}
 break|break;
 case|case
 literal|20
@@ -2785,21 +2837,22 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" (State Refresh Capable"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|EXTRACT_32BITS
-argument_list|(
-operator|&
+literal|" (State Refresh Capable; v%d"
+argument_list|,
 name|bp
 index|[
 literal|4
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+index|[
+literal|5
+index|]
 operator|!=
-literal|1
+literal|0
 condition|)
 block|{
 operator|(
@@ -2807,14 +2860,45 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" ?0x%x?"
-argument_list|,
-name|EXTRACT_32BITS
+literal|" interval "
+argument_list|)
+expr_stmt|;
+name|relts_print
+argument_list|(
+name|bp
+index|[
+literal|5
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|EXTRACT_16BITS
 argument_list|(
 operator|&
 name|bp
 index|[
-literal|4
+literal|6
+index|]
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" ?0x%04x?"
+argument_list|,
+name|EXTRACT_16BITS
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|6
 index|]
 argument_list|)
 argument_list|)
@@ -2826,6 +2910,19 @@ operator|)
 name|printf
 argument_list|(
 literal|")"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|22
+case|:
+comment|/* Bidir-Capable */
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" (bidir-capable)"
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (C) 2000 Alfredo Andres Omella.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *    *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in  *      the documentation and/or other materials provided with the  *      distribution.  *   3. The names of the authors may not be used to endorse or promote  *      products derived from this software without specific prior  *      written permission.  *    * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_comment
 comment|/*  * Radius printer routines as specified on:  *  * RFC 2865:  *      "Remote Authentication Dial In User Service (RADIUS)"  *  * RFC 2866:  *      "RADIUS Accounting"  *  * RFC 2867:  *      "RADIUS Accounting Modifications for Tunnel Protocol Support"  *  * RFC 2868:  *      "RADIUS Attributes for Tunnel Protocol Support"  *  * RFC 2869:  *      "RADIUS Extensions"  *  * Alfredo Andres Omella (aandres@s21sec.com) v0.1 2000/09/15  *  * TODO: Among other things to print ok MacIntosh and Vendor values   */
 end_comment
 
@@ -16,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print-radius.c,v 1.5 2000/12/18 08:16:58 guy Exp $"
+literal|"$Id: print-radius.c,v 1.10 2001/10/22 06:58:33 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +45,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -509,6 +519,13 @@ comment|/* Authenticator   */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MIN_RADIUS_LEN
+value|20
+end_define
 
 begin_struct
 struct|struct
@@ -2624,9 +2641,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|data
-operator|++
-expr_stmt|;
 name|data_value
 operator|=
 name|EXTRACT_32BITS
@@ -3153,7 +3167,7 @@ argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|string
 argument_list|,
@@ -3161,6 +3175,11 @@ name|ctime
 argument_list|(
 operator|&
 name|attr_time
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|string
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3541,6 +3560,7 @@ name|void
 name|radius_attr_print
 parameter_list|(
 specifier|register
+specifier|const
 name|u_char
 modifier|*
 name|attr
@@ -3589,6 +3609,22 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|rad_attr
+operator|->
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"(zero-length attribute)"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|rad_attr
@@ -3776,6 +3812,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 name|i
 operator|=
 name|min
@@ -3786,18 +3825,12 @@ name|snapend
 operator|-
 name|dat
 argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-operator|*
-name|rad
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|i
 operator|<
-literal|0
+name|MIN_RADIUS_LEN
 condition|)
 block|{
 name|printf
@@ -3815,6 +3848,43 @@ name|radius_hdr
 operator|*
 operator|)
 name|dat
+expr_stmt|;
+name|len
+operator|=
+name|ntohs
+argument_list|(
+name|rad
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+name|MIN_RADIUS_LEN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [|radius]"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|len
+operator|<
+name|i
+condition|)
+name|i
+operator|=
+name|len
+expr_stmt|;
+name|i
+operator|-=
+name|MIN_RADIUS_LEN
 expr_stmt|;
 switch|switch
 condition|(
@@ -3951,17 +4021,9 @@ name|i
 condition|)
 name|radius_attr_print
 argument_list|(
-operator|(
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-name|rad
+name|dat
 operator|+
-literal|1
-operator|)
-operator|)
+name|MIN_RADIUS_LEN
 argument_list|,
 name|i
 argument_list|)

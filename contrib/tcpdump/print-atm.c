@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.20 2000/12/22 22:45:09 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atm.c,v 1.21 2001/07/05 18:54:14 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,6 +137,9 @@ decl_stmt|;
 name|u_short
 name|ethertype
 decl_stmt|;
+operator|++
+name|infodelay
+expr_stmt|;
 name|ts_print
 argument_list|(
 operator|&
@@ -581,6 +584,18 @@ label|:
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|--
+name|infodelay
+expr_stmt|;
+if|if
+condition|(
+name|infoprint
+condition|)
+name|info
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

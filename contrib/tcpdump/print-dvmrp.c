@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-dvmrp.c,v 1.20 2000/09/29 04:58:36 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-dvmrp.c,v 1.21 2001/05/10 05:30:20 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,7 @@ comment|/* sent by mapper, asking for a list */
 end_comment
 
 begin_comment
-comment|/* 					 * of this router's neighbors 					 */
+comment|/* of this router's neighbors */
 end_comment
 
 begin_define
@@ -451,11 +451,11 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+comment|/* Skip IGMP header */
 name|bp
 operator|+=
 literal|8
 expr_stmt|;
-comment|/* 	 * Skip IGMP header 	 */
 name|len
 operator|-=
 literal|8
@@ -498,6 +498,8 @@ expr_stmt|;
 if|if
 condition|(
 name|vflag
+operator|>
+literal|1
 condition|)
 name|print_report
 argument_list|(
@@ -1048,13 +1050,37 @@ name|len
 operator|-=
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+operator|>
+literal|1
+condition|)
 name|printf
 argument_list|(
-literal|"\n\tgenid %u"
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"genid %u"
 argument_list|,
 name|genid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+operator|<
+literal|2
+condition|)
+return|return;
 while|while
 condition|(
 operator|(

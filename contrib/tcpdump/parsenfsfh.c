@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright (c) 1993, 1994 Jeffrey C. Mogul, Digital Equipment Corporation,  * Western Research Laboratory. All rights reserved.  * Copyright (c) 2001 Compaq Computer Corporation. All rights reserved.  *  *  Permission to use, copy, and modify this software and its  *  documentation is hereby granted only under the following terms and  *  conditions.  Both the above copyright notice and this permission  *  notice must appear in all copies of the software, derivative works  *  or modified versions, and any portions thereof, and both notices  *  must appear in supporting documentation.  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *    1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *    2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  *  THE SOFTWARE IS PROVIDED "AS IS" AND COMPAQ COMPUTER CORPORATION  *  DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING  *  ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.   IN NO  *  EVENT SHALL COMPAQ COMPUTER CORPORATION BE LIABLE FOR ANY  *  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  *  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN  *  AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING  *  OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  *  SOFTWARE.  */
+end_comment
+
+begin_comment
 comment|/*  * parsenfsfh.c - portable parser for NFS file handles  *			uses all sorts of heuristics  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
 end_comment
 
@@ -16,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.18 2000/07/01 03:39:00 assar Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/parsenfsfh.c,v 1.23 2001/09/17 21:57:53 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,12 +373,14 @@ name|ino_t
 modifier|*
 name|inop
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
 name|osnamep
 decl_stmt|;
 comment|/* if non-NULL, return OS name here */
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1997,9 +2003,6 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 comment|/* XXX debugging */
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -2040,7 +2043,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX for now, give "bogus" values to aid debugging */
 comment|/* Save the actual handle, so it can be display with -u */
 for|for
 control|(
@@ -2058,7 +2060,7 @@ control|)
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 operator|&
 operator|(
@@ -2072,6 +2074,8 @@ literal|2
 index|]
 operator|)
 argument_list|,
+literal|3
+argument_list|,
 literal|"%.2X"
 argument_list|,
 name|fhp
@@ -2080,6 +2084,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* XXX for now, give "bogus" values to aid debugging */
 name|fsidp
 operator|->
 name|fsid_code

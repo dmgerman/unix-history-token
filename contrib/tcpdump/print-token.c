@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-token.c,v 1.11 2000/12/23 20:48:13 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-token.c,v 1.13 2001/09/18 15:46:37 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,6 +144,7 @@ argument_list|(
 name|fdst
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -159,6 +160,7 @@ argument_list|(
 name|fsrc
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -206,6 +208,7 @@ modifier|*
 name|fdst
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|srcname
@@ -270,6 +273,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|broadcast_indicator
@@ -297,6 +301,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|direction
@@ -312,6 +317,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|largest_frame
@@ -375,6 +381,7 @@ name|h
 operator|->
 name|len
 decl_stmt|;
+specifier|const
 name|struct
 name|token_header
 modifier|*
@@ -397,11 +404,15 @@ decl_stmt|;
 name|trp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|token_header
 operator|*
 operator|)
 name|p
+expr_stmt|;
+operator|++
+name|infodelay
 expr_stmt|;
 name|ts_print
 argument_list|(
@@ -865,6 +876,18 @@ label|:
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|--
+name|infodelay
+expr_stmt|;
+if|if
+condition|(
+name|infoprint
+condition|)
+name|info
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

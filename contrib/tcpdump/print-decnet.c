@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.30 2000/09/28 06:42:57 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.33 2001/09/17 21:57:59 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4303,6 +4303,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|dnnum_string
@@ -4388,6 +4389,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|dnname_string
@@ -4437,7 +4439,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|savestr
+name|strdup
 argument_list|(
 name|dnet_htoa
 argument_list|(
@@ -4504,26 +4506,9 @@ operator|*
 name|dp
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|isprint
+name|safeputchar
 argument_list|(
 name|c
-argument_list|)
-condition|)
-name|putchar
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"\\%o"
-argument_list|,
-name|c
-operator|&
-literal|0xFF
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IPX protocol formats   *  * @(#) $Header: /tcpdump/master/tcpdump/ipx.h,v 1.2 2000/10/03 02:54:56 itojun Exp $  */
+comment|/*  * IPX protocol formats   *  * @(#) $Header: /tcpdump/master/tcpdump/ipx.h,v 1.4 2001/01/15 03:23:59 guy Exp $  */
 end_comment
 
 begin_comment
@@ -41,6 +41,28 @@ directive|define
 name|IPX_SKT_DIAGNOSTICS
 value|0x0456
 end_define
+
+begin_define
+define|#
+directive|define
+name|IPX_SKT_NWLINK_DGM
+value|0x0553
+end_define
+
+begin_comment
+comment|/* NWLink datagram, may contain SMB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPX_SKT_EIGRP
+value|0x85be
+end_define
+
+begin_comment
+comment|/* Cisco EIGRP over IPX */
+end_comment
 
 begin_comment
 comment|/* IPX transport header */

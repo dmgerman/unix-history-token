@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ah.c,v 1.14 2000/12/12 09:58:40 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ah.c,v 1.15 2001/09/17 21:57:54 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,7 @@ decl_stmt|;
 name|ah
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ah
 operator|*
@@ -150,29 +151,12 @@ operator|=
 name|snapend
 expr_stmt|;
 comment|/* 'ep' points to the end of available data. */
-if|if
-condition|(
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-name|ah
-operator|+
-literal|1
-operator|)
-operator|>=
-name|ep
-operator|-
-sizeof|sizeof
+name|TCHECK
 argument_list|(
-expr|struct
+operator|*
 name|ah
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|sumlen
 operator|=
 name|ah
@@ -222,6 +206,7 @@ name|ntohl
 argument_list|(
 operator|*
 operator|(
+specifier|const
 name|u_int32_t
 operator|*
 operator|)

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/machdep.c,v 1.6 2000/01/17 06:24:23 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/machdep.c,v 1.7 2001/06/27 05:42:04 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,10 +66,88 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SNPRINTF
+argument_list|)
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE___ATTRIBUTE__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAVE___ATTRIBUTE__ */
+end_comment
+
+begin_function_decl
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|3
+operator|,
+function_decl|4
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(HAVE_SNPRINTF) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __osf__ */
+end_comment
 
 begin_include
 include|#

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.3 2000/12/23 20:49:34 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sll.c,v 1.6 2001/07/05 18:54:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,22 +125,6 @@ include|#
 directive|include
 file|"sll.h"
 end_include
-
-begin_decl_stmt
-specifier|const
-name|u_char
-modifier|*
-name|packetp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|u_char
-modifier|*
-name|snapend
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -365,6 +349,9 @@ decl_stmt|;
 name|u_short
 name|extracted_ethertype
 decl_stmt|;
+operator|++
+name|infodelay
+expr_stmt|;
 name|ts_print
 argument_list|(
 operator|&
@@ -574,6 +561,18 @@ name|ether_type
 condition|)
 block|{
 case|case
+name|LINUX_SLL_P_802_3
+case|:
+comment|/* 			 * Ethernet_802.3 IPX frame. 			 */
+name|ipx_print
+argument_list|(
+name|p
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|LINUX_SLL_P_802_2
 case|:
 comment|/* 			 * 802.2. 			 * Try to print the LLC-layer header& higher layers. 			 */
@@ -732,6 +731,18 @@ label|:
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|--
+name|infodelay
+expr_stmt|;
+if|if
+condition|(
+name|infoprint
+condition|)
+name|info
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

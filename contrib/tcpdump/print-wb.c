@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-wb.c,v 1.25 1999/11/21 09:37:03 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-wb.c,v 1.26 2001/06/27 05:37:19 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,6 +237,27 @@ end_define
 begin_comment
 comment|/* page vector reply */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PF_USER
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|PF_USER
+end_undef
+
+begin_comment
+comment|/* {Digital,Tru64} UNIX define this, alas */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* flags */

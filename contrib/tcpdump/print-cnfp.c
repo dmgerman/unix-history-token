@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cnfp.c,v 1.6 2000/09/23 08:26:32 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cnfp.c,v 1.8 2001/09/17 21:57:58 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,7 +188,12 @@ comment|/* v1: flags; v5: src,dst AS */
 name|u_int32_t
 name|masks
 decl_stmt|;
-comment|/* src,dst addr prefix */
+comment|/* src,dst addr prefix; v6: encaps */
+name|struct
+name|in_addr
+name|peer_nexthop
+decl_stmt|;
+comment|/* v6: IP address of the nexthop within the peer (FIB)*/
 block|}
 struct|;
 end_struct
@@ -248,6 +253,7 @@ decl_stmt|;
 name|ip
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip
 operator|*
@@ -257,6 +263,7 @@ expr_stmt|;
 name|nh
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nfhdr
 operator|*
@@ -266,6 +273,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -370,6 +378,10 @@ condition|(
 name|ver
 operator|==
 literal|5
+operator|||
+name|ver
+operator|==
+literal|6
 condition|)
 block|{
 name|printf
@@ -390,6 +402,7 @@ expr_stmt|;
 name|nr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nfrec
 operator|*
@@ -410,6 +423,7 @@ block|{
 name|nr
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|nfrec
 operator|*
@@ -438,6 +452,7 @@ name|nrecs
 operator|--
 operator|&&
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -535,6 +550,10 @@ condition|(
 name|ver
 operator|==
 literal|5
+operator|||
+name|ver
+operator|==
+literal|6
 condition|)
 block|{
 name|snprintf
@@ -574,7 +593,7 @@ argument_list|(
 name|asbuf
 argument_list|)
 argument_list|,
-literal|"%u:"
+literal|":%u"
 argument_list|,
 call|(
 name|unsigned
@@ -627,6 +646,10 @@ condition|(
 name|ver
 operator|==
 literal|5
+operator|||
+name|ver
+operator|==
+literal|6
 condition|)
 block|{
 name|snprintf
@@ -666,7 +689,7 @@ argument_list|(
 name|asbuf
 argument_list|)
 argument_list|,
-literal|"%u:"
+literal|":%u"
 argument_list|,
 operator|(
 name|unsigned
@@ -906,9 +929,66 @@ literal|' '
 argument_list|)
 expr_stmt|;
 block|}
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|ver
+operator|==
+literal|6
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"(%u<>%u encaps)"
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|ntohl
+argument_list|(
+name|nr
+operator|->
+name|masks
+argument_list|)
+operator|>>
+literal|8
+argument_list|)
+operator|&
+literal|0xff
+argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
+name|ntohl
+argument_list|(
+name|nr
+operator|->
+name|masks
+argument_list|)
+argument_list|)
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
-literal|"tos %u, %u (%u octets)"
+literal|"tos %u, %u (%u octets) %s"
 argument_list|,
 operator|(
 name|unsigned
@@ -941,6 +1021,8 @@ name|nr
 operator|->
 name|octets
 argument_list|)
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.40 2000/12/16 22:00:50 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-null.c,v 1.41 2001/07/05 18:54:15 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,6 +317,9 @@ decl_stmt|;
 name|u_int
 name|family
 decl_stmt|;
+operator|++
+name|infodelay
+expr_stmt|;
 name|ts_print
 argument_list|(
 operator|&
@@ -483,6 +486,18 @@ expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+expr_stmt|;
+operator|--
+name|infodelay
+expr_stmt|;
+if|if
+condition|(
+name|infoprint
+condition|)
+name|info
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.26 2000/09/29 04:58:36 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.28 2001/09/17 21:58:01 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,6 +312,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|egp_acquire_codes
@@ -332,6 +333,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|egp_acquire_status
@@ -358,6 +360,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|egp_reach_codes
@@ -372,6 +375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|egp_status_updown
@@ -388,6 +392,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|egp_reasons
@@ -935,23 +940,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s> %s: egp: "
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
+literal|"egp: "
 argument_list|)
 expr_stmt|;
 if|if
