@@ -584,16 +584,17 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|msg
-operator|.
-name|lm_cred
-operator|=
-operator|*
-operator|(
+name|cru2x
+argument_list|(
 name|td
 operator|->
 name|td_ucred
-operator|)
+argument_list|,
+operator|&
+name|msg
+operator|.
+name|lm_cred
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Open the lock fifo.  If for any reason we don't find the fifo, it 	 * means that the lock daemon isn't running.  Translate any missing 	 * file error message for the user, otherwise the application will 	 * complain that the user's file is missing, which isn't the case. 	 * Note that we use proc0's cred, so the fifo is opened as root. 	 * 	 * XXX: Note that this behavior is relative to the root directory 	 * of the current process, and this may result in a variety of 	 * {functional, security} problems in chroot() environments. 	 */
 name|NDINIT

@@ -101,7 +101,7 @@ name|lm_fh_len
 decl_stmt|;
 comment|/* The file handle length. */
 name|struct
-name|ucred
+name|xucred
 name|lm_cred
 decl_stmt|;
 comment|/* user cred for lock req */
