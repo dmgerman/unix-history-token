@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: proc.h,v 1.2 1998/06/10 10:55:17 dfr Exp $ */
+comment|/* $Id: proc.h,v 1.3 1998/07/15 20:16:27 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -56,6 +56,10 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* two single step breakpoints */
+name|u_int64_t
+name|md_hae
+decl_stmt|;
+comment|/* user HAE register value */
 block|}
 struct|;
 end_struct
@@ -91,6 +95,17 @@ end_define
 
 begin_comment
 comment|/* Single step branch instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDP_HAEUSED
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Process used the HAE */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.275 1998/10/31 10:35:23 dfr Exp $  *  from: i386/isa syscons.c,v 1.278  */
+comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.276 1998/11/08 12:39:04 dfr Exp $  *  from: i386/isa syscons.c,v 1.278  */
 end_comment
 
 begin_include
@@ -141,6 +141,12 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -157,6 +163,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
 
 begin_include
 include|#
@@ -3886,6 +3898,16 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|res
+decl_stmt|;
+name|int
+name|zero
+init|=
+literal|0
+decl_stmt|;
 name|scinit
 argument_list|()
 expr_stmt|;
@@ -4309,9 +4331,30 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ih
+name|res
 operator|=
-name|BUS_CREATE_INTR
+name|bus_alloc_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+operator|&
+name|zero
+argument_list|,
+literal|0ul
+argument_list|,
+operator|~
+literal|0ul
+argument_list|,
+literal|1
+argument_list|,
+name|RF_SHAREABLE
+operator||
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+name|BUS_SETUP_INTR
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -4320,31 +4363,13 @@ argument_list|)
 argument_list|,
 name|dev
 argument_list|,
-name|isa_get_irq
-argument_list|(
-name|dev
-argument_list|)
+name|res
 argument_list|,
 name|scintr
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ih
-condition|)
-return|return
-name|ENXIO
-return|;
-name|BUS_CONNECT_INTR
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
 argument_list|,
+operator|&
 name|ih
 argument_list|)
 expr_stmt|;
