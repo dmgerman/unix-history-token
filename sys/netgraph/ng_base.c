@@ -2065,12 +2065,16 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
+operator|(
 name|node
 operator|->
 name|name
 operator|!=
 name|NULL
+operator|)
 operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|node
@@ -2081,7 +2085,9 @@ name|name
 argument_list|)
 operator|==
 literal|0
-operator|&&
+operator|)
+operator|)
+operator|||
 operator|(
 name|node
 operator|->
@@ -2092,22 +2098,26 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|)
 break|break;
 block|}
+end_function
+
+begin_return
 return|return
 operator|(
 name|node
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Decode a ID name, eg. "[f03034de]". Returns 0 if the  * string is not valid, otherwise returns the value.  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|ng_ID_t
 name|ng_decodeidname
 parameter_list|(
