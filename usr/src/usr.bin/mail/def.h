@@ -68,7 +68,7 @@ begin_define
 define|#
 directive|define
 name|NMLSIZE
-value|20
+value|1024
 end_define
 
 begin_comment
@@ -79,7 +79,7 @@ begin_define
 define|#
 directive|define
 name|PATHSIZE
-value|100
+value|1024
 end_define
 
 begin_comment
@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|NAMESIZE
-value|20
+value|32
 end_define
 
 begin_comment
@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|HSHSIZE
-value|19
+value|59
 end_define
 
 begin_comment
@@ -145,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|MAXARGC
-value|20
+value|1024
 end_define
 
 begin_comment
@@ -1042,7 +1042,7 @@ begin_define
 define|#
 directive|define
 name|STRINGLEN
-value|64
+value|1024
 end_define
 
 begin_comment
