@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -551,6 +557,8 @@ decl_stmt|,
 name|sz
 decl_stmt|;
 name|int
+name|c
+decl_stmt|,
 name|error
 decl_stmt|,
 name|twiddle
@@ -695,6 +703,35 @@ expr_stmt|;
 name|pa
 operator|+=
 name|sz
+expr_stmt|;
+comment|/* Check for user abort. */
+name|c
+operator|=
+name|cncheckc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0x03
+condition|)
+return|return
+operator|(
+name|ECANCELED
+operator|)
+return|;
+if|if
+condition|(
+name|c
+operator|!=
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"(CTRL-C to abort)  "
+argument_list|)
 expr_stmt|;
 block|}
 name|printf
@@ -1512,10 +1549,21 @@ operator|=
 operator|-
 name|error
 expr_stmt|;
-comment|/* XXX It should look more like VMS :-) */
+if|if
+condition|(
+name|error
+operator|==
+name|ECANCELED
+condition|)
 name|printf
 argument_list|(
-literal|"** DUMP FAILED (ERROR %d) **\n"
+literal|"\nDump aborted\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"\n** DUMP FAILED (ERROR %d) **\n"
 argument_list|,
 name|error
 argument_list|)
