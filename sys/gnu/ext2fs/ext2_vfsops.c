@@ -653,7 +653,7 @@ name|MNT_RDONLY
 expr_stmt|;
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|rootdev
 argument_list|)
@@ -670,7 +670,7 @@ name|MNT_NOCLUSTERR
 expr_stmt|;
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|rootdev
 argument_list|)
@@ -1041,7 +1041,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|ump
 operator|->
@@ -1060,7 +1060,7 @@ name|MNT_NOCLUSTERR
 expr_stmt|;
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|ump
 operator|->
@@ -1488,7 +1488,7 @@ return|;
 block|}
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|devvp
 operator|->
@@ -1610,7 +1610,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|devvp
 operator|->
@@ -1629,7 +1629,7 @@ name|MNT_NOCLUSTERR
 expr_stmt|;
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|devvp
 operator|->

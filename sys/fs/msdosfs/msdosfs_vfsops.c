@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.45 1999/05/31 11:28:02 phk Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.46 1999/08/08 18:42:54 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1579,7 +1579,7 @@ return|;
 block|}
 if|if
 condition|(
-name|bdevsw
+name|devsw
 argument_list|(
 name|devvp
 operator|->
