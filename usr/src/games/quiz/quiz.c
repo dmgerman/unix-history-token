@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	quiz.c	4.3	87/06/17	"
+literal|"	quiz.c	4.4	88/01/02	"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,10 @@ end_macro
 
 begin_block
 block|{
+specifier|register
+name|int
+name|ch
+decl_stmt|;
 name|char
 modifier|*
 name|t
@@ -200,8 +204,7 @@ operator|=
 name|line
 init|;
 operator|(
-operator|*
-name|t
+name|ch
 operator|=
 name|getc
 argument_list|(
@@ -216,6 +219,11 @@ name|t
 operator|++
 control|)
 block|{
+operator|*
+name|t
+operator|=
+name|ch
+expr_stmt|;
 name|nc
 operator|++
 expr_stmt|;
@@ -311,20 +319,18 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-operator|*
-name|line
+if|if
+condition|(
+operator|(
+name|ch
 operator|=
 name|getc
 argument_list|(
 name|input
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|line
+operator|)
 operator|==
-literal|0377
+name|EOF
 condition|)
 return|return
 operator|(
@@ -334,12 +340,16 @@ return|;
 block|}
 do|while
 condition|(
-operator|*
-name|line
+name|ch
 operator|!=
 literal|'\n'
 condition|)
 do|;
+operator|*
+name|line
+operator|=
+literal|'\n'
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
