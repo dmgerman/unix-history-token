@@ -506,7 +506,6 @@ name|int32_t
 name|datalen
 decl_stmt|;
 comment|/* bytes remaining to transfer */
-empty_stmt|;
 block|}
 name|scb_t
 typedef|;
@@ -523,7 +522,7 @@ block|,
 name|CTLR_NCR_53C400
 block|,
 name|CTLR_PAS_16
-block|, }
+block|}
 name|ctlr_t
 typedef|;
 end_typedef
