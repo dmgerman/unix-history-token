@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chmod.c	5.20 (Berkeley) %G%"
+literal|"@(#)chmod.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,8 +478,8 @@ name|set
 argument_list|,
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_mode
 argument_list|)
 argument_list|)

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.12 (Berkeley) %G%"
+literal|"@(#)du.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -383,8 +383,8 @@ name|fts_number
 operator|+=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_blocks
 expr_stmt|;
 comment|/* 			 * If listing each directory, or not listing files 			 * or directories and this is post-order of the 			 * root of a traversal, display the total. 			 */
@@ -489,8 +489,8 @@ if|if
 condition|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_nlink
 operator|>
 literal|1
@@ -524,8 +524,8 @@ name|howmany
 argument_list|(
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_blocks
 argument_list|,
 literal|2
@@ -533,8 +533,8 @@ argument_list|)
 else|:
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_blocks
 argument_list|,
 name|p
@@ -550,8 +550,8 @@ name|fts_number
 operator|+=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_blocks
 expr_stmt|;
 block|}
@@ -624,16 +624,16 @@ name|ino
 operator|=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_ino
 expr_stmt|;
 name|dev
 operator|=
 name|p
 operator|->
-name|fts_statb
-operator|.
+name|fts_statp
+operator|->
 name|st_dev
 expr_stmt|;
 if|if

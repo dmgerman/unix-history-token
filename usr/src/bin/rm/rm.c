@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rm.c	4.26 (Berkeley) %G%"
+literal|"@(#)rm.c	4.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,10 +476,9 @@ name|p
 operator|->
 name|fts_accpath
 argument_list|,
-operator|&
 name|p
 operator|->
-name|fts_statb
+name|fts_statp
 argument_list|)
 condition|)
 block|{
@@ -534,10 +533,9 @@ name|p
 operator|->
 name|fts_accpath
 argument_list|,
-operator|&
 name|p
 operator|->
-name|fts_statb
+name|fts_statp
 argument_list|)
 condition|)
 continue|continue;
