@@ -295,18 +295,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* print bridge statistics */
+end_comment
+
 begin_function
 name|void
 name|bdg_stats
 parameter_list|(
 name|u_long
 name|dummy
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
-comment|/* print bridge statistics */
 block|{
 name|int
 name|i
@@ -587,6 +595,7 @@ specifier|static
 name|void
 name|show_stat
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3497,6 +3506,7 @@ name|catchalarm
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|signalled

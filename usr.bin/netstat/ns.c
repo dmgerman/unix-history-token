@@ -254,6 +254,10 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -683,6 +687,10 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1377,6 +1385,10 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1564,6 +1576,10 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 name|struct

@@ -120,19 +120,6 @@ begin_comment
 comment|/* width of group column */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|routename6
-parameter_list|(
-name|struct
-name|sockaddr_in6
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|mroute6pr

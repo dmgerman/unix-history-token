@@ -479,8 +479,6 @@ name|struct
 name|val2str
 modifier|*
 parameter_list|,
-name|size_t
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -510,9 +508,6 @@ name|struct
 name|val2str
 modifier|*
 name|name
-parameter_list|,
-name|size_t
-name|namemax
 parameter_list|,
 specifier|const
 name|char
@@ -599,6 +594,9 @@ name|p
 operator|->
 name|val
 operator|==
+operator|(
+name|int
+operator|)
 name|proto
 condition|)
 break|break;
@@ -687,7 +685,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|ipsec_hist((f), sizeof(f)/sizeof(f[0]), (n), sizeof(n)/sizeof(n[0]), (t));
+value|ipsec_hist((f), sizeof(f)/sizeof(f[0]), (n), (t));
 name|p
 argument_list|(
 name|in_success
@@ -915,10 +913,15 @@ name|ipsec_stats
 parameter_list|(
 name|u_long
 name|off
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -1036,17 +1039,22 @@ name|pfkey_stats
 parameter_list|(
 name|u_long
 name|off
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 name|struct
 name|pfkeystat
 name|pfkeystat
 decl_stmt|;
-name|int
+name|unsigned
 name|first
 decl_stmt|,
 name|type

@@ -296,6 +296,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|at_pr_port
@@ -960,10 +961,15 @@ name|atalkprotopr
 parameter_list|(
 name|u_long
 name|off
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1241,10 +1247,15 @@ name|ddp_stats
 parameter_list|(
 name|u_long
 name|off
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|af
+name|__unused
 parameter_list|)
 block|{
 name|struct
