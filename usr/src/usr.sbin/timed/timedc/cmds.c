@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	8.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,7 +420,7 @@ block|{
 if|if
 condition|(
 name|errno
-operator|=
+operator|==
 name|EINTR
 condition|)
 continue|continue;
