@@ -1353,7 +1353,7 @@ name|chunk
 operator|.
 name|type
 operator|=
-name|unknown
+name|mbr
 expr_stmt|;
 elseif|else
 if|if
@@ -1444,7 +1444,7 @@ name|chunk
 operator|.
 name|type
 operator|=
-name|unknown
+name|part
 expr_stmt|;
 block|}
 else|else
