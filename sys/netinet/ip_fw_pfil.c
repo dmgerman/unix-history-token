@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_pfil_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -47,6 +53,33 @@ end_endif
 begin_comment
 comment|/* INET */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PFIL_HOOKS
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|IPFIREWALL requires PFIL_HOOKS.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
