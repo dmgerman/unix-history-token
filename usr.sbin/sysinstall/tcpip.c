@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.1 1995/05/16 02:53:28 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Gary J Palmer  *      for the FreeBSD Project.  * 4. The name of Gary J Palmer or the FreeBSD Project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY GARY J PALMER ``AS IS'' AND ANY EXPRESS   * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL GARY J PALMER BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.3 1995/05/16 20:00:51 gpalmer Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Gary J Palmer  *      for the FreeBSD Project.  * 4. The name of Gary J Palmer or the FreeBSD Project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY GARY J PALMER ``AS IS'' AND ANY EXPRESS   * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL GARY J PALMER BE LIABLE FOR ANY  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -75,6 +75,10 @@ directive|include
 file|"sysinstall.h"
 end_include
 
+begin_comment
+comment|/* These are nasty, but they make the layout structure a lot easier ... */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -134,6 +138,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* What the screen size is meant to be */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -162,6 +170,10 @@ name|TCP_DIALOG_HEIGHT
 value|LINES - 2
 end_define
 
+begin_comment
+comment|/* The per interface set of records */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -185,9 +197,9 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-name|Device
-modifier|*
-name|dev
+comment|/* Extra stuff for ifconfig (link0, etc) */
+name|int
+name|valid
 decl_stmt|;
 block|}
 name|Interface
@@ -217,6 +229,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The screen layout structure */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -225,34 +241,42 @@ block|{
 name|int
 name|y
 decl_stmt|;
+comment|/* x& Y co-ordinates */
 name|int
 name|x
 decl_stmt|;
 name|int
 name|len
 decl_stmt|;
+comment|/* The size of the dialog on the screen */
 name|int
 name|maxlen
 decl_stmt|;
+comment|/* How much the user can type in ... */
 name|char
 modifier|*
 name|prompt
 decl_stmt|;
+comment|/* The string for the prompt */
 name|char
 modifier|*
 name|help
 decl_stmt|;
+comment|/* The display for the help line */
 name|void
 modifier|*
 name|var
 decl_stmt|;
+comment|/* The var to set when this changes */
 name|int
 name|type
 decl_stmt|;
+comment|/* The type of the dialog to create */
 name|void
 modifier|*
 name|obj
 decl_stmt|;
+comment|/* The obj pointer returned by libdialog */
 block|}
 name|Layout
 typedef|;
@@ -285,6 +309,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_HOSTNAME
+value|0
 block|{
 literal|1
 block|,
@@ -305,6 +333,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_DOMAINNAME
+value|1
 block|{
 literal|5
 block|,
@@ -325,6 +357,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_GATEWAY
+value|2
 block|{
 literal|5
 block|,
@@ -345,6 +381,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_NAMESERVER
+value|3
 block|{
 literal|9
 block|,
@@ -356,7 +396,7 @@ literal|6
 block|,
 literal|"Interface:"
 block|,
-literal|"One of potentially several network interfaces"
+literal|"Network devices found on boot (use<TAB> to exit from here)"
 block|,
 name|iface
 block|,
@@ -365,6 +405,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_IFACE
+value|4
 block|{
 literal|10
 block|,
@@ -385,6 +429,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_IPADDR
+value|5
 block|{
 literal|10
 block|,
@@ -405,6 +453,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_NETMASK
+value|6
 block|{
 literal|14
 block|,
@@ -425,6 +477,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_EXTRAS
+value|7
 block|{
 literal|19
 block|,
@@ -446,6 +502,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_OKBUTTON
+value|8
 block|{
 literal|19
 block|,
@@ -467,6 +527,10 @@ block|,
 name|NULL
 block|}
 block|,
+define|#
+directive|define
+name|LAYOUT_CANCELBUTTON
+value|9
 block|{
 name|NULL
 block|}
@@ -483,6 +547,10 @@ name|b
 parameter_list|)
 value|((b)> 0&& (b)< 255)
 end_define
+
+begin_comment
+comment|/* A JKH special - inform the user of an unusal error in a controlled    fashion */
+end_comment
 
 begin_function
 specifier|static
@@ -504,6 +572,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Very basic IP address integrity check - could be drastically improved */
+end_comment
 
 begin_function
 specifier|static
@@ -579,6 +651,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Check for the settings on the screen - the per interface stuff is    moved to the main handling code now to do it on the fly - sigh */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -600,20 +676,12 @@ argument_list|(
 literal|"Must specify a host name of some sort!"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|verifyIP
-argument_list|(
-name|ipaddr
-argument_list|)
-condition|)
-name|feepout
-argument_list|(
-literal|"Invalid or missing value for IP address"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+if|else if (!verifyIP(ipaddr)) 	feepout("Invalid or missing value for IP address");
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -652,28 +720,12 @@ argument_list|(
 literal|"Invalid name server IP address specified"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|netmask
-index|[
+if|#
+directive|if
 literal|0
-index|]
-operator|<
-literal|'0'
-operator|||
-name|netmask
-index|[
-literal|0
-index|]
-operator|>
-literal|'9'
-condition|)
-name|feepout
-argument_list|(
-literal|"Invalid or missing netmask"
-argument_list|)
-expr_stmt|;
+if|else if (netmask[0]< '0' || netmask[0]> '9') 	feepout("Invalid or missing netmask");
+endif|#
+directive|endif
 else|else
 return|return
 literal|1
@@ -748,6 +800,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* We need a curses window */
 name|ds_win
 operator|=
 name|newwin
@@ -772,6 +825,7 @@ argument_list|(
 literal|"Cannot open TCP/IP dialog window!!"
 argument_list|)
 expr_stmt|;
+comment|/* Look for net.devices for us to configure */
 name|devs
 operator|=
 name|deviceFind
@@ -829,6 +883,7 @@ operator|=
 operator|--
 name|n
 expr_stmt|;
+comment|/* Setup a nice screen for us to splat stuff onto */
 name|draw_box
 argument_list|(
 name|ds_win
@@ -913,6 +968,7 @@ argument_list|,
 literal|" Per Interface Configuration "
 argument_list|)
 expr_stmt|;
+comment|/* Initialise vars so that dialog has something to chew on */
 name|strcpy
 argument_list|(
 name|ipaddr
@@ -949,6 +1005,7 @@ operator|.
 name|extras
 argument_list|)
 expr_stmt|;
+comment|/* Look up values already recorded with the system, or blank the        string variables ready to accept some new data */
 name|tmp
 operator|=
 name|getenv
@@ -1065,6 +1122,7 @@ name|nameserver
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Loop over the layout list, create the objects, and add them        onto the chain of objects that dialog uses for traversal*/
 name|n
 operator|=
 literal|0
@@ -1246,6 +1304,7 @@ name|n
 operator|-
 literal|1
 expr_stmt|;
+comment|/* Find the last object we can traverse to */
 name|last
 operator|=
 name|obj
@@ -1262,7 +1321,7 @@ name|last
 operator|->
 name|next
 expr_stmt|;
-comment|/* find the first object in the list */
+comment|/* Find the first object in the list */
 name|first
 operator|=
 name|obj
@@ -1279,6 +1338,7 @@ name|first
 operator|->
 name|prev
 expr_stmt|;
+comment|/* Some more initialisation before we go into the main input loop */
 name|n
 operator|=
 literal|0
@@ -1299,6 +1359,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|if_list
+index|[
+literal|0
+index|]
+operator|.
+name|valid
+operator|=
+name|FALSE
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|old_iface
@@ -1306,6 +1375,7 @@ argument_list|,
 name|iface
 argument_list|)
 expr_stmt|;
+comment|/* Incoming user data - DUCK! */
 while|while
 condition|(
 operator|!
@@ -1330,6 +1400,7 @@ operator|.
 name|help
 argument_list|)
 decl_stmt|;
+comment|/* Display the help line at the bottom of the screen */
 for|for
 control|(
 name|i
@@ -1388,6 +1459,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Ask for libdialog to do its stuff */
 name|ret
 operator|=
 name|PollObj
@@ -1396,11 +1468,77 @@ operator|&
 name|obj
 argument_list|)
 expr_stmt|;
+comment|/* We are in the Hostname field - calculate the domainname */
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|tmp
+operator|=
+name|index
+argument_list|(
+name|hostname
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|domainname
+argument_list|,
+name|tmp
+operator|+
+literal|1
+argument_list|,
+name|strlen
+argument_list|(
+name|tmp
+operator|+
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|domainname
+index|[
+name|strlen
+argument_list|(
+name|tmp
+operator|+
+literal|1
+argument_list|)
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|RefreshStringObj
+argument_list|(
+name|layout
+index|[
+literal|1
+index|]
+operator|.
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Handle special case stuff that libdialog misses. Sigh */
 switch|switch
 condition|(
 name|ret
 condition|)
 block|{
+comment|/* Bail out */
 case|case
 name|SEL_ESC
 case|:
@@ -1413,6 +1551,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+comment|/* This doesn't work for list dialogs. Oh well. Perhaps 	       should special case the move from the OK button ``up'' 	       to make it go to the interface list, but then it gets 	       awkward for the user to go back and correct screw up's 	       in the per-interface section */
 case|case
 name|KEY_UP
 case|:
@@ -1447,6 +1586,7 @@ name|max
 expr_stmt|;
 block|}
 break|break;
+comment|/* More special case handling - if we are at the interface                list, move to the OK button - the user hasn't selected                one of the entries in the list by pressing CR, so (s)he                must be wanting to skip to<OK>&<CANCEL> */
 case|case
 name|KEY_DOWN
 case|:
@@ -1454,12 +1594,12 @@ if|if
 condition|(
 name|n
 operator|==
-literal|7
+name|LAYOUT_EXTRAS
 condition|)
 block|{
 name|n
 operator|=
-literal|4
+name|LAYOUT_IFACE
 expr_stmt|;
 name|obj
 operator|=
@@ -1512,6 +1652,7 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
+comment|/* Same as KEY_DOWN, but dialog has already move us to the                next object on the list, which makes this slightly                different. */
 case|case
 name|SEL_TAB
 case|:
@@ -1519,12 +1660,12 @@ if|if
 condition|(
 name|n
 operator|==
-literal|7
+name|LAYOUT_EXTRAS
 condition|)
 block|{
 name|n
 operator|=
-literal|4
+name|LAYOUT_IFACE
 expr_stmt|;
 name|obj
 operator|=
@@ -1566,16 +1707,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* This looks double dutch, but we have already MOVED onto                the next field, so we special case around getting to                that field, rather than moving off the previous                one. Hence we are really testing for 	       (n ==_IFACE) */
 if|if
 condition|(
 name|n
 operator|==
-literal|5
+name|LAYOUT_IPADDR
 condition|)
 block|{
 name|n
 operator|=
-literal|8
+name|LAYOUT_OKBUTTON
 expr_stmt|;
 name|obj
 operator|=
@@ -1593,6 +1735,7 @@ name|next
 expr_stmt|;
 block|}
 break|break;
+comment|/* The user has pressed enter over a button object */
 case|case
 name|SEL_BUTTON
 case|:
@@ -1623,9 +1766,11 @@ name|TRUE
 expr_stmt|;
 block|}
 break|break;
+comment|/* Generic CR handler */
 case|case
 name|SEL_CR
 case|:
+comment|/* Has the user selected a new interface? */
 if|if
 condition|(
 name|strcmp
@@ -1636,85 +1781,17 @@ name|iface
 argument_list|)
 condition|)
 block|{
-comment|/* First, find the old value */
-name|n_iface
-operator|=
+comment|/* Moved to a different condition for better handling */
+if|#
+directive|if
 literal|0
-expr_stmt|;
-while|while
-condition|(
-name|strcmp
-argument_list|(
-name|old_iface
-argument_list|,
-name|iface_names
-index|[
-name|n_iface
-index|]
-argument_list|)
-operator|&&
-operator|(
-name|iface_names
-index|[
-name|n_iface
-index|]
-operator|!=
-name|NULL
-operator|)
-condition|)
-operator|++
-name|n_iface
-expr_stmt|;
-if|if
-condition|(
-name|iface_names
-index|[
-name|n_iface
-index|]
-operator|==
-name|NULL
-condition|)
-name|msgFatal
-argument_list|(
-literal|"Erk - run off the end of the list of interfaces!"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|if_list
-index|[
-name|n_iface
-index|]
-operator|.
-name|ipaddr
-argument_list|,
-name|ipaddr
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|if_list
-index|[
-name|n_iface
-index|]
-operator|.
-name|netmask
-argument_list|,
-name|netmask
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|if_list
-index|[
-name|n_iface
-index|]
-operator|.
-name|extras
-argument_list|,
-name|extras
-argument_list|)
-expr_stmt|;
+comment|/* First, find the old value */
+block|n_iface = 0; 		while (strcmp(old_iface, iface_names[n_iface])&& 		       (iface_names[n_iface] != NULL)) 		    ++n_iface; 		 		if (iface_names[n_iface] == NULL) 		    msgFatal("Erk - run off the end of the list of interfaces!");
+comment|/* Sanity check what the user supplied - this could probably 		   be better :-( */
+block|if (!verifyIP(ipaddr)) { 		    feepout("Invalid or missing IP address!"); 		    strcpy(iface, old_iface); 		    n = LAYOUT_IFACE; 		    obj = (((first->next)->next)->next)->next; 		    RefreshListObj(layout[LAYOUT_IFACE].obj); 		}  		if (netmask[0]< '0' || netmask[0]> '9') { 		    feepout("Invalid or missing netmask!"); 		    strcpy(iface, old_iface); 		    n = LAYOUT_IFACE; 		    obj = (((first->next)->next)->next)->next; 		    RefreshListObj(layout[LAYOUT_IFACE].obj); 		} 		 		strcpy(if_list[n_iface].ipaddr, ipaddr); 		strcpy(if_list[n_iface].netmask, netmask); 		strcpy(if_list[n_iface].extras, extras); 		if_list[n_iface].valid = TRUE;
+endif|#
+directive|endif
+comment|/* if 0 */
 comment|/* Now go find the new location */
 name|n_iface
 operator|=
@@ -1794,11 +1871,20 @@ operator|.
 name|extras
 argument_list|)
 expr_stmt|;
+name|if_list
+index|[
+name|n_iface
+index|]
+operator|.
+name|valid
+operator|=
+name|FALSE
+expr_stmt|;
 name|RefreshStringObj
 argument_list|(
 name|layout
 index|[
-literal|5
+name|LAYOUT_IPADDR
 index|]
 operator|.
 name|obj
@@ -1808,7 +1894,7 @@ name|RefreshStringObj
 argument_list|(
 name|layout
 index|[
-literal|6
+name|LAYOUT_NETMASK
 index|]
 operator|.
 name|obj
@@ -1818,7 +1904,7 @@ name|RefreshStringObj
 argument_list|(
 name|layout
 index|[
-literal|7
+name|LAYOUT_EXTRAS
 index|]
 operator|.
 name|obj
@@ -1832,16 +1918,17 @@ name|iface
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Loop back to the interface list from the extras box -                now we handle the case of saving out the data the user                typed in (and also do basic verification of it's                sanity) */
 if|if
 condition|(
 name|n
 operator|==
-literal|7
+name|LAYOUT_EXTRAS
 condition|)
 block|{
 name|n
 operator|=
-literal|4
+name|LAYOUT_IFACE
 expr_stmt|;
 name|obj
 operator|=
@@ -1861,6 +1948,211 @@ operator|)
 operator|->
 name|next
 expr_stmt|;
+comment|/* First, find the old value */
+name|n_iface
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|strcmp
+argument_list|(
+name|old_iface
+argument_list|,
+name|iface_names
+index|[
+name|n_iface
+index|]
+argument_list|)
+operator|&&
+operator|(
+name|iface_names
+index|[
+name|n_iface
+index|]
+operator|!=
+name|NULL
+operator|)
+condition|)
+operator|++
+name|n_iface
+expr_stmt|;
+if|if
+condition|(
+name|iface_names
+index|[
+name|n_iface
+index|]
+operator|==
+name|NULL
+condition|)
+name|msgFatal
+argument_list|(
+literal|"Erk - run off the end of the list of interfaces!"
+argument_list|)
+expr_stmt|;
+comment|/* Sanity check what the user supplied - this could probably 		   be better :-( */
+if|if
+condition|(
+operator|!
+name|verifyIP
+argument_list|(
+name|ipaddr
+argument_list|)
+condition|)
+block|{
+name|feepout
+argument_list|(
+literal|"Invalid or missing IP address!"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|iface
+argument_list|,
+name|old_iface
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|LAYOUT_IFACE
+expr_stmt|;
+name|obj
+operator|=
+operator|(
+operator|(
+operator|(
+name|first
+operator|->
+name|next
+operator|)
+operator|->
+name|next
+operator|)
+operator|->
+name|next
+operator|)
+operator|->
+name|next
+expr_stmt|;
+name|RefreshListObj
+argument_list|(
+name|layout
+index|[
+name|LAYOUT_IFACE
+index|]
+operator|.
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|netmask
+index|[
+literal|0
+index|]
+operator|<
+literal|'0'
+operator|||
+name|netmask
+index|[
+literal|0
+index|]
+operator|>
+literal|'9'
+condition|)
+block|{
+name|feepout
+argument_list|(
+literal|"Invalid or missing netmask!"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|iface
+argument_list|,
+name|old_iface
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|LAYOUT_IFACE
+expr_stmt|;
+name|obj
+operator|=
+operator|(
+operator|(
+operator|(
+name|first
+operator|->
+name|next
+operator|)
+operator|->
+name|next
+operator|)
+operator|->
+name|next
+operator|)
+operator|->
+name|next
+expr_stmt|;
+name|RefreshListObj
+argument_list|(
+name|layout
+index|[
+name|LAYOUT_IFACE
+index|]
+operator|.
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
+name|strcpy
+argument_list|(
+name|if_list
+index|[
+name|n_iface
+index|]
+operator|.
+name|ipaddr
+argument_list|,
+name|ipaddr
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|if_list
+index|[
+name|n_iface
+index|]
+operator|.
+name|netmask
+argument_list|,
+name|netmask
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|if_list
+index|[
+name|n_iface
+index|]
+operator|.
+name|extras
+argument_list|,
+name|extras
+argument_list|)
+expr_stmt|;
+name|if_list
+index|[
+name|n_iface
+index|]
+operator|.
+name|valid
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1878,6 +2170,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+comment|/* This doesn't seem to work anymore - dunno why. Foo */
 case|case
 name|SEL_BACKTAB
 case|:
@@ -1894,18 +2187,13 @@ operator|=
 name|max
 expr_stmt|;
 break|break;
+comment|/* They tried some key combination we don't support - tell them! */
 default|default:
 name|beep
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|n
-operator|==
-literal|1
-condition|)
-block|{
+comment|/* BODGE ALERT! */
 if|if
 condition|(
 operator|(
@@ -1962,19 +2250,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
+comment|/* Clear this crap off the screen */
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
+comment|/* We actually need to inform the rest of sysinstall about this        data now - if the user hasn't selected cancel, save the stuff        out to the environment via the variable_set layers */
 if|if
 condition|(
 operator|!
 name|cancel
 condition|)
 block|{
+name|int
+name|foo
+decl_stmt|;
 name|variable_set2
 argument_list|(
 name|VAR_HOSTNAME
@@ -2017,6 +2309,97 @@ argument_list|,
 name|nameserver
 argument_list|)
 expr_stmt|;
+comment|/* Loop over the per-interface data saving data which has been            validated ... */
+name|foo
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|foo
+operator|=
+literal|0
+init|;
+name|foo
+operator|<
+name|INTERFACE_MAX
+condition|;
+name|foo
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|if_list
+index|[
+name|foo
+index|]
+operator|.
+name|valid
+operator|==
+name|TRUE
+condition|)
+block|{
+name|char
+name|temp
+index|[
+literal|512
+index|]
+decl_stmt|,
+name|ifn
+index|[
+literal|64
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|temp
+argument_list|,
+literal|"inet %s %s netmask %s"
+argument_list|,
+name|if_list
+index|[
+name|foo
+index|]
+operator|.
+name|ipaddr
+argument_list|,
+name|if_list
+index|[
+name|foo
+index|]
+operator|.
+name|extras
+argument_list|,
+name|if_list
+index|[
+name|foo
+index|]
+operator|.
+name|netmask
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|ifn
+argument_list|,
+literal|"ifconfig_%s"
+argument_list|,
+name|iface_names
+index|[
+name|foo
+index|]
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|ifn
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 literal|1
 return|;
