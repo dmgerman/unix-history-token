@@ -116,7 +116,7 @@ name|ktr_time
 decl_stmt|;
 comment|/* timestamp */
 name|caddr_t
-name|ktr_buf
+name|ktr_buffer
 decl_stmt|;
 block|}
 struct|;

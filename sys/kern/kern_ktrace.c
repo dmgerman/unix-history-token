@@ -456,7 +456,7 @@ index|]
 expr_stmt|;
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 operator|=
 operator|(
 name|caddr_t
@@ -588,7 +588,7 @@ expr_stmt|;
 comment|/* what about val2 ? */
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 operator|=
 operator|(
 name|caddr_t
@@ -687,7 +687,7 @@ argument_list|)
 expr_stmt|;
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 operator|=
 name|path
 expr_stmt|;
@@ -801,7 +801,7 @@ name|rw
 expr_stmt|;
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 operator|=
 operator|(
 name|caddr_t
@@ -950,7 +950,7 @@ name|code
 expr_stmt|;
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 operator|=
 operator|(
 name|caddr_t
@@ -1059,7 +1059,7 @@ name|user
 expr_stmt|;
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 operator|=
 operator|(
 name|caddr_t
@@ -1775,7 +1775,7 @@ condition|)
 block|{
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 operator|=
 name|cp
 expr_stmt|;
@@ -2342,7 +2342,7 @@ name|iov_base
 operator|=
 name|kth
 operator|->
-name|ktr_buf
+name|ktr_buffer
 expr_stmt|;
 name|aiov
 index|[
