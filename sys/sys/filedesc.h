@@ -245,10 +245,6 @@ modifier|*
 name|sio_ucred
 decl_stmt|;
 comment|/* current credentials */
-name|uid_t
-name|sio_ruid
-decl_stmt|;
-comment|/* real user id */
 name|pid_t
 name|sio_pgid
 decl_stmt|;

@@ -856,7 +856,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* Let root, or someone who once was root (lockd generally 	 * switches to the daemon uid once it is done setting up) make  	 * this call 	 */
+comment|/* Let root, or someone who once was root (lockd generally 	 * switches to the daemon uid once it is done setting up) make  	 * this call. 	 * 	 * XXX This authorization check is probably not right. 	 */
 if|if
 condition|(
 operator|(
@@ -872,9 +872,9 @@ literal|0
 operator|&&
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_svuid
+name|cr_svuid
 operator|!=
 literal|0
 condition|)

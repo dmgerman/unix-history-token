@@ -102,7 +102,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * This is stolen from CANSIGNAL in kern_sig:  *  * Can process p, with pcred pc, do "write flavor" operations to process q?  */
+comment|/*  * This is stolen from CANSIGNAL in kern_sig:  *  * Can process with credential cr1 do "write flavor" operations to credential  * cr2.  This check needs to use generalized checks.  */
 end_comment
 
 begin_define
@@ -110,12 +110,12 @@ define|#
 directive|define
 name|CAN_AFFECT
 parameter_list|(
-name|p
+name|cr1
 parameter_list|,
-name|q
+name|cr2
 parameter_list|)
 define|\
-value|(!suser_xxx(NULL, p, PRISON_ROOT) || \ 	    (p)->p_cred->pc_ruid == (q)->p_cred->p_ruid || \ 	    (p)->p_ucred->cr_uid == (q)->p_cred->p_ruid || \ 	    (p)->p_cred->pc_ruid == (q)->p_ucred->cr_uid || \ 	    (p)->p_ucred->cr_uid == (q)->p_ucred->cr_uid)
+value|(!suser_xxx(cr1, NULL, PRISON_ROOT) || \ 	    (c1)->cr_ruid == (cr2)->cr_ruid || \ 	    (c1)->cr_uid == (cr2)->cr_ruid || \ 	    (c1)->cr_ruid == (cr2)->cr_uid || \ 	    (c1)->cr_uid == (cr2)->cr_uid)
 end_define
 
 begin_else
@@ -128,11 +128,11 @@ define|#
 directive|define
 name|CAN_AFFECT
 parameter_list|(
-name|p
+name|cr1
 parameter_list|,
-name|q
+name|cr2
 parameter_list|)
-value|(!suser_xxx(NULL, p, PRISON_ROOT))
+value|(!suser_xxx(cr1, NULL, PRISON_ROOT))
 end_define
 
 begin_endif
@@ -211,8 +211,12 @@ condition|(
 name|CAN_AFFECT
 argument_list|(
 name|p
+operator|->
+name|p_ucred
 argument_list|,
 name|other_proc
+operator|->
+name|p_ucred
 argument_list|)
 condition|)
 operator|*

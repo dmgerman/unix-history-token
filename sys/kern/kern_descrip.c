@@ -2445,17 +2445,6 @@ name|curproc
 operator|->
 name|p_ucred
 expr_stmt|;
-comment|/* It would be convenient if p_ruid was in ucred. */
-name|sigio
-operator|->
-name|sio_ruid
-operator|=
-name|curproc
-operator|->
-name|p_cred
-operator|->
-name|p_ruid
-expr_stmt|;
 name|sigio
 operator|->
 name|sio_myref

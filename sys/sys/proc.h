@@ -351,9 +351,9 @@ expr_stmt|;
 comment|/* (d) List of all processes. */
 comment|/* substructures: */
 name|struct
-name|pcred
+name|ucred
 modifier|*
-name|p_cred
+name|p_ucred
 decl_stmt|;
 comment|/* (c + k) Process owner's identity. */
 name|struct
@@ -398,10 +398,6 @@ define|#
 directive|define
 name|p_sigcatch
 value|p_procsig->ps_sigcatch
-define|#
-directive|define
-name|p_ucred
-value|p_cred->pc_ucred
 define|#
 directive|define
 name|p_rlimit
@@ -1292,50 +1288,6 @@ directive|define
 name|P_CAN_DEBUG
 value|4
 end_define
-
-begin_comment
-comment|/*  * MOVE TO ucred.h?  *  * Shareable process credentials (always resident).  This includes a reference  * to the current user credentials as well as real and saved ids that may be  * used to change ids.  */
-end_comment
-
-begin_struct
-struct|struct
-name|pcred
-block|{
-name|struct
-name|ucred
-modifier|*
-name|pc_ucred
-decl_stmt|;
-comment|/* Current credentials. */
-name|uid_t
-name|p_ruid
-decl_stmt|;
-comment|/* Real user id. */
-name|uid_t
-name|p_svuid
-decl_stmt|;
-comment|/* Saved effective user id. */
-name|gid_t
-name|p_rgid
-decl_stmt|;
-comment|/* Real group id. */
-name|gid_t
-name|p_svgid
-decl_stmt|;
-comment|/* Saved effective group id. */
-name|int
-name|p_refcnt
-decl_stmt|;
-comment|/* Number of references. */
-name|struct
-name|uidinfo
-modifier|*
-name|p_uidinfo
-decl_stmt|;
-comment|/* Per uid resource consumption. */
-block|}
-struct|;
-end_struct
 
 begin_ifdef
 ifdef|#

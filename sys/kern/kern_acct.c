@@ -815,9 +815,9 @@ name|ac_uid
 operator|=
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruid
 expr_stmt|;
 name|acct
 operator|.
@@ -825,9 +825,9 @@ name|ac_gid
 operator|=
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_rgid
+name|cr_rgid
 expr_stmt|;
 comment|/* (7) The terminal from which the process was started */
 if|if

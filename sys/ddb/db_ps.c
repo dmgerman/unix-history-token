@@ -244,13 +244,13 @@ name|p_addr
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 condition|?
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruid
 else|:
 literal|0
 argument_list|,

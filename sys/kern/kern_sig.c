@@ -444,7 +444,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Policy -- Can real uid ruid with ucred uc send a signal to process q?  */
+comment|/*  * Policy -- Can ucred cr1 send SIGIO to process cr2?  */
 end_comment
 
 begin_define
@@ -452,14 +452,12 @@ define|#
 directive|define
 name|CANSIGIO
 parameter_list|(
-name|ruid
+name|cr1
 parameter_list|,
-name|uc
-parameter_list|,
-name|q
+name|cr2
 parameter_list|)
 define|\
-value|((uc)->cr_uid == 0 || \ 	    (ruid) == (q)->p_cred->p_ruid || \ 	    (uc)->cr_uid == (q)->p_cred->p_ruid || \ 	    (ruid) == (q)->p_ucred->cr_uid || \ 	    (uc)->cr_uid == (q)->p_ucred->cr_uid)
+value|((cr1)->cr_uid == 0 || \ 	    (cr2)->cr_ruid == (cr2)->cr_ruid || \ 	    (cr2)->cr_uid == (cr2)->cr_ruid || \ 	    (cr2)->cr_ruid == (cr2)->cr_uid || \ 	    (cr2)->cr_uid == (cr2)->cr_uid)
 end_define
 
 begin_decl_stmt
@@ -7336,10 +7334,6 @@ name|p_comm
 argument_list|,
 name|p
 operator|->
-name|p_cred
-operator|&&
-name|p
-operator|->
 name|p_ucred
 condition|?
 name|p
@@ -7467,10 +7461,6 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
-name|p
-operator|->
-name|p_cred
-operator|&&
 name|p
 operator|->
 name|p_ucred
@@ -8556,15 +8546,13 @@ name|CANSIGIO
 argument_list|(
 name|sigio
 operator|->
-name|sio_ruid
-argument_list|,
-name|sigio
-operator|->
 name|sio_ucred
 argument_list|,
 name|sigio
 operator|->
 name|sio_proc
+operator|->
+name|p_ucred
 argument_list|)
 condition|)
 name|psignal
@@ -8619,13 +8607,11 @@ name|CANSIGIO
 argument_list|(
 name|sigio
 operator|->
-name|sio_ruid
-argument_list|,
-name|sigio
-operator|->
 name|sio_ucred
 argument_list|,
 name|p
+operator|->
+name|p_ucred
 argument_list|)
 operator|&&
 operator|(

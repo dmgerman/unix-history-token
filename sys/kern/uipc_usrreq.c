@@ -4909,9 +4909,9 @@ name|cmcred_uid
 operator|=
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruid
 expr_stmt|;
 name|cmcred
 operator|->
@@ -4919,9 +4919,9 @@ name|cmcred_gid
 operator|=
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_rgid
+name|cr_rgid
 expr_stmt|;
 name|cmcred
 operator|->

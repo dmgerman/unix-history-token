@@ -2225,9 +2225,9 @@ literal|"Uid:\t%d %d %d %d\n"
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruid
 argument_list|,
 name|p
 operator|->
@@ -2237,9 +2237,9 @@ name|cr_uid
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_svuid
+name|cr_svuid
 argument_list|,
 comment|/* FreeBSD doesn't have fsuid */
 name|p
@@ -2258,9 +2258,9 @@ literal|"Gid:\t%d %d %d %d\n"
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_rgid
+name|cr_rgid
 argument_list|,
 name|p
 operator|->
@@ -2270,9 +2270,9 @@ name|cr_gid
 argument_list|,
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_svgid
+name|cr_svgid
 argument_list|,
 comment|/* FreeBSD doesn't have fsgid */
 name|p
@@ -2715,12 +2715,6 @@ expr_stmt|;
 if|if
 condition|(
 name|p
-operator|==
-name|NULL
-operator|||
-name|p
-operator|->
-name|p_cred
 operator|==
 name|NULL
 operator|||

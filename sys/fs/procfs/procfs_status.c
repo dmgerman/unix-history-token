@@ -710,26 +710,22 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|p
+name|cr
 operator|->
-name|p_cred
-operator|->
-name|p_ruid
+name|cr_ruid
 argument_list|,
 operator|(
 name|u_long
 operator|)
-name|p
+name|cr
 operator|->
-name|p_cred
-operator|->
-name|p_rgid
+name|cr_rgid
 argument_list|)
 expr_stmt|;
 name|DOCHECK
 argument_list|()
 expr_stmt|;
-comment|/* egid (p->p_cred->p_svgid) is equal to cr_ngroups[0]  	   see also getegid(2) in /sys/kern/kern_prot.c */
+comment|/* egid (cr->cr_svgid) is equal to cr_ngroups[0]  	   see also getegid(2) in /sys/kern/kern_prot.c */
 for|for
 control|(
 name|i

@@ -2058,12 +2058,6 @@ if|if
 condition|(
 name|procp
 operator|->
-name|p_cred
-operator|==
-name|NULL
-operator|||
-name|procp
-operator|->
 name|p_ucred
 operator|==
 name|NULL

@@ -280,9 +280,9 @@ name|uid
 operator|=
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruid
 expr_stmt|;
 name|cmd
 operator|=
@@ -308,9 +308,9 @@ name|uid
 operator|==
 name|p
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruid
 condition|)
 break|break;
 comment|/* fall through */

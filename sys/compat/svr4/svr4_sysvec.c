@@ -671,9 +671,9 @@ name|imgp
 operator|->
 name|proc
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_ruid
+name|cr_ruid
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY
@@ -686,9 +686,9 @@ name|imgp
 operator|->
 name|proc
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_svuid
+name|cr_svuid
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY
@@ -701,9 +701,9 @@ name|imgp
 operator|->
 name|proc
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_rgid
+name|cr_rgid
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY
@@ -716,9 +716,9 @@ name|imgp
 operator|->
 name|proc
 operator|->
-name|p_cred
+name|p_ucred
 operator|->
-name|p_svgid
+name|cr_svgid
 argument_list|)
 expr_stmt|;
 name|AUXARGS_ENTRY

@@ -1697,12 +1697,6 @@ if|if
 condition|(
 name|procp
 operator|->
-name|p_cred
-operator|==
-name|NULL
-operator|||
-name|procp
-operator|->
 name|p_ucred
 operator|==
 name|NULL
@@ -3872,12 +3866,6 @@ expr_stmt|;
 if|if
 condition|(
 name|procp
-operator|==
-name|NULL
-operator|||
-name|procp
-operator|->
-name|p_cred
 operator|==
 name|NULL
 operator|||
