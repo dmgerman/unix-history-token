@@ -135,10 +135,18 @@ name|f
 argument_list|,
 literal|"  Dump length: %lldB (%lld MB)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|h
 operator|->
 name|dumplength
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|h
 operator|->
 name|dumplength
@@ -355,6 +363,10 @@ name|printf
 argument_list|(
 literal|"Mediasize = %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|mediasize
 argument_list|)
 expr_stmt|;
@@ -405,6 +417,10 @@ name|warn
 argument_list|(
 literal|"Error Reading last dump header at offset %lld in %s"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|lasthd
 argument_list|,
 name|devname
@@ -523,6 +539,10 @@ name|warn
 argument_list|(
 literal|"Error Reading first dump header at offset %lld in %s"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|firsthd
 argument_list|,
 name|devname
