@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -401,7 +395,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 name|error
 operator|=
