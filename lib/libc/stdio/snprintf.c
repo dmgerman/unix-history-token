@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: snprintf.c,v 1.8 1997/12/24 20:24:05 ache Exp $"
+literal|"$Id: snprintf.c,v 1.9 1997/12/24 23:02:40 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +150,7 @@ decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
-name|int
+name|size_t
 name|on
 decl_stmt|;
 name|on
