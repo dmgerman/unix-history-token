@@ -5086,6 +5086,20 @@ name|tp
 operator|+=
 name|phdr_len
 expr_stmt|;
+if|if
+condition|(
+name|cc
+operator|-
+name|ICMP_MINLEN
+operator|-
+name|phdr_len
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|tv1
+argument_list|)
+condition|)
+block|{
 comment|/* Copy to avoid alignment problems: */
 name|memcpy
 argument_list|(
@@ -5161,6 +5175,12 @@ condition|)
 name|tmax
 operator|=
 name|triptime
+expr_stmt|;
+block|}
+else|else
+name|timing
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|seq
@@ -5431,6 +5451,12 @@ operator|+
 name|phdr_len
 index|]
 expr_stmt|;
+name|cc
+operator|-=
+name|ICMP_MINLEN
+operator|+
+name|phdr_len
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -5440,6 +5466,10 @@ init|;
 name|i
 operator|<
 name|datalen
+operator|&&
+name|cc
+operator|!=
+literal|0
 condition|;
 operator|++
 name|i
@@ -5449,6 +5479,9 @@ name|cp
 operator|,
 operator|++
 name|dp
+operator|,
+name|cc
+operator|--
 control|)
 block|{
 if|if
