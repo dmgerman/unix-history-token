@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mille.c	8.1 (Berkeley) 5/31/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mille.c	8.1 (Berkeley) 5/31/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +101,30 @@ begin_comment
 comment|/*  * @(#)mille.c	1.3 (Berkeley) 5/10/83  */
 end_comment
 
+begin_decl_stmt
+name|void
+name|check_more
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|die
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|rub
@@ -94,7 +132,21 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|ac
@@ -192,16 +244,8 @@ literal|1
 case|:
 break|break;
 default|default:
-name|printf
-argument_list|(
-literal|"usage: milles [ restore_file ]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-operator|-
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
@@ -530,6 +574,27 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: mille [restore_file]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  *	Routine to trap rubouts, and make sure they really want to  * quit.  */
 end_comment
@@ -578,20 +643,15 @@ begin_comment
 comment|/*  *	Time to go beddy-by  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|die
-argument_list|(
-argument|code
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|code
+parameter_list|)
 name|int
 name|code
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -636,7 +696,7 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

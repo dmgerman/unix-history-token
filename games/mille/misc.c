@@ -847,12 +847,10 @@ begin_comment
 comment|/*  *	Check to see if more games are desired.  If not, and game  * came from a saved file, make sure that they don't want to restore  * it.  Exit appropriately.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|check_more
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|On_exit
 operator|=
@@ -989,7 +987,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|readch
