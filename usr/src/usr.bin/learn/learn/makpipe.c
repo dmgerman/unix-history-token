@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makpipe.c	4.1	(Berkeley)	%G%"
+literal|"@(#)makpipe.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,9 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|vax
 name|execl
 argument_list|(
 literal|"/bin/sh"
@@ -95,7 +98,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/usr/bin/sh"
+literal|"/usr/ucb/bin/sh"
 argument_list|,
 literal|"sh"
 argument_list|,
@@ -104,6 +107,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|execlp
+argument_list|(
+literal|"/bin/csh"
+argument_list|,
+literal|"csh"
+argument_list|,
+literal|"-if"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/*execl ("/usr/ucb/bin/csh", "csh", "-if", 0);*/
+endif|#
+directive|endif
 name|write
 argument_list|(
 literal|2

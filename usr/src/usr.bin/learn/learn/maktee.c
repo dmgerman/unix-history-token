@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)maktee.c	4.1	(Berkeley)	%G%"
+literal|"@(#)maktee.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ name|sprintf
 argument_list|(
 name|tee
 argument_list|,
-literal|"%s/tee"
+literal|"%s/bin/lrntee"
 argument_list|,
 name|direct
 argument_list|)
@@ -154,11 +154,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+name|tee
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tee exec failed\n"
+literal|"Maktee:  lrntee exec failed\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -198,13 +203,20 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
+block|{
+name|perror
+argument_list|(
+literal|"dup"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Error making tee for copyout\n"
+literal|"Maktee:  error making tee for copyout\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|out

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)selsub.c	4.1	(Berkeley)	%G%"
+literal|"@(#)selsub.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,18 @@ begin_include
 include|#
 directive|include
 file|"stdio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/types.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/stat.h"
 end_include
 
 begin_include
@@ -57,9 +69,6 @@ name|ans1
 index|[
 literal|100
 index|]
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 specifier|static
 name|char
@@ -81,6 +90,10 @@ name|subname
 index|[
 literal|20
 index|]
+decl_stmt|;
+name|struct
+name|stat
+name|statbuf
 decl_stmt|;
 if|if
 condition|(
@@ -115,11 +128,6 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-name|chknam
-argument_list|(
-name|direct
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -130,13 +138,16 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+name|direct
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't cd to %s\,"
-argument_list|,
-name|direct
+literal|"Selsub:  couldn't cd to non-standard directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -164,6 +175,7 @@ name|argc
 operator|>
 literal|2
 condition|)
+block|{
 name|strcpy
 argument_list|(
 name|level
@@ -176,6 +188,29 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|level
+argument_list|,
+literal|"-"
+argument_list|)
+operator|==
+literal|0
+condition|)
+comment|/* no lesson name is - */
+name|ask
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|again
+operator|=
+literal|1
+expr_stmt|;
+comment|/* treat as if "again lesson" */
+block|}
 else|else
 name|level
 operator|=
@@ -225,12 +260,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"type 'return'; otherwise type the name of\n"
+literal|"press RETURN; otherwise type the name of\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"the course you want, followed by 'return'.\n"
+literal|"the course you want, followed by RETURN.\n"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -297,6 +332,25 @@ argument_list|(
 name|sname
 argument_list|)
 expr_stmt|;
+name|stat
+argument_list|(
+name|sname
+argument_list|,
+operator|&
+name|statbuf
+argument_list|)
+expr_stmt|;
+name|total
+operator|=
+name|statbuf
+operator|.
+name|st_size
+operator|/
+literal|16
+operator|-
+literal|2
+expr_stmt|;
+comment|/* size/dirsize-(.+..) */
 if|if
 condition|(
 operator|!
@@ -320,7 +374,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"To start at the beginning, just hit return.\n"
+literal|"If you don't know the number, type in a word\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"you think might appear in the lesson you want,\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"and I will look for the first lesson containing it.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"To start at the beginning, just hit RETURN.\n"
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -349,35 +418,6 @@ argument_list|,
 literal|"0"
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|cp
-operator|=
-name|ans2
-init|;
-operator|*
-name|cp
-condition|;
-name|cp
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|cp
-operator|==
-literal|'('
-operator|||
-operator|*
-name|cp
-operator|==
-literal|' '
-condition|)
-operator|*
-name|cp
-operator|=
-literal|0
-expr_stmt|;
 name|level
 operator|=
 name|ans2
@@ -388,17 +428,22 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"play"
+literal|"/tmp"
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+literal|"/tmp"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't cd to playpen\n"
+literal|"Selsub:  couldn't cd to public directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -443,11 +488,18 @@ operator|<
 literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Couldn't create working directory.\nBye.\n"
+literal|"Selsub:  couldn't make play directory with %s.\nBye.\n"
+argument_list|,
+name|ans1
 argument_list|)
 expr_stmt|;
 name|exit
@@ -510,25 +562,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|level
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
-condition|)
-comment|/* no lesson names start with - */
-name|ask
-operator|=
-literal|1
-expr_stmt|;
-name|start
-argument_list|(
-name|level
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	4.1	(Berkeley)	%G%"
+literal|"@(#)start.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lrnref.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -37,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lrnref.h"
 end_include
 
 begin_define
@@ -103,6 +103,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* clean up play directory */
 name|n
 operator|=
 name|read
@@ -138,7 +139,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"lesson too long\n"
+literal|"Start:  play directory too long\n"
 argument_list|)
 expr_stmt|;
 name|dm
@@ -242,7 +243,9 @@ name|sprintf
 argument_list|(
 name|where
 argument_list|,
-literal|"../../%s/L%s"
+literal|"%s/%s/L%s"
+argument_list|,
+name|direct
 argument_list|,
 name|sname
 argument_list|,
@@ -262,11 +265,16 @@ literal|0
 condition|)
 comment|/* there is a file */
 return|return;
+name|perror
+argument_list|(
+name|where
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No lesson %s\n"
+literal|"Start:  no lesson %s\n"
 argument_list|,
 name|lesson
 argument_list|)

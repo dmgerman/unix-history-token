@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mem.c	4.1	(Berkeley)	%G%"
+literal|"@(#)mem.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,12 @@ name|NO
 block|}
 block|,
 block|{
+literal|"again"
+block|,
+name|AGAIN
+block|}
+block|,
+block|{
 literal|"#mv"
 block|,
 name|MV
@@ -189,7 +195,7 @@ name|SKIP
 block|}
 block|,
 block|{
-literal|"#where"
+literal|"where"
 block|,
 name|WHERE
 block|}
@@ -219,9 +225,9 @@ name|CMP
 block|}
 block|,
 block|{
-literal|"#goto"
+literal|"xyzzy"
 block|,
-name|GOTO
+name|XYZZY
 block|}
 block|,
 block|{
@@ -365,6 +371,15 @@ name|whbuff
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|whichdid
+modifier|*
+name|pw
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|setdid
 argument_list|(
@@ -381,40 +396,20 @@ name|lesson
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|sequence
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-name|struct
-name|whichdid
-modifier|*
-name|pw
-decl_stmt|;
-for|for
-control|(
-name|pw
-operator|=
-name|which
-init|;
-name|pw
-operator|<
-name|which
-operator|+
-name|nwh
-condition|;
-name|pw
-operator|++
-control|)
 if|if
 condition|(
-name|strcmp
+name|already
 argument_list|(
-name|pw
-operator|->
-name|w_less
-argument_list|,
 name|lesson
 argument_list|)
-operator|==
-name|SAME
 condition|)
 block|{
 name|pw
@@ -443,8 +438,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nwh>=NW\n"
+literal|"Setdid:  too many lessons\n"
 argument_list|)
+expr_stmt|;
+name|tellwhich
+argument_list|()
 expr_stmt|;
 name|wrapup
 argument_list|(
@@ -488,8 +486,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"lesson name too long\n"
+literal|"Setdid:  lesson names too long\n"
 argument_list|)
+expr_stmt|;
+name|tellwhich
+argument_list|()
 expr_stmt|;
 name|wrapup
 argument_list|(
@@ -501,11 +502,9 @@ block|}
 end_block
 
 begin_macro
-name|already
+name|unsetdid
 argument_list|(
 argument|lesson
-argument_list|,
-argument|sequence
 argument_list|)
 end_macro
 
@@ -518,11 +517,47 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|whichdid
-modifier|*
+if|if
+condition|(
+operator|!
+name|already
+argument_list|(
+name|lesson
+argument_list|)
+condition|)
+return|return;
+name|nwh
+operator|=
 name|pw
+operator|-
+name|which
+expr_stmt|;
+comment|/* pretend the rest have not been done */
+name|whcp
+operator|=
+name|pw
+operator|->
+name|w_less
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|already
+argument_list|(
+argument|lesson
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|lesson
 decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 for|for
 control|(
 name|pw
@@ -561,6 +596,48 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|tellwhich
+argument_list|()
+end_macro
+
+begin_block
+block|{
+for|for
+control|(
+name|pw
+operator|=
+name|which
+init|;
+name|pw
+operator|<
+name|which
+operator|+
+name|nwh
+condition|;
+name|pw
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"%3d lesson %7s sequence %3d\n"
+argument_list|,
+name|pw
+operator|-
+name|which
+argument_list|,
+name|pw
+operator|->
+name|w_less
+argument_list|,
+name|pw
+operator|->
+name|w_seq
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

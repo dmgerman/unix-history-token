@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*	@(#)lrnref.h	4.1	(Berkeley)	83/02/24	*/
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -188,15 +184,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|GOTO
+name|ONCE
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|ONCE
+name|AGAIN
 value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|XYZZY
+value|28
 end_define
 
 begin_decl_stmt
@@ -323,6 +326,34 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|again
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|skip
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|teed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|total
 decl_stmt|;
 end_decl_stmt
 
