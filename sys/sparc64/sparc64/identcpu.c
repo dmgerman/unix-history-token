@@ -46,7 +46,6 @@ file|<machine/ver.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|char
 name|machine
 index|[]
