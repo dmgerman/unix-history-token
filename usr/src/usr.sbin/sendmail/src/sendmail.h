@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.91		%G%"
+literal|"@(#)sendmail.h	3.92		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1722,6 +1722,17 @@ end_define
 
 begin_comment
 comment|/* verify: don't collect or deliver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_TEST
+value|'t'
+end_define
+
+begin_comment
+comment|/* test mode: resolve addrs only */
 end_comment
 
 begin_define
