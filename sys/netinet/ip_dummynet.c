@@ -1808,11 +1808,6 @@ operator|*
 operator|)
 name|pkt
 decl_stmt|;
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
 if|if
 condition|(
 name|pkt
@@ -1848,29 +1843,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * same as ether_input, make eh be a pointer into the mbuf 		 */
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|pkt
-operator|->
-name|dn_m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
-name|m_adj
-argument_list|(
-name|pkt
-operator|->
-name|dn_m
-argument_list|,
-name|ETHER_HDR_LEN
-argument_list|)
-expr_stmt|;
 comment|/* 		 * bdg_forward() wants a pointer to the pseudo-mbuf-header, but 		 * on return it will supply the pointer to the actual packet 		 * (originally pkt->dn_m, but could be something else now) if 		 * it has not consumed it. 		 */
 if|if
 condition|(
@@ -1881,13 +1853,12 @@ operator|==
 name|DN_TO_BDG_FWD
 condition|)
 block|{
+comment|/* 		     * same as ether_input, make eh be a pointer into the mbuf 		     */
 name|m
 operator|=
 name|bdg_forward_ptr
 argument_list|(
 name|m
-argument_list|,
-name|eh
 argument_list|,
 name|pkt
 operator|->
@@ -1908,8 +1879,6 @@ else|else
 name|ether_demux
 argument_list|(
 name|NULL
-argument_list|,
-name|eh
 argument_list|,
 name|m
 argument_list|)
