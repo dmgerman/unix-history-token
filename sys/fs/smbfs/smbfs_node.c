@@ -369,7 +369,7 @@ argument|n_hash
 argument_list|)
 name|vprint
 argument_list|(
-name|NULL
+literal|""
 argument_list|,
 name|SMBTOV
 argument_list|(
