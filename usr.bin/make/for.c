@@ -475,7 +475,7 @@ name|NULL
 argument_list|,
 name|ptr
 argument_list|,
-name|VAR_GLOBAL
+name|VAR_CMD
 argument_list|,
 name|FALSE
 argument_list|)
