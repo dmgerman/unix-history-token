@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.4
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -1678,17 +1678,19 @@ block|}
 end_if
 
 begin_comment
-comment|/* 	**  If printing the queue, go off and do that. 	*/
+comment|/* 	**  Do operation-mode-dependent initialization. 	*/
 end_comment
 
-begin_if
-if|if
+begin_switch
+switch|switch
 condition|(
 name|OpMode
-operator|==
-name|MD_PRINT
 condition|)
 block|{
+case|case
+name|MD_PRINT
+case|:
+comment|/* print the queue */
 ifdef|#
 directive|ifdef
 name|QUEUE
@@ -1719,38 +1721,39 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|QUEUE
-block|}
-end_if
-
-begin_comment
-comment|/* 	**  Initialize aliases. 	*/
-end_comment
-
-begin_expr_stmt
+case|case
+name|MD_INITALIAS
+case|:
+comment|/* initialize alias database */
 name|initaliases
 argument_list|(
 name|AliasFile
 argument_list|,
-name|OpMode
-operator|==
-name|MD_INITALIAS
+name|TRUE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|OpMode
-operator|==
-name|MD_INITALIAS
-condition|)
 name|exit
 argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
-end_if
+case|case
+name|MD_DAEMON
+case|:
+comment|/* don't open alias database -- done in srvrsmtp */
+break|break;
+default|default:
+comment|/* open the alias database */
+name|initaliases
+argument_list|(
+name|AliasFile
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+end_switch
 
 begin_ifdef
 ifdef|#

@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -2259,6 +2259,14 @@ expr_stmt|;
 name|clearenvelope
 argument_list|(
 name|CurEnv
+argument_list|)
+expr_stmt|;
+comment|/* open alias database */
+name|initaliases
+argument_list|(
+name|AliasFile
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
