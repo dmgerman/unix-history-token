@@ -478,9 +478,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FPSWA_INTERFACE
+name|struct
+name|fpswa_iface
 modifier|*
-name|fpswa_interface
+name|fpswa_iface
 decl_stmt|;
 end_decl_stmt
 
@@ -1186,7 +1187,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fpswa_interface
+name|fpswa_iface
 operator|==
 name|NULL
 condition|)
@@ -1203,17 +1204,17 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|fpswa_interface
+name|fpswa_iface
 operator|->
-name|Revision
+name|if_rev
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|fpswa_interface
+name|fpswa_iface
 operator|->
-name|Fpswa
+name|if_fpswa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
@@ -2652,10 +2653,11 @@ literal|"WARNING: loader(8) metadata is missing!\n"
 argument_list|)
 expr_stmt|;
 comment|/* Get FPSWA interface */
-name|fpswa_interface
+name|fpswa_iface
 operator|=
 operator|(
-name|FPSWA_INTERFACE
+expr|struct
+name|fpswa_iface
 operator|*
 operator|)
 name|IA64_PHYS_TO_RR7

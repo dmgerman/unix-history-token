@@ -335,81 +335,14 @@ begin_comment
 comment|/*  * EFI-Provided FPSWA interface (Floating Point SoftWare Assist)  */
 end_comment
 
-begin_comment
-comment|/* The function entry address */
-end_comment
-
 begin_decl_stmt
 specifier|extern
-name|FPSWA_INTERFACE
+name|struct
+name|fpswa_iface
 modifier|*
-name|fpswa_interface
+name|fpswa_iface
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Copy of the faulting instruction bundle */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int64_t
-name|bundle_low64
-decl_stmt|;
-name|u_int64_t
-name|bundle_high64
-decl_stmt|;
-block|}
-name|FPSWA_BUNDLE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * The fp state descriptor... tell FPSWA where the "true" copy is.  * We save some registers in the trapframe, so we have to point some of  * these there.  The rest of the registers are "live"  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int64_t
-name|bitmask_low64
-decl_stmt|;
-comment|/* f63 - f2 */
-name|u_int64_t
-name|bitmask_high64
-decl_stmt|;
-comment|/* f127 - f64 */
-name|union
-name|_ia64_fpreg
-modifier|*
-name|fp_low_preserved
-decl_stmt|;
-comment|/* f2 - f5 */
-name|union
-name|_ia64_fpreg
-modifier|*
-name|fp_low_volatile
-decl_stmt|;
-comment|/* f6 - f15 */
-name|union
-name|_ia64_fpreg
-modifier|*
-name|fp_high_preserved
-decl_stmt|;
-comment|/* f16 - f31 */
-name|union
-name|_ia64_fpreg
-modifier|*
-name|fp_high_volatile
-decl_stmt|;
-comment|/* f32 - f127 */
-block|}
-name|FP_STATE
-typedef|;
-end_typedef
 
 begin_ifdef
 ifdef|#
@@ -2747,18 +2680,24 @@ case|case
 name|IA64_VEC_FLOATING_POINT_TRAP
 case|:
 block|{
-name|FP_STATE
-name|fp_state
-decl_stmt|;
-name|FPSWA_RET
-name|fpswa_ret
-decl_stmt|;
-name|FPSWA_BUNDLE
+name|struct
+name|fpswa_bundle
 name|bundle
+decl_stmt|;
+name|struct
+name|fpswa_fpctx
+name|fpctx
+decl_stmt|;
+name|struct
+name|fpswa_ret
+name|ret
 decl_stmt|;
 name|char
 modifier|*
 name|ip
+decl_stmt|;
+name|u_long
+name|fault
 decl_stmt|;
 comment|/* Always fatal in kernel. Should never happen. */
 if|if
@@ -2775,7 +2714,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fpswa_interface
+name|fpswa_iface
 operator|==
 name|NULL
 condition|)
@@ -2833,7 +2772,10 @@ argument_list|,
 operator|&
 name|bundle
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+name|bundle
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2854,26 +2796,26 @@ comment|/* exception summary */
 break|break;
 block|}
 comment|/* f6-f15 are saved in exception_save */
-name|fp_state
+name|fpctx
 operator|.
-name|bitmask_low64
+name|mask_low
 operator|=
 literal|0xffc0
 expr_stmt|;
 comment|/* bits 6 - 15 */
-name|fp_state
+name|fpctx
 operator|.
-name|bitmask_high64
+name|mask_high
 operator|=
-literal|0x0
+literal|0
 expr_stmt|;
-name|fp_state
+name|fpctx
 operator|.
 name|fp_low_preserved
 operator|=
 name|NULL
 expr_stmt|;
-name|fp_state
+name|fpctx
 operator|.
 name|fp_low_volatile
 operator|=
@@ -2884,29 +2826,20 @@ name|tf_scratch_fp
 operator|.
 name|fr6
 expr_stmt|;
-name|fp_state
+name|fpctx
 operator|.
 name|fp_high_preserved
 operator|=
 name|NULL
 expr_stmt|;
-name|fp_state
+name|fpctx
 operator|.
 name|fp_high_volatile
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * We have the high FP registers disabled while in the 		 * kernel. Enable them for the FPSWA handler only. 		 */
-name|ia64_enable_highfp
-argument_list|()
-expr_stmt|;
-comment|/* The docs are unclear.  Is Fpswa reentrant? */
-name|fpswa_ret
+name|fault
 operator|=
-name|fpswa_interface
-operator|->
-name|Fpswa
-argument_list|(
 operator|(
 name|vector
 operator|==
@@ -2916,6 +2849,19 @@ condition|?
 literal|1
 else|:
 literal|0
+expr_stmt|;
+comment|/* 		 * We have the high FP registers disabled while in the 		 * kernel. Enable them for the FPSWA handler only. 		 */
+name|ia64_enable_highfp
+argument_list|()
+expr_stmt|;
+comment|/* The docs are unclear.  Is Fpswa reentrant? */
+name|ret
+operator|=
+name|fpswa_iface
+operator|->
+name|if_fpswa
+argument_list|(
+name|fault
 argument_list|,
 operator|&
 name|bundle
@@ -2956,7 +2902,7 @@ operator|.
 name|cfm
 argument_list|,
 operator|&
-name|fp_state
+name|fpctx
 argument_list|)
 expr_stmt|;
 name|ia64_disable_highfp
@@ -2965,19 +2911,17 @@ expr_stmt|;
 comment|/* 		 * Update ipsr and iip to next instruction. We only 		 * have to do that for faults. 		 */
 if|if
 condition|(
-name|vector
-operator|==
-name|IA64_VEC_FLOATING_POINT_FAULT
+name|fault
 operator|&&
 operator|(
-name|fpswa_ret
+name|ret
 operator|.
 name|status
 operator|==
 literal|0
 operator|||
 operator|(
-name|fpswa_ret
+name|ret
 operator|.
 name|status
 operator|&
@@ -3086,7 +3030,7 @@ block|}
 block|}
 if|if
 condition|(
-name|fpswa_ret
+name|ret
 operator|.
 name|status
 operator|==
@@ -3100,7 +3044,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|fpswa_ret
+name|ret
 operator|.
 name|status
 operator|==
@@ -3112,15 +3056,15 @@ name|printf
 argument_list|(
 literal|"FATAL: FPSWA err1 %lx, err2 %lx, err3 %lx\n"
 argument_list|,
-name|fpswa_ret
+name|ret
 operator|.
 name|err1
 argument_list|,
-name|fpswa_ret
+name|ret
 operator|.
 name|err2
 argument_list|,
-name|fpswa_ret
+name|ret
 operator|.
 name|err3
 argument_list|)
