@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.21 1996/05/05 13:53:48 joerg Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.22 1996/09/07 03:24:44 dyson Exp $ */
 end_comment
 
 begin_comment
@@ -129,6 +129,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_pager.h>
 end_include
 
 begin_ifndef
@@ -2702,20 +2708,25 @@ operator|->
 name|shm_perm
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We make sure that we have allocated a pager before we need 	 * to. 	 */
 name|shm_handle
 operator|->
 name|shm_object
 operator|=
-name|vm_object_allocate
+name|vm_pager_allocate
 argument_list|(
-name|OBJT_DEFAULT
+name|OBJT_SWAP
 argument_list|,
-name|round_page
+literal|0
+argument_list|,
+name|OFF_TO_IDX
 argument_list|(
 name|size
 argument_list|)
-operator|/
-name|PAGE_SIZE
+argument_list|,
+name|VM_PROT_DEFAULT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|shmseg
