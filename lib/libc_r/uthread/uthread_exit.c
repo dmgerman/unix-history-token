@@ -620,6 +620,8 @@ block|}
 comment|/* Set the return value for the joining thread: */
 name|pthread
 operator|->
+name|join_status
+operator|.
 name|ret
 operator|=
 name|curthread
@@ -628,9 +630,19 @@ name|ret
 expr_stmt|;
 name|pthread
 operator|->
+name|join_status
+operator|.
 name|error
 operator|=
 literal|0
+expr_stmt|;
+name|pthread
+operator|->
+name|join_status
+operator|.
+name|thread
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Make this thread collectable by the garbage collector. */
 name|PTHREAD_ASSERT
