@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.21	82/06/30	*/
+comment|/*	if_ec.c	4.22	82/07/21	*/
 end_comment
 
 begin_include
@@ -156,6 +156,13 @@ define|#
 directive|define
 name|ECMTU
 value|1500
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECMEM
+value|0000000
 end_define
 
 begin_decl_stmt
@@ -379,7 +386,7 @@ index|[
 name|numuba
 index|]
 index|[
-literal|0600000
+name|ECMEM
 index|]
 decl_stmt|;
 ifdef|#
@@ -421,7 +428,21 @@ name|ec_rcr
 operator|=
 name|EC_AROM
 expr_stmt|;
-comment|/* 	 * Check for existence of buffers on Unibus. 	 * This won't work on a 780 until more work is done. 	 */
+comment|/* 	 * Disable map registers for ec unibus space, 	 * but don't allocate yet. 	 */
+name|ubamem
+argument_list|(
+name|numuba
+argument_list|,
+name|ECMEM
+argument_list|,
+literal|32
+operator|*
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Check for existence of buffers on Unibus. 	 */
 if|if
 condition|(
 name|badaddr
@@ -435,29 +456,111 @@ literal|2
 argument_list|)
 condition|)
 block|{
+name|bad1
+label|:
 name|printf
 argument_list|(
-literal|"ec: buffer mem not found"
+literal|"ec: buffer mem not found\n"
 argument_list|)
 expr_stmt|;
+name|bad2
+label|:
+name|ubamem
+argument_list|(
+name|numuba
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* reenable map (780 only) */
+name|addr
+operator|->
+name|ec_rcr
+operator|=
+name|EC_MDISAB
+expr_stmt|;
+comment|/* disable memory */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|VAX780
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_780
+operator|&&
+name|uba_hd
+index|[
+name|numuba
+index|]
+operator|.
+name|uh_uba
+operator|->
+name|uba_sr
+condition|)
+block|{
+name|uba_hd
+index|[
+name|numuba
+index|]
+operator|.
+name|uh_uba
+operator|->
+name|uba_sr
+operator|=
+name|uba_hd
+index|[
+name|numuba
+index|]
+operator|.
+name|uh_uba
+operator|->
+name|uba_sr
+expr_stmt|;
+goto|goto
+name|bad1
+goto|;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Tell the system that the board has memory here, so it won't 	 * attempt to allocate the addresses later. 	 */
+if|if
+condition|(
 name|ubamem
 argument_list|(
 name|numuba
 argument_list|,
-literal|0600000
+name|ECMEM
 argument_list|,
 literal|32
 operator|*
 literal|2
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ecprobe: cannot reserve uba addresses\n"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|bad2
+goto|;
+block|}
 comment|/* 	 * Make a one byte packet in what should be buffer #0. 	 * Submit it for sending.  This whould cause an xmit interrupt. 	 * The xmit interrupt vector is 8 bytes after the receive vector, 	 * so adjust for this before returning. 	 */
 operator|*
 operator|(
@@ -497,7 +600,6 @@ name|ec_xcr
 operator|=
 name|EC_XCLR
 expr_stmt|;
-comment|/* will this work if there's a collision? */
 if|if
 condition|(
 name|cvec
@@ -509,6 +611,27 @@ operator|!=
 literal|0x200
 condition|)
 block|{
+if|if
+condition|(
+name|cvec
+operator|&
+literal|04
+condition|)
+block|{
+comment|/* collision interrupt */
+name|cvec
+operator|-=
+literal|04
+expr_stmt|;
+name|br
+operator|+=
+literal|1
+expr_stmt|;
+comment|/* rcv is collision + 1 */
+block|}
+else|else
+block|{
+comment|/* xmit interrupt */
 name|cvec
 operator|-=
 literal|010
@@ -518,6 +641,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/* rcv is xmit + 2 */
+block|}
 block|}
 return|return
 operator|(
@@ -953,7 +1077,7 @@ operator|->
 name|ui_ubanum
 index|]
 index|[
-literal|0600000
+name|ECMEM
 operator|+
 literal|2048
 operator|*
@@ -1034,6 +1158,20 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|ubamem
+argument_list|(
+name|uban
+argument_list|,
+name|ECMEM
+argument_list|,
+literal|32
+operator|*
+literal|2
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* map register disable (no alloc) */
 name|ecinit
 argument_list|(
 name|unit
@@ -1679,11 +1817,7 @@ name|addr
 operator|->
 name|ec_xcr
 operator|=
-name|EC_JINTEN
-operator||
-name|EC_XINTEN
-operator||
-name|EC_JCLR
+name|EC_CLEAR
 expr_stmt|;
 block|}
 end_block

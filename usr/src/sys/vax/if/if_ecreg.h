@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ecreg.h	4.2	82/06/26	*/
+comment|/*	if_ecreg.h	4.3	82/07/21	*/
 end_comment
 
 begin_comment
@@ -113,6 +113,17 @@ end_define
 
 begin_comment
 comment|/* receive done */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EC_MDISAB
+value|0x0080
+end_define
+
+begin_comment
+comment|/* memory disable */
 end_comment
 
 begin_define

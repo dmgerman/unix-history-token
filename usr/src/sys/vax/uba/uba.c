@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.46	82/06/26	*/
+comment|/*	uba.c	4.47	82/07/21	*/
 end_comment
 
 begin_include
@@ -2515,7 +2515,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This routine is called by a driver for a device with on-board Unibus  * memory.  It removes the memory block from the Unibus resource map  * and clears the map registers for the block.  *  * Arguments are the Unibus number, the Unibus address of the memory  * block, and its size in blocks of 512 bytes.  *  * Returns addr if successful, 0 if not.  */
+comment|/*  * This routine is called by a driver for a device with on-board Unibus  * memory.  It removes the memory block from the Unibus resource map  * and clears the map registers for the block.  *  * Arguments are the Unibus number, the Unibus address of the memory  * block, its size in blocks of 512 bytes, and a flag indicating whether  * to allocate the unibus space form the resource map or whether it already  * has been.  *  * Returns> 0 if successful, 0 if not.  */
 end_comment
 
 begin_macro
@@ -2526,6 +2526,8 @@ argument_list|,
 argument|addr
 argument_list|,
 argument|size
+argument_list|,
+argument|alloc
 argument_list|)
 end_macro
 
@@ -2556,6 +2558,11 @@ name|a
 decl_stmt|,
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|alloc
+condition|)
+block|{
 name|s
 operator|=
 name|spl6
@@ -2571,15 +2578,32 @@ name|uh_map
 argument_list|,
 name|size
 argument_list|,
+operator|(
 name|addr
 operator|>>
 literal|9
+operator|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
+comment|/* starts at ONE! */
 name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|a
+operator|=
+operator|(
+name|addr
+operator|>>
+literal|9
+operator|)
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2600,6 +2624,8 @@ operator|->
 name|uba_map
 index|[
 name|a
+operator|-
+literal|1
 index|]
 expr_stmt|;
 for|for
@@ -2622,6 +2648,44 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* All off, especially 'valid' */
+if|#
+directive|if
+name|VAX780
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_780
+condition|)
+block|{
+comment|/* map disable */
+name|i
+operator|=
+operator|(
+name|addr
+operator|+
+name|size
+operator|*
+literal|512
+operator|+
+literal|8191
+operator|)
+operator|/
+literal|8192
+expr_stmt|;
+name|uh
+operator|->
+name|uh_uba
+operator|->
+name|uba_cr
+operator||=
+name|i
+operator|<<
+literal|26
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.40	82/07/15	*/
+comment|/*	autoconf.c	4.41	82/07/21	*/
 end_comment
 
 begin_comment
@@ -676,6 +676,21 @@ operator||
 name|UBACR_USEFIE
 operator||
 name|UBACR_SUEFIE
+operator||
+operator|(
+operator|(
+operator|(
+expr|struct
+name|uba_regs
+operator|*
+operator|)
+name|nxv
+operator|)
+operator|->
+name|uba_cr
+operator|&
+literal|0x7c000000
+operator|)
 expr_stmt|;
 endif|#
 directive|endif
