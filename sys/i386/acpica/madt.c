@@ -1704,6 +1704,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* First, we run through adding I/O APIC's. */
+if|if
+condition|(
+name|madt
+operator|->
+name|PCATCompat
+condition|)
+name|ioapic_enable_mixed_mode
+argument_list|()
+expr_stmt|;
 name|madt_walk_table
 argument_list|(
 name|madt_parse_apics
