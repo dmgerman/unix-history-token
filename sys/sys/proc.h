@@ -1015,17 +1015,6 @@ begin_comment
 comment|/* No zombies if child dies */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|P_DEADLKTREAT
-value|0x800000
-end_define
-
-begin_comment
-comment|/* lock aquisition - deadlock treatment */
-end_comment
-
 begin_comment
 comment|/*  * MOVE TO ucred.h?  *  * Shareable process credentials (always resident).  This includes a reference  * to the current user credentials as well as real and saved ids that may be  * used to change ids.  */
 end_comment
