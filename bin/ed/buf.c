@@ -161,7 +161,7 @@ name|seek
 expr_stmt|;
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|sfp
 argument_list|,
@@ -398,11 +398,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|sfp
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_END
 argument_list|)
@@ -432,7 +435,7 @@ return|;
 block|}
 name|sfseek
 operator|=
-name|ftell
+name|ftello
 argument_list|(
 name|sfp
 argument_list|)
