@@ -1614,9 +1614,14 @@ name|nfsrv_numnfsd
 operator|!=
 literal|0
 condition|)
+block|{
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
+block|}
 name|callout_stop
 argument_list|(
 operator|&
