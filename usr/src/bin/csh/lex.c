@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.28 (Berkeley) %G%"
+literal|"@(#)lex.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1317,9 +1317,9 @@ name|c
 argument_list|,
 name|_META
 operator||
-name|_Q
+name|_QF
 operator||
-name|_Q1
+name|_QB
 operator||
 name|_ESC
 argument_list|)
@@ -1385,9 +1385,9 @@ name|cmap
 argument_list|(
 name|c
 argument_list|,
-name|_Q
+name|_QF
 operator||
-name|_Q1
+name|_QB
 argument_list|)
 condition|)
 block|{
@@ -1557,9 +1557,9 @@ name|c
 argument_list|,
 name|_META
 operator||
-name|_Q
+name|_QF
 operator||
-name|_Q1
+name|_QB
 argument_list|)
 condition|)
 name|c
@@ -5505,9 +5505,9 @@ name|_ESC
 operator||
 name|_META
 operator||
-name|_Q
+name|_QF
 operator||
-name|_Q1
+name|_QB
 argument_list|)
 operator|&&
 operator|!

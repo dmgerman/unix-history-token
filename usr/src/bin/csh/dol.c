@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dol.c	5.20 (Berkeley) %G%"
+literal|"@(#)dol.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|QUOTES
-value|(_Q|_Q1|_ESC)
+value|(_QF|_QB|_ESC)
 end_define
 
 begin_comment
@@ -845,9 +845,9 @@ name|_SP
 operator||
 name|_NL
 operator||
-name|_Q
+name|_QF
 operator||
-name|_Q1
+name|_QB
 argument_list|)
 condition|)
 block|{

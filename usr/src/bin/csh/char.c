@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)char.c	5.9 (Berkeley) %G%"
+literal|"@(#)char.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,7 +130,7 @@ name|_META
 block|,
 literal|0
 block|,
-name|_Q
+name|_QF
 block|,
 name|_META
 block|,
@@ -143,7 +143,7 @@ name|_META
 operator||
 name|_CMD
 block|,
-name|_Q
+name|_QF
 block|,
 comment|/*	(		)		*		+	*/
 name|_META
@@ -360,7 +360,7 @@ block|,
 literal|0
 block|,
 comment|/*	`		a		b		c	*/
-name|_Q1
+name|_QB
 operator||
 name|_GLOB
 operator||
