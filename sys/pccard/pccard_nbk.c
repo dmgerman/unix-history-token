@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * This file contains various kludges to allow the legacy pccard system to  * work in the newbus system until the pccard system can be converted  * wholesale to newbus.  As that is a while off, I'm providing this glue to  * allow newbus drivers to have pccard attachments.  *  * We do *NOT* implement ISA ivars at all.  We are not an isa bus, and drivers  * that abuse isa_{set,get}_* must be fixed in order to work with pccard.  * We use ivars for something else anyway, so it becomes fairly awkward  * to do so.  *  * Here's a summary of the glue that we do to make things work.  *  * First, we have pccard node in the device and driver trees.  The pccard  * device lives in the instance tree attached to the nexus.  The pccard  * attachments will be attached to that node.  This allows one to pass things  * up the tree that terminates at the nexus, like other buses.  The pccard  * code will create a device instance for each of the drivers that are to  * be attached.  *  * These compatibility nodes are called pccnbk.  PCCard New Bus Kludge.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OBSOLETE_IN_6
+end_define
+
 begin_include
 include|#
 directive|include

@@ -7,6 +7,12 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OBSOLETE_IN_6
+end_define
+
 begin_include
 include|#
 directive|include
