@@ -1955,7 +1955,7 @@ condition|(
 operator|!
 name|unidialer_get_okay
 argument_list|(
-literal|250
+name|reset_delay
 argument_list|)
 condition|)
 goto|goto
@@ -2240,7 +2240,7 @@ name|okay
 operator|=
 name|unidialer_get_okay
 argument_list|(
-literal|250
+name|reset_delay
 argument_list|)
 expr_stmt|;
 block|}
