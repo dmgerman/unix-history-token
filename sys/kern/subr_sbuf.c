@@ -1272,11 +1272,14 @@ operator|-
 literal|1
 operator|)
 return|;
-while|while
-condition|(
+for|for
+control|(
+init|;
+name|len
+condition|;
 name|len
 operator|--
-condition|)
+control|)
 block|{
 if|if
 condition|(
