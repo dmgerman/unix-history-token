@@ -616,7 +616,8 @@ argument_list|,
 name|skip2
 argument_list|)
 expr_stmt|;
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|zflag
@@ -676,6 +677,7 @@ operator|.
 name|st_size
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
