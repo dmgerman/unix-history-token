@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.54 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -147,7 +147,7 @@ file|<vm/vm_kern.h>
 end_include
 
 begin_comment
-comment|/*  * Exit system call: pass back caller's arg  */
+comment|/*  * exit --  *	Death of process.  */
 end_comment
 
 begin_struct
@@ -161,12 +161,8 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_macro
-name|rexit
+name|exit
 argument_list|(
 argument|p
 argument_list|,
@@ -220,7 +216,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Exit: deallocate address space and other resources,  * change proc state to zombie, and unlink proc from allproc  * and parent's lists.  Save exit status and rusage for wait().  * Check for child processes and orphan them.  */
+comment|/*  * Exit: deallocate address space and other resources, change proc state  * to zombie, and unlink proc from allproc and parent's lists.  Save exit  * status and rusage for wait().  Check for child processes and orphan them.  */
 end_comment
 
 begin_expr_stmt
