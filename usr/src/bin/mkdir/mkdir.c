@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkdir.c	4.4 (Berkeley) %G%"
+literal|"@(#)mkdir.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mkdir: arg count\n"
+literal|"usage: %s directory ...\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|exit

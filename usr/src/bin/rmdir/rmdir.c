@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rmdir.c	4.7 (Berkeley) %G%"
+literal|"@(#)rmdir.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rmdir: arg count\n"
+literal|"usage: %s directory ...\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|exit
