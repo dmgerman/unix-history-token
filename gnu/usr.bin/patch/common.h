@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: common.h,v 2.0.1.2 88/06/22 20:44:53 lwall Locked $  *  * $Log:	common.h,v $  * Revision 2.0.1.2  88/06/22  20:44:53  lwall  * patch12: sprintf was declared wrong  *   * Revision 2.0.1.1  88/06/03  15:01:56  lwall  * patch10: support for shorter extensions.  *   * Revision 2.0  86/09/17  15:36:39  lwall  * Baseline for netwide release.  *   */
+comment|/* $Header: /a/cvs/386BSD/src/gnu/patch/common.h,v 1.1.1.1 1993/06/19 14:21:52 paul Exp $  *  * $Log: common.h,v $  * Revision 1.1.1.1  1993/06/19  14:21:52  paul  * b-maked patch-2.10  *  * Revision 2.0.1.2  88/06/22  20:44:53  lwall  * patch12: sprintf was declared wrong  *   * Revision 2.0.1.1  88/06/03  15:01:56  lwall  * patch10: support for shorter extensions.  *   * Revision 2.0  86/09/17  15:36:39  lwall  * Baseline for netwide release.  *   */
 end_comment
 
 begin_define
@@ -243,7 +243,7 @@ begin_define
 define|#
 directive|define
 name|MAXHUNKSIZE
-value|100000
+value|200000
 end_define
 
 begin_comment
@@ -265,14 +265,14 @@ begin_define
 define|#
 directive|define
 name|MAXLINELEN
-value|1024
+value|4096
 end_define
 
 begin_define
 define|#
 directive|define
 name|BUFFERSIZE
-value|1024
+value|4096
 end_define
 
 begin_define
