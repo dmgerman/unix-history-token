@@ -84,43 +84,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DRIVER
+name|NORMAL
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|NORMAL
+name|INVISIBLE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|INVISIBLE
+name|PROFILING
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|PROFILING
+name|NODEPEND
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|NODEPEND
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOCAL
-value|6
+value|5
 end_define
 
 begin_define

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.42 1999/05/09 17:23:37 phk Exp $"
+literal|"$Id: mkmakefile.c,v 1.43 1999/05/09 18:54:23 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,6 +1193,11 @@ literal|80
 index|]
 decl_stmt|;
 name|int
+name|ddwarned
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|nreqs
 decl_stmt|,
 name|first
@@ -1282,7 +1287,7 @@ expr_stmt|;
 block|}
 name|next
 label|:
-comment|/* 	 * filename    [ standard | mandatory | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] 	 */
+comment|/* 	 * filename    [ standard | mandatory | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ no-obj ] 	 *	[ compile-with "compile rule" [no-implicit-rule] ] 	 *      [ dependency "dependency-list"] [ before-depend ] 	 *	[ clean "file-list"] 	 */
 name|wd
 operator|=
 name|get_word
@@ -1937,10 +1942,23 @@ literal|"device-driver"
 argument_list|)
 condition|)
 block|{
-name|filetype
-operator|=
-name|DRIVER
+if|if
+condition|(
+operator|!
+name|ddwarned
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: `device-driver' flag ignored.\n"
+argument_list|,
+name|fname
+argument_list|)
 expr_stmt|;
+name|ddwarned
+operator|++
+expr_stmt|;
+block|}
 goto|goto
 name|nextparam
 goto|;
@@ -3647,14 +3665,6 @@ case|:
 name|ftype
 operator|=
 literal|"NORMAL"
-expr_stmt|;
-break|break;
-case|case
-name|DRIVER
-case|:
-name|ftype
-operator|=
-literal|"DRIVER"
 expr_stmt|;
 break|break;
 case|case
