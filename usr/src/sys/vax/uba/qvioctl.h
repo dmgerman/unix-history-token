@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)qvioctl.h	1.7 (ULTRIX) 6/11/85  *  * Ioctl definitions for the qvss.  *  *	@(#)qvioctl.h	1.2 (Berkeley) %G%  *  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  * 		@(#)qvioctl.h	1.3  Berkeley  %G%  *	derived from: @(#)qvioctl.h	1.7 (ULTRIX) 6/11/85  */
+end_comment
+
+begin_comment
+comment|/*  * Ioctl definitions for the qvss.  */
 end_comment
 
 begin_ifdef
@@ -12,19 +16,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"qevent.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"qvreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"qevent.h"
 end_include
 
 begin_else
@@ -35,19 +39,19 @@ end_else
 begin_include
 include|#
 directive|include
-file|<qevent.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<qvreg.h>
+file|<vaxuba/qvreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vaxuba/qevent.h>
 end_include
 
 begin_endif
