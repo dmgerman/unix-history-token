@@ -850,6 +850,30 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"opt_param.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NMBCLUSTERS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NMBCLUSTERS
+value|(512 + MAXUSERS * 16)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
