@@ -27,14 +27,18 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_HEADER
-value|0
+value|0x00
 end_define
+
+begin_comment
+comment|/* Header */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_CM
-value|1
+value|0x01
 end_define
 
 begin_comment
@@ -45,7 +49,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_ACM
-value|2
+value|0x02
 end_define
 
 begin_comment
@@ -56,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_DLM
-value|3
+value|0x03
 end_define
 
 begin_comment
@@ -67,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_TRF
-value|4
+value|0x04
 end_define
 
 begin_comment
@@ -78,25 +82,29 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_TCLSR
-value|5
+value|0x05
 end_define
 
 begin_comment
-comment|/* Telephone Call ... */
+comment|/* Tel. Call and Line State Rep. Cap. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_UNION
-value|6
+value|0x06
 end_define
+
+begin_comment
+comment|/* Union */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_CS
-value|7
+value|0x07
 end_define
 
 begin_comment
@@ -107,7 +115,7 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_TOM
-value|8
+value|0x08
 end_define
 
 begin_comment
@@ -118,12 +126,107 @@ begin_define
 define|#
 directive|define
 name|UDESCSUB_CDC_USBT
-value|9
+value|0x09
 end_define
 
 begin_comment
 comment|/* USB Terminal */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_NCT
+value|0x0a
+end_define
+
+begin_comment
+comment|/* Network Channel Terminal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_PU
+value|0x0b
+end_define
+
+begin_comment
+comment|/* Protocol Unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_EU
+value|0x0c
+end_define
+
+begin_comment
+comment|/* Extention Unit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_MCM
+value|0x0d
+end_define
+
+begin_comment
+comment|/* Multi-Channel Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_CCM
+value|0x0e
+end_define
+
+begin_comment
+comment|/* CAPI Control Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_EN
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Ethernet Networking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESCSUB_CDC_AN
+value|0x10
+end_define
+
+begin_comment
+comment|/* ATM Networking */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uByte
+name|bDescriptorSubtype
+decl_stmt|;
+block|}
+name|usb_cdc_generic_descriptor_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
