@@ -318,7 +318,7 @@ end_define
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|disize
 parameter_list|(
@@ -348,7 +348,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|cylsize
 parameter_list|(
@@ -2029,7 +2029,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|bps
 parameter_list|(

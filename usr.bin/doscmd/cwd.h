@@ -5,7 +5,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 modifier|*
 name|ustrcpy
@@ -46,7 +46,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 modifier|*
 name|ustrcat
@@ -87,7 +87,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 modifier|*
 name|ustrncat
@@ -135,7 +135,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 modifier|*
 name|ustrncpy
@@ -181,7 +181,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|ustrcmp
 parameter_list|(
@@ -217,7 +217,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|ustrncmp
 parameter_list|(
@@ -262,7 +262,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|ustrlen
 parameter_list|(
@@ -290,7 +290,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 modifier|*
 name|ustrrchr
@@ -326,7 +326,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|u_char
 modifier|*
 name|ustrdup
@@ -359,7 +359,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|ustat
 parameter_list|(
@@ -392,7 +392,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|uaccess
 parameter_list|(

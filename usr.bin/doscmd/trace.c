@@ -77,7 +77,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|showstate
 parameter_list|(
@@ -587,7 +587,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|showstate
 parameter_list|(

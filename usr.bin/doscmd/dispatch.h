@@ -58,7 +58,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|intfunc_init
 parameter_list|(
@@ -154,7 +154,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|intfunc_find
 parameter_list|(
@@ -256,7 +256,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|intfunc_search
 parameter_list|(

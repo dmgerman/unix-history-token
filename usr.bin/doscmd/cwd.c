@@ -95,7 +95,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|isvalid
 parameter_list|(
@@ -106,7 +106,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|isdot
 parameter_list|(
@@ -117,7 +117,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|isslash
 parameter_list|(
@@ -2246,7 +2246,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|isvalid
 parameter_list|(
@@ -2271,7 +2271,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|isdot
 parameter_list|(
@@ -2296,7 +2296,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|isslash
 parameter_list|(

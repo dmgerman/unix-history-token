@@ -551,8 +551,8 @@ value|regcontext_t *REGS
 end_define
 
 begin_function
-specifier|inline
 specifier|static
+name|__inline
 name|void
 name|PUSH
 parameter_list|(
@@ -586,8 +586,8 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 specifier|static
+name|__inline
 name|u_short
 name|POP
 parameter_list|(

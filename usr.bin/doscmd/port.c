@@ -55,29 +55,68 @@ name|MAXPORT_MASK
 value|(MAXPORT - 1)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|int
 name|in
 parameter_list|(
+name|u_int
 name|port
 parameter_list|)
-define|\
-value|({ \         register int _inb_result; \ \         asm volatile ("xorl %%eax,%%eax; inb %%dx,%%al" : \             "=a" (_inb_result) : "d" (port)); \         _inb_result; \ })
-end_define
+block|{
+name|int
+name|_inb_result
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+asm|__asm __volatile ("xorl %%eax,%%eax; inb %%dx,%%al" :
+literal|"=a"
+operator|(
+name|_inb_result
+operator|)
+operator|:
+literal|"d"
+operator|(
+name|port
+operator|)
+block|)
+function|;
+end_function
 
-begin_define
-define|#
-directive|define
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+name|_inb_result
+return|;
+end_return
+
+begin_function
+unit|}  static
+name|__inline
+name|void
 name|out
 parameter_list|(
+name|u_int
 name|port
 parameter_list|,
+name|int
 name|data
 parameter_list|)
-define|\
-value|asm volatile ("outb %%al,%%dx" : : "a" (data), "d" (port))
-end_define
+block|{
+ifdef|#
+directive|ifdef
+name|__GNUC__
+asm|__asm __volatile ("outb %%al,%%dx" : : "a" (data), "d" (port));
+endif|#
+directive|endif
+block|}
+end_function
 
 begin_decl_stmt
 name|FILE

@@ -25,7 +25,7 @@ end_include
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|to_BCD
 parameter_list|(

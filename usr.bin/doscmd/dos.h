@@ -3315,7 +3315,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|from_dos_attr
 parameter_list|(
@@ -3341,7 +3341,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|to_dos_attr
 parameter_list|(

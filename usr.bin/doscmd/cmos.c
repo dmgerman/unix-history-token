@@ -350,7 +350,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|day_in_mon_year
 parameter_list|(
@@ -386,7 +386,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|to_BCD
 parameter_list|(
@@ -418,7 +418,7 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|int
 name|from_BCD
 parameter_list|(
