@@ -538,17 +538,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_COMSIZE
-value|8
-end_define
-
-begin_comment
-comment|/* 8250, 16X50 com controllers (4?) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_DMASIZE
 value|16
 end_define

@@ -313,6 +313,21 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+name|SET_FLAG
+argument_list|(
+name|dev
+argument_list|,
+name|SET_IFTYPE
+argument_list|(
+name|COM_IF_MODEM_CARD
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Do not probe IRQ - pccard doesn't turn on the interrupt line */
 comment|/* until bus_setup_intr */
 return|return
