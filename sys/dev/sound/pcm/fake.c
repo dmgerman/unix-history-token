@@ -426,7 +426,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|->
-name|parent
+name|parentsnddev
 operator|=
 name|d
 expr_stmt|;

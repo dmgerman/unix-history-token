@@ -20,6 +20,9 @@ name|oflags
 parameter_list|,
 name|int
 name|devtype
+parameter_list|,
+name|pid_t
+name|pid
 parameter_list|)
 function_decl|;
 end_function_decl
