@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.12	82/04/03	*/
+comment|/*	param.c	4.13	82/08/01	*/
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/quota.h"
 end_include
 
 begin_comment
@@ -210,6 +216,49 @@ name|NMBCLUSTERS
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|QUOTA
+end_if
+
+begin_decl_stmt
+name|int
+name|nquota
+init|=
+operator|(
+name|MAXUSERS
+operator|*
+literal|9
+operator|)
+operator|/
+literal|7
+operator|+
+literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ndquot
+init|=
+operator|(
+name|MAXUSERS
+operator|*
+name|NMOUNT
+operator|)
+operator|/
+literal|4
+operator|+
+name|NPROC
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * These are initialized at bootstrap time  * to values dependent on memory size  */
 end_comment
@@ -328,6 +377,39 @@ modifier|*
 name|ecmap
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|QUOTA
+end_if
+
+begin_decl_stmt
+name|struct
+name|quota
+modifier|*
+name|quota
+decl_stmt|,
+modifier|*
+name|quotaNQUOTA
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|dquot
+modifier|*
+name|dquot
+decl_stmt|,
+modifier|*
+name|dquotNDQUOT
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
