@@ -727,6 +727,7 @@ goto|goto
 name|drop
 goto|;
 block|}
+comment|/* 	 * Remeber that we have checked the IP header and found it valid. 	 */
 name|m
 operator|->
 name|m_pkthdr
@@ -1335,7 +1336,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* 	 * Decrement the TTL and incrementally change the checksum. 	 * Don't bother doing this with hw checksum offloading. 	 */
+comment|/* 	 * Decrement the TTL and incrementally change the IP header checksum. 	 * Don't bother doing this with hw checksum offloading, it's faster 	 * doing it right here. 	 */
 name|ip
 operator|->
 name|ip_ttl
@@ -1553,16 +1554,16 @@ else|#
 directive|else
 if|if
 condition|(
-name|in_localip
-argument_list|(
-name|dest
-argument_list|)
-operator|||
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_FASTFWD_OURS
+operator|||
+name|in_localip
+argument_list|(
+name|dest
+argument_list|)
 condition|)
 block|{
 endif|#
