@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.38 1997/08/27 02:58:40 julian Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.39 1997/09/14 02:57:48 peter Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -4805,15 +4805,15 @@ operator|)
 operator|==
 name|HASBUF
 condition|)
-name|FREE
+name|zfree
 argument_list|(
+name|namei_zone
+argument_list|,
 name|ap
 operator|->
 name|a_cnp
 operator|->
 name|cn_pnbuf
-argument_list|,
-name|M_NAMEI
 argument_list|)
 expr_stmt|;
 return|return
