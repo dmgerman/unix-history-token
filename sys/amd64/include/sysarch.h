@@ -66,6 +66,7 @@ begin_struct
 struct|struct
 name|i386_ldt_args
 block|{
+name|unsigned
 name|int
 name|start
 decl_stmt|;
@@ -74,6 +75,7 @@ name|descriptor
 modifier|*
 name|descs
 decl_stmt|;
+name|unsigned
 name|int
 name|num
 decl_stmt|;
