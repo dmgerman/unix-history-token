@@ -3581,6 +3581,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|_thr_seterrno
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|_thr_sig_handler
 parameter_list|(
 name|int
@@ -3666,13 +3679,9 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_thr_seterrno
+name|_thr_spinlock_init
 parameter_list|(
-name|struct
-name|pthread
-modifier|*
-parameter_list|,
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

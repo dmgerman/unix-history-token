@@ -1947,6 +1947,9 @@ argument_list|(
 literal|"Cannot initialize thread specific keytable lock"
 argument_list|)
 expr_stmt|;
+name|_thr_spinlock_init
+argument_list|()
+expr_stmt|;
 comment|/* Clear pending signals and get the process signal mask. */
 name|sigemptyset
 argument_list|(
