@@ -1476,20 +1476,6 @@ condition|)
 goto|goto
 name|cleanup
 goto|;
-comment|/* 	 * Lock no longer needed 	 */
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-name|locked
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Pull in executable header into kernel_map */
 name|error
 operator|=
@@ -1518,6 +1504,20 @@ operator|)
 name|vp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Lock no longer needed 	 */
+name|locked
+operator|=
+literal|0
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|td
 argument_list|)
 expr_stmt|;
 if|if
