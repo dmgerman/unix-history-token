@@ -848,8 +848,7 @@ specifier|static
 name|int
 name|start_all_aps
 parameter_list|(
-name|u_int
-name|boot_addr
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -859,8 +858,7 @@ specifier|static
 name|void
 name|install_ap_tramp
 parameter_list|(
-name|u_int
-name|boot_addr
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -872,9 +870,6 @@ name|start_ap
 parameter_list|(
 name|int
 name|apic_id
-parameter_list|,
-name|u_int
-name|boot_addr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -934,10 +929,10 @@ argument_list|)
 expr_stmt|;
 name|boot_address
 operator|=
+name|trunc_page
+argument_list|(
 name|basemem
-operator|&
-operator|~
-literal|0xfff
+argument_list|)
 expr_stmt|;
 comment|/* round down to 4k boundary */
 if|if
@@ -952,7 +947,7 @@ name|bootMP_size
 condition|)
 name|boot_address
 operator|-=
-literal|4096
+name|PAGE_SIZE
 expr_stmt|;
 comment|/* not enough, lower by 4k */
 return|return
@@ -1491,9 +1486,7 @@ name|boot_cpu_id
 expr_stmt|;
 comment|/* Start each Application Processor */
 name|start_all_aps
-argument_list|(
-name|boot_address
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Setup the initial logical CPUs info. */
 name|logical_cpus
@@ -2329,8 +2322,7 @@ specifier|static
 name|int
 name|start_all_aps
 parameter_list|(
-name|u_int
-name|boot_addr
+name|void
 parameter_list|)
 block|{
 ifndef|#
@@ -2384,9 +2376,7 @@ argument_list|)
 expr_stmt|;
 comment|/* install the AP 1st level boot code */
 name|install_ap_tramp
-argument_list|(
-name|boot_addr
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* save the current value of the warm-start vector */
 name|mpbioswarmvec
@@ -2672,7 +2662,7 @@ name|WARMBOOT_SEG
 operator|)
 operator|=
 operator|(
-name|boot_addr
+name|boot_address
 operator|>>
 literal|4
 operator|)
@@ -2729,8 +2719,6 @@ operator|!
 name|start_ap
 argument_list|(
 name|apic_id
-argument_list|,
-name|boot_addr
 argument_list|)
 condition|)
 block|{
@@ -2989,8 +2977,7 @@ specifier|static
 name|void
 name|install_ap_tramp
 parameter_list|(
-name|u_int
-name|boot_addr
+name|void
 parameter_list|)
 block|{
 name|int
@@ -3035,7 +3022,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|boot_addr
+name|boot_address
 operator|+
 name|KERNBASE
 decl_stmt|;
@@ -3066,11 +3053,11 @@ argument_list|)
 expr_stmt|;
 name|pmap_kenter
 argument_list|(
-name|boot_addr
+name|boot_address
 operator|+
 name|KERNBASE
 argument_list|,
-name|boot_addr
+name|boot_address
 argument_list|)
 expr_stmt|;
 for|for
@@ -3102,7 +3089,7 @@ operator|(
 name|u_char
 operator|*
 operator|)
-name|boot_addr
+name|boot_address
 operator|+
 name|KERNBASE
 expr_stmt|;
@@ -3130,7 +3117,7 @@ expr_stmt|;
 operator|*
 name|dst32
 operator|=
-name|boot_addr
+name|boot_address
 operator|+
 operator|(
 operator|(
@@ -3214,7 +3201,7 @@ operator|=
 operator|(
 name|u_int
 operator|)
-name|boot_addr
+name|boot_address
 operator|&
 literal|0xffff
 expr_stmt|;
@@ -3225,7 +3212,7 @@ operator|(
 operator|(
 name|u_int
 operator|)
-name|boot_addr
+name|boot_address
 operator|>>
 literal|16
 operator|)
@@ -3270,7 +3257,7 @@ operator|=
 operator|(
 name|u_int
 operator|)
-name|boot_addr
+name|boot_address
 operator|&
 literal|0xffff
 expr_stmt|;
@@ -3281,7 +3268,7 @@ operator|(
 operator|(
 name|u_int
 operator|)
-name|boot_addr
+name|boot_address
 operator|>>
 literal|16
 operator|)
@@ -3302,9 +3289,6 @@ name|start_ap
 parameter_list|(
 name|int
 name|apic_id
-parameter_list|,
-name|u_int
-name|boot_addr
 parameter_list|)
 block|{
 name|int
@@ -3324,7 +3308,7 @@ comment|/* calculate the vector */
 name|vector
 operator|=
 operator|(
-name|boot_addr
+name|boot_address
 operator|>>
 literal|12
 operator|)
