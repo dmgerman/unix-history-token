@@ -1542,7 +1542,7 @@ name|INADDR_ANY
 expr_stmt|;
 return|return
 operator|(
-name|EAGAIN
+name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
@@ -1623,7 +1623,7 @@ name|INADDR_ANY
 expr_stmt|;
 return|return
 operator|(
-name|EAGAIN
+name|EADDRNOTAVAIL
 operator|)
 return|;
 block|}
