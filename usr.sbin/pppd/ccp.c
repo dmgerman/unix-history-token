@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ccp.c,v 1.2 1995/10/31 21:20:49 peter Exp $"
+literal|"$Id: ccp.c,v 1.3 1995/10/31 21:29:19 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2185,6 +2185,35 @@ else|:
 literal|"Transmit compression"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ANY_COMPRESS
+argument_list|(
+name|ccp_gotoptions
+index|[
+name|f
+operator|->
+name|unit
+index|]
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"No matching compression scheme, CCP disabled"
+argument_list|)
+expr_stmt|;
+name|ccp_close
+argument_list|(
+name|f
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
