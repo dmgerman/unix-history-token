@@ -1640,6 +1640,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|envtmp
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|path
@@ -1647,6 +1649,13 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|issetugid
+argument_list|()
+operator|==
+literal|0
+condition|)
 name|envtmp
 operator|=
 name|getenv
