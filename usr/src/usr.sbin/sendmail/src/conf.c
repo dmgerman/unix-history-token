@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.46 (Berkeley) %G%"
+literal|"@(#)conf.c	5.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,7 +356,17 @@ literal|9000
 expr_stmt|;
 name|FileMode
 operator|=
+operator|(
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+operator|)
+condition|?
 literal|0644
+else|:
+literal|0600
 expr_stmt|;
 name|DefUid
 operator|=
@@ -372,7 +382,7 @@ literal|10
 expr_stmt|;
 name|MaxHopCount
 operator|=
-name|MAXHOP
+literal|17
 expr_stmt|;
 name|SendMode
 operator|=
