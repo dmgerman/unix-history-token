@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.82 1998/12/19 02:58:29 msmith Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.83 1998/12/19 08:35:30 julian Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -844,14 +844,6 @@ literal|"Intel 82375EB PCI-EISA bridge"
 operator|)
 return|;
 case|case
-literal|0x04961039
-case|:
-return|return
-operator|(
-literal|"SiS 85c496"
-operator|)
-return|;
-case|case
 literal|0x04a38086
 case|:
 name|rev
@@ -939,30 +931,6 @@ case|:
 return|return
 operator|(
 literal|"Intel 82439"
-operator|)
-return|;
-case|case
-literal|0x04061039
-case|:
-return|return
-operator|(
-literal|"SiS 85c501"
-operator|)
-return|;
-case|case
-literal|0x00081039
-case|:
-return|return
-operator|(
-literal|"SiS 85c503"
-operator|)
-return|;
-case|case
-literal|0x06011039
-case|:
-return|return
-operator|(
-literal|"SiS 85c601"
 operator|)
 return|;
 case|case
@@ -1108,6 +1076,39 @@ operator|(
 literal|"Intel 82380FB mobile PCI to PCI bridge"
 operator|)
 return|;
+comment|/* SiS -- vendor 0x1039 */
+case|case
+literal|0x04961039
+case|:
+return|return
+operator|(
+literal|"SiS 85c496"
+operator|)
+return|;
+case|case
+literal|0x04061039
+case|:
+return|return
+operator|(
+literal|"SiS 85c501"
+operator|)
+return|;
+case|case
+literal|0x00081039
+case|:
+return|return
+operator|(
+literal|"SiS 85c503"
+operator|)
+return|;
+case|case
+literal|0x06011039
+case|:
+return|return
+operator|(
+literal|"SiS 85c601"
+operator|)
+return|;
 comment|/* VLSI -- vendor 0x1004 */
 case|case
 literal|0x00051004
@@ -1209,6 +1210,85 @@ case|:
 return|return
 operator|(
 literal|"VIA 82C586B ACPI interface"
+operator|)
+return|;
+comment|/* XXX New info added-in */
+case|case
+literal|0x05711106
+case|:
+return|return
+operator|(
+literal|"VIA 82C586B IDE controller"
+operator|)
+return|;
+case|case
+literal|0x30381106
+case|:
+return|return
+operator|(
+literal|"VIA 82C586B USB controller"
+operator|)
+return|;
+comment|/* XXX Here is MVP3, I got the datasheet but NO M/B to test it  */
+comment|/* totally. Please let me know if anything wrong.            -F */
+case|case
+literal|0x05981106
+case|:
+return|return
+operator|(
+literal|"VIA 82C598MVP (Apollo MVP3) host bridge"
+operator|)
+return|;
+case|case
+literal|0x85981106
+case|:
+return|return
+operator|(
+literal|"VIA 82C598MVP (Apollo MVP3) PCI-PCI bridge"
+operator|)
+return|;
+comment|/* AcerLabs -- vendor 0x10b9 */
+comment|/* Funny : The datasheet told me vendor id is "10b8",sub-vendor */
+comment|/* id is '10b9" but the register always shows "10b9". -Foxfair  */
+case|case
+literal|0x154110b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs M1541 (Aladdin-V) PCI host bridge"
+operator|)
+return|;
+case|case
+literal|0x153310b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs M1533 portable PCI-ISA bridge"
+operator|)
+return|;
+case|case
+literal|0x154310b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs M1543 desktop PCI-ISA bridge"
+operator|)
+return|;
+case|case
+literal|0x524710b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs M5247 PCI-PCI(AGP Supported) bridge"
+operator|)
+return|;
+case|case
+literal|0x524310b9
+case|:
+comment|/* 5243 seems like 5247, need more info to divide*/
+return|return
+operator|(
+literal|"AcerLabs M5243 PCI-PCI bridge"
 operator|)
 return|;
 comment|/* NEC -- vendor 0x1033 */
