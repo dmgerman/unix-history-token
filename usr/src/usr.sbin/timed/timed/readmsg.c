@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	1.1 (Berkeley) %G%"
+literal|"@(#)readmsg.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,19 +37,14 @@ directive|include
 file|<protocols/timed.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|SLAVE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MASTER
-value|1
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|tsptype
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * LOOKAT checks if the message is of the requested type and comes from  * the right machine, returning 1 in case of affirmative answer   */
@@ -61,17 +56,26 @@ directive|define
 name|LOOKAT
 parameter_list|(
 name|msg
+parameter_list|,
+name|mtype
+parameter_list|,
+name|mfrom
 parameter_list|)
 define|\
-value|((((type == TSP_ANY) || (type == (msg).tsp_type))&& \ 	((machfrom == NULL) || (strcmp(machfrom, (msg).tsp_name) == 0))) \ 	? 1 : 0)
+value|(((((mtype) == TSP_ANY) || ((mtype) == (msg).tsp_type))&& \ 	(((mfrom) == NULL) || (strcmp((mfrom), (msg).tsp_name) == 0))) \ 	? 1 : 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISTOUTOFF
+parameter_list|(
+name|rtime
+parameter_list|,
+name|rtout
+parameter_list|)
 define|\
-value|((rtime.tv_sec> rtout.tv_sec || (rtime.tv_sec == rtout.tv_sec&& \ 				rtime.tv_usec>= rtout.tv_usec)) \ 	? 1 : 0)
+value|(((rtime).tv_sec> (rtout).tv_sec || \ 	    ((rtime).tv_sec == (rtout).tv_sec&& \ 		(rtime).tv_usec>= (rtout).tv_usec)) \ 	? 1 : 0)
 end_define
 
 begin_decl_stmt
@@ -200,11 +204,12 @@ name|ready
 decl_stmt|,
 name|found
 decl_stmt|;
-specifier|static
 name|struct
 name|tsp
 modifier|*
 name|ret
+init|=
+name|NULL
 decl_stmt|;
 specifier|extern
 name|int
@@ -248,15 +253,25 @@ decl_stmt|,
 name|bytehostorder
 argument_list|()
 decl_stmt|;
-name|ret
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|trace
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"looking for %s from %s\n"
+argument_list|,
+name|tsptype
+index|[
+name|type
+index|]
+argument_list|,
+name|machfrom
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|=
 name|head
@@ -325,6 +340,10 @@ argument_list|(
 name|ptr
 operator|->
 name|info
+argument_list|,
+name|type
+argument_list|,
+name|machfrom
 argument_list|)
 condition|)
 block|{
@@ -648,7 +667,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: receiving datagram packet: %m"
+literal|"receiving datagram packet: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -663,7 +682,69 @@ operator|&
 name|msgin
 argument_list|)
 expr_stmt|;
-comment|/*  * Should check here to see if message comes from local net.  * Until done, master cannot run on gateway conneting  * two subnets each with running timedaemons.  */
+if|if
+condition|(
+operator|(
+name|from
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|&
+name|netmask
+operator|)
+operator|!=
+name|mynet
+condition|)
+block|{
+if|if
+condition|(
+name|trace
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"readmsg: wrong network: "
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+operator|&
+name|msgin
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|gettimeofday
+argument_list|(
+operator|&
+name|rtime
+argument_list|,
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ISTOUTOFF
+argument_list|(
+name|rtime
+argument_list|,
+name|rtout
+argument_list|)
+condition|)
+break|break;
+else|else
+continue|continue;
+block|}
 comment|/* 			 * Throw away messages coming from this machine, unless 			 * they are of some particular type. 			 * This gets rid of broadcast messages and reduces 			 * master processing time. 			 */
 if|if
 condition|(
@@ -755,6 +836,11 @@ expr_stmt|;
 if|if
 condition|(
 name|ISTOUTOFF
+argument_list|(
+name|rtime
+argument_list|,
+name|rtout
+argument_list|)
 condition|)
 break|break;
 else|else
@@ -779,6 +865,10 @@ condition|(
 name|LOOKAT
 argument_list|(
 name|msgin
+argument_list|,
+name|type
+argument_list|,
+name|machfrom
 argument_list|)
 condition|)
 block|{
@@ -853,6 +943,11 @@ expr_stmt|;
 if|if
 condition|(
 name|ISTOUTOFF
+argument_list|(
+name|rtime
+argument_list|,
+name|rtout
+argument_list|)
 condition|)
 break|break;
 block|}
@@ -976,6 +1071,25 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|trace
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"Slaveack: "
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
+block|}
 name|bytenetorder
 argument_list|(
 operator|&
@@ -1017,7 +1131,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1081,13 +1195,6 @@ argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-name|bytenetorder
-argument_list|(
-operator|&
-name|resp
-argument_list|)
-expr_stmt|;
-comment|/* this is not really necessary here */
 switch|switch
 condition|(
 name|msgin
@@ -1116,6 +1223,31 @@ name|tsp_type
 operator|=
 name|TSP_ACK
 expr_stmt|;
+name|bytenetorder
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trace
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"Masterack: "
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sendto
@@ -1150,7 +1282,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1172,6 +1304,31 @@ name|tsp_type
 operator|=
 name|TSP_MASTERACK
 expr_stmt|;
+name|bytenetorder
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trace
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"Masterack: "
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sendto
@@ -1206,7 +1363,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1225,6 +1382,31 @@ name|tsp_type
 operator|=
 name|TSP_DATEACK
 expr_stmt|;
+name|bytenetorder
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trace
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"Masterack: "
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+operator|&
+name|resp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sendto
@@ -1259,7 +1441,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: sendto: %m"
+literal|"sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
