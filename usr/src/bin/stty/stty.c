@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.25 (Berkeley) %G%"
+literal|"@(#)stty.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,7 +219,11 @@ name|ctl
 decl_stmt|,
 name|ldisc
 decl_stmt|,
+name|set
+decl_stmt|,
 name|tmp
+decl_stmt|,
+name|wset
 decl_stmt|;
 name|ctl
 operator|=
@@ -483,6 +487,11 @@ parameter_list|)
 value|(**argv == s[0]&& !strcmp(*argv, s))
 for|for
 control|(
+name|set
+operator|=
+name|wset
+operator|=
+literal|0
 init|;
 operator|*
 name|argv
@@ -510,6 +519,10 @@ operator|.
 name|c_oflag
 operator||=
 name|ONLCR
+expr_stmt|;
+name|set
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -585,6 +598,10 @@ operator|&=
 operator|~
 name|ICANON
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -642,6 +659,10 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|wset
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -723,6 +744,10 @@ operator|&=
 operator|~
 name|IXANY
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -776,7 +801,7 @@ if|if
 condition|(
 name|CHK
 argument_list|(
-literal|"extrpc"
+literal|"extproc"
 argument_list|)
 condition|)
 block|{
@@ -828,6 +853,10 @@ name|argv
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -861,6 +890,10 @@ name|c_oflag
 operator|&=
 operator|~
 name|ONLCR
+expr_stmt|;
+name|set
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -906,6 +939,10 @@ name|argv
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -949,6 +986,10 @@ name|c_cflag
 operator||=
 name|CS8
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -980,6 +1021,10 @@ argument_list|(
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|wset
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -1043,6 +1088,10 @@ operator|.
 name|c_oflag
 operator|=
 name|TTYDEF_OFLAG
+expr_stmt|;
+name|set
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -1176,6 +1225,10 @@ name|mp
 operator|->
 name|set
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|next
 goto|;
@@ -1219,6 +1272,10 @@ operator||=
 name|mp
 operator|->
 name|set
+expr_stmt|;
+name|set
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|next
@@ -1264,6 +1321,10 @@ name|mp
 operator|->
 name|set
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|next
 goto|;
@@ -1307,6 +1368,10 @@ operator||=
 name|mp
 operator|->
 name|set
+expr_stmt|;
+name|set
+operator|=
+literal|1
 expr_stmt|;
 goto|goto
 name|next
@@ -1477,6 +1542,10 @@ operator|*
 operator|*
 name|argv
 expr_stmt|;
+name|set
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|next
 goto|;
@@ -1572,6 +1641,8 @@ continue|continue;
 block|}
 if|if
 condition|(
+name|set
+operator|&&
 name|tcsetattr
 argument_list|(
 name|ctl
@@ -1596,6 +1667,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|wset
+operator|&&
 name|ioctl
 argument_list|(
 name|ctl
