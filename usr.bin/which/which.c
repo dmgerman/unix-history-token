@@ -127,18 +127,6 @@ name|status
 operator|=
 name|EXIT_SUCCESS
 expr_stmt|;
-comment|/* If called without args, die silently to conform */
-if|if
-condition|(
-name|argc
-operator|<
-literal|2
-condition|)
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -196,6 +184,15 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+name|argc
+operator|==
+literal|0
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|p
 operator|=
@@ -240,16 +237,6 @@ name|EXIT_FAILURE
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|==
-literal|0
-condition|)
-name|status
-operator|=
-name|EXIT_FAILURE
 expr_stmt|;
 while|while
 condition|(
@@ -315,11 +302,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: which [-as] program ...\n"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 name|EXIT_FAILURE
-argument_list|,
-literal|"usage: which [-as] program ..."
 argument_list|)
 expr_stmt|;
 block|}
