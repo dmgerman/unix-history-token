@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.24 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,9 +1078,21 @@ end_macro
 
 begin_block
 block|{
-name|fatal
+if|if
+condition|(
+name|debug
+condition|)
+name|fprintf
 argument_list|(
-literal|"Connection closed."
+name|stderr
+argument_list|,
+literal|"Lost connection.\n"
+argument_list|)
+expr_stmt|;
+name|dologout
+argument_list|(
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
