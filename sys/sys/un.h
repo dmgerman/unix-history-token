@@ -15,6 +15,42 @@ directive|define
 name|_SYS_UN_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SA_FAMILY_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_SA_FAMILY_T_
+name|sa_family_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SA_FAMILY_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Definitions for UNIX IPC domain.  */
 end_comment
@@ -27,7 +63,7 @@ name|u_char
 name|sun_len
 decl_stmt|;
 comment|/* sockaddr len including null */
-name|u_char
+name|sa_family_t
 name|sun_family
 decl_stmt|;
 comment|/* AF_UNIX */
@@ -41,6 +77,12 @@ comment|/* path name (gag) */
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_comment
 comment|/* Socket options. */
@@ -223,6 +265,15 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_endif
