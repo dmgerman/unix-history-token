@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1060,6 +1060,14 @@ name|tpcb
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If all outstanding data is acked, stop retransmit timer. 		 * If there is more data to be acked, restart retransmit 		 * timer, using current (possibly backed-off) value. 		 * OSI combines the keepalive and persistance functions. 		 * So, there is no persistance timer per se, to restart. 		 */
+if|if
+condition|(
+name|tpcb
+operator|->
+name|tp_class
+operator|!=
+name|TP_CLASS_0
+condition|)
 name|tpcb
 operator|->
 name|tp_timer
@@ -2057,6 +2065,12 @@ name|TM_data_retrans
 index|]
 operator|==
 literal|0
+operator|&&
+name|tpcb
+operator|->
+name|tp_class
+operator|!=
+name|TP_CLASS_0
 condition|)
 block|{
 name|tpcb
@@ -3557,11 +3571,21 @@ name|tpcb
 operator|->
 name|tp_rsycnt
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"tp_rsyflush"
+literal|"tp_rsyflush %x\n"
+argument_list|,
+name|tpcb
 argument_list|)
 expr_stmt|;
+name|tpcb
+operator|->
+name|tp_rsycnt
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 name|free
 argument_list|(
