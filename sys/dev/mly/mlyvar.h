@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000, 2001 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* max outstanding commands per controller, limit 65535 */
+comment|/* max commands per controller */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ comment|/* max S/G entries, limit 65535 */
 end_comment
 
 begin_comment
-comment|/********************************************************************************  ********************************************************************************                                                       Driver Variable Definitions  ********************************************************************************  ********************************************************************************/
+comment|/********************************************************************************  ********************************************************************************                                                       Cross-version Compatibility  ********************************************************************************  ********************************************************************************/
 end_comment
 
 begin_if
@@ -59,6 +59,47 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<=
+literal|500014
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|offsetof
+end_undef
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|field
+parameter_list|)
+value|((size_t)(&((type *)0)->field))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/********************************************************************************  ********************************************************************************                                                       Driver Variable Definitions  ********************************************************************************  ********************************************************************************/
+end_comment
 
 begin_comment
 comment|/*  * Debugging levels:  *  0 - quiet, only emit warnings  *  1 - noisy, emit major function points and things done  *  2 - extremely noisy, emit trace items in loops, etc.  */
@@ -249,6 +290,15 @@ name|int
 name|mb_type
 decl_stmt|;
 comment|/* see 8.2 */
+comment|/* physical devices only */
+name|int
+name|mb_speed
+decl_stmt|;
+comment|/* interface transfer rate */
+name|int
+name|mb_width
+decl_stmt|;
+comment|/* interface width */
 block|}
 struct|;
 end_struct
@@ -283,68 +333,28 @@ name|mc_flags
 decl_stmt|;
 define|#
 directive|define
-name|MLY_CMD_STATEMASK
-value|((1<<8)-1)
-define|#
-directive|define
-name|MLY_CMD_STATE
-parameter_list|(
-name|mc
-parameter_list|)
-value|((mc)->mc_flags& MLY_CMD_STATEMASK)
-define|#
-directive|define
-name|MLY_CMD_SETSTATE
-parameter_list|(
-name|mc
-parameter_list|,
-name|s
-parameter_list|)
-value|((mc)->mc_flags = ((mc)->mc_flags&= ~MLY_CMD_STATEMASK) | (s))
-define|#
-directive|define
-name|MLY_CMD_FREE
-value|0
-comment|/* command is on the free list */
-define|#
-directive|define
-name|MLY_CMD_SETUP
-value|1
-comment|/* command is being built */
-define|#
-directive|define
 name|MLY_CMD_BUSY
-value|2
+value|(1<<0)
 comment|/* command is being run, or ready to run, or not completed */
 define|#
 directive|define
 name|MLY_CMD_COMPLETE
-value|3
+value|(1<<1)
 comment|/* command has been completed */
 define|#
 directive|define
-name|MLY_CMD_SLOTTED
-value|(1<<8)
-comment|/* command has a slot number */
-define|#
-directive|define
 name|MLY_CMD_MAPPED
-value|(1<<9)
+value|(1<<3)
 comment|/* command has had its data mapped */
 define|#
 directive|define
-name|MLY_CMD_PRIORITY
-value|(1<<10)
-comment|/* allow use of "priority" slots */
-define|#
-directive|define
 name|MLY_CMD_DATAIN
-value|(1<<11)
+value|(1<<4)
 comment|/* data moves controller->system */
 define|#
 directive|define
 name|MLY_CMD_DATAOUT
-value|(1<<12)
+value|(1<<5)
 comment|/* data moves system->controller */
 name|u_int16_t
 name|mc_status
@@ -422,49 +432,6 @@ value|(MLY_SLOT_START + MLY_MAXCOMMANDS)
 end_define
 
 begin_comment
-comment|/*  * Command/command packet cluster.  *  * Due to the difficulty of using the zone allocator to create a new  * zone from within a module, we use our own clustering to reduce   * memory wastage caused by allocating lots of these small structures.  *  * Note that it is possible to require more than MLY_MAXCOMMANDS   * command structures.  *  * Since we may need to allocate extra clusters at any time, and since this  * process needs to allocate a physically contiguous slab of controller  * addressible memory in which to place the command packets, do not allow more  * command packets in a cluster than will fit in a page.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MLY_CMD_CLUSTERCOUNT
-value|(PAGE_SIZE / sizeof(union mly_command_packet))
-end_define
-
-begin_struct
-struct|struct
-name|mly_command_cluster
-block|{
-name|TAILQ_ENTRY
-argument_list|(
-argument|mly_command_cluster
-argument_list|)
-name|mcc_link
-expr_stmt|;
-name|union
-name|mly_command_packet
-modifier|*
-name|mcc_packet
-decl_stmt|;
-name|bus_dmamap_t
-name|mcc_packetmap
-decl_stmt|;
-name|u_int64_t
-name|mcc_packetphys
-decl_stmt|;
-name|struct
-name|mly_command
-name|mcc_command
-index|[
-name|MLY_CMD_CLUSTERCOUNT
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Per-controller structure.  */
 end_comment
 
@@ -475,6 +442,9 @@ block|{
 comment|/* bus connections */
 name|device_t
 name|mly_dev
+decl_stmt|;
+name|dev_t
+name|mly_dev_t
 decl_stmt|;
 name|struct
 name|resource
@@ -594,11 +564,11 @@ comment|/* memory mailbox DMA map */
 name|u_int32_t
 name|mly_mmbox_command_index
 decl_stmt|;
-comment|/* next slot to use */
+comment|/* next index to use */
 name|u_int32_t
 name|mly_mmbox_status_index
 decl_stmt|;
-comment|/* slot we next expect status in */
+comment|/* index we next expect status at */
 comment|/* controller features, limits and status */
 name|int
 name|mly_state
@@ -619,10 +589,6 @@ define|#
 directive|define
 name|MLY_STATE_MMBOX_ACTIVE
 value|(1<<3)
-name|int
-name|mly_max_commands
-decl_stmt|;
-comment|/* max parallel commands we allow */
 name|struct
 name|mly_ioctl_getcontrollerinfo
 modifier|*
@@ -646,25 +612,36 @@ decl_stmt|;
 comment|/* command management */
 name|struct
 name|mly_command
-modifier|*
-name|mly_busycmds
+name|mly_command
 index|[
-name|MLY_SLOT_MAX
+name|MLY_MAXCOMMANDS
 index|]
 decl_stmt|;
-comment|/* busy commands */
-name|int
-name|mly_busy_count
+comment|/* commands */
+name|union
+name|mly_command_packet
+modifier|*
+name|mly_packet
 decl_stmt|;
-name|int
-name|mly_last_slot
+comment|/* command packets */
+name|bus_dma_tag_t
+name|mly_packet_dmat
 decl_stmt|;
+comment|/* packet DMA tag */
+name|bus_dmamap_t
+name|mly_packetmap
+decl_stmt|;
+comment|/* packet DMA map */
+name|u_int64_t
+name|mly_packetphys
+decl_stmt|;
+comment|/* packet array base address */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|mly_command
 argument_list|)
-name|mly_freecmds
+name|mly_free
 expr_stmt|;
 comment|/* commands available for reuse */
 name|TAILQ_HEAD
@@ -680,21 +657,24 @@ argument_list|(
 argument_list|,
 argument|mly_command
 argument_list|)
-name|mly_completed
+name|mly_busy
 expr_stmt|;
-comment|/* commands which have been returned by the controller */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
-argument|mly_command_cluster
+argument|mly_command
 argument_list|)
-name|mly_clusters
+name|mly_complete
 expr_stmt|;
-comment|/* command memory blocks */
-name|bus_dma_tag_t
-name|mly_packet_dmat
+comment|/* commands which have been returned by the controller */
+name|struct
+name|mly_qstat
+name|mly_qstat
+index|[
+name|MLYQ_COUNT
+index|]
 decl_stmt|;
-comment|/* command packet DMA tag */
+comment|/* queue statistics */
 comment|/* health monitoring */
 name|u_int32_t
 name|mly_event_change
@@ -1093,501 +1073,99 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/********************************************************************************  * Queue primitives  *  * These are broken out individually to make statistics gathering easier.  */
+comment|/********************************************************************************  * Queue primitives  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|mly_enqueue_ready
+begin_define
+define|#
+directive|define
+name|MLYQ_ADD
 parameter_list|(
-name|struct
-name|mly_command
-modifier|*
-name|mc
-parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|mc
-operator|->
-name|mc_sc
-operator|->
-name|mly_ready
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
-name|MLY_CMD_SETSTATE
-argument_list|(
-name|mc
-argument_list|,
-name|MLY_CMD_BUSY
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|mly_requeue_ready
-parameter_list|(
-name|struct
-name|mly_command
-modifier|*
-name|mc
-parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|mc
-operator|->
-name|mc_sc
-operator|->
-name|mly_ready
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|mly_command
-operator|*
-name|mly_dequeue_ready
-argument_list|(
-argument|struct mly_softc *sc
-argument_list|)
-block|{     struct
-name|mly_command
-operator|*
-name|mc
-block|;
-name|int
-name|s
-block|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-block|;
-if|if
-condition|(
-operator|(
-name|mc
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_ready
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_ready
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-name|mc
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|mly_enqueue_completed
-parameter_list|(
-name|struct
-name|mly_command
-modifier|*
-name|mc
-parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
-name|TAILQ_INSERT_TAIL
-argument_list|(
-operator|&
-name|mc
-operator|->
-name|mc_sc
-operator|->
-name|mly_completed
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
-comment|/* don't set MLY_CMD_COMPLETE here to avoid wakeup race */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|mly_command
-operator|*
-name|mly_dequeue_completed
-argument_list|(
-argument|struct mly_softc *sc
-argument_list|)
-block|{     struct
-name|mly_command
-operator|*
-name|mc
-block|;
-name|int
-name|s
-block|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-block|;
-if|if
-condition|(
-operator|(
-name|mc
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_completed
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_completed
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-name|mc
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|mly_enqueue_free
-parameter_list|(
-name|struct
-name|mly_command
-modifier|*
-name|mc
-parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|mc
-operator|->
-name|mc_sc
-operator|->
-name|mly_freecmds
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
-name|MLY_CMD_SETSTATE
-argument_list|(
-name|mc
-argument_list|,
-name|MLY_CMD_FREE
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|mly_command
-operator|*
-name|mly_dequeue_free
-argument_list|(
-argument|struct mly_softc *sc
-argument_list|)
-block|{     struct
-name|mly_command
-operator|*
-name|mc
-block|;
-name|int
-name|s
-block|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-block|;
-if|if
-condition|(
-operator|(
-name|mc
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_freecmds
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_freecmds
-argument_list|,
-name|mc
-argument_list|,
-name|mc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-operator|(
-name|mc
-operator|)
-return|;
-end_return
-
-begin_function
-unit|}  static
-name|__inline
-name|void
-name|mly_enqueue_cluster
-parameter_list|(
-name|struct
-name|mly_softc
-modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|mly_command_cluster
-modifier|*
-name|mcc
+name|qname
 parameter_list|)
-block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
+define|\
+value|do {							\ 	    struct mly_qstat *qs =&(sc)->mly_qstat[qname];	\ 								\ 	    qs->q_length++;					\ 	    if (qs->q_length> qs->q_max)			\ 		qs->q_max = qs->q_length;			\ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLYQ_REMOVE
+parameter_list|(
 name|sc
-operator|->
-name|mly_clusters
-argument_list|,
-name|mcc
-argument_list|,
-name|mcc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+parameter_list|,
+name|qname
+parameter_list|)
+value|(sc)->mly_qstat[qname].q_length--
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLYQ_INIT
+parameter_list|(
+name|sc
+parameter_list|,
+name|qname
+parameter_list|)
+define|\
+value|do {					\ 	    sc->mly_qstat[qname].q_length = 0;	\ 	    sc->mly_qstat[qname].q_max = 0;	\ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MLYQ_COMMAND_QUEUE
+parameter_list|(
+name|name
+parameter_list|,
+name|index
+parameter_list|)
+define|\
+value|static __inline void							\ mly_initq_ ## name (struct mly_softc *sc)				\ {									\     TAILQ_INIT(&sc->mly_ ## name);					\     MLYQ_INIT(sc, index);						\ }									\ static __inline void							\ mly_enqueue_ ## name (struct mly_command *mc)				\ {									\     int		s;							\ 									\     s = splcam();							\     TAILQ_INSERT_TAIL(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_ADD(mc->mc_sc, index);						\     splx(s);								\ }									\ static __inline void							\ mly_requeue_ ## name (struct mly_command *mc)				\ {									\     int		s;							\ 									\     s = splcam();							\     TAILQ_INSERT_HEAD(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_ADD(mc->mc_sc, index);						\     splx(s);								\ }									\ static __inline struct mly_command *					\ mly_dequeue_ ## name (struct mly_softc *sc)				\ {									\     struct mly_command	*mc;						\     int			s;						\ 									\     s = splcam();							\     if ((mc = TAILQ_FIRST(&sc->mly_ ## name)) != NULL) {		\ 	TAILQ_REMOVE(&sc->mly_ ## name, mc, mc_link);			\ 	MLYQ_REMOVE(sc, index);						\     }									\     splx(s);								\     return(mc);								\ }									\ static __inline void							\ mly_remove_ ## name (struct mly_command *mc)				\ {									\     int			s;						\ 									\     s = splcam();							\     TAILQ_REMOVE(&mc->mc_sc->mly_ ## name, mc, mc_link);		\     MLYQ_REMOVE(mc->mc_sc, index);					\     splx(s);								\ }									\ struct hack
+end_define
 
 begin_expr_stmt
-specifier|static
-name|__inline
-expr|struct
-name|mly_command_cluster
-operator|*
-name|mly_dequeue_cluster
+name|MLYQ_COMMAND_QUEUE
 argument_list|(
-argument|struct mly_softc *sc
-argument_list|)
-block|{     struct
-name|mly_command_cluster
-operator|*
-name|mcc
-block|;
-name|int
-name|s
-block|;
-name|s
-operator|=
-name|splcam
-argument_list|()
-block|;
-if|if
-condition|(
-operator|(
-name|mcc
-operator|=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_clusters
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|mly_clusters
+name|free
 argument_list|,
-name|mcc
-argument_list|,
-name|mcc_link
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
+name|MLYQ_FREE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
-operator|(
-name|mcc
-operator|)
-return|;
-end_return
+begin_expr_stmt
+name|MLYQ_COMMAND_QUEUE
+argument_list|(
+name|ready
+argument_list|,
+name|MLYQ_READY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-unit|}
+begin_expr_stmt
+name|MLYQ_COMMAND_QUEUE
+argument_list|(
+name|busy
+argument_list|,
+name|MLYQ_BUSY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MLYQ_COMMAND_QUEUE
+argument_list|(
+name|complete
+argument_list|,
+name|MLYQ_COMPLETE
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
