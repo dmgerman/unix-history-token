@@ -303,7 +303,7 @@ name|_hw_pcic
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|override_irq
+name|irq
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
