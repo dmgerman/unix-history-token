@@ -169,6 +169,8 @@ parameter_list|(
 name|argc
 parameter_list|,
 name|argv
+parameter_list|,
+name|env
 parameter_list|)
 name|int
 name|argc
@@ -177,7 +179,14 @@ name|char
 modifier|*
 modifier|*
 name|argv
+decl_stmt|,
+decl|*
+modifier|*
+name|env
 decl_stmt|;
+end_function
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -228,6 +237,12 @@ name|av
 decl_stmt|,
 modifier|*
 name|argp
+decl_stmt|,
+modifier|*
+modifier|*
+name|ep
+init|=
+name|env
 decl_stmt|;
 comment|/* 	 * POSIX.2 limits the exec line length to ARG_MAX - 2K.  Running that 	 * caused some E2BIG errors, so it was changed to ARG_MAX - 4K.  Given 	 * that the smallest argument is 2 bytes in length, this means that 	 * the number of arguments is limited to: 	 * 	 *	 (ARG_MAX - 4K - LENGTH(utility + arguments)) / 2. 	 * 	 * We arbitrarily limit the number of arguments to 5000.  This is 	 * allowed by POSIX.2 as long as the resulting minimum exec line is 	 * at least LINE_MAX.  Realloc'ing as necessary is possible, but 	 * probably not worthwhile. 	 */
 name|nargs
@@ -242,6 +257,31 @@ literal|4
 operator|*
 literal|1024
 expr_stmt|;
+while|while
+condition|(
+operator|*
+name|ep
+condition|)
+block|{
+comment|/* 1 byte for each '\0' */
+name|nline
+operator|-=
+name|strlen
+argument_list|(
+operator|*
+name|ep
+operator|++
+argument_list|)
+operator|+
+literal|1
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ep
+argument_list|)
+expr_stmt|;
+block|}
 name|nflag
 operator|=
 name|xflag
@@ -887,7 +927,7 @@ break|break;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_function
+end_block
 
 begin_function
 name|void
