@@ -741,6 +741,15 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+name|flags
+operator||=
+name|VN_CONFIG
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|VN_UNCONFIG
+expr_stmt|;
 break|break;
 case|case
 literal|'T'
