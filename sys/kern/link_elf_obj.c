@@ -4610,34 +4610,16 @@ name|ddbsymtab
 operator|+
 name|symidx
 expr_stmt|;
-comment|/* Theoretically we can avoid a lookup for some locals */
-switch|switch
-condition|(
-name|ELF_ST_BIND
-argument_list|(
-name|sym
-operator|->
-name|st_info
-argument_list|)
-condition|)
-block|{
-case|case
-name|STB_LOCAL
-case|:
-comment|/* Local, but undefined? huh? */
+comment|/* Quick answer if there is a definition included. */
 if|if
 condition|(
 name|sym
 operator|->
 name|st_shndx
-operator|==
+operator|!=
 name|SHN_UNDEF
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|{
 name|ret
 operator|=
 literal|0
@@ -4698,6 +4680,27 @@ operator|+
 name|sym
 operator|->
 name|st_value
+return|;
+block|}
+comment|/* If we get here, then it is undefined and needs a lookup. */
+switch|switch
+condition|(
+name|ELF_ST_BIND
+argument_list|(
+name|sym
+operator|->
+name|st_info
+argument_list|)
+condition|)
+block|{
+case|case
+name|STB_LOCAL
+case|:
+comment|/* Local, but undefined? huh? */
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 case|case
 name|STB_GLOBAL
