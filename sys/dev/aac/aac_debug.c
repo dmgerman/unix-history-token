@@ -13,12 +13,6 @@ directive|include
 file|"opt_aac.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AAC_DEBUG
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -2683,11 +2677,6 @@ end_endif
 begin_comment
 comment|/* AAC_DEBUG */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -168,13 +168,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|device_shutdown
-argument_list|,
-name|aac_shutdown
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|device_suspend
 argument_list|,
 name|aac_suspend
@@ -388,20 +381,6 @@ literal|"Dell PERC 3/Di"
 block|}
 block|,
 block|{
-literal|0x9005
-block|,
-literal|0x0282
-block|,
-literal|0x9005
-block|,
-literal|0x0282
-block|,
-name|AAC_HWIF_I960RX
-block|,
-literal|"Adaptec AAC-2622"
-block|}
-block|,
-block|{
 literal|0x1011
 block|,
 literal|0x0046
@@ -443,21 +422,6 @@ block|,
 literal|"Dell PERC 2/QC"
 block|}
 block|,
-block|{
-literal|0x1011
-block|,
-literal|0x0046
-block|,
-literal|0x9005
-block|,
-literal|0x1365
-block|,
-name|AAC_HWIF_STRONGARM
-block|,
-literal|"Dell PERC 3/QC"
-block|}
-block|,
-comment|/* XXX guess */
 block|{
 literal|0x1011
 block|,
@@ -906,6 +870,17 @@ goto|goto
 name|out
 goto|;
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500005
+define|#
+directive|define
+name|INTR_ENTROPY
+value|0
+endif|#
+directive|endif
 if|if
 condition|(
 name|bus_setup_intr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000-2001 Scott Long  * Copyright (c) 2000 BSDi  * Copyright (c) 2001 Adaptec, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 Michael Smith  * Copyright (c) 2000 Scott Long  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -110,7 +110,7 @@ name|meth
 parameter_list|,
 name|acc
 parameter_list|)
-value|(((devType)<< 16) | ((acc)<< 14) \ 					   | ((func)<< 2) | (meth))
+value|(((devType)<< 16) | ((acc)<< 14) | ((func)<< 2) | (meth))
 end_define
 
 begin_define
@@ -328,7 +328,7 @@ value|0x173
 end_define
 
 begin_comment
-comment|/* Ok, this one is really lame */
+comment|/* Ok, here it gets really lame */
 end_comment
 
 begin_define
@@ -343,7 +343,7 @@ comment|/* Just guessing */
 end_comment
 
 begin_comment
-comment|/* Do the native version of the ioctls.  Since the BSD encoding scheme  * conflicts with the 'standard' AAC encoding scheme, the resulting values  * must be different.  The '8' comes from the fact that the previous scheme  * used 12 bits for the number, with the the 12th bit being the only set  * bit above bit 8.  Thus the value of 8, with the lower 8 bits holding the  * command number.  9 is used for the odd overflow/collision case.  */
+comment|/* Do the native version of the ioctls.  Since the BSD encoding scheme  * conflicts with the 'standard' AAC encoding scheme, the resulting numbers  * will be different.  The '8' comes from the fact that the previous scheme  * used 12 bits for the number, with the the 12th bit being the only set  * bit above bit 8.  Thus the value of 8, with the lower 8 bits holding the  * command number.  9 is used for the odd overflow case.  */
 end_comment
 
 begin_define
@@ -549,13 +549,6 @@ begin_comment
 comment|/*  * Context passed in by a consumer looking to collect an AIF.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AAC_AIF_SILLYMAGIC
-value|0xdeadbeef
-end_define
-
 begin_struct
 struct|struct
 name|get_adapter_fib_ioctl
@@ -568,6 +561,47 @@ name|Wait
 decl_stmt|;
 name|caddr_t
 name|AifFib
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|aac_query_disk
+block|{
+name|int32_t
+name|ContainerNumber
+decl_stmt|;
+name|int32_t
+name|Bus
+decl_stmt|;
+name|int32_t
+name|Target
+decl_stmt|;
+name|int32_t
+name|Lun
+decl_stmt|;
+name|u_int32_t
+name|Valid
+decl_stmt|;
+name|u_int32_t
+name|Locked
+decl_stmt|;
+name|u_int32_t
+name|Deleted
+decl_stmt|;
+name|int32_t
+name|Instance
+decl_stmt|;
+name|char
+name|diskDeviceName
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|u_int32_t
+name|UnMapped
 decl_stmt|;
 block|}
 struct|;
