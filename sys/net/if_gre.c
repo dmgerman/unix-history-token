@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -3080,6 +3086,14 @@ break|break;
 case|case
 name|SIOCGIFPSRCADDR
 case|:
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|SIOCGIFPSRCADDR_IN6
+case|:
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -3160,6 +3174,14 @@ break|break;
 case|case
 name|SIOCGIFPDSTADDR
 case|:
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|SIOCGIFPDSTADDR_IN6
+case|:
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
