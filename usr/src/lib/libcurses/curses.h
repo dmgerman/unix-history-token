@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* %G% (Berkeley) @(#)curses.h	1.2 */
+comment|/* %G% (Berkeley) @(#)curses.h	1.3 */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WINDOW
+end_ifndef
 
 begin_include
 include|#
@@ -123,12 +129,6 @@ name|sgttyb
 name|SGTTY
 typedef|;
 end_typedef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WINDOW
-end_ifndef
 
 begin_comment
 comment|/*  * Capabilities from termcap  */
@@ -444,11 +444,6 @@ name|x
 parameter_list|)
 value|(x)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -910,6 +905,11 @@ name|longname
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
