@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.3 (Berkeley) 81/02/28"
+literal|"@(#)mv.c	4.4 (Berkeley) 81/04/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -1296,33 +1296,6 @@ name|pname
 argument_list|(
 name|source
 argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|access
-argument_list|(
-name|source
-argument_list|,
-literal|2
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mv: no write access to %s\n"
-argument_list|,
-name|source
 argument_list|)
 expr_stmt|;
 return|return
