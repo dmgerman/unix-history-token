@@ -7690,9 +7690,7 @@ name|type
 operator|!=
 literal|0x01
 condition|)
-goto|goto
-name|next_run
-goto|;
+continue|continue;
 if|if
 condition|(
 name|smap
@@ -7701,9 +7699,7 @@ name|length
 operator|==
 literal|0
 condition|)
-goto|goto
-name|next_run
-goto|;
+continue|continue;
 ifndef|#
 directive|ifndef
 name|PAE
@@ -7732,9 +7728,7 @@ literal|1024
 argument_list|)
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next_run
-goto|;
+continue|continue;
 block|}
 endif|#
 directive|endif
@@ -7778,9 +7772,7 @@ argument_list|(
 literal|"Overlapping or non-montonic memory region, ignoring second region\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|next_run
-goto|;
+continue|continue;
 block|}
 block|}
 if|if
@@ -7808,9 +7800,7 @@ name|smap
 operator|->
 name|length
 expr_stmt|;
-goto|goto
-name|next_run
-goto|;
+continue|continue;
 block|}
 name|physmap_idx
 operator|+=
@@ -7854,9 +7844,6 @@ name|smap
 operator|->
 name|length
 expr_stmt|;
-name|next_run
-label|:
-empty_stmt|;
 block|}
 do|while
 condition|(
