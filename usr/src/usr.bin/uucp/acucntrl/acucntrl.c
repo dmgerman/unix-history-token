@@ -1,4 +1,32 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1985, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1985, 1986 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.16	(Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +47,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  acucntrl - turn around tty line between dialin and dialout  *   * Usage:	acucntrl {enable,disable} /dev/ttydX  *  * History:  *	First written by Allan Wilkes (fisher!allan)  *  *	Modified June 8,1983 by W.Sebok (astrovax!wls) to poke kernel rather  * 	than use kernel hack to turn on/off modem control, using subroutine  *	stolen from program written by Tsutomu Shimomura  *	{astrovax,escher}!tsutomu  *  *	Worked over many times by W.Sebok (i.e. hacked to death)  *  * Operation:  *   disable (i.e. setup for dialing out)  *	(1) check input arguments  *	(2) look in _PATH_UTMP to check that the line is not in use by another  *	(3) disable modem control on terminal  *	(4) check for carrier on device  *	(5) change owner of device to real id  *	(6) edit _PATH_TTYS, changing the first character of the appropriate  *	    line to 0  *	(7) send a hangup to process 1 to poke init to disable getty  *	(8) post uid name in capitals in _PATH_UTMP to let world know device  *	    has been grabbed  *	(9) make sure that DTR is on  *  *   enable (i.e.) restore for dialin  *	(1) check input arguments  *	(2) look in _PATH_UTMP to check that the line is not in use by another  *	(3) make sure modem control on terminal is disabled  *	(4) turn off DTR to make sure line is hung up  *	(5) condition line: clear exclusive use and set hangup on close modes  *	(6) turn on modem control  *	(7) edit _PATH_TTYS, changing the first character of the appropriate  *	    line to 1  *	(8) send a hangup to process 1 to poke init to enable getty  *	(9) clear uid name for _PATH_UTMP  */
