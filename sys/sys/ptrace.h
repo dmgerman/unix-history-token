@@ -136,8 +136,74 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_GETREGS
+value|33
+end_define
+
+begin_comment
+comment|/* get general-purpose registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_SETREGS
+value|34
+end_define
+
+begin_comment
+comment|/* set general-purpose registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_GETFPREGS
+value|35
+end_define
+
+begin_comment
+comment|/* get floating-point registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_SETFPREGS
+value|36
+end_define
+
+begin_comment
+comment|/* set floating-point registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_GETDBREGS
+value|37
+end_define
+
+begin_comment
+comment|/* get debugging registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_SETDBREGS
+value|38
+end_define
+
+begin_comment
+comment|/* set debugging registers */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_FIRSTMACH
-value|32
+value|64
 end_define
 
 begin_comment

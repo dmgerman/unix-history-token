@@ -15,37 +15,11 @@ directive|define
 name|_MACHINE_PTRACE_H_
 end_define
 
-begin_comment
-comment|/*  * Machine dependent trace commands.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PT_GETREGS
-value|(PT_FIRSTMACH + 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PT_SETREGS
-value|(PT_FIRSTMACH + 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PT_GETFPREGS
-value|(PT_FIRSTMACH + 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PT_SETFPREGS
-value|(PT_FIRSTMACH + 4)
-end_define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_define
 define|#
@@ -56,12 +30,6 @@ name|p
 parameter_list|)
 value|ptrace_clear_single_step(p)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_function_decl
 name|int
