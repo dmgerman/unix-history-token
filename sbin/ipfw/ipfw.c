@@ -8759,6 +8759,21 @@ operator|*=
 literal|8
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pipe
+operator|.
+name|bandwidth
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_DATAERR
+argument_list|,
+literal|"bandwidth too large"
+argument_list|)
+expr_stmt|;
 name|av
 operator|+=
 literal|2
@@ -9099,6 +9114,30 @@ operator|&
 name|DN_IS_RED
 condition|)
 block|{
+name|size_t
+name|len
+decl_stmt|;
+name|int
+name|lookup_depth
+decl_stmt|,
+name|avg_pkt_size
+decl_stmt|;
+name|double
+name|s
+decl_stmt|,
+name|idle
+decl_stmt|,
+name|weight
+decl_stmt|,
+name|w_q
+decl_stmt|;
+name|struct
+name|clockinfo
+name|clock
+decl_stmt|;
+name|int
+name|t
+decl_stmt|;
 if|if
 condition|(
 name|pipe
@@ -9149,37 +9188,6 @@ argument_list|,
 literal|"max_th must be> 0"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pipe
-operator|.
-name|bandwidth
-condition|)
-block|{
-name|size_t
-name|len
-decl_stmt|;
-name|int
-name|lookup_depth
-decl_stmt|,
-name|avg_pkt_size
-decl_stmt|;
-name|double
-name|s
-decl_stmt|,
-name|idle
-decl_stmt|,
-name|weight
-decl_stmt|,
-name|w_q
-decl_stmt|;
-name|struct
-name|clockinfo
-name|clock
-decl_stmt|;
-name|int
-name|t
-decl_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -9317,7 +9325,21 @@ argument_list|,
 literal|"kern.clockrate"
 argument_list|)
 expr_stmt|;
-comment|/* ticks needed for sending a medium-sized packet */
+comment|/* 		 * Ticks needed for sending a medium-sized packet. 		 * Unfortunately, when we are configuring a WF2Q+ queue, we 		 * do not have bandwidth information, because that is stored 		 * in the parent pipe, and also we have multiple queues 		 * competing for it. So we set s=0, which is not very 		 * correct. But on the other hand, why do we want RED with 		 * WF2Q+ ? 		 */
+if|if
+condition|(
+name|pipe
+operator|.
+name|bandwidth
+operator|==
+literal|0
+condition|)
+comment|/* this is a WF2Q+ queue */
+name|s
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|s
 operator|=
 name|clock
@@ -9332,7 +9354,7 @@ name|pipe
 operator|.
 name|bandwidth
 expr_stmt|;
-comment|/* 			 * max idle time (in ticks) before avg queue size 			 * becomes 0. 			 * NOTA:  (3/w_q) is approx the value x so that 			 * (1-w_q)^x< 10^-3. 			 */
+comment|/* 		 * max idle time (in ticks) before avg queue size 		 * becomes 0. 		 * NOTA:  (3/w_q) is approx the value x so that 		 * (1-w_q)^x< 10^-3. 		 */
 name|w_q
 operator|=
 operator|(
@@ -9437,13 +9459,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-if|#
-directive|if
-literal|0
-block|printf("configuring pipe %d bw %d delay %d size %d\n", 	    pipe.pipe_nr, pipe.bandwidth, pipe.delay, pipe.queue_size);
-endif|#
-directive|endif
 name|i
 operator|=
 name|setsockopt
