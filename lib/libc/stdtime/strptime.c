@@ -1647,6 +1647,10 @@ name|cp
 operator|&&
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
