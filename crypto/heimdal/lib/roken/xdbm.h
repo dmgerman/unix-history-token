@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: xdbm.h,v 1.12 2000/08/16 03:57:21 assar Exp $ */
+comment|/* $Id: xdbm.h,v 1.14 2001/09/03 05:03:00 assar Exp $ */
 end_comment
 
 begin_comment
@@ -26,10 +26,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|HAVE_DB_H
-argument_list|)
+name|HAVE_DB_NDBM
 end_if
 
 begin_define
@@ -45,30 +42,25 @@ directive|include
 file|<db.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DBM_INSERT
-end_ifndef
+begin_elif
+elif|#
+directive|elif
+name|HAVE_NDBM
+end_elif
 
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_NDBM_H
+name|HAVE_GDBM_NDBM_H
 argument_list|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<ndbm.h>
+file|<gdbm/ndbm.h>
 end_include
 
 begin_elif
@@ -76,14 +68,14 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_GDBM_NDBM_H
+name|HAVE_NDBM_H
 argument_list|)
 end_elif
 
 begin_include
 include|#
 directive|include
-file|<gdbm/ndbm.h>
+file|<ndbm.h>
 end_include
 
 begin_elif
@@ -101,21 +93,6 @@ directive|include
 file|<dbm.h>
 end_include
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_RPCSVC_DBM_H
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<rpcsvc/dbm.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -125,6 +102,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAVE_NDBM */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/* Macros to convert ndbm names to dbm names.  * Note that dbm_nextkey() cannot be simply converted using a macro, since  * it is invoked giving the database, and nextkey() needs the previous key.  *  * Instead, all routines call "dbm_next" instead.  */
@@ -146,14 +133,8 @@ name|HAVE_DB_H
 argument_list|)
 end_if
 
-begin_typedef
-typedef|typedef
-name|char
-name|DBM
-typedef|;
-end_typedef
-
 begin_define
+unit|typedef char DBM;
 define|#
 directive|define
 name|dbm_open
@@ -255,6 +236,11 @@ name|key
 parameter_list|)
 value|dbm_nextkey(db)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

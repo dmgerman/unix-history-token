@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popen.c,v 1.22 2001/02/05 07:51:51 assar Exp $"
+literal|"$Id: popen.c,v 1.25 2001/06/19 10:00:25 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -558,6 +558,16 @@ operator||
 name|GLOB_QUOTE
 operator||
 name|GLOB_TILDE
+operator||
+ifdef|#
+directive|ifdef
+name|GLOB_MAXPATH
+name|GLOB_MAXPATH
+else|#
+directive|else
+name|GLOB_LIMIT
+endif|#
+directive|endif
 decl_stmt|;
 name|memset
 argument_list|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1990, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: externs.h,v 1.20 2000/11/15 23:01:29 assar Exp $ */
+comment|/* $Id: externs.h,v 1.24 2001/12/20 20:39:52 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -134,6 +134,9 @@ decl_stmt|,
 comment|/* the user has set "localchars" */
 name|showoptions
 decl_stmt|,
+name|wantencryption
+decl_stmt|,
+comment|/* User has requested encryption */
 name|net
 decl_stmt|,
 comment|/* Network file descriptor */
@@ -178,6 +181,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* Debug level */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|intr_happened
+decl_stmt|,
+name|intr_waiting
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for interrupt handling */
 end_comment
 
 begin_decl_stmt
@@ -249,6 +265,12 @@ name|will
 index|[]
 decl_stmt|,
 name|wont
+index|[]
+decl_stmt|,
+name|do_dont_resp
+index|[]
+decl_stmt|,
+name|will_wont_resp
 index|[]
 decl_stmt|,
 name|options
@@ -505,7 +527,7 @@ value|{options[opt]&= ~MY_WANT_STATE_WILL;}
 end_define
 
 begin_comment
-comment|/*  * Make everything symetrical  */
+comment|/*  * Make everything symmetrical  */
 end_comment
 
 begin_define
@@ -1125,7 +1147,7 @@ name|SIGINFO
 end_ifdef
 
 begin_function_decl
-name|void
+name|RETSIGTYPE
 name|ayt_status
 parameter_list|(
 name|int
@@ -2630,6 +2652,45 @@ decl_stmt|,
 name|ttyoring
 decl_stmt|,
 name|ttyiring
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|resettermname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|linemode
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KLUDGELINEMODE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|kludgelinemode
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|want_status_response
 decl_stmt|;
 end_decl_stmt
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: random_password.c,v 1.3 1999/12/02 17:04:58 joda Exp $"
+literal|"$Id: random_password.c,v 1.4 2001/02/15 04:20:53 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -81,13 +81,18 @@ ifdef|#
 directive|ifdef
 name|OTP_STYLE
 block|{
-name|des_cblock
+name|OtpKey
 name|newkey
 decl_stmt|;
-name|des_new_random_key
+name|krb5_generate_random_block
 argument_list|(
 operator|&
 name|newkey
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|newkey
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|otp_print_stddict
@@ -181,9 +186,13 @@ specifier|static
 name|int
 name|RND
 parameter_list|(
-name|des_cblock
+name|unsigned
+name|char
 modifier|*
 name|key
+parameter_list|,
+name|int
+name|keylen
 parameter_list|,
 name|int
 modifier|*
@@ -198,15 +207,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|des_new_random_key
+name|krb5_generate_random_block
 argument_list|(
 name|key
+argument_list|,
+name|keylen
 argument_list|)
 expr_stmt|;
 operator|*
 name|left
 operator|=
-literal|8
+name|keylen
 expr_stmt|;
 block|}
 operator|(
@@ -277,8 +288,12 @@ name|len
 decl_stmt|,
 name|i
 decl_stmt|;
-name|des_cblock
+name|unsigned
+name|char
 name|rbuf
+index|[
+literal|8
+index|]
 decl_stmt|;
 comment|/* random buffer */
 name|int
@@ -426,8 +441,12 @@ name|x
 init|=
 name|RND
 argument_list|(
-operator|&
 name|rbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rbuf
+argument_list|)
 argument_list|,
 operator|&
 name|rleft
@@ -489,8 +508,12 @@ name|str
 index|[
 name|RND
 argument_list|(
-operator|&
 name|rbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rbuf
+argument_list|)
 argument_list|,
 operator|&
 name|rleft

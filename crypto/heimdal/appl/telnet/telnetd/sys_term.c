@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_term.c,v 1.97 2000/12/08 23:32:06 assar Exp $"
+literal|"$Id: sys_term.c,v 1.104 2001/09/17 02:09:04 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -398,6 +398,12 @@ begin_comment
 comment|/* STREAMSPTY */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|NOERROR
+end_undef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -631,6 +637,23 @@ begin_include
 include|#
 directive|include
 file|<util.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBUTIL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_endif
@@ -1662,9 +1685,42 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|__linux
+name|int
+name|master
+decl_stmt|;
+name|int
+name|slave
+decl_stmt|;
+if|if
+condition|(
+name|openpty
+argument_list|(
+operator|&
+name|master
+argument_list|,
+operator|&
+name|slave
+argument_list|,
+name|line
+argument_list|,
 literal|0
-comment|/*&& defined(HAVE_OPENPTY) */
-block|int master;     int slave;     if(openpty(&master,&slave, line, 0, 0) == 0){ 	close(slave); 	return master;     }
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|slave
+argument_list|)
+expr_stmt|;
+return|return
+name|master
+return|;
+block|}
 else|#
 directive|else
 ifdef|#
@@ -3562,18 +3618,6 @@ name|struct
 name|winsize
 name|ws
 decl_stmt|;
-specifier|extern
-name|int
-name|def_row
-decl_stmt|,
-name|def_col
-decl_stmt|;
-specifier|extern
-name|int
-name|def_tspeed
-decl_stmt|,
-name|def_rspeed
-decl_stmt|;
 comment|/*      * Opening the slave side may cause initilization of the      * kernel tty structure.  We need remember the state of      * 	if linemode was turned on      *	terminal window size      *	terminal speed      * so that we can re-set them if we need to.      */
 comment|/*      * Make sure that we don't have a controlling tty, and      * that we are the session (process group) leader.      */
 ifdef|#
@@ -4597,9 +4641,15 @@ begin_function
 name|void
 name|startslave
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|utmp_host
 parameter_list|,
 name|int
 name|autologin
@@ -4794,7 +4844,7 @@ name|wtmp
 operator|.
 name|ut_host
 argument_list|,
-name|host
+name|utmp_host
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4973,16 +5023,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|getenv
-argument_list|(
-specifier|const
-name|char
-operator|*
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -5241,6 +5281,7 @@ decl_stmt|;
 name|int
 name|argc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -5259,6 +5300,7 @@ name|struct
 name|arg_val
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -5273,6 +5315,7 @@ begin_function
 name|void
 name|start_login
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|host
@@ -5292,6 +5335,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|user
+decl_stmt|;
+name|int
+name|save_errno
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -5449,11 +5495,6 @@ name|argv
 operator|.
 name|argv
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 literal|0
@@ -5672,6 +5713,10 @@ operator|.
 name|argv
 argument_list|)
 expr_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -5681,11 +5726,13 @@ argument_list|,
 name|new_login
 argument_list|)
 expr_stmt|;
-name|fatalperror
+name|fatalperror_errno
 argument_list|(
 name|net
 argument_list|,
 name|new_login
+argument_list|,
+name|save_errno
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -5702,6 +5749,7 @@ name|arg_val
 modifier|*
 name|argv
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: klist.c,v 1.62 2001/01/25 12:37:01 assar Exp $"
+literal|"$Id: klist.c,v 1.64 2001/05/11 19:55:13 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1409,10 +1409,10 @@ argument_list|,
 name|ccache
 argument_list|,
 operator|&
-name|creds
+name|cursor
 argument_list|,
 operator|&
-name|cursor
+name|creds
 argument_list|)
 operator|==
 literal|0
@@ -3230,7 +3230,7 @@ name|exit_status
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

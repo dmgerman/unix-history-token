@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: asn1-common.h,v 1.1 2000/04/14 15:41:31 joda Exp $ */
+comment|/* $Id: asn1-common.h,v 1.2 2001/09/25 13:39:25 assar Exp $ */
 end_comment
 
 begin_include
@@ -49,6 +49,23 @@ typedef|typedef
 name|char
 modifier|*
 name|general_string
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|oid
+block|{
+name|size_t
+name|length
+decl_stmt|;
+name|unsigned
+modifier|*
+name|components
+decl_stmt|;
+block|}
+name|oid
 typedef|;
 end_typedef
 

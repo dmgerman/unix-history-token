@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: commands.c,v 1.64 2000/12/11 01:44:01 assar Exp $"
+literal|"$Id: commands.c,v 1.67 2001/08/29 00:45:20 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1722,6 +1722,19 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|telopts
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1747,12 +1760,6 @@ name|char
 modifier|*
 modifier|*
 name|cpp
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|telopts
-index|[]
 decl_stmt|;
 name|int
 name|val
@@ -4713,13 +4720,6 @@ directive|ifdef
 name|KLUDGELINEMODE
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|kludgelinemode
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
@@ -4864,10 +4864,6 @@ block|{
 name|unsigned
 name|char
 name|c
-decl_stmt|;
-specifier|extern
-name|int
-name|linemode
 decl_stmt|;
 if|if
 condition|(
@@ -6256,10 +6252,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|resettermname
-decl_stmt|;
 if|if
 condition|(
 name|connected
@@ -7286,12 +7278,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -7381,6 +7367,11 @@ name|ep
 operator|=
 name|env_find
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|"DISPLAY"
 argument_list|)
 operator|)
@@ -7601,6 +7592,11 @@ condition|(
 operator|(
 name|env_find
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|"USER"
 argument_list|)
 operator|==
@@ -7612,6 +7608,11 @@ name|ep
 operator|=
 name|env_find
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|"LOGNAME"
 argument_list|)
 operator|)
@@ -9484,7 +9485,7 @@ comment|/*  * Function that gets called when SIGINFO is received.  */
 end_comment
 
 begin_function
-name|void
+name|RETSIGTYPE
 name|ayt_status
 parameter_list|(
 name|int
@@ -10267,6 +10268,10 @@ argument_list|(
 name|_hostname
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|hostp
+operator|=
+name|_hostname
 expr_stmt|;
 if|if
 condition|(

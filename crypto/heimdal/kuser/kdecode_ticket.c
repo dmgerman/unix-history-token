@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kdecode_ticket.c,v 1.4 2000/12/31 07:50:19 assar Exp $"
+literal|"$Id: kdecode_ticket.c,v 1.5 2001/02/20 01:44:51 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -377,7 +377,7 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

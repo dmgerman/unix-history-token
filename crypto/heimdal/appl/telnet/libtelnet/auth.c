@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth.c,v 1.23 2000/01/18 03:09:34 assar Exp $"
+literal|"$Id: auth.c,v 1.25 2002/01/18 12:58:48 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -284,6 +284,22 @@ end_endif
 begin_decl_stmt
 name|int
 name|auth_debug_mode
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|auth_has_failed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|auth_enable_encrypt
 init|=
 literal|0
 decl_stmt|;
@@ -1828,6 +1844,10 @@ argument_list|,
 name|AUTH_REJECT
 argument_list|)
 expr_stmt|;
+name|auth_has_failed
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KANNAN
@@ -2679,6 +2699,10 @@ control|)
 block|{
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tbuf
 argument_list|,
 sizeof|sizeof

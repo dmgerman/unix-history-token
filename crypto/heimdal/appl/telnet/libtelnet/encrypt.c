@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: encrypt.c,v 1.22 2000/01/18 03:10:35 assar Exp $"
+literal|"$Id: encrypt.c,v 1.23 2002/01/18 12:58:49 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4202,6 +4202,26 @@ name|encrypt_output
 operator|&&
 name|decrypt_input
 operator|)
+condition|)
+return|return
+literal|1
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|encrypt_is_encrypting
+parameter_list|()
+block|{
+if|if
+condition|(
+name|encrypt_output
+operator|&&
+name|decrypt_input
 condition|)
 return|return
 literal|1

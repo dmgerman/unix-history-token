@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998-2000 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/* $Id: iprop.h,v 1.5 2000/06/05 17:02:43 assar Exp $ */
+comment|/* $Id: iprop.h,v 1.6 2001/09/05 14:14:35 joda Exp $ */
 end_comment
 
 begin_ifndef
@@ -41,6 +41,23 @@ begin_include
 include|#
 directive|include
 file|<sys/select.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UTIL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<util.h>
 end_include
 
 begin_endif

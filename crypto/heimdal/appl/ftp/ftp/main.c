@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.30 2000/11/15 22:56:35 assar Exp $"
+literal|"$Id: main.c,v 1.31 2001/02/20 01:44:43 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -57,7 +57,7 @@ name|servent
 modifier|*
 name|sp
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[
@@ -355,7 +355,8 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__progname
+name|getprogname
+argument_list|()
 expr_stmt|;
 name|xargv
 index|[

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/************************************************************************ * Copyright 1995 by Wietse Venema.  All rights reserved.  Some individual * files may be covered by other copyrights. * * This material was originally written and compiled by Wietse Venema at * Eindhoven University of Technology, The Netherlands, in 1990, 1991, * 1992, 1993, 1994 and 1995. * * Redistribution and use in source and binary forms, with or without * modification, are permitted provided that this entire copyright notice * is duplicated in all such copies. * * This software is provided "as is" and without any expressed or implied * warranties, including, without limitation, the implied warranties of * merchantibility and fitness for any particular purpose. ************************************************************************/
+end_comment
+
+begin_comment
 comment|/*   * This module implements a simple but effective form of login access   * control based on login names and on host (or domain) names, internet   * addresses (or network numbers), or on terminal line names in case of   * non-networked logins. Diagnostics are reported through syslog(3).   *   * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
 end_comment
 
@@ -12,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: login_access.c,v 1.1 1999/05/17 22:40:05 assar Exp $"
+literal|"$Id: login_access.c,v 1.2 2001/06/04 14:09:45 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

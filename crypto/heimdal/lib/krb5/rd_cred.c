@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_cred.c,v 1.12 2001/01/04 16:19:00 joda Exp $"
+literal|"$Id: rd_cred.c,v 1.15 2001/06/29 14:53:44 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -63,6 +63,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+operator|*
+name|ret_creds
+operator|=
+name|NULL
+expr_stmt|;
 name|ret
 operator|=
 name|decode_KRB_CRED
@@ -102,6 +107,11 @@ name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADVERSION
 expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -118,6 +128,11 @@ block|{
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_MSG_TYPE
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -298,6 +313,8 @@ name|ret
 operator|=
 name|krb5_make_addrport
 argument_list|(
+name|context
+argument_list|,
 operator|&
 name|a
 argument_list|,
@@ -349,6 +366,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADADDR
@@ -384,6 +406,11 @@ name|r_address
 argument_list|)
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADADDR
@@ -442,6 +469,11 @@ operator|->
 name|max_skew
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_SKEW
@@ -547,6 +579,29 @@ name|ret_creds
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ret_creds
+operator|==
+name|NULL
+condition|)
+block|{
+name|ret
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 for|for
 control|(
 name|i
@@ -615,6 +670,13 @@ block|{
 name|ret
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out

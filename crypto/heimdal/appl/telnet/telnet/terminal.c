@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: terminal.c,v 1.10 1997/12/15 19:53:06 joda Exp $"
+literal|"$Id: terminal.c,v 1.11 2001/03/06 20:10:14 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -495,24 +495,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|linemode
-decl_stmt|;
 name|int
 name|mode
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KLUDGELINEMODE
-specifier|extern
-name|int
-name|kludgelinemode
-decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|my_want_state_is_dont

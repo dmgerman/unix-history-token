@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos5.c,v 1.47 2001/01/09 18:45:33 assar Exp $"
+literal|"$Id: kerberos5.c,v 1.49 2001/06/18 19:50:11 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -398,6 +398,10 @@ name|c
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cd
 argument_list|)
 expr_stmt|;
@@ -878,7 +882,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|krb5_auth_setkeytype
+name|krb5_auth_con_setkeytype
 argument_list|(
 name|context
 argument_list|,
@@ -3057,6 +3061,10 @@ goto|;
 default|default:
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|buflen
@@ -3094,6 +3102,10 @@ control|)
 block|{
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|buflen

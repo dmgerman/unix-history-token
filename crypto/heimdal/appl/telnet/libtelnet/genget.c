@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: genget.c,v 1.6 1997/05/04 09:01:34 assar Exp $"
+literal|"$Id: genget.c,v 1.7 2001/09/03 05:54:14 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -94,13 +94,21 @@ name|s2
 expr_stmt|;
 while|while
 condition|(
-name|LOWER
+name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c1
 argument_list|)
 operator|==
-name|LOWER
+name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c2
 argument_list|)
 condition|)

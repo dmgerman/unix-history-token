@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_decode.c,v 1.15 2001/01/29 08:36:45 assar Exp $"
+literal|"$Id: gen_decode.c,v 1.17 2001/09/25 13:39:26 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -170,11 +170,33 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|TEnumerated
+case|:
+name|decode_primitive
+argument_list|(
+literal|"enumerated"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|TOctetString
 case|:
 name|decode_primitive
 argument_list|(
 literal|"octet_string"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TOID
+case|:
+name|decode_primitive
+argument_list|(
+literal|"oid"
 argument_list|,
 name|name
 argument_list|)
@@ -823,7 +845,7 @@ argument_list|(
 name|codefile
 argument_list|,
 literal|"#define FORW "
-literal|"if(e) return e; "
+literal|"if(e) goto fail; "
 literal|"p += l; "
 literal|"len -= l; "
 literal|"ret += l\n\n"
@@ -866,6 +888,9 @@ case|case
 name|TOctetString
 case|:
 case|case
+name|TOID
+case|:
+case|case
 name|TGeneralizedTime
 case|:
 case|case
@@ -899,6 +924,13 @@ name|fprintf
 argument_list|(
 name|codefile
 argument_list|,
+literal|"memset(data, 0, sizeof(*data));\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
 literal|"i = 0;\n"
 argument_list|)
 expr_stmt|;
@@ -926,6 +958,19 @@ name|codefile
 argument_list|,
 literal|"if(size) *size = ret;\n"
 literal|"return 0;\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"fail:\n"
+literal|"free_%s(data);\n"
+literal|"return e;\n"
+argument_list|,
+name|s
+operator|->
+name|gen_name
 argument_list|)
 expr_stmt|;
 break|break;

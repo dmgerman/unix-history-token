@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/************************************************************************ * Copyright 1995 by Wietse Venema.  All rights reserved.  Some individual * files may be covered by other copyrights. * * This material was originally written and compiled by Wietse Venema at * Eindhoven University of Technology, The Netherlands, in 1990, 1991, * 1992, 1993, 1994 and 1995. * * Redistribution and use in source and binary forms, with or without * modification, are permitted provided that this entire copyright notice * is duplicated in all such copies. * * This software is provided "as is" and without any expressed or implied * warranties, including, without limitation, the implied warranties of * merchantibility and fitness for any particular purpose. ************************************************************************/
+end_comment
+
+begin_comment
 comment|/* Author: Wietse Venema<wietse@wzv.win.tue.nl> */
 end_comment
 
@@ -12,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utmpx_login.c,v 1.24 1999/08/04 17:03:15 assar Exp $"
+literal|"$Id: utmpx_login.c,v 1.26 2001/06/04 14:10:19 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -151,13 +155,13 @@ name|ut_user
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|shrink_hostname
 argument_list|(
+name|host
+argument_list|,
 name|ut
 operator|->
 name|ut_host
-argument_list|,
-name|host
 argument_list|,
 sizeof|sizeof
 argument_list|(

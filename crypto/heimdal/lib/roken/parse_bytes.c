@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_bytes.c,v 1.2 1999/12/02 16:58:51 joda Exp $"
+literal|"$Id: parse_bytes.c,v 1.3 2001/09/04 09:56:00 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -197,7 +197,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|int
 name|unparse_bytes
 parameter_list|(
 name|int
@@ -227,7 +227,7 @@ block|}
 end_function
 
 begin_function
-name|size_t
+name|int
 name|unparse_bytes_short
 parameter_list|(
 name|int

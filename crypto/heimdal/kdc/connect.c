@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: connect.c,v 1.80 2000/10/08 21:36:29 assar Exp $"
+literal|"$Id: connect.c,v 1.84 2001/08/21 10:10:25 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -509,11 +509,6 @@ literal|"tcp"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KASERVER
 if|if
 condition|(
 name|enable_kaserver
@@ -944,6 +939,8 @@ name|ret
 operator|=
 name|krb5_addr2sockaddr
 argument_list|(
+name|context
+argument_list|,
 name|a
 argument_list|,
 name|sa
@@ -1821,11 +1818,6 @@ return|return
 name|ret
 return|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KASERVER
 elseif|else
 if|if
 condition|(
@@ -1891,6 +1883,8 @@ name|a
 decl_stmt|;
 name|krb5_sockaddr2address
 argument_list|(
+name|context
+argument_list|,
 name|addr
 argument_list|,
 operator|&
@@ -2020,8 +2014,12 @@ name|kdc_log
 argument_list|(
 literal|5
 argument_list|,
-literal|"sending %d bytes to %s"
+literal|"sending %lu bytes to %s"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|reply
 operator|.
 name|length
@@ -2279,8 +2277,12 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Failed to allocate %u bytes"
+literal|"Failed to allocate %lu bytes"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|max_request
 argument_list|)
 expr_stmt|;
@@ -2797,8 +2799,12 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Request exceeds max request size (%u bytes)."
+literal|"Request exceeds max request size (%lu bytes)."
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|d
 operator|->
 name|size
@@ -2838,8 +2844,12 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Failed to re-allocate %u bytes."
+literal|"Failed to re-allocate %lu bytes."
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|d
 operator|->
 name|size
@@ -3153,8 +3163,12 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"Failed to allocate %u bytes"
+literal|"Failed to allocate %lu bytes"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|strlen
 argument_list|(
 name|t
@@ -3900,7 +3914,7 @@ name|kdc_log
 argument_list|(
 literal|1
 argument_list|,
-literal|"TCP-connection from %s expired after %u bytes"
+literal|"TCP-connection from %s expired after %lu bytes"
 argument_list|,
 name|d
 index|[
@@ -3909,6 +3923,10 @@ index|]
 operator|.
 name|addr_string
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|d
 index|[
 name|i

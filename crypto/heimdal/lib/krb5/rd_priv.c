@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rd_priv.c,v 1.27 2001/01/19 04:27:09 assar Exp $"
+literal|"$Id: rd_priv.c,v 1.29 2001/06/18 02:46:15 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -112,6 +112,11 @@ operator|!=
 literal|5
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADVERSION
@@ -129,6 +134,11 @@ operator|!=
 name|krb_priv
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_MSG_TYPE
@@ -137,31 +147,30 @@ goto|goto
 name|failure
 goto|;
 block|}
-comment|/* XXX - Is this right? */
 if|if
 condition|(
 name|auth_context
 operator|->
-name|local_subkey
+name|remote_subkey
 condition|)
 name|key
 operator|=
 name|auth_context
 operator|->
-name|local_subkey
+name|remote_subkey
 expr_stmt|;
 elseif|else
 if|if
 condition|(
 name|auth_context
 operator|->
-name|remote_subkey
+name|local_subkey
 condition|)
 name|key
 operator|=
 name|auth_context
 operator|->
-name|remote_subkey
+name|local_subkey
 expr_stmt|;
 else|else
 name|key
@@ -282,6 +291,11 @@ name|s_address
 argument_list|)
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADADDR
@@ -316,6 +330,11 @@ name|r_address
 argument_list|)
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADADDR
@@ -374,6 +393,11 @@ operator|->
 name|max_skew
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_SKEW
@@ -428,6 +452,11 @@ name|remote_seqnumber
 operator|)
 condition|)
 block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|KRB5KRB_AP_ERR_BADORDER

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth_context.c,v 1.55 2000/12/10 20:01:05 assar Exp $"
+literal|"$Id: auth_context.c,v 1.57 2001/06/17 23:12:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -44,9 +44,18 @@ condition|(
 operator|!
 name|p
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|memset
 argument_list|(
 name|p
@@ -77,6 +86,13 @@ operator|->
 name|authenticator
 condition|)
 block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|p
@@ -549,12 +565,26 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"getsockname: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
 name|krb5_sockaddr2address
 argument_list|(
+name|context
+argument_list|,
 name|local
 argument_list|,
 operator|&
@@ -570,6 +600,8 @@ condition|)
 block|{
 name|krb5_sockaddr2port
 argument_list|(
+name|context
+argument_list|,
 name|local
 argument_list|,
 operator|&
@@ -626,12 +658,26 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"getpeername: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
 name|krb5_sockaddr2address
 argument_list|(
+name|context
+argument_list|,
 name|remote
 argument_list|,
 operator|&
@@ -647,6 +693,8 @@ condition|)
 block|{
 name|krb5_sockaddr2port
 argument_list|(
+name|context
+argument_list|,
 name|remote
 argument_list|,
 operator|&
@@ -835,9 +883,18 @@ name|local_addr
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|krb5_copy_address
 argument_list|(
 name|context
@@ -883,9 +940,31 @@ name|remote_addr
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+name|krb5_free_address
+argument_list|(
+name|context
+argument_list|,
+operator|*
+name|local_addr
+argument_list|)
+expr_stmt|;
+operator|*
+name|local_addr
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|krb5_copy_address
 argument_list|(
 name|context
@@ -1181,7 +1260,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setcksumtype
+name|krb5_auth_con_setcksumtype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1207,7 +1286,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getcksumtype
+name|krb5_auth_con_getcksumtype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1235,7 +1314,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setkeytype
+name|krb5_auth_con_setkeytype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1261,7 +1340,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getkeytype
+name|krb5_auth_con_getkeytype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1294,14 +1373,14 @@ literal|0
 end_if
 
 begin_endif
-unit|krb5_error_code krb5_auth_setenctype(krb5_context context, 		     krb5_auth_context auth_context, 		     krb5_enctype etype) {     if(auth_context->keyblock) 	krb5_free_keyblock(context, auth_context->keyblock);     ALLOC(auth_context->keyblock, 1);     if(auth_context->keyblock == NULL) 	return ENOMEM;     auth_context->keyblock->keytype = etype;     return 0; }  krb5_error_code krb5_auth_getenctype(krb5_context context, 		     krb5_auth_context auth_context, 		     krb5_enctype *etype) {     krb5_abortx(context, "unimplemented krb5_auth_getenctype called"); }
+unit|krb5_error_code krb5_auth_con_setenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype etype) {     if(auth_context->keyblock) 	krb5_free_keyblock(context, auth_context->keyblock);     ALLOC(auth_context->keyblock, 1);     if(auth_context->keyblock == NULL) 	return ENOMEM;     auth_context->keyblock->keytype = etype;     return 0; }  krb5_error_code krb5_auth_con_getenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype *etype) {     krb5_abortx(context, "unimplemented krb5_auth_getenctype called"); }
 endif|#
 directive|endif
 end_endif
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getlocalseqnumber
+name|krb5_auth_con_getlocalseqnumber
 parameter_list|(
 name|krb5_context
 name|context
@@ -1329,7 +1408,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setlocalseqnumber
+name|krb5_auth_con_setlocalseqnumber
 parameter_list|(
 name|krb5_context
 name|context
@@ -1383,7 +1462,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setremoteseqnumber
+name|krb5_auth_con_setremoteseqnumber
 parameter_list|(
 name|krb5_context
 name|context
@@ -1409,7 +1488,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getauthenticator
+name|krb5_auth_con_getauthenticator
 parameter_list|(
 name|krb5_context
 name|context
@@ -1442,9 +1521,18 @@ name|authenticator
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|copy_Authenticator
 argument_list|(
 name|auth_context

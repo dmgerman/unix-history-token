@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_mic.c,v 1.15 2001/01/29 02:08:58 assar Exp $"
+literal|"$Id: get_mic.c,v 1.19 2001/10/31 13:37:39 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -292,7 +292,7 @@ argument_list|)
 expr_stmt|;
 comment|/* SGN_CKSUM */
 comment|/* sequence number */
-name|krb5_auth_getlocalseqnumber
+name|krb5_auth_con_getlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -421,7 +421,7 @@ argument_list|,
 name|DES_ENCRYPT
 argument_list|)
 expr_stmt|;
-name|krb5_auth_setlocalseqnumber
+name|krb5_auth_con_setlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -703,6 +703,9 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -721,6 +724,8 @@ argument_list|,
 name|crypto
 argument_list|,
 name|KRB5_KU_USAGE_SIGN
+argument_list|,
+literal|0
 argument_list|,
 name|tmp
 argument_list|,
@@ -758,6 +763,9 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -787,7 +795,7 @@ name|length
 argument_list|)
 expr_stmt|;
 comment|/* sequence number */
-name|krb5_auth_getlocalseqnumber
+name|krb5_auth_con_getlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -898,6 +906,9 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -944,6 +955,9 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -981,30 +995,7 @@ operator|&
 name|encdata
 argument_list|)
 expr_stmt|;
-name|p
-operator|+=
-literal|8
-operator|+
-name|cksum
-operator|.
-name|checksum
-operator|.
-name|length
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|p
-argument_list|,
-name|message_buffer
-operator|->
-name|value
-argument_list|,
-name|message_buffer
-operator|->
-name|length
-argument_list|)
-expr_stmt|;
-name|krb5_auth_setlocalseqnumber
+name|krb5_auth_con_setlocalseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -1063,7 +1054,7 @@ name|keytype
 decl_stmt|;
 name|ret
 operator|=
-name|gss_krb5_getsomekey
+name|gss_krb5_get_localkey
 argument_list|(
 name|context_handle
 argument_list|,
@@ -1076,6 +1067,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=

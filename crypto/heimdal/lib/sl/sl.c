@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sl.c,v 1.28 2001/01/26 14:58:26 joda Exp $"
+literal|"$Id: sl.c,v 1.29 2001/02/20 01:44:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -241,7 +241,8 @@ name|p
 operator|=
 name|strrchr
 argument_list|(
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 literal|'/'
 argument_list|)
@@ -256,7 +257,8 @@ expr_stmt|;
 else|else
 name|p
 operator|=
-name|__progname
+name|getprogname
+argument_list|()
 expr_stmt|;
 name|strncpy
 argument_list|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify_mic.c,v 1.12 2001/01/29 02:08:59 assar Exp $"
+literal|"$Id: verify_mic.c,v 1.15 2001/08/23 04:35:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -104,9 +104,16 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+operator|*
+name|minor_status
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 if|if
 condition|(
 name|memcmp
@@ -466,7 +473,7 @@ return|return
 name|GSS_S_BAD_MIC
 return|;
 block|}
-name|krb5_auth_setremoteseqnumber
+name|krb5_auth_con_setremoteseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -570,9 +577,16 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+operator|*
+name|minor_status
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 if|if
 condition|(
 name|memcmp
@@ -633,6 +647,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -666,6 +683,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|krb5_crypto_destroy
 argument_list|(
 name|gssapi_krb5_context
@@ -949,6 +969,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 name|krb5_crypto_destroy
 argument_list|(
 name|gssapi_krb5_context
@@ -965,7 +988,7 @@ return|return
 name|GSS_S_BAD_MIC
 return|;
 block|}
-name|krb5_auth_setremoteseqnumber
+name|krb5_auth_con_setremoteseqnumber
 argument_list|(
 name|gssapi_krb5_context
 argument_list|,
@@ -1027,13 +1050,9 @@ name|keytype
 decl_stmt|;
 name|ret
 operator|=
-name|krb5_auth_con_getremotesubkey
+name|gss_krb5_get_remotekey
 argument_list|(
-name|gssapi_krb5_context
-argument_list|,
 name|context_handle
-operator|->
-name|auth_context
 argument_list|,
 operator|&
 name|key
@@ -1044,6 +1063,9 @@ condition|(
 name|ret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=

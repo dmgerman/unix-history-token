@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kf.c,v 1.14 2000/12/31 07:31:06 assar Exp $"
+literal|"$Id: kf.c,v 1.15 2001/02/20 01:44:44 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -279,7 +279,7 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

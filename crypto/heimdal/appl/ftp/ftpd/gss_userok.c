@@ -24,7 +24,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gss_userok.c,v 1.7 2001/01/30 00:36:58 assar Exp $"
+literal|"$Id: gss_userok.c,v 1.8 2001/08/05 06:38:57 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -226,6 +226,9 @@ literal|"%s%u"
 argument_list|,
 name|KRB5_DEFAULT_CCROOT
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|pw
 operator|->
 name|pw_uid

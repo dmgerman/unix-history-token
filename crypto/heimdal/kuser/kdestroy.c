@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kdestroy.c,v 1.12 2000/12/31 07:51:09 assar Exp $"
+literal|"$Id: kdestroy.c,v 1.13 2001/02/20 01:44:51 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -222,7 +222,7 @@ name|exit_val
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_bytes-test.c,v 1.2 1999/12/02 16:58:51 joda Exp $"
+literal|"$Id: parse_bytes-test.c,v 1.3 2001/09/04 09:56:00 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -243,7 +243,7 @@ operator|.
 name|def_unit
 argument_list|)
 decl_stmt|;
-name|size_t
+name|int
 name|len
 decl_stmt|;
 if|if

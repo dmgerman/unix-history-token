@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_free.c,v 1.8 2000/04/06 17:24:02 assar Exp $"
+literal|"$Id: gen_free.c,v 1.9 2001/09/25 13:39:26 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -101,6 +101,9 @@ case|:
 case|case
 name|TUInteger
 case|:
+case|case
+name|TEnumerated
+case|:
 break|break;
 case|case
 name|TOctetString
@@ -108,6 +111,17 @@ case|:
 name|free_primitive
 argument_list|(
 literal|"octet_string"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TOID
+case|:
+name|free_primitive
+argument_list|(
+literal|"oid"
 argument_list|,
 name|name
 argument_list|)

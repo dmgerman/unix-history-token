@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify.c,v 1.24 2000/12/31 07:57:08 assar Exp $"
+literal|"$Id: verify.c,v 1.25 2001/06/18 13:11:33 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -690,7 +690,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|krb524_convert_creds_kdc
+name|krb524_convert_creds_kdc_ccache
 argument_list|(
 name|context
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: db3.c,v 1.6 2001/01/30 01:24:00 assar Exp $"
+literal|"$Id: db3.c,v 1.8 2001/08/09 08:41:48 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20,15 +20,14 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|HAVE_DB_H
-argument_list|)
-operator|&&
-name|DB_VERSION_MAJOR
-operator|==
-literal|3
+name|HAVE_DB3
 end_if
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
 
 begin_function
 specifier|static
@@ -521,10 +520,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|code
-operator|=
-name|ENOMEM
-expr_stmt|;
 name|hdb_free_entry
 argument_list|(
 name|context
@@ -532,6 +527,16 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
 block|}
 else|else
 block|{
@@ -1313,9 +1318,18 @@ name|fn
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|db_create
 argument_list|(
 operator|&
@@ -1394,6 +1408,22 @@ argument_list|(
 name|fn
 argument_list|)
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"opening %s: %s"
+argument_list|,
+name|db
+operator|->
+name|name
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -1431,9 +1461,23 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"d->cursor: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1516,9 +1560,18 @@ name|db
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 operator|(
 operator|*
 name|db
@@ -1540,6 +1593,40 @@ argument_list|(
 name|filename
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|db
+operator|)
+operator|->
+name|name
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+operator|*
+name|db
+argument_list|)
+expr_stmt|;
+operator|*
+name|db
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 operator|(
 operator|*
 name|db
@@ -1694,6 +1781,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAVE_DB3 */
+end_comment
 
 end_unit
 

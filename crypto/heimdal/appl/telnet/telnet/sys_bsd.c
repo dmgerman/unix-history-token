@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_bsd.c,v 1.26 2000/10/19 21:19:57 assar Exp $"
+literal|"$Id: sys_bsd.c,v 1.29 2001/12/20 20:39:52 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -399,24 +399,6 @@ directive|endif
 comment|/* LNOFLSH */
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KLUDGELINEMODE
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|kludgelinemode
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * TerminalSpecialChars()  *  * Look at an input character to see if it is a special character  * and decide what to do.  *  * Output:  *  *	0	Don't add this character.  *	1	Do add this character  */
@@ -1902,12 +1884,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGINFO
-name|RETSIGTYPE
-name|ayt_status
-argument_list|(
-name|int
-argument_list|)
-decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINFO
@@ -2703,6 +2679,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|intr_happened
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|intr_waiting
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2716,6 +2708,17 @@ name|int
 name|sig
 parameter_list|)
 block|{
+if|if
+condition|(
+name|intr_waiting
+condition|)
+block|{
+name|intr_happened
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|localchars

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_file.c,v 1.6 2000/01/02 00:20:22 assar Exp $"
+literal|"$Id: keytab_file.c,v 1.8 2001/05/14 06:14:48 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -59,6 +59,9 @@ specifier|static
 name|krb5_error_code
 name|krb5_kt_ret_data
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_storage
 modifier|*
 name|sp
@@ -114,9 +117,18 @@ name|data
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|ret
 operator|=
 name|sp
@@ -160,6 +172,9 @@ specifier|static
 name|krb5_error_code
 name|krb5_kt_ret_string
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_storage
 modifier|*
 name|sp
@@ -209,9 +224,18 @@ name|data
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|ret
 operator|=
 name|sp
@@ -264,6 +288,9 @@ specifier|static
 name|krb5_error_code
 name|krb5_kt_store_data
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_storage
 modifier|*
 name|sp
@@ -426,6 +453,9 @@ specifier|static
 name|krb5_error_code
 name|krb5_kt_ret_keyblock
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_storage
 modifier|*
 name|sp
@@ -469,6 +499,8 @@ name|ret
 operator|=
 name|krb5_kt_ret_data
 argument_list|(
+name|context
+argument_list|,
 name|sp
 argument_list|,
 operator|&
@@ -488,6 +520,9 @@ specifier|static
 name|krb5_error_code
 name|krb5_kt_store_keyblock
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_storage
 modifier|*
 name|sp
@@ -523,6 +558,8 @@ name|ret
 operator|=
 name|krb5_kt_store_data
 argument_list|(
+name|context
+argument_list|,
 name|sp
 argument_list|,
 name|p
@@ -541,6 +578,9 @@ specifier|static
 name|krb5_error_code
 name|krb5_kt_ret_principal
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_storage
 modifier|*
 name|sp
@@ -575,9 +615,18 @@ name|p
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|ret
 operator|=
 name|krb5_ret_int16
@@ -620,6 +669,8 @@ name|ret
 operator|=
 name|krb5_kt_ret_string
 argument_list|(
+name|context
+argument_list|,
 name|sp
 argument_list|,
 operator|&
@@ -678,9 +729,18 @@ name|val
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 for|for
 control|(
 name|i
@@ -705,6 +765,8 @@ name|ret
 operator|=
 name|krb5_kt_ret_string
 argument_list|(
+name|context
+argument_list|,
 name|sp
 argument_list|,
 name|p
@@ -790,6 +852,9 @@ specifier|static
 name|krb5_error_code
 name|krb5_kt_store_principal
 parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
 name|krb5_storage
 modifier|*
 name|sp
@@ -994,9 +1059,18 @@ name|d
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|d
 operator|->
 name|filename
@@ -1018,6 +1092,13 @@ block|{
 name|free
 argument_list|(
 name|d
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1245,9 +1326,31 @@ name|fd
 operator|<
 literal|0
 condition|)
-return|return
+block|{
+name|ret
+operator|=
 name|errno
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"open(%s): %s"
+argument_list|,
+name|d
+operator|->
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
+block|}
 name|c
 operator|->
 name|sp
@@ -1313,6 +1416,11 @@ argument_list|(
 name|c
 operator|->
 name|fd
+argument_list|)
+expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
 argument_list|)
 expr_stmt|;
 return|return
@@ -1526,6 +1634,8 @@ name|ret
 operator|=
 name|krb5_kt_ret_principal
 argument_list|(
+name|context
+argument_list|,
 name|cursor
 operator|->
 name|sp
@@ -1597,6 +1707,8 @@ name|ret
 operator|=
 name|krb5_kt_ret_keyblock
 argument_list|(
+name|context
+argument_list|,
 name|cursor
 operator|->
 name|sp
@@ -1823,9 +1935,31 @@ name|fd
 operator|<
 literal|0
 condition|)
-return|return
+block|{
+name|ret
+operator|=
 name|errno
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"open(%s): %s"
+argument_list|,
+name|d
+operator|->
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|ret
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
 return|;
+block|}
 name|sp
 operator|=
 name|krb5_storage_from_fd
@@ -1977,6 +2111,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KEYTAB_BADVNO
 return|;
@@ -2049,6 +2188,13 @@ name|ret
 operator|=
 name|ENOMEM
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2057,6 +2203,8 @@ name|ret
 operator|=
 name|krb5_kt_store_principal
 argument_list|(
+name|context
+argument_list|,
 name|emem
 argument_list|,
 name|entry
@@ -2132,6 +2280,8 @@ name|ret
 operator|=
 name|krb5_kt_store_keyblock
 argument_list|(
+name|context
+argument_list|,
 name|emem
 argument_list|,
 operator|&
@@ -2538,9 +2688,16 @@ condition|(
 operator|!
 name|found
 condition|)
+block|{
+name|krb5_clear_error_string
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
 return|return
 name|KRB5_KT_NOTFOUND
 return|;
+block|}
 return|return
 literal|0
 return|;

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: init_sec_context.c,v 1.25 2001/01/30 22:49:56 assar Exp $"
+literal|"$Id: init_sec_context.c,v 1.29 2001/08/29 02:21:09 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -775,6 +775,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -889,6 +892,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -932,6 +938,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -967,6 +976,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1081,6 +1093,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1230,10 +1245,12 @@ name|more_flags
 operator|=
 name|LOCAL
 expr_stmt|;
-name|kret
+name|ret
 operator|=
 name|gssapi_krb5_create_8003_checksum
 argument_list|(
+name|minor_status
+argument_list|,
 name|input_chan_bindings
 argument_list|,
 name|flags
@@ -1253,22 +1270,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|kret
-condition|)
-block|{
-operator|*
-name|minor_status
-operator|=
-name|kret
-expr_stmt|;
 name|ret
-operator|=
-name|GSS_S_FAILURE
-expr_stmt|;
+condition|)
 goto|goto
 name|failure
 goto|;
-block|}
 if|#
 directive|if
 literal|1
@@ -1376,6 +1382,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1412,6 +1421,9 @@ condition|(
 name|kret
 condition|)
 block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
 operator|*
 name|minor_status
 operator|=
@@ -1429,6 +1441,8 @@ name|ret
 operator|=
 name|gssapi_krb5_encapsulate
 argument_list|(
+name|minor_status
+argument_list|,
 operator|&
 name|outbuf
 argument_list|,
@@ -1441,16 +1455,9 @@ if|if
 condition|(
 name|ret
 condition|)
-block|{
-operator|*
-name|minor_status
-operator|=
-name|kret
-expr_stmt|;
 goto|goto
 name|failure
 goto|;
-block|}
 name|krb5_data_free
 argument_list|(
 operator|&
@@ -1634,6 +1641,8 @@ name|ret
 operator|=
 name|gssapi_krb5_decapsulate
 argument_list|(
+name|minor_status
+argument_list|,
 name|input_token
 argument_list|,
 operator|&
@@ -1646,12 +1655,10 @@ if|if
 condition|(
 name|ret
 condition|)
-block|{
 comment|/* XXX - Handle AP_ERROR */
 return|return
-name|GSS_S_FAILURE
+name|ret
 return|;
-block|}
 name|kret
 operator|=
 name|krb5_rd_rep
@@ -1676,9 +1683,19 @@ if|if
 condition|(
 name|kret
 condition|)
+block|{
+name|gssapi_krb5_set_error_string
+argument_list|()
+expr_stmt|;
+operator|*
+name|minor_status
+operator|=
+name|kret
+expr_stmt|;
 return|return
 name|GSS_S_FAILURE
 return|;
+block|}
 name|krb5_free_ap_rep_enc_part
 argument_list|(
 name|gssapi_krb5_context

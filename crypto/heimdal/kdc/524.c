@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: 524.c,v 1.19 2001/01/30 01:44:07 assar Exp $"
+literal|"$Id: 524.c,v 1.23 2001/08/17 07:48:49 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -463,6 +463,8 @@ name|ret
 operator|=
 name|krb5_sockaddr2address
 argument_list|(
+name|context
+argument_list|,
 name|addr
 argument_list|,
 name|v4_addr
@@ -1079,6 +1081,8 @@ name|get_des_key
 argument_list|(
 name|server
 argument_list|,
+name|TRUE
+argument_list|,
 name|FALSE
 argument_list|,
 operator|&
@@ -1094,7 +1098,7 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"No DES key for server (%s)"
+literal|"no suitable DES key for server (%s)"
 argument_list|,
 name|spn
 argument_list|)
@@ -1248,6 +1252,24 @@ argument_list|(
 name|sp
 argument_list|,
 name|reply
+argument_list|)
+expr_stmt|;
+name|reply
+operator|->
+name|length
+operator|=
+call|(
+modifier|*
+name|sp
+operator|->
+name|seek
+call|)
+argument_list|(
+name|sp
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 name|krb5_storage_free

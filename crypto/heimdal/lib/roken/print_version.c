@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: print_version.c,v 1.7 2001/01/30 03:05:29 assar Exp $"
+literal|"$Id: print_version.c,v 1.8 2001/02/20 01:44:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -95,7 +95,8 @@ name|NULL
 condition|)
 name|progname
 operator|=
-name|__progname
+name|getprogname
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

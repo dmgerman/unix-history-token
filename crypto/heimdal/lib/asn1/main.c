@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.10 1999/12/02 17:05:02 joda Exp $"
+literal|"$Id: main.c,v 1.11 2001/02/20 01:44:52 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -153,7 +153,7 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|set_progname
+name|setprogname
 argument_list|(
 name|argv
 index|[
