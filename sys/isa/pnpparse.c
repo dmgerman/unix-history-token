@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -146,12 +152,8 @@ index|]
 decl_stmt|;
 name|struct
 name|isa_config
+modifier|*
 name|configs
-index|[
-literal|1
-operator|+
-name|MAXDEP
-index|]
 decl_stmt|;
 name|char
 name|buf
@@ -169,12 +171,63 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|configs
+operator|=
+operator|(
+expr|struct
+name|isa_config
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|configs
+argument_list|)
+operator|*
+operator|(
+literal|1
+operator|+
+name|MAXDEP
+operator|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|configs
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"No memory to parse PNP data\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bzero
 argument_list|(
 name|configs
 argument_list|,
 sizeof|sizeof
+argument_list|(
+operator|*
 name|configs
+argument_list|)
+operator|*
+operator|(
+literal|1
+operator|+
+name|MAXDEP
+operator|)
 argument_list|)
 expr_stmt|;
 name|config
@@ -1095,7 +1148,7 @@ name|device_printf
 argument_list|(
 name|parent
 argument_list|,
-literal|"too many memory ranges"
+literal|"too many memory ranges\n"
 argument_list|)
 expr_stmt|;
 name|scanning
@@ -1627,6 +1680,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|configs
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* Cycle through dependant configs merging primary details */
@@ -1688,6 +1748,13 @@ argument_list|(
 name|parent
 argument_list|,
 literal|"too many memory ranges\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|configs
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1752,6 +1819,13 @@ argument_list|,
 literal|"too many port ranges\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|configs
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|config
@@ -1812,6 +1886,13 @@ argument_list|(
 name|parent
 argument_list|,
 literal|"too many irq ranges\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|configs
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1876,6 +1957,13 @@ argument_list|,
 literal|"too many drq ranges\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|configs
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|config
@@ -1925,6 +2013,13 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|configs
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
