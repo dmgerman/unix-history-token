@@ -1408,15 +1408,12 @@ name|hlen
 argument_list|,
 name|ifp
 argument_list|,
-name|ip_divert_ignore
+operator|&
+name|ip_divert_cookie
 argument_list|,
 operator|&
 name|m
 argument_list|)
-expr_stmt|;
-name|ip_divert_ignore
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1448,6 +1445,11 @@ goto|;
 block|}
 else|#
 directive|else
+name|u_int16_t
+name|dummy
+init|=
+literal|0
+decl_stmt|;
 comment|/* If ipfw says divert, we have to just drop packet */
 if|if
 condition|(
@@ -1463,7 +1465,8 @@ name|hlen
 argument_list|,
 name|ifp
 argument_list|,
-literal|0
+operator|&
+name|dummy
 argument_list|,
 operator|&
 name|m
