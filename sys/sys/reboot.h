@@ -231,6 +231,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RB_PAUSE
+value|0x40000
+end_define
+
+begin_comment
+comment|/* pause after each output line during probe */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RB_BOOTINFO
 value|0x80000000
 end_define

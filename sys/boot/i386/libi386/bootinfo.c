@@ -277,6 +277,14 @@ name|RB_SERIAL
 expr_stmt|;
 break|break;
 case|case
+literal|'p'
+case|:
+name|howto
+operator||=
+name|RB_PAUSE
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|howto
