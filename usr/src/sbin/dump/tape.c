@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.3 (Berkeley) %G%"
+literal|"@(#)tape.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1538,14 +1538,24 @@ operator|)
 operator|<
 literal|0
 condition|)
-return|return
+block|{
+name|msg
+argument_list|(
+literal|"Could not create lockfile "
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|tmpname
+argument_list|)
+expr_stmt|;
+name|dumpabort
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
-name|fd
-index|[
-literal|1
-index|]
-operator|)
-return|;
 name|fd
 index|[
 literal|0
@@ -1557,29 +1567,30 @@ name|tmpname
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Could not reopen lockfile "
+argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+name|tmpname
+argument_list|)
+expr_stmt|;
+name|dumpabort
+argument_list|()
+expr_stmt|;
+block|}
 name|unlink
 argument_list|(
 name|tmpname
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|fd
-index|[
-literal|0
-index|]
-operator|<
-literal|0
-condition|?
-name|fd
-index|[
-literal|0
-index|]
-else|:
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
@@ -1726,6 +1737,23 @@ name|LOCK_EX
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+operator|<
+name|SLAVES
+operator|-
+literal|1
+condition|)
+block|{
+name|lockfile
+argument_list|(
+name|next
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|next
 index|[
 literal|0
@@ -1747,23 +1775,9 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* Last slave loops back */
+block|}
 if|if
 condition|(
-operator|(
-name|i
-operator|<
-name|SLAVES
-operator|-
-literal|1
-operator|&&
-name|lockfile
-argument_list|(
-name|next
-argument_list|)
-operator|<
-literal|0
-operator|)
-operator|||
 name|pipe
 argument_list|(
 name|cmd
@@ -1784,9 +1798,16 @@ operator|<
 literal|0
 condition|)
 block|{
+name|msg
+argument_list|(
+literal|"too many slaves, %d (recompile smaller) "
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"  DUMP: too many slaves (recompile smaller)"
+literal|""
 argument_list|)
 expr_stmt|;
 name|dumpabort
