@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdopen.c	5.4 (Berkeley) %G%"
+literal|"@(#)fdopen.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,7 @@ parameter_list|)
 name|int
 name|fd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mode

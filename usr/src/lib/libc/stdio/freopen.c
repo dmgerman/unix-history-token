@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)freopen.c	5.4 (Berkeley) %G%"
+literal|"@(#)freopen.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,7 @@ name|mode
 parameter_list|,
 name|fp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file

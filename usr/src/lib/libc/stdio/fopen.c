@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fopen.c	5.3 (Berkeley) %G%"
+literal|"@(#)fopen.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,10 +76,12 @@ name|file
 parameter_list|,
 name|mode
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|mode

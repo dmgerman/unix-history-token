@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fputs.c	5.4 (Berkeley) %G%"
+literal|"@(#)fputs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|s
@@ -102,6 +103,10 @@ name|iov
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|s
 expr_stmt|;
 name|iov

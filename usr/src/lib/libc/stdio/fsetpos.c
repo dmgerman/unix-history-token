@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsetpos.c	5.1 (Berkeley) %G%"
+literal|"@(#)fsetpos.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|fpos_t
 modifier|*
 name|pos

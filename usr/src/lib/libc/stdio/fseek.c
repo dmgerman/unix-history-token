@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fseek.c	5.5 (Berkeley) %G%"
+literal|"@(#)fseek.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ modifier|*
 name|seekfn
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|fpos_t
@@ -326,6 +326,11 @@ case|:
 case|case
 name|SEEK_END
 case|:
+name|curoff
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX just to keep gcc quiet */
 name|havepos
 operator|=
 literal|0

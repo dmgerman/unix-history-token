@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)remove.c	5.1 (Berkeley) %G%"
+literal|"@(#)remove.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|file

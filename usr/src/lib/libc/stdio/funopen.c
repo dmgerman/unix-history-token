@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)funopen.c	5.1 (Berkeley) %G%"
+literal|"@(#)funopen.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,8 @@ name|seekfn
 argument_list|,
 name|closefn
 argument_list|)
-name|char
+decl|const
+name|void
 modifier|*
 name|cookie
 decl_stmt|;
@@ -105,7 +106,7 @@ modifier|*
 name|seekfn
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 name|cookie
 parameter_list|,
@@ -243,6 +244,10 @@ name|fp
 operator|->
 name|_cookie
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|cookie
 expr_stmt|;
 name|fp
