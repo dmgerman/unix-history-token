@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.17	%G%	*/
+comment|/*	conf.c	4.18	%G%	*/
 end_comment
 
 begin_include
@@ -276,7 +276,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NRK11
+name|NHK
 operator|>
 literal|0
 end_if
@@ -354,7 +354,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NTM03
+name|NTM
 operator|>
 literal|0
 end_if
@@ -540,7 +540,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NUP
+name|NSC
 operator|>
 literal|0
 end_if
@@ -804,7 +804,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NDH11
+name|NDH
 operator|==
 literal|0
 end_if
@@ -1059,7 +1059,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NDZ11
+name|NDZ
 operator|==
 literal|0
 end_if
