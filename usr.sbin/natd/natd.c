@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software ois provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  */
 end_comment
 
 begin_include
@@ -334,7 +334,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_short
 name|StrToPort
 parameter_list|(
 name|char
@@ -362,7 +362,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|u_short
 name|StrToAddrAndPort
 parameter_list|(
 name|char
@@ -457,21 +457,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_short
 name|inPort
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_short
 name|outPort
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_short
 name|inOutPort
 decl_stmt|;
 end_decl_stmt
@@ -694,7 +694,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"both alias address and interface name are not allowed"
+literal|"both alias address and interface "
+literal|"name are not allowed"
 argument_list|)
 expr_stmt|;
 comment|/*  * Check that valid port number is known.  */
@@ -3185,6 +3186,9 @@ decl_stmt|;
 name|int
 name|numValue
 decl_stmt|;
+name|u_short
+name|uNumValue
+decl_stmt|;
 name|char
 modifier|*
 name|strValue
@@ -3286,6 +3290,10 @@ name|Usage
 argument_list|()
 expr_stmt|;
 block|}
+name|uNumValue
+operator|=
+literal|0
+expr_stmt|;
 name|yesNoValue
 operator|=
 literal|0
@@ -3370,12 +3378,13 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s needs service name or port number parameter"
+literal|"%s needs service name or "
+literal|"port number parameter"
 argument_list|,
 name|option
 argument_list|)
 expr_stmt|;
-name|numValue
+name|uNumValue
 operator|=
 name|StrToPort
 argument_list|(
@@ -3542,7 +3551,7 @@ name|InPort
 case|:
 name|inPort
 operator|=
-name|numValue
+name|uNumValue
 expr_stmt|;
 break|break;
 case|case
@@ -3550,7 +3559,7 @@ name|OutPort
 case|:
 name|outPort
 operator|=
-name|numValue
+name|uNumValue
 expr_stmt|;
 break|break;
 case|case
@@ -3558,7 +3567,7 @@ name|Port
 case|:
 name|inOutPort
 operator|=
-name|numValue
+name|uNumValue
 expr_stmt|;
 break|break;
 case|case
@@ -3734,7 +3743,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"config line too link: %s"
+literal|"config line too long: %s"
 argument_list|,
 name|buf
 argument_list|)
@@ -3997,13 +4006,13 @@ name|struct
 name|in_addr
 name|dstAddr
 decl_stmt|;
-name|int
+name|u_short
 name|srcPort
 decl_stmt|;
-name|int
+name|u_short
 name|dstPort
 decl_stmt|;
-name|int
+name|u_short
 name|aliasPort
 decl_stmt|;
 name|int
@@ -4197,13 +4206,13 @@ name|struct
 name|in_addr
 name|remoteAddr
 decl_stmt|;
-name|int
+name|u_short
 name|localPort
 decl_stmt|;
-name|int
+name|u_short
 name|publicPort
 decl_stmt|;
-name|int
+name|u_short
 name|remotePort
 decl_stmt|;
 name|int
@@ -4614,7 +4623,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|u_short
 name|StrToPort
 parameter_list|(
 name|char
@@ -4626,7 +4635,7 @@ modifier|*
 name|proto
 parameter_list|)
 block|{
-name|int
+name|u_short
 name|port
 decl_stmt|;
 name|struct
@@ -4657,7 +4666,7 @@ operator|!=
 name|str
 condition|)
 return|return
-name|htonl
+name|htons
 argument_list|(
 name|port
 argument_list|)
@@ -4743,7 +4752,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|u_short
 name|StrToAddrAndPort
 parameter_list|(
 name|char
