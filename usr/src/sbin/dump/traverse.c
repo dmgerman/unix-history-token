@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)traverse.c	1.9 (Berkeley) %G%"
+literal|"@(#)traverse.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"dump.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dir.h>
 end_include
 
 begin_macro

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.6 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.7 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<dumprestor.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dir.h>
 end_include
 
 begin_include
@@ -737,6 +743,28 @@ end_decl_stmt
 begin_comment
 comment|/*  *	The contents of the file NINCREM is maintained both on  *	a linked list, and then (eventually) arrayified.  */
 end_comment
+
+begin_struct
+struct|struct
+name|idates
+block|{
+name|char
+name|id_name
+index|[
+name|MAXNAMLEN
+operator|+
+literal|3
+index|]
+decl_stmt|;
+name|char
+name|id_incno
+decl_stmt|;
+name|time_t
+name|id_ddate
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
