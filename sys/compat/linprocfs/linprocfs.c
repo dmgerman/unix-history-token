@@ -2538,10 +2538,7 @@ name|td_state
 condition|)
 block|{
 case|case
-name|TDS_SLP
-case|:
-case|case
-name|TDS_MTX
+name|TDS_INHIBITED
 case|:
 name|state
 operator|=
@@ -2559,18 +2556,6 @@ operator|=
 literal|"R (running)"
 expr_stmt|;
 break|break;
-case|case
-name|TDS_NEW
-case|:
-case|case
-name|TDS_UNQUEUED
-case|:
-case|case
-name|TDS_IWAIT
-case|:
-case|case
-name|TDS_SURPLUS
-case|:
 default|default:
 name|state
 operator|=

@@ -315,7 +315,7 @@ name|td
 operator|->
 name|td_state
 operator|=
-name|TDS_UNQUEUED
+name|TDS_CAN_RUN
 expr_stmt|;
 name|td
 operator|->
@@ -470,7 +470,7 @@ name|td
 operator|->
 name|td_state
 operator|=
-name|TDS_UNQUEUED
+name|TDS_CAN_RUN
 expr_stmt|;
 name|mi_switch
 argument_list|()

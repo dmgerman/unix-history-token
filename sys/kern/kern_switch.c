@@ -358,11 +358,10 @@ condition|)
 goto|goto
 name|retry
 goto|;
+name|TD_SET_RUNNING
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_RUNNING
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -585,11 +584,10 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
+name|TD_ON_RUNQ
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_RUNQ
+argument_list|)
 operator|)
 argument_list|,
 operator|(
@@ -619,16 +617,15 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_UNQUEUED
-expr_stmt|;
 name|kg
 operator|->
 name|kg_runnable
 operator|--
+expr_stmt|;
+name|TD_SET_CAN_RUN
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -887,11 +884,15 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(
+name|TD_CAN_RUN
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|!=
-name|TDS_RUNQ
+argument_list|)
+operator|||
+name|TD_IS_RUNNING
+argument_list|(
+name|td
+argument_list|)
 operator|)
 argument_list|,
 operator|(
@@ -899,11 +900,10 @@ literal|"setrunqueue: bad thread state"
 operator|)
 argument_list|)
 expr_stmt|;
+name|TD_SET_RUNQ
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_RUNQ
+argument_list|)
 expr_stmt|;
 name|kg
 operator|=
@@ -2411,7 +2411,7 @@ literal|0
 end_if
 
 begin_if
-unit|void thread_sanity_check(struct thread *td) { 	struct proc *p; 	struct ksegrp *kg; 	struct kse *ke; 	struct thread *td2; 	unsigned int prevpri; 	int	saw_lastassigned; 	int unassigned; 	int assigned;  	p = td->td_proc; 	kg = td->td_ksegrp; 	ke = td->td_kse;  	if (kg !=&p->p_ksegrp) { 		panic ("wrong ksegrp"); 	}  	if (ke) { 		if (ke !=&p->p_kse) { 			panic("wrong kse"); 		} 		if (ke->ke_thread != td) { 			panic("wrong thread"); 		} 	} 	 	if ((p->p_flag& P_KSES) == 0) { 		if (ke == NULL) { 			panic("non KSE thread lost kse"); 		} 	} else { 		prevpri = 0; 		saw_lastassigned = 0; 		unassigned = 0; 		assigned = 0; 		TAILQ_FOREACH(td2,&kg->kg_runq, td_runq) { 			if (td2->td_priority< prevpri) { 				panic("thread runqueue unosorted"); 			} 			prevpri = td2->td_priority; 			if (td2->td_kse) { 				assigned++; 				if (unassigned) { 					panic("unassigned before assigned"); 				}  				if  (kg->kg_last_assigned == NULL) { 					panic("lastassigned corrupt"); 				} 				if (saw_lastassigned) { 					panic("last assigned not last"); 				} 				if (td2->td_kse->ke_thread != td2) { 					panic("mismatched kse/thread"); 				} 			} else { 				unassigned++; 			} 			if (td2 == kg->kg_last_assigned) { 				saw_lastassigned = 1; 				if (td2->td_kse == NULL) { 					panic("last assigned not assigned"); 				} 			} 		} 		if (kg->kg_last_assigned&& (saw_lastassigned == 0)) { 			panic("where on earth does lastassigned point?"); 		} 		FOREACH_THREAD_IN_GROUP(kg, td2) { 			if (((td2->td_flags& TDF_UNBOUND) == 0)&&  			    (td2->td_state == TDS_RUNQ)) { 				assigned++; 				if (td2->td_kse == NULL) { 					panic ("BOUND thread with no KSE"); 				} 			} 		}
+unit|void thread_sanity_check(struct thread *td) { 	struct proc *p; 	struct ksegrp *kg; 	struct kse *ke; 	struct thread *td2; 	unsigned int prevpri; 	int	saw_lastassigned; 	int unassigned; 	int assigned;  	p = td->td_proc; 	kg = td->td_ksegrp; 	ke = td->td_kse;  	if (kg !=&p->p_ksegrp) { 		panic ("wrong ksegrp"); 	}  	if (ke) { 		if (ke !=&p->p_kse) { 			panic("wrong kse"); 		} 		if (ke->ke_thread != td) { 			panic("wrong thread"); 		} 	} 	 	if ((p->p_flag& P_KSES) == 0) { 		if (ke == NULL) { 			panic("non KSE thread lost kse"); 		} 	} else { 		prevpri = 0; 		saw_lastassigned = 0; 		unassigned = 0; 		assigned = 0; 		TAILQ_FOREACH(td2,&kg->kg_runq, td_runq) { 			if (td2->td_priority< prevpri) { 				panic("thread runqueue unosorted"); 			} 			prevpri = td2->td_priority; 			if (td2->td_kse) { 				assigned++; 				if (unassigned) { 					panic("unassigned before assigned"); 				}  				if  (kg->kg_last_assigned == NULL) { 					panic("lastassigned corrupt"); 				} 				if (saw_lastassigned) { 					panic("last assigned not last"); 				} 				if (td2->td_kse->ke_thread != td2) { 					panic("mismatched kse/thread"); 				} 			} else { 				unassigned++; 			} 			if (td2 == kg->kg_last_assigned) { 				saw_lastassigned = 1; 				if (td2->td_kse == NULL) { 					panic("last assigned not assigned"); 				} 			} 		} 		if (kg->kg_last_assigned&& (saw_lastassigned == 0)) { 			panic("where on earth does lastassigned point?"); 		} 		FOREACH_THREAD_IN_GROUP(kg, td2) { 			if (((td2->td_flags& TDF_UNBOUND) == 0)&&  			    (TD_ON_RUNQ(td2))) { 				assigned++; 				if (td2->td_kse == NULL) { 					panic ("BOUND thread with no KSE"); 				} 			} 		}
 if|#
 directive|if
 literal|0

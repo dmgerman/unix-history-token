@@ -457,6 +457,10 @@ name|int
 name|td_flags
 decl_stmt|;
 comment|/* (j) TDF_* flags. */
+name|int
+name|td_inhibitors
+decl_stmt|;
+comment|/* (j) Why can not run */
 name|struct
 name|kse
 modifier|*
@@ -597,32 +601,18 @@ decl_stmt|;
 comment|/* (k) Kernel VA of pcb and kstack. */
 enum|enum
 block|{
-name|TDS_NEW
+name|TDS_INACTIVE
 init|=
 literal|0x20
 block|,
-name|TDS_UNQUEUED
+name|TDS_INHIBITED
 block|,
-name|TDS_SLP
-block|,
-name|TDS_MTX
+name|TDS_CAN_RUN
 block|,
 name|TDS_RUNQ
 block|,
 name|TDS_RUNNING
-block|,
-name|TDS_SUSPENDED
-block|,
-comment|/* would have liked to have run */
-name|TDS_IWAIT
-block|,
-name|TDS_SURPLUS
-block|,
-name|TDS_SWAPPED
-block|,
-name|TDS_SUSP_SLP
-comment|/* on sleep queue AND suspend queue */
-block|}
+block|, 	}
 name|td_state
 enum|;
 name|register_t
@@ -741,6 +731,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDF_ONSLEEPQ
+value|0x000200
+end_define
+
+begin_comment
+comment|/* On the sleep queue */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDF_INMSLEEP
 value|0x000400
 end_define
@@ -770,6 +771,339 @@ end_define
 begin_comment
 comment|/* Lock aquisition - deadlock treatment. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TDI_SUSPENDED
+value|0x01
+end_define
+
+begin_comment
+comment|/* on suspension queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDI_SLEEPING
+value|0x02
+end_define
+
+begin_comment
+comment|/* Actually asleep! */
+end_comment
+
+begin_comment
+comment|/* actually tricky */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDI_SWAPPED
+value|0x04
+end_define
+
+begin_comment
+comment|/* stack not in mem.. bad juju if run */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDI_MUTEX
+value|0x08
+end_define
+
+begin_comment
+comment|/* Stopped on a mutex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDI_IWAIT
+value|0x10
+end_define
+
+begin_comment
+comment|/* Awaiting interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TD_IS_SLEEPING
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_SLEEPING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_ON_SLEEPQ
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_wchan != NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_IS_SUSPENDED
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_SUSPENDED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_IS_SWAPPED
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_SWAPPED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_ON_MUTEX
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_MUTEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_AWAITING_INTR
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_inhibitors& TDI_IWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_IS_RUNNING
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_state == TDS_RUNNING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_ON_RUNQ
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_state == TDS_RUNQ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CAN_RUN
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_state == TDS_CAN_RUN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_IS_INHIBITED
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->td_state == TDS_INHIBITED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_INHIB
+parameter_list|(
+name|td
+parameter_list|,
+name|inhib
+parameter_list|)
+value|do {			\ 	(td)->td_state = TDS_INHIBITED;			\ 	(td)->td_inhibitors |= inhib;			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_INHIB
+parameter_list|(
+name|td
+parameter_list|,
+name|inhib
+parameter_list|)
+value|do {			\ 	if (((td)->td_inhibitors& inhib)&&		\ 	    (((td)->td_inhibitors&= ~inhib) == 0))	\ 		(td)->td_state = TDS_CAN_RUN;		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_SLEEPING
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_SLEEPING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_SWAPPED
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_SWAPPED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_MUTEX
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_MUTEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_SUSPENDED
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_SUSPENDED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_IWAIT
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_SET_INHIB((td), TDI_IWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_SLEEPING
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_CLR_INHIB((td), TDI_SLEEPING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_SWAPPED
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_CLR_INHIB((td), TDI_SWAPPED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_MUTEX
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_CLR_INHIB((td), TDI_MUTEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_SUSPENDED
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_CLR_INHIB((td), TDI_SUSPENDED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_IWAIT
+parameter_list|(
+name|td
+parameter_list|)
+value|TD_CLR_INHIB((td), TDI_IWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_RUNNING
+parameter_list|(
+name|td
+parameter_list|)
+value|do {(td)->td_state = TDS_RUNNING; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_RUNQ
+parameter_list|(
+name|td
+parameter_list|)
+value|do {(td)->td_state = TDS_RUNQ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_CAN_RUN
+parameter_list|(
+name|td
+parameter_list|)
+value|do {(td)->td_state = TDS_CAN_RUN; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_SET_ON_SLEEPQ
+parameter_list|(
+name|td
+parameter_list|)
+value|do {(td)->td_flags |= TDF_ONSLEEPQ; } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TD_CLR_ON_SLEEPQ
+parameter_list|(
+name|td
+parameter_list|)
+value|do {			\ 		(td)->td_flags&= ~TDF_ONSLEEPQ;	\ 		(td)->td_wchan = NULL;			\ } while (0)
+end_define
 
 begin_comment
 comment|/*  * Traps for young players:  * The main thread flag that controls whether a thread acts as a threaded  * or unthreaded thread is the TDF_UNBOUND flag.  * UPCALLS run with the UNBOUND flags clear, after they are first scheduled.  * i.e. they bind themselves to whatever thread thay are first scheduled with.  * You may see BOUND threads in KSE processes but you should never see  * UNBOUND threads in non KSE processes.  */
@@ -915,7 +1249,6 @@ value|ke_endzero
 name|u_char
 name|ke_dummy
 decl_stmt|;
-comment|/*   */
 define|#
 directive|define
 name|ke_endcopy
@@ -2686,8 +3019,7 @@ name|thread_safetoswapout
 parameter_list|(
 name|td
 parameter_list|)
-define|\
-value|((td)->td_state == TDS_RUNQ ||	\ 		 (td)->td_state == TDS_SLP)
+value|(TD_IS_SLEEPING(td) || TD_IS_SUSPENDED(td))
 end_define
 
 begin_comment

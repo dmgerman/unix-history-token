@@ -324,19 +324,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|KASSERT
-argument_list|(
-name|td
-operator|->
-name|td_state
-operator|!=
-name|TDS_SURPLUS
-argument_list|,
-operator|(
-literal|"Mutex owner SURPLUS"
-operator|)
-argument_list|)
-expr_stmt|;
 name|MPASS
 argument_list|(
 name|td
@@ -359,11 +346,11 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+operator|!
+name|TD_IS_SLEEPING
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|!=
-name|TDS_SLP
+argument_list|)
 argument_list|,
 operator|(
 literal|"sleeping thread owns a mutex"
@@ -383,11 +370,10 @@ return|return;
 comment|/* 		 * If lock holder is actually running, just bump priority. 		 */
 if|if
 condition|(
+name|TD_IS_RUNNING
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_RUNNING
+argument_list|)
 condition|)
 block|{
 name|td
@@ -418,11 +404,10 @@ directive|endif
 comment|/* 		 * If on run queue move to new run queue, and quit. 		 * XXXKSE this gets a lot more complicated under threads 		 * but try anyhow. 		 * We should have a special call to do this more efficiently. 		 */
 if|if
 condition|(
+name|TD_ON_RUNQ
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_RUNQ
+argument_list|)
 condition|)
 block|{
 name|MPASS
@@ -462,11 +447,10 @@ expr_stmt|;
 comment|/* 		 * If we aren't blocked on a mutex, we should be. 		 */
 name|KASSERT
 argument_list|(
+name|TD_ON_MUTEX
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_MTX
+argument_list|)
 argument_list|,
 operator|(
 literal|"process %d(%s):%d holds %s but isn't blocked on a mutex\n"
@@ -2873,11 +2857,10 @@ name|mtx_object
 operator|.
 name|lo_name
 expr_stmt|;
+name|TD_SET_MUTEX
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_MTX
+argument_list|)
 expr_stmt|;
 name|propagate_priority
 argument_list|(
@@ -3544,6 +3527,11 @@ operator|->
 name|td_blocked
 operator|=
 name|NULL
+expr_stmt|;
+name|TD_CLR_MUTEX
+argument_list|(
+name|td1
+argument_list|)
 expr_stmt|;
 name|setrunqueue
 argument_list|(

@@ -12159,11 +12159,17 @@ condition|)
 block|{
 if|if
 condition|(
+name|TD_ON_RUNQ
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_RUNQ
+argument_list|)
+operator|||
+operator|(
+name|TD_IS_RUNNING
+argument_list|(
+name|td
+argument_list|)
+operator|)
 condition|)
 block|{
 name|stmp
@@ -12174,11 +12180,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|TD_ON_MUTEX
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_MTX
+argument_list|)
 condition|)
 block|{
 name|stmp
@@ -12250,11 +12255,10 @@ operator|(
 name|td
 operator|&&
 operator|(
+name|TD_AWAITING_INTR
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_IWAIT
+argument_list|)
 operator|)
 operator|)
 operator|||
@@ -12305,11 +12309,10 @@ name|pick
 operator|->
 name|p_pid
 argument_list|,
+name|TD_ON_MUTEX
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_MTX
+argument_list|)
 condition|?
 literal|"*"
 else|:
@@ -12397,7 +12400,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|do {								\ 	struct thread *td;					\ 	val = 0;						\ 	FOREACH_THREAD_IN_PROC(p, td) {				\ 		if (td->td_state == TDS_RUNQ ||			\ 		    td->td_state == TDS_RUNNING) {		\ 			val = 1;				\ 			break;					\ 		}						\ 	}							\ } while (0)
+value|do {								\ 	struct thread *td;					\ 	val = 0;						\ 	FOREACH_THREAD_IN_PROC(p, td) {				\ 		if (TD_ON_RUNQ(td) ||				\ 		    TD_IS_RUNNING(td)) {			\ 			val = 1;				\ 			break;					\ 		}						\ 	}							\ } while (0)
 end_define
 
 begin_define

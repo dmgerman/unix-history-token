@@ -485,11 +485,10 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|TD_IS_RUNNING
+argument_list|(
 name|td
-operator|->
-name|td_state
-operator|==
-name|TDS_RUNNING
+argument_list|)
 argument_list|,
 operator|(
 literal|"forward_signal: thread is not TDS_RUNNING"

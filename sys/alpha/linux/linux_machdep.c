@@ -743,6 +743,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|TD_SET_CAN_RUN
+argument_list|(
+name|td2
+argument_list|)
+expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|FIRST_THREAD_IN_PROC

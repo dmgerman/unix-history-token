@@ -1330,12 +1330,9 @@ operator|&=
 operator|~
 name|P_STOPPED_SIG
 expr_stmt|;
-name|setrunnable
-argument_list|(
-name|FIRST_THREAD_IN_PROC
+name|thread_unsuspend
 argument_list|(
 name|p
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin

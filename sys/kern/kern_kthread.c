@@ -199,6 +199,11 @@ name|va_list
 name|ap
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|struct
 name|proc
 modifier|*
 name|p2
@@ -320,16 +325,25 @@ name|ap
 argument_list|)
 expr_stmt|;
 comment|/* call the processes' main()... */
-name|cpu_set_fork_handler
-argument_list|(
+name|td
+operator|=
 name|FIRST_THREAD_IN_PROC
 argument_list|(
 name|p2
 argument_list|)
+expr_stmt|;
+name|cpu_set_fork_handler
+argument_list|(
+name|td
 argument_list|,
 name|func
 argument_list|,
 name|arg
+argument_list|)
+expr_stmt|;
+name|TD_SET_CAN_RUN
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* Delay putting it on the run queue until now. */
@@ -357,10 +371,7 @@ condition|)
 block|{
 name|setrunqueue
 argument_list|(
-name|FIRST_THREAD_IN_PROC
-argument_list|(
-name|p2
-argument_list|)
+name|td
 argument_list|)
 expr_stmt|;
 block|}

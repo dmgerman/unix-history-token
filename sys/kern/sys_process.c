@@ -1955,6 +1955,11 @@ operator||
 name|P_STOPPED_SIG
 operator|)
 expr_stmt|;
+name|thread_unsuspend
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|setrunnable
 argument_list|(
 name|td2
