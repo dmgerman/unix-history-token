@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -906,6 +906,10 @@ name|caddr_t
 name|kb_next
 decl_stmt|;
 comment|/* list of free blocks */
+name|caddr_t
+name|kb_last
+decl_stmt|;
+comment|/* last free block */
 name|long
 name|kb_calls
 decl_stmt|;
@@ -1077,7 +1081,7 @@ name|addr
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	register struct kmembuckets *kbp; \ 	register struct kmemusage *kup = btokup(addr); \ 	long s = splimp(); \ 	if (1<< kup->ku_indx> MAXALLOCSAVE) { \ 		free((caddr_t)(addr), type); \ 	} else { \ 		kbp =&bucket[kup->ku_indx]; \ 		*(caddr_t *)(addr) = kbp->kb_next; \ 		kbp->kb_next = (caddr_t)(addr); \ 	} \ 	splx(s); \ }
+value|{ \ 	register struct kmembuckets *kbp; \ 	register struct kmemusage *kup = btokup(addr); \ 	long s = splimp(); \ 	if (1<< kup->ku_indx> MAXALLOCSAVE) { \ 		free((caddr_t)(addr), type); \ 	} else { \ 		kbp =&bucket[kup->ku_indx]; \ 		if (kbp->kb_next == NULL) \ 			kbp->kb_next = (caddr_t)(addr); \ 		else \ 			*(caddr_t *)(kbp->kb_last) = (caddr_t)(addr); \ 		*(caddr_t *)(addr) = NULL; \ 		kbp->kb_last = (caddr_t)(addr); \ 	} \ 	splx(s); \ }
 end_define
 
 begin_endif
