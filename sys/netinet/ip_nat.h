@@ -1031,6 +1031,13 @@ name|IPN_NOTDST
 value|0x100000
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPN_FRAG
+value|0x200000
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

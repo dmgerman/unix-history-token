@@ -3944,6 +3944,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|fin
 operator|->
 name|fin_fi
@@ -3951,6 +3952,13 @@ operator|.
 name|fi_fl
 operator|&
 name|FI_FRAG
+operator|)
+operator|&&
+operator|(
+name|pass
+operator|&
+name|FR_KEEPFRAG
+operator|)
 condition|)
 name|ipfr_newfrag
 argument_list|(
@@ -7328,6 +7336,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|fin
 operator|->
 name|fin_fi
@@ -7335,6 +7344,13 @@ operator|.
 name|fi_fl
 operator|&
 name|FI_FRAG
+operator|)
+operator|&&
+operator|(
+name|pass
+operator|&
+name|FR_KEEPFRAG
+operator|)
 condition|)
 name|ipfr_newfrag
 argument_list|(
