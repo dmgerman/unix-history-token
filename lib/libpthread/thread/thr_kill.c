@@ -78,6 +78,45 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|pthread
+operator|->
+name|state
+operator|==
+name|PS_SIGWAIT
+operator|)
+operator|&&
+name|sigismember
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|sigmask
+argument_list|,
+name|sig
+argument_list|)
+condition|)
+block|{
+comment|/* Change the state of the thread to run: */
+name|PTHREAD_NEW_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+comment|/* Return the signal number: */
+name|pthread
+operator|->
+name|signo
+operator|=
+name|sig
+expr_stmt|;
+block|}
+else|else
 comment|/* Increment the pending signal count: */
 name|sigaddset
 argument_list|(
@@ -89,6 +128,7 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
