@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.12 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,6 +553,10 @@ case|:
 case|case
 literal|'9'
 case|:
+name|width
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 name|width
