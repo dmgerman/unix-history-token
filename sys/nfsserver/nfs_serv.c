@@ -14166,7 +14166,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|mtx_lock
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
