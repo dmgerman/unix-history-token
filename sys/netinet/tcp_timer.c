@@ -736,17 +736,17 @@ literal|32
 block|,
 literal|64
 block|,
-literal|64
+literal|128
 block|,
-literal|64
+literal|256
 block|,
-literal|64
+literal|512
 block|,
-literal|64
+literal|512
 block|,
-literal|64
+literal|512
 block|,
-literal|64
+literal|512
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -756,7 +756,7 @@ specifier|static
 name|int
 name|tcp_totbackoff
 init|=
-literal|511
+literal|2559
 decl_stmt|;
 end_decl_stmt
 
