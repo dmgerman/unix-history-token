@@ -1027,6 +1027,8 @@ specifier|static
 name|char
 modifier|*
 name|buf
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|stat
@@ -1212,6 +1214,7 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|unsigned
 name|int
 name|len
 decl_stmt|;
