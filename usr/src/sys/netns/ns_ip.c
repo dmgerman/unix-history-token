@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -264,11 +264,11 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|m
@@ -426,6 +426,10 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
+comment|/* fall into: */
+case|case
+name|SIOCSIFDSTADDR
+case|:
 comment|/* 		 * Everything else is done at a higher level. 		 */
 break|break;
 case|case
@@ -1466,7 +1470,22 @@ name|sockaddr_in
 modifier|*
 name|src
 decl_stmt|;
-comment|/* 	 * First, determine if we can get to the destination 	 */
+comment|/* 	 * First, make sure we already have an ns address: 	 */
+if|if
+condition|(
+name|ns_hosteqnh
+argument_list|(
+name|ns_thishost
+argument_list|,
+name|ns_zerohost
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EADDRNOTAVAIL
+operator|)
+return|;
+comment|/* 	 * Now, determine if we can get to the destination 	 */
 name|bzero
 argument_list|(
 operator|(
@@ -1522,7 +1541,7 @@ name|ENETUNREACH
 operator|)
 return|;
 block|}
-comment|/* 	 * And see how he's going to get back to us: 	 */
+comment|/* 	 * And see how he's going to get back to us: 	 * i.e., what return ip address do we use? 	 */
 block|{
 specifier|register
 name|struct
@@ -1581,6 +1600,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|RTFREE
+argument_list|(
+name|ro
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EADDRNOTAVAIL
@@ -1667,6 +1693,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|RTFREE
+argument_list|(
+name|ro
+operator|.
+name|ro_rt
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOBUFS
@@ -1683,13 +1716,6 @@ expr|struct
 name|ifnet_en
 operator|*
 argument_list|)
-expr_stmt|;
-name|ro
-operator|.
-name|ro_rt
-operator|->
-name|rt_use
-operator|++
 expr_stmt|;
 name|ifn
 operator|->
@@ -1740,6 +1766,48 @@ name|sockaddr
 operator|*
 operator|)
 name|ns_dst
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ns_control
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|int
+operator|)
+name|SIOCSIFDSTADDR
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifr
+argument_list|,
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+name|ifn
+argument_list|)
+expr_stmt|;
+name|satons_addr
+argument_list|(
+name|ifr
+operator|.
+name|ifr_addr
+argument_list|)
+operator|.
+name|x_host
+operator|=
+name|ns_thishost
 expr_stmt|;
 return|return
 operator|(
@@ -1896,7 +1964,7 @@ operator|(
 name|unsigned
 operator|)
 name|cmd
-operator|>
+operator|>=
 name|PRC_NCMDS
 condition|)
 return|return;
