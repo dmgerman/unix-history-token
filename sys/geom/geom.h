@@ -424,9 +424,6 @@ argument|g_geom
 argument_list|)
 name|geom
 expr_stmt|;
-name|u_int
-name|protect
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -439,9 +436,6 @@ begin_struct
 struct|struct
 name|g_geom
 block|{
-name|u_int
-name|protect
-decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -550,9 +544,6 @@ begin_struct
 struct|struct
 name|g_consumer
 block|{
-name|u_int
-name|protect
-decl_stmt|;
 name|struct
 name|g_geom
 modifier|*
@@ -608,9 +599,6 @@ begin_struct
 struct|struct
 name|g_provider
 block|{
-name|u_int
-name|protect
-decl_stmt|;
 name|char
 modifier|*
 name|name
