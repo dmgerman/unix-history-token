@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -62,6 +56,12 @@ ifdef|#
 directive|ifdef
 name|NO_GEOM
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/diskslice.h>
+end_include
 
 begin_include
 include|#
