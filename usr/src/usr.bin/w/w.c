@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.26 (Berkeley) %G%"
+literal|"@(#)w.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,13 +65,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -83,19 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vm.h>
 end_include
 
 begin_include
@@ -139,6 +133,46 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SPPWAIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEWVM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEWVM
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<machine/pte.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vm.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|char
