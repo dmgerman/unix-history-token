@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1472,36 +1472,23 @@ begin_comment
 comment|/*  * Local lease check for server syscalls.  * Just set up args and let nqsrv_getlease() do the rest.  */
 end_comment
 
-begin_function
-name|void
+begin_macro
 name|lease_check
-parameter_list|(
-name|vp
-parameter_list|,
-name|p
-parameter_list|,
-name|cred
-parameter_list|,
-name|flag
-parameter_list|)
+argument_list|(
+argument|ap
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|struct
-name|vnode
+name|vop_lease_args
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 		struct ucred *a_cred; 		int a_flag; 	} */
 modifier|*
-name|vp
+name|ap
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-decl_stmt|;
-name|int
-name|flag
-decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|duration
@@ -1527,21 +1514,27 @@ name|nfsd
 operator|.
 name|nd_procp
 operator|=
-name|p
+name|ap
+operator|->
+name|a_p
 expr_stmt|;
 operator|(
 name|void
 operator|)
 name|nqsrv_getlease
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|,
 operator|&
 name|duration
 argument_list|,
 name|NQL_CHECK
 operator||
-name|flag
+name|ap
+operator|->
+name|a_flag
 argument_list|,
 operator|&
 name|nfsd
@@ -1559,11 +1552,18 @@ argument_list|,
 operator|&
 name|frev
 argument_list|,
-name|cred
+name|ap
+operator|->
+name|a_cred
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Add a host to an nqhost structure for a lease.  */
