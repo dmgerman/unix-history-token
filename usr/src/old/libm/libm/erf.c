@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)erf.c	4.1	%G%	*/
+comment|/*	@(#)erf.c	4.2	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -20,12 +20,6 @@ directive|define
 name|N
 value|9
 end_define
-
-begin_decl_stmt
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -169,10 +163,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|sign
 operator|=
 literal|1
@@ -325,10 +315,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|arg
