@@ -19,6 +19,12 @@ begin_comment
 comment|/*  * Protocol Independent Multicast (PIM) definitions.  * RFC 2362, June 1998.  *  * Written by Ahmed Helmy, USC/SGI, July 1996.  * Modified by George Edmond Eddy (Rusty), ISI, February 1998.  * Modified by Pavlin Radoslavov, USC/ISI, May 1998, October 2000.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
