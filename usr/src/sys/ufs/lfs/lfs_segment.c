@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resourcevar.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
@@ -96,16 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_comment
-comment|/* XXX  delete when time goes away */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/quota.h>
 end_include
 
@@ -143,35 +133,36 @@ begin_comment
 comment|/* In-memory description of a segment about to be written. */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|segment
-name|SEGMENT
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|segment
 block|{
-name|BUF
+name|struct
+name|buf
 modifier|*
 modifier|*
 name|bpp
 decl_stmt|;
 comment|/* pointer to buffer array */
-name|BUF
+name|struct
+name|buf
 modifier|*
 modifier|*
 name|cbpp
 decl_stmt|;
 comment|/* pointer to next available bp */
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|ibp
 decl_stmt|;
 comment|/* buffer pointer to inode page */
+name|struct
+name|finfo
+modifier|*
+name|fip
+decl_stmt|;
+comment|/* current fileinfo pointer */
 name|void
 modifier|*
 name|segsum
@@ -202,11 +193,6 @@ name|u_long
 name|seg_flags
 decl_stmt|;
 comment|/* run-time flags for this segment */
-name|FINFO
-modifier|*
-name|fip
-decl_stmt|;
-comment|/* current fileinfo pointer */
 block|}
 struct|;
 end_struct
@@ -226,41 +212,14 @@ define|\
 value|((fs)->lfs_dbpseg - ((fs)->lfs_offset - (fs)->lfs_curseg)> \ 	1<< (fs)->lfs_fsbtodb)
 end_define
 
-begin_define
-define|#
-directive|define
-name|datosn
-parameter_list|(
-name|fs
-parameter_list|,
-name|daddr
-parameter_list|)
-comment|/* disk address to segment number */
-define|\
-value|(((daddr) - (fs)->lfs_sboffs[0]) / fsbtodb((fs), (fs)->lfs_ssize))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sntoda
-parameter_list|(
-name|fs
-parameter_list|,
-name|sn
-parameter_list|)
-comment|/* segment number to disk address */
-define|\
-value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) + \ 	    (fs)->lfs_sboffs[0]))
-end_define
-
 begin_decl_stmt
 name|int
 name|lfs_callback
 name|__P
 argument_list|(
 operator|(
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -277,10 +236,12 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|,
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 name|int
@@ -294,7 +255,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -313,7 +275,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|)
 argument_list|)
@@ -326,7 +289,8 @@ name|lfs_iset
 name|__P
 argument_list|(
 operator|(
-name|INODE
+expr|struct
+name|inode
 operator|*
 operator|,
 name|daddr_t
@@ -347,7 +311,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -364,7 +329,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -381,7 +347,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -398,7 +365,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -406,7 +374,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|lfs_newbuf
 name|__P
@@ -416,7 +385,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|,
 name|daddr_t
@@ -447,7 +417,8 @@ name|lfs_shellsort
 name|__P
 argument_list|(
 operator|(
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|*
 operator|,
@@ -471,16 +442,19 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|,
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|,
 name|daddr_t
 operator|*
 operator|,
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|*
 operator|,
@@ -500,10 +474,12 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|,
-name|VNODE
+expr|struct
+name|vnode
 operator|*
 operator|)
 argument_list|)
@@ -520,10 +496,12 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|,
-name|INODE
+expr|struct
+name|inode
 operator|*
 operator|)
 argument_list|)
@@ -540,7 +518,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|)
 argument_list|)
@@ -557,7 +536,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|SEGMENT
+expr|struct
+name|segment
 operator|*
 operator|)
 argument_list|)
@@ -582,7 +562,8 @@ name|mp
 parameter_list|,
 name|do_ckp
 parameter_list|)
-name|MOUNT
+name|struct
+name|mount
 modifier|*
 name|mp
 decl_stmt|;
@@ -591,7 +572,8 @@ name|do_ckp
 decl_stmt|;
 comment|/* Do a checkpoint. */
 block|{
-name|INODE
+name|struct
+name|inode
 modifier|*
 name|ip
 decl_stmt|;
@@ -600,19 +582,22 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|VNODE
-modifier|*
-name|vp
-decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
 decl_stmt|;
 name|int
 name|s
 decl_stmt|,
 name|error
 decl_stmt|;
+comment|/* 	 * Ifile and meta data blocks are not marked busy, so segment writes 	 * must be single threaded.  Currently, there are two paths into this 	 * code, sync() and getnewbuf().  They both mark the file system busy, 	 * so lfs_segwrite is safe.  I think. 	 */
 ifdef|#
 directive|ifdef
 name|VERBOSE
@@ -662,7 +647,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|SEGMENT
+expr|struct
+name|segment
 argument_list|)
 argument_list|,
 name|M_SEGMENT
@@ -696,7 +682,8 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|BUF
+expr|struct
+name|buf
 operator|*
 argument_list|)
 argument_list|,
@@ -808,9 +795,16 @@ argument_list|(
 name|vp
 argument_list|)
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"lfs_segment: failed to get vnode (tell Keith)!\n"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
+block|}
 if|if
 condition|(
 name|vp
@@ -858,7 +852,6 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * XXX 	 * Should we always do the dirty blocks of the ifile?  Why just 	 * for a checkpoint.  No seeks are involved. 	 */
 if|if
 condition|(
 name|do_ckp
@@ -971,7 +964,7 @@ name|PRIBIO
 operator|+
 literal|1
 argument_list|,
-literal|"sync"
+literal|"lfs sync"
 argument_list|,
 literal|0
 argument_list|)
@@ -1026,11 +1019,6 @@ operator|&
 name|lfs_allclean_wakeup
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"sync returned\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1058,11 +1046,13 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
-name|VNODE
+name|struct
+name|vnode
 modifier|*
 name|vp
 decl_stmt|;
@@ -1072,16 +1062,14 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|FINFO
+name|struct
+name|finfo
 modifier|*
 name|fip
 decl_stmt|;
 name|IFILE
 modifier|*
 name|ifp
-decl_stmt|;
-name|ino_t
-name|inum
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1093,24 +1081,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|inum
-operator|=
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-operator|->
-name|i_number
-expr_stmt|;
-if|if
-condition|(
-name|vp
-operator|->
-name|v_dirtyblkhd
-operator|!=
-name|NULL
-condition|)
-block|{
 if|if
 condition|(
 name|sp
@@ -1127,7 +1097,8 @@ name|sum_bytes_left
 operator|<
 sizeof|sizeof
 argument_list|(
-name|FINFO
+expr|struct
+name|finfo
 argument_list|)
 condition|)
 block|{
@@ -1152,7 +1123,8 @@ name|sum_bytes_left
 operator|-=
 sizeof|sizeof
 argument_list|(
-name|FINFO
+expr|struct
+name|finfo
 argument_list|)
 operator|-
 sizeof|sizeof
@@ -1172,27 +1144,26 @@ name|fi_nblocks
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|inum
-operator|==
-name|LFS_IFILE_INUM
-condition|)
 name|fip
 operator|->
-name|fi_version
+name|fi_ino
 operator|=
-literal|1
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|i_number
 expr_stmt|;
-else|else
-block|{
 name|LFS_IENTRY
 argument_list|(
 name|ifp
 argument_list|,
 name|fs
 argument_list|,
-name|inum
+name|fip
+operator|->
+name|fi_ino
 argument_list|,
 name|bp
 argument_list|)
@@ -1205,21 +1176,12 @@ name|ifp
 operator|->
 name|if_version
 expr_stmt|;
-name|LFS_IRELEASE
+name|brelse
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
-name|fip
-operator|->
-name|fi_ino
-operator|=
-name|inum
-expr_stmt|;
-comment|/* 		 * It may not be necessary to write the meta-data blocks 		 * at this point, as the roll-forward recovery code should 		 * be able to reconstruct the list. 		 */
+comment|/* 	 * It may not be necessary to write the meta-data blocks at this point, 	 * as the roll-forward recovery code should be able to reconstruct the 	 * list. 	 */
 name|lfs_gather
 argument_list|(
 name|fs
@@ -1318,7 +1280,8 @@ operator|->
 name|fip
 operator|=
 operator|(
-name|FINFO
+expr|struct
+name|finfo
 operator|*
 operator|)
 operator|(
@@ -1329,7 +1292,8 @@ name|fip
 operator|+
 sizeof|sizeof
 argument_list|(
-name|FINFO
+expr|struct
+name|finfo
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -1346,7 +1310,6 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -1366,16 +1329,19 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
-name|INODE
+name|struct
+name|inode
 modifier|*
 name|ip
 decl_stmt|;
 block|{
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|,
@@ -1548,7 +1514,7 @@ operator|=
 name|next_addr
 expr_stmt|;
 block|}
-comment|/* 	 * Update the inode times and copy the inode onto the inode page. 	 * 	 * XXX 	 * Do struct assignment. 	 */
+comment|/* Update the inode times and copy the inode onto the inode page. */
 name|ITIMES
 argument_list|(
 name|ip
@@ -1566,20 +1532,12 @@ name|sp
 operator|->
 name|ibp
 expr_stmt|;
-name|bcopy
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|i_din
-argument_list|,
 name|bp
 operator|->
 name|b_un
 operator|.
 name|b_dino
-operator|+
-operator|(
+index|[
 name|sp
 operator|->
 name|ninodes
@@ -1588,13 +1546,11 @@ name|INOPB
 argument_list|(
 name|fs
 argument_list|)
-operator|)
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|DINODE
-argument_list|)
-argument_list|)
+index|]
+operator|=
+name|ip
+operator|->
+name|i_din
 expr_stmt|;
 comment|/* Increment inode count in segment summary block. */
 operator|++
@@ -1633,7 +1589,7 @@ name|ibp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * If updating the ifile, update the super-block.  Update the disk 	 * address and access times for this inode in the ifile. 	 * 	 * XXX 	 * The access time in the ifile is currently unused. 	 */
+comment|/* 	 * If updating the ifile, update the super-block.  Update the disk 	 * address and access times for this inode in the ifile. 	 */
 name|ino
 operator|=
 name|ip
@@ -1673,18 +1629,8 @@ name|bp
 operator|->
 name|b_blkno
 expr_stmt|;
-name|ifp
-operator|->
-name|if_st_atime
-operator|=
-name|ip
-operator|->
-name|i_atime
-expr_stmt|;
-name|LFS_IWRITE
+name|LFS_UBWRITE
 argument_list|(
-name|fs
-argument_list|,
 name|ibp
 argument_list|)
 expr_stmt|;
@@ -1708,11 +1654,13 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
-name|VNODE
+name|struct
+name|vnode
 modifier|*
 name|vp
 decl_stmt|;
@@ -1730,7 +1678,8 @@ expr|struct
 name|lfs
 operator|*
 operator|,
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -1739,7 +1688,8 @@ end_expr_stmt
 
 begin_block
 block|{
-name|BUF
+name|struct
+name|buf
 modifier|*
 modifier|*
 name|bpp
@@ -1750,11 +1700,13 @@ decl_stmt|,
 modifier|*
 name|nbp
 decl_stmt|;
-name|FINFO
+name|struct
+name|finfo
 modifier|*
 name|fip
 decl_stmt|;
-name|INODE
+name|struct
+name|inode
 modifier|*
 name|ip
 decl_stmt|;
@@ -2107,11 +2059,13 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
-name|VNODE
+name|struct
+name|vnode
 modifier|*
 name|vp
 decl_stmt|;
@@ -2119,7 +2073,8 @@ name|daddr_t
 modifier|*
 name|lbp
 decl_stmt|;
-name|BUF
+name|struct
+name|buf
 modifier|*
 modifier|*
 name|bpp
@@ -2132,7 +2087,8 @@ name|SEGUSE
 modifier|*
 name|sup
 decl_stmt|;
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -2145,7 +2101,8 @@ decl_stmt|,
 modifier|*
 name|ap
 decl_stmt|;
-name|INODE
+name|struct
+name|inode
 modifier|*
 name|ip
 decl_stmt|;
@@ -2261,73 +2218,11 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"lfs_updatemeta: lfs_bmaparray returned %d"
+literal|"lfs_updatemeta: lfs_bmaparray %d"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|META
-name|printf
-argument_list|(
-literal|"daddr: %d num: %d\n"
-argument_list|,
-name|daddr
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|num
-operator|!=
-literal|0
-condition|)
-block|{
-name|int
-name|x
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"array from bmaparray:\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|x
-operator|=
-literal|0
-init|;
-name|x
-operator|<
-name|num
-condition|;
-name|x
-operator|++
-control|)
-name|printf
-argument_list|(
-literal|"\tlbn %d off %d\n"
-argument_list|,
-name|a
-index|[
-name|x
-index|]
-operator|.
-name|in_lbn
-argument_list|,
-name|a
-index|[
-name|x
-index|]
-operator|.
-name|in_off
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|ip
 operator|=
 name|VTOI
@@ -2343,18 +2238,6 @@ block|{
 case|case
 literal|0
 case|:
-ifdef|#
-directive|ifdef
-name|META
-name|printf
-argument_list|(
-literal|"update inode for direct block %d\n"
-argument_list|,
-name|lbn
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_db
@@ -2394,24 +2277,6 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|META
-name|printf
-argument_list|(
-literal|"update indirect block %d offset %d\n"
-argument_list|,
-name|ap
-operator|->
-name|in_lbn
-argument_list|,
-name|ap
-operator|->
-name|in_off
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bread
@@ -2527,10 +2392,8 @@ name|fs
 operator|->
 name|lfs_bsize
 expr_stmt|;
-name|LFS_IWRITE
+name|LFS_UBWRITE
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2556,7 +2419,8 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
@@ -2674,10 +2538,8 @@ operator|-=
 name|LFS_SBPAD
 expr_stmt|;
 block|}
-name|LFS_IRELEASE
+name|brelse
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2804,14 +2666,6 @@ name|lfs_nextseg
 expr_stmt|;
 name|ssp
 operator|->
-name|ss_create
-operator|=
-name|time
-operator|.
-name|tv_sec
-expr_stmt|;
-name|ssp
-operator|->
 name|ss_nfinfo
 operator|=
 name|ssp
@@ -2826,7 +2680,8 @@ operator|->
 name|fip
 operator|=
 operator|(
-name|FINFO
+expr|struct
+name|finfo
 operator|*
 operator|)
 operator|(
@@ -2940,10 +2795,8 @@ operator|&=
 operator|~
 name|SEGUSE_ACTIVE
 expr_stmt|;
-name|LFS_IWRITE
+name|LFS_UBWRITE
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2973,10 +2826,8 @@ name|SEGUSE_ACTIVE
 operator||
 name|SEGUSE_DIRTY
 expr_stmt|;
-name|LFS_IWRITE
+name|LFS_UBWRITE
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -2999,10 +2850,8 @@ name|cip
 operator|->
 name|dirty
 expr_stmt|;
-name|LFS_IWRITE
+name|LFS_UBWRITE
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3082,10 +2931,8 @@ name|su_flags
 operator|&
 name|SEGUSE_DIRTY
 expr_stmt|;
-name|LFS_IRELEASE
+name|brelse
 argument_list|(
-name|fs
-argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3123,12 +2970,14 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
 block|{
-name|BUF
+name|struct
+name|buf
 modifier|*
 modifier|*
 name|bpp
@@ -3142,7 +2991,7 @@ name|sup
 decl_stmt|;
 name|SEGSUM
 modifier|*
-name|segp
+name|ssp
 decl_stmt|;
 name|dev_t
 name|i_dev
@@ -3174,7 +3023,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -3189,7 +3039,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Compute checksum across data and then across summary; 	 * the first block (the summary block) is skipped. 	 * 	 * XXX 	 * Fix this to do it inline, instead of malloc/copy. 	 */
+if|if
+condition|(
+operator|(
 name|nblocks
 operator|=
 name|sp
@@ -3199,7 +3051,51 @@ operator|-
 name|sp
 operator|->
 name|bpp
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* Update the segment usage information. */
+name|LFS_SEGENTRY
+argument_list|(
+name|sup
+argument_list|,
+name|fs
+argument_list|,
+name|sp
+operator|->
+name|seg_number
+argument_list|,
+name|bp
+argument_list|)
 expr_stmt|;
+name|sup
+operator|->
+name|su_nbytes
+operator|+=
+name|nblocks
+operator|-
+literal|1
+operator|<<
+name|fs
+operator|->
+name|lfs_bshift
+expr_stmt|;
+name|sup
+operator|->
+name|su_lastmod
+operator|=
+name|time
+operator|.
+name|tv_sec
+expr_stmt|;
+name|LFS_UBWRITE
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Compute checksum across data and then across summary; the first 	 * block (the summary block) is skipped.  Set the create time here 	 * so that it's guaranteed to be later than the inode mod times. 	 * 	 * XXX 	 * Fix this to do it inline, instead of malloc/copy. 	 */
 name|datap
 operator|=
 name|dp
@@ -3253,7 +3149,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|segp
+name|ssp
 operator|=
 operator|(
 name|SEGSUM
@@ -3263,7 +3159,7 @@ name|sp
 operator|->
 name|segsum
 expr_stmt|;
-name|segp
+name|ssp
 operator|->
 name|ss_datasum
 operator|=
@@ -3279,14 +3175,14 @@ name|u_long
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|segp
+name|ssp
 operator|->
 name|ss_sumsum
 operator|=
 name|cksum
 argument_list|(
 operator|&
-name|segp
+name|ssp
 operator|->
 name|ss_datasum
 argument_list|,
@@ -3294,11 +3190,19 @@ name|LFS_SUMMARY_SIZE
 operator|-
 sizeof|sizeof
 argument_list|(
-name|segp
+name|ssp
 operator|->
 name|ss_sumsum
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ssp
+operator|->
+name|ss_create
+operator|=
+name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 name|free
 argument_list|(
@@ -3486,51 +3390,6 @@ name|bpp
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* Update the segment usage information. */
-name|LFS_SEGENTRY
-argument_list|(
-name|sup
-argument_list|,
-name|fs
-argument_list|,
-name|sp
-operator|->
-name|seg_number
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-name|sup
-operator|->
-name|su_nbytes
-operator|+=
-name|LFS_SUMMARY_SIZE
-operator|+
-operator|(
-name|nblocks
-operator|-
-literal|1
-operator|<<
-name|fs
-operator|->
-name|lfs_bshift
-operator|)
-expr_stmt|;
-name|sup
-operator|->
-name|su_lastmod
-operator|=
-name|time
-operator|.
-name|tv_sec
-expr_stmt|;
-name|LFS_IWRITE
-argument_list|(
-name|fs
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3547,12 +3406,14 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
 block|{
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -3566,7 +3427,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|BUF
+expr|struct
+name|buf
 operator|*
 operator|)
 argument_list|)
@@ -3764,7 +3626,8 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -3794,7 +3657,8 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -3845,7 +3709,8 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -3896,7 +3761,8 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -3939,7 +3805,8 @@ comment|/*  * Allocate a new buffer header.  */
 end_comment
 
 begin_function
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|lfs_newbuf
 parameter_list|(
@@ -3956,7 +3823,8 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
-name|SEGMENT
+name|struct
+name|segment
 modifier|*
 name|sp
 decl_stmt|;
@@ -3967,7 +3835,8 @@ name|size_t
 name|size
 decl_stmt|;
 block|{
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -4069,7 +3938,8 @@ name|lfs_callback
 parameter_list|(
 name|bp
 parameter_list|)
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp
 decl_stmt|;
@@ -4153,7 +4023,8 @@ name|lb_array
 parameter_list|,
 name|nmemb
 parameter_list|)
-name|BUF
+name|struct
+name|buf
 modifier|*
 modifier|*
 name|bp_array
@@ -4191,7 +4062,8 @@ name|t1
 decl_stmt|,
 name|t2
 decl_stmt|;
-name|BUF
+name|struct
+name|buf
 modifier|*
 name|bp_temp
 decl_stmt|;
