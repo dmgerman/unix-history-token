@@ -1981,7 +1981,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * old style vnode pager output routine  */
+comment|/*  * old style vnode pager input routine  */
 end_comment
 
 begin_function
