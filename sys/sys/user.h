@@ -208,6 +208,11 @@ name|vmspace
 name|e_vm
 decl_stmt|;
 comment|/* address space */
+name|struct
+name|pstats
+name|e_stats
+decl_stmt|;
+comment|/* process stats */
 name|pid_t
 name|e_ppid
 decl_stmt|;
