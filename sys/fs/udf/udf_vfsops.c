@@ -3296,6 +3296,16 @@ name|vpp
 operator|=
 name|nvp
 expr_stmt|;
+name|vnode_create_vobject
+argument_list|(
+operator|*
+name|vpp
+argument_list|,
+literal|0
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
