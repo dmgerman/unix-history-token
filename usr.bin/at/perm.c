@@ -94,13 +94,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"privs.h"
+file|"at.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"at.h"
+file|"perm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"privs.h"
 end_include
 
 begin_comment
@@ -270,7 +276,9 @@ end_comment
 begin_function
 name|int
 name|check_permission
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FILE
 modifier|*

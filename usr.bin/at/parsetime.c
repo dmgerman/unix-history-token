@@ -120,6 +120,12 @@ directive|include
 file|"panic.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"parsetime.h"
+end_include
+
 begin_comment
 comment|/* Structures and unions */
 end_comment
@@ -216,6 +222,7 @@ end_comment
 begin_struct
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -835,7 +842,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -993,7 +1000,9 @@ begin_function
 specifier|static
 name|int
 name|token
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|idx

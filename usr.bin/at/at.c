@@ -360,6 +360,7 @@ comment|/* File scope variables */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|no_export
@@ -524,6 +525,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|long
+name|nextjob
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Signal catching functions */
 end_comment
@@ -535,6 +546,7 @@ name|sigc
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 comment|/* If the user presses ^C, remove the spool file and exit   */
@@ -566,6 +578,7 @@ name|alarmc
 parameter_list|(
 name|int
 name|signo
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1539,7 +1552,7 @@ name|atenv
 expr_stmt|;
 else|else
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -2182,7 +2195,7 @@ name|timestr
 argument_list|,
 name|TIMESIZE
 argument_list|,
-literal|"%X %x"
+literal|"%+"
 argument_list|,
 operator|&
 name|runtime
@@ -2582,26 +2595,13 @@ name|char
 modifier|*
 name|pgm
 decl_stmt|;
-enum|enum
-block|{
-name|ATQ
-block|,
-name|ATRM
-block|,
-name|AT
-block|,
-name|BATCH
-block|,
-name|CAT
-block|}
-enum|;
-comment|/* what program we want to run */
 name|int
 name|program
 init|=
 name|AT
 decl_stmt|;
 comment|/* our default program */
+specifier|const
 name|char
 modifier|*
 name|options

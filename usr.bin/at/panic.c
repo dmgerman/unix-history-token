@@ -97,6 +97,7 @@ begin_function
 name|void
 name|panic
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|a
@@ -132,6 +133,7 @@ begin_function
 name|void
 name|perr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|a
