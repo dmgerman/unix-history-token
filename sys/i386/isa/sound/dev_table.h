@@ -2358,6 +2358,15 @@ name|num_sound_cards
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _DEV_TABLE_C_ */
+end_comment
+
 begin_function_decl
 name|int
 name|sndtable_probe
@@ -2447,15 +2456,6 @@ name|type
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _DEV_TABLE_C_ */
-end_comment
 
 begin_endif
 endif|#
