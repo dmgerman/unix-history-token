@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macdefs.h	4.3	87/12/11	*/
+comment|/*	macdefs.h	4.4	87/12/11	*/
 end_comment
 
 begin_ifndef
@@ -454,6 +454,25 @@ name|m
 parameter_list|)
 value|if (!nerrors) printf("L%d:\n", m); else
 end_define
+
+begin_define
+define|#
+directive|define
+name|PRTDCON
+end_define
+
+begin_comment
+comment|/* use machine-specific prtdcon routine */
+end_comment
+
+begin_extern
+extern|extern	prtdcon(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#
