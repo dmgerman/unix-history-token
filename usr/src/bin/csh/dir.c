@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.10 (Berkeley) %G%"
+literal|"@(#)dir.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4202,6 +4202,8 @@ name|p1
 operator|&&
 operator|*
 name|p1
+operator|==
+literal|'/'
 operator|&&
 operator|(
 name|Strncmp
