@@ -600,6 +600,11 @@ operator|=
 name|iplattach
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+break|break;
 name|c
 operator|=
 name|NULL
