@@ -365,12 +365,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|map_port_space
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|map_gateway_page
 argument_list|()
 expr_stmt|;

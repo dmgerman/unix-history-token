@@ -1743,102 +1743,13 @@ end_asm
 
 begin_macro
 unit|}  void
-name|map_port_space
+name|map_gateway_page
 argument_list|(
 argument|void
 argument_list|)
 end_macro
 
 begin_block
-block|{
-name|struct
-name|ia64_pte
-name|pte
-decl_stmt|;
-name|u_int64_t
-name|psr
-decl_stmt|;
-comment|/* XXX we should fail hard if there's no I/O port space. */
-if|if
-condition|(
-name|ia64_port_base
-operator|==
-literal|0
-condition|)
-return|return;
-name|bzero
-argument_list|(
-operator|&
-name|pte
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pte
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pte
-operator|.
-name|pte_p
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ma
-operator|=
-name|PTE_MA_UC
-expr_stmt|;
-name|pte
-operator|.
-name|pte_a
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_d
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_pl
-operator|=
-name|PTE_PL_KERN
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ar
-operator|=
-name|PTE_AR_RW
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ppn
-operator|=
-name|ia64_port_base
-operator|>>
-literal|12
-expr_stmt|;
-asm|__asm __volatile("ptr.d %0,%1" :: "r"(ia64_port_base), "r"(24<< 2));
-asm|__asm __volatile("mov	%0=psr" : "=r" (psr));
-asm|__asm __volatile("rsm	psr.ic|psr.i");
-asm|__asm __volatile("srlz.d");
-asm|__asm __volatile("mov	cr.ifa=%0" :: "r"(ia64_port_base));
-asm|__asm __volatile("mov	cr.itir=%0" :: "r"(IA64_ID_PAGE_SHIFT<< 2));
-asm|__asm __volatile("itr.d dtr[%0]=%1" :: "r"(2), "r"(*(u_int64_t*)&pte));
-asm|__asm __volatile("mov	psr.l=%0" :: "r" (psr));
-asm|__asm __volatile("srlz.d");
-block|}
-end_block
-
-begin_function
-name|void
-name|map_gateway_page
-parameter_list|(
-name|void
-parameter_list|)
 block|{
 name|struct
 name|ia64_pte
@@ -1921,8 +1832,11 @@ operator|<<
 literal|2
 operator|)
 block|)
-function|;
-end_function
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_asm
 asm|__asm __volatile("mov	%0=psr" : "=r"(psr));
@@ -2459,9 +2373,6 @@ operator|->
 name|PhysicalStart
 expr_stmt|;
 block|}
-name|map_port_space
-argument_list|()
-expr_stmt|;
 name|metadata_missing
 operator|=
 literal|0
