@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	6.4	84/06/22	*/
+comment|/*	udp_usrreq.c	6.5	84/07/31	*/
 end_comment
 
 begin_include
@@ -1067,6 +1067,14 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_PRIV
+operator|)
+operator||
 name|IP_ROUTETOIF
 argument_list|)
 operator|)
@@ -1457,6 +1465,9 @@ name|struct
 name|in_addr
 name|laddr
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|nam
@@ -1485,6 +1496,12 @@ name|EISCONN
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * Must block input while temporarily connected. 			 */
+name|s
+operator|=
+name|splnet
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|in_pcbconnect
@@ -1498,7 +1515,14 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 block|}
 else|else
 block|{
@@ -1541,6 +1565,11 @@ block|{
 name|in_pcbdisconnect
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|inp
@@ -1594,32 +1623,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PRU_CONTROL
-case|:
-name|m
-operator|=
-name|NULL
-expr_stmt|;
-name|error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-break|break;
-case|case
-name|PRU_SENSE
-case|:
-name|m
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* fall thru... */
-case|case
-name|PRU_RCVD
-case|:
-case|case
-name|PRU_RCVOOB
-case|:
-case|case
 name|PRU_SENDOOB
 case|:
 case|case
@@ -1639,6 +1642,24 @@ operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 break|break;
+case|case
+name|PRU_CONTROL
+case|:
+case|case
+name|PRU_SENSE
+case|:
+case|case
+name|PRU_RCVD
+case|:
+case|case
+name|PRU_RCVOOB
+case|:
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+comment|/* do not free mbuf's */
 default|default:
 name|panic
 argument_list|(
