@@ -762,6 +762,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|BPBGAP
+value|0, 0, 0, 0, 0, 0
+end_define
+
 begin_struct
 specifier|static
 struct|struct
@@ -803,6 +810,8 @@ block|,
 literal|8
 block|,
 literal|1
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -829,6 +838,8 @@ block|,
 literal|9
 block|,
 literal|1
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -855,6 +866,8 @@ block|,
 literal|8
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -881,6 +894,8 @@ block|,
 literal|9
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -907,6 +922,8 @@ block|,
 literal|8
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -933,6 +950,8 @@ block|,
 literal|9
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -959,6 +978,8 @@ block|,
 literal|15
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -985,6 +1006,8 @@ block|,
 literal|8
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -1011,6 +1034,8 @@ block|,
 literal|18
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|,
@@ -1037,6 +1062,8 @@ block|,
 literal|36
 block|,
 literal|2
+block|,
+name|BPBGAP
 block|}
 block|}
 block|}
@@ -3957,6 +3984,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|n
 operator|!=
 name|bpb
@@ -4884,6 +4914,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|n
 operator|!=
 name|bpb
@@ -5208,6 +5241,7 @@ name|char
 modifier|*
 name|dtype
 parameter_list|,
+name|__unused
 name|int
 name|oflag
 parameter_list|,
@@ -5232,6 +5266,8 @@ name|off_t
 name|ms
 decl_stmt|,
 name|hs
+init|=
+literal|0
 decl_stmt|;
 name|lp
 operator|=
@@ -5251,10 +5287,6 @@ name|getdiskbyname
 argument_list|(
 name|dtype
 argument_list|)
-expr_stmt|;
-name|hs
-operator|=
-literal|0
 expr_stmt|;
 block|}
 comment|/* Maybe it's a floppy drive */
@@ -5348,10 +5380,6 @@ name|lp
 operator|=
 operator|&
 name|dlp
-expr_stmt|;
-name|hs
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
