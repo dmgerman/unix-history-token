@@ -33,19 +33,6 @@ name|ASM_SPEC
 value|"%{v*: -v}"
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|ASM_FINAL_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_FINAL_SPEC
-value|"%|"
-end_define
-
 begin_comment
 comment|/* Provide a LINK_SPEC appropriate for FreeBSD.  Here we provide support    for the special GCC options -static and -shared, which allow us to    link things in one of these three modes by applying the appropriate    combinations of options at link-time. We like to support here for    as many of the other GNU linker options as possible. But I don't    have the time to search for those flags. I am sure how to add    support for -soname shared_object_name. H.J.     When the -shared link option is used a final link is not being    done.  */
 end_comment
