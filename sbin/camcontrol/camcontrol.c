@@ -3931,9 +3931,10 @@ name|CAM_REQ_CMP
 operator|)
 condition|)
 block|{
+specifier|const
 name|char
-modifier|*
 name|error_string
+index|[]
 init|=
 literal|"error getting transfer settings"
 decl_stmt|;
@@ -4598,8 +4599,8 @@ block|{
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|must
+index|[]
 init|=
 literal|"you must specify a bus, or a bus:target:lun to %s"
 decl_stmt|;
@@ -12794,9 +12795,10 @@ operator|)
 operator|)
 condition|)
 block|{
+specifier|const
 name|char
-modifier|*
 name|errstr
+index|[]
 init|=
 literal|"error sending format command"
 decl_stmt|;
