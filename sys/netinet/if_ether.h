@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.h	8.3 (Berkeley) 5/2/95  *	$Id: if_ether.h,v 1.15 1996/08/06 21:14:28 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.h	8.3 (Berkeley) 5/2/95  *	$Id: if_ether.h,v 1.16 1996/12/11 17:46:33 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -26,86 +26,6 @@ include|#
 directive|include
 file|<net/if_arp.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_PUP
-value|0x0200
-end_define
-
-begin_comment
-comment|/* PUP protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_IP
-value|0x0800
-end_define
-
-begin_comment
-comment|/* IP protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_ARP
-value|0x0806
-end_define
-
-begin_comment
-comment|/* Addr. resolution protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_REVARP
-value|0x8035
-end_define
-
-begin_comment
-comment|/* reverse Addr. resolution protocol */
-end_comment
-
-begin_comment
-comment|/*  * The ETHERTYPE_NTRAILER packet types starting at ETHERTYPE_TRAIL have  * (type-ETHERTYPE_TRAIL)*512 bytes of data followed  * by an ETHER type (as given above) and then the (variable-length) header.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_TRAIL
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Trailer packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHERTYPE_NTRAILER
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHERMTU
-value|(ETHER_MAX_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHERMIN
-value|(ETHER_MIN_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
-end_define
 
 begin_ifdef
 ifdef|#

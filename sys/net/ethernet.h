@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Fundamental constants relating to ethernet.  *  * $Id: ethernet.h,v 1.4 1996/12/19 15:42:52 wollman Exp $  *  */
+comment|/*  * Fundamental constants relating to ethernet.  *  * $Id: ethernet.h,v 1.5 1996/12/19 18:12:06 bde Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -140,6 +140,101 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_PUP
+value|0x0200
+end_define
+
+begin_comment
+comment|/* PUP protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_IP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* IP protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_ARP
+value|0x0806
+end_define
+
+begin_comment
+comment|/* Addr. resolution protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_REVARP
+value|0x8035
+end_define
+
+begin_comment
+comment|/* reverse Addr. resolution protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_LOOPBACK
+value|0x9000
+end_define
+
+begin_comment
+comment|/* used to test interfaces */
+end_comment
+
+begin_comment
+comment|/* XXX - add more useful types here */
+end_comment
+
+begin_comment
+comment|/*  * The ETHERTYPE_NTRAILER packet types starting at ETHERTYPE_TRAIL have  * (type-ETHERTYPE_TRAIL)*512 bytes of data followed  * by an ETHER type (as given above) and then the (variable-length) header.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_TRAIL
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Trailer packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_NTRAILER
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERMTU
+value|(ETHER_MAX_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHERMIN
+value|(ETHER_MIN_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
+end_define
 
 begin_ifndef
 ifndef|#
