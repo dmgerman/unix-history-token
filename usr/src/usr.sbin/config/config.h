@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	1.8	82/10/24	*/
+comment|/*	config.h	1.9	82/10/24	*/
 end_comment
 
 begin_define
@@ -96,13 +96,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-name|char
-name|bool
-typedef|;
-end_typedef
-
 begin_struct
 struct|struct
 name|device
@@ -158,7 +151,7 @@ directive|define
 name|UNKNOWN
 value|-2
 comment|/* -2 means not set yet */
-name|bool
+name|int
 name|d_dk
 decl_stmt|;
 comment|/* if init 1 set to number for iostat */
@@ -297,7 +290,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bool
+name|int
 name|do_trace
 decl_stmt|;
 end_decl_stmt
@@ -309,7 +302,7 @@ name|MACHINE_VAX
 end_if
 
 begin_decl_stmt
-name|bool
+name|int
 name|seen_mba
 decl_stmt|,
 name|seen_uba
@@ -412,20 +405,6 @@ parameter_list|,
 name|b
 parameter_list|)
 value|(!strcmp(a,b))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
 end_define
 
 end_unit

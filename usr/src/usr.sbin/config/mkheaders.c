@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkheaders.c	1.9	82/10/24	*/
+comment|/*	mkheaders.c	1.10	82/10/24	*/
 end_comment
 
 begin_comment
@@ -78,7 +78,7 @@ name|fl
 operator|->
 name|f_needs
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -252,12 +252,12 @@ name|d_name
 argument_list|,
 name|hname
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 name|search
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.19	82/10/24	*/
+comment|/*	mkmakefile.c	1.20	82/10/24	*/
 end_comment
 
 begin_comment
@@ -2038,7 +2038,7 @@ name|file_list
 modifier|*
 name|fl
 decl_stmt|;
-name|bool
+name|int
 name|first
 init|=
 literal|1
