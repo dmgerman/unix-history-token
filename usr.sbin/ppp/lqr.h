@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.h,v 1.11 1998/01/11 17:50:42 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.h,v 1.12.2.6 1998/05/08 01:15:09 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
-comment|/*  *  Structure of LQR packet defined in RFC1333  */
+comment|/*  *  Structure of LQR packet defined in RFC1989  */
 end_comment
 
 begin_struct
@@ -17,80 +17,50 @@ decl_stmt|;
 name|u_int32_t
 name|LastOutLQRs
 decl_stmt|;
+comment|/* most recently received PeerOutLQRs */
 name|u_int32_t
 name|LastOutPackets
 decl_stmt|;
+comment|/* most recently received PeerOutPackets */
 name|u_int32_t
 name|LastOutOctets
 decl_stmt|;
+comment|/* most recently received PeerOutOctets */
 name|u_int32_t
 name|PeerInLQRs
 decl_stmt|;
+comment|/* Peers SaveInLQRs */
 name|u_int32_t
 name|PeerInPackets
 decl_stmt|;
+comment|/* Peers SaveInPackets */
 name|u_int32_t
 name|PeerInDiscards
 decl_stmt|;
+comment|/* Peers SaveInDiscards */
 name|u_int32_t
 name|PeerInErrors
 decl_stmt|;
+comment|/* Peers SaveInErrors */
 name|u_int32_t
 name|PeerInOctets
 decl_stmt|;
+comment|/* Peers SaveInOctets */
 name|u_int32_t
 name|PeerOutLQRs
 decl_stmt|;
+comment|/* Peers OutLQRs (hdlc.h) */
 name|u_int32_t
 name|PeerOutPackets
 decl_stmt|;
+comment|/* Peers OutPackets (hdlc.h) */
 name|u_int32_t
 name|PeerOutOctets
 decl_stmt|;
+comment|/* Peers OutOctets (hdlc.h) */
 block|}
 struct|;
 end_struct
-
-begin_struct
-struct|struct
-name|lqrsave
-block|{
-name|u_int32_t
-name|SaveInLQRs
-decl_stmt|;
-name|u_int32_t
-name|SaveInPackets
-decl_stmt|;
-name|u_int32_t
-name|SaveInDiscards
-decl_stmt|;
-name|u_int32_t
-name|SaveInErrors
-decl_stmt|;
-name|u_int32_t
-name|SaveInOctets
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|lqrdata
-name|MyLqrData
-decl_stmt|,
-name|HisLqrData
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|lqrsave
-name|HisLqrSave
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  *  We support LQR and ECHO as LQM method  */
@@ -110,11 +80,39 @@ name|LQM_ECHO
 value|2
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|physical
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|lcp
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|fsm
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
-name|LqrDump
+name|lqr_Dump
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -130,7 +128,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LqrChangeOrder
+name|lqr_ChangeOrder
 parameter_list|(
 name|struct
 name|lqrdata
@@ -146,9 +144,11 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|StartLqm
+name|lqr_Start
 parameter_list|(
-name|void
+name|struct
+name|lcp
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -156,8 +156,24 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|StopLqr
+name|lqr_reStart
 parameter_list|(
+name|struct
+name|lcp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|lqr_Stop
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -166,9 +182,11 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|StopLqrTimer
+name|lqr_StopTimer
 parameter_list|(
-name|void
+name|struct
+name|physical
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -176,8 +194,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|RecvEchoLqr
+name|lqr_RecvEcho
 parameter_list|(
+name|struct
+name|fsm
+modifier|*
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -188,8 +210,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LqrInput
+name|lqr_Input
 parameter_list|(
+name|struct
+name|physical
+modifier|*
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*

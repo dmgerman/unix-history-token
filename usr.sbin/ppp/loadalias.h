@@ -1,17 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: loadalias.h,v 1.4.2.3 1998/05/01 19:25:03 brian Exp $  */
 end_comment
 
 begin_struct
 struct|struct
 name|aliasHandlers
 block|{
+name|void
+modifier|*
+name|dl
+decl_stmt|;
 name|char
 modifier|*
 function_decl|(
 modifier|*
-name|PacketAliasGetFragment
+name|GetFragment
 function_decl|)
 parameter_list|(
 name|char
@@ -21,7 +25,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|PacketAliasInit
+name|Init
 function_decl|)
 parameter_list|(
 name|void
@@ -30,7 +34,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|PacketAliasIn
+name|In
 function_decl|)
 parameter_list|(
 name|char
@@ -42,7 +46,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|PacketAliasOut
+name|Out
 function_decl|)
 parameter_list|(
 name|char
@@ -56,7 +60,7 @@ name|alias_link
 modifier|*
 function_decl|(
 modifier|*
-name|PacketAliasRedirectAddr
+name|RedirectAddr
 function_decl|)
 parameter_list|(
 name|struct
@@ -71,7 +75,7 @@ name|alias_link
 modifier|*
 function_decl|(
 modifier|*
-name|PacketAliasRedirectPort
+name|RedirectPort
 function_decl|)
 parameter_list|(
 name|struct
@@ -95,7 +99,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|PacketAliasSaveFragment
+name|SaveFragment
 function_decl|)
 parameter_list|(
 name|char
@@ -105,7 +109,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|PacketAliasSetAddress
+name|SetAddress
 function_decl|)
 parameter_list|(
 name|struct
@@ -115,7 +119,7 @@ function_decl|;
 name|unsigned
 function_decl|(
 modifier|*
-name|PacketAliasSetMode
+name|SetMode
 function_decl|)
 parameter_list|(
 name|unsigned
@@ -126,7 +130,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|PacketAliasFragmentIn
+name|FragmentIn
 function_decl|)
 parameter_list|(
 name|char
@@ -140,14 +144,28 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|aliasHandlers
+name|PacketAlias
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|alias_IsEnabled
+parameter_list|()
+value|(PacketAlias.dl ? 1 : 0)
+end_define
+
 begin_function_decl
 specifier|extern
 name|int
-name|loadAliasHandlers
+name|alias_Load
 parameter_list|(
-name|struct
-name|aliasHandlers
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -155,7 +173,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|unloadAliasHandlers
+name|alias_Unload
 parameter_list|(
 name|void
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1997 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: log.h,v 1.18.2.8 1998/05/01 22:39:37 brian Exp $  */
 end_comment
 
 begin_define
@@ -24,43 +24,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LogCARRIER
+name|LogCCP
 value|(2)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogCCP
+name|LogCHAT
 value|(3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogCHAT
+name|LogCOMMAND
 value|(4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogCOMMAND
+name|LogCONNECT
 value|(5)
 end_define
 
 begin_define
 define|#
 directive|define
-name|LogCONNECT
-value|(6)
-end_define
-
-begin_define
-define|#
-directive|define
 name|LogDEBUG
-value|(7)
+value|(6)
 end_define
 
 begin_comment
@@ -71,63 +64,67 @@ begin_define
 define|#
 directive|define
 name|LogHDLC
-value|(8)
+value|(7)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogID0
-value|(9)
+value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogIPCP
-value|(10)
+value|(9)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogLCP
-value|(11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LogLINK
-value|(12)
+value|(10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogLQM
-value|(13)
+value|(11)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogPHASE
-value|(14)
+value|(12)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogTCPIP
-value|(15)
+value|(13)
 end_define
 
 begin_define
 define|#
 directive|define
+name|LogTIMER
+value|(14)
+end_define
+
+begin_comment
+comment|/* syslog(LOG_DEBUG, ....)	 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LogTUN
-value|(16)
+value|(15)
 end_define
 
 begin_comment
@@ -138,14 +135,14 @@ begin_define
 define|#
 directive|define
 name|LogMAXCONF
-value|(16)
+value|(15)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogWARN
-value|(17)
+value|(16)
 end_define
 
 begin_comment
@@ -156,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|LogERROR
-value|(18)
+value|(17)
 end_define
 
 begin_comment
@@ -167,7 +164,7 @@ begin_define
 define|#
 directive|define
 name|LogALERT
-value|(19)
+value|(18)
 end_define
 
 begin_comment
@@ -178,8 +175,26 @@ begin_define
 define|#
 directive|define
 name|LogMAX
-value|(19)
+value|(18)
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|cmdargs
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|prompt
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* The first int arg for all of the following is one of the above values */
@@ -190,7 +205,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|LogName
+name|log_Name
 parameter_list|(
 name|int
 parameter_list|)
@@ -200,7 +215,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogKeep
+name|log_Keep
 parameter_list|(
 name|int
 parameter_list|)
@@ -210,7 +225,20 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogKeepLocal
+name|log_KeepLocal
+parameter_list|(
+name|int
+parameter_list|,
+name|u_long
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|log_Discard
 parameter_list|(
 name|int
 parameter_list|)
@@ -220,9 +248,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogDiscard
+name|log_DiscardLocal
 parameter_list|(
 name|int
+parameter_list|,
+name|u_long
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -230,17 +261,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogDiscardLocal
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|LogDiscardAll
+name|log_DiscardAll
 parameter_list|(
 name|void
 parameter_list|)
@@ -250,9 +271,10 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogDiscardAllLocal
+name|log_DiscardAllLocal
 parameter_list|(
-name|void
+name|u_long
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -265,7 +287,7 @@ value|(1)
 end_define
 
 begin_comment
-comment|/* Results of LogIsKept() */
+comment|/* Results of log_IsKept() */
 end_comment
 
 begin_define
@@ -276,13 +298,13 @@ value|(2)
 end_define
 
 begin_comment
-comment|/* Results of LogIsKept() */
+comment|/* Results of log_IsKept() */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|int
-name|LogIsKept
+name|log_IsKept
 parameter_list|(
 name|int
 parameter_list|)
@@ -291,8 +313,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|log_IsKeptLocal
+parameter_list|(
+name|int
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
-name|LogOpen
+name|log_Open
 parameter_list|(
 specifier|const
 name|char
@@ -304,7 +338,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogSetTun
+name|log_SetTun
 parameter_list|(
 name|int
 parameter_list|)
@@ -314,17 +348,57 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogClose
+name|log_Close
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|void
-name|LogPrintf
+name|log_Printf
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|void
+name|log_Printf
 parameter_list|(
 name|int
 parameter_list|,
@@ -337,10 +411,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void
-name|LogDumpBp
+name|log_DumpBp
 parameter_list|(
 name|int
 parameter_list|,
@@ -359,7 +438,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogDumpBuff
+name|log_DumpBuff
 parameter_list|(
 name|int
 parameter_list|,
@@ -372,6 +451,69 @@ name|u_char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|log_RegisterPrompt
+parameter_list|(
+name|struct
+name|prompt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|log_UnRegisterPrompt
+parameter_list|(
+name|struct
+name|prompt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|log_ShowLevel
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|log_SetLevel
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|log_ShowWho
+parameter_list|(
+name|struct
+name|cmdargs
+specifier|const
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

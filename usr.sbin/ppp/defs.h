@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.28 1997/11/22 03:37:29 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.29.2.18 1998/05/15 23:58:22 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_comment
-comment|/*  *  Check following definitions for your machine environment  */
+comment|/* Check the following definitions for your machine environment */
 end_comment
 
 begin_ifdef
@@ -16,23 +16,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|MODEM_DEV
-value|"/dev/cuaa1"
+name|MODEM_LIST
+value|"/dev/cuaa1, /dev/cuaa0"
 end_define
 
 begin_comment
 comment|/* name of tty device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BASE_MODEM_DEV
-value|"cuaa1"
-end_define
-
-begin_comment
-comment|/* name of base tty device */
 end_comment
 
 begin_else
@@ -49,23 +38,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|MODEM_DEV
-value|"/dev/cua01"
+name|MODEM_LIST
+value|"/dev/cua01, /dev/cua00"
 end_define
 
 begin_comment
 comment|/* name of tty device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BASE_MODEM_DEV
-value|"cua01"
-end_define
-
-begin_comment
-comment|/* name of base tty device */
 end_comment
 
 begin_else
@@ -76,34 +54,52 @@ end_else
 begin_define
 define|#
 directive|define
-name|MODEM_DEV
-value|"/dev/tty01"
+name|MODEM_LIST
+value|"/dev/tty01, /dev/tty00"
 end_define
 
 begin_comment
 comment|/* name of tty device */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|BASE_MODEM_DEV
-value|"tty01"
+name|_PATH_PPP
+value|"/etc/ppp"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUN_PREFIX
+value|"/dev/tun"
 end_define
 
 begin_comment
-comment|/* name of base tty device */
+comment|/* tunnel device prefix */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|CATPROG
+value|"/bin/cat"
+end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* Multilink pipe program name */
+end_comment
 
 begin_define
 define|#
@@ -141,7 +137,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RECONNECT_TIMER
+name|RECONNECT_TIMEOUT
 value|3
 end_define
 
@@ -152,29 +148,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RECONNECT_TRIES
-value|0
-end_define
-
-begin_comment
-comment|/* Default retries on carrier loss */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REDIAL_PERIOD
+name|DIAL_TIMEOUT
 value|30
 end_define
 
 begin_comment
-comment|/* Default Hold time to redial */
+comment|/* Default and Max random time to redial */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NEXT_REDIAL_PERIOD
+name|DIAL_NEXT_TIMEOUT
 value|3
 end_define
 
@@ -218,6 +203,46 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NCP_IDLE_TIMEOUT
+value|180
+end_define
+
+begin_comment
+comment|/* Drop all links */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_MINWEIGHT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEF_LQRPERIOD
+value|30
+end_define
+
+begin_comment
+comment|/* LQR frequency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_FSMRETRY
+value|3
+end_define
+
+begin_comment
+comment|/* FSM retry frequency */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CONFFILE
 value|"ppp.conf"
 end_define
@@ -241,101 +266,6 @@ define|#
 directive|define
 name|SECRETFILE
 value|"ppp.secret"
-end_define
-
-begin_comment
-comment|/*  *  Definition of working mode  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_INTER
-value|1
-end_define
-
-begin_comment
-comment|/* Interactive mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_AUTO
-value|2
-end_define
-
-begin_comment
-comment|/* Auto calling mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_DIRECT
-value|4
-end_define
-
-begin_comment
-comment|/* Direct connection mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_DEDICATED
-value|8
-end_define
-
-begin_comment
-comment|/* Dedicated line mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_DDIAL
-value|16
-end_define
-
-begin_comment
-comment|/* Dedicated dialing line mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_ALIAS
-value|32
-end_define
-
-begin_comment
-comment|/* Packet aliasing (masquerading) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_BACKGROUND
-value|64
-end_define
-
-begin_comment
-comment|/* Background mode. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MODE_DAEMON
-value|(2|4|8|16|64)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MODE_OUTGOING_DAEMON
-value|(2|8|16|64)
 end_define
 
 begin_define
@@ -436,74 +366,89 @@ name|EX_NOLOGIN
 value|13
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|mode
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* physical::type values (OR'd in bundle::phys_type) */
+end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|BGFiledes
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|PHYS_NONE
+value|0
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|modem
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|PHYS_MANUAL
+value|1
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|tun_in
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Manual link */
+end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|tun_out
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|PHYS_DEMAND
+value|2
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|netfd
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* Dial-on-demand link (-auto) */
+end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|SetLabel
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|PHYS_DIRECT
+value|4
+end_define
 
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|GetLabel
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Incoming link (-direct) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHYS_DEDICATED
+value|8
+end_define
+
+begin_comment
+comment|/* Dedicated link (-dedicated) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHYS_PERM
+value|16
+end_define
+
+begin_comment
+comment|/* Dial immediately, stay connected (-ddial) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHYS_1OFF
+value|32
+end_define
+
+begin_comment
+comment|/* Dial immediately, delete when done. (-background) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHYS_ALL
+value|63
+end_define
 
 begin_function_decl
 specifier|extern
@@ -517,20 +462,39 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|GetShortHost
+name|ssize_t
+name|fullread
 parameter_list|(
+name|int
+parameter_list|,
 name|void
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
-name|DropClient
+specifier|const
+name|char
+modifier|*
+name|mode2Nam
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|Nam2mode
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

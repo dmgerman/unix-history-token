@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.26 1998/01/23 22:29:16 brian Exp $  *  */
+comment|/*  * sys-bsd.c - System-dependent procedures for setting up  * PPP interfaces on bsd-4.4-ish systems (including 386BSD, NetBSD, etc.)  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: arp.c,v 1.27.2.15 1998/05/01 19:23:46 brian Exp $  *  */
 end_comment
 
 begin_comment
@@ -10,13 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -52,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/if_ether.h>
 end_include
 
@@ -70,7 +58,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
@@ -100,31 +100,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"command.h"
 end_include
 
 begin_include
@@ -148,7 +130,97 @@ end_include
 begin_include
 include|#
 directive|include
-file|"route.h"
+file|"timer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"fsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"iplist.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"throughput.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"slcompress.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ipcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"descriptor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lqr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hdlc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ccp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"link.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bundle.h"
 end_include
 
 begin_include
@@ -156,115 +228,6 @@ include|#
 directive|include
 file|"arp.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_comment
-comment|/*  * To test the proxy arp stuff, just  *   * cc -o arp-test -DDEBUG arp.c  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LogIsKept
-parameter_list|(
-name|x
-parameter_list|)
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|LogPrintf
-value|fprintf
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LogDEBUG
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LogDEBUG
-value|stderr
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LogERROR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LogERROR
-value|stderr
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LogPHASE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LogPHASE
-value|stdout
-end_define
-
-begin_define
-define|#
-directive|define
-name|ID0socket
-value|socket
-end_define
-
-begin_define
-define|#
-directive|define
-name|ID0ioctl
-value|ioctl
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|int
-name|rtm_seq
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|int
-name|get_ether_addr
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|struct
-name|sockaddr_dl
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * SET_SA_FAMILY - set the sa_family field of a struct sockaddr,  * if it exists.  */
@@ -292,7 +255,7 @@ literal|3
 end_if
 
 begin_comment
-comment|/*  * sifproxyarp - Make a proxy ARP entry for the peer.  */
+comment|/*  * arp_SetProxy - Make a proxy ARP entry for the peer.  */
 end_comment
 
 begin_struct
@@ -331,14 +294,19 @@ end_decl_stmt
 
 begin_function
 name|int
-name|sifproxyarp
+name|arp_SetProxy
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|bundle
+modifier|*
+name|bundle
 parameter_list|,
 name|struct
 name|in_addr
-name|hisaddr
+name|addr
+parameter_list|,
+name|int
+name|s
 parameter_list|)
 block|{
 name|int
@@ -361,9 +329,9 @@ condition|(
 operator|!
 name|get_ether_addr
 argument_list|(
-name|unit
+name|s
 argument_list|,
-name|hisaddr
+name|addr
 argument_list|,
 operator|&
 name|arpmsg
@@ -372,7 +340,7 @@ name|hwa
 argument_list|)
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
@@ -401,11 +369,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sifproxyarp: opening routing socket: %s\n"
+literal|"arp_SetProxy: opening routing socket: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -452,7 +420,9 @@ operator|.
 name|rtm_seq
 operator|=
 operator|++
-name|rtm_seq
+name|bundle
+operator|->
+name|routing_seq
 expr_stmt|;
 name|arpmsg
 operator|.
@@ -500,7 +470,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-name|hisaddr
+name|addr
 operator|.
 name|s_addr
 expr_stmt|;
@@ -559,7 +529,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
@@ -596,19 +566,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cifproxyarp - Delete the proxy ARP entry for the peer.  */
+comment|/*  * arp_ClearProxy - Delete the proxy ARP entry for the peer.  */
 end_comment
 
 begin_function
 name|int
-name|cifproxyarp
+name|arp_ClearProxy
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|bundle
+modifier|*
+name|bundle
 parameter_list|,
 name|struct
 name|in_addr
-name|hisaddr
+name|addr
+parameter_list|,
+name|int
+name|s
 parameter_list|)
 block|{
 name|int
@@ -641,7 +616,9 @@ operator|.
 name|rtm_seq
 operator|=
 operator|++
-name|rtm_seq
+name|bundle
+operator|->
+name|routing_seq
 expr_stmt|;
 name|routes
 operator|=
@@ -661,11 +638,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sifproxyarp: opening routing socket: %s\n"
+literal|"arp_SetProxy: opening routing socket: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -696,7 +673,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
@@ -738,19 +715,24 @@ comment|/* RTM_VERSION */
 end_comment
 
 begin_comment
-comment|/*  * sifproxyarp - Make a proxy ARP entry for the peer.  */
+comment|/*  * arp_SetProxy - Make a proxy ARP entry for the peer.  */
 end_comment
 
 begin_function
 name|int
-name|sifproxyarp
+name|arp_SetProxy
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|bundle
+modifier|*
+name|bundle
 parameter_list|,
 name|struct
 name|in_addr
-name|hisaddr
+name|addr
+parameter_list|,
+name|int
+name|s
 parameter_list|)
 block|{
 name|struct
@@ -789,9 +771,9 @@ condition|(
 operator|!
 name|get_ether_addr
 argument_list|(
-name|unit
+name|s
 argument_list|,
-name|hisaddr
+name|addr
 argument_list|,
 operator|&
 name|dls
@@ -800,7 +782,7 @@ name|sdl
 argument_list|)
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LOG_PHASE_BIT
 argument_list|,
@@ -879,7 +861,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-name|hisaddr
+name|addr
 operator|.
 name|s_addr
 expr_stmt|;
@@ -895,7 +877,7 @@ if|if
 condition|(
 name|ID0ioctl
 argument_list|(
-name|unit
+name|s
 argument_list|,
 name|SIOCSARP
 argument_list|,
@@ -909,11 +891,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"sifproxyarp: ioctl(SIOCSARP): %s\n"
+literal|"arp_SetProxy: ioctl(SIOCSARP): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -932,19 +914,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cifproxyarp - Delete the proxy ARP entry for the peer.  */
+comment|/*  * arp_ClearProxy - Delete the proxy ARP entry for the peer.  */
 end_comment
 
 begin_function
 name|int
-name|cifproxyarp
+name|arp_ClearProxy
 parameter_list|(
-name|int
-name|unit
+name|struct
+name|bundle
+modifier|*
+name|bundle
 parameter_list|,
 name|struct
 name|in_addr
-name|hisaddr
+name|addr
+parameter_list|,
+name|int
+name|s
 parameter_list|)
 block|{
 name|struct
@@ -987,7 +974,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-name|hisaddr
+name|addr
 operator|.
 name|s_addr
 expr_stmt|;
@@ -995,7 +982,7 @@ if|if
 condition|(
 name|ID0ioctl
 argument_list|(
-name|unit
+name|s
 argument_list|,
 name|SIOCDARP
 argument_list|,
@@ -1009,11 +996,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"cifproxyarp: ioctl(SIOCDARP): %s\n"
+literal|"arp_ClearProxy: ioctl(SIOCDARP): %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1045,7 +1032,6 @@ comment|/*  * get_ether_addr - get the hardware address of an interface on the  
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|get_ether_addr
 parameter_list|(
@@ -1178,7 +1164,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
@@ -1396,7 +1382,7 @@ continue|continue;
 comment|/* Found a candidate.  Do the addresses match ? */
 if|if
 condition|(
-name|LogIsKept
+name|log_IsKept
 argument_list|(
 name|LogDEBUG
 argument_list|)
@@ -1417,7 +1403,7 @@ name|ifam
 operator|->
 name|ifam_msglen
 condition|)
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
@@ -1561,7 +1547,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|LogIsKept
+name|log_IsKept
 argument_list|(
 name|LogDEBUG
 argument_list|)
@@ -1600,7 +1586,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
@@ -1652,11 +1638,11 @@ name|s_addr
 operator|)
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Found interface %.*s for proxy arp\n"
+literal|"Found interface %.*s for %s\n"
 argument_list|,
 name|dl
 operator|->
@@ -1665,6 +1651,11 @@ argument_list|,
 name|dl
 operator|->
 name|sdl_data
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ipaddr
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -1699,93 +1690,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_function
-name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-block|{
-name|struct
-name|in_addr
-name|ipaddr
-decl_stmt|;
-name|int
-name|s
-decl_stmt|,
-name|f
-decl_stmt|;
-name|s
-operator|=
-name|socket
-argument_list|(
-name|AF_INET
-argument_list|,
-name|SOCK_DGRAM
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|f
-operator|=
-literal|1
-init|;
-name|f
-operator|<
-name|argc
-condition|;
-name|f
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|inet_aton
-argument_list|(
-name|argv
-index|[
-name|f
-index|]
-argument_list|,
-operator|&
-name|ipaddr
-argument_list|)
-condition|)
-name|sifproxyarp
-argument_list|(
-name|s
-argument_list|,
-name|ipaddr
-argument_list|)
-expr_stmt|;
-block|}
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

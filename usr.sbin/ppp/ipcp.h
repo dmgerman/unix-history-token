@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.17 1998/01/11 17:50:33 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.h,v 1.18.2.28 1998/05/21 01:26:10 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_define
@@ -32,14 +32,8 @@ value|3
 end_define
 
 begin_comment
-comment|/* MS PPP NameServer and NetBIOS NameServer stuff */
+comment|/* Domain NameServer and NetBIOS NameServer options */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOMSEXT
-end_ifndef
 
 begin_define
 define|#
@@ -69,85 +63,22 @@ name|TY_SECONDARY_NBNS
 value|132
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|in_addr
-name|ns_entries
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|TY_ADJUST_NS
+value|119
+end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|in_addr
-name|nbns_entries
-index|[
-literal|2
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* subtract from NS val for REJECT bit */
+end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_struct
-struct|struct
-name|ipcpstate
-block|{
-name|struct
-name|in_addr
-name|his_ipaddr
-decl_stmt|;
-comment|/* IP address he is willing to use */
-name|u_int32_t
-name|his_compproto
-decl_stmt|;
-name|struct
-name|in_addr
-name|want_ipaddr
-decl_stmt|;
-comment|/* IP address I'm willing to use */
-name|u_int32_t
-name|want_compproto
-decl_stmt|;
-name|u_int32_t
-name|his_reject
-decl_stmt|;
-comment|/* Request codes rejected by peer */
-name|u_int32_t
-name|my_reject
-decl_stmt|;
-comment|/* Request codes I have rejected */
-name|int
-name|heis1172
-decl_stmt|;
-comment|/* True if he is speaking rfc1172 */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|compreq
-block|{
-name|u_short
-name|proto
-decl_stmt|;
-name|u_char
-name|slots
-decl_stmt|;
-name|u_char
-name|compcid
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_struct_decl
+struct_decl|struct
+name|sticky_route
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -168,67 +99,224 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
+begin_struct
+struct|struct
+name|ipcp
+block|{
 name|struct
-name|ipcpstate
-name|IpcpInfo
+name|fsm
+name|fsm
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+comment|/* The finite state machine */
+struct|struct
+block|{
+struct|struct
+block|{
+name|int
+name|slots
+decl_stmt|;
+comment|/* Maximum VJ slots */
+name|unsigned
+name|slotcomp
+range|:
+literal|1
+decl_stmt|;
+comment|/* Slot compression */
+name|unsigned
+name|neg
+range|:
+literal|2
+decl_stmt|;
+comment|/* VJ negotiation */
+block|}
+name|vj
+struct|;
 name|struct
 name|in_range
-name|DefMyAddress
+name|my_range
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+comment|/* MYADDR spec */
+name|struct
+name|in_addr
+name|netmask
+decl_stmt|;
+comment|/* netmask (unused by most OSs) */
 name|struct
 name|in_range
-name|DefHisAddress
+name|peer_range
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+comment|/* HISADDR spec */
 name|struct
 name|iplist
-name|DefHisChoice
+name|peer_list
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+comment|/* Ranges of HISADDR values */
 name|struct
 name|in_addr
 name|TriggerAddress
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
+comment|/* Address to suggest in REQ */
+name|unsigned
 name|HaveTriggerAddress
+range|:
+literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+comment|/* Trigger address specified */
+struct|struct
+block|{
 name|struct
-name|fsm
-name|IpcpFsm
+name|in_addr
+name|dns
+index|[
+literal|2
+index|]
 decl_stmt|;
-end_decl_stmt
+comment|/* DNS addresses offered */
+name|unsigned
+name|dns_neg
+range|:
+literal|2
+decl_stmt|;
+comment|/* dns negotiation */
+name|struct
+name|in_addr
+name|nbns
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* NetBIOS NS addresses offered */
+block|}
+name|ns
+struct|;
+name|u_int
+name|fsmretry
+decl_stmt|;
+comment|/* FSM retry frequency */
+block|}
+name|cfg
+struct|;
+struct|struct
+block|{
+name|struct
+name|slcompress
+name|cslc
+decl_stmt|;
+comment|/* VJ state */
+name|struct
+name|slstat
+name|slstat
+decl_stmt|;
+comment|/* VJ statistics */
+block|}
+name|vj
+struct|;
+name|struct
+name|sticky_route
+modifier|*
+name|route
+decl_stmt|;
+comment|/* List of dynamic routes */
+name|unsigned
+name|heis1172
+range|:
+literal|1
+decl_stmt|;
+comment|/* True if he is speaking rfc1172 */
+name|struct
+name|in_addr
+name|peer_ip
+decl_stmt|;
+comment|/* IP address he's willing to use */
+name|u_int32_t
+name|peer_compproto
+decl_stmt|;
+comment|/* VJ params he's willing to use */
+name|struct
+name|in_addr
+name|my_ip
+decl_stmt|;
+comment|/* IP address I'm willing to use */
+name|u_int32_t
+name|my_compproto
+decl_stmt|;
+comment|/* VJ params I'm willing to use */
+name|u_int32_t
+name|peer_reject
+decl_stmt|;
+comment|/* Request codes rejected by peer */
+name|u_int32_t
+name|my_reject
+decl_stmt|;
+comment|/* Request codes I have rejected */
+name|struct
+name|in_addr
+name|my_ifip
+decl_stmt|;
+comment|/* My configured interface address */
+name|struct
+name|in_addr
+name|peer_ifip
+decl_stmt|;
+comment|/* My congigured destination address */
+name|struct
+name|pppThroughput
+name|throughput
+decl_stmt|;
+comment|/* throughput statistics */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|fsm2ipcp
+parameter_list|(
+name|fp
+parameter_list|)
+value|(fp->proto == PROTO_IPCP ? (struct ipcp *)fp : NULL)
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|bundle
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|link
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|cmdargs
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 specifier|extern
 name|void
-name|IpcpInit
+name|ipcp_Init
 parameter_list|(
-name|void
+name|struct
+name|ipcp
+modifier|*
+parameter_list|,
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
+name|struct
+name|link
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|fsm_parent
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -236,9 +324,11 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|IpcpDefAddress
+name|ipcp_Setup
 parameter_list|(
-name|void
+name|struct
+name|ipcp
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -246,19 +336,15 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|IpcpUp
+name|ipcp_SetLink
 parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|IpcpOpen
-parameter_list|(
-name|void
+name|struct
+name|ipcp
+modifier|*
+parameter_list|,
+name|struct
+name|link
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,7 +352,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ReportIpcpStatus
+name|ipcp_Show
 parameter_list|(
 name|struct
 name|cmdargs
@@ -279,8 +365,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|IpcpInput
+name|ipcp_Input
 parameter_list|(
+name|struct
+name|ipcp
+modifier|*
+parameter_list|,
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
@@ -291,8 +385,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|IpcpAddInOctets
+name|ipcp_AddInOctets
 parameter_list|(
+name|struct
+name|ipcp
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -301,8 +399,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|IpcpAddOutOctets
+name|ipcp_AddOutOctets
 parameter_list|(
+name|struct
+name|ipcp
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -311,8 +413,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|UseHisaddr
+name|ipcp_UseHisaddr
 parameter_list|(
+name|struct
+name|bundle
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -325,7 +431,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|SetInitVJ
+name|ipcp_vjset
 parameter_list|(
 name|struct
 name|cmdargs
@@ -337,12 +443,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|ShowInitVJ
+name|void
+name|ipcp_CleanInterface
 parameter_list|(
 name|struct
-name|cmdargs
-specifier|const
+name|ipcp
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ipcp_InterfaceUp
+parameter_list|(
+name|struct
+name|ipcp
 modifier|*
 parameter_list|)
 function_decl|;

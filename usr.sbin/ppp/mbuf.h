@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.h,v 1.10 1997/12/03 10:23:50 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.h,v 1.11.2.5 1998/05/01 19:25:24 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_struct
@@ -119,7 +119,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MB_MODEM
+name|MB_LINK
 value|7
 end_define
 
@@ -133,14 +133,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|MB_LOG
+name|MB_IPQ
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_IPQ
+name|MB_MP
 value|10
 end_define
 
@@ -148,13 +148,19 @@ begin_define
 define|#
 directive|define
 name|MB_MAX
-value|MB_IPQ
+value|MB_MP
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|cmdargs
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|int
-name|plength
+name|mbuf_Length
 parameter_list|(
 name|struct
 name|mbuf
@@ -168,7 +174,7 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mballoc
+name|mbuf_Alloc
 parameter_list|(
 name|int
 parameter_list|,
@@ -182,7 +188,7 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mbfree
+name|mbuf_FreeSeg
 parameter_list|(
 name|struct
 name|mbuf
@@ -194,7 +200,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|pfree
+name|mbuf_Free
 parameter_list|(
 name|struct
 name|mbuf
@@ -206,7 +212,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|mbwrite
+name|mbuf_Write
 parameter_list|(
 name|struct
 name|mbuf
@@ -225,7 +231,7 @@ specifier|extern
 name|struct
 name|mbuf
 modifier|*
-name|mbread
+name|mbuf_Read
 parameter_list|(
 name|struct
 name|mbuf
@@ -242,7 +248,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|LogMemory
+name|mbuf_Log
 parameter_list|(
 name|void
 parameter_list|)
@@ -252,11 +258,41 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ShowMemMap
+name|mbuf_Show
 parameter_list|(
 name|struct
 name|cmdargs
 specifier|const
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mbuf_Enqueue
+parameter_list|(
+name|struct
+name|mqueue
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|mbuf
+modifier|*
+name|mbuf_Dequeue
+parameter_list|(
+name|struct
+name|mqueue
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1,12 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Definitions for tcp compression routines.  *  * $Header: /home/ncvs/src/usr.sbin/ppp/slcompress.h,v 1.9 1997/10/26 01:03:46 brian Exp $  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.h,v 1.9 1997/10/26 01:03:46 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
+comment|/*  * Definitions for tcp compression routines.  *  * Copyright (c) 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: slcompress.h,v 1.10.2.5 1998/05/01 19:26:00 brian Exp $  *  *	Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *	- Initial distribution.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_STATES
+name|MIN_VJ_STATES
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_VJ_STATES
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEF_VJ_STATES
 value|16
 end_define
 
@@ -20,10 +34,6 @@ directive|define
 name|MAX_HDR
 value|128
 end_define
-
-begin_comment
-comment|/* XXX 4bsd-ism: should really be 128 */
-end_comment
 
 begin_comment
 comment|/*  * Compressed packet format:  *  * The first octet contains the packet type (top 3 bits), TCP  * 'push' bit, and flags that indicate which of the 4 TCP sequence  * numbers have changed (bottom 5 bits).  The next octet is a  * conversation number that associates a saved IP/TCP header with  * the compressed packet.  The next two octets are the TCP checksum  * from the original datagram.  The next 0 to 15 octets are  * sequence number changes, one change per bit set in the header  * (there may be no changes and there are two special cases where  * the receiver implicitly knows what changed -- see below).  *  * There are 5 numbers which can change (they are always inserted  * in the following order): TCP urgent pointer, window,  * acknowlegement, sequence number and IP ID.  (The urgent pointer  * is different from the others in that its value is sent, not the  * change in value.)  Since typical use of SLIP links is biased  * toward small packets (see comments on MTU/MSS below), changes  * use a variable length coding with one octet for numbers in the  * range 1 - 255 and 3 octets (0, MSB, LSB) for numbers in the  * range 256 - 65535 or 0.  (If the change in sequence number or  * ack is more than 65535, an uncompressed packet is sent.)  */
@@ -243,7 +253,7 @@ name|struct
 name|cstate
 name|tstate
 index|[
-name|MAX_STATES
+name|MAX_VJ_STATES
 index|]
 decl_stmt|;
 comment|/* xmit connection states */
@@ -251,10 +261,50 @@ name|struct
 name|cstate
 name|rstate
 index|[
-name|MAX_STATES
+name|MAX_VJ_STATES
 index|]
 decl_stmt|;
 comment|/* receive connection states */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|slstat
+block|{
+name|int
+name|sls_packets
+decl_stmt|;
+comment|/* outbound packets */
+name|int
+name|sls_compressed
+decl_stmt|;
+comment|/* outbound compressed packets */
+name|int
+name|sls_searches
+decl_stmt|;
+comment|/* searches for connection state */
+name|int
+name|sls_misses
+decl_stmt|;
+comment|/* times couldn't find conn. state */
+name|int
+name|sls_uncompressedin
+decl_stmt|;
+comment|/* inbound uncompressed packets */
+name|int
+name|sls_compressedin
+decl_stmt|;
+comment|/* inbound compressed packets */
+name|int
+name|sls_errorin
+decl_stmt|;
+comment|/* inbound unknown type packets */
+name|int
+name|sls_tossed
+decl_stmt|;
+comment|/* inbound packets tossed because of error */
 block|}
 struct|;
 end_struct
@@ -273,6 +323,18 @@ end_define
 begin_comment
 comment|/* tossing rcvd frames because of input err */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|cmdargs
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 specifier|extern
@@ -305,6 +367,10 @@ name|struct
 name|slcompress
 modifier|*
 parameter_list|,
+name|struct
+name|slstat
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -326,6 +392,10 @@ parameter_list|,
 name|struct
 name|slcompress
 modifier|*
+parameter_list|,
+name|struct
+name|slstat
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -333,7 +403,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ReportCompress
+name|sl_Show
 parameter_list|(
 name|struct
 name|cmdargs

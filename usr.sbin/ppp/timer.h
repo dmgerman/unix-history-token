@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.h,v 1.4 1997/12/28 21:55:05 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: timer.h,v 1.5.4.5 1998/05/08 01:15:19 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_define
@@ -11,7 +11,7 @@ value|100000
 end_define
 
 begin_comment
-comment|/* Unit in usec */
+comment|/* usec's per Unit */
 end_comment
 
 begin_define
@@ -21,12 +21,21 @@ name|SECTICKS
 value|(1000000/TICKUNIT)
 end_define
 
+begin_comment
+comment|/* Units per second */
+end_comment
+
 begin_struct
 struct|struct
 name|pppTimer
 block|{
 name|int
 name|state
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
 decl_stmt|;
 name|u_long
 name|rest
@@ -89,10 +98,16 @@ name|TIMER_EXPIRED
 value|2
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|prompt
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
-name|StartTimer
+name|timer_Start
 parameter_list|(
 name|struct
 name|pppTimer
@@ -104,7 +119,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|StopTimer
+name|timer_Stop
 parameter_list|(
 name|struct
 name|pppTimer
@@ -116,7 +131,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|TermTimerService
+name|timer_TermService
 parameter_list|(
 name|void
 parameter_list|)
@@ -126,43 +141,17 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|ShowTimers
+name|timer_Show
 parameter_list|(
-name|void
+name|int
+name|LogLevel
+parameter_list|,
+name|struct
+name|prompt
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SIGALRM
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|nointr_sleep
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|nointr_usleep
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

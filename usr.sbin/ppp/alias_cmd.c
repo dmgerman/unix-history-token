@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.11 1997/12/24 10:28:37 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.12.2.8 1998/05/01 19:23:43 brian Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -54,19 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|<termios.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"command.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"mbuf.h"
 end_include
 
 begin_include
@@ -84,13 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vars.h"
+file|"alias_cmd.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"alias_cmd.h"
+file|"descriptor.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"prompt.h"
 end_include
 
 begin_function_decl
@@ -153,7 +147,7 @@ end_function_decl
 
 begin_function
 name|int
-name|AliasRedirectPort
+name|alias_RedirectPort
 parameter_list|(
 name|struct
 name|cmdargs
@@ -165,20 +159,15 @@ block|{
 if|if
 condition|(
 operator|!
-operator|(
-name|mode
-operator|&
-name|MODE_ALIAS
-operator|)
+name|alias_IsEnabled
+argument_list|()
 condition|)
 block|{
-if|if
-condition|(
-name|VarTerm
-condition|)
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"Alias not enabled\n"
 argument_list|)
@@ -194,6 +183,10 @@ name|arg
 operator|->
 name|argc
 operator|==
+name|arg
+operator|->
+name|argn
+operator|+
 literal|3
 condition|)
 block|{
@@ -233,7 +226,9 @@ name|arg
 operator|->
 name|argv
 index|[
-literal|0
+name|arg
+operator|->
+name|argn
 index|]
 expr_stmt|;
 if|if
@@ -273,21 +268,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|VarTerm
-condition|)
-block|{
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
-literal|"port redirect: protocol must be tcp or udp\n"
+literal|"port redirect: protocol must be"
+literal|" tcp or udp\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
@@ -304,7 +299,6 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|1
 return|;
@@ -317,6 +311,10 @@ name|arg
 operator|->
 name|argv
 index|[
+name|arg
+operator|->
+name|argn
+operator|+
 literal|1
 index|]
 argument_list|,
@@ -334,21 +332,21 @@ condition|(
 name|error
 condition|)
 block|{
-if|if
-condition|(
-name|VarTerm
-condition|)
-block|{
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
-literal|"port redirect: error reading local addr:port\n"
+literal|"port redirect: error reading"
+literal|" local addr:port\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
@@ -365,7 +363,6 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|1
 return|;
@@ -378,6 +375,10 @@ name|arg
 operator|->
 name|argv
 index|[
+name|arg
+operator|->
+name|argn
+operator|+
 literal|2
 index|]
 argument_list|,
@@ -392,21 +393,20 @@ condition|(
 name|error
 condition|)
 block|{
-if|if
-condition|(
-name|VarTerm
-condition|)
-block|{
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"port redirect: error reading alias port\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
@@ -423,7 +423,6 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|1
 return|;
@@ -432,11 +431,16 @@ name|null_addr
 operator|.
 name|s_addr
 operator|=
-literal|0
+name|INADDR_ANY
 expr_stmt|;
 name|link
 operator|=
-name|VarPacketAliasRedirectPort
+call|(
+modifier|*
+name|PacketAlias
+operator|.
+name|RedirectPort
+call|)
 argument_list|(
 name|local_addr
 argument_list|,
@@ -458,12 +462,12 @@ condition|(
 name|link
 operator|==
 name|NULL
-operator|&&
-name|VarTerm
 condition|)
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"port redirect: error returned by packed"
 literal|" aliasing engine (code=%d)\n"
@@ -485,7 +489,7 @@ end_function
 
 begin_function
 name|int
-name|AliasRedirectAddr
+name|alias_RedirectAddr
 parameter_list|(
 name|struct
 name|cmdargs
@@ -497,20 +501,15 @@ block|{
 if|if
 condition|(
 operator|!
-operator|(
-name|mode
-operator|&
-name|MODE_ALIAS
-operator|)
+name|alias_IsEnabled
+argument_list|()
 condition|)
 block|{
-if|if
-condition|(
-name|VarTerm
-condition|)
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"alias not enabled\n"
 argument_list|)
@@ -526,6 +525,10 @@ name|arg
 operator|->
 name|argc
 operator|==
+name|arg
+operator|->
+name|argn
+operator|+
 literal|2
 condition|)
 block|{
@@ -553,7 +556,9 @@ name|arg
 operator|->
 name|argv
 index|[
-literal|0
+name|arg
+operator|->
+name|argn
 index|]
 argument_list|,
 operator|&
@@ -565,13 +570,11 @@ condition|(
 name|error
 condition|)
 block|{
-if|if
-condition|(
-name|VarTerm
-condition|)
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"address redirect: invalid local address\n"
 argument_list|)
@@ -588,6 +591,10 @@ name|arg
 operator|->
 name|argv
 index|[
+name|arg
+operator|->
+name|argn
+operator|+
 literal|1
 index|]
 argument_list|,
@@ -600,21 +607,20 @@ condition|(
 name|error
 condition|)
 block|{
-if|if
-condition|(
-name|VarTerm
-condition|)
-block|{
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"address redirect: invalid alias address\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
@@ -631,14 +637,18 @@ operator|->
 name|syntax
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|1
 return|;
 block|}
 name|link
 operator|=
-name|VarPacketAliasRedirectAddr
+call|(
+modifier|*
+name|PacketAlias
+operator|.
+name|RedirectAddr
+call|)
 argument_list|(
 name|local_addr
 argument_list|,
@@ -650,20 +660,23 @@ condition|(
 name|link
 operator|==
 name|NULL
-operator|&&
-name|VarTerm
 condition|)
 block|{
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
-literal|"address redirect: packet aliasing engine error\n"
+literal|"address redirect: packet aliasing"
+literal|" engine error\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|prompt_Printf
 argument_list|(
-name|VarTerm
+name|arg
+operator|->
+name|prompt
 argument_list|,
 literal|"Usage: alias %s %s\n"
 argument_list|,
@@ -739,7 +752,7 @@ operator|!
 name|hp
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
@@ -852,7 +865,7 @@ operator|!
 name|sp
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
@@ -928,7 +941,7 @@ operator|!
 name|colon
 condition|)
 block|{
-name|LogPrintf
+name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
