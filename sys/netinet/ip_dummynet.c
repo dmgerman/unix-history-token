@@ -791,7 +791,7 @@ define|#
 directive|define
 name|DUMMYNET_LOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&dummynet_mtx, MA_OWNED)
+value|do {				\ 	mtx_assert(&dummynet_mtx, MA_OWNED);			\ 	NET_ASSERT_GIANT();					\ } while (0)
 end_define
 
 begin_function_decl

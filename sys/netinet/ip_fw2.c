@@ -476,7 +476,7 @@ name|IPFW_LOCK_ASSERT
 parameter_list|(
 name|_chain
 parameter_list|)
-value|mtx_assert(&(_chain)->mtx, MA_OWNED)
+value|do {				\ 	mtx_assert(&(_chain)->mtx, MA_OWNED);				\ 	NET_ASSERT_GIANT();						\ } while (0)
 end_define
 
 begin_comment
