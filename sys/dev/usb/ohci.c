@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  *	$NetBSD: ohci.c,v 1.143 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ohci.c,v 1.144 2003/11/23 19:18:06 augustss Exp $  *	$NetBSD: ohci.c,v 1.145 2003/11/23 19:20:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.146 2003/12/29 08:17:10 toshii Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  *	$NetBSD: ohci.c,v 1.141 2003/09/10 20:08:29 mycroft Exp $  *	$NetBSD: ohci.c,v 1.142 2003/10/11 03:04:26 toshii Exp $  *	$NetBSD: ohci.c,v 1.143 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ohci.c,v 1.144 2003/11/23 19:18:06 augustss Exp $  *	$NetBSD: ohci.c,v 1.145 2003/11/23 19:20:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.146 2003/12/29 08:17:10 toshii Exp $  *	$NetBSD: ohci.c,v 1.147 2004/06/22 07:20:35 mycroft Exp $  *	$NetBSD: ohci.c,v 1.148 2004/06/22 18:27:46 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -8554,7 +8554,7 @@ name|length
 operator|=
 name|len
 expr_stmt|;
-comment|/* Update device address and length since they may have changed. */
+comment|/* Update device address and length since they may have changed 	   during the setup of the control pipe in usbd_new_device(). */
 comment|/* XXX This only needs to be done once, but it's too early in open. */
 comment|/* XXXX Should not touch ED here! */
 name|sed
@@ -10645,9 +10645,12 @@ argument_list|)
 operator||
 name|OHCI_ED_SET_EN
 argument_list|(
+name|UE_GET_ADDR
+argument_list|(
 name|ed
 operator|->
 name|bEndpointAddress
+argument_list|)
 argument_list|)
 operator||
 operator|(
