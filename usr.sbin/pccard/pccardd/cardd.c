@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.13.2.4 1997/11/25 19:41:36 nate Exp $"
+literal|"$Id: cardd.c,v 1.13.2.5 1998/02/07 20:33:06 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1827,7 +1827,7 @@ if|#
 directive|if
 literal|0
 comment|/* Allocate I/O and memory resources. */
-block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				logmsg("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				logmsg("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
+block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				logmsg("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, i + ap->size - 1); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				logmsg("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
 endif|#
 directive|endif
 comment|/* 0 */
@@ -2284,7 +2284,15 @@ name|sp
 operator|->
 name|io
 operator|.
+name|addr
+operator|+
+name|sp
+operator|->
+name|io
+operator|.
 name|size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Set up the size to take into account the decode lines. */
