@@ -2195,7 +2195,9 @@ name|xstrdup
 argument_list|(
 name|vers
 operator|->
-name|vn_rcs
+name|srcfile
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 else|else
@@ -2329,7 +2331,9 @@ name|xstrdup
 argument_list|(
 name|vers
 operator|->
-name|vn_rcs
+name|srcfile
+operator|->
+name|head
 argument_list|)
 expr_stmt|;
 else|else
