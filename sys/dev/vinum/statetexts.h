@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* Created by ./makestatetext on Wed Jan 20 16:30:10 CST 1999. Do not edit */
+comment|/* Created by ./makestatetext on Fri Jan 29 10:38:01 CST 1999. Do not edit */
 end_comment
 
 begin_comment

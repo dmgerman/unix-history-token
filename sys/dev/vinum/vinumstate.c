@@ -260,7 +260,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Try to set the subdisk state.  Return 1 if state changed to  * what we wanted, -1 if it changed to something else, and 0  * if no change.  *  * This routine is called both from the user (up, down states  * only) and internally.  */
+comment|/*  * Try to set the subdisk state.  Return 1 if state changed to  * what we wanted, -1 if it changed to something else, and 0  * if no change.  *  * This routine is called both from the user (up, down states  * only) and internally.  */
 end_comment
 
 begin_function
@@ -497,7 +497,7 @@ condition|)
 comment|/* or it's the only one */
 break|break;
 comment|/* do it */
-comment|/* XXX Get this right: make sure that other plexes in 		 * the volume cover this address space, otherwise 		 * we make this one sd_up. 		 * 		 * Do we even want this any more? 		 */
+comment|/* 		 * XXX Get this right: make sure that other plexes in 		 * the volume cover this address space, otherwise 		 * we make this one sd_up. 		 * 		 * Do we even want this any more? 		 */
 name|sd
 operator|->
 name|state
@@ -602,7 +602,7 @@ comment|/* out of date info, need reviving */
 case|case
 name|sd_obsolete
 case|:
-comment|/* 1.  If the subdisk is not part of a plex, bring it up, don't revive.  		 * 2.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's not RAID-5, we *can't revive*.  The subdisk doesn't 		 *     change its state. 		 *  		 * 3.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's RAID-5, but more than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't change its state. 		 *  		 * 4.  If the subdisk is part of a multi-plex volume, we'll change to 		 *     reviving and let the revive routines find out whether it will work 		 *     or not.  If they don't, the revive stops with an error message, 		 *     but the state doesn't change (FWIW).*/
+comment|/* 		 * 1.  If the subdisk is not part of a plex, bring it up, don't revive. 		 * 		 * 2.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's not RAID-5, we *can't revive*.  The subdisk doesn't 		 *     change its state. 		 *  		 * 3.  If the subdisk is part of a one-plex volume or an unattached plex, 		 *     and it's RAID-5, but more than one subdisk is down, we *still 		 *     can't revive*.  The subdisk doesn't change its state. 		 *  		 * 4.  If the subdisk is part of a multi-plex volume, we'll change to 		 *     reviving and let the revive routines find out whether it will work 		 *     or not.  If they don't, the revive stops with an error message, 		 *     but the state doesn't change (FWIW). 		 */
 if|if
 condition|(
 name|sd
@@ -712,7 +712,7 @@ name|EAGAIN
 expr_stmt|;
 comment|/* need to repeat */
 break|break;
-comment|/* XXX This is silly.  We need to be able to 		 * bring the subdisk up when it's finished 		 * initializing, but not from the user.  We 		 * use the same ioctl in each case, but Vinum(8) 		 * doesn't supply the -f flag, so we use that 		 * to decide whether to do it or not */
+comment|/* 		 * XXX This is silly.  We need to be able to 		 * bring the subdisk up when it's finished 		 * initializing, but not from the user.  We 		 * use the same ioctl in each case, but Vinum(8) 		 * doesn't supply the -f flag, so we use that 		 * to decide whether to do it or not  		 */
 case|case
 name|sd_initializing
 case|:
@@ -745,7 +745,7 @@ return|;
 comment|/* no, try again */
 default|default:
 comment|/* can't do it */
-comment|/* There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived */
+comment|/* 		 * There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived  		 */
 return|return
 literal|0
 return|;
@@ -862,7 +862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Set the state of a plex dependent on its subdisks.  * This time round, we'll let plex state just reflect  * aggregate subdisk state, so this becomes an order of  * magnitude less complicated.  In particular, ignore  * the requested state.  */
+comment|/*  * Set the state of a plex dependent on its subdisks.  * This time round, we'll let plex state just reflect  * aggregate subdisk state, so this becomes an order of  * magnitude less complicated.  In particular, ignore  * the requested state.  */
 end_comment
 
 begin_function
@@ -954,7 +954,7 @@ condition|(
 name|state
 condition|)
 block|{
-comment|/* We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that */
+comment|/* 	 * We can't bring the plex up, even by force, 	 * unless it's ready.  update_plex_state 	 * checks that  	 */
 case|case
 name|plex_up
 case|:
@@ -1020,7 +1020,7 @@ argument_list|)
 expr_stmt|;
 comment|/* and down all up subdisks */
 break|break;
-comment|/* This is only requested internally. 	 * Trust ourselves */
+comment|/* 	 * This is only requested internally. 	 * Trust ourselves  	 */
 case|case
 name|plex_faulty
 case|:
@@ -1097,7 +1097,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* tell them about it */
-comment|/* Now see what we have left, and whether      * we're taking the volume down */
+comment|/*      * Now see what we have left, and whether      * we're taking the volume down       */
 if|if
 condition|(
 name|plex
@@ -1515,7 +1515,7 @@ operator|==
 name|sd_upstate
 condition|)
 comment|/* all subdisks ready for action */
-comment|/* All the subdisks are up.  This also means that 	   * they are consistent, so we can just bring 	   * the plex up */
+comment|/* 	   * All the subdisks are up.  This also means that 	   * they are consistent, so we can just bring 	   * the plex up  	 */
 name|plex
 operator|->
 name|state
@@ -1582,7 +1582,7 @@ operator|)
 condition|)
 block|{
 comment|/* and we consider that up */
-comment|/* Conceptually, an empty plex does not contain valid data, 	     * but normally we'll see this state when we have just 	     * created a plex, and it's either consistent from earlier, 	     * or we don't care about the previous contents (we're going 	     * to create a file system or use it for swap). 	     * 	     * We need to do this in one swell foop: on the next call 	     * we will no longer be just empty. 	     * 	     * This code assumes that all the other plexes are also 	     * capable of coming up (i.e. all the sds are up), but 	     * that's OK: we'll come back to this function for the remaining 	     * plexes in the volume. */
+comment|/* 	     * Conceptually, an empty plex does not contain valid data, 	     * but normally we'll see this state when we have just 	     * created a plex, and it's either consistent from earlier, 	     * or we don't care about the previous contents (we're going 	     * to create a file system or use it for swap). 	     * 	     * We need to do this in one swell foop: on the next call 	     * we will no longer be just empty. 	     * 	     * This code assumes that all the other plexes are also 	     * capable of coming up (i.e. all the sds are up), but 	     * that's OK: we'll come back to this function for the remaining 	     * plexes in the volume.  	     */
 name|struct
 name|volume
 modifier|*
@@ -1963,11 +1963,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can. */
+comment|/*  * Called from request routines when they find  * a subdisk which is not kosher.  Decide whether  * it warrants changing the state.  Return  * REQUEST_DOWN if we can't use the subdisk,  * REQUEST_OK if we can.   */
 end_comment
 
 begin_comment
-comment|/* A prior version of this function checked the plex  * state as well.  At the moment, consider plex states  * information for the user only.  We'll ignore them  * and use the subdisk state only.  The last version of  * this file with the old logic was 2.7. XXX */
+comment|/*  * A prior version of this function checked the plex  * state as well.  At the moment, consider plex states  * information for the user only.  We'll ignore them  * and use the subdisk state only.  The last version of  * this file with the old logic was 2.7. XXX   */
 end_comment
 
 begin_function
@@ -2038,7 +2038,7 @@ return|;
 case|case
 name|sd_reviving
 case|:
-comment|/* Access to a reviving subdisk depends on the 	 * organization of the plex:  	 * - If it's concatenated, access the subdisk up to its current 	 *   revive point.  If we want to write to the subdisk overlapping the 	 *   current revive block, set the conflict flag in the request, asking 	 *   the caller to put the request on the wait list, which will be 	 *   attended to by revive_block when it's done. 	 * - if it's striped, we can't do it (we could do some hairy 	 *   calculations, but it's unlikely to work). 	 * - if it's RAID-5, we can do it as long as only one 	 *   subdisk is down */
+comment|/* 	 * Access to a reviving subdisk depends on the 	 * organization of the plex:  	 * - If it's concatenated, access the subdisk up to its current 	 *   revive point.  If we want to write to the subdisk overlapping the 	 *   current revive block, set the conflict flag in the request, asking 	 *   the caller to put the request on the wait list, which will be 	 *   attended to by revive_block when it's done. 	 * - if it's striped, we can't do it (we could do some hairy 	 *   calculations, but it's unlikely to work). 	 * - if it's RAID-5, we can do it as long as only one 	 *   subdisk is down  	 */
 if|if
 condition|(
 name|plex
@@ -2140,7 +2140,7 @@ return|;
 comment|/* always write to a reborn disk */
 else|else
 comment|/* don't allow a read */
-comment|/* Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX */
+comment|/* 	       * Handle the mapping.  We don't want to reject 	       * a read request to a reborn subdisk if that's 	       * all we have. XXX  	     */
 return|return
 name|REQUEST_DOWN
 return|;
@@ -2804,7 +2804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start an object, in other words do what we can to get it up.  * This is called from vinumioctl (VINUMSTART).  * Return error indications via ioctl_reply  */
+comment|/*  * Start an object, in other words do what we can to get it up.  * This is called from vinumioctl (VINUMSTART).  * Return error indications via ioctl_reply  */
 end_comment
 
 begin_function
@@ -3114,7 +3114,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* There's no point in saying anything here:      * the userland program does it better */
+comment|/*      * There's no point in saying anything here:      * the userland program does it better       */
 name|ioctl_reply
 operator|->
 name|msg
@@ -3128,7 +3128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Stop an object, in other words do what we can to get it down  * This is called from vinumioctl (VINUMSTOP).  * Return error indications via ioctl_reply.  */
+comment|/*  * Stop an object, in other words do what we can to get it down  * This is called from vinumioctl (VINUMSTOP).  * Return error indications via ioctl_reply.  */
 end_comment
 
 begin_function
@@ -3293,7 +3293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* VINUM_SETSTATE ioctl: set an object state  * msg is the message passed by the user */
+comment|/*  * VINUM_SETSTATE ioctl: set an object state  * msg is the message passed by the user   */
 end_comment
 
 begin_function

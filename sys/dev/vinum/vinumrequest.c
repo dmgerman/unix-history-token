@@ -4,7 +4,7 @@ comment|/* XXX to do:   * Decide where we need splbio ()  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.8 1999/01/28 07:00:55 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.22 1999/01/17 06:15:46 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -502,7 +502,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* In fact, vinum doesn't handle drives: they're 	 * handled directly by the disk drivers */
+comment|/* 	 * In fact, vinum doesn't handle drives: they're 	 * handled directly by the disk drivers  	 */
 case|case
 name|VINUM_DRIVE_TYPE
 case|:
@@ -599,7 +599,7 @@ comment|/* have nothing to do with this */
 return|return;
 block|}
 comment|/* FALLTHROUGH */
-comment|/* Plex I/O is pretty much the same as volume I/O 	 * for a single plex.  Indicate this by passing a NULL 	 * pointer (set above) for the volume */
+comment|/* 	 * Plex I/O is pretty much the same as volume I/O 	 * for a single plex.  Indicate this by passing a NULL 	 * pointer (set above) for the volume  	 */
 case|case
 name|VINUM_PLEX_TYPE
 case|:
@@ -628,7 +628,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start a transfer.  Return -1 on error,  * 0 if OK, 1 if we need to retry.  * Parameter reviveok is set when doing  * transfers for revives: it allows transfers to  * be started immediately when a revive is in  * progress.  During revive, normal transfers  * are queued if they share address space with  * a currently active revive operation. */
+comment|/*  * Start a transfer.  Return -1 on error,  * 0 if OK, 1 if we need to retry.  * Parameter reviveok is set when doing  * transfers for revives: it allows transfers to  * be started immediately when a revive is in  * progress.  During revive, normal transfers  * are queued if they share address space with  * a currently active revive operation.   */
 end_comment
 
 begin_function
@@ -686,7 +686,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX In these routines, we're assuming that      * we will always be called with bp->b_bcount      * which is a multiple of the sector size.  This      * is a reasonable assumption, since we are only      * called from system routines.  Should we check      * anyway? */
+comment|/*      * XXX In these routines, we're assuming that      * we will always be called with bp->b_bcount      * which is a multiple of the sector size.  This      * is a reasonable assumption, since we are only      * called from system routines.  Should we check      * anyway?       */
 if|if
 condition|(
 operator|(
@@ -783,7 +783,7 @@ name|request
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Note the volume ID.  This can be NULL, which      * the request building functions use as an      * indication for single plex I/O */
+comment|/*      * Note the volume ID.  This can be NULL, which      * the request building functions use as an      * indication for single plex I/O       */
 name|rq
 operator|->
 name|bp
@@ -888,7 +888,7 @@ operator|&
 name|B_READ
 condition|)
 block|{
-comment|/* This is a read request.  Decide 	 * which plex to read from. 	 * 	 * There's a potential race condition here, 	 * since we're not locked, and we could end 	 * up multiply incrementing the round-robin 	 * counter.  This doesn't have any serious 	 * effects, however. */
+comment|/* 	 * This is a read request.  Decide 	 * which plex to read from. 	 * 	 * There's a potential race condition here, 	 * since we're not locked, and we could end 	 * up multiply incrementing the round-robin 	 * counter.  This doesn't have any serious 	 * effects, however.  	 */
 if|if
 condition|(
 name|vol
@@ -1091,7 +1091,7 @@ return|;
 block|}
 block|}
 else|else
-comment|/* This is a write operation.  We write to all 	 * plexes.  If this is a RAID 5 plex, we must also 	 * update the parity stripe. */
+comment|/* 	 * This is a write operation.  We write to all 	 * plexes.  If this is a RAID 5 plex, we must also 	 * update the parity stripe.  	 */
 block|{
 if|if
 condition|(
@@ -1248,7 +1248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Call the low-level strategy routines to  * perform the requests in a struct request */
+comment|/*  * Call the low-level strategy routines to  * perform the requests in a struct request   */
 end_comment
 
 begin_function
@@ -1282,7 +1282,7 @@ comment|/* current element */
 name|int
 name|s
 decl_stmt|;
-comment|/* First find out whether we're reviving, and the      * request contains a conflict.  If so, we hang      * the request off plex->waitlist of the first      * plex we find which is reviving */
+comment|/*      * First find out whether we're reviving, and the      * request contains a conflict.  If so, we hang      * the request off plex->waitlist of the first      * plex we find which is reviving       */
 if|if
 condition|(
 operator|(
@@ -1820,7 +1820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* define the low-level requests needed to perform a  * high-level I/O operation for a specific plex 'plexno'.  *  * Return 0 if all subdisks involved in the request are up, 1 if some  * subdisks are not up, and -1 if the request is at least partially  * outside the bounds of the subdisks.  *  * Modify the pointer *diskstart to point to the end address.  On  * read, return on the first bad subdisk, so that the caller  * (build_read_request) can try alternatives.  *  * On entry to this routine, the rqg structures are not assigned.  The  * assignment is performed by expandrq().  Strictly speaking, the  * elements rqe->sdno of all entries should be set to -1, since 0  * (from bzero) is a valid subdisk number.  We avoid this problem by  * initializing the ones we use, and not looking at the others (index  *>= rqg->requests).  */
+comment|/*  * define the low-level requests needed to perform a  * high-level I/O operation for a specific plex 'plexno'.  *  * Return 0 if all subdisks involved in the request are up, 1 if some  * subdisks are not up, and -1 if the request is at least partially  * outside the bounds of the subdisks.  *  * Modify the pointer *diskstart to point to the end address.  On  * read, return on the first bad subdisk, so that the caller  * (build_read_request) can try alternatives.  *  * On entry to this routine, the rqg structures are not assigned.  The  * assignment is performed by expandrq().  Strictly speaking, the  * elements rqe->sdno of all entries should be set to -1, since 0  * (from bzero) is a valid subdisk number.  We avoid this problem by  * initializing the ones we use, and not looking at the others (index  *>= rqg->requests).  */
 end_comment
 
 begin_function
@@ -2267,7 +2267,7 @@ name|diskend
 condition|)
 block|{
 comment|/* until we get it all sorted out */
-comment|/* The offset of the start address from 		 * the start of the stripe */
+comment|/* 		 * The offset of the start address from 		 * the start of the stripe  		 */
 name|stripeoffset
 operator|=
 operator|*
@@ -2283,7 +2283,7 @@ operator|->
 name|subdisks
 operator|)
 expr_stmt|;
-comment|/* The plex-relative address of the 		 * start of the stripe */
+comment|/* 		 * The plex-relative address of the 		 * start of the stripe  		 */
 name|stripebase
 operator|=
 operator|*
@@ -2291,7 +2291,7 @@ name|diskaddr
 operator|-
 name|stripeoffset
 expr_stmt|;
-comment|/* The number of the subdisk in which 		 * the start is located */
+comment|/* 		 * The number of the subdisk in which 		 * the start is located  		 */
 name|sdno
 operator|=
 name|stripeoffset
@@ -2300,7 +2300,7 @@ name|plex
 operator|->
 name|stripesize
 expr_stmt|;
-comment|/* The offset from the beginning of the stripe 		 * on this subdisk */
+comment|/* 		 * The offset from the beginning of the stripe 		 * on this subdisk  		 */
 name|blockoffset
 operator|=
 name|stripeoffset
@@ -2663,7 +2663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build up a request structure for reading volumes.  * This function is not needed for plex reads, since there's  * no recovery if a plex read can't be satisified. */
+comment|/*  * Build up a request structure for reading volumes.  * This function is not needed for plex reads, since there's  * no recovery if a plex read can't be satisified.   */
 end_comment
 
 begin_function
@@ -2840,7 +2840,7 @@ case|:
 return|return
 name|status
 return|;
-comment|/* if we get here, we have either had a failure or 	     * a RAID 5 recovery.  We don't want to use the 	     * recovery, because it's expensive, so first we 	     * check if we have alternatives */
+comment|/* 	     * if we get here, we have either had a failure or 	     * a RAID 5 recovery.  We don't want to use the 	     * recovery, because it's expensive, so first we 	     * check if we have alternatives  	     */
 case|case
 name|REQUEST_DOWN
 case|:
@@ -2853,7 +2853,7 @@ name|NULL
 condition|)
 block|{
 comment|/* and this is volume I/O */
-comment|/* Try to satisfy the request 		 * from another plex */
+comment|/* 		 * Try to satisfy the request 		 * from another plex  		 */
 for|for
 control|(
 name|plexno
@@ -2971,7 +2971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build up a request structure for writes.  * Return 0 if all subdisks involved in the request are up, 1 if some  * subdisks are not up, and -1 if the request is at least partially  * outside the bounds of the subdisks. */
+comment|/*  * Build up a request structure for writes.  * Return 0 if all subdisks involved in the request are up, 1 if some  * subdisks are not up, and -1 if the request is at least partially  * outside the bounds of the subdisks.   */
 end_comment
 
 begin_function
@@ -3075,7 +3075,7 @@ operator|->
 name|b_blkno
 expr_stmt|;
 comment|/* start offset of transfer */
-comment|/* Build requests for the plex. 	 * We take the best possible result here (min, 	 * not max): we're happy if we can write at all */
+comment|/* 	 * Build requests for the plex. 	 * We take the best possible result here (min, 	 * not max): we're happy if we can write at all  	 */
 name|status
 operator|=
 name|min
@@ -3244,7 +3244,7 @@ operator||
 name|B_BUSY
 expr_stmt|;
 comment|/* inform us when it's done */
-comment|/* XXX Should we check for reviving plexes here, and      * set B_ORDERED if so? */
+comment|/*      * XXX Should we check for reviving plexes here, and      * set B_ORDERED if so?       */
 name|bp
 operator|->
 name|b_iodone
@@ -3391,7 +3391,7 @@ comment|/* no memory */
 block|}
 block|}
 else|else
-comment|/* Point directly to user buffer data.  This means 	 * that we don't need to do anything when we have 	 * finished the transfer */
+comment|/* 	 * Point directly to user buffer data.  This means 	 * that we don't need to do anything when we have 	 * finished the transfer  	 */
 name|bp
 operator|->
 name|b_data
@@ -3413,7 +3413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Abort a request: free resources and complete the  * user request with the specified error */
+comment|/*  * Abort a request: free resources and complete the  * user request with the specified error   */
 end_comment
 
 begin_function
@@ -3470,7 +3470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check that our transfer will cover the  * complete address space of the user request.  *  * Return 1 if it can, otherwise 0 */
+comment|/*  * Check that our transfer will cover the  * complete address space of the user request.  *  * Return 1 if it can, otherwise 0   */
 end_comment
 
 begin_function
@@ -3862,7 +3862,7 @@ operator|->
 name|b_bcount
 expr_stmt|;
 comment|/* nothing transferred */
-comment|/* XXX Grrr.  This doesn't seem to work.  Return 	     * an error after all */
+comment|/* 	     * XXX Grrr.  This doesn't seem to work.  Return 	     * an error after all  	     */
 name|bp
 operator|->
 name|b_flags
@@ -4047,7 +4047,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Simplified version of bounds_check_with_label  * Determine the size of the transfer, and make sure it is  * within the boundaries of the partition. Adjust transfer  * if needed, and signal errors or early completion.  *  * Volumes are simpler than disk slices: they only contain  * one component (though we call them a, b and c to make  * system utilities happy), and they always take up the  * complete space of the "partition".  *  * I'm still not happy with this: why should the label be  * protected?  If it weren't so damned difficult to write  * one in the first pleace (because it's protected), it wouldn't  * be a problem.  */
+comment|/*  * Simplified version of bounds_check_with_label  * Determine the size of the transfer, and make sure it is  * within the boundaries of the partition. Adjust transfer  * if needed, and signal errors or early completion.  *  * Volumes are simpler than disk slices: they only contain  * one component (though we call them a, b and c to make  * system utilities happy), and they always take up the  * complete space of the "partition".  *  * I'm still not happy with this: why should the label be  * protected?  If it weren't so damned difficult to write  * one in the first pleace (because it's protected), it wouldn't  * be a problem.  */
 end_comment
 
 begin_function
@@ -4292,7 +4292,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocate a request group and hook  * it in in the list for rq */
+comment|/*  * Allocate a request group and hook  * it in in the list for rq   */
 end_comment
 
 begin_function
@@ -4421,7 +4421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Deallocate a request group out of a chain.  We do  * this by linear search: the chain is short, this  * almost never happens, and currently it can only  * happen to the first member of the chain. */
+comment|/*  * Deallocate a request group out of a chain.  We do  * this by linear search: the chain is short, this  * almost never happens, and currently it can only  * happen to the first member of the chain.   */
 end_comment
 
 begin_function

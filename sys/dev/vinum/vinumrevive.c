@@ -28,7 +28,7 @@ file|<dev/vinum/request.h>
 end_include
 
 begin_comment
-comment|/* revive a block of a subdisk.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  EINVAL means  * that the subdisk isn't associated with a plex (which  * means a programming error if we get here at all;  * FIXME)  * XXX We should specify a block size here.  At the moment,  * just take a default value.  FIXME */
+comment|/*  * revive a block of a subdisk.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  EINVAL means  * that the subdisk isn't associated with a plex (which  * means a programming error if we get here at all;  * FIXME)  * XXX We should specify a block size here.  At the moment,  * just take a default value.  FIXME   */
 end_comment
 
 begin_function
@@ -247,7 +247,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* Amount to transfer: block size, unless it      * would overlap the end */
+comment|/*      * Amount to transfer: block size, unless it      * would overlap the end       */
 name|bp
 operator|->
 name|b_bufsize
@@ -362,7 +362,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* it's part of a volume, */
-comment|/* First, read the data from the volume.  We don't 	       * care which plex, that's bre's job */
+comment|/* 	     * First, read the data from the volume.  We don't 	     * care which plex, that's bre's job  	     */
 name|bp
 operator|->
 name|b_dev

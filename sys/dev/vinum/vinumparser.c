@@ -4,11 +4,11 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* This file contains the parser for the configuration routines.  It's used  * both in the kernel and in the user interface program, thus the separate file. */
+comment|/*  * This file contains the parser for the configuration routines.  It's used  * both in the kernel and in the user interface program, thus the separate file.   */
 end_comment
 
 begin_comment
-comment|/* Go through a text and split up into text tokens.  These are either non-blank  * sequences, or any sequence (except \0) enclosed in ' or ".  Embedded ' or  * " characters may be escaped by \, which otherwise has no special meaning.  *  * Delimit by following with a \0, and return pointers to the starts at token [].  * Return the number of tokens found as the return value.  *  * This method has the restriction that a closing " or ' must be followed by  * grey space.  *  * Error conditions are end of line before end of quote, or no space after  * a closing quote.  In this case, tokenize() returns -1. */
+comment|/*  * Go through a text and split up into text tokens.  These are either non-blank  * sequences, or any sequence (except \0) enclosed in ' or ".  Embedded ' or  * " characters may be escaped by \, which otherwise has no special meaning.  *  * Delimit by following with a \0, and return pointers to the starts at token [].  * Return the number of tokens found as the return value.  *  * This method has the restriction that a closing " or ' must be followed by  * grey space.  *  * Error conditions are end of line before end of quote, or no space after  * a closing quote.  In this case, tokenize() returns -1.   */
 end_comment
 
 begin_ifdef

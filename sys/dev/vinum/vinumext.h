@@ -677,10 +677,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* #define read_drive(a, b, c, d) driveio (a, b, c, d, B_READ)    #define write_drive(a, b, c, d) driveio (a, b, c, d, B_WRITE) */
-end_comment
-
 begin_function_decl
 name|int
 name|set_drive_parms

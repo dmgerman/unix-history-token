@@ -181,7 +181,7 @@ operator|->
 name|type
 condition|)
 block|{
-comment|/* We had an I/O error on a request.  Go through the 		 * request and try to salvage it */
+comment|/* 		 * We had an I/O error on a request.  Go through the 		 * request and try to salvage it  		 */
 case|case
 name|daemonrq_ioerror
 case|:
@@ -255,7 +255,7 @@ argument_list|)
 expr_stmt|;
 comment|/* the failed request */
 break|break;
-comment|/* Write the config to disk.  We could end up with 		 * quite a few of these in a row.  Only honour the 		 * last one */
+comment|/* 		 * Write the config to disk.  We could end up with 		 * quite a few of these in a row.  Only honour the 		 * last one  		 */
 case|case
 name|daemonrq_saveconfig
 case|:
@@ -388,7 +388,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Recover a failed I/O operation.   * The correct way to do this is to examine the request and determine  * how to recover each individual failure.  In the case of a write,  * this could be as simple as doing nothing: the defective drives may  * already be down, and there may be nothing else to do.  In case of  * a read, it will be necessary to retry if there are alternative  * copies of the data.  *  * The easy way (here) is just to reissue the request.  This will take  * a little longer, but nothing like as long as the failure will have  * taken.  *  */
+comment|/*  * Recover a failed I/O operation.  *  * The correct way to do this is to examine the request and determine  * how to recover each individual failure.  In the case of a write,  * this could be as simple as doing nothing: the defective drives may  * already be down, and there may be nothing else to do.  In case of  * a read, it will be necessary to retry if there are alternative  * copies of the data.  *  * The easy way (here) is just to reissue the request.  This will take  * a little longer, but nothing like as long as the failure will have  * taken.  *  */
 end_comment
 
 begin_function
@@ -525,7 +525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* see if the daemon is running.  Return 0 (no error)  * if it is, ESRCH otherwise */
+comment|/*  * see if the daemon is running.  Return 0 (no error)  * if it is, ESRCH otherwise   */
 end_comment
 
 begin_function
