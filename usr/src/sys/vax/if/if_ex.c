@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Excelan Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_ex.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Excelan Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_ex.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -181,19 +181,14 @@ directive|include
 file|"../netiso/iso_var.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../netiso/iso_snpac.h"
-end_include
-
 begin_decl_stmt
 specifier|extern
-name|struct
-name|snpa_cache
-name|all_es
+name|char
+name|all_es_snpa
+index|[]
 decl_stmt|,
-name|all_is
+name|all_is_snpa
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1579,9 +1574,7 @@ directive|ifdef
 name|ISO
 name|ex_setmulti
 argument_list|(
-name|all_es
-operator|.
-name|sc_snpa
+name|all_es_snpa
 argument_list|,
 name|unit
 argument_list|,
@@ -1590,9 +1583,7 @@ argument_list|)
 expr_stmt|;
 name|ex_setmulti
 argument_list|(
-name|all_is
-operator|.
-name|sc_snpa
+name|all_is_snpa
 argument_list|,
 name|unit
 argument_list|,
