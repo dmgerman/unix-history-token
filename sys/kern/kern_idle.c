@@ -204,7 +204,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * setup per-cpu idle process contexts  */
+comment|/*  * Setup per-cpu idle process contexts.  The AP's shouldn't be running or  * accessing their idle processes at this point, so don't bother with  * locking.  */
 end_comment
 
 begin_function
@@ -311,6 +311,22 @@ operator|->
 name|p_stat
 operator|=
 name|SRUN
+expr_stmt|;
+if|if
+condition|(
+name|gd
+operator|->
+name|gd_curproc
+operator|==
+name|NULL
+condition|)
+name|gd
+operator|->
+name|gd_curproc
+operator|=
+name|gd
+operator|->
+name|gd_idleproc
 expr_stmt|;
 block|}
 block|}
@@ -426,6 +442,15 @@ argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
+expr_stmt|;
+name|curproc
+operator|->
+name|p_stats
+operator|->
+name|p_ru
+operator|.
+name|ru_nvcsw
+operator|++
 expr_stmt|;
 name|mi_switch
 argument_list|()
