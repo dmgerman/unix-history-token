@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.104 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.105 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8796,30 +8796,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
-name|charset
-init|=
-name|DefaultCharSet
-decl_stmt|;
-comment|/* as recommended by RFC 1428 section 3... */
-if|if
-condition|(
-name|charset
-operator|==
-name|NULL
-condition|)
-name|charset
-operator|=
-literal|"unknown-8bit"
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|buf
 argument_list|,
 literal|"Content-Type: text/plain; charset=%s"
 argument_list|,
-name|charset
+name|defcharset
+argument_list|(
+name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putline

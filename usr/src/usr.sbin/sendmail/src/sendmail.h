@@ -786,6 +786,11 @@ name|gid_t
 name|m_gid
 decl_stmt|;
 comment|/* GID to run as */
+name|char
+modifier|*
+name|m_defcharset
+decl_stmt|;
+comment|/* default character set */
 block|}
 struct|;
 end_struct
@@ -6240,6 +6245,21 @@ name|char
 operator|*
 operator|,
 name|HDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|defcharset
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
 operator|*
 operator|)
 argument_list|)

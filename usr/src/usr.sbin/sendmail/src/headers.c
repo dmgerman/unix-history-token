@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.39 (Berkeley) %G%"
+literal|"@(#)headers.c	8.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4262,13 +4262,10 @@ name|obuf
 argument_list|,
 literal|"Content-Type: text/plain; charset=%s"
 argument_list|,
-name|DefaultCharSet
-operator|!=
-name|NULL
-condition|?
-name|DefaultCharSet
-else|:
-literal|"unknown-8bit"
+name|defcharset
+argument_list|(
+name|e
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putline
