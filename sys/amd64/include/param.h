@@ -405,13 +405,13 @@ value|39
 end_define
 
 begin_comment
-comment|/* LOG2(NBPML4T) */
+comment|/* LOG2(NBPML4) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NBPML4T
+name|NBPML4
 value|(1ul<<PML4SHIFT)
 end_define
 
@@ -423,7 +423,7 @@ begin_define
 define|#
 directive|define
 name|PML4MASK
-value|(NBPML4T-1)
+value|(NBPML4-1)
 end_define
 
 begin_define
