@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	1.30 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	1.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2260,7 +2260,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} %ss | sed -f ../%s/asm.sed |"
+literal|"\t${C2} %ss | ../%s/asm |"
 argument_list|,
 name|tp
 argument_list|,
@@ -2329,7 +2329,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} -i %ss | sed -f ../%s/asm.sed |"
+literal|"\t${C2} -i %ss | ../%s/asm |"
 argument_list|,
 name|tp
 argument_list|,
@@ -2433,7 +2433,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\tsed -f ../vax/asm.sed %ss | ${AS} -o %so\n"
+literal|"\t../%s/asm %ss | ${AS} -o %so\n"
+argument_list|,
+name|machinename
 argument_list|,
 name|tp
 argument_list|,
@@ -2645,18 +2647,33 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: makefile locore.o ${OBJS} param.o"
+literal|"%s: makefile"
 argument_list|,
 name|fl
 operator|->
 name|f_needs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|machine
+operator|==
+name|MACHINE_VAX
+condition|)
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" ioconf.o swap%s.o\n"
+literal|" ../%s/asm"
+argument_list|,
+name|machinename
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|" locore.o ${OBJS} param.o ioconf.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
@@ -2928,7 +2945,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} swapgeneric.s | sed -f ../%s/asm.sed"
+literal|"\t${C2} swapgeneric.s | ../%s/asm"
 argument_list|,
 name|machinename
 argument_list|)
