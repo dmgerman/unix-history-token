@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* i386.c -- Assemble code for the Intel 80386    Copyright (C) 1989, 91, 92, 93, 94, 95, 96, 1997 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* i386.c -- Assemble code for the Intel 80386    Copyright (C) 1989, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -300,7 +300,7 @@ name|unsigned
 name|int
 name|prefixes
 decl_stmt|;
-comment|/* RM and IB are the modrm byte and the base index byte where the        addressing modes of this insn are encoded. */
+comment|/* RM and BI are the modrm byte and the base index byte where the        addressing modes of this insn are encoded. */
 name|modrm_byte
 name|rm
 decl_stmt|;
@@ -1479,7 +1479,7 @@ init|=
 block|{
 literal|0x8d
 block|,
-literal|0xb6
+literal|0xb4
 block|,
 literal|0x00
 block|,
@@ -1499,7 +1499,7 @@ block|,
 comment|/* nop			*/
 literal|0x8d
 block|,
-literal|0xb6
+literal|0xb4
 block|,
 literal|0x00
 block|,
@@ -1538,7 +1538,7 @@ init|=
 block|{
 literal|0x8d
 block|,
-literal|0x76
+literal|0x74
 block|,
 literal|0x00
 block|,
@@ -1562,7 +1562,7 @@ init|=
 block|{
 literal|0x8d
 block|,
-literal|0xb6
+literal|0xb4
 block|,
 literal|0x00
 block|,
@@ -2128,9 +2128,19 @@ block|}
 block|,
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|OBJ_AOUT
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_ALIGN_PTWO
+argument_list|)
 block|{
 literal|"align"
 block|,
@@ -3981,9 +3991,9 @@ modifier|*
 name|fixP
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|OBJ_AOUT
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
 comment|/* Prevent all adjustments to global symbols. */
 if|if
 condition|(
@@ -4116,7 +4126,8 @@ modifier|*
 name|line
 decl_stmt|;
 block|{
-comment|/* Holds template once we've found it. */
+comment|/* Points to template once we've found it. */
+specifier|const
 name|template
 modifier|*
 name|t
@@ -4140,6 +4151,12 @@ literal|0
 decl_stmt|;
 name|int
 name|j
+decl_stmt|;
+comment|/* Wait prefix needs to come before any other prefixes, so handle it      specially.  wait_prefix will hold the opcode modifier flag FWait      if a wait prefix is given.  */
+name|int
+name|wait_prefix
+init|=
+literal|0
 decl_stmt|;
 comment|/* Initialize globals. */
 name|memset
@@ -4206,7 +4223,7 @@ operator|=
 name|save_stack
 expr_stmt|;
 comment|/* reset stack pointer */
-comment|/* Fist parse an opcode& call i386_operand for the operands.      We assume that the scrubber has arranged it so that line[0] is the valid      start of a (possibly prefixed) opcode. */
+comment|/* First parse an opcode& call i386_operand for the operands.      We assume that the scrubber has arranged it so that line[0] is the valid      start of a (possibly prefixed) opcode. */
 block|{
 name|char
 modifier|*
@@ -4406,6 +4423,36 @@ return|return;
 block|}
 if|if
 condition|(
+name|prefix
+operator|->
+name|prefix_code
+operator|==
+name|FWAIT_OPCODE
+condition|)
+block|{
+if|if
+condition|(
+name|wait_prefix
+operator|!=
+literal|0
+condition|)
+block|{
+name|as_bad
+argument_list|(
+literal|"same prefix used twice; you don't really want this!"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|wait_prefix
+operator|=
+name|FWait
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|i
 operator|.
 name|prefixes
@@ -4452,6 +4499,7 @@ name|expecting_string_instruction
 operator|=
 literal|1
 expr_stmt|;
+block|}
 comment|/* skip past PREFIX_SEPERATOR and reset token_start */
 name|token_start
 operator|=
@@ -5226,14 +5274,14 @@ name|t
 operator|->
 name|operand_types
 index|[
-literal|0
+literal|1
 index|]
 argument_list|,
 name|t
 operator|->
 name|operand_types
 index|[
-literal|1
+literal|0
 index|]
 argument_list|)
 condition|)
@@ -5363,7 +5411,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Copy the template we found (we may change it!). */
+comment|/* Copy the template we found.  */
 name|i
 operator|.
 name|tm
@@ -5371,19 +5419,59 @@ operator|=
 operator|*
 name|t
 expr_stmt|;
-name|t
-operator|=
-operator|&
 name|i
 operator|.
 name|tm
+operator|.
+name|opcode_modifier
+operator||=
+name|wait_prefix
 expr_stmt|;
-comment|/* alter new copy of template */
+if|if
+condition|(
+name|found_reverse_match
+condition|)
+block|{
+name|i
+operator|.
+name|tm
+operator|.
+name|operand_types
+index|[
+literal|0
+index|]
+operator|=
+name|t
+operator|->
+name|operand_types
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|i
+operator|.
+name|tm
+operator|.
+name|operand_types
+index|[
+literal|1
+index|]
+operator|=
+name|t
+operator|->
+name|operand_types
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
 comment|/* If the matched instruction specifies an explicit opcode suffix,        use it - and make sure none has already been specified.  */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 operator|(
@@ -5409,8 +5497,10 @@ return|return;
 block|}
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|Data16
@@ -5871,48 +5961,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* kludge for shift insns */
-if|if
-condition|(
-name|found_reverse_match
-condition|)
-block|{
-name|unsigned
-name|int
-name|save
-decl_stmt|;
-name|save
-operator|=
-name|t
-operator|->
-name|operand_types
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|t
-operator|->
-name|operand_types
-index|[
-literal|0
-index|]
-operator|=
-name|t
-operator|->
-name|operand_types
-index|[
-literal|1
-index|]
-expr_stmt|;
-name|t
-operator|->
-name|operand_types
-index|[
-literal|1
-index|]
-operator|=
-name|save
-expr_stmt|;
-block|}
 comment|/* Finalize opcode.  First, we change the opcode based on the operand        size given by i.suffix: we never have to change things for byte insns,        or when no opcode suffix is need to size the operands. */
 if|if
 condition|(
@@ -5922,8 +5970,10 @@ operator|.
 name|suffix
 operator|&&
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|W
@@ -5953,14 +6003,18 @@ block|{
 comment|/* Select between byte and word/dword operations. */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|W
 condition|)
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator||=
 name|W
@@ -5990,7 +6044,7 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
-literal|"%d prefixes given and 'w' opcode suffix gives too many prefixes"
+literal|"%d prefixes given and data size prefix gives too many prefixes"
 argument_list|,
 name|MAX_PREFIXES
 argument_list|)
@@ -6039,8 +6093,10 @@ condition|(
 name|found_reverse_match
 condition|)
 block|{
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator||=
 name|found_reverse_match
@@ -6049,8 +6105,10 @@ block|}
 comment|/* The imul $imm, %reg instruction is converted into 	   imul $imm, %reg, %reg. */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|imulKludge
@@ -6081,8 +6139,10 @@ block|}
 comment|/* The clr %reg instruction is converted into xor %reg, %reg.  */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|iclrKludge
@@ -6113,8 +6173,10 @@ comment|/* Certain instructions expect the destination to be in the i.rm.reg 	  
 if|if
 condition|(
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|ReverseRegRegmem
@@ -6191,8 +6253,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|ShortForm
@@ -6223,8 +6287,10 @@ else|:
 literal|1
 decl_stmt|;
 comment|/* Register goes in low 3 bits of opcode. */
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator||=
 name|i
@@ -6240,16 +6306,20 @@ block|}
 elseif|else
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|ShortFormW
 condition|)
 block|{
 comment|/* Short form with 0x8 width bit.  Register is always dest. operand */
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator||=
 name|i
@@ -6275,8 +6345,10 @@ name|suffix
 operator|==
 name|DWORD_OPCODE_SUFFIX
 condition|)
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator||=
 literal|0x8
@@ -6285,8 +6357,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|Seg2ShortForm
@@ -6294,8 +6368,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|==
 name|POP_SEG_SHORT
@@ -6319,8 +6395,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator||=
 operator|(
@@ -6340,8 +6418,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|Seg3ShortForm
@@ -6361,8 +6441,10 @@ name|reg_num
 operator|==
 literal|5
 condition|)
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator||=
 literal|0x08
@@ -6372,8 +6454,10 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|&
 operator|~
@@ -6397,14 +6481,16 @@ block|}
 elseif|else
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|Modrm
 condition|)
 block|{
-comment|/* The opcode is completed (modulo t->extension_opcode which must 	       be put into the modrm byte. 	       Now, we make the modrm& index base bytes based on all the info 	       we've collected. */
+comment|/* The opcode is completed (modulo i.tm.extension_opcode which 	       must be put into the modrm byte). 	       Now, we make the modrm& index base bytes based on all the 	       info we've collected. */
 comment|/* i.reg_operands MUST be the number of real register operands; 	       implicit registers do not count. */
 if|if
 condition|(
@@ -7198,7 +7284,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Fill in i.rm.reg or i.rm.regmem field with register 		   operand (if any) based on 		   t->extension_opcode. Again, we must be careful to 		   make sure that segment/control/debug/test/MMX 		   registers are coded into the i.rm.reg field. */
+comment|/* Fill in i.rm.reg or i.rm.regmem field with register 		   operand (if any) based on i.tm.extension_opcode. 		   Again, we must be careful to make sure that 		   segment/control/debug/test/MMX registers are coded 		   into the i.rm.reg field. */
 if|if
 condition|(
 name|i
@@ -7273,8 +7359,10 @@ decl_stmt|;
 comment|/* If there is an extension opcode to put here, the 		       register number must be put into the regmem field. */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|extension_opcode
 operator|!=
 name|None
@@ -7330,8 +7418,10 @@ block|}
 comment|/* Fill in i.rm.reg field with extension opcode (if any). */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|extension_opcode
 operator|!=
 name|None
@@ -7342,8 +7432,10 @@ name|rm
 operator|.
 name|reg
 operator|=
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|extension_opcode
 expr_stmt|;
 block|}
@@ -7465,8 +7557,10 @@ block|}
 comment|/* Handle conversion of 'int $3' --> special int3 insn. */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|==
 name|INT_OPCODE
@@ -7483,8 +7577,10 @@ operator|==
 literal|3
 condition|)
 block|{
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|=
 name|INT3_OPCODE
@@ -7506,8 +7602,10 @@ decl_stmt|;
 comment|/* Output jumps. */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|Jump
@@ -7564,8 +7662,10 @@ index|[
 literal|0
 index|]
 operator|=
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 expr_stmt|;
 name|p
@@ -7609,8 +7709,10 @@ return|return;
 block|}
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|==
 name|JUMP_PC_RELATIVE
@@ -7690,8 +7792,10 @@ index|[
 literal|1
 index|]
 operator|=
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|+
 literal|0x10
@@ -7754,8 +7858,10 @@ index|[
 literal|0
 index|]
 operator|=
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 expr_stmt|;
 name|frag_var
@@ -7814,8 +7920,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 operator|(
@@ -7829,8 +7937,10 @@ name|int
 name|size
 init|=
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|JumpByte
@@ -7889,6 +7999,33 @@ operator|==
 name|WORD_PREFIX_OPCODE
 condition|)
 block|{
+comment|/* The jcxz/jecxz instructions are marked with Data16 		   and Data32, which means that they may get 		   WORD_PREFIX_OPCODE added to the list of prefixes. 		   However, the are correctly distinguished using 		   ADDR_PREFIX_OPCODE.  Here we look for 		   WORD_PREFIX_OPCODE, and actually emit 		   ADDR_PREFIX_OPCODE.  This is a hack, but, then, so 		   is the instruction itself.  		   If an explicit suffix is used for the loop 		   instruction, that actually controls whether we use 		   cx vs. ecx.  This is also controlled by 		   ADDR_PREFIX_OPCODE.  		   I don't know if there is any valid case in which we 		   want to emit WORD_PREFIX_OPCODE, but I am keeping 		   the old behaviour for safety.  */
+if|if
+condition|(
+name|IS_JUMP_ON_CX_ZERO
+argument_list|(
+name|i
+operator|.
+name|tm
+operator|.
+name|base_opcode
+argument_list|)
+operator|||
+name|IS_LOOP_ECX_TIMES
+argument_list|(
+name|i
+operator|.
+name|tm
+operator|.
+name|base_opcode
+argument_list|)
+condition|)
+name|FRAG_APPEND_1_CHAR
+argument_list|(
+name|ADDR_PREFIX_OPCODE
+argument_list|)
+expr_stmt|;
+else|else
 name|FRAG_APPEND_1_CHAR
 argument_list|(
 name|WORD_PREFIX_OPCODE
@@ -7928,16 +8065,20 @@ if|if
 condition|(
 name|fits_in_unsigned_byte
 argument_list|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 argument_list|)
 condition|)
 block|{
 name|FRAG_APPEND_1_CHAR
 argument_list|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 argument_list|)
 expr_stmt|;
@@ -7966,8 +8107,10 @@ name|p
 operator|++
 operator|=
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|>>
 literal|8
@@ -7978,8 +8121,10 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|&
 literal|0xff
@@ -8090,8 +8235,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|JumpInterSegment
@@ -8137,8 +8284,10 @@ index|[
 literal|0
 index|]
 operator|=
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 expr_stmt|;
 if|if
@@ -8250,7 +8399,47 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-comment|/* First the prefix bytes. */
+comment|/* Hack for fwait.  It must come before any prefixes, as it 	   really is an instruction rather than a prefix. */
+if|if
+condition|(
+operator|(
+name|i
+operator|.
+name|tm
+operator|.
+name|opcode_modifier
+operator|&
+name|FWait
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+name|frag_more
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|insn_size
+operator|+=
+literal|1
+expr_stmt|;
+name|md_number_to_chars
+argument_list|(
+name|p
+argument_list|,
+operator|(
+name|valueT
+operator|)
+name|FWAIT_OPCODE
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* The prefix bytes. */
 for|for
 control|(
 name|q
@@ -8303,16 +8492,20 @@ if|if
 condition|(
 name|fits_in_unsigned_byte
 argument_list|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 argument_list|)
 condition|)
 block|{
 name|FRAG_APPEND_1_CHAR
 argument_list|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 argument_list|)
 expr_stmt|;
@@ -8326,8 +8519,10 @@ if|if
 condition|(
 name|fits_in_unsigned_word
 argument_list|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 argument_list|)
 condition|)
@@ -8349,8 +8544,10 @@ name|p
 operator|++
 operator|=
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|>>
 literal|8
@@ -8361,8 +8558,10 @@ expr_stmt|;
 operator|*
 name|p
 operator|=
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|&
 literal|0xff
@@ -8373,8 +8572,10 @@ block|{
 comment|/* opcode is either 3 or 4 bytes */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|&
 literal|0xff000000
@@ -8396,8 +8597,10 @@ name|p
 operator|++
 operator|=
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|>>
 literal|24
@@ -8425,8 +8628,10 @@ name|p
 operator|++
 operator|=
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|>>
 literal|16
@@ -8439,8 +8644,10 @@ name|p
 operator|++
 operator|=
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|>>
 literal|8
@@ -8452,8 +8659,10 @@ operator|*
 name|p
 operator|=
 operator|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|base_opcode
 operator|)
 operator|&
@@ -8463,8 +8672,10 @@ block|}
 comment|/* Now the modrm byte and base index byte (if present). */
 if|if
 condition|(
-name|t
-operator|->
+name|i
+operator|.
+name|tm
+operator|.
 name|opcode_modifier
 operator|&
 name|Modrm
@@ -9633,6 +9844,23 @@ argument_list|(
 name|exp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|!=
+literal|'\0'
+condition|)
+block|{
+comment|/* This should be as_bad, but some versions of gcc, up to              about 2.8 and egcs 1.01, generate a bogus @GOTOFF(%ebx)              in certain cases.  Oddly, the code in question turns out              to work correctly anyhow, so we make this just a warning              until those versions of gcc are obsolete.  */
+name|as_warn
+argument_list|(
+literal|"warning: unrecognized characters `%s' in expression"
+argument_list|,
+name|input_line_pointer
+argument_list|)
+expr_stmt|;
+block|}
 name|input_line_pointer
 operator|=
 name|save_input_line_pointer
@@ -9883,7 +10111,7 @@ operator|.
 name|mem_operands
 operator|++
 expr_stmt|;
-comment|/* Determine type of memory operand from opcode_suffix; 		   no opcode suffix implies general memory references. */
+comment|/* Determine type of memory operand from opcode_suffix; 	 no opcode suffix implies general memory references. */
 switch|switch
 condition|(
 name|i
@@ -10503,9 +10731,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-if|if
-condition|(
-operator|(
 name|cp
 operator|=
 name|strchr
@@ -10514,27 +10739,46 @@ name|input_line_pointer
 argument_list|,
 literal|'@'
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
 operator|!=
 name|NULL
 condition|)
 block|{
 name|char
+modifier|*
 name|tmpbuf
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|GOT_symbol
+operator|==
+name|NULL
 condition|)
 name|GOT_symbol
 operator|=
 name|symbol_find_or_make
 argument_list|(
 name|GLOBAL_OFFSET_TABLE_NAME
+argument_list|)
+expr_stmt|;
+name|tmpbuf
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|alloca
+argument_list|(
+operator|(
+name|cp
+operator|-
+name|input_line_pointer
+operator|)
+operator|+
+literal|20
 argument_list|)
 expr_stmt|;
 if|if
@@ -12085,6 +12329,24 @@ init|=
 operator|*
 name|valp
 decl_stmt|;
+if|if
+condition|(
+name|fixP
+operator|->
+name|fx_r_type
+operator|==
+name|BFD_RELOC_32
+operator|&&
+name|fixP
+operator|->
+name|fx_pcrel
+condition|)
+name|fixP
+operator|->
+name|fx_r_type
+operator|=
+name|BFD_RELOC_32_PCREL
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -12119,6 +12381,10 @@ condition|(
 name|OUTPUT_FLAVOR
 operator|==
 name|bfd_target_elf_flavour
+operator|||
+name|OUTPUT_FLAVOR
+operator|==
+name|bfd_target_coff_flavour
 condition|)
 name|value
 operator|+=
@@ -12191,6 +12457,38 @@ operator|->
 name|fr_address
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OBJ_COFF
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TE_PE
+argument_list|)
+comment|/* For some reason, the PE format does not store a section          address offset for a PC relative symbol.  */
+if|if
+condition|(
+name|S_GET_SEGMENT
+argument_list|(
+name|fixP
+operator|->
+name|fx_addsy
+argument_list|)
+operator|!=
+name|seg
+condition|)
+name|value
+operator|+=
+name|md_pcrel_from
+argument_list|(
+name|fixP
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -13266,6 +13564,9 @@ name|BFD_RELOC_386_GOTOFF
 case|:
 case|case
 name|BFD_RELOC_386_GOTPC
+case|:
+case|case
+name|BFD_RELOC_RVA
 case|:
 name|code
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back end for NetBSD style core files    Copyright 1988, 1989, 1991, 1992, 1993, 1996 Free Software Foundation, Inc.    Written by Paul Kranenburg, EUR  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* BFD back end for NetBSD style core files    Copyright 1988, 89, 91, 92, 93, 96, 1998 Free Software Foundation, Inc.    Written by Paul Kranenburg, EUR  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_include
@@ -100,7 +100,7 @@ specifier|static
 specifier|const
 name|bfd_target
 modifier|*
-name|netbsd_core_core_file_p
+name|netbsd_core_file_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -116,7 +116,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|netbsd_core_core_file_failing_command
+name|netbsd_core_file_failing_command
 name|PARAMS
 argument_list|(
 operator|(
@@ -131,7 +131,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|netbsd_core_core_file_failing_signal
+name|netbsd_core_file_failing_signal
 name|PARAMS
 argument_list|(
 operator|(
@@ -146,7 +146,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|boolean
-name|netbsd_core_core_file_matches_executable_p
+name|netbsd_core_file_matches_executable_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -188,7 +188,7 @@ specifier|static
 specifier|const
 name|bfd_target
 modifier|*
-name|netbsd_core_core_file_p
+name|netbsd_core_file_p
 parameter_list|(
 name|abfd
 parameter_list|)
@@ -450,6 +450,9 @@ argument_list|(
 name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
+goto|goto
+name|punt
+goto|;
 block|}
 name|asect
 operator|->
@@ -765,7 +768,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|netbsd_core_core_file_failing_command
+name|netbsd_core_file_failing_command
 parameter_list|(
 name|abfd
 parameter_list|)
@@ -796,7 +799,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|netbsd_core_core_file_failing_signal
+name|netbsd_core_file_failing_signal
 parameter_list|(
 name|abfd
 parameter_list|)
@@ -827,7 +830,7 @@ end_comment
 begin_function
 specifier|static
 name|boolean
-name|netbsd_core_core_file_matches_executable_p
+name|netbsd_core_file_matches_executable_p
 parameter_list|(
 name|core_bfd
 parameter_list|,
@@ -853,223 +856,6 @@ end_block
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* No archive file support via this BFD */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|netbsd_openr_next_archived_file
-value|bfd_generic_openr_next_archived_file
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_generic_stat_arch_elt
-value|bfd_generic_stat_arch_elt
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_slurp_armap
-value|bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_slurp_extended_name_table
-value|bfd_true
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_write_armap
-value|(boolean (*) PARAMS	\     ((bfd *arch, unsigned int elength, struct orl *map, \       unsigned int orl_count, int stridx))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_truncate_arname
-value|bfd_dont_truncate_arname
-end_define
-
-begin_define
-define|#
-directive|define
-name|aout_32_openr_next_archived_file
-value|bfd_generic_openr_next_archived_file
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_close_and_cleanup
-value|bfd_generic_close_and_cleanup
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_set_section_contents
-value|(boolean (*) PARAMS	\         ((bfd *abfd, asection *section, PTR data, file_ptr offset,	\         bfd_size_type count))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_get_section_contents
-value|bfd_generic_get_section_contents
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_new_section_hook
-value|(boolean (*) PARAMS	\ 	((bfd *, sec_ptr))) bfd_true
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_get_symtab_upper_bound
-value|bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_get_symtab
-value|(unsigned int (*) PARAMS \         ((bfd *, struct symbol_cache_entry **))) bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_get_reloc_upper_bound
-value|(unsigned int (*) PARAMS \ 	((bfd *, sec_ptr))) bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_canonicalize_reloc
-value|(unsigned int (*) PARAMS \ 	((bfd *, sec_ptr, arelent **, struct symbol_cache_entry**))) bfd_0u
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_make_empty_symbol
-value|(struct symbol_cache_entry * \ 	(*) PARAMS ((bfd *))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_print_symbol
-value|(void (*) PARAMS	\ 	((bfd *, PTR, struct symbol_cache_entry  *,			\ 	bfd_print_symbol_type))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_get_symbol_info
-value|(void (*) PARAMS	\ 	((bfd *, struct symbol_cache_entry  *,			\ 	symbol_info *))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_get_lineno
-value|(alent * (*) PARAMS	\ 	((bfd *, struct symbol_cache_entry *))) bfd_nullvoidptr
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_set_arch_mach
-value|(boolean (*) PARAMS	\ 	((bfd *, enum bfd_architecture, unsigned long))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_find_nearest_line
-value|(boolean (*) PARAMS	\         ((bfd *abfd, struct sec  *section,				\          struct symbol_cache_entry  **symbols,bfd_vma offset,		\          CONST char **file, CONST char **func, unsigned int *line))) bfd_false
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_sizeof_headers
-value|(int (*) PARAMS	\ 	((bfd *, boolean))) bfd_0
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_debug_info_start
-value|bfd_void
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_debug_info_end
-value|bfd_void
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_debug_info_accumulate
-value|(void (*) PARAMS	\ 	((bfd *, struct sec *))) bfd_void
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_get_relocated_section_contents
-value|bfd_generic_get_relocated_section_contents
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_relax_section
-value|bfd_generic_relax_section
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_seclet_link
-define|\
-value|((boolean (*) PARAMS ((bfd *, PTR, boolean))) bfd_false)
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_reloc_type_lookup
-define|\
-value|((CONST struct reloc_howto_struct *(*) PARAMS ((bfd *, bfd_reloc_code_real_type))) bfd_nullvoidptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|netbsd_bfd_make_debug_symbol
-define|\
-value|((asymbol *(*) PARAMS ((bfd *, void *, unsigned long))) bfd_nullvoidptr)
-end_define
 
 begin_comment
 comment|/* If somebody calls any byte-swapping routines, shoot them.  */
@@ -1107,7 +893,7 @@ define|#
 directive|define
 name|NO_SIGNED_GET
 define|\
-value|((bfd_signed_vma (*) PARAMS ((    const bfd_byte *))) swap_abort )
+value|((bfd_signed_vma (*) PARAMS ((const bfd_byte *))) swap_abort )
 end_define
 
 begin_decl_stmt
@@ -1120,10 +906,10 @@ literal|"netbsd-core"
 block|,
 name|bfd_target_unknown_flavour
 block|,
-name|true
+name|BFD_ENDIAN_UNKNOWN
 block|,
 comment|/* target byte order */
-name|true
+name|BFD_ENDIAN_UNKNOWN
 block|,
 comment|/* target headers byte order */
 operator|(
@@ -1139,8 +925,6 @@ operator||
 name|HAS_SYMS
 operator||
 name|HAS_LOCALS
-operator||
-name|DYNAMIC
 operator||
 name|WP_TEXT
 operator||
@@ -1220,7 +1004,7 @@ comment|/* object file */
 name|_bfd_dummy_target
 block|,
 comment|/* archive */
-name|netbsd_core_core_file_p
+name|netbsd_core_file_p
 comment|/* a core file */
 block|}
 block|,
@@ -1258,7 +1042,7 @@ argument_list|)
 block|,
 name|BFD_JUMP_TABLE_CORE
 argument_list|(
-name|netbsd_core
+name|netbsd
 argument_list|)
 block|,
 name|BFD_JUMP_TABLE_ARCHIVE

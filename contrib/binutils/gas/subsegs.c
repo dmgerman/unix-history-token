@@ -1059,7 +1059,7 @@ name|newP
 operator|->
 name|frch_obstack
 argument_list|,
-literal|5000
+name|chunksize
 argument_list|)
 expr_stmt|;
 if|#

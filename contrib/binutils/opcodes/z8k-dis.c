@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Disassemble z8000 code.    Copyright 1992, 1993, 1995, 1998 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -186,9 +186,6 @@ operator|)
 name|info
 operator|->
 name|private_data
-decl_stmt|;
-name|bfd_vma
-name|start
 decl_stmt|;
 if|if
 condition|(
@@ -679,29 +676,21 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|print_insn_z8001
-argument_list|(
-argument|addr
-argument_list|,
-argument|info
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|,
+name|info
+parameter_list|)
 name|bfd_vma
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|disassemble_info
 modifier|*
 name|info
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|print_insn_z8k
@@ -714,31 +703,23 @@ literal|1
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|print_insn_z8002
-argument_list|(
-argument|addr
-argument_list|,
-argument|info
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|,
+name|info
+parameter_list|)
 name|bfd_vma
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|disassemble_info
 modifier|*
 name|info
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|print_insn_z8k
@@ -751,7 +732,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -2094,7 +2075,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"0x%0x(R%d)"
+literal|"0x%0lx(R%ld)"
 argument_list|,
 name|instr_data
 operator|->
@@ -2123,7 +2104,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"r%d(#%x)"
+literal|"r%ld(#%lx)"
 argument_list|,
 name|instr_data
 operator|->
@@ -2152,7 +2133,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"r%d(R%d)"
+literal|"r%ld(R%ld)"
 argument_list|,
 name|instr_data
 operator|->
@@ -2184,7 +2165,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"#0x%0x"
+literal|"#0x%0lx"
 argument_list|,
 name|instr_data
 operator|->
@@ -2206,7 +2187,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"#0x%0x"
+literal|"#0x%0lx"
 argument_list|,
 name|instr_data
 operator|->
@@ -2253,7 +2234,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"0x%0x"
+literal|"0x%0lx"
 argument_list|,
 name|instr_data
 operator|->
@@ -2278,7 +2259,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"#0x%0x"
+literal|"#0x%0lx"
 argument_list|,
 name|instr_data
 operator|->
@@ -2300,7 +2281,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"@R%d"
+literal|"@R%ld"
 argument_list|,
 name|instr_data
 operator|->
@@ -2325,7 +2306,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"0x%0x"
+literal|"0x%0lx"
 argument_list|,
 name|instr_data
 operator|->
@@ -2359,7 +2340,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"rl%d"
+literal|"rl%ld"
 argument_list|,
 name|instr_data
 operator|->
@@ -2378,7 +2359,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"rh%d"
+literal|"rh%ld"
 argument_list|,
 name|instr_data
 operator|->
@@ -2404,7 +2385,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"r%d"
+literal|"r%ld"
 argument_list|,
 name|instr_data
 operator|->
@@ -2429,7 +2410,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"rq%d"
+literal|"rq%ld"
 argument_list|,
 name|instr_data
 operator|->
@@ -2454,7 +2435,7 @@ name|sprintf
 argument_list|(
 name|tmp_str
 argument_list|,
-literal|"rr%d"
+literal|"rr%ld"
 argument_list|,
 name|instr_data
 operator|->

@@ -904,6 +904,12 @@ name|rpath
 operator|=
 name|NULL
 expr_stmt|;
+name|command_line
+operator|.
+name|warn_mismatch
+operator|=
+name|true
+expr_stmt|;
 name|link_info
 operator|.
 name|callbacks

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CGEN generic opcode support.  Copyright (C) 1996, 1997 Free Software Foundation, Inc.  This file is part of the GNU Binutils and GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* CGEN generic opcode support.     Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.     This file is part of the GNU Binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -31,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"symcat.h"
 end_include
 
 begin_include
@@ -77,6 +89,10 @@ name|CGEN_ENDIAN_UNKNOWN
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* FIXME: To support multiple architectures, we need to return a handle    to the state set up by this function, and pass the handle back to the    other functions.  Later.  */
+end_comment
+
 begin_function
 name|void
 name|cgen_set_cpu
@@ -99,6 +115,10 @@ name|cgen_endian
 name|endian
 decl_stmt|;
 block|{
+specifier|static
+name|int
+name|init_once_p
+decl_stmt|;
 name|cgen_current_opcode_data
 operator|=
 name|data
@@ -111,6 +131,19 @@ name|cgen_current_endian
 operator|=
 name|endian
 expr_stmt|;
+comment|/* Initialize those things that only need be done once.  */
+if|if
+condition|(
+operator|!
+name|init_once_p
+condition|)
+block|{
+comment|/* Nothing to do currently.  */
+name|init_once_p
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
@@ -134,13 +167,14 @@ name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -155,10 +189,10 @@ name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|,
+name|unsigned
 name|int
 operator|)
 argument_list|)
@@ -172,8 +206,7 @@ name|build_keyword_hash_tables
 name|PARAMS
 argument_list|(
 operator|(
-expr|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 operator|*
 operator|)
 argument_list|)
@@ -200,8 +233,7 @@ end_comment
 
 begin_function
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|cgen_keyword_lookup_name
 parameter_list|(
@@ -209,8 +241,7 @@ name|kt
 parameter_list|,
 name|name
 parameter_list|)
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|kt
 decl_stmt|;
@@ -221,8 +252,7 @@ name|name
 decl_stmt|;
 block|{
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|ke
 decl_stmt|;
@@ -258,6 +288,8 @@ argument_list|(
 name|kt
 argument_list|,
 name|name
+argument_list|,
+literal|0
 argument_list|)
 index|]
 expr_stmt|;
@@ -294,21 +326,35 @@ operator|||
 operator|(
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
 operator|&&
+operator|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
 operator|==
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|n
 argument_list|)
+operator|)
 operator|)
 operator|)
 condition|)
@@ -338,6 +384,17 @@ operator|->
 name|next_name
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|kt
+operator|->
+name|null_entry
+condition|)
+return|return
+name|kt
+operator|->
+name|null_entry
+return|;
 return|return
 name|NULL
 return|;
@@ -350,8 +407,7 @@ end_comment
 
 begin_function
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|cgen_keyword_lookup_value
 parameter_list|(
@@ -359,8 +415,7 @@ name|kt
 parameter_list|,
 name|value
 parameter_list|)
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|kt
 decl_stmt|;
@@ -369,8 +424,7 @@ name|value
 decl_stmt|;
 block|{
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|ke
 decl_stmt|;
@@ -444,13 +498,11 @@ name|kt
 parameter_list|,
 name|ke
 parameter_list|)
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|kt
 decl_stmt|;
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|ke
 decl_stmt|;
@@ -481,6 +533,8 @@ argument_list|,
 name|ke
 operator|->
 name|name
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ke
@@ -534,6 +588,23 @@ index|]
 operator|=
 name|ke
 expr_stmt|;
+if|if
+condition|(
+name|ke
+operator|->
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+name|kt
+operator|->
+name|null_entry
+operator|=
+name|ke
+expr_stmt|;
 block|}
 end_function
 
@@ -546,16 +617,14 @@ comment|/* Initialize a keyword table search.    SPEC is a specification of what
 end_comment
 
 begin_function
-name|struct
-name|cgen_keyword_search
+name|CGEN_KEYWORD_SEARCH
 name|cgen_keyword_search_init
 parameter_list|(
 name|kt
 parameter_list|,
 name|spec
 parameter_list|)
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|kt
 decl_stmt|;
@@ -565,8 +634,7 @@ modifier|*
 name|spec
 decl_stmt|;
 block|{
-name|struct
-name|cgen_keyword_search
+name|CGEN_KEYWORD_SEARCH
 name|search
 decl_stmt|;
 comment|/* FIXME: Need to specify format of PARAMS.  */
@@ -628,25 +696,17 @@ end_comment
 
 begin_function
 specifier|const
-name|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 modifier|*
 name|cgen_keyword_search_next
 parameter_list|(
 name|search
 parameter_list|)
-name|struct
-name|cgen_keyword_search
+name|CGEN_KEYWORD_SEARCH
 modifier|*
 name|search
 decl_stmt|;
 block|{
-specifier|const
-name|struct
-name|cgen_keyword_entry
-modifier|*
-name|ke
-decl_stmt|;
 comment|/* Has search finished?  */
 if|if
 condition|(
@@ -766,7 +826,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return first entry in hash chain for NAME.  */
+comment|/* Return first entry in hash chain for NAME.    If CASE_SENSITIVE_P is non-zero, return a case sensitive hash.  */
 end_comment
 
 begin_function
@@ -778,10 +838,11 @@ parameter_list|(
 name|kt
 parameter_list|,
 name|name
+parameter_list|,
+name|case_sensitive_p
 parameter_list|)
 specifier|const
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|kt
 decl_stmt|;
@@ -790,11 +851,18 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|int
+name|case_sensitive_p
+decl_stmt|;
 block|{
 name|unsigned
 name|int
 name|hash
 decl_stmt|;
+if|if
+condition|(
+name|case_sensitive_p
+condition|)
 for|for
 control|(
 name|hash
@@ -822,6 +890,37 @@ operator|)
 operator|*
 name|name
 expr_stmt|;
+else|else
+for|for
+control|(
+name|hash
+operator|=
+literal|0
+init|;
+operator|*
+name|name
+condition|;
+operator|++
+name|name
+control|)
+name|hash
+operator|=
+operator|(
+name|hash
+operator|*
+literal|97
+operator|)
+operator|+
+operator|(
+name|unsigned
+name|char
+operator|)
+name|tolower
+argument_list|(
+operator|*
+name|name
+argument_list|)
+expr_stmt|;
 return|return
 name|hash
 operator|%
@@ -847,11 +946,11 @@ parameter_list|,
 name|value
 parameter_list|)
 specifier|const
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|kt
 decl_stmt|;
+name|unsigned
 name|int
 name|value
 decl_stmt|;
@@ -877,8 +976,7 @@ name|build_keyword_hash_tables
 parameter_list|(
 name|kt
 parameter_list|)
-name|struct
-name|cgen_keyword
+name|CGEN_KEYWORD
 modifier|*
 name|kt
 decl_stmt|;
@@ -909,8 +1007,7 @@ operator|->
 name|name_hash_table
 operator|=
 operator|(
-expr|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 operator|*
 operator|*
 operator|)
@@ -920,8 +1017,7 @@ name|size
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 operator|*
 argument_list|)
 argument_list|)
@@ -938,8 +1034,7 @@ name|size
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 operator|*
 argument_list|)
 argument_list|)
@@ -949,8 +1044,7 @@ operator|->
 name|value_hash_table
 operator|=
 operator|(
-expr|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 operator|*
 operator|*
 operator|)
@@ -960,8 +1054,7 @@ name|size
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 operator|*
 argument_list|)
 argument_list|)
@@ -978,8 +1071,7 @@ name|size
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|cgen_keyword_entry
+name|CGEN_KEYWORD_ENTRY
 operator|*
 argument_list|)
 argument_list|)
@@ -1026,6 +1118,7 @@ comment|/* Hardware support.  */
 end_comment
 
 begin_function
+specifier|const
 name|CGEN_HW_ENTRY
 modifier|*
 name|cgen_hw_lookup
@@ -1038,6 +1131,7 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+specifier|const
 name|CGEN_HW_ENTRY
 modifier|*
 name|hw

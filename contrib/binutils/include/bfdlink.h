@@ -384,6 +384,10 @@ comment|/* true if BFD should generate a relocateable object file.  */
 name|boolean
 name|relocateable
 decl_stmt|;
+comment|/* true if BFD should generate a "task linked" object file,      similar to relocatable but also with globals converted to statics. */
+name|boolean
+name|task_link
+decl_stmt|;
 comment|/* true if BFD should generate a shared object.  */
 name|boolean
 name|shared

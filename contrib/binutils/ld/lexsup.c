@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Parse options for the GNU linker.    Copyright (C) 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Parse options for the GNU linker.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -110,6 +110,63 @@ include|#
 directive|include
 file|"ldemul.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_SEPARATOR
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MSDOS__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PATH_SEPARATOR
+value|';'
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PATH_SEPARATOR
+value|':'
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Somewhere above, sys/stat.h got included . . . . */
@@ -314,8 +371,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_NOINHIBIT_EXEC
+name|OPTION_NO_WARN_MISMATCH
 value|(OPTION_NO_KEEP_MEMORY + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_NOINHIBIT_EXEC
+value|(OPTION_NO_WARN_MISMATCH + 1)
 end_define
 
 begin_define
@@ -405,8 +469,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPTION_TBSS
+name|OPTION_TASK_LINK
 value|(OPTION_SYMBOLIC + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTION_TBSS
+value|(OPTION_TASK_LINK + 1)
 end_define
 
 begin_define
@@ -1725,6 +1796,26 @@ block|}
 block|,
 block|{
 block|{
+literal|"no-warn-mismatch"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_NO_WARN_MISMATCH
+block|}
+block|,
+literal|'\0'
+block|,
+name|NULL
+block|,
+literal|"Don't warn about mismatched input files"
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
 literal|"no-whole-archive"
 block|,
 name|no_argument
@@ -2066,6 +2157,26 @@ block|}
 block|,
 block|{
 block|{
+literal|"task-link"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+name|OPTION_TASK_LINK
+block|}
+block|,
+literal|'\0'
+block|,
+literal|"SYMBOL"
+block|,
+literal|"Do task level linking"
+block|,
+name|TWO_DASHES
+block|}
+block|,
+block|{
+block|{
 literal|"traditional-format"
 block|,
 name|no_argument
@@ -2372,7 +2483,7 @@ begin_define
 define|#
 directive|define
 name|OPTION_COUNT
-value|(sizeof ld_options / sizeof ld_options[0])
+value|((int) (sizeof ld_options / sizeof ld_options[0]))
 end_define
 
 begin_function
@@ -2428,6 +2539,9 @@ name|OPTION_COUNT
 operator|+
 literal|1
 index|]
+decl_stmt|;
+name|int
+name|last_optind
 decl_stmt|;
 comment|/* Starting the short option string with '-' is for programs that      expect options and other ARGV-elements in any order and that care about      the ordering of the two.  We describe each non-option ARGV-element      as if it were the argument of an option with character code 1.  */
 name|shortopts
@@ -2633,6 +2747,10 @@ operator|||
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|argv
 index|[
 name|i
@@ -2656,6 +2774,11 @@ operator|*
 operator|)
 literal|"--shared"
 expr_stmt|;
+name|last_optind
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 while|while
 condition|(
 literal|1
@@ -2668,6 +2791,14 @@ decl_stmt|;
 name|int
 name|optc
 decl_stmt|;
+comment|/* Using last_optind lets us avoid calling ldemul_parse_args 	 multiple times on a single option, which would lead to 	 confusion in the internal static variables maintained by 	 getopt.  This could otherwise happen for an argument like 	 -nx, in which the -n is parsed as a single option, and we 	 loop around to pick up the -x.  */
+if|if
+condition|(
+name|optind
+operator|!=
+name|last_optind
+condition|)
+block|{
 if|if
 condition|(
 name|ldemul_parse_args
@@ -2678,6 +2809,11 @@ name|argv
 argument_list|)
 condition|)
 continue|continue;
+name|last_optind
+operator|=
+name|optind
+expr_stmt|;
+block|}
 name|optc
 operator|=
 name|getopt_long_only
@@ -3340,6 +3476,16 @@ name|false
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_NO_WARN_MISMATCH
+case|:
+name|command_line
+operator|.
+name|warn_mismatch
+operator|=
+name|false
+expr_stmt|;
+break|break;
+case|case
 name|OPTION_NOINHIBIT_EXEC
 case|:
 name|force_make_executable
@@ -3784,6 +3930,16 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+case|case
+name|OPTION_TASK_LINK
+case|:
+name|link_info
+operator|.
+name|task_link
+operator|=
+name|true
+expr_stmt|;
+comment|/* Fall through - do an implied -r option.  */
 case|case
 name|OPTION_UR
 case|:
@@ -4232,7 +4388,7 @@ name|strchr
 argument_list|(
 name|dirlist_ptr
 argument_list|,
-literal|':'
+name|PATH_SEPARATOR
 argument_list|)
 expr_stmt|;
 if|if
@@ -4844,7 +5000,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nReport bugs to bug-gnu-utils@prep.ai.mit.edu\n"
+literal|"\nReport bugs to bug-gnu-utils@gnu.org\n"
 argument_list|)
 expr_stmt|;
 block|}

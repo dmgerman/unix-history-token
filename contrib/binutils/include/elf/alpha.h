@@ -20,6 +20,32 @@ name|_ELF_ALPHA_H
 end_define
 
 begin_comment
+comment|/* Processor specific flags for the ELF header e_flags field.  */
+end_comment
+
+begin_comment
+comment|/* All addresses must be below 2GB.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_ALPHA_32BIT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* All relocations needed for relaxation with code movement are present.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_ALPHA_CANRELAX
+value|0x00000002
+end_define
+
+begin_comment
 comment|/* Processor specific section flags.  */
 end_comment
 

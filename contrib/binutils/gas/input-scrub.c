@@ -974,6 +974,24 @@ operator|&
 name|from_sb
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|from
+operator|->
+name|len
+operator|>=
+literal|1
+operator|&&
+name|from
+operator|->
+name|ptr
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\n'
+condition|)
+block|{
 comment|/* Add the sentinel required by read.c.  */
 name|sb_add_char
 argument_list|(
@@ -983,6 +1001,7 @@ argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
+block|}
 name|sb_add_sb
 argument_list|(
 operator|&
@@ -1455,11 +1474,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *			new_logical_line()  *  * Tells us what the new logical line number and file are.  * If the line_number is -1, we don't change the current logical line  * number.  If it is -2, we decrement the logical line number (this is  * to support the .appfile pseudo-op inserted into the stream by  * do_scrub_chars).  * If the fname is NULL, we don't change the current logical file name.  */
+comment|/*  *			new_logical_line()  *  * Tells us what the new logical line number and file are.  * If the line_number is -1, we don't change the current logical line  * number.  If it is -2, we decrement the logical line number (this is  * to support the .appfile pseudo-op inserted into the stream by  * do_scrub_chars).  * If the fname is NULL, we don't change the current logical file name.  * Returns nonzero if the filename actually changes.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|new_logical_line
 parameter_list|(
 name|fname
@@ -1475,17 +1494,6 @@ name|int
 name|line_number
 decl_stmt|;
 block|{
-if|if
-condition|(
-name|fname
-condition|)
-block|{
-name|logical_input_file
-operator|=
-name|fname
-expr_stmt|;
-block|}
-comment|/* if we have a file name */
 if|if
 condition|(
 name|line_number
@@ -1511,6 +1519,36 @@ condition|)
 operator|--
 name|logical_input_line
 expr_stmt|;
+if|if
+condition|(
+name|fname
+operator|&&
+operator|(
+name|logical_input_file
+operator|==
+name|NULL
+operator|||
+name|strcmp
+argument_list|(
+name|logical_input_file
+argument_list|,
+name|fname
+argument_list|)
+operator|)
+condition|)
+block|{
+name|logical_input_file
+operator|=
+name|fname
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+else|else
+return|return
+literal|0
+return|;
 block|}
 end_function
 

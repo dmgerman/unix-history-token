@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.h - global header file    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* as.h - global header file    Copyright (C) 1987, 90, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -52,18 +52,50 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|alloca
-end_undef
+end_ifndef
 
-begin_define
-define|#
-directive|define
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
 name|alloca
-value|__builtin_alloca
-end_define
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|alloca
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -131,6 +163,7 @@ argument_list|)
 end_if
 
 begin_function_decl
+specifier|extern
 name|char
 modifier|*
 name|alloca
@@ -144,6 +177,7 @@ directive|else
 end_else
 
 begin_function_decl
+specifier|extern
 name|void
 modifier|*
 name|alloca
@@ -669,18 +703,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is needed for VMS with DEC C.  */
+comment|/* This is needed for VMS.  */
 end_comment
 
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
@@ -1545,6 +1573,12 @@ name|rs_machine_dependent
 block|,
 comment|/* .space directive with expression operand that needs to be computed        later.  Similar to rs_org, but different.        fr_symbol: operand        1 variable char: fill character  */
 name|rs_space
+block|,
+comment|/* A DWARF leb128 value; only ELF uses this.  The subtype is 0 for        unsigned, 1 for signed.  */
+name|rs_leb128
+block|,
+comment|/* Exception frame information which we may be able to optimize.  */
+name|rs_cfa
 block|}
 enum|;
 end_enum
@@ -1582,194 +1616,6 @@ end_typedef
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* frags.c */
-end_comment
-
-begin_comment
-comment|/*  * A code fragment (frag) is some known number of chars, followed by some  * unknown number of chars. Typically the unknown number of chars is an  * instruction address whose size is yet unknown. We always know the greatest  * possible size the unknown number of chars may become, and reserve that  * much room at the end of the frag.  * Once created, frags do not change address during assembly.  * We chain the frags in (a) forward-linked list(s). The object-file address  * of the 1st char of a frag is generally not known until after relax().  * Many things at assembly time describe an address by {object-file-address  * of a particular frag}+offset.   BUG: it may be smarter to have a single pointer off to various different  notes for different frag kinds. See how code pans  */
-end_comment
-
-begin_struct
-struct|struct
-name|frag
-block|{
-comment|/* Object file address. */
-name|addressT
-name|fr_address
-decl_stmt|;
-comment|/* Chain forward; ascending address order.  Rooted in frch_root. */
-name|struct
-name|frag
-modifier|*
-name|fr_next
-decl_stmt|;
-comment|/* (Fixed) number of chars we know we have.  May be 0. */
-name|offsetT
-name|fr_fix
-decl_stmt|;
-comment|/* (Variable) number of chars after above.  May be 0. */
-name|offsetT
-name|fr_var
-decl_stmt|;
-comment|/* For variable-length tail. */
-name|struct
-name|symbol
-modifier|*
-name|fr_symbol
-decl_stmt|;
-comment|/* For variable-length tail. */
-name|offsetT
-name|fr_offset
-decl_stmt|;
-comment|/* Points to opcode low addr byte, for relaxation.  */
-name|char
-modifier|*
-name|fr_opcode
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_LISTING
-name|struct
-name|list_info_struct
-modifier|*
-name|line
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* What state is my tail in? */
-name|relax_stateT
-name|fr_type
-decl_stmt|;
-name|relax_substateT
-name|fr_subtype
-decl_stmt|;
-union|union
-block|{
-comment|/* These are needed only on the NS32K machines.  But since we don't        include targ-cpu.h until after this structure has been defined,        we can't really conditionalize it.  This code should be        rearranged a bit to make that possible.  */
-struct|struct
-block|{
-name|char
-name|pcrel_adjust
-decl_stmt|,
-name|bsr
-decl_stmt|;
-block|}
-name|ns32k
-struct|;
-ifdef|#
-directive|ifdef
-name|USING_CGEN
-comment|/* Don't include this unless using CGEN to keep frag size down.  */
-struct|struct
-block|{
-specifier|const
-name|struct
-name|cgen_insn
-modifier|*
-name|insn
-decl_stmt|;
-name|unsigned
-name|char
-name|opindex
-decl_stmt|,
-name|opinfo
-decl_stmt|;
-block|}
-name|cgen
-struct|;
-endif|#
-directive|endif
-block|}
-name|fr_targ
-union|;
-comment|/* Where the frag was created, or where it became a variant frag.  */
-name|char
-modifier|*
-name|fr_file
-decl_stmt|;
-name|unsigned
-name|int
-name|fr_line
-decl_stmt|;
-comment|/* Data begins here.  */
-name|char
-name|fr_literal
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|SIZEOF_STRUCT_FRAG
-define|\
-value|((char *)zero_address_frag.fr_literal-(char *)&zero_address_frag)
-end_define
-
-begin_comment
-comment|/* We want to say fr_literal[0] above. */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|frag
-name|fragS
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Current frag we are building.  This frag is incomplete.  It is, however,    included in frchain_now.  The fr_fix field is bogus; instead, use:    obstack_next_free(&frags)-frag_now->fr_literal.  */
-end_comment
-
-begin_decl_stmt
-name|COMMON
-name|fragS
-modifier|*
-name|frag_now
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|frag_now_fix
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* For foreign-segment symbol fixups. */
-end_comment
-
-begin_decl_stmt
-name|COMMON
-name|fragS
-name|zero_address_frag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* For local common (N_BSS segment) fixups. */
-end_comment
-
-begin_decl_stmt
-name|COMMON
-name|fragS
-name|bss_address_frag
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* main program "as.c" (command arguments etc) */
@@ -1931,6 +1777,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* True if local absolute symbols are to be stripped.  */
+end_comment
+
+begin_decl_stmt
+name|COMMON
+name|int
+name|flag_strip_local_absolute
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if we should generate a traditional format object file.  */
+end_comment
+
+begin_decl_stmt
+name|COMMON
+name|int
+name|flag_traditional_format
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* name of emitted object file */
 end_comment
 
@@ -1986,6 +1854,34 @@ name|int
 name|listing
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Type of debugging information we should generate.  We currently    only support stabs and ECOFF.  */
+end_comment
+
+begin_enum
+enum|enum
+name|debug_info_type
+block|{
+name|DEBUG_NONE
+block|,
+name|DEBUG_STABS
+block|,
+name|DEBUG_ECOFF
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|debug_info_type
+name|debug_type
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Maximum level of macro nesting.  */
@@ -2149,6 +2045,37 @@ begin_comment
 comment|/* for use with -Wformat */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__GNUC_MINOR__
+operator|<
+literal|6
+end_if
+
+begin_comment
+comment|/* Support for double underscores in attribute names was added in gcc    2.6, so avoid them if we are using an earlier version.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__printf__
+value|printf
+end_define
+
+begin_define
+define|#
+directive|define
+name|__format__
+value|format
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2156,7 +2083,8 @@ name|PRINTF_LIKE
 parameter_list|(
 name|FCN
 parameter_list|)
-value|void FCN (const char *format, ...) \ 					__attribute__ ((format (printf, 1, 2)))
+define|\
+value|void FCN (const char *format, ...) \     __attribute__ ((__format__ (__printf__, 1, 2)))
 end_define
 
 begin_define
@@ -2166,7 +2094,8 @@ name|PRINTF_WHERE_LIKE
 parameter_list|(
 name|FCN
 parameter_list|)
-value|void FCN (char *file, unsigned int line, \ 					  const char *format, ...) \ 					__attribute__ ((format (printf, 3, 4)))
+define|\
+value|void FCN (char *file, unsigned int line, const char *format, ...) \     __attribute__ ((__format__ (__printf__, 3, 4)))
 end_define
 
 begin_else
@@ -2175,7 +2104,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* ANSI C with stdarg, but not GNU C */
+comment|/* __GNUC__< 2 || defined(VMS) */
 end_comment
 
 begin_define
@@ -2203,13 +2132,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __GNUC__< 2 || defined(VMS) */
+end_comment
+
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* not using stdarg */
+comment|/* ! USE_STDARG */
 end_comment
 
 begin_define
@@ -2236,6 +2169,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! USE_STDARG */
+end_comment
 
 begin_expr_stmt
 name|PRINTF_LIKE
@@ -2717,7 +2654,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|new_logical_line
 name|PARAMS
 argument_list|(
@@ -2840,6 +2777,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|void
+name|start_dependencies
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|register_dependency
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|print_dependencies
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|expressionS
@@ -2863,6 +2838,14 @@ struct_decl|struct
 name|relax_type
 struct_decl|;
 end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|frag
+name|fragS
+typedef|;
+end_typedef
 
 begin_ifdef
 ifdef|#
@@ -2898,6 +2881,63 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|check_eh_frame
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|expressionS
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|eh_frame_estimate_size_before_relax
+name|PARAMS
+argument_list|(
+operator|(
+name|fragS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|eh_frame_relax_frag
+name|PARAMS
+argument_list|(
+operator|(
+name|fragS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|eh_frame_convert_frag
+name|PARAMS
+argument_list|(
+operator|(
+name|fragS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -3019,6 +3059,38 @@ define|#
 directive|define
 name|LOCAL_LABELS_FB
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TEXT_SECTION_NAME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TEXT_SECTION_NAME
+value|".text"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_SECTION_NAME
+value|".data"
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSS_SECTION_NAME
+value|".bss"
 end_define
 
 begin_endif

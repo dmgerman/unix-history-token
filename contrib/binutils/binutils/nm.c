@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* nm.c -- Describe symbol table of a rel file.    Copyright 1991, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -1261,23 +1261,33 @@ literal|"%04x"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|target
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* IMPORT */
+comment|/* Used to cache the line numbers for a BFD.  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|char
+specifier|static
+name|bfd
 modifier|*
-name|program_name
+name|lineno_cache_bfd
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|char
+specifier|static
+name|bfd
 modifier|*
-name|target
+name|lineno_cache_rel_bfd
 decl_stmt|;
 end_decl_stmt
 
@@ -1588,7 +1598,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"Report bugs to bug-gnu-utils@prep.ai.mit.edu\n"
+literal|"Report bugs to bug-gnu-utils@gnu.org\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2364,11 +2374,21 @@ name|last_arfile
 operator|!=
 name|NULL
 condition|)
+block|{
 name|bfd_close
 argument_list|(
 name|last_arfile
 argument_list|)
 expr_stmt|;
+name|lineno_cache_bfd
+operator|=
+name|NULL
+expr_stmt|;
+name|lineno_cache_rel_bfd
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|last_arfile
 operator|=
 name|arfile
@@ -2380,11 +2400,21 @@ name|last_arfile
 operator|!=
 name|NULL
 condition|)
+block|{
 name|bfd_close
 argument_list|(
 name|last_arfile
 argument_list|)
 expr_stmt|;
+name|lineno_cache_bfd
+operator|=
+name|NULL
+expr_stmt|;
+name|lineno_cache_rel_bfd
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2531,6 +2561,14 @@ name|bfd_fatal
 argument_list|(
 name|filename
 argument_list|)
+expr_stmt|;
+name|lineno_cache_bfd
+operator|=
+name|NULL
+expr_stmt|;
+name|lineno_cache_rel_bfd
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 name|retval
@@ -3500,6 +3538,8 @@ decl_stmt|;
 name|asymbol
 modifier|*
 name|sym
+init|=
+name|NULL
 decl_stmt|;
 name|asymbol
 modifier|*
@@ -4943,11 +4983,6 @@ name|line_numbers
 condition|)
 block|{
 specifier|static
-name|bfd
-modifier|*
-name|cache_bfd
-decl_stmt|;
-specifier|static
 name|asymbol
 modifier|*
 modifier|*
@@ -4974,7 +5009,7 @@ if|if
 condition|(
 name|abfd
 operator|!=
-name|cache_bfd
+name|lineno_cache_bfd
 operator|&&
 name|syms
 operator|!=
@@ -5057,7 +5092,7 @@ name|abfd
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cache_bfd
+name|lineno_cache_bfd
 operator|=
 name|abfd
 expr_stmt|;
@@ -5073,11 +5108,6 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-specifier|static
-name|bfd
-modifier|*
-name|cache_rel_bfd
-decl_stmt|;
 specifier|static
 name|asection
 modifier|*
@@ -5096,10 +5126,13 @@ name|long
 modifier|*
 name|relcount
 decl_stmt|;
+specifier|static
 name|unsigned
 name|int
 name|seccount
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|i
 decl_stmt|;
 specifier|const
@@ -5108,18 +5141,11 @@ modifier|*
 name|symname
 decl_stmt|;
 comment|/* For an undefined symbol, we try to find a reloc for the              symbol, and print the line number of the reloc.  */
-name|seccount
-operator|=
-name|bfd_count_sections
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|abfd
 operator|!=
-name|cache_rel_bfd
+name|lineno_cache_rel_bfd
 operator|&&
 name|relocs
 operator|!=
@@ -5195,6 +5221,13 @@ name|struct
 name|get_relocs_info
 name|info
 decl_stmt|;
+name|seccount
+operator|=
+name|bfd_count_sections
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
 name|secs
 operator|=
 operator|(
@@ -5280,7 +5313,7 @@ operator|&
 name|info
 argument_list|)
 expr_stmt|;
-name|cache_rel_bfd
+name|lineno_cache_rel_bfd
 operator|=
 name|abfd
 expr_stmt|;
@@ -5306,8 +5339,7 @@ name|i
 operator|++
 control|)
 block|{
-name|unsigned
-name|int
+name|long
 name|j
 decl_stmt|;
 for|for

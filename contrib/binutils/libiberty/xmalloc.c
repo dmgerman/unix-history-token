@@ -142,8 +142,23 @@ literal|""
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
+end_if
+
 begin_comment
-comment|/* The initial sbrk, set when the program name is set.  */
+comment|/* The initial sbrk, set when the program name is set. Not used for win32    ports other than cygwin32.  */
 end_comment
 
 begin_decl_stmt
@@ -155,6 +170,11 @@ init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -172,6 +192,19 @@ name|name
 operator|=
 name|s
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
+comment|/* Win32 ports other than cygwin32 don't have brk() */
 if|if
 condition|(
 name|first_break
@@ -189,6 +222,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! _WIN32 || __CYGWIN32 __ */
 block|}
 end_function
 
@@ -228,6 +264,18 @@ operator|!
 name|newmem
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
 specifier|extern
 name|char
 modifier|*
@@ -303,6 +351,33 @@ operator|)
 name|allocated
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n%s%sCan not allocate %lu bytes\n"
+argument_list|,
+name|name
+argument_list|,
+operator|*
+name|name
+condition|?
+literal|": "
+else|:
+literal|""
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ! _WIN32 || __CYGWIN32 __ */
 name|xexit
 argument_list|(
 literal|1
@@ -373,6 +448,9 @@ operator|!
 name|newmem
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|__MINGW32__
 specifier|extern
 name|char
 modifier|*
@@ -448,6 +526,33 @@ operator|)
 name|allocated
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n%s%sCan not reallocate %lu bytes\n"
+argument_list|,
+name|name
+argument_list|,
+operator|*
+name|name
+condition|?
+literal|": "
+else|:
+literal|""
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __MINGW32__ */
 name|xexit
 argument_list|(
 literal|1

@@ -30,13 +30,22 @@ begin_comment
 comment|/* A floatformat consists of a sign bit, an exponent and a mantissa.  Once the    bytes are concatenated according to the byteorder flag, then each of those    fields is contiguous.  We number the bits with 0 being the most significant    (i.e. BITS_BIG_ENDIAN type numbering), and specify which bits each field    contains with the *_start and *_len fields.  */
 end_comment
 
+begin_comment
+comment|/* What is the order of the bytes. */
+end_comment
+
 begin_enum
 enum|enum
 name|floatformat_byteorders
 block|{
+comment|/* Standard little endian byte order.      EX: 1.2345678e10 => 00 00 80 c5 e0 fe 06 42 */
 name|floatformat_little
 block|,
+comment|/* Standard big endian byte order.      EX: 1.2345678e10 => 42 06 fe e0 c5 80 00 00 */
 name|floatformat_big
+block|,
+comment|/* Little endian byte order but big endian word order.      EX: 1.2345678e10 => e0 fe 06 42 00 00 80 c5 */
+name|floatformat_littlebyte_bigword
 block|}
 enum|;
 end_enum
@@ -142,6 +151,19 @@ specifier|const
 name|struct
 name|floatformat
 name|floatformat_ieee_double_little
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* floatformat for ARM IEEE double, little endian bytes and big endian words */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|floatformat
+name|floatformat_ieee_double_littlebyte_bigword
 decl_stmt|;
 end_decl_stmt
 

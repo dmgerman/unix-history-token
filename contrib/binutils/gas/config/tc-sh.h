@@ -46,6 +46,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Whether -small was used.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sh_small
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Don't try to break words.  */
 end_comment
 
@@ -54,6 +65,33 @@ define|#
 directive|define
 name|WORKING_DOT_WORD
 end_define
+
+begin_comment
+comment|/* We require .long, et. al., to be aligned correctly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|md_cons_align
+parameter_list|(
+name|nbytes
+parameter_list|)
+value|sh_cons_align (nbytes)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sh_cons_align
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* When relaxing, we need to generate relocations for alignment    directives.  */
@@ -454,7 +492,7 @@ parameter_list|(
 name|SEG
 parameter_list|)
 define|\
-value|(strncmp (obj_segment_name (SEG), ".stabstr", 8) == 0		\    ? 0								\    : ((strncmp (obj_segment_name (SEG), ".stab", 5) == 0	\        || strcmp (obj_segment_name (SEG), ".ctors") == 0	\        || strcmp (obj_segment_name (SEG), ".dtors") == 0)	\       ? 2							\       : 4))
+value|(strncmp (obj_segment_name (SEG), ".stabstr", 8) == 0		\    ? 0								\    : ((strncmp (obj_segment_name (SEG), ".stab", 5) == 0	\        || strcmp (obj_segment_name (SEG), ".ctors") == 0	\        || strcmp (obj_segment_name (SEG), ".dtors") == 0)	\       ? 2							\       : (sh_small ? 2 : 4)))
 end_define
 
 begin_endif

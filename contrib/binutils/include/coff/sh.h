@@ -1025,6 +1025,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R_SH_SWITCH8
+value|33
+end_define
+
+begin_comment
+comment|/* 8 bit switch table entry */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|R_SH_SWITCH16
 value|25
 end_define
@@ -1128,6 +1139,10 @@ end_define
 
 begin_comment
 comment|/* label */
+end_comment
+
+begin_comment
+comment|/* NB: R_SH_SWITCH8 is 33 */
 end_comment
 
 end_unit

@@ -216,5 +216,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Just return the given address.  */
+end_comment
+
+begin_function
+name|int
+name|generic_symbol_at_address
+parameter_list|(
+name|addr
+parameter_list|,
+name|info
+parameter_list|)
+name|bfd_vma
+name|addr
+decl_stmt|;
+name|struct
+name|disassemble_info
+modifier|*
+name|info
+decl_stmt|;
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 end_unit
 

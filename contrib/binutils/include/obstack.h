@@ -1051,7 +1051,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|_obstack_begin_1 ((h), (size), (alignment), \ 		    (void *(*) (long)) (chunkfun), (void (*) (void *)) (freefun), (arg))
+value|_obstack_begin_1 ((h), (size), (alignment), \ 		    (void *(*) (void *, long)) (chunkfun), \ 		    (void (*) (void *, void *)) (freefun), (arg))
 end_define
 
 begin_define
@@ -1064,7 +1064,7 @@ parameter_list|,
 name|newchunkfun
 parameter_list|)
 define|\
-value|((h) -> chunkfun = (struct _obstack_chunk *(*)(long)) (newchunkfun))
+value|((h) -> chunkfun = (struct _obstack_chunk *(*)(void *, long)) (newchunkfun))
 end_define
 
 begin_define
@@ -1077,7 +1077,7 @@ parameter_list|,
 name|newfreefun
 parameter_list|)
 define|\
-value|((h) -> freefun = (void (*)(void *)) (newfreefun))
+value|((h) -> freefun = (void (*)(void *, struct _obstack_chunk *)) (newfreefun))
 end_define
 
 begin_else

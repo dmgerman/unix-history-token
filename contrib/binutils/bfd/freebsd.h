@@ -151,7 +151,7 @@ file|"libaout.h"
 end_include
 
 begin_comment
-comment|/* On FreeBSD, the magic number is always in ntohl's "network" (big-endian)    format.  I think.  */
+comment|/* On FreeBSD, the magic number is always in i386 (little-endian)    format.  I think.  */
 end_comment
 
 begin_define
@@ -161,7 +161,7 @@ name|SWAP_MAGIC
 parameter_list|(
 name|ext
 parameter_list|)
-value|bfd_getb32 (ext)
+value|bfd_getl32 (ext)
 end_define
 
 begin_define

@@ -836,7 +836,7 @@ name|arelent
 operator|*
 argument_list|)
 decl_stmt|;
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1128,7 +1128,7 @@ operator|==
 literal|'G'
 condition|)
 block|{
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1164,7 +1164,7 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1244,7 +1244,7 @@ literal|0
 condition|)
 block|{
 comment|/* We use abfd->filename in this initial line, 			       in case filename is a .h file or something 			       similarly unhelpful.  */
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1318,7 +1318,7 @@ name|linenumber
 argument_list|)
 expr_stmt|;
 else|else
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1353,7 +1353,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1374,7 +1374,7 @@ name|linenumber
 operator|!=
 literal|0
 condition|)
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1391,7 +1391,7 @@ name|linenumber
 operator|!=
 literal|0
 condition|)
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1405,7 +1405,7 @@ name|linenumber
 argument_list|)
 expr_stmt|;
 else|else
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1424,7 +1424,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|finfo
+name|lfinfo
 argument_list|(
 name|fp
 argument_list|,
@@ -1901,7 +1901,7 @@ name|void
 if|#
 directive|if
 name|USE_STDARG
-name|finfo
+name|lfinfo
 parameter_list|(
 name|FILE
 modifier|*
@@ -1916,7 +1916,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
-function|finfo
+function|lfinfo
 parameter_list|(
 name|va_alist
 parameter_list|)

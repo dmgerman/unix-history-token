@@ -105,6 +105,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DMGL_JAVA
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Demangle as Java rather than C++. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DMGL_AUTO
 value|(1<< 8)
 end_define

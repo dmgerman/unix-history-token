@@ -1,5 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* Name of package.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PACKAGE
+end_undef
+
+begin_comment
+comment|/* Version of package.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|VERSION
+end_undef
+
+begin_comment
 comment|/* Should gas use high-level BFD interfaces?  */
 end_comment
 
@@ -120,19 +140,13 @@ name|MANY_SEGMENTS
 end_undef
 
 begin_comment
-comment|/* Needed only for sparc configuration.  */
+comment|/* The configure script defines this for some targets based on the    target name used.  It is not always defined.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|SPARC_V9
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|SPARC_ARCH64
+name|TARGET_BYTES_BIG_ENDIAN
 end_undef
 
 begin_comment
@@ -237,6 +251,46 @@ begin_undef
 undef|#
 directive|undef
 name|M88KCOFF
+end_undef
+
+begin_comment
+comment|/* Using cgen code?  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USING_CGEN
+end_undef
+
+begin_comment
+comment|/* Needed only for sparc configuration.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DEFAULT_ARCH
+end_undef
+
+begin_comment
+comment|/* Needed only for PowerPC Solaris.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_SOLARIS_COMMENT
+end_undef
+
+begin_comment
+comment|/* Needed only for SCO 5.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SCO_ELF
 end_undef
 
 end_unit

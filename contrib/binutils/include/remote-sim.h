@@ -20,63 +20,44 @@ name|REMOTE_SIM_H
 value|1
 end_define
 
-begin_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 comment|/* This file is used when building stand-alone simulators, so isolate this    file from gdb.  */
-end_comment
-
-begin_comment
 comment|/* Pick up CORE_ADDR_TYPE if defined (from gdb), otherwise use same value as    gdb does (unsigned int - from defs.h).  */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|CORE_ADDR_TYPE
-end_ifndef
-
-begin_typedef
 typedef|typedef
 name|unsigned
 name|int
 name|SIM_ADDR
 typedef|;
-end_typedef
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_typedef
 typedef|typedef
 name|CORE_ADDR_TYPE
 name|SIM_ADDR
 typedef|;
-end_typedef
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* Semi-opaque type used as result of sim_open and passed back to all    other routines.  "desc" is short for "descriptor".    It is up to each simulator to define `sim_state'.  */
-end_comment
-
-begin_typedef
 typedef|typedef
 name|struct
 name|sim_state
 modifier|*
 name|SIM_DESC
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* Values for `kind' arg to sim_open.  */
-end_comment
-
-begin_typedef
 typedef|typedef
 enum|enum
 block|{
@@ -88,13 +69,7 @@ comment|/* simulator used by debugger (gdb) */
 block|}
 name|SIM_OPEN_KIND
 typedef|;
-end_typedef
-
-begin_comment
 comment|/* Return codes from various functions.  */
-end_comment
-
-begin_typedef
 typedef|typedef
 enum|enum
 block|{
@@ -105,20 +80,27 @@ block|,
 name|SIM_RC_OK
 init|=
 literal|1
+block|,
+name|SIM_RC_UNKNOWN_BREAKPOINT
+init|=
+literal|2
+block|,
+name|SIM_RC_INSUFFICIENT_RESOURCES
+init|=
+literal|3
+block|,
+name|SIM_RC_DUPLICATE_BREAKPOINT
+init|=
+literal|4
 block|}
 name|SIM_RC
 typedef|;
-end_typedef
-
-begin_comment
+comment|/* The bfd struct, as an opaque type.  */
+struct_decl|struct
+name|_bfd
+struct_decl|;
 comment|/* Main simulator entry points.  */
-end_comment
-
-begin_comment
-comment|/* Initialize the simulator.  This function is called when the simulator    is selected from the gdb command line.    KIND specifies how the simulator will be used.  Currently there are only    two kinds: standalone and debug.    ARGV is passed from the command line and can be used to select whatever    run time options the simulator provides.    ARGV is the standard NULL terminated array of pointers, with argv[0]    being the program name.    The result is a descriptor that must be passed back to the other sim_foo    functions.  */
-end_comment
-
-begin_decl_stmt
+comment|/* Create a fully initialized simulator instance.     (This function is called when the simulator is selected from the    gdb command line.)     KIND specifies how the simulator shall be used.  Currently there    are only two kinds: stand-alone and debug.     CALLBACK specifies a standard host callback (defined in callback.h).     ABFD, when non NULL, designates a target program.  The program is    not loaded.     ARGV is a standard ARGV pointer such as that passed from the    command line.  The syntax of the argument list is is assumed to be    ``SIM-PROG { SIM-OPTION } [ TARGET-PROGRAM { TARGET-OPTION } ]''.    The trailing TARGET-PROGRAM and args are only valid for a    stand-alone simulator.     On success, the result is a non NULL descriptor that shall be    passed to the other sim_foo functions.  While the simulator    configuration can be parameterized by (in decreasing precedence)    ARGV's SIM-OPTION, ARGV's TARGET-PROGRAM and the ABFD argument, the    successful creation of the simulator shall not dependent on the    presence of any of these arguments/options.     Hardware simulator: The created simulator shall be sufficiently    initialized to handle, with out restrictions any client requests    (including memory reads/writes, register fetch/stores and a    resume).     Process simulator: that process is not created until a call to    sim_create_inferior.  FIXME: What should the state of the simulator    be? */
 name|SIM_DESC
 name|sim_open
 name|PARAMS
@@ -127,6 +109,16 @@ operator|(
 name|SIM_OPEN_KIND
 name|kind
 operator|,
+expr|struct
+name|host_callback_struct
+operator|*
+name|callback
+operator|,
+expr|struct
+name|_bfd
+operator|*
+name|abfd
+operator|,
 name|char
 operator|*
 operator|*
@@ -134,13 +126,7 @@ name|argv
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Terminate usage of the simulator.  This may involve freeing target memory    and closing any open files and mmap'd areas.  You cannot assume sim_kill    has already been called.    QUITTING is non-zero if we cannot hang on errors.  */
-end_comment
-
-begin_decl_stmt
+comment|/* Destory a simulator instance.     QUITTING is non-zero if we cannot hang on errors.     This may involve freeing target memory and closing any open files    and mmap'd areas.  You cannot assume sim_kill has already been    called. */
 name|void
 name|sim_close
 name|PARAMS
@@ -154,14 +140,8 @@ name|quitting
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Load program PROG into the simulator.    Return non-zero if you wish the caller to handle it    (it is done this way because most simulators can use gr_load_image,    but defining it as a callback seems awkward).  */
-end_comment
-
-begin_decl_stmt
-name|int
+comment|/* Load program PROG into the simulators memory.     If ABFD is non-NULL, the bfd for the file has already been opened.    The result is a return code indicating success.     Hardware simulator: Normally, each program section is written into    memory according to that sections LMA using physical (direct)    addressing.  The exception being systems, such as PPC/CHRP, which    support more complicated program loaders.  A call to this function    should not effect the state of the processor registers.  Multiple    calls to this function are permitted and have an accumulative    effect.     Process simulator: Calls to this function may be ignored.     FIXME: Most hardware simulators load the image at the VMA using    virtual addressing.     FIXME: For some hardware targets, before a loaded program can be    executed, it requires the manipulation of VM registers and tables.    Such manipulation should probably (?) occure in    sim_create_inferior. */
+name|SIM_RC
 name|sim_load
 name|PARAMS
 argument_list|(
@@ -173,19 +153,18 @@ name|char
 operator|*
 name|prog
 operator|,
+expr|struct
+name|_bfd
+operator|*
+name|abfd
+operator|,
 name|int
 name|from_tty
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Prepare to run the simulated program.    START_ADDRESS is, yes, you guessed it, the start address of the program.    ARGV and ENV are NULL terminated lists of pointers.    Gdb will set the start address via sim_store_register as well, but    standalone versions of existing simulators are not set up to cleanly call    sim_store_register, so the START_ADDRESS argument is there as a    workaround.  */
-end_comment
-
-begin_decl_stmt
-name|void
+comment|/* Prepare to run the simulated program.     ABFD, if not NULL, provides initial processor state information.    ARGV and ENV, if non NULL, are NULL terminated lists of pointers.     Hardware simulator: This function shall initialize the processor    registers to a known value.  The program counter and possibly stack    pointer shall be set using information obtained from ABFD (or    hardware reset defaults).  ARGV and ENV, dependant on the target    ABI, may be written to memory.     Process simulator: After a call to this function, a new process    instance shall exist. The TEXT, DATA, BSS and stack regions shall    all be initialized, ARGV and ENV shall be written to process    address space (according to the applicable ABI) and the program    counter and stack pointer set accordingly. */
+name|SIM_RC
 name|sim_create_inferior
 name|PARAMS
 argument_list|(
@@ -193,8 +172,10 @@ operator|(
 name|SIM_DESC
 name|sd
 operator|,
-name|SIM_ADDR
-name|start_address
+expr|struct
+name|_bfd
+operator|*
+name|abfd
 operator|,
 name|char
 operator|*
@@ -208,30 +189,7 @@ name|env
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Kill the running program.    This may involve closing any open files and deleting any mmap'd areas.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|sim_kill
-name|PARAMS
-argument_list|(
-operator|(
-name|SIM_DESC
-name|sd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Read LENGTH bytes of the simulated program's memory and store in BUF.    Result is number of bytes read, or zero if error.  */
-end_comment
-
-begin_decl_stmt
+comment|/* Fetch LENGTH bytes of the simulated program's memory.  Start fetch    at virtual address MEM and store in BUF.  Result is number of bytes    read, or zero if error.  */
 name|int
 name|sim_read
 name|PARAMS
@@ -253,13 +211,7 @@ name|length
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Store LENGTH bytes from BUF in the simulated program's memory.    Result is number of bytes write, or zero if error.  */
-end_comment
-
-begin_decl_stmt
+comment|/* Store LENGTH bytes from BUF into the simulated program's    memory. Store bytes starting at virtual address MEM. Result is    number of bytes write, or zero if error.  */
 name|int
 name|sim_write
 name|PARAMS
@@ -281,14 +233,8 @@ name|length
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Fetch register REGNO and store the raw value in BUF.  */
-end_comment
-
-begin_decl_stmt
-name|void
+comment|/* Fetch register REGNO storing its raw (target endian) value in the    LENGTH byte buffer BUF.  Return the actual size of the register or    zero if REGNO is not applicable.     Legacy implementations ignore LENGTH and always return -1.     If LENGTH does not match the size of REGNO no data is transfered    (the actual register size is still returned). */
+name|int
 name|sim_fetch_register
 name|PARAMS
 argument_list|(
@@ -303,17 +249,14 @@ name|unsigned
 name|char
 operator|*
 name|buf
+operator|,
+name|int
+name|length
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Store register REGNO from BUF (in raw format).  */
-end_comment
-
-begin_decl_stmt
-name|void
+comment|/* Store register REGNO from the raw (target endian) value in BUF.    Return the actual size of the register or zero if REGNO is not    applicable.     Legacy implementations ignore LENGTH and always return -1.     If LENGTH does not match the size of REGNO no data is transfered    (the actual register size is still returned). */
+name|int
 name|sim_store_register
 name|PARAMS
 argument_list|(
@@ -328,16 +271,13 @@ name|unsigned
 name|char
 operator|*
 name|buf
+operator|,
+name|int
+name|length
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Print some interesting information about the simulator.    VERBOSE is non-zero for the wordy version.  */
-end_comment
-
-begin_decl_stmt
+comment|/* Print whatever statistics the simulator has collected.     VERBOSE is currently unused and must always be zero.  */
 name|void
 name|sim_info
 name|PARAMS
@@ -351,16 +291,42 @@ name|verbose
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Fetch why the program stopped.    SIGRC will contain either the argument to exit() or the signal number.  */
-end_comment
-
-begin_enum
+comment|/* Run (or resume) the simulated program.  */
+name|void
+name|sim_resume
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|,
+name|int
+name|step
+operator|,
+name|int
+name|siggnal
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Asynchronous request to stop the simulation.    A nonzero return indicates that the simulator is able to handle    the request */
+name|int
+name|sim_stop
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Fetch the REASON why the program stopped.     SIM_EXITED: The program has terminated. SIGRC indicates the target    dependant exit status.     SIM_STOPPED: The program has stopped.  SIGRC uses the host's signal    numbering as a way of identifying the reaon: program interrupted by    user via a sim_stop request (SIGINT); a breakpoint instruction    (SIGTRAP); a completed single step (SIGTRAP); an internal error    condition (SIGABRT); an illegal instruction (SIGILL); Access to an    undefined memory region (SIGSEGV); Mis-aligned memory access    (SIGBUS).     SIM_SIGNALLED: The program has stopped. The simulator has    encountered target code that requires the (HOST) signal SIGRC to be    delivered to the simulated program.  Ex: `kill (getpid (),    TARGET_SIGxxx)'.  Where TARGET_SIGxxx has been translated into a    host signal.  FIXME: This is not always possible..     SIM_RUNNING, SIM_POLLING: The return of one of these values    indicates a problem internal to the simulator. */
 enum|enum
 name|sim_stop
 block|{
+name|sim_running
+block|,
+name|sim_polling
+block|,
 name|sim_exited
 block|,
 name|sim_stopped
@@ -368,9 +334,6 @@ block|,
 name|sim_signalled
 block|}
 enum|;
-end_enum
-
-begin_decl_stmt
 name|void
 name|sim_stop_reason
 name|PARAMS
@@ -390,36 +353,7 @@ name|sigrc
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Run (or resume) the program.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|sim_resume
-name|PARAMS
-argument_list|(
-operator|(
-name|SIM_DESC
-name|sd
-operator|,
-name|int
-name|step
-operator|,
-name|int
-name|siggnal
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Passthru for other commands that the simulator might support.    If SD is NULL, the command is to be interpreted as refering to    the global state, however the simulator defines that.  */
-end_comment
-
-begin_decl_stmt
+comment|/* Passthru for other commands that the simulator might support.    Simulators should be prepared to deal with any combination of NULL    or empty CMD. */
 name|void
 name|sim_do_command
 name|PARAMS
@@ -434,28 +368,156 @@ name|cmd
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Provide simulator with a standard host_callback_struct.    If SD is NULL, the command is to be interpreted as refering to    the global state, however the simulator defines that.  */
-end_comment
-
-begin_decl_stmt
-name|void
-name|sim_set_callbacks
+comment|/* Call these functions to set and clear breakpoints at ADDR. */
+name|SIM_RC
+name|sim_set_breakpoint
 name|PARAMS
 argument_list|(
 operator|(
 name|SIM_DESC
 name|sd
 operator|,
+name|SIM_ADDR
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+name|SIM_RC
+name|sim_clear_breakpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|,
+name|SIM_ADDR
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+name|SIM_RC
+name|sim_clear_all_breakpoints
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* These functions are used to enable and disable breakpoints. */
+name|SIM_RC
+name|sim_enable_breakpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|,
+name|SIM_ADDR
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+name|SIM_RC
+name|sim_disable_breakpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|,
+name|SIM_ADDR
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+name|SIM_RC
+name|sim_enable_all_breakpoints
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|)
+argument_list|)
+decl_stmt|;
+name|SIM_RC
+name|sim_disable_all_breakpoints
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Provide simulator with a default (global) host_callback_struct.    THIS PROCEDURE IS DEPRECIATED.    GDB and NRUN do not use this interface.    This procedure does not take a SIM_DESC argument as it is    used before sim_open. */
+name|void
+name|sim_set_callbacks
+name|PARAMS
+argument_list|(
+operator|(
 expr|struct
 name|host_callback_struct
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
-end_decl_stmt
+comment|/* Set the size of the simulator memory array.    THIS PROCEDURE IS DEPRECIATED.    GDB and NRUN do not use this interface.    This procedure does not take a SIM_DESC argument as it is    used before sim_open. */
+name|void
+name|sim_size
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|i
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Run a simulation with tracing enabled.    THIS PROCEDURE IS DEPRECIATED.    GDB and NRUN do not use this interface.    This procedure does not take a SIM_DESC argument as it is    used before sim_open. */
+name|int
+name|sim_trace
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Configure the size of the profile buffer.    THIS PROCEDURE IS DEPRECIATED.    GDB and NRUN do not use this interface.    This procedure does not take a SIM_DESC argument as it is    used before sim_open. */
+name|void
+name|sim_set_profile_size
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|n
+operator|)
+argument_list|)
+decl_stmt|;
+comment|/* Kill the running program.    THIS PROCEDURE IS DEPRECIATED.    GDB and NRUN do not use this interface.    This procedure will be replaced as part of the introduction of    multi-cpu simulators. */
+name|void
+name|sim_kill
+name|PARAMS
+argument_list|(
+operator|(
+name|SIM_DESC
+name|sd
+operator|)
+argument_list|)
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* i386-opcode.h -- Intel 80386 opcode table    Copyright 1989, 91, 92, 93, 94, 95, 96, 1997 Free Software Foundation.  This file is part of GAS, the GNU Assembler, and GDB, the GNU Debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* i386-opcode.h -- Intel 80386 opcode table    Copyright 1989, 91, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation.  This file is part of GAS, the GNU Assembler, and GDB, the GNU Debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -114,6 +114,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* The next instruction accepts WordReg so that `movl %gs,%esi' can be    used to move a segment register to a 32 bit register without using    a size prefix.  This will set the upper 16 bits of the 32 bit    register to an implementation defined value (on the Pentium Pro,    the implementation defined value is zero).  */
 block|{
 literal|"mov"
 block|,
@@ -132,9 +133,9 @@ name|SReg3
 operator||
 name|SReg2
 block|,
-name|Reg16
+name|WordReg
 operator||
-name|Mem
+name|WordMem
 block|,
 literal|0
 block|}
@@ -4864,11 +4865,6 @@ literal|0
 block|}
 block|}
 block|,
-if|#
-directive|if
-literal|0
-comment|/* XXX where are these macros used? 	  To get them working again, they need to take 	  an entire template as the parameter, 	  and check for Data16/Data32 flags.  */
-comment|/* these turn into pseudo operations when disp is larger than 8 bits */
 define|#
 directive|define
 name|IS_JUMP_ON_CX_ZERO
@@ -4876,17 +4872,8 @@ parameter_list|(
 name|o
 parameter_list|)
 define|\
-value|(o == 0x66e3)
-define|#
-directive|define
-name|IS_JUMP_ON_ECX_ZERO
-parameter_list|(
-name|o
-parameter_list|)
-define|\
 value|(o == 0xe3)
-endif|#
-directive|endif
+comment|/* jcxz vs. jecxz is chosen on the basis of the address size prefix.  */
 block|{
 literal|"jcxz"
 block|,
@@ -7439,7 +7426,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem word  */
+comment|/* compare %st0, mem dword  */
 block|{
 literal|"fcoml"
 block|,
@@ -7501,7 +7488,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem dword */
+comment|/* compare %st0, mem word */
 comment|/* comparison (with pop) */
 block|{
 literal|"fcomp"
@@ -7585,7 +7572,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem word  */
+comment|/* compare %st0, mem dword  */
 block|{
 literal|"fcompl"
 block|,
@@ -7647,7 +7634,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem dword */
+comment|/* compare %st0, mem word */
 block|{
 literal|"fcompp"
 block|,
@@ -10018,10 +10005,12 @@ literal|"finit"
 block|,
 literal|0
 block|,
-literal|0x9bdbe3
+literal|0xdbe3
 block|,
 name|_
 block|,
+name|FWait
+operator||
 name|NoModrm
 block|,
 block|{
@@ -10078,10 +10067,12 @@ literal|"fstcw"
 block|,
 literal|1
 block|,
-literal|0x9bd9
+literal|0xd9
 block|,
 literal|7
 block|,
+name|FWait
+operator||
 name|Modrm
 block|,
 block|{
@@ -10158,10 +10149,12 @@ literal|"fstsw"
 block|,
 literal|1
 block|,
-literal|0x9bdfe0
+literal|0xdfe0
 block|,
 name|_
 block|,
+name|FWait
+operator||
 name|NoModrm
 block|,
 block|{
@@ -10178,10 +10171,12 @@ literal|"fstsw"
 block|,
 literal|1
 block|,
-literal|0x9bdd
+literal|0xdd
 block|,
 literal|7
 block|,
+name|FWait
+operator||
 name|Modrm
 block|,
 block|{
@@ -10198,10 +10193,12 @@ literal|"fstsw"
 block|,
 literal|0
 block|,
-literal|0x9bdfe0
+literal|0xdfe0
 block|,
 name|_
 block|,
+name|FWait
+operator||
 name|NoModrm
 block|,
 block|{
@@ -10238,10 +10235,12 @@ literal|"fclex"
 block|,
 literal|0
 block|,
-literal|0x9bdbe2
+literal|0xdbe2
 block|,
 name|_
 block|,
+name|FWait
+operator||
 name|NoModrm
 block|,
 block|{
@@ -10253,7 +10252,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/*  We ignore the short format (287) versions of fstenv/fldenv& fsave/frstor  instructions;  i'm not sure how to add them or how they are different.  My 386/387 book offers no details about this. */
 block|{
 literal|"fnstenv"
 block|,
@@ -10279,10 +10277,12 @@ literal|"fstenv"
 block|,
 literal|1
 block|,
-literal|0x9bd9
+literal|0xd9
 block|,
 literal|6
 block|,
+name|FWait
+operator||
 name|Modrm
 block|,
 block|{
@@ -10339,10 +10339,12 @@ literal|"fsave"
 block|,
 literal|1
 block|,
-literal|0x9bdd
+literal|0xdd
 block|,
 literal|6
 block|,
+name|FWait
+operator||
 name|Modrm
 block|,
 block|{
@@ -10364,6 +10366,75 @@ block|,
 literal|4
 block|,
 name|Modrm
+block|,
+block|{
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Short forms of fldenv, fstenv use data size prefix. (At least I    think so.  The PentPro prog ref I have says address size in one    place, operand size elsewhere).  FIXME: Are these the right names?  */
+block|{
+literal|"fnstenvs"
+block|,
+literal|1
+block|,
+literal|0xd9
+block|,
+literal|6
+block|,
+name|Modrm
+operator||
+name|Data16
+block|,
+block|{
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"fstenvs"
+block|,
+literal|1
+block|,
+literal|0xd9
+block|,
+literal|6
+block|,
+name|FWait
+operator||
+name|Modrm
+operator||
+name|Data16
+block|,
+block|{
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"fldenvs"
+block|,
+literal|1
+block|,
+literal|0xd9
+block|,
+literal|4
+block|,
+name|Modrm
+operator||
+name|Data16
 block|,
 block|{
 name|Mem
@@ -10435,6 +10506,10 @@ literal|0
 block|}
 block|}
 block|,
+define|#
+directive|define
+name|FWAIT_OPCODE
+value|0x9b
 block|{
 literal|"fwait"
 block|,
@@ -11033,7 +11108,7 @@ literal|"ud2"
 block|,
 literal|0
 block|,
-literal|0x0fff
+literal|0x0f0b
 block|,
 name|_
 block|,
@@ -12007,7 +12082,7 @@ literal|"pand"
 block|,
 literal|2
 block|,
-literal|0x0fda
+literal|0x0fdb
 block|,
 name|_
 block|,
@@ -13830,7 +13905,7 @@ operator|&
 name|ss
 block|,
 operator|&
-name|ds
+name|ss
 block|,
 operator|&
 name|ds
@@ -13855,7 +13930,7 @@ operator|&
 name|ss
 block|,
 operator|&
-name|ds
+name|ss
 block|,
 operator|&
 name|ds

@@ -51,7 +51,7 @@ name|char
 modifier|*
 name|ld_program_version
 init|=
-literal|"2.8.1"
+name|VERSION
 decl_stmt|;
 end_decl_stmt
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 91, 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libbfd.h is a GENERATED file.  Don't change it; instead, ** change libbfd-in.h or the other BFD source files processed to ** generate this file.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)    Copyright 1990, 91, 92, 93, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.    Written by Cygnus Support.  ** NOTE: libbfd.h is a GENERATED file.  Don't change it; instead, ** change libbfd-in.h or the other BFD source files processed to ** generate this file.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Align an address upward to a boundary, expressed as a number of bytes.    E.g. align to an 8-byte boundary with argument of 8.  */
+comment|/* Align an address upward to a boundary, expressed as a number of bytes.    E.g. align to an 8-byte boundary with argument of 8.  Take care never    to wrap around if the address is within boundary-1 of the end of the    address space.  */
 end_comment
 
 begin_define
@@ -17,7 +17,7 @@ parameter_list|,
 name|boundary
 parameter_list|)
 define|\
-value|((( (this) + ((boundary) -1))& (~((boundary)-1))))
+value|((((bfd_vma) (this) + (boundary) - 1)>= (bfd_vma) (this))		\    ? (((bfd_vma) (this) + ((boundary) - 1))& (~((boundary)-1)))	\    : ~ (bfd_vma) 0)
 end_define
 
 begin_comment
@@ -1706,6 +1706,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Find the nearest line using DWARF 2 debugging information.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|_bfd_dwarf2_find_nearest_line
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|*
+operator|,
+name|bfd_vma
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* A routine to create entries for a bfd_link_hash_table.  */
 end_comment
 
@@ -2979,13 +3020,25 @@ literal|"BFD_RELOC_SPARC_WDISP16"
 block|,
 literal|"BFD_RELOC_SPARC_WDISP19"
 block|,
-literal|"BFD_RELOC_SPARC_GLOB_JMP"
-block|,
 literal|"BFD_RELOC_SPARC_7"
 block|,
 literal|"BFD_RELOC_SPARC_6"
 block|,
 literal|"BFD_RELOC_SPARC_5"
+block|,
+literal|"BFD_RELOC_SPARC_PLT64"
+block|,
+literal|"BFD_RELOC_SPARC_HIX22"
+block|,
+literal|"BFD_RELOC_SPARC_LOX10"
+block|,
+literal|"BFD_RELOC_SPARC_H44"
+block|,
+literal|"BFD_RELOC_SPARC_M44"
+block|,
+literal|"BFD_RELOC_SPARC_L44"
+block|,
+literal|"BFD_RELOC_SPARC_REGISTER"
 block|,
 literal|"BFD_RELOC_ALPHA_GPDISP_HI16"
 block|,
@@ -3207,6 +3260,16 @@ literal|"BFD_RELOC_SH_DATA"
 block|,
 literal|"BFD_RELOC_SH_LABEL"
 block|,
+literal|"BFD_RELOC_THUMB_PCREL_BRANCH9"
+block|,
+literal|"BFD_RELOC_THUMB_PCREL_BRANCH12"
+block|,
+literal|"BFD_RELOC_THUMB_PCREL_BRANCH23"
+block|,
+literal|"BFD_RELOC_ARC_B22_PCREL"
+block|,
+literal|"BFD_RELOC_ARC_B26"
+block|,
 literal|"BFD_RELOC_D10V_10_PCREL_R"
 block|,
 literal|"BFD_RELOC_D10V_10_PCREL_L"
@@ -3231,9 +3294,31 @@ literal|"BFD_RELOC_M32R_LO16"
 block|,
 literal|"BFD_RELOC_M32R_SDA16"
 block|,
+literal|"BFD_RELOC_V850_9_PCREL"
+block|,
+literal|"BFD_RELOC_V850_22_PCREL"
+block|,
+literal|"BFD_RELOC_V850_SDA_16_16_OFFSET"
+block|,
+literal|"BFD_RELOC_V850_SDA_15_16_OFFSET"
+block|,
+literal|"BFD_RELOC_V850_ZDA_16_16_OFFSET"
+block|,
+literal|"BFD_RELOC_V850_ZDA_15_16_OFFSET"
+block|,
+literal|"BFD_RELOC_V850_TDA_6_8_OFFSET"
+block|,
+literal|"BFD_RELOC_V850_TDA_7_8_OFFSET"
+block|,
+literal|"BFD_RELOC_V850_TDA_7_7_OFFSET"
+block|,
+literal|"BFD_RELOC_V850_TDA_16_16_OFFSET"
+block|,
 literal|"BFD_RELOC_MN10300_32_PCREL"
 block|,
 literal|"BFD_RELOC_MN10300_16_PCREL"
+block|,
+literal|"BFD_RELOC_TIC30_LDP"
 block|,
 literal|"@@overflow: BFD_RELOC_UNUSED@@"
 block|, }

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ieee-695 objects.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 1997    Free Software Foundation, Inc.     Written by Steve Chamberlain of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ieee-695 objects.    Copyright (C) 1990, 91, 92, 93, 94, 95, 96, 97, 1998    Free Software Foundation, Inc.     Written by Steve Chamberlain of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -7546,9 +7546,12 @@ name|relent
 operator|.
 name|sym_ptr_ptr
 operator|==
-literal|0
+name|NULL
+operator|&&
+name|section
+operator|!=
+name|NULL
 condition|)
-block|{
 name|r
 operator|->
 name|relent
@@ -7559,7 +7562,6 @@ name|section
 operator|->
 name|symbol_ptr_ptr
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|this_byte
@@ -9176,6 +9178,16 @@ break|break;
 case|case
 literal|0
 case|:
+if|if
+condition|(
+name|src
+operator|->
+name|relent
+operator|.
+name|sym_ptr_ptr
+operator|!=
+name|NULL
+condition|)
 name|src
 operator|->
 name|relent
@@ -15557,6 +15569,26 @@ name|ieee_ar_data_type
 modifier|*
 name|ar
 init|=
+operator|(
+name|ieee_ar_data_type
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+name|ieee_data_type
+modifier|*
+name|ieee
+decl_stmt|;
+if|if
+condition|(
+name|abfd
+operator|->
+name|my_archive
+operator|!=
+name|NULL
+condition|)
+name|ar
+operator|=
 name|abfd
 operator|->
 name|my_archive
@@ -15564,11 +15596,7 @@ operator|->
 name|tdata
 operator|.
 name|ieee_ar_data
-decl_stmt|;
-name|ieee_data_type
-modifier|*
-name|ieee
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ar

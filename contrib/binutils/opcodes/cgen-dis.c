@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CGEN generic disassembler support code.  Copyright (C) 1996, 1997 Free Software Foundation, Inc.  This file is part of the GNU Binutils and GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* CGEN generic disassembler support code.     Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.     This file is part of the GNU Binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation, Inc.,    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"symcat.h"
 end_include
 
 begin_include
@@ -98,10 +104,7 @@ name|build_dis_hash_table
 parameter_list|()
 block|{
 name|int
-name|i
-decl_stmt|;
-name|int
-name|big_p
+name|bigend
 init|=
 name|cgen_current_endian
 operator|==
@@ -143,6 +146,14 @@ name|insn_table
 decl_stmt|;
 name|unsigned
 name|int
+name|entry_size
+init|=
+name|insn_table
+operator|->
+name|entry_size
+decl_stmt|;
+name|unsigned
+name|int
 name|hash_size
 init|=
 name|insn_table
@@ -157,7 +168,8 @@ decl_stmt|;
 name|CGEN_INSN_LIST
 modifier|*
 name|insn_lists
-decl_stmt|,
+decl_stmt|;
+name|CGEN_INSN_LIST
 modifier|*
 name|new_insns
 decl_stmt|;
@@ -221,20 +233,34 @@ operator|+
 name|hash_size
 operator|)
 expr_stmt|;
-comment|/* Add compiled in insns.      The table is scanned backwards as later additions are inserted in      front of earlier ones and we want earlier ones to be prefered.      We stop at the first one as it is a reserved entry.  */
+comment|/* Add compiled in insns.      The table is scanned backwards as later additions are inserted in      front of earlier ones and we want earlier ones to be prefered.      We stop at the first one as it is a reserved entry.      This is a bit tricky as the attribute member of CGEN_INSN is variable      among architectures.  This code could be moved to cgen-asm.in, but      I prefer to keep it here for now.  */
 for|for
 control|(
 name|insn
 operator|=
+operator|(
+name|CGEN_INSN
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|insn_table
 operator|->
 name|init_entries
 operator|+
+name|entry_size
+operator|*
+operator|(
 name|insn_table
 operator|->
 name|num_init_entries
 operator|-
 literal|1
+operator|)
+operator|)
 init|;
 name|insn
 operator|>
@@ -242,8 +268,21 @@ name|insn_table
 operator|->
 name|init_entries
 condition|;
-operator|--
 name|insn
+operator|=
+operator|(
+name|CGEN_INSN
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|insn
+operator|-
+name|entry_size
+operator|)
 operator|,
 operator|++
 name|insn_lists
@@ -252,15 +291,14 @@ block|{
 comment|/* We don't know whether the target uses the buffer or the base insn 	 to hash on, so set both up.  */
 name|value
 operator|=
+name|CGEN_INSN_VALUE
+argument_list|(
 name|insn
-operator|->
-name|syntax
-operator|.
-name|value
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|CGEN_INSN_BITSIZE
+name|CGEN_INSN_MASK_BITSIZE
 argument_list|(
 name|insn
 argument_list|)
@@ -282,7 +320,7 @@ literal|16
 case|:
 if|if
 condition|(
-name|big_p
+name|bigend
 condition|)
 name|bfd_putb16
 argument_list|(
@@ -311,7 +349,7 @@ literal|32
 case|:
 if|if
 condition|(
-name|big_p
+name|bigend
 condition|)
 name|bfd_putb32
 argument_list|(
@@ -342,12 +380,9 @@ expr_stmt|;
 block|}
 name|hash
 operator|=
-call|(
-modifier|*
 name|insn_table
 operator|->
 name|dis_hash
-call|)
 argument_list|(
 name|buf
 argument_list|,
@@ -403,17 +438,16 @@ block|{
 comment|/* We don't know whether the target uses the buffer or the base insn 	 to hash on, so set both up.  */
 name|value
 operator|=
+name|CGEN_INSN_VALUE
+argument_list|(
 name|new_insns
 operator|->
 name|insn
-operator|->
-name|syntax
-operator|.
-name|value
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|CGEN_INSN_BITSIZE
+name|CGEN_INSN_MASK_BITSIZE
 argument_list|(
 name|new_insns
 operator|->
@@ -437,7 +471,7 @@ literal|16
 case|:
 if|if
 condition|(
-name|big_p
+name|bigend
 condition|)
 name|bfd_putb16
 argument_list|(
@@ -466,7 +500,7 @@ literal|32
 case|:
 if|if
 condition|(
-name|big_p
+name|bigend
 condition|)
 name|bfd_putb32
 argument_list|(
@@ -497,12 +531,9 @@ expr_stmt|;
 block|}
 name|hash
 operator|=
-call|(
-modifier|*
 name|insn_table
 operator|->
 name|dis_hash
-call|)
 argument_list|(
 name|buf
 argument_list|,
@@ -575,14 +606,11 @@ argument_list|()
 expr_stmt|;
 name|hash
 operator|=
-call|(
-modifier|*
 name|cgen_current_opcode_data
 operator|->
 name|insn_table
 operator|->
 name|dis_hash
-call|)
 argument_list|(
 name|buf
 argument_list|,

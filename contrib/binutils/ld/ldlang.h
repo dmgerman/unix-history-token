@@ -90,8 +90,11 @@ decl_stmt|;
 name|bfd_size_type
 name|old_length
 decl_stmt|;
-name|int
+name|flagword
 name|flags
+decl_stmt|;
+name|flagword
+name|not_flags
 decl_stmt|;
 name|boolean
 name|had_full_message
@@ -292,7 +295,7 @@ name|asection
 modifier|*
 name|bfd_section
 decl_stmt|;
-name|int
+name|flagword
 name|flags
 decl_stmt|;
 comment|/* Or together of all input sections */
@@ -935,6 +938,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|memory_region_struct
+modifier|*
+name|lang_memory_region_default
+name|PARAMS
+argument_list|(
+operator|(
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|lang_map
 name|PARAMS
@@ -953,7 +972,7 @@ name|lang_set_flags
 name|PARAMS
 argument_list|(
 operator|(
-name|int
+name|lang_memory_region_type
 operator|*
 operator|,
 specifier|const

@@ -9,12 +9,23 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|alloca
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|alloca
 value|__builtin_alloca
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
