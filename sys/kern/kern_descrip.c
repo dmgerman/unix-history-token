@@ -3205,11 +3205,6 @@ name|fd_lastfile
 operator|=
 name|new
 expr_stmt|;
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 operator|*
 name|retval
 operator|=
@@ -3223,7 +3218,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* XXX need to call knote_fdclose() */
+name|knote_fdclose
+argument_list|(
+name|td
+argument_list|,
+name|new
+argument_list|)
+expr_stmt|;
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3297,6 +3303,14 @@ name|fdp
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
