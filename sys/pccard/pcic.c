@@ -2243,7 +2243,7 @@ name|sp
 argument_list|,
 name|PCIC_POWER
 argument_list|,
-name|PCIC_APSENA
+name|PCIC_PCPWRE
 operator||
 name|PCIC_DISRST
 argument_list|)
@@ -2472,7 +2472,7 @@ name|reg
 init|=
 name|PCIC_DISRST
 operator||
-name|PCIC_APSENA
+name|PCIC_PCPWRE
 decl_stmt|;
 name|struct
 name|pcic_slot

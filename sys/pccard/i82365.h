@@ -485,6 +485,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIC_PCPWRE
+value|0x10
+end_define
+
+begin_comment
+comment|/* PC Card Power Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIC_VCC
 value|0x18
 end_define
