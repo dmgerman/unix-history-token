@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -85,34 +85,34 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* clock frequency */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|phz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* alternate clock's frequency */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|tick
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* usec per tick */
+comment|/* usec per tick (1000000 / hz) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* system clock's frequency */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|stathz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* statistics clock's frequency */
 end_comment
 
 begin_decl_stmt
