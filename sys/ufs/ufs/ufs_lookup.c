@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lookup.c	8.15 (Berkeley) 6/16/95  * $Id: ufs_lookup.c,v 1.22 1998/03/08 09:59:29 julian Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_lookup.c	8.15 (Berkeley) 6/16/95  * $Id: ufs_lookup.c,v 1.23 1998/03/30 09:56:23 phk Exp $  */
 end_comment
 
 begin_include
@@ -3512,12 +3512,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * First entry in block: set d_ino to zero. 		 */
-if|#
-directive|if
-literal|0
-block|error = 		    UFS_BLKATOFF(dvp, (off_t)dp->i_offset, (char **)&ep,&bp); 		if (error) 			return (error);
-endif|#
-directive|endif
 name|ep
 operator|->
 name|d_ino
@@ -3596,6 +3590,48 @@ operator|->
 name|i_nlink
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|DOWHITEOUT
+condition|)
+name|error
+operator|=
+name|VOP_BWRITE
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dvp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ASYNC
+operator|&&
+name|dp
+operator|->
+name|i_count
+operator|!=
+literal|0
+condition|)
+block|{
+name|bdwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 name|error
 operator|=
 name|bowrite
@@ -3603,15 +3639,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* maybe this should be as below? */
 block|}
-if|#
-directive|if
-literal|0
-comment|/* 	 * Collapse new free space into previous entry. 	 */
-block|error = UFS_BLKATOFF(dvp, (off_t)(dp->i_offset - dp->i_count), 	    (char **)&ep,&bp); 	if (error) 		return (error); 	ep->d_reclen += dp->i_reclen; 	if (dvp->v_mount->mnt_flag& MNT_ASYNC) { 		bdwrite(bp); 		error = 0; 	} else { 		error = bowrite(bp); 	}
-endif|#
-directive|endif
 name|dp
 operator|->
 name|i_flag
