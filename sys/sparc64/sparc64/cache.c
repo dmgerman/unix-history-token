@@ -1273,12 +1273,12 @@ comment|/*  * Invalidate a E$ range using diagnostic accesses.  * This is disabl
 end_comment
 
 begin_comment
-unit|void ecache_inval_phys(vm_offset_t start, vm_offset_t end) { 	vm_offset_t addr, eca; 	critical_t c; 	u_long tag, j;  	if (!cache.c_enabled) 		return;  	for (addr = start& ~(cache.ec_linesize - 1); addr<= end; 	     addr += cache.ec_linesize) { 		for (j = 0; j< cache.ec_assoc; j++) {
+unit|void ecache_inval_phys(vm_offset_t start, vm_offset_t end) { 	vm_offset_t addr, eca; 	u_long tag, j;  	if (!cache.c_enabled) 		return;  	for (addr = start& ~(cache.ec_linesize - 1); addr<= end; 	     addr += cache.ec_linesize) { 		for (j = 0; j< cache.ec_assoc; j++) {
 comment|/* XXX: guesswork... */
 end_comment
 
 begin_comment
-unit|eca = (addr& (cache.ec_size - 1)) | 			    (j<< (cache.ec_l2set)); 			c = critical_enter();
+unit|eca = (addr& (cache.ec_size - 1)) | 			    (j<< (cache.ec_l2set));
 comment|/* 			 * Retrieve the tag: 			 * A read from the appropriate VA in ASI_ECACHE_R 			 * will transfer the tag from the tag RAM to the 			 * data register (ASI_ECACHE_TAG_DATA, VA 0). 			 */
 end_comment
 
