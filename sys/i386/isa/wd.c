@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.73 1995/04/14 22:31:58 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.74 1995/04/22 22:44:30 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -219,23 +219,19 @@ begin_comment
 comment|/* can't handle that in all cases */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NSECS_MULTI
-end_ifndef
+begin_define
+define|#
+directive|define
+name|WDOPT_32BIT
+value|0x8000
+end_define
 
 begin_define
 define|#
 directive|define
-name|NSECS_MULTI
-value|1
+name|WDOPT_MULTIMASK
+value|0x00ff
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -1029,6 +1025,9 @@ name|struct
 name|disk
 modifier|*
 name|du
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1720,11 +1719,30 @@ name|dvp
 operator|->
 name|id_iobase
 expr_stmt|;
+comment|/* 		 * Use the individual device flags or the controller 		 * flags. 		 */
 if|if
 condition|(
 name|wdgetctlr
 argument_list|(
 name|du
+argument_list|,
+name|wdup
+operator|->
+name|id_flags
+operator||
+operator|(
+operator|(
+name|dvp
+operator|->
+name|id_flags
+operator|)
+operator|>>
+operator|(
+literal|16
+operator|*
+name|unit
+operator|)
+operator|)
 argument_list|)
 operator|==
 literal|0
@@ -6053,6 +6071,9 @@ name|struct
 name|disk
 modifier|*
 name|du
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -6507,6 +6528,13 @@ expr_stmt|;
 comment|/* try 32-bit data path (VLB IDE controller) */
 if|if
 condition|(
+name|flags
+operator|&
+name|WDOPT_32BIT
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 operator|(
 name|du
@@ -6582,6 +6610,7 @@ operator|&=
 operator|~
 name|DKFL_32BIT
 expr_stmt|;
+block|}
 block|}
 name|bcopy
 argument_list|(
@@ -6868,36 +6897,59 @@ comment|/* better ... */
 block|du->dk_dd.d_type = DTYPE_ESDI; 	du->dk_dd.d_subtype |= DSTYPE_GEOMETRY;
 endif|#
 directive|endif
+comment|/* 	 * find out the drives maximum multi-block transfer capability 	 */
 name|du
 operator|->
 name|dk_multi
 operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|NSECS_MULTI
-operator|!=
-literal|1
-operator|)
-operator|&&
-operator|(
-operator|(
 name|wp
 operator|->
 name|wdp_nsecperint
 operator|&
 literal|0xff
+expr_stmt|;
+comment|/* 	 * The config option flags low 8 bits define the maximum multi-block 	 * transfer size.  If the user wants the maximum that the drive 	 * is capable of, just set the low bits of the config option to 	 * 0x00ff. 	 */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|WDOPT_MULTIMASK
 operator|)
-operator|>=
-name|NSECS_MULTI
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|du
+operator|->
+name|dk_multi
+operator|>
+literal|1
 operator|)
 condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|du
+operator|->
+name|dk_multi
+operator|>
+operator|(
+name|flags
+operator|&
+name|WDOPT_MULTIMASK
+operator|)
+condition|)
+name|du
+operator|->
+name|dk_multi
+operator|=
+name|flags
+operator|&
+name|WDOPT_MULTIMASK
+expr_stmt|;
+if|if
+condition|(
 name|wdcommand
 argument_list|(
 name|du
@@ -6908,7 +6960,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|NSECS_MULTI
+name|du
+operator|->
+name|dk_multi
 argument_list|,
 name|WDCC_SET_MULTI
 argument_list|)
@@ -6918,9 +6972,18 @@ name|du
 operator|->
 name|dk_multi
 operator|=
-name|NSECS_MULTI
+literal|1
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|du
+operator|->
+name|dk_multi
+operator|=
+literal|1
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -9052,7 +9115,7 @@ name|timeout
 operator|+=
 name|POLLING
 expr_stmt|;
-comment|/*  * This delay is really too long, but does not impact the performance  * as much when using the NSECS_MULTI option.  Shorter delays have  * caused I/O errors on some drives and system configs.  This should  * probably be fixed if we develop a better short term delay mechanism.  */
+comment|/*  * This delay is really too long, but does not impact the performance  * as much when using the multi-sector option.  Shorter delays have  * caused I/O errors on some drives and system configs.  This should  * probably be fixed if we develop a better short term delay mechanism.  */
 name|DELAY
 argument_list|(
 literal|1
