@@ -695,7 +695,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_ioctl_args
-comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
+comment|/* { 		struct vnode *a_vp; 		u_long  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -715,6 +715,7 @@ operator|(
 name|ENOTTY
 operator|)
 return|;
+comment|/* XXX: Doesn't this just recurse back here ? */
 return|return
 operator|(
 name|VCALL
