@@ -15,11 +15,12 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+operator|!
 name|USERDB
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +28,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.21 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.22 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +43,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.21 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.22 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,11 +57,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|USERDB
-end_ifdef
+end_if
 
 begin_include
 include|#
@@ -68,11 +69,56 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEWDB
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<db.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DBT
+value|struct _data_base_thang_
+end_define
+
+begin_macro
+name|DBT
+end_macro
+
+begin_block
+block|{
+name|void
+modifier|*
+name|data
+decl_stmt|;
+comment|/* pointer to data */
+name|size_t
+name|size
+decl_stmt|;
+comment|/* length of data */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -157,6 +203,9 @@ define|#
 directive|define
 name|udb_fwdhost
 value|udb_u.udb_forward._udb_fwdhost
+ifdef|#
+directive|ifdef
+name|NEWDB
 comment|/* type UE_FETCH -- lookup in local database */
 struct|struct
 block|{
@@ -181,6 +230,8 @@ define|#
 directive|define
 name|udb_dbp
 value|udb_u.udb_lookup._udb_dbp
+endif|#
+directive|endif
 block|}
 name|udb_u
 union|;
@@ -3468,6 +3519,9 @@ break|break;
 case|case
 name|UDB_DBFETCH
 case|:
+ifdef|#
+directive|ifdef
+name|NEWDB
 name|printf
 argument_list|(
 literal|"FETCH: file %s\n"
@@ -3477,6 +3531,15 @@ operator|->
 name|udb_dbname
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"FETCH\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|UDB_FORWARD
@@ -3847,6 +3910,12 @@ name|name
 argument_list|,
 name|type
 argument_list|)
+expr_stmt|;
+operator|*
+operator|--
+name|type
+operator|=
+literal|':'
 expr_stmt|;
 if|if
 condition|(
