@@ -41,6 +41,10 @@ name|G_RAID3_MAGIC
 value|"GEOM::RAID3"
 end_define
 
+begin_comment
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added 'round-robin reading' algorithm.  */
+end_comment
+
 begin_define
 define|#
 directive|define
