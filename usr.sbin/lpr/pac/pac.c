@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)pac.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)pac.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,6 +452,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -563,17 +590,8 @@ operator|++
 expr_stmt|;
 continue|continue;
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: pac [-Pprinter] [-pprice] [-s] [-c] [-r] [-m] [user ...]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -712,6 +730,27 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|errs
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: pac [-Pprinter] [-pprice] [-s] [-c] [-r] [-m] [user ...]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1192,8 +1231,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|sumfile
 argument_list|)
 expr_stmt|;
@@ -1270,8 +1311,10 @@ name|acctf
 argument_list|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|sumfile
 argument_list|)
 expr_stmt|;
@@ -1299,8 +1342,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|acctfile
 argument_list|)
 expr_stmt|;
@@ -1932,18 +1977,13 @@ name|sumfile
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"pac"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"calloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|sumfile
