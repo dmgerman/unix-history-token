@@ -243,6 +243,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
 begin_comment
 comment|/* Global defs */
 end_comment
@@ -298,6 +304,12 @@ name|nsd
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -324,6 +336,11 @@ end_decl_stmt
 begin_comment
 comment|/* end of argv */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -390,6 +407,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_decl_stmt
 name|void
 name|setproctitle
@@ -402,6 +431,16 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
@@ -610,6 +649,9 @@ literal|"NFS is not available in the running kernel"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
 comment|/* Save start and extent of argv for setproctitle. */
 name|Argv
 operator|=
@@ -655,6 +697,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 define|#
 directive|define
 name|MAXNFSDCNT
@@ -1080,7 +1124,7 @@ continue|continue;
 block|}
 name|setproctitle
 argument_list|(
-literal|"nfsd-srv"
+literal|"server"
 argument_list|)
 expr_stmt|;
 name|nfssvc_flag
@@ -2455,7 +2499,7 @@ argument_list|)
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"nfsd-master"
+literal|"master"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop forever accepting connections and passing the sockets 	 * into the kernel for the mounts. 	 */
@@ -2997,6 +3041,18 @@ empty_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLD_SETPROCTITLE
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_function
 name|void
 name|setproctitle
@@ -3038,7 +3094,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s"
+literal|"nfsd-%s"
 argument_list|,
 name|a
 argument_list|)
@@ -3076,8 +3132,29 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+name|Argv
+index|[
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
