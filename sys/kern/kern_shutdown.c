@@ -2114,6 +2114,7 @@ end_function
 begin_if
 if|#
 directive|if
+operator|(
 operator|!
 name|defined
 argument_list|(
@@ -2123,6 +2124,13 @@ operator|||
 name|defined
 argument_list|(
 name|PC98
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__ia64__
 argument_list|)
 end_if
 
