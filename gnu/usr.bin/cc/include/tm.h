@@ -45,6 +45,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{pg:gcrt0.o%s}%{!pg:%{p:mcrt0.o%s}%{!p:%{static:scrt0.o%s}%{!static:crt0.o%s}}}"
+end_define
+
+begin_define
+define|#
+directive|define
 name|INCLUDE_DEFAULTS
 value|{ \ 	{ "/usr/include", 0 }, \ 	{ "/usr/include/g++", 1 }, \ 	{ 0, 0} \ 	}
 end_define
