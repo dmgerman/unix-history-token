@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.4 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,8 +299,11 @@ control|)
 name|t2
 operator|=
 operator|(
-operator|++
+operator|(
 name|t2
+operator|+
+literal|1
+operator|)
 operator|>>
 literal|1
 operator|)
