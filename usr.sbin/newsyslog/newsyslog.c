@@ -3539,7 +3539,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"chown %d.%d %s\n"
+literal|"chown %d:%d %s\n"
 argument_list|,
 name|owner_uid
 argument_list|,
