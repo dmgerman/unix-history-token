@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.5 2001/05/13 00:17:37 jlemon Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.4.2.6 2001/06/18 18:49:13 wpaul Exp   */
 end_comment
 
 begin_comment
@@ -88,6 +88,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MII_OUI_JATO
+value|0x00e083
+end_define
+
+begin_comment
+comment|/* Jato Technologies */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MII_OUI_LEVEL1
 value|0x00207b
 end_define
@@ -138,6 +149,17 @@ end_define
 
 begin_comment
 comment|/* Silicon Integrated Systems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OUI_TDK
+value|0x00c039
+end_define
+
+begin_comment
+comment|/* TDK */
 end_comment
 
 begin_define
@@ -525,6 +547,24 @@ value|"i82553 10/100 media interface"
 end_define
 
 begin_comment
+comment|/* Jato Technologies PHYs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_JATO_BASEX
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_JATO_BASEX
+value|"Jato 1000baseX media interface"
+end_define
+
+begin_comment
 comment|/* Level 1 PHYs */
 end_comment
 
@@ -572,6 +612,34 @@ define|#
 directive|define
 name|MII_STR_NATSEMI_DP83843
 value|"DP83843 10/100 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_NATSEMI_DP83891
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_NATSEMI_DP83891
+value|"DP83891 10/100/1000 media interface"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_NATSEMI_DP83861
+value|0x0006
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_NATSEMI_DP83861
+value|"DP83861 10/100/1000 media interface"
 end_define
 
 begin_comment
@@ -640,6 +708,24 @@ define|#
 directive|define
 name|MII_STR_xxSIS_900
 value|"SiS 900 10/100 media interface"
+end_define
+
+begin_comment
+comment|/* TDK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_TDK_78Q2120
+value|0x0014
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_TDK_78Q2120
+value|"TDK 78Q2120 media interface"
 end_define
 
 begin_comment
