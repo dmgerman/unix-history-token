@@ -657,7 +657,7 @@ parameter_list|,
 name|caddr_t
 name|dst
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
