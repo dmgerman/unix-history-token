@@ -12490,7 +12490,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vm_hold_free_pages: blkno: %d, lblkno: %d\n"
+literal|"vm_hold_free_pages: blkno: %lld, lblkno: %lld\n"
 argument_list|,
 name|bp
 operator|->
@@ -12621,7 +12621,7 @@ name|db_printf
 argument_list|(
 literal|"b_error = %d, b_bufsize = %ld, b_bcount = %ld, "
 literal|"b_resid = %ld\nb_dev = (%d,%d), b_data = %p, "
-literal|"b_blkno = %d, b_pblkno = %d\n"
+literal|"b_blkno = %lld, b_pblkno = %lld\n"
 argument_list|,
 name|bp
 operator|->

@@ -2961,7 +2961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy a cylinder group map. All the unallocated blocks are marked  * BLK_NOCOPY so that the snapshot knows that it need not copy them  * if they are later written. If how is one, then this is a first  * pass, so only setting needs to be done. If how is 2, then this  * is a revision to a previous pass which must be undone as the  * replacement pass is done.  */
+comment|/*  * Copy a cylinder group map. All the unallocated blocks are marked  * BLK_NOCOPY so that the snapshot knows that it need not copy them  * if they are later written. If passno is one, then this is a first  * pass, so only setting needs to be done. If passno is 2, then this  * is a revision to a previous pass which must be undone as the  * replacement pass is done.  */
 end_comment
 
 begin_function
@@ -6383,7 +6383,7 @@ name|snapdebug
 condition|)
 name|printf
 argument_list|(
-literal|"%s%d lbn %d for inum %d size %ld to blkno %d\n"
+literal|"%s%d lbn %d for inum %d size %ld to blkno %lld\n"
 argument_list|,
 literal|"Copyonremove: snapino "
 argument_list|,
@@ -7511,7 +7511,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" lblkno %d to blkno %d\n"
+literal|" lblkno %lld to blkno %lld\n"
 argument_list|,
 name|bp
 operator|->

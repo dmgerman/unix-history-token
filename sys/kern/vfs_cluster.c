@@ -205,7 +205,7 @@ operator|,
 name|daddr_t
 name|lbn
 operator|,
-name|daddr_t
+name|daddr64_t
 name|blkno
 operator|,
 name|long
@@ -353,7 +353,7 @@ decl_stmt|,
 modifier|*
 name|reqbp
 decl_stmt|;
-name|daddr_t
+name|daddr64_t
 name|blkno
 decl_stmt|,
 name|origblkno
@@ -1351,7 +1351,7 @@ decl_stmt|;
 name|daddr_t
 name|lbn
 decl_stmt|;
-name|daddr_t
+name|daddr64_t
 name|blkno
 decl_stmt|;
 name|long

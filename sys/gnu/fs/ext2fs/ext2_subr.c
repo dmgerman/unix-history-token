@@ -441,7 +441,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\tstart %d, end %d overlap start %d, end %ld\n"
+literal|"\tstart %d, end %d overlap start %lld, end %ld\n"
 argument_list|,
 name|start
 argument_list|,

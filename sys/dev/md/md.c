@@ -1679,7 +1679,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"mdstrategy(%p) %s %x, %d, %ld, %p)\n"
+literal|"mdstrategy(%p) %s %x, %lld, %ld, %p)\n"
 argument_list|,
 name|bp
 argument_list|,

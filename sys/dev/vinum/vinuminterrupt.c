@@ -343,7 +343,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s:%s read error, block %d for %ld bytes\n"
+literal|"%s:%s read error, block %lld for %ld bytes\n"
 argument_list|,
 name|gravity
 argument_list|,
@@ -406,7 +406,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s:%s write error, block %d for %ld bytes\n"
+literal|"%s:%s write error, block %lld for %ld bytes\n"
 argument_list|,
 name|gravity
 argument_list|,
@@ -428,7 +428,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: user buffer block %d for %ld bytes\n"
+literal|"%s: user buffer block %lld for %ld bytes\n"
 argument_list|,
 name|sd
 operator|->
@@ -457,7 +457,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: fatal drive I/O error, block %d for %ld bytes\n"
+literal|"%s: fatal drive I/O error, block %lld for %ld bytes\n"
 argument_list|,
 name|DRIVE
 index|[
@@ -2533,7 +2533,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%llx, length %ld\n"
 argument_list|,
 name|rqe
 operator|->
@@ -2800,7 +2800,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%llx, length %ld\n"
 argument_list|,
 name|rqe
 operator|->

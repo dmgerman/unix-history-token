@@ -355,7 +355,7 @@ name|int
 name|b_kvasize
 decl_stmt|;
 comment|/* size of kva for buffer */
-name|daddr_t
+name|daddr64_t
 name|b_lblkno
 decl_stmt|;
 comment|/* Logical block number. */
@@ -1438,7 +1438,7 @@ argument|buf
 argument_list|)
 name|queue
 expr_stmt|;
-name|daddr_t
+name|daddr64_t
 name|last_pblkno
 decl_stmt|;
 name|struct

@@ -316,7 +316,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"vinum: recovering I/O request: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"vinum: recovering I/O request: %p\n%s dev %d.%d, offset 0x%llx, length %ld\n"
 argument_list|,
 name|rq
 argument_list|,

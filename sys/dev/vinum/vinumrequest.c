@@ -1471,7 +1471,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"Revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%llx, length %ld\n"
 argument_list|,
 name|rq
 operator|->
@@ -1549,7 +1549,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Request: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"Request: %p\n%s dev %d.%d, offset 0x%llx, length %ld\n"
 argument_list|,
 name|rq
 argument_list|,
@@ -1898,7 +1898,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%x, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%llx, length %ld\n"
 argument_list|,
 name|rqe
 operator|->
@@ -2834,7 +2834,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"vinum: EOF on plex %s, sd %s offset %x (user offset %x)\n"
+literal|"vinum: EOF on plex %s, sd %s offset %x (user offset %llx)\n"
 argument_list|,
 name|plex
 operator|->

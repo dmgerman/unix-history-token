@@ -7468,7 +7468,7 @@ operator|->
 name|a_vpp
 decl_stmt|;
 comment|/* RETURN vp of device */
-name|daddr_t
+name|daddr64_t
 modifier|*
 name|bnp
 name|__attribute__
@@ -7551,7 +7551,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("VOP_BMAP(cp->c_ovp %p, bn %p, vpp %p, bnp %p, ap->a_runp %p, ap->a_runb %p) = %d\n", 			cp->c_ovp, bn, vpp, bnp, ap->a_runp, ap->a_runb, ret);
+block|printf("VOP_BMAP(cp->c_ovp %p, bn %p, vpp %p, bnp %lld, ap->a_runp %p, ap->a_runb %p) = %d\n", 			cp->c_ovp, bn, vpp, bnp, ap->a_runp, ap->a_runb, ret);
 endif|#
 directive|endif
 return|return

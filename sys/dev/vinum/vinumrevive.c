@@ -859,7 +859,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Relaunch revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"Relaunch revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%llx, length %ld\n"
 argument_list|,
 name|rq
 operator|->

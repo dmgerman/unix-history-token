@@ -99,11 +99,17 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		ufs_daddr_t a_bn; 		struct vnode **a_vpp; 		ufs_daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
+comment|/* { 		struct vnode *a_vp; 		daddr64_t a_bn; 		struct vnode **a_vpp; 		daddr64_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
+name|daddr_t
+name|blkno
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* 	 * Check for underlying vnode requests and ensure that logical 	 * to physical mapping is requested. 	 */
 if|if
 condition|(
@@ -140,8 +146,8 @@ operator|(
 literal|0
 operator|)
 return|;
-return|return
-operator|(
+name|error
+operator|=
 name|ufs_bmaparray
 argument_list|(
 name|ap
@@ -152,9 +158,8 @@ name|ap
 operator|->
 name|a_bn
 argument_list|,
-name|ap
-operator|->
-name|a_bnp
+operator|&
+name|blkno
 argument_list|,
 name|ap
 operator|->
@@ -164,6 +169,17 @@ name|ap
 operator|->
 name|a_runb
 argument_list|)
+expr_stmt|;
+operator|*
+name|ap
+operator|->
+name|a_bnp
+operator|=
+name|blkno
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}

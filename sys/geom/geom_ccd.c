@@ -4787,7 +4787,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"ccd%d: error %d on component %d block %d (ccd block %d)%s\n"
+literal|"ccd%d: error %d on component %d block %d (ccd block %lld)%s\n"
 argument_list|,
 name|unit
 argument_list|,

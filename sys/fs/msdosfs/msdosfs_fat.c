@@ -4155,6 +4155,9 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|daddr_t
+name|blkno
+decl_stmt|;
 comment|/* 	 * Don't try to extend the root directory 	 */
 if|if
 condition|(
@@ -4514,9 +4517,7 @@ name|b_lblkno
 argument_list|)
 argument_list|,
 operator|&
-name|bp
-operator|->
-name|b_blkno
+name|blkno
 argument_list|,
 literal|0
 argument_list|,
@@ -4543,6 +4544,13 @@ name|panic
 argument_list|(
 literal|"extendfile: pcbmap"
 argument_list|)
+expr_stmt|;
+else|else
+name|bp
+operator|->
+name|b_blkno
+operator|=
+name|blkno
 expr_stmt|;
 block|}
 name|clrbuf
