@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -109,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/pipe.h>
 end_include
 
 begin_include
@@ -842,13 +830,6 @@ name|uap
 operator|->
 name|fd
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX Compatibility 	 */
-block|if (old&~ 077) { uap->fd&= 077; return (dup2(p, uap, p->p_retval)); }
-endif|#
-directive|endif
 name|fdp
 operator|=
 name|p
@@ -2121,7 +2102,6 @@ name|ESRCH
 operator|)
 return|;
 comment|/* 		 * Policy - Don't allow a process to FSETOWN a process 		 * in another session. 		 * 		 * Remove this test to allow maximum flexibility or 		 * restrict FSETOWN to the current process or process 		 * group for maximum safety. 		 */
-elseif|else
 if|if
 condition|(
 name|proc
@@ -2165,7 +2145,6 @@ name|ESRCH
 operator|)
 return|;
 comment|/* 		 * Policy - Don't allow a process to FSETOWN a process 		 * in another session. 		 * 		 * Remove this test to allow maximum flexibility or 		 * restrict FSETOWN to the current process or process 		 * group for maximum safety. 		 */
-elseif|else
 if|if
 condition|(
 name|pgrp
@@ -4414,7 +4393,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/*  * Certain daemons might not have file descriptors  */
+comment|/* Certain daemons might not have file descriptors. */
 if|if
 condition|(
 name|fdp
@@ -4422,7 +4401,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|MALLOC
 argument_list|(
@@ -4724,7 +4705,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/*  * Certain daemons might not have file descriptors  */
+comment|/* Certain daemons might not have file descriptors. */
 if|if
 condition|(
 name|fdp
@@ -4873,7 +4854,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/*  * Certain daemons might not have file descriptors  */
+comment|/* Certain daemons might not have file descriptors. */
 if|if
 condition|(
 name|fdp
