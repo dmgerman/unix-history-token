@@ -72,9 +72,35 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|pid_t
+name|pid
+decl_stmt|;
+name|pid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|kdb_thread
+operator|->
+name|td_proc
+operator|!=
+name|NULL
+condition|)
+name|pid
+operator|=
+name|kdb_thread
+operator|->
+name|td_proc
+operator|->
+name|p_pid
+expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"[thread %ld]\n"
+literal|"[thread pid %d tid %ld ]\n"
+argument_list|,
+name|pid
 argument_list|,
 operator|(
 name|long
