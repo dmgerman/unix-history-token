@@ -719,6 +719,18 @@ comment|/* flags to be passed to mount */
 end_comment
 
 begin_decl_stmt
+name|int
+name|t_or_u_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user has specified -t or -u */
+end_comment
+
+begin_decl_stmt
 name|u_long
 name|memleft
 decl_stmt|;
@@ -1422,6 +1434,9 @@ break|break;
 case|case
 literal|'t'
 case|:
+name|t_or_u_flag
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1446,6 +1461,9 @@ break|break;
 case|case
 literal|'u'
 case|:
+name|t_or_u_flag
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2331,12 +2349,7 @@ name|MAX
 argument_list|(
 literal|1
 argument_list|,
-name|MIN
-argument_list|(
 name|MAXPHYS
-argument_list|,
-name|MAXBSIZE
-argument_list|)
 operator|/
 name|bsize
 operator|-
@@ -2451,8 +2464,11 @@ name|ntracks
 operator|-
 name|cylspares
 expr_stmt|;
+comment|/* 	 * Only complain if -t or -u have been specified; the default 	 * case (4096 sectors per cylinder) is intented to disagree 	 * with the disklabel. 	 */
 if|if
 condition|(
+name|t_or_u_flag
+operator|&&
 name|secpercyl
 operator|!=
 name|lp
