@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.5 %G%"
+literal|"@(#)interp.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5674,7 +5674,7 @@ name|ERROR
 argument_list|(
 name|ECASE
 argument_list|,
-name|tl2
+name|tl1
 argument_list|)
 expr_stmt|;
 name|pc
@@ -5770,7 +5770,7 @@ name|ERROR
 argument_list|(
 name|ECASE
 argument_list|,
-name|tl2
+name|tl1
 argument_list|)
 expr_stmt|;
 name|pc
@@ -5866,7 +5866,7 @@ name|ERROR
 argument_list|(
 name|ECASE
 argument_list|,
-name|tl2
+name|tl1
 argument_list|)
 expr_stmt|;
 name|pc
