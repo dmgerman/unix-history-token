@@ -59,6 +59,37 @@ directive|include
 file|"tzfile.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_THREAD_SAFE
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|asctime_r
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|tm
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* ** A la X3J11, with core dump avoidance. */
 end_comment
@@ -114,7 +145,16 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_THREAD_SAFE
+end_ifndef
+
 begin_function
+specifier|static
+endif|#
+directive|endif
 name|char
 modifier|*
 name|asctime_r
