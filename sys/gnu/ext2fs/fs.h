@@ -14,13 +14,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BBSIZE
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
 name|SBSIZE
 value|1024
 end_define
@@ -28,8 +21,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|SBOFF
-value|((off_t)(BBSIZE))
+name|SBLOCK
+value|2
 end_define
 
 begin_comment

@@ -230,6 +230,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Size of bootblock area in sector-size neutral bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BBSIZE
+value|8192
+end_define
+
 begin_define
 define|#
 directive|define
