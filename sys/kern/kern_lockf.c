@@ -3460,7 +3460,7 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"%s: Lock list for ino %ju on dev<%d, %d>:\n"
+literal|"%s: Lock list for ino %ju on dev<%s>:\n"
 argument_list|,
 name|tag
 argument_list|,
@@ -3473,16 +3473,7 @@ name|lf_inode
 operator|->
 name|i_number
 argument_list|,
-name|major
-argument_list|(
-name|lock
-operator|->
-name|lf_inode
-operator|->
-name|i_dev
-argument_list|)
-argument_list|,
-name|minor
+name|devtoname
 argument_list|(
 name|lock
 operator|->
