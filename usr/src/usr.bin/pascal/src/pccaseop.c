@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.4 %G%"
+literal|"@(#)pccaseop.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -674,8 +674,12 @@ index|]
 argument_list|)
 expr_stmt|;
 name|nr
-operator|&=
+operator|=
+operator|(
+name|nr
+operator|&&
 name|noreach
+operator|)
 expr_stmt|;
 name|noreach
 operator|=

@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.3 %G%"
+literal|"@(#)main.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,21 +822,24 @@ case|case
 literal|'A'
 case|:
 name|testtrace
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* and fall through */
 case|case
 literal|'F'
 case|:
 name|fulltrace
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* and fall through */
 case|case
 literal|'E'
 case|:
 name|errtrace
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 name|opt
 argument_list|(
@@ -991,14 +994,16 @@ literal|'p'
 case|:
 comment|/* 				 *	-p on the command line means profile 				 */
 name|profflag
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
 literal|'z'
 case|:
 name|monflg
-operator|++
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:
