@@ -1266,13 +1266,9 @@ name|flags
 operator|&
 name|PG_WRITEABLE
 condition|)
-name|vm_object_set_flag
+name|vm_object_set_writeable_dirty
 argument_list|(
 name|object
-argument_list|,
-name|OBJ_WRITEABLE
-operator||
-name|OBJ_MIGHTBEDIRTY
 argument_list|)
 expr_stmt|;
 block|}

@@ -820,6 +820,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|vm_object_set_writeable_dirty
+name|__P
+argument_list|(
+operator|(
+name|vm_object_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|vm_object_init
 name|__P
 argument_list|(
