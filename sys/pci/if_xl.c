@@ -6580,7 +6580,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* 	 * Figure out the card type. 3c905B adapters have the 	 * 'supportsNoTxLength' bit set in the capabilities 	 * word in the EEPROM. 	 */
+comment|/* 	 * Figure out the card type. 3c905B adapters have the 	 * 'supportsNoTxLength' bit set in the capabilities 	 * word in the EEPROM. 	 * Note: my 3c575C cardbus card lies. It returns a value 	 * of 0x1578 for its capabilities word, which is somewhat  	 * nonsensical. Another way to distinguish a 3c90x chip 	 * from a 3c90xB/C chip is to check for the 'supportsLargePackets' 	 * bit. This will only be set for 3c90x boomerage chips. 	 */
 name|xl_read_eeprom
 argument_list|(
 name|sc
@@ -6607,6 +6607,15 @@ operator|->
 name|xl_caps
 operator|&
 name|XL_CAPS_NO_TXLENGTH
+operator|||
+operator|!
+operator|(
+name|sc
+operator|->
+name|xl_caps
+operator|&
+name|XL_CAPS_LARGE_PKTS
+operator|)
 condition|)
 name|sc
 operator|->
@@ -6676,6 +6685,12 @@ name|if_output
 operator|=
 name|ether_output
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|IFCAP_VLAN_MTU
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6700,7 +6715,7 @@ expr_stmt|;
 name|ifp
 operator|->
 name|if_capabilities
-operator|=
+operator||=
 name|IFCAP_HWCSUM
 expr_stmt|;
 block|}
@@ -9013,6 +9028,27 @@ name|cur_rx
 operator|->
 name|xl_next
 expr_stmt|;
+name|total_len
+operator|=
+name|rxstat
+operator|&
+name|XL_RXSTAT_LENMASK
+expr_stmt|;
+comment|/* 		 * Since we have told the chip to allow large frames, 		 * we need to trap giant frame errors in software. We allow 		 * a little more than the normal frame size to account for 		 * frames with VLAN tags. 		 */
+if|if
+condition|(
+name|total_len
+operator|>
+name|XL_MAX_FRAMELEN
+condition|)
+name|rxstat
+operator||=
+operator|(
+name|XL_RXSTAT_UP_ERROR
+operator||
+name|XL_RXSTAT_OVERSIZE
+operator|)
+expr_stmt|;
 comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 	 	 * comes up in the ring. 		 */
 if|if
 condition|(
@@ -9053,7 +9089,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If there error bit was not set, the upload complete 		 * bit should be set which means we have a valid packet. 		 * If not, something truly strange has happened. 		 */
+comment|/* 		 * If the error bit was not set, the upload complete 		 * bit should be set which means we have a valid packet. 		 * If not, something truly strange has happened. 		 */
 if|if
 condition|(
 operator|!
@@ -9125,19 +9161,6 @@ operator|=
 name|cur_rx
 operator|->
 name|xl_mbuf
-expr_stmt|;
-name|total_len
-operator|=
-name|le32toh
-argument_list|(
-name|cur_rx
-operator|->
-name|xl_ptr
-operator|->
-name|xl_status
-argument_list|)
-operator|&
-name|XL_RXSTAT_LENMASK
 expr_stmt|;
 comment|/* 		 * Try to conjure up a new mbuf cluster. If that 		 * fails, it means we have an out of memory condition and 		 * should leave the buffer in place and continue. This will 		 * result in a lost packet, but there's little else we 		 * can do in this situation. 		 */
 if|if
@@ -9226,11 +9249,11 @@ name|total_len
 expr_stmt|;
 if|if
 condition|(
-name|sc
+name|ifp
 operator|->
-name|xl_type
-operator|==
-name|XL_TYPE_905B
+name|if_capenable
+operator|&
+name|IFCAP_RXCSUM
 condition|)
 block|{
 comment|/* Do IP checksum checking. */
@@ -10631,6 +10654,20 @@ decl_stmt|;
 name|u_int32_t
 name|status
 decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
 comment|/*  	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out  	 * of fragments or hit the end of the mbuf chain. 	 */
 name|error
 operator|=
@@ -12326,7 +12363,7 @@ argument_list|,
 name|XL_CMD_COAX_STOP
 argument_list|)
 expr_stmt|;
-comment|/* increase packet size to allow reception of 802.1q or ISL packets */
+comment|/* 	 * increase packet size to allow reception of 802.1q or ISL packets. 	 * For the 3c90x chip, set the 'allow large packets' bit in the MAC 	 * control register. For 3c90xB/C chips, use the RX packet size 	 * register. 	 */
 if|if
 condition|(
 name|sc
@@ -12344,6 +12381,34 @@ argument_list|,
 name|XL_PACKET_SIZE
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|u_int8_t
+name|macctl
+decl_stmt|;
+name|macctl
+operator|=
+name|CSR_READ_1
+argument_list|(
+name|sc
+argument_list|,
+name|XL_W3_MAC_CTRL
+argument_list|)
+expr_stmt|;
+name|macctl
+operator||=
+name|XL_MACCTRL_ALLOW_LARGE_PACK
+expr_stmt|;
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|XL_W3_MAC_CTRL
+argument_list|,
+name|macctl
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Clear out the stats counters. */
 name|CSR_WRITE_2
 argument_list|(
@@ -13310,6 +13375,39 @@ name|mii_media
 argument_list|,
 name|command
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIOCSIFCAP
+case|:
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|ifr
+operator|->
+name|ifr_reqcap
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_TXCSUM
+condition|)
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+name|XL905B_CSUM_FEATURES
+expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 default|default:

@@ -367,6 +367,13 @@ name|XL_PACKET_SIZE
 value|1540
 end_define
 
+begin_define
+define|#
+directive|define
+name|XL_MAX_FRAMELEN
+value|(ETHER_MAX_LEN + ETHER_VLAN_ENCAP_LEN)
+end_define
+
 begin_comment
 comment|/*  * Register layouts.  */
 end_comment
