@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1954,7 +1954,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSNOACT
-value|_IOW(b, 66, int)
+value|_IOW(b, 66, u_long)
 end_define
 
 begin_comment
@@ -1965,11 +1965,33 @@ begin_define
 define|#
 directive|define
 name|SIOCGNOACT
-value|_IOR(b, 67, int)
+value|_IOR(b, 67, u_long)
 end_define
 
 begin_comment
 comment|/* tcp: get no activity timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_NOACTPROBE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/*	send pkt on timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_NOACTSIG
+value|0x40000000
+end_define
+
+begin_comment
+comment|/*	advise user on timeout */
 end_comment
 
 begin_define
