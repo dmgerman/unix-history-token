@@ -2307,6 +2307,10 @@ name|i
 decl_stmt|;
 name|p
 operator|=
+operator|(
+name|u_int64_t
+operator|*
+operator|)
 name|bp
 operator|->
 name|b_data
