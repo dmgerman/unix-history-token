@@ -4130,7 +4130,7 @@ name|fwc
 argument_list|,
 name|M_IP6FW
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 name|ftmp
@@ -4143,7 +4143,7 @@ name|ftmp
 argument_list|,
 name|M_IP6FW
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

@@ -16,7 +16,7 @@ name|_NET_BPF_COMPAT_H_
 end_define
 
 begin_comment
-comment|/*  * Some hacks for compatibility across SunOS and 4.4BSD.  We emulate malloc  * and free with mbuf clusters.  We store a pointer to the mbuf in the first  * word of the mbuf and return 8 bytes passed the start of data (for double  * word alignment).  We cannot just use offsets because clusters are not at  * a fixed offset from the associated mbuf.  Sorry for this kludge.  */
+comment|/*  * Some hacks for compatibility across SunOS and 4.4BSD.  We emulate malloc  * and free with mbuf clusters.  We store a pointer to the mbuf in the first  * word of the mbuf and return 8 bytes past the start of data (for double  * word alignment).  We cannot just use offsets because clusters are not at  * a fixed offset from the associated mbuf.  Sorry for this kludge.  */
 end_comment
 
 begin_define
@@ -30,7 +30,8 @@ name|type
 parameter_list|,
 name|canwait
 parameter_list|)
-value|bpf_alloc(size, canwait)
+define|\
+value|bpf_alloc(size, (canwait& M_NOWAIT) ? M_DONTWAIT : M_TRYWAIT)
 end_define
 
 begin_define
@@ -43,20 +44,6 @@ parameter_list|,
 name|type
 parameter_list|)
 value|m_free(*(struct mbuf **)(cp - 8))
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_WAITOK
-value|M_TRYWAIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|M_NOWAIT
-value|M_DONTWAIT
 end_define
 
 begin_comment

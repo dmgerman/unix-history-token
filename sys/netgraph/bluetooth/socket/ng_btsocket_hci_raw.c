@@ -5308,7 +5308,7 @@ name|MGET
 argument_list|(
 name|nam
 argument_list|,
-name|M_WAITOK
+name|M_TRYWAIT
 argument_list|,
 name|MT_SONAME
 argument_list|)

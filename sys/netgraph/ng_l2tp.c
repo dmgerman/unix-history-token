@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/libkern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_message.h>
 end_include
 
@@ -1090,7 +1096,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* mem*() macros */
+comment|/* memmove macro */
 end_comment
 
 begin_define
@@ -1106,24 +1112,6 @@ name|l
 parameter_list|)
 value|ovbcopy(s, d, l)
 end_define
-
-begin_define
-define|#
-directive|define
-name|memset
-parameter_list|(
-name|d
-parameter_list|,
-name|z
-parameter_list|,
-name|l
-parameter_list|)
-value|bzero(d, l)
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_comment
 comment|/* Whether to use m_copypacket() or m_dup() */
@@ -4298,7 +4286,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 operator|)
 operator|==
@@ -5614,7 +5602,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 operator|)
 operator|==
@@ -6196,7 +6184,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 operator|)
 operator|==

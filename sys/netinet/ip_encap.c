@@ -2146,7 +2146,7 @@ name|void
 operator|*
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

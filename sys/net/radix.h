@@ -669,7 +669,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|(p = (t) malloc((unsigned long)(n), M_RTABLE, M_DONTWAIT))
+value|(p = (t) malloc((unsigned long)(n), M_RTABLE, M_NOWAIT))
 end_define
 
 begin_define

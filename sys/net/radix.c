@@ -37,13 +37,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|M_DONTWAIT
-value|M_NOWAIT
-end_define
-
 begin_include
 include|#
 directive|include

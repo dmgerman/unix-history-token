@@ -2460,7 +2460,7 @@ name|m
 argument_list|,
 name|ETHER_HDR_LEN
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4123,7 +4123,7 @@ expr|struct
 name|ether_header
 argument_list|)
 argument_list|,
-name|M_NOWAIT
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 call|(
