@@ -17,11 +17,33 @@ directive|include
 file|<sys/sem.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -86,8 +108,8 @@ name|semun
 modifier|*
 name|semun_ptr
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|__STDC__
 name|va_start
 argument_list|(
