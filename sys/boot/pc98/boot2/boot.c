@@ -288,6 +288,7 @@ literal|0x80
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|#
 directive|else
 comment|/* IBM-PC */
@@ -321,7 +322,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PC98 */
-block|}
 name|bootinfo
 operator|.
 name|bi_basemem
