@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.29
+literal|3.30
 operator|%
 name|G
 operator|%
@@ -306,7 +306,17 @@ init|;
 condition|;
 control|)
 block|{
+name|int
+name|i
+decl_stmt|;
 comment|/* get a socket for the SMTP connection */
+comment|/* do loop is to avoid 4.1b kernel bug (?) */
+name|i
+operator|=
+literal|50
+expr_stmt|;
+do|do
+block|{
 name|s
 operator|=
 name|socket
@@ -321,6 +331,30 @@ argument_list|,
 name|SO_ACCEPTCONN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|--
+name|i
+operator|>
+literal|0
+operator|&&
+name|s
+operator|<
+literal|0
+condition|)
+do|;
 if|if
 condition|(
 name|s
