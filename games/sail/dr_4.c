@@ -56,8 +56,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
 name|k
-expr_stmt|;
+decl_stmt|;
 name|char
 name|friend
 decl_stmt|;

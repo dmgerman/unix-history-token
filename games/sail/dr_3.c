@@ -1530,10 +1530,11 @@ name|BP
 modifier|*
 name|bp
 decl_stmt|;
+name|int
 name|obp
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|int
 name|n
 decl_stmt|,

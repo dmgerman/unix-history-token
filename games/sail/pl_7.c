@@ -913,8 +913,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 name|prompt
 argument_list|(
 name|p
@@ -1008,15 +1009,17 @@ name|buf
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|n
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 name|char
 modifier|*
 name|p

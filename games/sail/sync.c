@@ -712,8 +712,9 @@ name|sighup
 decl_stmt|,
 name|sigint
 decl_stmt|;
+name|int
 name|n
-expr_stmt|;
+decl_stmt|;
 name|int
 name|type
 decl_stmt|,

@@ -78,14 +78,15 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
 name|bow1r
-operator|,
+decl_stmt|,
 name|bow1c
-operator|,
+decl_stmt|,
 name|bow2r
-operator|,
+decl_stmt|,
 name|bow2c
-expr_stmt|;
+decl_stmt|;
 name|int
 name|stern1r
 decl_stmt|,
@@ -449,17 +450,19 @@ argument|dc
 argument_list|)
 end_macro
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|dr
-operator|,
+decl_stmt|,
 name|dc
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|dc
@@ -635,8 +638,9 @@ name|Dc
 decl_stmt|,
 name|i
 decl_stmt|;
+name|int
 name|ang
-expr_stmt|;
+decl_stmt|;
 name|Dr
 operator|=
 name|from
@@ -794,12 +798,14 @@ end_comment
 begin_block
 block|{
 comment|/* shooting at onship's starboard side */
+name|int
 name|ang
-expr_stmt|;
+decl_stmt|;
+name|int
 name|Dr
-operator|,
+decl_stmt|,
 name|Dc
-expr_stmt|;
+decl_stmt|;
 name|Dr
 operator|=
 name|from

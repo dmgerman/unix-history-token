@@ -1413,8 +1413,9 @@ name|ship
 modifier|*
 name|to
 decl_stmt|;
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|foreachship
 argument_list|(
 argument|to

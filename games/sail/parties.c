@@ -239,8 +239,9 @@ name|file
 operator|->
 name|OBP
 decl_stmt|;
+name|int
 name|n
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|n

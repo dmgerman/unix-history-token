@@ -54,8 +54,9 @@ decl_stmt|;
 name|int
 name|nat
 decl_stmt|;
+name|int
 name|i
-expr_stmt|;
+decl_stmt|;
 name|foreachship
 argument_list|(
 argument|sp
@@ -1550,8 +1551,9 @@ end_macro
 
 begin_block
 block|{
+name|int
 name|n
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|ship
 modifier|*
