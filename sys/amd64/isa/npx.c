@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/i386/isa/RCS/npx.c,v 1.2 92/01/21 14:34:27 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/npx.c,v 1.1.1.1 1993/06/12 14:58:00 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1171,7 +1171,11 @@ name|npx_ex16
 condition|)
 name|printf
 argument_list|(
-literal|"<Errors reported via Exception 16>"
+literal|"npx%d: Errors reported via Exception 16\n"
+argument_list|,
+name|dvp
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1181,7 +1185,11 @@ name|npx_irq13
 condition|)
 name|printf
 argument_list|(
-literal|"<Errors reported via IRQ 13>"
+literal|"npx%d: Errors reported via IRQ 13\n"
+argument_list|,
+name|dvp
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1191,13 +1199,21 @@ name|npx_exists
 condition|)
 name|printf
 argument_list|(
-literal|"<Error reporting broken, using 387 emulator>"
+literal|"npx%d: Error reporting broken, using 387 emulator\n"
+argument_list|,
+name|dvp
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"<387 Emulator>"
+literal|"npx%d: 387 Emulator\n"
+argument_list|,
+name|dvp
+operator|->
+name|id_unit
 argument_list|)
 expr_stmt|;
 name|npxinit

@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /usr/bill/working/sys/i386/isa/RCS/com.c,v 1.2 92/01/21 14:34:11 william Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/sio.c,v 1.1.1.1 1993/06/12 14:57:57 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2155,6 +2155,13 @@ argument_list|,
 name|scr
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"sio%d: type"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|scr1
@@ -2253,6 +2260,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COM_MULTIPORT

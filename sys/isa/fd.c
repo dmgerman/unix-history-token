@@ -12,16 +12,16 @@ name|char
 name|rev
 index|[]
 init|=
-literal|"$Revision: 1.10 $"
+literal|"$Revision: 1.1.1.1 $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * $Header: /usr/src/sys.386bsd/i386/isa/RCS/fd.c,v 1.10 93/04/13 16:53:29 root Exp $  */
+comment|/*  * $Header: /a/cvs/386BSD/src/sys.386bsd/i386/isa/fd.c,v 1.1.1.1 1993/06/12 14:58:02 rgrimes Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * $Log:	fd.c,v $  * Revision 1.10  93/04/13  16:53:29  root  * make sure turning off a drive motor doesn't deselect another  * drive active at the time.  * Also added a pointer from the fd_data to it's fd_type.  *   * Revision 1.9  93/04/13  15:31:02  root  * make all seeks go through DOSEEK state so are sure of being done right.  *   * Revision 1.8  93/04/12  21:20:13  root  * only check if old fd is the one we are working on if there IS  * an old fd pointer. (in fdstate())  *   * Revision 1.7  93/04/11  17:05:35  root  * cleanup timeouts etc.  * also fix bug to select teh correct drive when running> 1 drive  * at a time.  *   * Revision 1.6  93/04/05  00:48:45  root  * change a timeout and add version to banner message  *   * Revision 1.5  93/04/04  16:39:08  root  * first working version.. some floppy controllers don't seem to  * like 2 int. status inquiries in a row.  *   */
+comment|/*  * $Log: fd.c,v $  * Revision 1.1.1.1  1993/06/12  14:58:02  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.10  93/04/13  16:53:29  root  * make sure turning off a drive motor doesn't deselect another  * drive active at the time.  * Also added a pointer from the fd_data to it's fd_type.  *   * Revision 1.9  93/04/13  15:31:02  root  * make all seeks go through DOSEEK state so are sure of being done right.  *   * Revision 1.8  93/04/12  21:20:13  root  * only check if old fd is the one we are working on if there IS  * an old fd pointer. (in fdstate())  *   * Revision 1.7  93/04/11  17:05:35  root  * cleanup timeouts etc.  * also fix bug to select teh correct drive when running> 1 drive  * at a time.  *   * Revision 1.6  93/04/05  00:48:45  root  * change a timeout and add version to banner message  *   * Revision 1.5  93/04/04  16:39:08  root  * first working version.. some floppy controllers don't seem to  * like 2 int. status inquiries in a row.  *   */
 end_comment
 
 begin_include
@@ -1078,26 +1078,11 @@ name|fdsu
 operator|=
 name|fdsu
 expr_stmt|;
-comment|/* yes, announce it */
-if|if
-condition|(
-operator|!
-name|hdr
-condition|)
 name|printf
 argument_list|(
-literal|" drives "
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|", "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%d: "
+literal|"fd%d: unit %d type "
+argument_list|,
+name|fdcu
 argument_list|,
 name|fdu
 argument_list|)
@@ -1115,7 +1100,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"1.2M"
+literal|"1.2MB 5.25in\n"
 argument_list|)
 expr_stmt|;
 name|fd_data
@@ -1152,7 +1137,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"1.44M"
+literal|"1.44MB 3.5in\n"
 argument_list|)
 expr_stmt|;
 name|fd_data
@@ -1190,13 +1175,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|" %s "
-argument_list|,
-name|rev
-argument_list|)
-expr_stmt|;
 comment|/* Set transfer to 500kbps */
 name|outb
 argument_list|(
