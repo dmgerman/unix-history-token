@@ -877,6 +877,62 @@ block|}
 end_function
 
 begin_comment
+comment|/* CIS string comparison */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|cis_strcmp
+parameter_list|(
+name|char
+modifier|*
+name|db
+parameter_list|,
+name|char
+modifier|*
+name|cis
+parameter_list|)
+block|{
+name|size_t
+name|n
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|db
+operator|||
+operator|!
+name|cis
+condition|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|n
+operator|=
+name|strlen
+argument_list|(
+name|db
+argument_list|)
+expr_stmt|;
+return|return
+name|strncmp
+argument_list|(
+name|db
+argument_list|,
+name|cis
+argument_list|,
+name|n
+argument_list|)
+return|;
+comment|/* XXX Add code for regex CIS string comparison here */
+block|}
+end_function
+
+begin_comment
 comment|/*  * card_inserted - Card has been inserted;  *	- Read the CIS  *	- match the card type.  *	- Match the driver and allocate a driver instance.  *	- Allocate I/O ports, memory and IRQ.  *	- Set up the slot.  *	- assign the driver (if failed, then terminate).  *	- Run the card commands.  *	- Run the driver commands  *	- Run the device commands  */
 end_comment
 
@@ -964,7 +1020,7 @@ name|DT_VERS
 case|:
 if|if
 condition|(
-name|strcmp
+name|cis_strcmp
 argument_list|(
 name|cp
 operator|->
@@ -979,7 +1035,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|strcmp
+name|cis_strcmp
 argument_list|(
 name|cp
 operator|->
