@@ -47,9 +47,11 @@ begin_comment
 comment|/* If defined, readline shows opening parens and braces when closing    paren or brace entered. */
 end_comment
 
-begin_comment
-comment|/* #define PAREN_MATCHING */
-end_comment
+begin_define
+define|#
+directive|define
+name|PAREN_MATCHING
+end_define
 
 begin_comment
 comment|/* This definition is needed by readline.c, rltty.c, and signals.c. */
