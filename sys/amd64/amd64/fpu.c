@@ -661,13 +661,6 @@ block|{
 name|register_t
 name|s
 decl_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"INT 16 interface\n"
-argument_list|)
-expr_stmt|;
 name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
