@@ -4688,6 +4688,8 @@ parameter_list|)
 block|{
 name|int
 name|cd
+decl_stmt|,
+name|oflag
 decl_stmt|;
 comment|/* check if we should use HTTP instead */
 if|if
@@ -4857,6 +4859,35 @@ operator|)
 literal|1
 return|;
 comment|/* bogus return value */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|op
+argument_list|,
+literal|"STOR"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|op
+argument_list|,
+literal|"APPE"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|oflag
+operator|=
+name|O_WRONLY
+expr_stmt|;
+else|else
+name|oflag
+operator|=
+name|O_RDONLY
+expr_stmt|;
 comment|/* initiate the transfer */
 return|return
 name|_ftp_transfer
@@ -4869,7 +4900,7 @@ name|url
 operator|->
 name|doc
 argument_list|,
-name|O_RDONLY
+name|oflag
 argument_list|,
 name|url
 operator|->
