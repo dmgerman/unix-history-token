@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.25 1996/06/09 23:46:22 alex Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.26 1996/06/18 01:46:34 alex Exp $  *  */
 end_comment
 
 begin_include
@@ -1256,7 +1256,7 @@ name|IP_FW_F_FRAG
 condition|)
 name|printf
 argument_list|(
-literal|"frag "
+literal|" frag "
 argument_list|)
 expr_stmt|;
 if|if
@@ -2134,12 +2134,16 @@ argument_list|(
 literal|"ip number\n"
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|md
-operator|==
+condition|)
+block|{
+case|case
 literal|':'
-operator|&&
+case|:
+if|if
+condition|(
 operator|!
 name|inet_aton
 argument_list|(
@@ -2153,13 +2157,29 @@ argument_list|(
 literal|"ip number\n"
 argument_list|)
 expr_stmt|;
-elseif|else
+break|break;
+case|case
+literal|'/'
+case|:
 if|if
 condition|(
-name|md
+name|atoi
+argument_list|(
+name|p
+argument_list|)
 operator|==
-literal|'/'
+literal|0
 condition|)
+block|{
+name|mask
+operator|->
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|mask
 operator|->
 name|s_addr
@@ -2178,7 +2198,9 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-else|else
+block|}
+break|break;
+default|default:
 name|mask
 operator|->
 name|s_addr
@@ -2187,6 +2209,16 @@ name|htonl
 argument_list|(
 literal|0xffffffff
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|ipno
+operator|->
+name|s_addr
+operator|&=
+name|mask
+operator|->
+name|s_addr
 expr_stmt|;
 name|av
 operator|++
@@ -4604,9 +4636,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|show_usage
 argument_list|(
