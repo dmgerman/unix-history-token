@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)itime.c	1.11 (Berkeley) %G%"
+literal|"@(#)itime.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +369,10 @@ operator|.
 name|c_ddate
 operator|=
 literal|0
+expr_stmt|;
+name|lastincno
+operator|=
+literal|'0'
 expr_stmt|;
 name|inititimes
 argument_list|()
