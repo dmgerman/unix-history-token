@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|PCI_CBMEM
-value|0x10
+value|PCIR_BAR(0)
 end_define
 
 begin_define
@@ -78,6 +78,13 @@ define|#
 directive|define
 name|FW_DEVICE_UPD72870
 value|(0x00cd<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_UPD72873
+value|(0x00e7<< 16)
 end_define
 
 begin_define

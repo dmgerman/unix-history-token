@@ -1731,6 +1731,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
 name|__FreeBSD_version
 operator|<
 literal|500000
