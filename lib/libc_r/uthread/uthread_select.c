@@ -737,7 +737,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
