@@ -1303,7 +1303,7 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -1661,7 +1661,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|char
@@ -3163,7 +3163,7 @@ name|state
 init|=
 name|STATE_UNKNOWN
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|sbuf_clear
@@ -3801,7 +3801,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
+name|ino_t
 name|prev_inode
 init|=
 literal|0
