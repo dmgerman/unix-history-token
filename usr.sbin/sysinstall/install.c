@@ -4975,6 +4975,8 @@ name|termcap_cons25l1
 block|,
 name|termcap_cons25l1_m
 block|,
+name|termcap_xterm
+block|,
 name|NULL
 block|,     }
 decl_stmt|;

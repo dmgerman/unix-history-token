@@ -120,6 +120,12 @@ literal|"cons25-m"
 block|,
 name|termcap_cons25_m
 block|}
+block|,
+block|{
+literal|"xterm"
+block|,
+name|termcap_xterm
+block|}
 block|}
 struct|;
 if|if
@@ -172,7 +178,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Your choice: (1-4) "
+literal|"5 ...................... xterm terminal emulator.\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Your choice: (1-5) "
 argument_list|)
 expr_stmt|;
 name|fflush
