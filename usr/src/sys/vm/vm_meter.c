@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.18	83/01/08	*/
+comment|/*	vm_meter.c	4.19	83/01/17	*/
 end_comment
 
 begin_include
@@ -228,6 +228,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|NOPAGING
 name|desfree
 operator|=
 operator|(
@@ -252,6 +255,20 @@ name|LOOPPAGES
 operator|/
 literal|8
 expr_stmt|;
+else|#
+directive|else
+name|desfree
+operator|=
+operator|(
+literal|32
+operator|*
+literal|1024
+operator|)
+operator|/
+name|NBPG
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
