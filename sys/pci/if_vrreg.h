@@ -2482,6 +2482,10 @@ name|struct
 name|mtx
 name|vr_mtx
 decl_stmt|;
+name|int
+name|suspended
+decl_stmt|;
+comment|/* if 1, sleeping/detaching */
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
