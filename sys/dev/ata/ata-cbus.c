@@ -150,6 +150,19 @@ decl_stmt|;
 name|u_long
 name|tmp
 decl_stmt|;
+comment|/* dont probe PnP devices */
+if|if
+condition|(
+name|isa_get_vendorid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* allocate the ioport range */
 name|rid
 operator|=
