@@ -7431,6 +7431,7 @@ operator|(
 name|ret
 operator|)
 return|;
+comment|/* 	 * Normally, one wouldn't delete the children.  However, detach 	 * merely detaches the children w/o deleting them.  So if 	 * we were to reattach, we add additional children and wind up 	 * with duplicates.  So, we remove them here following the 	 * implicit "if you add it in attach, you should delete it in 	 * detach" rule that may or may not be documented. 	 */
 name|device_get_children
 argument_list|(
 name|dev
