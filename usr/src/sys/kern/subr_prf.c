@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.6 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/mtpr.h"
-end_include
 
 begin_include
 include|#
@@ -92,6 +86,29 @@ include|#
 directive|include
 file|"syslog.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/mtpr.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../machine/kdbparam.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1370,6 +1387,34 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+block|{
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
+comment|/* below kdb pri */
+name|setsoftkdb
+argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|boot
 argument_list|(
 name|bootopt
