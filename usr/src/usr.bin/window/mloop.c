@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.10 (Berkeley) %G%"
+literal|"@(#)mloop.c	3.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,16 +124,15 @@ decl_stmt|;
 specifier|register
 name|n
 expr_stmt|;
-name|wwiomux
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|wwibp
-operator|<
+operator|>=
 name|wwibq
 condition|)
-block|{
+name|wwiomux
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -220,7 +219,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
