@@ -1349,18 +1349,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|lkp
-operator|->
-name|lk_flags
-operator||=
-name|LK_HAVE_EXCL
-expr_stmt|;
-name|lkp
-operator|->
-name|lk_lockholder
-operator|=
-name|thr
-expr_stmt|;
 if|if
 condition|(
 name|lkp
@@ -1373,6 +1361,18 @@ name|panic
 argument_list|(
 literal|"lockmgr: non-zero exclusive count"
 argument_list|)
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_flags
+operator||=
+name|LK_HAVE_EXCL
+expr_stmt|;
+name|lkp
+operator|->
+name|lk_lockholder
+operator|=
+name|thr
 expr_stmt|;
 name|lkp
 operator|->
