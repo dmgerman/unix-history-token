@@ -73,6 +73,12 @@ literal|0
 block|,
 literal|"/usr/sccs/admin"
 block|,
+literal|"chghist"
+block|,
+literal|0
+block|,
+literal|"/usr/sccs/rmdel"
+block|,
 literal|"comb"
 block|,
 literal|0
@@ -90,6 +96,12 @@ block|,
 literal|0
 block|,
 literal|"/usr/sccs/get"
+block|,
+literal|"help"
+block|,
+name|F_NOSDOT
+block|,
+literal|"/usr/sccs/help"
 block|,
 literal|"prt"
 block|,
@@ -123,7 +135,7 @@ name|char
 modifier|*
 name|SccsPath
 init|=
-literal|"sccs/s."
+literal|"SCCS/s."
 decl_stmt|;
 end_decl_stmt
 
@@ -293,8 +305,7 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	**  Build new argument vector. 	**	This is in three phases. 	**	1.  Copy program name. 	**	2.  Copy program flags with no translation. 	**	3.  Copy program files, with possible translation. 	*/
-comment|/*  1: copy program name  */
+comment|/* 	**  Build new argument vector. 	*/
 name|av
 operator|=
 name|newargv
@@ -305,40 +316,21 @@ operator|++
 operator|=
 name|p
 expr_stmt|;
-comment|/*  2: copy program flags, no translation  */
+comment|/* copy program filename arguments and flags */
 while|while
 condition|(
 operator|--
 name|argc
 operator|>
 literal|0
-operator|&&
-operator|*
-operator|(
+condition|)
+block|{
 name|p
 operator|=
 operator|*
 operator|++
 name|argv
-operator|)
-operator|==
-literal|'-'
-condition|)
-operator|*
-name|av
-operator|++
-operator|=
-name|p
 expr_stmt|;
-comment|/*  3: copy program filename arguments  */
-while|while
-condition|(
-name|argc
-operator|--
-operator|>
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 operator|(
@@ -350,6 +342,11 @@ name|F_NOSDOT
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'-'
 condition|)
 operator|*
 name|av
@@ -357,9 +354,7 @@ operator|++
 operator|=
 name|makefile
 argument_list|(
-operator|*
-name|argv
-operator|++
+name|p
 argument_list|)
 expr_stmt|;
 else|else
@@ -367,9 +362,7 @@ operator|*
 name|av
 operator|++
 operator|=
-operator|*
-name|argv
-operator|++
+name|p
 expr_stmt|;
 block|}
 comment|/* terminate argument vector */
