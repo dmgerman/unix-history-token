@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.3 1998/09/18 01:12:46 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.4 1998/09/18 02:02:33 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -1219,7 +1219,6 @@ goto|goto
 name|out
 goto|;
 block|}
-elseif|else
 if|if
 condition|(
 name|dev
@@ -1235,7 +1234,6 @@ operator|->
 name|d_npartitions
 condition|)
 block|{
-comment|/* 	     * The partition supplied is out of bounds; this is fatal. 	     */
 name|DEBUG
 argument_list|(
 literal|"partition '%c' exceeds partitions in table (a-'%c')"
@@ -1265,9 +1263,7 @@ goto|goto
 name|out
 goto|;
 block|}
-else|else
-block|{
-comment|/* 	     * Complain if the partition type is wrong and it shouldn't be, but 	     * regardless accept this partition. 	     */
+comment|/* Complain if the partition type is wrong */
 if|if
 condition|(
 operator|(
@@ -1323,7 +1319,6 @@ index|]
 operator|.
 name|p_offset
 expr_stmt|;
-block|}
 block|}
 comment|/*      * Save our context      */
 operator|(
@@ -1419,12 +1414,13 @@ operator|.
 name|data
 operator|)
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|DEBUG("open_disk %p", od);
-endif|#
-directive|endif
+name|DEBUG
+argument_list|(
+literal|"open_disk %p"
+argument_list|,
+name|od
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -1537,12 +1533,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-literal|0
-block|DEBUG("open_disk %p", od);
-endif|#
-directive|endif
+name|DEBUG
+argument_list|(
+literal|"open_disk %p"
+argument_list|,
+name|od
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rw
@@ -1560,12 +1557,21 @@ name|size
 operator|/
 name|BIOSDISK_SECSIZE
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|DEBUG("read %d from %d+%d to %p", blks, od->od_boff, dblk, buf);
-endif|#
-directive|endif
+name|DEBUG
+argument_list|(
+literal|"read %d from %d+%d to %p"
+argument_list|,
+name|blks
+argument_list|,
+name|od
+operator|->
+name|od_boff
+argument_list|,
+name|dblk
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rsize
@@ -1609,12 +1615,29 @@ block|}
 ifdef|#
 directive|ifdef
 name|BD_SUPPORT_FRAGS
-if|#
-directive|if
-literal|0
-block|D(printf("bd_strategy: frag read %d from %d+%d+d to %p\n",  	     fragsize, od->od_boff, dblk, blks, buf + (blks * BIOSDISK_SECSIZE)));
-endif|#
-directive|endif
+name|DEBUG
+argument_list|(
+literal|"bd_strategy: frag read %d from %d+%d+d to %p\n"
+argument_list|,
+name|fragsize
+argument_list|,
+name|od
+operator|->
+name|od_boff
+argument_list|,
+name|dblk
+argument_list|,
+name|blks
+argument_list|,
+name|buf
+operator|+
+operator|(
+name|blks
+operator|*
+name|BIOSDISK_SECSIZE
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fragsize
@@ -1712,6 +1735,15 @@ decl_stmt|,
 name|hd
 decl_stmt|,
 name|sec
+decl_stmt|,
+name|result
+decl_stmt|,
+name|resid
+decl_stmt|,
+name|cnt
+decl_stmt|;
+name|caddr_t
+name|p
 decl_stmt|;
 name|bpc
 operator|=
@@ -1726,22 +1758,18 @@ name|od_hds
 operator|)
 expr_stmt|;
 comment|/* blocks per cylinder */
-name|v86
-operator|.
-name|ctl
+name|resid
 operator|=
-name|V86_FLAGS
+name|blks
 expr_stmt|;
-name|v86
-operator|.
-name|addr
+name|p
 operator|=
-literal|0x13
+name|dest
 expr_stmt|;
 while|while
 condition|(
-name|blks
-operator|!=
+name|resid
+operator|>
 literal|0
 condition|)
 block|{
@@ -1790,7 +1818,7 @@ name|od_sec
 operator|-
 name|sec
 argument_list|,
-name|blks
+name|resid
 argument_list|)
 expr_stmt|;
 comment|/* correct sector number for 1-based BIOS numbering */
@@ -1798,6 +1826,18 @@ name|sec
 operator|++
 expr_stmt|;
 comment|/* build request  XXX support EDD requests too */
+name|v86
+operator|.
+name|ctl
+operator|=
+name|V86_FLAGS
+expr_stmt|;
+name|v86
+operator|.
+name|addr
+operator|=
+literal|0x13
+expr_stmt|;
 name|v86
 operator|.
 name|eax
@@ -1852,7 +1892,7 @@ name|es
 operator|=
 name|VTOPSEG
 argument_list|(
-name|dest
+name|p
 argument_list|)
 expr_stmt|;
 name|v86
@@ -1861,19 +1901,46 @@ name|ebx
 operator|=
 name|VTOPOFF
 argument_list|(
-name|dest
+name|p
 argument_list|)
 expr_stmt|;
 name|v86int
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
+name|result
+operator|=
+operator|(
 name|v86
 operator|.
 name|efl
 operator|&
 literal|0x1
+operator|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|"%d sectors from %d/%d/%d %s"
+argument_list|,
+name|x
+argument_list|,
+name|cyl
+argument_list|,
+name|hd
+argument_list|,
+name|sec
+operator|-
+literal|1
+argument_list|,
+name|result
+condition|?
+literal|"failed"
+else|:
+literal|"ok"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
 condition|)
 return|return
 operator|(
@@ -1881,8 +1948,8 @@ operator|-
 literal|1
 operator|)
 return|;
-name|dest
-operator|+
+name|p
+operator|+=
 operator|(
 name|x
 operator|*
@@ -1893,11 +1960,12 @@ name|dblk
 operator|+=
 name|x
 expr_stmt|;
-name|blks
+name|resid
 operator|-=
 name|x
 expr_stmt|;
 block|}
+comment|/*    hexdump(dest, (blks * BIOSDISK_SECSIZE)); */
 return|return
 operator|(
 literal|0
@@ -2040,6 +2108,27 @@ operator|.
 name|ecx
 operator|&
 literal|0x3f
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|"unit 0x%x geometry %d/%d/%d"
+argument_list|,
+name|od
+operator|->
+name|od_unit
+argument_list|,
+name|od
+operator|->
+name|od_cyl
+argument_list|,
+name|od
+operator|->
+name|od_hds
+argument_list|,
+name|od
+operator|->
+name|od_sec
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
