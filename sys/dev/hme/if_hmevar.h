@@ -324,6 +324,9 @@ name|int
 name|sc_pci
 decl_stmt|;
 comment|/* XXXXX -- PCI buses are LE. */
+name|int
+name|sc_csum_features
+decl_stmt|;
 comment|/* Ring descriptor */
 name|struct
 name|hme_ring

@@ -113,7 +113,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* ? */
+comment|/* extended transfer mode */
 end_comment
 
 begin_define
@@ -124,7 +124,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* ? */
+comment|/* parity check for DVMA/PIO */
 end_comment
 
 begin_define
@@ -777,12 +777,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HME_ERXI_FIFO_SRPTR
+name|HME_ERXI_FIFO_PKTCNT
 value|(6*4)
 end_define
 
 begin_comment
-comment|/* FIFO shadow read pointer */
+comment|/* FIFO packet counter */
 end_comment
 
 begin_define
@@ -887,13 +887,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HME_ERX_CFG_CSUMSTART
+name|HME_ERX_CFG_CSUMSTART_MASK
 value|0x007f0000
 end_define
 
 begin_comment
-comment|/* cksum offset */
+comment|/* cksum offset mask */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HME_ERX_CFG_CSUMSTART_SHIFT
+value|16
+end_define
 
 begin_comment
 comment|/*  * HME MAC-core register offsets  */
@@ -1892,6 +1899,20 @@ end_define
 begin_comment
 comment|/* packet length mask (tx) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HME_XD_TXCKSUM_SSHIFT
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|HME_XD_TXCKSUM_OSHIFT
+value|20
+end_define
 
 begin_define
 define|#
