@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"header.h"
 end_include
 
@@ -221,6 +227,10 @@ name|struct
 name|passwd
 modifier|*
 name|pwe
+decl_stmt|;
+name|struct
+name|stat
+name|sb
 decl_stmt|;
 comment|/*  *	first task is to identify the player  */
 ifndef|#
@@ -582,15 +592,21 @@ endif|VT100
 comment|/*  *	now make scoreboard if it is not there (don't clear)  */
 if|if
 condition|(
-name|access
+name|stat
 argument_list|(
 name|scorefile
 argument_list|,
-literal|0
+operator|&
+name|sb
 argument_list|)
+operator|<
+literal|0
+operator|||
+name|sb
+operator|.
+name|st_size
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 comment|/* not there */
 name|makeboard
