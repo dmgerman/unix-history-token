@@ -190,6 +190,8 @@ argument_list|(
 name|devname
 argument_list|,
 name|O_RDONLY
+operator||
+name|O_NONBLOCK
 argument_list|,
 literal|0
 argument_list|)
