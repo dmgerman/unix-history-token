@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_syscalls.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2906,12 +2906,18 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
 begin_comment
 comment|/*  * Creat system call.  */
 end_comment
 
 begin_macro
-name|creat
+name|ocreat
 argument_list|(
 argument|p
 argument_list|,
@@ -3013,6 +3019,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_43 */
+end_comment
 
 begin_comment
 comment|/*  * Mknod system call  */
@@ -8466,7 +8481,7 @@ operator|!=
 name|vattr
 operator|.
 name|va_uid
-operator|||
+operator|&&
 operator|(
 name|error
 operator|=
