@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.82 1996/10/14 10:09:52 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.82.2.1 1996/11/09 21:15:54 phk Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NCR_DATE
-value|"pl23 95/09/07"
+value|"pl24 96/12/14"
 end_define
 
 begin_define
@@ -30,6 +30,35 @@ directive|define
 name|NCR_GETCC_WITHMSG
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_ncr.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined (__FreeBSD__)&& defined(KERNEL) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -41,13 +70,6 @@ define|#
 directive|define
 name|SCSI_NCR_DFLT_TAGS
 value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_LUN
-value|(1)
 end_define
 
 begin_define
@@ -610,7 +632,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SCSI_DEBUG_FLAGS
+name|SCSI_NCR_DEBUG
 end_ifdef
 
 begin_define
@@ -626,13 +648,13 @@ directive|else
 end_else
 
 begin_comment
-comment|/* SCSI_DEBUG_FLAGS */
+comment|/* SCSI_NCR_DEBUG */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCSI_DEBUG_FLAGS
+name|SCSI_NCR_DEBUG
 value|0
 end_define
 
@@ -649,7 +671,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SCSI_DEBUG_FLAGS */
+comment|/* SCSI_NCR_DEBUG */
 end_comment
 
 begin_comment
@@ -786,7 +808,7 @@ name|r
 parameter_list|,
 name|val
 parameter_list|)
-value|np->reg->r = val
+value|np->reg->r = (val)
 end_define
 
 begin_define
@@ -798,7 +820,7 @@ name|r
 parameter_list|,
 name|val
 parameter_list|)
-value|np->reg->r = val
+value|np->reg->r = (val)
 end_define
 
 begin_define
@@ -810,7 +832,7 @@ name|r
 parameter_list|,
 name|val
 parameter_list|)
-value|np->reg->r = val
+value|np->reg->r = (val)
 end_define
 
 begin_endif
@@ -3115,7 +3137,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.82 1996/10/14 10:09:52 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.82.2.1 1996/11/09 21:15:54 phk Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3213,7 +3235,7 @@ specifier|static
 name|int
 name|ncr_debug
 init|=
-name|SCSI_DEBUG_FLAGS
+name|SCSI_NCR_DEBUG
 decl_stmt|;
 end_decl_stmt
 
@@ -3258,13 +3280,6 @@ define|#
 directive|define
 name|NCR_810_ID
 value|(0x00011000ul)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NCR_810AP_ID
-value|(0x00051000ul)
 end_define
 
 begin_define
@@ -8509,12 +8524,6 @@ name|pa
 operator|->
 name|pa_id
 operator|!=
-name|NCR_810AP_ID
-operator|&&
-name|pa
-operator|->
-name|pa_id
-operator|!=
 name|NCR_815_ID
 operator|&&
 name|pa
@@ -8566,6 +8575,18 @@ name|pcidi_t
 name|type
 parameter_list|)
 block|{
+name|u_char
+name|rev
+init|=
+name|pci_conf_read
+argument_list|(
+name|tag
+argument_list|,
+name|PCI_CLASS_REG
+argument_list|)
+operator|&
+literal|0xff
+decl_stmt|;
 switch|switch
 condition|(
 name|type
@@ -8576,15 +8597,19 @@ name|NCR_810_ID
 case|:
 return|return
 operator|(
+name|rev
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x00
+condition|?
+operator|(
 literal|"ncr 53c810 scsi"
 operator|)
-return|;
-case|case
-name|NCR_810AP_ID
-case|:
-return|return
+else|:
 operator|(
-literal|"ncr 53c810ap scsi"
+literal|"ncr 53c810a scsi"
 operator|)
 return|;
 case|case
@@ -8600,7 +8625,19 @@ name|NCR_825_ID
 case|:
 return|return
 operator|(
+name|rev
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0x00
+condition|?
+operator|(
 literal|"ncr 53c825 wide scsi"
+operator|)
+else|:
+operator|(
+literal|"ncr 53c825a wide scsi"
 operator|)
 return|;
 case|case
@@ -9112,26 +9149,6 @@ name|myaddr
 operator|=
 name|SCSI_NCR_MYADDR
 expr_stmt|;
-comment|/* 	**	Reset chip. 	*/
-name|OUTB
-argument_list|(
-name|nc_istat
-argument_list|,
-name|SRST
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-name|OUTB
-argument_list|(
-name|nc_istat
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NCR_DUMP_REG
@@ -9213,7 +9230,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	**	Reset chip, once again. 	*/
+endif|#
+directive|endif
+comment|/* NCR_DUMP_REG */
+comment|/* 	**	Reset chip. 	*/
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -9233,9 +9253,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NCR_DUMP_REG */
 comment|/* 	**	Now check the cache handling of the pci chipset. 	*/
 if|if
 condition|(
@@ -12964,61 +12981,17 @@ name|code
 argument_list|)
 expr_stmt|;
 comment|/* 	**	Init chip. 	*/
-ifndef|#
-directive|ifndef
-name|__NetBSD__
-if|if
-condition|(
-name|pci_max_burst_len
-operator|<
-literal|4
-condition|)
-block|{
-specifier|static
-name|u_char
-name|tbl
-index|[
-literal|4
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0x40
-block|,
-literal|0x80
-block|}
-decl_stmt|;
-name|burstlen
-operator|=
-name|tbl
-index|[
-name|pci_max_burst_len
-index|]
-expr_stmt|;
-block|}
-else|else
 name|burstlen
 operator|=
 literal|0xc0
 expr_stmt|;
-else|#
-directive|else
-comment|/* !__NetBSD__ */
-name|burstlen
-operator|=
-literal|0xc0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
+comment|/* XXX 53c875 needs code change to   */
+comment|/*     be able to use larger bursts  */
 name|OUTB
 argument_list|(
 name|nc_istat
 argument_list|,
-literal|0
+literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/*  Remove Reset, abort ...	     */
@@ -14594,7 +14567,7 @@ operator|>
 literal|2
 condition|)
 block|{
-comment|/* 			**      If there are no requests, the script 			**      processor will sleep on SEL_WAIT_RESEL. 			**      But we have to check whether it died. 			**      Let's wake it up. 			*/
+comment|/* 			**      If there are no requests, the script 			**      processor will sleep on SEL_WAIT_RESEL. 			**      But we have to check whether it died. 			**      Let's try to wake it up. 			*/
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -14604,59 +14577,6 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|undef
-if|if
-condition|(
-name|np
-operator|->
-name|latetime
-operator|>
-literal|4
-condition|)
-block|{
-comment|/* 			**	Although we tried to wake it up, 			**	the script processor didn't respond. 			** 			**	May be a target is hanging, 			**	or another initator lets a tape device 			**	rewind with disconnect disabled :-( 			** 			**	We won't accept that. 			*/
-if|if
-condition|(
-name|INB
-argument_list|(
-name|nc_sbcl
-argument_list|)
-operator|&
-name|CBSY
-condition|)
-name|OUTB
-argument_list|(
-name|nc_scntl1
-argument_list|,
-name|CRST
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
-name|ncr_init
-argument_list|(
-name|np
-argument_list|,
-literal|"ncr dead ?"
-argument_list|,
-name|HS_TIMEOUT
-argument_list|)
-expr_stmt|;
-name|np
-operator|->
-name|heartbeat
-operator|=
-name|thistime
-expr_stmt|;
-block|}
-empty_stmt|;
-endif|#
-directive|endif
 comment|/*---------------------------------------------------- 		** 		**	handle ccb timeouts 		** 		**---------------------------------------------------- 		*/
 for|for
 control|(
@@ -14990,21 +14910,6 @@ block|{
 return|return;
 block|}
 comment|/* 	**	Steinbach's Guideline for Systems Programming: 	**	Never test for an error condition you don't know how to handle. 	*/
-name|dstat
-operator|=
-operator|(
-name|istat
-operator|&
-name|DIP
-operator|)
-condition|?
-name|INB
-argument_list|(
-name|nc_dstat
-argument_list|)
-else|:
-literal|0
-expr_stmt|;
 name|sist
 operator|=
 operator|(
@@ -15016,6 +14921,21 @@ condition|?
 name|INW
 argument_list|(
 name|nc_sist
+argument_list|)
+else|:
+literal|0
+expr_stmt|;
+name|dstat
+operator|=
+operator|(
+name|istat
+operator|&
+name|DIP
+operator|)
+condition|?
+name|INB
+argument_list|(
+name|nc_dstat
 argument_list|)
 else|:
 literal|0
@@ -20727,6 +20647,29 @@ block|{
 name|printf
 argument_list|(
 literal|"CACHE TEST FAILED: script execution failed.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\tstart=%08x, pc=%08x, end=%08x\n"
+argument_list|,
+name|NCB_SCRIPT_PHYS
+argument_list|(
+name|np
+argument_list|,
+name|snooptest
+argument_list|)
+argument_list|,
+name|pc
+argument_list|,
+name|NCB_SCRIPT_PHYS
+argument_list|(
+name|np
+argument_list|,
+name|snoopend
+argument_list|)
+operator|+
+literal|8
 argument_list|)
 expr_stmt|;
 return|return
