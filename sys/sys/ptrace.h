@@ -175,26 +175,6 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|void
-name|proc_reparent
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|child
-operator|,
-expr|struct
-name|proc
-operator|*
-name|newparent
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ptrace_set_pc
 name|__P
