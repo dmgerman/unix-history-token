@@ -503,6 +503,15 @@ name|k
 operator|->
 name|wk_private
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|ctx
+operator|->
+name|wc_ic
+decl_stmt|;
 name|u_int32_t
 name|iv
 decl_stmt|;
@@ -515,8 +524,10 @@ name|hdrlen
 decl_stmt|;
 name|hdrlen
 operator|=
-name|ieee80211_hdrsize
+name|ieee80211_hdrspace
 argument_list|(
+name|ic
+argument_list|,
 name|mtod
 argument_list|(
 name|m
