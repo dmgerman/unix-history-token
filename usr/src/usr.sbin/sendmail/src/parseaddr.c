@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.34 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2392,6 +2392,10 @@ name|rwr
 decl_stmt|;
 comment|/* pointer to current rewrite rule */
 name|int
+name|ruleno
+decl_stmt|;
+comment|/* current rule number */
+name|int
 name|subr
 decl_stmt|;
 comment|/* subroutine number if>= 0 */
@@ -2569,6 +2573,10 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Run through the list of rewrite rules, applying any that match. 	*/
+name|ruleno
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|rwr
@@ -2748,21 +2756,12 @@ name|extend_match
 operator|=
 name|FALSE
 expr_stmt|;
-while|while
+if|if
 condition|(
-operator|(
-name|ap
-operator|=
-operator|*
-name|avp
-operator|)
-operator|!=
-name|NULL
-operator|||
-operator|*
-name|rvp
-operator|!=
-name|NULL
+operator|++
+name|loopcount
+operator|>
+literal|100
 condition|)
 block|{
 if|if
@@ -2796,21 +2795,25 @@ expr_stmt|;
 comment|/* force rule failure */
 break|break;
 block|}
-if|if
-condition|(
-operator|++
-name|loopcount
-operator|>
-literal|100
-condition|)
-block|{
 name|syserr
 argument_list|(
-literal|"554 Infinite loop in ruleset %d"
+literal|"554 Infinite loop in ruleset %d, rule %d"
 argument_list|,
 name|ruleset
+argument_list|,
+name|ruleno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|21
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"workspace: "
@@ -2821,8 +2824,26 @@ argument_list|(
 name|pvp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
+while|while
+condition|(
+operator|(
+name|ap
+operator|=
+operator|*
+name|avp
+operator|)
+operator|!=
+name|NULL
+operator|||
+operator|*
+name|rvp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|rp
 operator|=
 operator|*
@@ -3578,6 +3599,9 @@ name|rwr
 operator|->
 name|r_next
 expr_stmt|;
+name|ruleno
+operator|++
+expr_stmt|;
 name|nmatches
 operator|=
 literal|0
@@ -3670,6 +3694,9 @@ operator|=
 name|rwr
 operator|->
 name|r_next
+expr_stmt|;
+name|ruleno
+operator|++
 expr_stmt|;
 name|nmatches
 operator|=
