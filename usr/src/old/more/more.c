@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.16 (Berkeley) %G%"
+literal|"@(#)more.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,7 +232,7 @@ name|ctrl
 parameter_list|(
 name|letter
 parameter_list|)
-value|('letter'& 077)
+value|(letter& 077)
 end_define
 
 begin_define
@@ -3177,7 +3177,7 @@ name|bell
 init|=
 name|ctrl
 argument_list|(
-name|G
+literal|'G'
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4739,7 +4739,7 @@ case|:
 case|case
 name|ctrl
 argument_list|(
-name|B
+literal|'B'
 argument_list|)
 case|:
 block|{
@@ -4946,7 +4946,7 @@ case|:
 case|case
 name|ctrl
 argument_list|(
-name|D
+literal|'D'
 argument_list|)
 case|:
 if|if
