@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imphost.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imphost.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_include
@@ -480,7 +486,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|long
+name|u_long
 name|net
 decl_stmt|;
 end_decl_stmt
@@ -507,6 +513,11 @@ name|hmbuf
 modifier|*
 name|hm
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mnext
+decl_stmt|;
 for|for
 control|(
 name|m
@@ -517,11 +528,15 @@ name|m
 condition|;
 name|m
 operator|=
+name|mnext
+control|)
+block|{
+name|mnext
+operator|=
 name|m
 operator|->
 name|m_next
-control|)
-block|{
+expr_stmt|;
 name|hm
 operator|=
 name|mtod
@@ -837,6 +852,11 @@ name|hmbuf
 modifier|*
 name|hm
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|mnext
+decl_stmt|;
 name|int
 name|s
 init|=
@@ -853,11 +873,15 @@ name|m
 condition|;
 name|m
 operator|=
+name|mnext
+control|)
+block|{
+name|mnext
+operator|=
 name|m
 operator|->
 name|m_next
-control|)
-block|{
+expr_stmt|;
 name|hm
 operator|=
 name|mtod
@@ -902,15 +926,6 @@ if|if
 condition|(
 name|hp
 operator|->
-name|h_flags
-operator|&
-name|HF_INUSE
-condition|)
-continue|continue;
-if|if
-condition|(
-name|hp
-operator|->
 name|h_timer
 operator|&&
 operator|--
@@ -920,11 +935,39 @@ name|h_timer
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|hp
+operator|->
+name|h_rfnm
+condition|)
+name|log
+argument_list|(
+name|KERN_RECOV
+argument_list|,
+literal|"imp?: host %x, lost %d rfnms\n"
+argument_list|,
+name|ntohs
+argument_list|(
+name|hp
+operator|->
+name|h_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|,
+name|hp
+operator|->
+name|h_rfnm
+argument_list|)
+expr_stmt|;
 name|hostrelease
 argument_list|(
 name|hp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|splx
