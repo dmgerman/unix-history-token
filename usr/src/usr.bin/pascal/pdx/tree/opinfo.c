@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opinfo.c 1.2 %G%"
+literal|"@(#)opinfo.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,7 @@ block|,
 literal|0
 block|,
 comment|/* O_INDEX */
-name|BINARY
+name|UNARY
 block|,
 literal|0
 block|,
