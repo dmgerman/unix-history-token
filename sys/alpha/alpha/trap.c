@@ -4039,6 +4039,24 @@ name|alpha_unaligned_sigbus
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|unaligned_fixup_data
+block|{
+specifier|const
+name|char
+modifier|*
+name|type
+decl_stmt|;
+comment|/* opcode name */
+name|int
+name|size
+decl_stmt|;
+comment|/* size, 0 if fixup not supported */
+block|}
+struct|;
+end_struct
+
 begin_function
 name|int
 name|unaligned_fixup
@@ -4100,20 +4118,36 @@ name|int
 name|intdata
 decl_stmt|;
 comment|/* signed to get extension when storing */
-struct|struct
-block|{
+name|u_int16_t
+name|worddata
+decl_stmt|;
+comment|/* unsigned to _avoid_ extension */
 specifier|const
-name|char
-modifier|*
-name|type
-decl_stmt|;
-comment|/* opcode name */
-name|int
-name|size
-decl_stmt|;
-comment|/* size, 0 if fixup not supported */
+name|struct
+name|unaligned_fixup_data
+name|tab_0c
+index|[
+literal|0x2
+index|]
+init|=
+block|{
+block|{
+literal|"ldwu"
+block|,
+literal|2
 block|}
-name|tab
+block|,
+block|{
+literal|"stw"
+block|,
+literal|2
+block|}
+block|, 	}
+decl_stmt|;
+specifier|const
+name|struct
+name|unaligned_fixup_data
+name|tab_20
 index|[
 literal|0x10
 index|]
@@ -4256,7 +4290,7 @@ block|}
 block|,
 comment|/* can't fix */
 block|}
-struct|;
+decl_stmt|;
 comment|/* 	 * Figure out what actions to take. 	 * 	 */
 if|if
 condition|(
@@ -4328,6 +4362,41 @@ if|if
 condition|(
 name|opcode
 operator|>=
+literal|0x0c
+operator|&&
+name|opcode
+operator|<=
+literal|0x0d
+condition|)
+block|{
+name|type
+operator|=
+name|tab_0c
+index|[
+name|opcode
+operator|-
+literal|0x0c
+index|]
+operator|.
+name|type
+expr_stmt|;
+name|size
+operator|=
+name|tab_0c
+index|[
+name|opcode
+operator|-
+literal|0x0c
+index|]
+operator|.
+name|size
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|opcode
+operator|>=
 literal|0x20
 operator|&&
 name|opcode
@@ -4337,7 +4406,7 @@ condition|)
 block|{
 name|type
 operator|=
-name|tab
+name|tab_20
 index|[
 name|opcode
 operator|-
@@ -4348,7 +4417,7 @@ name|type
 expr_stmt|;
 name|size
 operator|=
-name|tab
+name|tab_20
 index|[
 name|opcode
 operator|-
@@ -4469,6 +4538,28 @@ condition|(
 name|opcode
 condition|)
 block|{
+case|case
+literal|0x0c
+case|:
+comment|/* ldwu */
+comment|/* XXX ONLY WORKS ON LITTLE-ENDIAN ALPHA */
+name|unaligned_load_integer
+argument_list|(
+name|worddata
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x0d
+case|:
+comment|/* stw */
+comment|/* XXX ONLY WORKS ON LITTLE-ENDIAN ALPHA */
+name|unaligned_store_integer
+argument_list|(
+name|worddata
+argument_list|)
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|FIX_UNALIGNED_VAX_FP
