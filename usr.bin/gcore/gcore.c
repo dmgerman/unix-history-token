@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gcore.c,v 1.7 1997/11/18 03:50:25 jdp Exp $"
+literal|"$Id: gcore.c,v 1.8 1998/08/24 16:25:30 wosch Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -343,8 +343,12 @@ name|uid
 decl_stmt|;
 name|char
 modifier|*
-name|corefile
+name|binfile
 decl_stmt|,
+modifier|*
+name|corefile
+decl_stmt|;
+name|char
 name|errbuf
 index|[
 name|_POSIX2_LINE_MAX
@@ -420,15 +424,75 @@ name|argc
 operator|-=
 name|optind
 expr_stmt|;
-if|if
+comment|/* XXX we should check that the pid argument is really a number */
+switch|switch
 condition|(
 name|argc
-operator|!=
-literal|2
 condition|)
+block|{
+case|case
+literal|1
+case|:
+name|pid
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|binfile
+argument_list|,
+literal|"/proc/%d/file"
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|binfile
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"allocation failure"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|pid
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|binfile
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+break|break;
+default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 name|kd
 operator|=
 name|kvm_openfiles
@@ -463,16 +527,6 @@ name|uid
 operator|=
 name|getuid
 argument_list|()
-expr_stmt|;
-name|pid
-operator|=
-name|atoi
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
 expr_stmt|;
 name|ki
 operator|=
@@ -654,10 +708,7 @@ name|efd
 operator|=
 name|open
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|binfile
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -676,10 +727,7 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|binfile
 argument_list|)
 expr_stmt|;
 name|cnt
@@ -712,10 +760,7 @@ literal|1
 argument_list|,
 literal|"%s exec header: %s"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|binfile
 argument_list|,
 name|cnt
 operator|>
@@ -757,10 +802,7 @@ argument_list|,
 literal|"The executable %s does not belong to process %d!\n"
 literal|"Text segment size (in bytes): executable %d, process %d"
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|binfile
 argument_list|,
 name|pid
 argument_list|,
