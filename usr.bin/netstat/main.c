@@ -1558,7 +1558,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aabcdf:gI:iLlM:mN:np:rSstuWw:z"
+literal|"Aabdf:gI:iLlM:mN:np:rSstuWw:z"
 argument_list|)
 operator|)
 operator|!=
@@ -3440,7 +3440,7 @@ argument_list|,
 literal|"       netstat -i | -I interface -s [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
-literal|"       netstat -m [-c] [-M core] [-N system]"
+literal|"       netstat -m [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -r [-AenW] [-f address_family] [-M core] [-N system]"
 argument_list|,
