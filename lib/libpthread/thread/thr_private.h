@@ -1116,37 +1116,6 @@ value|{ LCK_INITIALIZER, COND_TYPE_FAST, TAILQ_INITIALIZER,	\ 	NULL, NULL, 0, 0 
 end_define
 
 begin_comment
-comment|/*  * Semaphore definitions.  */
-end_comment
-
-begin_struct
-struct|struct
-name|sem
-block|{
-define|#
-directive|define
-name|SEM_MAGIC
-value|((u_int32_t) 0x09fa4012)
-name|u_int32_t
-name|magic
-decl_stmt|;
-name|pthread_mutex_t
-name|lock
-decl_stmt|;
-name|pthread_cond_t
-name|gtzero
-decl_stmt|;
-name|u_int32_t
-name|count
-decl_stmt|;
-name|u_int32_t
-name|nwaiters
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Cleanup definitions.  */
 end_comment
 
