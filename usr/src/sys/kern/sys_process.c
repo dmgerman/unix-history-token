@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.29 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -109,6 +109,27 @@ begin_comment
 comment|/*  * Process debugging system call.  */
 end_comment
 
+begin_struct
+struct|struct
+name|ptrace_args
+block|{
+name|int
+name|req
+decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
+name|int
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_macro
 name|ptrace
 argument_list|(
@@ -128,29 +149,14 @@ name|curp
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
+begin_decl_stmt
 specifier|register
-struct|struct
-name|args
-block|{
-name|int
-name|req
-decl_stmt|;
-name|int
-name|pid
-decl_stmt|;
-name|int
-modifier|*
-name|addr
-decl_stmt|;
-name|int
-name|data
-decl_stmt|;
-block|}
+name|struct
+name|ptrace_args
 modifier|*
 name|uap
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
