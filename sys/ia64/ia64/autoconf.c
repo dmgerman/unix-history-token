@@ -273,9 +273,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|cninit_finish
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is slightly misplaced. 	 */
 name|enable_intr
 argument_list|()
