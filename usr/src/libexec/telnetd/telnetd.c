@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.39 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1010,14 +1010,14 @@ argument_list|(
 name|baseline
 argument_list|)
 expr_stmt|;
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_TTYPE
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_TSPEED
 argument_list|,
@@ -1690,13 +1690,15 @@ index|[
 name|TELOPT_SGA
 index|]
 condition|)
-name|dooption
+name|send_will
 argument_list|(
 name|TELOPT_SGA
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Is the client side a 4.2 (NOT 4.3) system?  We need to know this 	 * because 4.2 clients are unable to deal with TCP urgent data. 	 * 	 * To find out, we send out a "DO ECHO".  If the remote system 	 * answers "WILL ECHO" it is probably a 4.2 client, and we note 	 * that fact ("WILL ECHO" ==> that the client will echo what 	 * WE, the server, sends it; it does NOT mean that the client will 	 * echo the terminal input). 	 */
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_ECHO
 argument_list|,
@@ -1725,7 +1727,7 @@ name|editmode
 operator|=
 literal|0
 expr_stmt|;
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_LINEMODE
 argument_list|,
@@ -1738,14 +1740,14 @@ endif|#
 directive|endif
 comment|/* LINEMODE */
 comment|/* 	 * Send along a couple of other options that we wish to negotiate. 	 */
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_NAWS
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|dooption
+name|send_will
 argument_list|(
 name|TELOPT_STATUS
 argument_list|,
@@ -1757,7 +1759,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* default flow control state */
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_LFLOW
 argument_list|,
@@ -1793,8 +1795,6 @@ condition|)
 name|willoption
 argument_list|(
 name|TELOPT_ECHO
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, to clean things up, we turn on our echo.  This 	 * will break stupid 4.2 telnets out of local terminal echo. 	 */
@@ -1806,9 +1806,11 @@ index|[
 name|TELOPT_ECHO
 index|]
 condition|)
-name|dooption
+name|send_will
 argument_list|(
 name|TELOPT_ECHO
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Turn on packet mode, and default to line at at time mode. 	 */
@@ -1847,7 +1849,7 @@ name|lmodetype
 operator|<
 name|REAL_LINEMODE
 condition|)
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_TM
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	5.1 (Berkeley) %G%"
+literal|"@(#)termstat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,7 @@ index|]
 operator|==
 name|OPT_NO
 condition|)
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_BINARY
 argument_list|,
@@ -189,7 +189,7 @@ index|]
 operator|==
 name|OPT_YES
 condition|)
-name|wontoption
+name|send_dont
 argument_list|(
 name|TELOPT_BINARY
 argument_list|,
@@ -212,7 +212,7 @@ index|]
 operator|==
 name|OPT_NO
 condition|)
-name|dooption
+name|send_will
 argument_list|(
 name|TELOPT_BINARY
 argument_list|,
@@ -231,7 +231,7 @@ index|]
 operator|==
 name|OPT_YES
 condition|)
-name|dontoption
+name|send_wont
 argument_list|(
 name|TELOPT_BINARY
 argument_list|,
@@ -348,7 +348,7 @@ argument_list|()
 operator|&&
 name|uselinemode
 condition|)
-name|dontoption
+name|send_wont
 argument_list|(
 name|TELOPT_ECHO
 argument_list|,
@@ -356,7 +356,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 else|else
-name|dooption
+name|send_will
 argument_list|(
 name|TELOPT_ECHO
 argument_list|,
@@ -384,7 +384,7 @@ condition|)
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
-name|wontoption
+name|send_dont
 argument_list|(
 name|TELOPT_LINEMODE
 argument_list|,
@@ -401,7 +401,7 @@ name|lmodetype
 operator|==
 name|KLUDGE_LINEMODE
 condition|)
-name|dooption
+name|send_wont
 argument_list|(
 name|TELOPT_SGA
 argument_list|,
@@ -481,7 +481,7 @@ operator|==
 name|KLUDGE_LINEMODE
 condition|)
 block|{
-name|dontoption
+name|send_wont
 argument_list|(
 name|TELOPT_SGA
 argument_list|,
@@ -500,7 +500,7 @@ block|{
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
-name|willoption
+name|send_do
 argument_list|(
 name|TELOPT_LINEMODE
 argument_list|,
@@ -738,7 +738,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|KLUDGELINEMODE
-comment|/* 			 * If using kludge linemode, make sure that 			 * we can do what the client asks. 			 * We can not turn off linemode if alwayslinemode 			 * or if the ICANON bit is set. 			 */
+comment|/* 			 * If using kludge linemode, make sure that 			 * we can do what the client asks. 			 * We can not turn off linemode if alwayslinemode 			 * and the ICANON bit is set. 			 */
 if|if
 condition|(
 name|lmodetype
@@ -749,7 +749,7 @@ block|{
 if|if
 condition|(
 name|alwayslinemode
-operator|||
+operator|&&
 name|tty_isediting
 argument_list|()
 condition|)
