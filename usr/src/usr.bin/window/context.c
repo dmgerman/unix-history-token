@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)context.c	3.12 (Berkeley) %G%"
+literal|"@(#)context.c	3.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|"context.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_comment
@@ -274,6 +280,23 @@ condition|)
 goto|goto
 name|bad
 goto|;
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|fileno
+argument_list|(
+name|cx
+operator|.
+name|x_fp
+argument_list|)
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|cx
 operator|.
 name|x_bol

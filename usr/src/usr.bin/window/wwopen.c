@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwopen.c	3.29 (Berkeley) %G%"
+literal|"@(#)wwopen.c	3.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_function
@@ -477,6 +483,36 @@ goto|goto
 name|bad
 goto|;
 block|}
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|d
+index|[
+literal|0
+index|]
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|d
+index|[
+literal|1
+index|]
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|w
 operator|->
 name|ww_pty

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwpty.c	3.19 (Berkeley) %G%"
+literal|"@(#)wwpty.c	3.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_if
@@ -306,6 +312,20 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|w
+operator|->
+name|ww_pty
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	3.6 (Berkeley) %G%"
+literal|"@(#)compress.c	3.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_decl_stmt
@@ -1552,6 +1558,7 @@ if|if
 condition|(
 name|cc_trace
 condition|)
+block|{
 name|cc_trace_fp
 operator|=
 name|fopen
@@ -1561,6 +1568,22 @@ argument_list|,
 literal|"a"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|fileno
+argument_list|(
+name|cc_trace_fp
+argument_list|)
+argument_list|,
+name|F_SETFD
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 

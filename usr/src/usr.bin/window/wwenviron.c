@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwenviron.c	3.27 (Berkeley) %G%"
+literal|"@(#)wwenviron.c	3.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,21 +266,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|wwdtablesize
-operator|-
-literal|1
-init|;
-name|i
-operator|>
-literal|2
-condition|;
-name|i
-operator|--
-control|)
 operator|(
 name|void
 operator|)
