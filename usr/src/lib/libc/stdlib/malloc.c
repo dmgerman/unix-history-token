@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.9 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,18 +721,16 @@ begin_comment
 comment|/*  * Allocate more memory to the indicated bucket.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|morecore
 argument_list|(
 argument|bucket
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|bucket
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
