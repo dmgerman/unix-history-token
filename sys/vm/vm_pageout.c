@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.9 1994/08/30 18:27:44 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.10 1994/09/06 11:28:46 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -618,6 +618,11 @@ expr_stmt|;
 name|cnt
 operator|.
 name|v_pageouts
+operator|++
+expr_stmt|;
+name|cnt
+operator|.
+name|v_pgpgout
 operator|+=
 name|pageout_count
 expr_stmt|;
@@ -643,6 +648,11 @@ expr_stmt|;
 name|cnt
 operator|.
 name|v_pageouts
+operator|++
+expr_stmt|;
+name|cnt
+operator|.
+name|v_pgpgout
 operator|++
 expr_stmt|;
 name|object
@@ -1809,7 +1819,7 @@ name|cache_size
 decl_stmt|,
 name|orig_cache_size
 decl_stmt|;
-comment|/* 	 * deactivate pages for objects on the cached queue are 0 	 * we manage the cached memory by attempting to keep it 	 * at about the desired level. 	 * we deactivate the pages for the oldest cached objects 	 * first. 	 */
+comment|/* 	 * We manage the cached memory by attempting to keep it 	 * at about the desired level. 	 * We deactivate the pages for the oldest cached objects 	 * first.  This keeps pages that are "cached" from hogging 	 * physical memory. 	 */
 name|orig_cache_size
 operator|=
 literal|0
@@ -1820,6 +1830,7 @@ name|vm_object_cached_list
 operator|.
 name|tqh_first
 expr_stmt|;
+comment|/* calculate the total cached size */
 while|while
 condition|(
 name|object
@@ -1948,75 +1959,6 @@ argument_list|()
 expr_stmt|;
 name|morefree
 label|:
-comment|/* 	 * deactivate pages for objects whose ref-counts are 0 	 */
-name|simple_lock
-argument_list|(
-operator|&
-name|vm_object_list_lock
-argument_list|)
-expr_stmt|;
-name|object
-operator|=
-name|vm_object_list
-operator|.
-name|tqh_first
-expr_stmt|;
-while|while
-condition|(
-name|object
-condition|)
-block|{
-if|if
-condition|(
-name|cnt
-operator|.
-name|v_inactive_count
-operator|>=
-name|cnt
-operator|.
-name|v_inactive_target
-condition|)
-break|break;
-if|if
-condition|(
-operator|(
-name|object
-operator|->
-name|ref_count
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|object
-operator|->
-name|resident_page_count
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
-name|vm_object_deactivate_pages
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-block|}
-name|object
-operator|=
-name|object
-operator|->
-name|object_list
-operator|.
-name|tqe_next
-expr_stmt|;
-block|}
-name|simple_unlock
-argument_list|(
-operator|&
-name|vm_object_list_lock
-argument_list|)
-expr_stmt|;
 comment|/* 	 * now check malloc area or swap processes out if we are in low 	 * memory conditions 	 */
 if|if
 condition|(
@@ -2448,6 +2390,11 @@ name|vm_page_free
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+operator|++
+name|cnt
+operator|.
+name|v_dfree
 expr_stmt|;
 operator|++
 name|pages_freed
@@ -3074,11 +3021,18 @@ name|v_free_min
 operator|=
 literal|12
 expr_stmt|;
+comment|/* 	 * free_reserved needs to include enough for the largest 	 * swap pager structures plus enough for any pv_entry 	 * structs when paging. 	 */
 name|cnt
 operator|.
 name|v_free_reserved
 operator|=
-literal|8
+literal|4
+operator|+
+name|cnt
+operator|.
+name|v_page_count
+operator|/
+literal|1024
 expr_stmt|;
 if|if
 condition|(
@@ -3110,7 +3064,9 @@ literal|32
 expr_stmt|;
 name|vm_pageout_free_min
 operator|=
-literal|4
+name|cnt
+operator|.
+name|v_free_reserved
 expr_stmt|;
 name|cnt
 operator|.
