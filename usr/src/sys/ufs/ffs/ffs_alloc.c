@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1483,21 +1483,21 @@ comment|/*  * Allocate an inode in the file system.  *   * If allocating a direc
 end_comment
 
 begin_expr_stmt
-name|ffs_ialloc
+name|ffs_valloc
 argument_list|(
-name|pip
+name|pvp
 argument_list|,
 name|mode
 argument_list|,
 name|cred
 argument_list|,
-name|ipp
+name|vpp
 argument_list|)
 specifier|register
 expr|struct
-name|inode
+name|vnode
 operator|*
-name|pip
+name|pvp
 expr_stmt|;
 end_expr_stmt
 
@@ -1517,15 +1517,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|inode
+name|vnode
 modifier|*
 modifier|*
-name|ipp
+name|vpp
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|pip
+decl_stmt|;
 specifier|register
 name|struct
 name|fs
@@ -1549,9 +1555,16 @@ decl_stmt|,
 name|error
 decl_stmt|;
 operator|*
-name|ipp
+name|vpp
 operator|=
 name|NULL
+expr_stmt|;
+name|pip
+operator|=
+name|VTOI
+argument_list|(
+name|pvp
+argument_list|)
 expr_stmt|;
 name|fs
 operator|=
@@ -1586,9 +1599,7 @@ name|ipref
 operator|=
 name|ffs_dirpref
 argument_list|(
-name|pip
-operator|->
-name|i_fs
+name|fs
 argument_list|)
 expr_stmt|;
 else|else
@@ -1655,13 +1666,15 @@ name|noinodes
 goto|;
 name|error
 operator|=
-name|ffs_iget
+name|ffs_vget
 argument_list|(
-name|pip
+name|pvp
+operator|->
+name|v_mount
 argument_list|,
 name|ino
 argument_list|,
-name|ipp
+name|vpp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1669,16 +1682,15 @@ condition|(
 name|error
 condition|)
 block|{
-name|ffs_ifree
+name|ffs_vfree
 argument_list|(
-name|pip
+name|pvp
 argument_list|,
 name|ino
 argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-comment|/* XXX already freed? */
 return|return
 operator|(
 name|error
@@ -1687,8 +1699,11 @@ return|;
 block|}
 name|ip
 operator|=
+name|VTOI
+argument_list|(
 operator|*
-name|ipp
+name|vpp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1716,7 +1731,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_ialloc: dup alloc"
+literal|"ffs_valloc: dup alloc"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5466,18 +5481,18 @@ end_comment
 
 begin_function
 name|void
-name|ffs_ifree
+name|ffs_vfree
 parameter_list|(
-name|pip
+name|pvp
 parameter_list|,
 name|ino
 parameter_list|,
 name|mode
 parameter_list|)
 name|struct
-name|inode
+name|vnode
 modifier|*
-name|pip
+name|pvp
 decl_stmt|;
 name|ino_t
 name|ino
@@ -5498,6 +5513,12 @@ name|cg
 modifier|*
 name|cgp
 decl_stmt|;
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|pip
+decl_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -5508,6 +5529,13 @@ name|error
 decl_stmt|,
 name|cg
 decl_stmt|;
+name|pip
+operator|=
+name|VTOI
+argument_list|(
+name|pvp
+argument_list|)
+expr_stmt|;
 name|fs
 operator|=
 name|pip

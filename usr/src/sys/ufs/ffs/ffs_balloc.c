@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -67,39 +67,44 @@ begin_comment
 comment|/*  * Bmap converts a the logical block number of a file  * to its physical block number on the disk. The conversion  * is done by using the logical block number to index into  * the array of block pointers described by the dinode.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ffs_bmap
-argument_list|(
-name|ip
-argument_list|,
+parameter_list|(
+name|vp
+parameter_list|,
 name|bn
-argument_list|,
+parameter_list|,
+name|vpp
+parameter_list|,
 name|bnp
-argument_list|)
-specifier|register
-expr|struct
-name|inode
-operator|*
-name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|)
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 specifier|register
 name|daddr_t
 name|bn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
 name|daddr_t
 modifier|*
 name|bnp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+specifier|register
+name|struct
+name|inode
+modifier|*
+name|ip
+decl_stmt|;
 specifier|register
 name|struct
 name|fs
@@ -129,6 +134,38 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Check for underlying vnode requests and ensure that logical 	 * to physical mapping is requested. 	 */
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vpp
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|vpp
+operator|=
+name|ip
+operator|->
+name|i_devvp
+expr_stmt|;
+if|if
+condition|(
+name|bnp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|bn
@@ -425,7 +462,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Balloc defines the structure of file system storage  * by allocating the physical blocks on a device given  * the inode and the logical block number in a file.  */
