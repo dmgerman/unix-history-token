@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.82 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.83 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -183,7 +183,7 @@ if|if
 condition|(
 name|ldip
 operator|->
-name|di_inum
+name|di_inumber
 operator|==
 name|ino
 condition|)
@@ -1343,11 +1343,19 @@ argument_list|,
 name|blocksreleased
 argument_list|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"lfs_truncate: block count< 0"
+literal|"lfs_truncate: block count< 0\n"
 argument_list|)
 expr_stmt|;
+name|blocksreleased
+operator|=
+name|ip
+operator|->
+name|i_blocks
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|ip
