@@ -2176,13 +2176,11 @@ if|if
 condition|(
 name|cardbus_cis_debug
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"CIS reading done\n"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -3458,11 +3456,20 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"CIS pointer is 0!\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 name|off
 operator|=
 literal|0
@@ -3488,11 +3495,20 @@ name|res
 operator|==
 name|NULL
 condition|)
+block|{
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Unable to allocate resources for CIS\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 do|do
 block|{
 if|if
@@ -3610,6 +3626,15 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Parsing failed with %d\n"
+argument_list|,
+name|expect_linktarget
+argument_list|)
+expr_stmt|;
 name|cardbus_read_tuple_finish
 argument_list|(
 name|cbdev
