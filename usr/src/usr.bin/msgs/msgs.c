@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.15 (Berkeley) %G%"
+literal|"@(#)msgs.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -664,24 +664,9 @@ decl_stmt|,
 modifier|*
 name|msgsrc
 decl_stmt|;
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|UNBUFFERED
-name|char
-name|obuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|obuf
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|setbuf
 argument_list|(
 name|stdout

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	4.4 82/11/14"
+literal|"@(#)if.c	4.5 84/09/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,11 +515,6 @@ decl_stmt|;
 name|off_t
 name|firstifnet
 decl_stmt|;
-specifier|extern
-name|char
-name|_sobuf
-index|[]
-decl_stmt|;
 specifier|register
 name|struct
 name|iftot
@@ -547,13 +542,6 @@ decl_stmt|;
 name|int
 name|maxtraffic
 decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
-expr_stmt|;
 name|klseek
 argument_list|(
 name|kmem
