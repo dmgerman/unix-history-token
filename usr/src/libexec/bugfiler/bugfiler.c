@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.9 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -884,7 +884,7 @@ literal|0
 block|,
 literal|"Repeat-By"
 block|,
-name|H_REQ
+literal|0
 block|,
 literal|0
 block|,
