@@ -2431,6 +2431,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|c
 argument_list|)

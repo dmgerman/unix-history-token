@@ -9338,6 +9338,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|line
 argument_list|)

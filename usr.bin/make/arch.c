@@ -570,6 +570,10 @@ literal|')'
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -598,6 +602,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1217,6 +1225,10 @@ literal|'\0'
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
