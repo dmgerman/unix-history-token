@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.8 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3127,6 +3127,78 @@ name|lfsp
 operator|->
 name|lfs_tstamp
 argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"In-Memory Information\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s%d\t%s%X\t%s%d\t%s%d\t%s%d\n"
+argument_list|,
+literal|"seglock  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_seglock
+argument_list|,
+literal|"iocount  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_iocount
+argument_list|,
+literal|"writer   "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_writer
+argument_list|,
+literal|"dirops   "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_dirops
+argument_list|,
+literal|"doifile  "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_doifile
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s%d\t%s%X\t%s%d\n"
+argument_list|,
+literal|"fmod     "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_fmod
+argument_list|,
+literal|"clean    "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_clean
+argument_list|,
+literal|"ronly    "
+argument_list|,
+name|lfsp
+operator|->
+name|lfs_ronly
 argument_list|)
 expr_stmt|;
 block|}
