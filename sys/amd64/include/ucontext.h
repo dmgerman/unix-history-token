@@ -75,6 +75,9 @@ name|register_t
 name|mc_trapno
 decl_stmt|;
 name|register_t
+name|mc_addr
+decl_stmt|;
+name|register_t
 name|mc_err
 decl_stmt|;
 name|register_t

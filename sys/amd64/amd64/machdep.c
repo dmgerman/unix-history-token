@@ -1363,7 +1363,7 @@ name|tf_rcx
 operator|=
 name|regs
 operator|->
-name|tf_err
+name|tf_addr
 expr_stmt|;
 comment|/* arg 4 in %rcx */
 block|}
@@ -1383,7 +1383,7 @@ name|tf_rcx
 operator|=
 name|regs
 operator|->
-name|tf_err
+name|tf_addr
 expr_stmt|;
 comment|/* arg 4 in %rcx */
 name|sf
