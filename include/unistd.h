@@ -88,32 +88,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
-name|__BEGIN_DECLS
-end_macro
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|timespec
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* nanosleep(2), clock_*(2) etc */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|void
 name|_exit
 name|__P
