@@ -2,11 +2,11 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|"curses.h"
+file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine draws a box around the given window with "vert"  * as the vertical delimiting char, and "hor", as the horizontal one.  *  * %G% (Berkeley) @(#)box.c	1.1  */
+comment|/*  *	This routine draws a box around the given window with "vert"  * as the vertical delimiting char, and "hor", as the horizontal one.  *  * %G% (Berkeley) @(#)box.c	1.2  */
 end_comment
 
 begin_macro
