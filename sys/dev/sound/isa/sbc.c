@@ -1058,6 +1058,13 @@ block|}
 block|,
 comment|/* CTL0045 */
 block|{
+literal|0x01000000
+block|,
+literal|"Avance Logic ALS100+"
+block|}
+block|,
+comment|/* @@@0001 */
+block|{
 literal|0x01100000
 block|,
 literal|"Avance Asound 110"
