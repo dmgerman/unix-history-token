@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.67 2002/08/22 10:08:34 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.68 2002/08/22 10:15:12 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1659,7 +1659,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UDCLASS_AUDIO
+name|UDCLASS_IN_INTERFACE
 value|0x00
 end_define
 
@@ -1668,13 +1668,6 @@ define|#
 directive|define
 name|UDCLASS_COMM
 value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDCLASS_HID
-value|0x00
 end_define
 
 begin_define
@@ -1715,8 +1708,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|UDCLASS_MASS
-value|0x00
+name|UDCLASS_DIAGNOSTIC
+value|0xdc
 end_define
 
 begin_define
@@ -1738,6 +1731,13 @@ define|#
 directive|define
 name|UDPROTO_BLUETOOTH
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDCLASS_VENDOR
+value|0xff
 end_define
 
 begin_comment
@@ -1872,6 +1872,13 @@ define|#
 directive|define
 name|UICLASS_PHYSICAL
 value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|UICLASS_IMAGE
+value|0x06
 end_define
 
 begin_define
@@ -2193,8 +2200,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UICLASS_FIRM_UPD
-value|0x0c
+name|UICLASS_SMARTCARD
+value|0x0b
+end_define
+
+begin_comment
+comment|/*#define UICLASS_FIRM_UPD	0x0c*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UICLASS_SECURITY
+value|0x0d
+end_define
+
+begin_define
+define|#
+directive|define
+name|UICLASS_DIAGNOSTIC
+value|0xdc
 end_define
 
 begin_define
