@@ -592,6 +592,46 @@ argument_list|,
 name|mname
 argument_list|)
 expr_stmt|;
+comment|/* Don't process absolute directories.  Anything else could be a security      * problem.  Before this check was put in place:      *      *   $ cvs -d:fork:/cvsroot co /foo      *   cvs server: warning: cannot make directory CVS in /: Permission denied      *   cvs [server aborted]: cannot make directory /foo: Permission denied      *   $      */
+if|if
+condition|(
+name|isabsolute
+argument_list|(
+name|mname
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"Absolute module reference invalid: `%s'"
+argument_list|,
+name|mname
+argument_list|)
+expr_stmt|;
+comment|/* Similarly for directories that attempt to step above the root of the      * repository.      */
+if|if
+condition|(
+name|pathname_levels
+argument_list|(
+name|mname
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"up-level in module reference (`..') invalid: `%s'."
+argument_list|,
+name|mname
+argument_list|)
+expr_stmt|;
 comment|/* if this is a directory to ignore, add it to that list */
 if|if
 condition|(

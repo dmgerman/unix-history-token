@@ -154,6 +154,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Begin GNULIB headers.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"xsize.h"
+end_include
+
+begin_comment
+comment|/* End GNULIB headers.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
