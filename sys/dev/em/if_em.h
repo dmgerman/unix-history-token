@@ -752,6 +752,34 @@ name|XSUM_CONTEXT_T
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|adapter
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|em_int_delay_info
+block|{
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
+comment|/* Back-pointer to the adapter struct */
+name|int
+name|offset
+decl_stmt|;
+comment|/* Register offset to read/write */
+name|int
+name|value
+decl_stmt|;
+comment|/* Current value in usecs */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Our adapter structure */
 end_comment
@@ -841,16 +869,20 @@ decl_stmt|;
 name|u_int32_t
 name|smartspeed
 decl_stmt|;
-name|u_int32_t
+name|struct
+name|em_int_delay_info
 name|tx_int_delay
 decl_stmt|;
-name|u_int32_t
+name|struct
+name|em_int_delay_info
 name|tx_abs_int_delay
 decl_stmt|;
-name|u_int32_t
+name|struct
+name|em_int_delay_info
 name|rx_int_delay
 decl_stmt|;
-name|u_int32_t
+name|struct
+name|em_int_delay_info
 name|rx_abs_int_delay
 decl_stmt|;
 name|XSUM_CONTEXT_T

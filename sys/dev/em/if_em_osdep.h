@@ -398,9 +398,62 @@ define|#
 directive|define
 name|E1000_WRITE_FLUSH
 parameter_list|(
-name|a
+name|hw
 parameter_list|)
-value|E1000_READ_REG(a, STATUS)
+value|E1000_READ_REG(hw, STATUS)
+end_define
+
+begin_comment
+comment|/* Read from an absolute offset in the adapter's memory space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_READ_OFFSET
+parameter_list|(
+name|hw
+parameter_list|,
+name|offset
+parameter_list|)
+define|\
+value|bus_space_read_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                       offset)
+end_define
+
+begin_comment
+comment|/* Write to an absolute offset in the adapter's memory space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WRITE_OFFSET
+parameter_list|(
+name|hw
+parameter_list|,
+name|offset
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_4( ((struct em_osdep *)(hw)->back)->mem_bus_space_tag, \                        ((struct em_osdep *)(hw)->back)->mem_bus_space_handle, \                        offset, \                        value)
+end_define
+
+begin_comment
+comment|/* Convert a register name to its offset in the adapter's memory space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_REG_OFFSET
+parameter_list|(
+name|hw
+parameter_list|,
+name|reg
+parameter_list|)
+define|\
+value|((hw)->mac_type>= em_82543 ? E1000_##reg : E1000_82542_##reg)
 end_define
 
 begin_define
@@ -408,11 +461,12 @@ define|#
 directive|define
 name|E1000_READ_REG
 parameter_list|(
-name|a
+name|hw
 parameter_list|,
 name|reg
 parameter_list|)
-value|(\    bus_space_read_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                      ((a)->mac_type>= em_82543) ? E1000_##reg : E1000_82542_##reg))
+define|\
+value|E1000_READ_OFFSET(hw, E1000_REG_OFFSET(hw, reg))
 end_define
 
 begin_define
@@ -420,13 +474,14 @@ define|#
 directive|define
 name|E1000_WRITE_REG
 parameter_list|(
-name|a
+name|hw
 parameter_list|,
 name|reg
 parameter_list|,
 name|value
 parameter_list|)
-value|(\    bus_space_write_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \ 		     ((a)->mac_type>= em_82543) ? E1000_##reg : E1000_82542_##reg, \                      value))
+define|\
+value|E1000_WRITE_OFFSET(hw, E1000_REG_OFFSET(hw, reg), value)
 end_define
 
 begin_define
@@ -434,13 +489,14 @@ define|#
 directive|define
 name|E1000_READ_REG_ARRAY
 parameter_list|(
-name|a
+name|hw
 parameter_list|,
 name|reg
 parameter_list|,
-name|offset
+name|index
 parameter_list|)
-value|(\  ((a)->mac_type>= em_82543) ? \    bus_space_read_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                      ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                      (E1000_##reg + ((offset)<< 2))): \    bus_space_read_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                        (E1000_82542_##reg + ((offset)<< 2))))
+define|\
+value|E1000_READ_OFFSET(hw, E1000_REG_OFFSET(hw, reg) + ((index)<< 2))
 end_define
 
 begin_define
@@ -448,15 +504,16 @@ define|#
 directive|define
 name|E1000_WRITE_REG_ARRAY
 parameter_list|(
-name|a
+name|hw
 parameter_list|,
 name|reg
 parameter_list|,
-name|offset
+name|index
 parameter_list|,
 name|value
 parameter_list|)
-value|(\   ((a)->mac_type>= em_82543) ? \       bus_space_write_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                       (E1000_##reg + ((offset)<< 2)), value): \       bus_space_write_4( ((struct em_osdep *)(a)->back)->mem_bus_space_tag, \                       ((struct em_osdep *)(a)->back)->mem_bus_space_handle, \                       (E1000_82542_##reg + ((offset)<< 2)), value))
+define|\
+value|E1000_WRITE_OFFSET(hw, E1000_REG_OFFSET(hw, reg) + ((index)<< 2), value)
 end_define
 
 begin_endif
