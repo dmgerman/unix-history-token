@@ -405,6 +405,7 @@ specifier|const
 name|td_thrhandle_t
 modifier|*
 parameter_list|,
+specifier|const
 name|prgregset_t
 parameter_list|)
 function_decl|;

@@ -1017,6 +1017,7 @@ name|td_thrhandle_t
 modifier|*
 name|th
 parameter_list|,
+specifier|const
 name|prgregset_t
 name|gregs
 parameter_list|)
