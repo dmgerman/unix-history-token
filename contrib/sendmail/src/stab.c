@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: stab.c,v 8.40.16.2 2000/06/05 21:46:59 gshapiro Exp $"
+literal|"@(#)$Id: stab.c,v 8.40.16.3 2000/10/09 02:46:12 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -841,6 +841,13 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|class
+operator|=
+name|bitidx
+argument_list|(
+name|class
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|shead
@@ -895,8 +902,6 @@ operator|&&
 name|bitnset
 argument_list|(
 name|class
-operator|&
-literal|0xff
 argument_list|,
 name|s
 operator|->
@@ -1023,6 +1028,20 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+name|src
+operator|=
+name|bitidx
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
+name|dst
+operator|=
+name|bitidx
+argument_list|(
+name|dst
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|shead
@@ -1070,8 +1089,6 @@ operator|&&
 name|bitnset
 argument_list|(
 name|src
-operator|&
-literal|0xff
 argument_list|,
 name|s
 operator|->

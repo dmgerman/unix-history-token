@@ -44,7 +44,7 @@ name|char
 name|SmailId
 index|[]
 init|=
-literal|"@(#)$Id: sendmail.h,v 8.517.4.37 2000/09/25 07:53:29 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.517.4.45 2000/12/28 23:46:44 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -777,42 +777,42 @@ define|#
 directive|define
 name|QS_EXPANDED
 value|6
-comment|/* expanded */
+comment|/* QS_DONTSEND: expanded */
 define|#
 directive|define
 name|QS_SENDER
 value|7
-comment|/* message sender (MeToo) */
+comment|/* QS_DONTSEND: message sender (MeToo) */
 define|#
 directive|define
 name|QS_CLONED
 value|8
-comment|/* addr cloned to a split envelope */
+comment|/* QS_DONTSEND: addr cloned to split envelope */
 define|#
 directive|define
 name|QS_DISCARDED
 value|9
-comment|/* recipient discarded (EF_DISCARD) */
+comment|/* QS_DONTSEND: rcpt discarded (EF_DISCARD) */
 define|#
 directive|define
 name|QS_REPLACED
 value|10
-comment|/* maplocaluser()/UserDB replaced */
+comment|/* QS_DONTSEND: maplocaluser()/UserDB replaced */
 define|#
 directive|define
 name|QS_REMOVED
 value|11
-comment|/* removed (removefromlist()) */
+comment|/* QS_DONTSEND: removed (removefromlist()) */
 define|#
 directive|define
 name|QS_DUPLICATE
 value|12
-comment|/* duplicate suppressed */
+comment|/* QS_DONTSEND: duplicate suppressed */
 define|#
 directive|define
 name|QS_INCLUDED
 value|13
-comment|/* :include: delivery */
+comment|/* QS_DONTSEND: :include: delivery */
 comment|/* address state testing primitives */
 define|#
 directive|define
@@ -2416,6 +2416,17 @@ begin_comment
 comment|/* STARTTLS */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MCIF_ONLY_EHLO
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* use only EHLO in smtpinit */
+end_comment
+
 begin_comment
 comment|/* states */
 end_comment
@@ -3519,7 +3530,9 @@ name|char
 modifier|*
 name|e_macro
 index|[
-literal|256
+name|MAXMACROID
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* macro definitions */
@@ -4434,6 +4447,9 @@ operator|,
 name|bool
 operator|,
 name|int
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -11593,6 +11609,8 @@ name|bool
 operator|,
 name|char
 operator|*
+operator|,
+name|bool
 operator|)
 argument_list|)
 decl_stmt|;
@@ -14119,25 +14137,6 @@ name|reapchild
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|refuseconnections
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|ENVELOPE
-operator|*
-operator|,
 name|int
 operator|)
 argument_list|)

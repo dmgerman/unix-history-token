@@ -21,7 +21,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: alias.c,v 8.142.4.3 2000/09/21 21:52:16 ca Exp $"
+literal|"@(#)$Id: alias.c,v 8.142.4.9 2000/11/08 20:58:42 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2816,6 +2816,10 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|nlp
+operator|>
+name|p
+operator|&&
 name|nlp
 index|[
 operator|-

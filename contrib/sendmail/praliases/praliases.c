@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: praliases.c,v 8.59.4.10 2000/07/18 05:41:39 gshapiro Exp $"
+literal|"@(#)$Id: praliases.c,v 8.59.4.15 2000/10/24 00:42:59 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,20 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DELIMITERS
+value|" ,/"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_SEPARATOR
+value|':'
+end_define
 
 begin_function
 name|int
@@ -783,7 +797,7 @@ name|strpbrk
 argument_list|(
 name|p
 argument_list|,
-literal|" ,/"
+name|DELIMITERS
 argument_list|)
 expr_stmt|;
 comment|/* find end of spec */
@@ -1031,7 +1045,7 @@ name|strchr
 argument_list|(
 name|filename
 argument_list|,
-literal|':'
+name|PATH_SEPARATOR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1356,7 +1370,7 @@ if|#
 directive|if
 literal|0
 comment|/* skip magic @:@ entry */
-block|if (db_key.data.size == 2&& 			    db_key.data.data[0] == '@'&& 			    db_key.data.data[1] == '\0'&& 			    db_value.data.size == 2&& 			    db_value.data.data[0] == '@'&& 			    db_value.data.data[1] == '\0') 				continue;
+block|if (db_key.size == 2&& 			    db_key.data[0] == '@'&& 			    db_key.data[1] == '\0'&& 			    db_value.size == 2&& 			    db_value.data[0] == '@'&& 			    db_value.data[1] == '\0') 				continue;
 endif|#
 directive|endif
 comment|/* 0 */
@@ -1369,8 +1383,6 @@ name|int
 operator|)
 name|db_key
 operator|.
-name|data
-operator|.
 name|size
 argument_list|,
 operator|(
@@ -1380,15 +1392,11 @@ operator|)
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 argument_list|,
 operator|(
 name|int
 operator|)
 name|db_value
-operator|.
-name|data
 operator|.
 name|size
 argument_list|,
@@ -1397,8 +1405,6 @@ name|char
 operator|*
 operator|)
 name|db_value
-operator|.
-name|data
 operator|.
 name|data
 argument_list|)
@@ -1472,15 +1478,11 @@ expr_stmt|;
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 operator|=
 operator|*
 name|argv
 expr_stmt|;
 name|db_key
-operator|.
-name|data
 operator|.
 name|size
 operator|=
@@ -1521,8 +1523,6 @@ name|int
 operator|)
 name|db_key
 operator|.
-name|data
-operator|.
 name|size
 argument_list|,
 operator|(
@@ -1532,15 +1532,11 @@ operator|)
 name|db_key
 operator|.
 name|data
-operator|.
-name|data
 argument_list|,
 operator|(
 name|int
 operator|)
 name|db_value
-operator|.
-name|data
 operator|.
 name|size
 argument_list|,
@@ -1549,8 +1545,6 @@ name|char
 operator|*
 operator|)
 name|db_value
-operator|.
-name|data
 operator|.
 name|data
 argument_list|)
@@ -1566,8 +1560,6 @@ name|char
 operator|*
 operator|)
 name|db_key
-operator|.
-name|data
 operator|.
 name|data
 argument_list|)

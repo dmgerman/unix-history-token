@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: envelope.c,v 8.180.14.4 2000/08/22 18:22:39 gshapiro Exp $"
+literal|"@(#)$Id: envelope.c,v 8.180.14.6 2000/11/30 00:39:46 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,6 +287,9 @@ name|e
 operator|->
 name|e_id
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -434,10 +437,14 @@ name|StatFile
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Extract state information from dregs of send list. 	*/
-if|if
-condition|(
+name|now
+operator|=
 name|curtime
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|now
 operator|>
 name|e
 operator|->
@@ -883,8 +890,7 @@ index|]
 operator|>
 literal|0
 operator|&&
-name|curtime
-argument_list|()
+name|now
 operator|>
 name|e
 operator|->
@@ -4316,6 +4322,8 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;

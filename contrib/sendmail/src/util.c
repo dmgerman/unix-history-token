@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: util.c,v 8.225.2.1.2.8 2000/07/03 18:28:56 geir Exp $"
+literal|"@(#)$Id: util.c,v 8.225.2.1.2.15 2000/10/18 23:46:07 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1394,11 +1394,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|long
+name|pid
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
 name|CommandLineArgs
 decl_stmt|;
+name|pid
+operator|=
+operator|(
+name|long
+operator|)
+name|getpid
+argument_list|()
+expr_stmt|;
 comment|/* write the process id on line 1 */
 name|fprintf
 argument_list|(
@@ -1406,11 +1417,7 @@ name|pidf
 argument_list|,
 literal|"%ld\n"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|getpid
-argument_list|()
+name|pid
 argument_list|)
 expr_stmt|;
 comment|/* line 2 contains all command line flags */
@@ -1862,11 +1869,12 @@ literal|"{%s}"
 argument_list|,
 name|macname
 argument_list|(
+name|bitidx
+argument_list|(
 operator|*
 name|s
 operator|++
-operator|&
-literal|0377
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2779,6 +2787,14 @@ name|dead
 operator|=
 name|TRUE
 expr_stmt|;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -2857,6 +2873,14 @@ name|dead
 operator|=
 name|TRUE
 expr_stmt|;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -2912,11 +2936,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+else|else
+block|{
 comment|/* record progress for DATA timeout */
 name|DataProgress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2969,11 +2996,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+else|else
+block|{
 comment|/* record progress for DATA timeout */
 name|DataProgress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -3073,6 +3103,14 @@ operator|==
 name|EOF
 condition|)
 break|break;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -3148,6 +3186,14 @@ operator|==
 name|EOF
 condition|)
 break|break;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -3222,11 +3268,14 @@ name|TRUE
 expr_stmt|;
 break|break;
 block|}
+else|else
+block|{
 comment|/* record progress for DATA timeout */
 name|DataProgress
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3267,6 +3316,14 @@ operator|==
 name|EOF
 condition|)
 break|break;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|l
@@ -3319,6 +3376,14 @@ operator|==
 name|EOF
 condition|)
 break|break;
+else|else
+block|{
+comment|/* record progress for DATA timeout */
+name|DataProgress
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|TrafficLogFile
@@ -3337,11 +3402,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* record progress for DATA timeout */
-name|DataProgress
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 do|while
 condition|(
@@ -4307,6 +4367,7 @@ operator|>=
 literal|0
 condition|;
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -4326,6 +4387,7 @@ condition|)
 return|return
 name|TRUE
 return|;
+block|}
 return|return
 name|FALSE
 return|;
@@ -4369,6 +4431,7 @@ operator|>=
 literal|0
 condition|;
 control|)
+block|{
 if|if
 condition|(
 name|map
@@ -4381,6 +4444,7 @@ condition|)
 return|return
 name|FALSE
 return|;
+block|}
 return|return
 name|TRUE
 return|;
@@ -4689,11 +4753,11 @@ if|if
 condition|(
 name|DtableSize
 operator|>
-literal|256
+name|BITMAPBITS
 condition|)
 name|maxfd
 operator|=
-literal|256
+name|BITMAPBITS
 expr_stmt|;
 else|else
 name|maxfd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.34.4.5 2000/09/14 23:32:26 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.34.4.7 2000/10/09 16:15:26 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -173,6 +173,20 @@ argument_list|)
 index|]
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* properly case and truncate bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bitidx
+parameter_list|(
+name|bit
+parameter_list|)
+value|((unsigned int) (bit)& 0xff)
+end_define
 
 begin_comment
 comment|/* test bit number N */

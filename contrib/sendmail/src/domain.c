@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: domain.c,v 8.114.6.1.2.3 2000/06/13 18:00:08 gshapiro Exp $ (with name server)"
+literal|"@(#)$Id: domain.c,v 8.114.6.1.2.6 2000/12/19 02:50:33 gshapiro Exp $ (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: domain.c,v 8.114.6.1.2.3 2000/06/13 18:00:08 gshapiro Exp $ (without name server)"
+literal|"@(#)$Id: domain.c,v 8.114.6.1.2.6 2000/12/19 02:50:33 gshapiro Exp $ (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1623,6 +1623,23 @@ operator|-
 literal|1
 return|;
 block|}
+if|#
+directive|if
+name|_FFR_FREEHOSTENT
+operator|&&
+name|NETINET6
+name|freehostent
+argument_list|(
+name|h
+argument_list|)
+expr_stmt|;
+name|hp
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_FREEHOSTENT&& NETINET6 */
 block|}
 if|if
 condition|(
@@ -2570,6 +2587,11 @@ return|return
 name|FALSE
 return|;
 block|}
+operator|*
+name|statp
+operator|=
+name|EX_OK
+expr_stmt|;
 comment|/* 	**  Initialize domain search list.  If there is at least one 	**  dot in the name, search the unmodified name first so we 	**  find "vse.CS" in Czechoslovakia instead of in the local 	**  domain (e.g., vse.CS.Berkeley.EDU).  Note that there is no 	**  longer a country named Czechoslovakia but this type of problem 	**  is still present. 	** 	**  Older versions of the resolver could create this 	**  list by tearing apart the host name. 	*/
 name|loopcnt
 operator|=
@@ -2858,6 +2880,10 @@ else|:
 literal|"???"
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|ret
 operator|=
 name|res_querydomain
@@ -2919,7 +2945,7 @@ operator|==
 name|TRY_AGAIN
 condition|)
 block|{
-comment|/* the name server seems to be down */
+comment|/* 				**  the name server seems to be down or 				**  broken. 				*/
 name|h_errno
 operator|=
 name|TRY_AGAIN
@@ -2930,6 +2956,26 @@ operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
 comment|/* 				**  If the ANY query is larger than the 				**  UDP packet size, the resolver will 				**  fall back to TCP.  However, some 				**  misconfigured firewalls block 53/TCP 				**  so the ANY lookup fails whereas an MX 				**  or A record might work.  Therefore, 				**  don't fail on ANY queries. 				** 				**  The ANY query is really meant to prime 				**  the cache so this isn't dangerous. 				*/
+if|#
+directive|if
+name|_FFR_WORKAROUND_BROKEN_NAMESERVERS
+comment|/* 				**  Only return if not TRY_AGAIN as an 				**  attempt with a different qtype may 				**  succeed (res_querydomain() calls 				**  res_query() calls res_send() which 				**  sets errno to ETIMEDOUT if the 				**  nameservers could be contacted but 				**  didn't give an answer). 				*/
+if|if
+condition|(
+name|qtype
+operator|!=
+name|T_ANY
+operator|&&
+name|errno
+operator|!=
+name|ETIMEDOUT
+condition|)
+return|return
+name|FALSE
+return|;
+else|#
+directive|else
+comment|/* _FFR_WORKAROUND_BROKEN_NAMESERVERS */
 if|if
 condition|(
 name|qtype
@@ -2939,6 +2985,9 @@ condition|)
 return|return
 name|FALSE
 return|;
+endif|#
+directive|endif
+comment|/* _FFR_WORKAROUND_BROKEN_NAMESERVERS */
 block|}
 if|if
 condition|(
@@ -3561,6 +3610,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|statp
+operator|==
+name|EX_OK
+condition|)
 operator|*
 name|statp
 operator|=
