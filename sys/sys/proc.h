@@ -1873,7 +1873,7 @@ argument|ksegrp
 argument_list|)
 name|p_ksegrps
 expr_stmt|;
-comment|/* (kg_ksegrp) All KSEGs. */
+comment|/* (c)(kg_ksegrp) All KSEGs. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1881,7 +1881,7 @@ argument|thread
 argument_list|)
 name|p_threads
 expr_stmt|;
-comment|/* (td_plist) Threads. (shortcut) */
+comment|/* (j)(td_plist) Threads. (shortcut) */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -2223,7 +2223,7 @@ comment|/* (j) Number of threads. */
 name|int
 name|p_numksegrps
 decl_stmt|;
-comment|/* (?) number of ksegrps */
+comment|/* (c) number of ksegrps */
 name|struct
 name|mdproc
 name|p_md
