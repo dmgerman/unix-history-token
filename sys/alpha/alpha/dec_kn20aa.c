@@ -502,9 +502,9 @@ argument_list|(
 literal|"not configured to use display&& keyboard console"
 argument_list|)
 expr_stmt|;
-break|break;
 endif|#
 directive|endif
+break|break;
 default|default:
 name|printf
 argument_list|(
