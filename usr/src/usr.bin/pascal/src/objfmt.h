@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)objfmt.h 1.7 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.8 %G%"; */
 end_comment
 
 begin_ifdef
@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|PX_HEADER
-value|"/usr/lib/npx_header"
+value|"/usr/lib/px_header"
 end_define
 
 begin_comment
