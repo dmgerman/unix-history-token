@@ -4,14 +4,14 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:50:27 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *  *	Last Edit-Date: [Mon Mar 27 16:10:50 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCVT_REL
-value|"3.20-b24"
+value|"3.60"
 end_define
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1999, 2000 Hellmuth Michaelis  *  * Copyright (c) 19
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:38:45 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *  *	Last Edit-Date: [Mon Mar 27 16:11:33 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -972,18 +972,6 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-name|data
-operator|->
-name|opsys
-operator|=
-name|CONF_FREEBSD
-expr_stmt|;
-name|data
-operator|->
-name|opsysrel
-operator|=
-name|__FreeBSD__
-expr_stmt|;
 name|data
 operator|->
 name|nscreens
