@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.26 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1949,7 +1949,7 @@ name|f_bavail
 operator|*
 name|fsbuf
 operator|.
-name|f_fsize
+name|f_bsize
 operator|/
 literal|1024
 expr_stmt|;
