@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-null.c,v 1.19 96/07/14 19:39:02 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-null.c,v 1.22 96/12/10 23:18:58 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +141,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pcap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -152,19 +159,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"interface.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"addrtoname.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pcap.h"
+file|"interface.h"
 end_include
 
 begin_define
@@ -173,6 +174,28 @@ directive|define
 name|NULL_HDRLEN
 value|4
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AF_NS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AF_NS
+value|6
+end_define
+
+begin_comment
+comment|/* XEROX NS protocols */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static

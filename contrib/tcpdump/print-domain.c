@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-domain.c,v 1.35 96/07/23 14:17:22 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-domain.c,v 1.37 96/12/10 23:21:06 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1687,7 +1688,7 @@ operator|(
 name|rp
 operator|)
 return|;
-comment|/* XXX This isn't always right*/
+comment|/* XXX This isn't always right */
 block|}
 end_function
 

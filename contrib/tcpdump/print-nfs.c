@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-nfs.c,v 1.56 96/07/23 14:17:25 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-nfs.c,v 1.63 96/12/10 23:18:07 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,33 +79,10 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SOLARIS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<tiuser.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|<rpc/rpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/pmap_prot.h>
 end_include
 
 begin_include
@@ -116,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<pcap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -256,6 +234,17 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|int
+name|nfserr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if we error rather than trunc */
+end_comment
 
 begin_comment
 comment|/*  * Mapping of old NFS Version 2 RPC numbers to generic numbers.  */
@@ -461,13 +450,6 @@ name|int
 name|how
 parameter_list|)
 block|{
-specifier|static
-name|char
-name|buf
-index|[
-literal|32
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INT64_FORMAT
@@ -632,7 +614,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -661,7 +643,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|sa3
@@ -686,7 +668,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -715,7 +697,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|sa3
@@ -740,7 +722,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -769,7 +751,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|sa3
@@ -794,7 +776,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -823,7 +805,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|sa3
@@ -848,7 +830,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -879,7 +861,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|sa3
@@ -919,7 +901,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -950,7 +932,7 @@ name|ep
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|sa3
@@ -1145,6 +1127,11 @@ name|proc
 decl_stmt|,
 name|vers
 decl_stmt|;
+name|nfserr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* assume no error */
 name|rp
 operator|=
 operator|(
@@ -1307,7 +1294,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a pointer to the first file handle in the packet.  * If the packet was truncated, return 0.  */
+comment|/*  * Return a pointer to the first file handle in the packet.  * If the packet was truncated, return NULL.  */
 end_comment
 
 begin_function
@@ -1334,7 +1321,14 @@ specifier|const
 name|u_int32_t
 modifier|*
 name|dp
-init|=
+decl_stmt|;
+specifier|register
+name|u_int
+name|len
+decl_stmt|;
+comment|/* 	 * find the start of the req data (if we captured it) 	 */
+name|dp
+operator|=
 operator|(
 name|u_int32_t
 operator|*
@@ -1345,39 +1339,15 @@ operator|->
 name|rm_call
 operator|.
 name|cb_cred
-decl_stmt|;
-specifier|register
-specifier|const
-name|u_int32_t
-modifier|*
-name|ep
-init|=
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-name|snapend
-decl_stmt|;
-specifier|register
-name|u_int
-name|len
-decl_stmt|;
-if|if
-condition|(
-operator|&
+expr_stmt|;
+name|TCHECK
+argument_list|(
 name|dp
 index|[
-literal|2
+literal|1
 index|]
-operator|>=
-name|ep
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* 	 * find the start of the req data (if we captured it) 	 */
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|ntohl
@@ -1390,10 +1360,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dp
-operator|<
-name|ep
-operator|&&
 name|len
 operator|<
 name|length
@@ -1409,7 +1375,8 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+operator|*
+name|dp
 argument_list|)
 operator|+
 literal|3
@@ -1418,7 +1385,16 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+operator|*
+name|dp
+argument_list|)
+expr_stmt|;
+name|TCHECK
+argument_list|(
+name|dp
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|len
@@ -1433,17 +1409,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|dp
-operator|<
-name|ep
-operator|)
-operator|&&
-operator|(
 name|len
 operator|<
 name|length
-operator|)
 condition|)
 block|{
 name|dp
@@ -1456,7 +1424,8 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+operator|*
+name|dp
 argument_list|)
 operator|+
 literal|3
@@ -1465,15 +1434,20 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+operator|*
+name|dp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|TCHECK2
+argument_list|(
 name|dp
-operator|<
-name|ep
-condition|)
+index|[
+literal|0
+index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|dp
@@ -1481,16 +1455,18 @@ operator|)
 return|;
 block|}
 block|}
+name|trunc
+label|:
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Print out an NFS file handle and return a pointer to following word.  * If packet was truncated, return 0.  */
+comment|/*  * Print out an NFS file handle and return a pointer to following word.  * If packet was truncated, return NULL.  */
 end_comment
 
 begin_function
@@ -1518,23 +1494,14 @@ condition|(
 name|v3
 condition|)
 block|{
-if|if
-condition|(
+name|TCHECK
+argument_list|(
 name|dp
-operator|+
-literal|1
-operator|>
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-name|snapend
-condition|)
-return|return
-operator|(
+index|[
 literal|0
-operator|)
-return|;
+index|]
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 operator|(
@@ -1561,15 +1528,19 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
-name|dp
-operator|+
-name|len
-operator|<=
-operator|(
-name|u_int32_t
+name|TTEST2
+argument_list|(
 operator|*
-operator|)
-name|snapend
+name|dp
+argument_list|,
+name|len
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dp
+argument_list|)
+argument_list|)
 condition|)
 block|{
 name|nfs_printfh
@@ -1587,16 +1558,18 @@ name|len
 operator|)
 return|;
 block|}
+name|trunc
+label|:
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Print out a file name and return pointer to 32-bit word past it.  * If packet was truncated, return 0.  */
+comment|/*  * Print out a file name and return pointer to 32-bit word past it.  * If packet was truncated, return NULL.  */
 end_comment
 
 begin_function
@@ -1642,7 +1615,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 comment|/* Fetch string length; convert to host order */
@@ -1697,10 +1670,15 @@ name|snapend
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 comment|/* XXX seems like we should be checking the length */
+name|putchar
+argument_list|(
+literal|'"'
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1713,6 +1691,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|putchar
+argument_list|(
+literal|'"'
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|dp
@@ -1722,7 +1705,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print out file handle and file name.  * Return pointer to 32-bit word past file name.  * If packet was truncated (or there was some other error), return 0.  */
+comment|/*  * Print out file handle and file name.  * Return pointer to 32-bit word past file name.  * If packet was truncated (or there was some other error), return NULL.  */
 end_comment
 
 begin_function
@@ -1755,11 +1738,11 @@ if|if
 condition|(
 name|dp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|putchar
@@ -1818,12 +1801,6 @@ name|u_int32_t
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|ep
-decl_stmt|;
 name|nfstype
 name|type
 decl_stmt|;
@@ -1836,6 +1813,11 @@ name|struct
 name|nfsv3_sattr
 name|sa3
 decl_stmt|;
+name|nfserr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* assume no error */
 name|rp
 operator|=
 operator|(
@@ -1855,10 +1837,6 @@ name|ip
 operator|*
 operator|)
 name|bp2
-expr_stmt|;
-name|ep
-operator|=
-name|snapend
 expr_stmt|;
 if|if
 condition|(
@@ -2034,7 +2012,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
@@ -2043,7 +2021,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2068,7 +2046,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
@@ -2077,7 +2055,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2102,7 +2080,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
@@ -2111,7 +2089,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2136,7 +2114,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -2149,7 +2127,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TCHECK
@@ -2160,7 +2138,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %04x"
+literal|" %04lx"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -2195,7 +2173,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
@@ -2204,7 +2182,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2229,7 +2207,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -2242,7 +2220,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2347,7 +2325,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -2360,7 +2338,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2517,7 +2495,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
@@ -2526,7 +2504,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2551,7 +2529,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
@@ -2560,7 +2538,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2585,7 +2563,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -2598,7 +2576,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|fputs
@@ -2624,7 +2602,7 @@ name|sa3
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -2634,7 +2612,7 @@ argument_list|(
 name|dp
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 if|if
@@ -2675,7 +2653,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -2688,7 +2666,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2730,7 +2708,7 @@ name|sa3
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 name|printf
@@ -2777,7 +2755,7 @@ condition|)
 break|break;
 name|printf
 argument_list|(
-literal|" %u/%u"
+literal|" %lu/%lu"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -2837,7 +2815,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
@@ -2846,7 +2824,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2871,7 +2849,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
@@ -2880,7 +2858,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -2905,7 +2883,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -2918,7 +2896,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|fputs
@@ -2937,7 +2915,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -2963,7 +2941,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -2976,7 +2954,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|fputs
@@ -2995,7 +2973,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -3021,7 +2999,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -3034,7 +3012,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -3077,7 +3055,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|" verf %08lx%08lx"
+literal|" verf %08x%08x"
 argument_list|,
 name|dp
 index|[
@@ -3154,7 +3132,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -3167,7 +3145,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TCHECK2
@@ -3205,7 +3183,7 @@ name|vflag
 condition|)
 name|printf
 argument_list|(
-literal|" max %lu verf %08lx%08lx"
+literal|" max %lu verf %08x%08x"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -3250,7 +3228,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
@@ -3259,7 +3237,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -3302,7 +3280,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -3315,7 +3293,7 @@ name|v3
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
@@ -3360,6 +3338,11 @@ return|return;
 block|}
 name|trunc
 label|:
+if|if
+condition|(
+operator|!
+name|nfserr
+condition|)
 name|fputs
 argument_list|(
 literal|" [|nfs]"
@@ -3497,13 +3480,13 @@ literal|" fh %u,%u/%u"
 argument_list|,
 name|fsid
 operator|.
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 argument_list|,
 name|fsid
 operator|.
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 argument_list|,
@@ -3684,7 +3667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns NFSPROC_xxx or -1 on failure */
+comment|/*  * Returns 0 and puts NFSPROC_xxx in proc return and  * version in vers return, or returns -1 on failure  */
 end_comment
 
 begin_function
@@ -3843,7 +3826,7 @@ comment|/*  * Routines for parsing reply packets  */
 end_comment
 
 begin_comment
-comment|/*  * Return a pointer to the beginning of the actual results.  * If the packet was truncated, return 0.  */
+comment|/*  * Return a pointer to the beginning of the actual results.  * If the packet was truncated, return NULL.  */
 end_comment
 
 begin_function
@@ -3871,19 +3854,6 @@ name|u_int32_t
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
-specifier|const
-name|u_int32_t
-modifier|*
-name|ep
-init|=
-operator|(
-specifier|const
-name|u_int32_t
-operator|*
-operator|)
-name|snapend
-decl_stmt|;
 name|int
 name|len
 decl_stmt|;
@@ -3908,21 +3878,16 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
-if|if
-condition|(
-operator|&
+name|TCHECK2
+argument_list|(
 name|dp
 index|[
-literal|1
-index|]
-operator|>=
-name|ep
-condition|)
-return|return
-operator|(
 literal|0
-operator|)
-return|;
+index|]
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|len
 operator|=
 name|ntohl
@@ -3941,7 +3906,7 @@ name|length
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 comment|/* 	 * skip past the ar_verf credentials. 	 */
@@ -3967,17 +3932,16 @@ argument_list|(
 name|u_int32_t
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|TCHECK2
+argument_list|(
 name|dp
-operator|>=
-name|ep
-condition|)
-return|return
-operator|(
+index|[
 literal|0
-operator|)
-return|;
+index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * now we can check the ar_stat field 	 */
 name|astat
 operator|=
@@ -4009,9 +3973,14 @@ argument_list|(
 literal|" PROG_UNAVAIL"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -4022,9 +3991,14 @@ argument_list|(
 literal|" PROG_MISMATCH"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -4035,9 +4009,14 @@ argument_list|(
 literal|" PROC_UNAVAIL"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -4048,9 +4027,14 @@ argument_list|(
 literal|" GARBAGE_ARGS"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -4061,9 +4045,14 @@ argument_list|(
 literal|" SYSTEM_ERR"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 default|default:
@@ -4074,9 +4063,14 @@ argument_list|,
 name|astat
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -4091,18 +4085,14 @@ argument_list|)
 operator|+
 operator|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|dp
 operator|)
 operator|)
 operator|<
-operator|(
-name|char
-operator|*
-operator|)
-name|ep
+name|snapend
 condition|)
 return|return
 operator|(
@@ -4126,9 +4116,11 @@ operator|)
 operator|)
 operator|)
 return|;
+name|trunc
+label|:
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -4143,33 +4135,8 @@ name|p
 parameter_list|,
 name|l
 parameter_list|)
-value|if ((u_char *)(p)> ((u_char *)snapend) - l) return(0)
+value|if ((u_char *)(p)> ((u_char *)snapend) - l) return(NULL)
 end_define
-
-begin_comment
-comment|/*  * Not all systems have strerror().  */
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|strerr
-parameter_list|(
-name|int
-name|errno
-parameter_list|)
-block|{
-return|return
-operator|(
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -4188,17 +4155,19 @@ modifier|*
 name|er
 parameter_list|)
 block|{
+specifier|register
 name|int
-name|errno
+name|errnum
 decl_stmt|;
-name|T2CHECK
+name|TCHECK
 argument_list|(
 name|dp
-argument_list|,
-literal|4
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
-name|errno
+name|errnum
 operator|=
 name|ntohl
 argument_list|(
@@ -4215,54 +4184,52 @@ condition|)
 operator|*
 name|er
 operator|=
-name|errno
+name|errnum
 expr_stmt|;
 if|if
 condition|(
-name|errno
+name|errnum
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|qflag
 condition|)
-block|{
-name|char
-modifier|*
-name|errmsg
-decl_stmt|;
-name|errmsg
+name|printf
+argument_list|(
+literal|" ERROR: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errnum
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|nfserr
 operator|=
-name|strerr
-argument_list|(
-name|errno
-argument_list|)
+literal|1
 expr_stmt|;
-if|if
-condition|(
-name|errmsg
-condition|)
-name|printf
-argument_list|(
-literal|" ERROR: '%s'"
-argument_list|,
-name|errmsg
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|" ERROR: %d"
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 return|return
 operator|(
 name|dp
 operator|+
 literal|1
+operator|)
+return|;
+name|trunc
+label|:
+return|return
+operator|(
+name|NULL
 operator|)
 return|;
 block|}
@@ -4323,7 +4290,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %s %o ids %d/%d"
+literal|" %s %lo ids %ld/%ld"
 argument_list|,
 name|tok2str
 argument_list|(
@@ -4421,7 +4388,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" sz %d "
+literal|" sz %ld "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4455,7 +4422,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"nlink %d rdev %d/%d "
+literal|"nlink %ld rdev %ld/%ld "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4523,7 +4490,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" a/m/ctime %u.%06u "
+literal|" a/m/ctime %lu.%06lu "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4546,7 +4513,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%06u "
+literal|"%lu.%06lu "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4569,7 +4536,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%06u "
+literal|"%lu.%06lu "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4602,7 +4569,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"nlink %d rdev %x fsid %x nodeid %x a/m/ctime "
+literal|"nlink %ld rdev %lx fsid %lx nodeid %lx a/m/ctime "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4635,7 +4602,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%06u "
+literal|"%lu.%06lu "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4658,7 +4625,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%06u "
+literal|"%lu.%06lu "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4681,7 +4648,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%06u "
+literal|"%lu.%06lu "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -4777,9 +4744,6 @@ operator|)
 return|;
 return|return
 operator|(
-operator|(
-name|long
-operator|)
 name|parsefattr
 argument_list|(
 name|dp
@@ -4788,6 +4752,8 @@ name|verbose
 argument_list|,
 name|v3
 argument_list|)
+operator|!=
+name|NULL
 operator|)
 return|;
 block|}
@@ -4807,10 +4773,6 @@ block|{
 name|int
 name|er
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
 name|dp
 operator|=
 name|parsestatus
@@ -4820,7 +4782,12 @@ argument_list|,
 operator|&
 name|er
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|==
+name|NULL
 operator|||
 name|er
 condition|)
@@ -4910,7 +4877,7 @@ if|if
 condition|(
 name|v3
 operator|&&
-operator|!
+operator|(
 operator|(
 name|dp
 operator|=
@@ -4920,6 +4887,9 @@ name|dp
 argument_list|,
 name|vflag
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 operator|)
 condition|)
 return|return
@@ -5021,7 +4991,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5032,6 +5001,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -5204,7 +5175,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|" tsize %d bsize %d blocks %d bfree %d bavail %d"
+literal|" tsize %ld bsize %ld blocks %ld bfree %ld bavail %ld"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5279,7 +5250,7 @@ if|if
 condition|(
 name|dp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|er
 condition|)
@@ -5306,7 +5277,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" offset %x size %d "
+literal|" offset %lx size %ld "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5374,7 +5345,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" mtime %u.%06u ctime %u.%06u"
+literal|" mtime %lu.%06lu ctime %lu.%06lu"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -5613,7 +5584,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5624,10 +5594,12 @@ argument_list|,
 name|verbose
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -5671,7 +5643,6 @@ name|er
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5683,10 +5654,12 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -5734,7 +5707,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5745,10 +5717,12 @@ argument_list|,
 literal|1
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -5758,7 +5732,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5769,10 +5742,12 @@ argument_list|,
 name|verbose
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -5826,7 +5801,6 @@ name|er
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5838,6 +5812,8 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -5852,7 +5828,7 @@ argument_list|,
 name|verbose
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -5878,7 +5854,6 @@ name|er
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5890,10 +5865,12 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -5907,7 +5884,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -5918,10 +5894,12 @@ argument_list|,
 name|verbose
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -5945,7 +5923,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" verf %08lx%08lx"
+literal|" verf %08x%08x"
 argument_list|,
 name|dp
 index|[
@@ -5990,7 +5968,6 @@ name|er
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6002,6 +5979,8 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -6019,7 +5998,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6030,6 +6008,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -6145,7 +6125,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" delta %u.%06u "
+literal|" delta %lu.%06lu "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -6196,7 +6176,6 @@ name|spp
 decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6208,6 +6187,8 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -6225,7 +6206,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6236,6 +6216,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -6373,14 +6355,6 @@ specifier|register
 name|int
 name|v3
 decl_stmt|;
-specifier|register
-specifier|const
-name|u_char
-modifier|*
-name|ep
-init|=
-name|snapend
-decl_stmt|;
 name|int
 name|er
 decl_stmt|;
@@ -6452,7 +6426,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parseattrstat
 argument_list|(
@@ -6478,7 +6452,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6489,6 +6462,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return;
 if|if
@@ -6504,6 +6479,8 @@ name|dp
 argument_list|,
 name|vflag
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return;
 block|}
@@ -6536,7 +6513,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6547,6 +6523,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6556,7 +6534,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6568,6 +6545,8 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6602,7 +6581,6 @@ else|else
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6613,10 +6591,13 @@ argument_list|,
 name|v3
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
 condition|(
+operator|(
 operator|(
 name|dp
 operator|=
@@ -6627,10 +6608,15 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|!=
+name|NULL
+operator|)
 operator|&&
+operator|(
 name|vflag
 operator|>
 literal|1
+operator|)
 condition|)
 block|{
 name|printf
@@ -6652,6 +6638,8 @@ block|}
 if|if
 condition|(
 name|dp
+operator|!=
+name|NULL
 condition|)
 return|return;
 block|}
@@ -6688,7 +6676,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6700,6 +6687,8 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6713,7 +6702,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6724,6 +6712,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6733,7 +6723,7 @@ name|er
 condition|)
 name|printf
 argument_list|(
-literal|" c %04x"
+literal|" c %04lx"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -6766,7 +6756,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parselinkres
 argument_list|(
@@ -6789,7 +6779,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6800,6 +6789,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6809,7 +6800,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6821,11 +6811,12 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6836,6 +6827,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6915,7 +6908,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6926,6 +6918,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -6935,7 +6929,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6947,11 +6940,12 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -6962,6 +6956,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7058,7 +7054,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7069,6 +7064,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7085,7 +7082,7 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7113,7 +7110,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7124,6 +7120,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7140,7 +7138,7 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7168,7 +7166,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7179,6 +7176,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7195,7 +7194,7 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7211,7 +7210,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7226,7 +7225,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7237,6 +7235,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7248,7 +7248,7 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -7262,7 +7262,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7273,6 +7272,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7288,6 +7289,8 @@ name|dp
 argument_list|,
 name|vflag
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return;
 block|}
@@ -7303,7 +7306,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7318,7 +7321,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7329,6 +7331,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7344,6 +7348,8 @@ name|dp
 argument_list|,
 name|vflag
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return;
 block|}
@@ -7359,7 +7365,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7374,7 +7380,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7385,6 +7390,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7394,7 +7401,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7406,6 +7412,8 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7420,7 +7428,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7431,6 +7438,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 name|printf
@@ -7440,7 +7449,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7451,6 +7459,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 block|}
@@ -7468,7 +7478,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7483,7 +7493,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7494,6 +7503,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7503,7 +7514,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7515,6 +7525,8 @@ operator|&
 name|er
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7529,7 +7541,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7540,6 +7551,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 name|printf
@@ -7549,7 +7562,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7560,6 +7572,8 @@ argument_list|,
 name|vflag
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 return|return;
@@ -7577,7 +7591,7 @@ operator|&
 name|er
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7592,7 +7606,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7603,6 +7616,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7618,6 +7633,8 @@ name|dp
 argument_list|,
 name|vflag
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 return|return;
 block|}
@@ -7645,7 +7662,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|dp
 operator|=
@@ -7656,6 +7672,8 @@ argument_list|,
 name|length
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 break|break;
 if|if
@@ -7666,6 +7684,8 @@ name|dp
 argument_list|,
 name|vflag
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -7690,7 +7710,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsestatfs
 argument_list|(
@@ -7699,7 +7719,7 @@ argument_list|,
 name|v3
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -7724,14 +7744,14 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefsinfo
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -7756,7 +7776,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsepathconf
 argument_list|(
@@ -7788,7 +7808,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsewccres
 argument_list|(
@@ -7804,7 +7824,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|" proc-%lu"
+literal|" proc-%u"
 argument_list|,
 name|proc
 argument_list|)
@@ -7813,6 +7833,11 @@ return|return;
 block|}
 name|trunc
 label|:
+if|if
+condition|(
+operator|!
+name|nfserr
+condition|)
 name|fputs
 argument_list|(
 literal|" [|nfs]"

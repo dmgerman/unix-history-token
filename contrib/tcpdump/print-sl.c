@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-sl.c,v 1.38 96/07/15 18:23:25 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-sl.c,v 1.41 96/12/10 23:19:42 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -604,7 +605,7 @@ break|break;
 case|case
 name|TYPE_UNCOMPRESSED_TCP
 case|:
-comment|/* 		 * The connection id is stored in the IP protcol field. 		 * Get it from the link layer since sl_uncompress_tcp() 		 * has restored the IP header copy to IPPROTO_TCP. 		 */
+comment|/* 		 * The connection id is stored in the IP protocol field. 		 * Get it from the link layer since sl_uncompress_tcp() 		 * has restored the IP header copy to IPPROTO_TCP. 		 */
 name|lastconn
 operator|=
 operator|(
@@ -1132,6 +1133,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pcap.h>
 end_include
 
 begin_include

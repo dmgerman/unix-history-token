@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-ppp.c,v 1.22 96/07/14 19:39:03 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-ppp.c,v 1.24 96/12/10 23:23:12 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

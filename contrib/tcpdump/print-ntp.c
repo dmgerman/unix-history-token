@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-ntp.c,v 1.23 96/07/23 14:17:26 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-ntp.c,v 1.25 96/11/05 13:30:37 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,13 +252,16 @@ argument_list|)
 expr_stmt|;
 name|version
 operator|=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|bp
 operator|->
 name|status
 operator|&
 name|VERSIONMASK
-operator|)
+argument_list|)
 operator|>>
 literal|3
 expr_stmt|;
