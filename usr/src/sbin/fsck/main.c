@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	3.4 (Berkeley) %G%"
+literal|"@(#)main.c	3.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -608,6 +608,11 @@ name|n_ffree
 decl_stmt|,
 name|n_bfree
 decl_stmt|;
+name|struct
+name|dups
+modifier|*
+name|dp
+decl_stmt|;
 name|devname
 operator|=
 name|filesys
@@ -898,6 +903,47 @@ argument_list|,
 name|n_blks
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|duplist
+operator|!=
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"The following duplicate blocks remain:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|dp
+operator|=
+name|duplist
+init|;
+name|dp
+condition|;
+name|dp
+operator|=
+name|dp
+operator|->
+name|next
+control|)
+name|printf
+argument_list|(
+literal|" %d,"
+argument_list|,
+name|dp
+operator|->
+name|dup
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
