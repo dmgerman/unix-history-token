@@ -671,6 +671,13 @@ name|VAR_LOGOUT
 value|34
 end_define
 
+begin_define
+define|#
+directive|define
+name|VAR_IFQUEUE
+value|35
+end_define
+
 begin_comment
 comment|/* ``accept|deny|disable|enable'' masks */
 end_comment
@@ -11125,6 +11132,33 @@ literal|'\0'
 expr_stmt|;
 break|break;
 case|case
+name|VAR_IFQUEUE
+case|:
+name|long_val
+operator|=
+name|atol
+argument_list|(
+name|argp
+argument_list|)
+expr_stmt|;
+name|arg
+operator|->
+name|bundle
+operator|->
+name|cfg
+operator|.
+name|ifqueue
+operator|=
+name|long_val
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+name|long_val
+expr_stmt|;
+break|break;
+case|case
 name|VAR_LOGOUT
 case|:
 name|strncpy
@@ -13692,6 +13726,27 @@ block|,
 literal|"destination address"
 block|,
 literal|"set ifaddr [src-addr [dst-addr [netmask [trg-addr]]]]"
+block|}
+block|,
+block|{
+literal|"ifqueue"
+block|,
+name|NULL
+block|,
+name|SetVariable
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"interface queue"
+block|,
+literal|"set ifqueue packets"
+block|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|VAR_IFQUEUE
 block|}
 block|,
 block|{
