@@ -1,7 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id$  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: bootsect.h,v 1.2 1993/10/16 19:29:24 rgrimes Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PCFS_BOOTSECT_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PCFS_BOOTSECT_H_
+value|1
+end_define
 
 begin_comment
 comment|/*  *  Format of a boot sector.  This is the first sector  *  on a DOS floppy disk or the fist sector of a partition  *  on a hard disk.  But, it is not the first sector of  *  a partitioned hard disk.  */
@@ -237,6 +250,15 @@ directive|define
 name|bsHugeSectors
 value|bsBPB.bpbHugeSectors
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _PCFS_BOOTSECT_H_ */
+end_comment
 
 end_unit
 

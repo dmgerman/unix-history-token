@@ -75,9 +75,12 @@ begin_struct
 struct|struct
 name|lock
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
 comment|/* 	 *	Efficient VAX implementation -- see field description below. 	 */
 name|unsigned
 name|int
@@ -107,12 +110,12 @@ decl_stmt|;
 name|simple_lock_data_t
 name|interlock
 decl_stmt|;
-else|#
-directive|else
-else|vax
-ifdef|#
-directive|ifdef
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|ns32000
+argument_list|)
 comment|/* 	 *	Efficient ns32000 implementation -- 	 *	see field description below. 	 */
 name|simple_lock_data_t
 name|interlock
@@ -144,7 +147,7 @@ literal|0
 decl_stmt|;
 else|#
 directive|else
-else|ns32000
+comment|/* neither vax nor ns32000 */
 comment|/*	Only the "interlock" field is used for hardware exclusion; 	 *	other fields are modified with normal instructions after 	 *	acquiring the interlock bit. 	 */
 name|simple_lock_data_t
 name|interlock
@@ -170,9 +173,6 @@ name|int
 name|read_count
 decl_stmt|;
 comment|/* Number of accepted readers */
-endif|#
-directive|endif
-comment|/* ns32000 */
 endif|#
 directive|endif
 comment|/* vax */
@@ -246,8 +246,11 @@ end_function_decl
 begin_else
 else|#
 directive|else
-else|NCPUS> 1
 end_else
+
+begin_comment
+comment|/* NCPUS == 1 */
+end_comment
 
 begin_comment
 comment|/*  *	No multiprocessor locking is necessary.  */

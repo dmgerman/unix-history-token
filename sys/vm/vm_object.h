@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.h	7.3 (Berkeley) 4/21/91  *	$Id$  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.h	7.3 (Berkeley) 4/21/91  *	$Id: vm_object.h,v 1.2 1993/10/16 16:20:43 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -160,6 +160,7 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
 name|queue_head_t
 name|vm_object_cached_list
 decl_stmt|;
@@ -170,6 +171,7 @@ comment|/* list of objects persisting */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|vm_object_cached
 decl_stmt|;
@@ -180,6 +182,7 @@ comment|/* size of cached list */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|simple_lock_data_t
 name|vm_cache_lock
 decl_stmt|;
@@ -190,6 +193,7 @@ comment|/* lock for object cache */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|queue_head_t
 name|vm_object_list
 decl_stmt|;
@@ -200,6 +204,7 @@ comment|/* list of allocated objects */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|long
 name|vm_object_count
 decl_stmt|;
@@ -210,6 +215,7 @@ comment|/* count of all objects */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|simple_lock_data_t
 name|vm_object_list_lock
 decl_stmt|;
@@ -220,6 +226,7 @@ comment|/* lock for object list and count */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|vm_object_t
 name|kernel_object
 decl_stmt|;
@@ -230,6 +237,7 @@ comment|/* the single kernel object */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|vm_object_t
 name|kmem_object
 decl_stmt|;
@@ -254,8 +262,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  *	Declare procedures that operate on VM objects.  */
@@ -457,8 +468,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|VM_OBJECT_DEBUG
 end_else
+
+begin_comment
+comment|/* VM_OBJECT_DEBUG */
+end_comment
 
 begin_define
 define|#
@@ -518,14 +532,20 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|VM_OBJECT_DEBUG
 end_endif
+
+begin_comment
+comment|/* VM_OBJECT_DEBUG */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|_VM_OBJECT_
 end_endif
+
+begin_comment
+comment|/* _VM_OBJECT_ */
+end_comment
 
 end_unit
 

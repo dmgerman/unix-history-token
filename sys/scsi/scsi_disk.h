@@ -8,8 +8,21 @@ comment|/*  * Some lines of this file comes from a file of the name "scsi.h"  * 
 end_comment
 
 begin_comment
-comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
+comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with   * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_disk.h,v 1.4 1993/08/21 20:01:54 rgrimes Exp $  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SCSI_SCSI_DISK_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SCSI_SCSI_DISK_H_
+value|1
+end_define
 
 begin_comment
 comment|/*  * SCSI command format  */
@@ -547,6 +560,15 @@ struct|;
 block|}
 union|;
 end_union
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SCSI_SCSI_DISK_H_ */
+end_comment
 
 end_unit
 
