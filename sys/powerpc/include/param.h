@@ -174,24 +174,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * OBJFORMAT_NAMES is a comma-separated list of the object formats  * that are supported on the architecture.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OBJFORMAT_NAMES
-value|"elf"
-end_define
-
-begin_define
-define|#
-directive|define
-name|OBJFORMAT_DEFAULT
-value|"elf"
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -31,10 +31,6 @@ begin_comment
 comment|/* RCS ID& Copyright macro defns */
 end_comment
 
-begin_comment
-comment|/* __KERNEL_RCSID(0, "$NetBSD: interrupt.c,v 1.23 1998/02/24 07:38:01 thorpej Exp $");*/
-end_comment
-
 begin_include
 include|#
 directive|include

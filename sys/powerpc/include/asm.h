@@ -342,12 +342,6 @@ begin_comment
 comment|/* not lint and not STRIP_FBSDID */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -360,11 +354,6 @@ parameter_list|)
 define|\
 value|.weak alias;						\ 	alias = sym
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

@@ -129,12 +129,6 @@ begin_comment
 comment|/*  * CNAME and HIDENAME manage the relationship between symbol names in C  * and the equivalent assembly language names.  CNAME is given a name as  * it would be used in a C program.  It expands to the equivalent assembly  * language name.  HIDENAME is given an assembly-language name, and expands  * to a possibly-modified form that will be invisible to C programs.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -154,36 +148,6 @@ name|asmsym
 parameter_list|)
 value|__CONCAT(.,asmsym)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CNAME
-parameter_list|(
-name|csym
-parameter_list|)
-value|__CONCAT(_,csym)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HIDENAME
-parameter_list|(
-name|asmsym
-parameter_list|)
-value|asmsym
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* XXX should use .p2align 4,0x90 for -m486. */
@@ -294,12 +258,6 @@ name|STRIP_FBSDID
 argument_list|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -309,26 +267,6 @@ name|s
 parameter_list|)
 value|.ident s
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__FBSDID
-parameter_list|(
-name|s
-parameter_list|)
-value|.data ;	.asciz s ; .previous
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#

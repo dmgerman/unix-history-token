@@ -47,12 +47,6 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|FREEBSD_AOUT
-end_define
-
 begin_include
 include|#
 directive|include
@@ -86,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<link.h>
+file|<sys/link_aout.h>
 end_include
 
 begin_include

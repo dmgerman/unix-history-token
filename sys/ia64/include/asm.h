@@ -296,12 +296,6 @@ begin_comment
 comment|/*  * WEAK_ALIAS: create a weak alias (ELF only).  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -315,134 +309,8 @@ define|\
 value|.weak alias;						\ 	alias = sym
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Kernel RCS ID tag and copyright macros  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__KERNEL_SECTIONSTRING
-parameter_list|(
-name|_sec
-parameter_list|,
-name|_str
-parameter_list|)
-define|\
-value|.section _sec ; .asciz _str ; .text
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __ELF__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__KERNEL_SECTIONSTRING
-parameter_list|(
-name|_sec
-parameter_list|,
-name|_str
-parameter_list|)
-define|\
-value|.data ; .asciz _str ; .align 3 ; .text
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ELF__ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__KERNEL_RCSID
-parameter_list|(
-name|_n
-parameter_list|,
-name|_s
-parameter_list|)
-value|__KERNEL_SECTIONSTRING(.ident, _s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__KERNEL_COPYRIGHT
-parameter_list|(
-name|_n
-parameter_list|,
-name|_s
-parameter_list|)
-value|__KERNEL_SECTIONSTRING(.copyright, _s)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_KERNEL_RCSIDS
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|__KERNEL_RCSID
-end_undef
-
-begin_define
-define|#
-directive|define
-name|__KERNEL_RCSID
-parameter_list|(
-name|_n
-parameter_list|,
-name|_s
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
+comment|/*  * ID tag macros  */
 end_comment
 
 begin_if

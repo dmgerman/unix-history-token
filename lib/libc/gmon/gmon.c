@@ -130,12 +130,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__ELF__
-argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
 name|__i386__
 argument_list|)
 operator|||
@@ -143,7 +137,6 @@ name|defined
 argument_list|(
 name|__sparc64__
 argument_list|)
-operator|)
 end_if
 
 begin_decl_stmt

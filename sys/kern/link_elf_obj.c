@@ -151,23 +151,6 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__AOUT__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/nlist_aout.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -765,9 +748,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__ELF__
 name|Elf_Dyn
 modifier|*
 name|dp
@@ -795,17 +775,12 @@ name|newfilename
 decl_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
 name|linker_add_class
 argument_list|(
 operator|&
 name|link_elf_class
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__ELF__
 name|dp
 operator|=
 operator|(
@@ -1105,8 +1080,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* say hello to gdb! */
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}

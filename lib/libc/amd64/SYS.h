@@ -61,43 +61,12 @@ parameter_list|)
 value|.byte 0x9a ; .long y; .word x
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|KERNCALL
 value|int $0x80
 end_define
-
-begin_comment
-comment|/* Faster */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KERNCALL
-value|LCALL(7,0)
-end_define
-
-begin_comment
-comment|/* The old way */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

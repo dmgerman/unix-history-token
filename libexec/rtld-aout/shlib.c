@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<link.h>
+file|<sys/link_aout.h>
 end_include
 
 begin_include

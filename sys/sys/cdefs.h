@@ -785,12 +785,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__ELF__
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__STDC__
 end_ifdef
 
@@ -860,96 +854,6 @@ begin_comment
 comment|/* __STDC__ */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__ELF__ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__weak_reference
-parameter_list|(
-name|sym
-parameter_list|,
-name|alias
-parameter_list|)
-define|\
-value|__asm__(".stabs \"_" #alias "\",11,0,0,0");	\ 	__asm__(".stabs \"_" #sym "\",1,0,0,0")
-end_define
-
-begin_define
-define|#
-directive|define
-name|__warn_references
-parameter_list|(
-name|sym
-parameter_list|,
-name|msg
-parameter_list|)
-define|\
-value|__asm__(".stabs \"" msg "\",30,0,0,0");		\ 	__asm__(".stabs \"_" #sym "\",1,0,0,0")
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__weak_reference
-parameter_list|(
-name|sym
-parameter_list|,
-name|alias
-parameter_list|)
-define|\
-value|__asm__(".stabs \"_/**/alias\",11,0,0,0");	\ 	__asm__(".stabs \"_/**/sym\",1,0,0,0")
-end_define
-
-begin_define
-define|#
-directive|define
-name|__warn_references
-parameter_list|(
-name|sym
-parameter_list|,
-name|msg
-parameter_list|)
-define|\
-value|__asm__(".stabs msg,30,0,0,0");			\ 	__asm__(".stabs \"_/**/sym\",1,0,0,0")
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __ELF__ */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -965,12 +869,6 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -982,28 +880,6 @@ name|string
 parameter_list|)
 value|__asm__(".ident\t\"" string "\"")
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__IDSTRING
-parameter_list|(
-name|name
-parameter_list|,
-name|string
-parameter_list|)
-value|__asm__(".data\n\t.asciz\t\"" string "\"\n\t.previous")
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
