@@ -1662,8 +1662,6 @@ decl_stmt|,
 name|vector
 decl_stmt|,
 name|intpin
-decl_stmt|,
-name|pri
 decl_stmt|;
 name|error
 operator|=
@@ -1720,13 +1718,6 @@ argument_list|,
 name|slot
 argument_list|)
 expr_stmt|;
-name|pri
-operator|=
-name|ithread_priority
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|alpha_setup_intr
@@ -1745,8 +1736,6 @@ argument_list|,
 name|intr
 argument_list|,
 name|arg
-argument_list|,
-name|pri
 argument_list|,
 name|flags
 argument_list|,

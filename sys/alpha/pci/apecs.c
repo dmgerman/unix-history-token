@@ -1461,11 +1461,6 @@ name|intr
 argument_list|,
 name|arg
 argument_list|,
-name|ithread_priority
-argument_list|(
-name|flags
-argument_list|)
-argument_list|,
 name|flags
 argument_list|,
 name|cookiep

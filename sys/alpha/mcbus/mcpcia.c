@@ -1570,8 +1570,6 @@ decl_stmt|,
 name|intpin
 decl_stmt|,
 name|h
-decl_stmt|,
-name|pri
 decl_stmt|;
 name|intpin
 operator|=
@@ -1786,13 +1784,6 @@ name|irq
 operator|+
 name|INTRCNT_KN300_IRQ
 expr_stmt|;
-name|pri
-operator|=
-name|ithread_priority
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|alpha_setup_intr
@@ -1811,8 +1802,6 @@ argument_list|,
 name|intr
 argument_list|,
 name|arg
-argument_list|,
-name|pri
 argument_list|,
 name|flags
 argument_list|,

@@ -1560,11 +1560,6 @@ operator|)
 argument_list|,
 name|ii
 argument_list|,
-name|ithread_priority
-argument_list|(
-name|flags
-argument_list|)
-argument_list|,
 name|flags
 argument_list|,
 operator|&
