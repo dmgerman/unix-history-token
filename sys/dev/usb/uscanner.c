@@ -735,6 +735,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|d_ioctl_t
+name|uscannerioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|d_poll_t
 name|uscannerpoll
 decl_stmt|;
@@ -767,7 +773,7 @@ comment|/* write */
 name|uscannerwrite
 block|,
 comment|/* ioctl */
-name|noioctl
+name|uscannerioctl
 block|,
 comment|/* poll */
 name|uscannerpoll
