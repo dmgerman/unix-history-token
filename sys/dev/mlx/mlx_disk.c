@@ -934,9 +934,11 @@ name|mlx_iftype
 operator|==
 name|MLX_IFTYPE_2
 condition|)
-name|dsk
+name|sc
 operator|->
-name|si_iosize_max
+name|mlxd_disk
+operator|.
+name|d_maxsize
 operator|=
 literal|8
 operator|*
@@ -972,9 +974,11 @@ operator|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
-name|dsk
+name|sc
 operator|->
-name|si_iosize_max
+name|mlxd_disk
+operator|.
+name|d_maxsize
 operator|=
 name|imin
 argument_list|(
