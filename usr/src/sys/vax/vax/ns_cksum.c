@@ -1,24 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_cksum.c	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_cksum.c	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"../h/types.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../netns/ns.h"
+file|"../h/mbuf.h"
 end_include
 
 begin_comment
@@ -95,7 +89,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 			 * There is a byte left from the last segment; 			 * add it into the checksum.  Don't have to worry 			 * about a carry-out here because although we may do 			 * the 16th and 17th additions, the contribution 			 * of this byte and the previous cannot cause 			 * more than 1 carry into the high order 16 bits. 			 */
+comment|/* 			 * There is a byte left from the last segment; 			 * add it into the checksum.  Don't have to worry 			 * about a carry-out here because we make sure 			 * that high part of (32 bit) sum is small below. 			 */
 name|sum
 operator|+=
 operator|*
@@ -166,7 +160,39 @@ name|len
 operator|-=
 name|mlen
 expr_stmt|;
-comment|/* 		 * This loop is unrolled to make overhead from 		 * branches&c small. 		 * 		 * We can do a 16 bit ones complement sum 32 bits at a time 		 * by using regular arithmetic for 16 additions, then 		 * folding the carries in.  Each addition can generate 		 * no more than one carry. 		 * 		 */
+comment|/* 		 * Force to long boundary so we do longword aligned 		 * memory operations.  It is too hard to do byte 		 * adjustment, do only word adjustment. 		 */
+if|if
+condition|(
+operator|(
+operator|(
+name|int
+operator|)
+name|w
+operator|&
+literal|0x2
+operator|)
+operator|&&
+name|mlen
+operator|>=
+literal|2
+condition|)
+block|{
+name|sum
+operator|+=
+operator|*
+name|w
+operator|++
+expr_stmt|;
+name|sum
+operator|+=
+name|sum
+expr_stmt|;
+name|mlen
+operator|-=
+literal|2
+expr_stmt|;
+block|}
+comment|/* 		 * 		 * We can do a 16 bit ones complement sum using 		 * 32 bit arithmetic registers for adding, 		 * with carries from the low added 		 * into the high (by normal carry-chaining) 		 * so long as we fold back before 16 carries have occured. 		 * 		 */
 while|while
 condition|(
 operator|(
@@ -178,6 +204,7 @@ operator|>=
 literal|0
 condition|)
 block|{
+comment|/*asm("bicpsw $1");		 clears carry */
 undef|#
 directive|undef
 name|ADD
@@ -235,21 +262,14 @@ condition|(
 operator|(
 name|mlen
 operator|-=
-literal|16
+literal|8
 operator|)
 operator|>=
 literal|0
 condition|)
 block|{
+comment|/*asm("bicpsw $1");		 clears carry */
 name|FOLD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
-expr_stmt|;
-name|ADD
 expr_stmt|;
 name|ADD
 expr_stmt|;
@@ -262,9 +282,9 @@ expr_stmt|;
 block|}
 name|mlen
 operator|+=
-literal|16
+literal|8
 expr_stmt|;
-comment|/* 		 * Now eliminate the possibility of carry-out's by 		 * folding back to a 16 bit number (adding high and 		 * low parts together.)  Then mop up trailing words 		 * and maybe an odd byte. There can be at most 7 		 * words added in this loop, or 14 carries. 		 */
+comment|/* 		 * Now eliminate the possibility of carry-out's by 		 * folding back to a 16 bit number (adding high and 		 * low parts together.)  Then mop up trailing words 		 * and maybe an odd byte. 		 */
 name|FOLD
 expr_stmt|;
 while|while
@@ -322,7 +342,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cksum: out of data\n"
+literal|"idpcksum: out of data\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -361,9 +381,6 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|u_short
-operator|)
 name|sum
 operator|)
 return|;
