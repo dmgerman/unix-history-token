@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_timer.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_timer.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -684,6 +684,14 @@ name|tcp_drop
 argument_list|(
 name|tp
 argument_list|,
+name|tp
+operator|->
+name|t_softerror
+condition|?
+name|tp
+operator|->
+name|t_softerror
+else|:
 name|ETIMEDOUT
 argument_list|)
 expr_stmt|;
@@ -696,24 +704,11 @@ operator|++
 expr_stmt|;
 name|rexmt
 operator|=
-operator|(
-operator|(
+name|TCP_REXMTVAL
+argument_list|(
 name|tp
-operator|->
-name|t_srtt
-operator|>>
-literal|2
-operator|)
-operator|+
-name|tp
-operator|->
-name|t_rttvar
-operator|)
-operator|>>
-literal|1
-expr_stmt|;
-name|rexmt
-operator|*=
+argument_list|)
+operator|*
 name|tcp_backoff
 index|[
 name|tp
@@ -729,7 +724,9 @@ name|t_rxtcur
 argument_list|,
 name|rexmt
 argument_list|,
-name|TCPTV_MIN
+name|tp
+operator|->
+name|t_rttmin
 argument_list|,
 name|TCPTV_REXMTMAX
 argument_list|)
@@ -780,7 +777,7 @@ name|tp
 operator|->
 name|t_srtt
 operator|>>
-literal|2
+name|TCP_RTT_SHIFT
 operator|)
 expr_stmt|;
 name|tp
@@ -810,7 +807,7 @@ block|{
 name|u_int
 name|win
 init|=
-name|MIN
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -854,6 +851,12 @@ operator|*
 name|tp
 operator|->
 name|t_maxseg
+expr_stmt|;
+name|tp
+operator|->
+name|t_dupacks
+operator|=
+literal|0
 expr_stmt|;
 block|}
 operator|(
