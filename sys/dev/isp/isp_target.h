@@ -693,6 +693,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NA_OK
+value|0x01
+end_define
+
+begin_comment
+comment|/* Notify Acknowledge Succeeded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NA_INVALID
+value|0x06
+end_define
+
+begin_comment
+comment|/* Invalid Notify Acknowledge */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NA2_RSVDLEN
 value|21
 end_define
@@ -2185,7 +2207,6 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
-name|isp
 operator|,
 name|int
 operator|,
@@ -2236,7 +2257,6 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
-name|isp
 operator|,
 name|int
 operator|,
@@ -2265,7 +2285,6 @@ operator|(
 expr|struct
 name|ispsoftc
 operator|*
-name|isp
 operator|,
 name|void
 operator|*
