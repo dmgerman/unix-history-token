@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sf_buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -78,7 +84,7 @@ file|<machine/vmparam.h>
 end_include
 
 begin_comment
-comment|/*  * Implement uiomove(9) from physical memory using the direct map to  * avoid the creation and destruction of ephemeral mappings.  */
+comment|/*  * Implement uiomove(9) from physical memory using sf_bufs to  * avoid the creation and destruction of ephemeral mappings.  */
 end_comment
 
 begin_function
@@ -132,6 +138,11 @@ name|int
 name|save
 init|=
 literal|0
+decl_stmt|;
+name|struct
+name|sf_buf
+modifier|*
+name|sf
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -254,13 +265,9 @@ operator|-
 name|page_offset
 argument_list|)
 expr_stmt|;
-name|cp
+name|sf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|VM_PAGE_TO_PHYS
+name|sf_buf_alloc
 argument_list|(
 name|ma
 index|[
@@ -268,6 +275,19 @@ name|offset
 operator|>>
 name|PAGE_SHIFT
 index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|sf_buf_kva
+argument_list|(
+name|sf
 argument_list|)
 operator|+
 name|page_offset
@@ -379,6 +399,11 @@ name|UIO_NOCOPY
 case|:
 break|break;
 block|}
+name|sf_buf_free
+argument_list|(
+name|sf
+argument_list|)
+expr_stmt|;
 name|iov
 operator|->
 name|iov_base
