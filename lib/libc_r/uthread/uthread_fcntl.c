@@ -58,6 +58,9 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|nonblock
+decl_stmt|;
+name|int
 name|oldfd
 decl_stmt|;
 name|int
@@ -234,6 +237,7 @@ break|break;
 case|case
 name|F_SETFL
 case|:
+comment|/* 			 * Get the file descriptor flags passed by the 			 * caller: 			 */
 name|flags
 operator|=
 name|va_arg
@@ -243,6 +247,14 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Check if the user wants a non-blocking file 			 * descriptor: 			 */
+name|nonblock
+operator|=
+name|flags
+operator|&
+name|O_NONBLOCK
+expr_stmt|;
+comment|/* Set the file descriptor flags: */
 if|if
 condition|(
 operator|(
@@ -259,10 +271,46 @@ operator||
 name|O_NONBLOCK
 argument_list|)
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
+comment|/* Get the flags so that we behave like the kernel: */
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|flags
+operator|=
+name|_thread_sys_fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_GETFL
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* Error getting flags: */
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 			 * Check if the file descriptor is non-blocking 			 * with respect to the user: 			 */
+block|}
+elseif|else
+if|if
+condition|(
+name|nonblock
+condition|)
+comment|/* A non-blocking descriptor: */
 name|_thread_fd_table
 index|[
 name|fd
@@ -271,8 +319,23 @@ operator|->
 name|flags
 operator|=
 name|flags
+operator||
+name|O_NONBLOCK
 expr_stmt|;
-block|}
+else|else
+comment|/* Save the flags: */
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|->
+name|flags
+operator|=
+name|flags
+operator|&
+operator|~
+name|O_NONBLOCK
+expr_stmt|;
 break|break;
 default|default:
 comment|/* Might want to make va_arg use a union */
