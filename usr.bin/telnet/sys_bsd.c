@@ -58,7 +58,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -2725,7 +2725,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|SOLARIS
+comment|/* SOLARIS */
 operator|(
 name|void
 operator|)
@@ -2736,7 +2736,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|SOLARIS
+comment|/* SOLARIS */
 endif|#
 directive|endif
 comment|/* SIGTSTP */

@@ -211,7 +211,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|MAXHOSTNAMELEN
 end_endif
 
 begin_typedef
