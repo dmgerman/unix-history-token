@@ -212,12 +212,37 @@ name|DIST_DES_SSECURE
 value|0x0004
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|>
+literal|3
+end_if
+
+begin_define
+define|#
+directive|define
+name|DIST_DES_KERBEROS4
+value|0x0008
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|DIST_DES_KERBEROS
 value|0x0008
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

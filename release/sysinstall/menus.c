@@ -5019,6 +5019,36 @@ block|,
 name|DIST_DES_DES
 block|, }
 block|,
+if|#
+directive|if
+name|__FreeBSD__
+operator|>
+literal|3
+block|{
+literal|"krb4"
+block|,
+literal|"KerberosIV authentication services"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|DESDists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_DES_KERBEROS4
+block|}
+block|,
+else|#
+directive|else
 block|{
 literal|"krb"
 block|,
@@ -5042,6 +5072,8 @@ block|,
 name|DIST_DES_KERBEROS
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"skerbero"
 block|,
