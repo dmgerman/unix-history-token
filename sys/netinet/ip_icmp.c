@@ -706,21 +706,11 @@ expr|struct
 name|ip
 argument_list|)
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"icmp_error: bad length\n"
+literal|"icmp_error: bad length"
 argument_list|)
 expr_stmt|;
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-goto|goto
-name|freeit
-goto|;
-block|}
 name|m
 operator|->
 name|m_len
