@@ -954,6 +954,24 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
+comment|/* 		 * SimpleTech FlashLink UCF-100 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"OEI-USB"
+block|,
+literal|"CompactFlash"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
 comment|/* 		 * Minolta Dimage 2330 		 */
 block|{
 name|T_DIRECT
