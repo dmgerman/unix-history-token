@@ -333,6 +333,12 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|LOCKING_WORKED_AS_IT_SHOULD
+end_if
+
 begin_define
 define|#
 directive|define
@@ -404,6 +410,83 @@ define|\
 value|mtx_unlock(&Giant); mtx_lock(&(mpt)->mpt_lock)
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MPT_IFLAGS
+value|INTR_TYPE_CAM | INTR_ENTROPY
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_LOCK_SETUP
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_LOCK_DESTROY
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_LOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPT_UNLOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPTLOCK_2_CAMLOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAMLOCK_2_MPTLOCK
+parameter_list|(
+name|mpt
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -424,12 +507,11 @@ begin_define
 define|#
 directive|define
 name|MPT_MAX_REQUESTS
-value|256
+parameter_list|(
+name|mpt
+parameter_list|)
+value|((mpt)->is_fc? 1024 : 256)
 end_define
-
-begin_comment
-comment|/* XXX: should be derived from GlobalCredits */
-end_comment
 
 begin_define
 define|#
@@ -453,7 +535,10 @@ begin_define
 define|#
 directive|define
 name|MPT_REQ_MEM_SIZE
-value|(MPT_MAX_REQUESTS * MPT_REQUEST_AREA)
+parameter_list|(
+name|mpt
+parameter_list|)
+value|(MPT_MAX_REQUESTS(mpt) * MPT_REQUEST_AREA)
 end_define
 
 begin_comment
@@ -683,6 +768,7 @@ name|verbose
 operator|:
 literal|3
 operator|,
+name|outofbeer
 operator|:
 literal|1
 operator|,
@@ -894,10 +980,8 @@ decl_stmt|;
 comment|/* BusADdr of request memory */
 comment|/* 	 * CAM&& Software Management 	 */
 name|request_t
-name|requests
-index|[
-name|MPT_MAX_REQUESTS
-index|]
+modifier|*
+name|request_pool
 decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
@@ -1069,21 +1153,6 @@ name|void
 name|mpt_done
 parameter_list|(
 name|mpt_softc_t
-modifier|*
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mpt_notify
-parameter_list|(
-name|mpt_softc_t
-modifier|*
-parameter_list|,
-name|void
 modifier|*
 parameter_list|,
 name|u_int32_t
