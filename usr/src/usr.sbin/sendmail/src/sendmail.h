@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	2.2	%G% */
+comment|/* **  DLVRMAIL.H -- Global definitions for delivermail. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.1	%G% */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ comment|/* location of alias file */
 end_comment
 
 begin_comment
-comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The argument vector is expanded before actual use.  Every- **	thing is passed through except for things starting with "$". **	"$x" defines some interpolation, as described in conf.c **	"$x" where x is unknown expands to "x", so use "$$" to get "$". */
+comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The host map is a list of lists of strings.  Within each **	list, any host is mapped to the last host in the list. **	This allows multiple names, as well as doing clever **	mail grouping in point-to-point networks.  Note: this **	is only used internally, so the apparent host is still **	kept around. ** **	The argument vector is expanded before actual use.  Every- **	thing is passed through except for things starting with "$". **	"$x" defines some interpolation, as described in conf.c **	"$x" where x is unknown expands to "x", so use "$$" to get "$". */
 end_comment
 
 begin_struct
@@ -108,6 +108,18 @@ decl_stmt|;
 comment|/* list of local names for this host */
 name|char
 modifier|*
+name|m_from
+decl_stmt|;
+comment|/* pattern for From: header */
+name|char
+modifier|*
+modifier|*
+modifier|*
+name|m_hmap
+decl_stmt|;
+comment|/* host map */
+name|char
+modifier|*
 name|m_argv
 index|[
 name|MAXPV
@@ -122,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|M_FOPT
-value|0001
+value|000001
 end_define
 
 begin_comment
@@ -133,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|M_ROPT
-value|0002
+value|000002
 end_define
 
 begin_comment
@@ -144,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|M_QUIET
-value|0004
+value|000004
 end_define
 
 begin_comment
@@ -155,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|M_RESTR
-value|0010
+value|000010
 end_define
 
 begin_comment
@@ -166,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|M_HDR
-value|0020
+value|000020
 end_define
 
 begin_comment
@@ -177,7 +189,7 @@ begin_define
 define|#
 directive|define
 name|M_NOHOST
-value|0040
+value|000040
 end_define
 
 begin_comment
@@ -188,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|M_STRIPQ
-value|0100
+value|000100
 end_define
 
 begin_comment
@@ -199,12 +211,63 @@ begin_define
 define|#
 directive|define
 name|M_FHDR
-value|0200
+value|000200
 end_define
 
 begin_comment
 comment|/* force good From line */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NEEDFROM
+value|000400
+end_define
+
+begin_comment
+comment|/* need arpa-style From: line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NEEDDATE
+value|001000
+end_define
+
+begin_comment
+comment|/* need arpa-style Date: line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MSGID
+value|002000
+end_define
+
+begin_comment
+comment|/* need Message-Id: field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_COMMAS
+value|004000
+end_define
+
+begin_comment
+comment|/* need comma-seperated address lists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ARPAFMT
+value|(M_NEEDDATE|M_NEEDFROM|M_MSGID|M_COMMAS)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -410,6 +473,136 @@ comment|/* don't map UPPER->lower in host names */
 end_comment
 
 begin_comment
+comment|/* **  Header structure. **	This structure is used internally to store header items. */
+end_comment
+
+begin_struct
+struct|struct
+name|header
+block|{
+name|char
+modifier|*
+name|h_field
+decl_stmt|;
+comment|/* the name of the field */
+name|char
+modifier|*
+name|h_value
+decl_stmt|;
+comment|/* the value of that field */
+name|struct
+name|header
+modifier|*
+name|h_link
+decl_stmt|;
+comment|/* the next header */
+name|short
+name|h_flags
+decl_stmt|;
+comment|/* status bits, see below */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|header
+name|HDR
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|HDR
+modifier|*
+name|Header
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head of header list */
+end_comment
+
+begin_comment
+comment|/* **  Header information structure. **	Defined in conf.c, this struct declares the header fields **	that have some magic meaning. */
+end_comment
+
+begin_struct
+struct|struct
+name|hdrinfo
+block|{
+name|char
+modifier|*
+name|hi_field
+decl_stmt|;
+comment|/* the name of the field */
+name|short
+name|hi_flags
+decl_stmt|;
+comment|/* status bits, see below */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|hdrinfo
+name|HdrInfo
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bits for h_flags and hi_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_CONCAT
+value|00001
+end_define
+
+begin_comment
+comment|/* comma-concat multiple fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_DELETE
+value|00002
+end_define
+
+begin_comment
+comment|/* don't send this field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_DEFAULT
+value|00004
+end_define
+
+begin_comment
+comment|/* if another value is found, drop this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_USED
+value|00010
+end_define
+
+begin_comment
+comment|/* indicates that this has been output */
+end_comment
+
+begin_comment
 comment|/* **  Global variables. */
 end_comment
 
@@ -594,13 +787,25 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
 name|MsgId
-index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* the message id for this message */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Date
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* origination date (UNIX format) */
 end_comment
 
 begin_decl_stmt
