@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: perform.c,v 1.35 1997/06/06 12:19:11 jkh Exp $"
+literal|"$Id: perform.c,v 1.36 1997/07/04 04:48:02 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -202,9 +202,16 @@ condition|(
 operator|!
 name|pkg_in
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Unable to open contents file '%s' for input."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"unable to open contents file '%s' for input"
 argument_list|,
 name|Contents
 argument_list|)
@@ -774,9 +781,16 @@ condition|(
 operator|!
 name|fp
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Can't open file %s for writing."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't open file %s for writing"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -796,9 +810,16 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Error while closing %s."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"error while closing %s"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -1073,14 +1094,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Cannot create pipe: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
+literal|0
 argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"cannot create pipe"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1095,14 +1118,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Cannot fork process for tar: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
+literal|0
 argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"cannot fork process for tar"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1146,14 +1171,16 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
-name|barf
+name|cleanup
 argument_list|(
-literal|"Failed to execute tar command: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
+literal|0
 argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"failed to execute tar command"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1184,14 +1211,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"fdopen failed: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
+literal|0
 argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"fdopen failed"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1380,8 +1409,15 @@ if|if
 condition|(
 name|ret
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"tar command failed with code %d"
 argument_list|,
 name|ret
@@ -1401,9 +1437,16 @@ condition|(
 operator|!
 name|Comment
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Required package comment string is missing (-c comment)."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"required package comment string is missing (-c comment)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1411,9 +1454,16 @@ condition|(
 operator|!
 name|Desc
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Required package description string is missing (-d desc)."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"required package description string is missing (-d desc)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1421,9 +1471,16 @@ condition|(
 operator|!
 name|Contents
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Required package contents list is missing (-f [-]file)."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"required package contents list is missing (-f [-]file)"
 argument_list|)
 expr_stmt|;
 block|}

@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: extract.c,v 1.15 1997/06/30 02:57:40 jkh Exp $"
+literal|"$Id: extract.c,v 1.16 1997/07/01 06:13:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the package extraction code for the add module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -63,7 +69,7 @@ name|todir
 parameter_list|)
 comment|/* push out string */
 define|\
-value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) \ 			barf("can not invoke %d byte tar pipeline: %s", strlen(where_args), where_args); \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
+value|if (where_count> sizeof(STARTSTRING)-1) { \ 		    strcat(where_args, "|tar xf - -C "); \ 		    strcat(where_args, todir); \ 		    if (system(where_args)) \ 	cleanup(0), errx(2, "can not invoke %d byte tar pipeline: %s", \ 				strlen(where_args), where_args); \ 		    strcpy(where_args, STARTSTRING); \ 		    where_count = sizeof(STARTSTRING)-1; \ 	} \ 	if (perm_count) { \ 		    apply_perms(todir, perm_args); \ 		    perm_args[0] = 0;\ 		    perm_count = 0; \ 	}
 end_define
 
 begin_function
@@ -194,9 +200,9 @@ argument_list|,
 name|try
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"rollback: unable to rename %s back to %s."
+literal|"rollback: unable to rename %s back to %s"
 argument_list|,
 name|bup
 argument_list|,
@@ -314,8 +320,15 @@ condition|(
 operator|!
 name|where_args
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"can't get argument list space"
 argument_list|)
 expr_stmt|;
@@ -331,8 +344,15 @@ condition|(
 operator|!
 name|perm_args
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"can't get argument list space"
 argument_list|)
 expr_stmt|;
@@ -547,9 +567,9 @@ name|pf
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to back up %s to %s, aborting pkg_add"
+literal|"unable to back up %s to %s, aborting pkg_add"
 argument_list|,
 name|try
 argument_list|,
@@ -643,8 +663,15 @@ name|maxargs
 operator|-
 name|perm_count
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
@@ -728,8 +755,15 @@ name|maxargs
 operator|-
 name|where_count
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
@@ -766,8 +800,15 @@ name|maxargs
 operator|-
 name|perm_count
 condition|)
-name|barf
+name|cleanup
 argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
 literal|"oops, miscounted strings!"
 argument_list|)
 expr_stmt|;
@@ -825,9 +866,16 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Unable make directory '%s'."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"unable to make directory '%s'"
 argument_list|,
 name|p
 operator|->
@@ -856,9 +904,16 @@ name|last_file
 operator|==
 name|NULL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"No last file specified for '%s' command."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"no last file specified for '%s' command"
 argument_list|,
 name|p
 operator|->
@@ -904,9 +959,9 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Command '%s' failed."
+literal|"command '%s' failed"
 argument_list|,
 name|cmd
 argument_list|)

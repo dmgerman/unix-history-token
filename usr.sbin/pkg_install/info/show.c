@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: show.c,v 1.10 1997/02/22 16:09:43 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,9 +199,9 @@ operator|!
 name|fp
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"show_file: Can't open '%s' for reading."
+literal|"show_file: can't open '%s' for reading"
 argument_list|,
 name|fname
 argument_list|)
@@ -636,9 +636,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|barf
+name|cleanup
 argument_list|(
-literal|"Unknown command type %d (%s)\n"
+literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"unknown command type %d (%s)"
 argument_list|,
 name|p
 operator|->

@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: perform.c,v 1.21 1997/02/22 16:09:42 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,9 +485,9 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't stat package file '%s'."
+literal|"can't stat package file '%s'"
 argument_list|,
 name|fname
 argument_list|)
@@ -523,9 +523,9 @@ literal|"+*"
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Error during unpacking, no info for '%s' available."
+literal|"error during unpacking, no info for '%s' available"
 argument_list|,
 name|pkg
 argument_list|)
@@ -577,9 +577,9 @@ name|log_dir
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't find package `%s' installed or in a file!"
+literal|"can't find package `%s' installed or in a file!"
 argument_list|,
 name|pkg
 argument_list|)
@@ -598,9 +598,9 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't change directory to '%s'!"
+literal|"can't change directory to '%s'!"
 argument_list|,
 name|log_dir
 argument_list|)
@@ -640,9 +640,9 @@ operator|!
 name|fp
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to open %s file."
+literal|"unable to open %s file"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)

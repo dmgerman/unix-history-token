@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: perform.c,v 1.12 1997/02/22 16:09:37 peter Exp $"
+literal|"$Id: perform.c,v 1.13 1997/03/06 10:21:57 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the main body of the delete module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -211,9 +217,9 @@ name|LogDir
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"No such package '%s' installed."
+literal|"no such package '%s' installed"
 argument_list|,
 name|pkg
 argument_list|)
@@ -232,9 +238,16 @@ argument_list|,
 name|FILENAME_MAX
 argument_list|)
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Unable to get current working directory!"
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"unable to get current working directory!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -247,9 +260,9 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to change directory to %s!  Deinstall failed."
+literal|"unable to change directory to %s! deinstall failed"
 argument_list|,
 name|LogDir
 argument_list|)
@@ -273,16 +286,12 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package `%s' is required by these other packages"
+literal|"package `%s' is required by these other packages\n"
+literal|"and may not be deinstalled%s:"
 argument_list|,
 name|pkg
-argument_list|)
-expr_stmt|;
-name|whinge
-argument_list|(
-literal|"and may not be deinstalled%s:"
 argument_list|,
 name|Force
 condition|?
@@ -335,7 +344,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|whinge
+name|warnx
 argument_list|(
 literal|"cannot open requirements file `%s'"
 argument_list|,
@@ -371,9 +380,9 @@ operator|!
 name|cfile
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to open '%s' file."
+literal|"unable to open '%s' file"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -426,9 +435,9 @@ operator|!
 name|p
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package '%s' doesn't have a prefix."
+literal|"package '%s' doesn't have a prefix"
 argument_list|,
 name|pkg
 argument_list|)
@@ -485,17 +494,17 @@ name|pkg
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package %s fails requirements %s"
+literal|"package %s fails requirements %s"
 argument_list|,
 name|pkg
 argument_list|,
 name|Force
 condition|?
-literal|"."
+literal|""
 else|:
-literal|"- not deleted."
+literal|"- not deleted"
 argument_list|)
 expr_stmt|;
 if|if
@@ -550,9 +559,9 @@ name|pkg
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"De-Install script returned error status."
+literal|"deinstall script returned error status"
 argument_list|)
 expr_stmt|;
 if|if
@@ -575,9 +584,16 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Toto!  This doesn't look like Kansas anymore!"
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"Toto! This doesn't look like Kansas anymore!"
 argument_list|)
 expr_stmt|;
 if|if
@@ -601,10 +617,10 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't entirely delete package (perhaps the packing list is\n"
-literal|"incorrectly specified?)\n"
+literal|"couldn't entirely delete package (perhaps the packing list is\n"
+literal|"incorrectly specified?)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -619,9 +635,9 @@ name|LogDir
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't remove log entry in %s, de-install failed."
+literal|"couldn't remove log entry in %s, deinstall failed"
 argument_list|,
 name|LogDir
 argument_list|)
@@ -712,9 +728,16 @@ argument_list|(
 name|CONTENTS_FNAME
 argument_list|)
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Installed package %s has no %s file!"
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"installed package %s has no %s file!"
 argument_list|,
 name|pkg
 argument_list|,
@@ -822,9 +845,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't open dependency file `%s'"
+literal|"couldn't open dependency file `%s'"
 argument_list|,
 name|fname
 argument_list|)
@@ -860,9 +883,9 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't open temp file `%s'"
+literal|"couldn't open temp file `%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -895,9 +918,9 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't fdopen temp file `%s'"
+literal|"couldn't fdopen temp file `%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -997,9 +1020,9 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Error changing permission of temp file `%s'"
+literal|"error changing permission of temp file `%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -1026,9 +1049,9 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Error closing temp file `%s'"
+literal|"error closing temp file `%s'"
 argument_list|,
 name|ftmp
 argument_list|)
@@ -1052,9 +1075,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Error renaming `%s' to `%s'"
+literal|"error renaming `%s' to `%s'"
 argument_list|,
 name|ftmp
 argument_list|,

@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: futil.c,v 1.6 1997/02/22 16:09:17 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * Miscellaneous file access utilities.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -231,9 +237,9 @@ argument_list|,
 name|arg
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't change modes of '%s' to '%s'."
+literal|"couldn't change modes of '%s' to '%s'"
 argument_list|,
 name|arg
 argument_list|,
@@ -262,9 +268,9 @@ argument_list|,
 name|arg
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't change owner/group of '%s' to '%s.%s'."
+literal|"couldn't change owner/group of '%s' to '%s.%s'"
 argument_list|,
 name|arg
 argument_list|,
@@ -293,9 +299,9 @@ argument_list|,
 name|arg
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't change owner of '%s' to '%s'."
+literal|"couldn't change owner of '%s' to '%s'"
 argument_list|,
 name|arg
 argument_list|,
@@ -322,9 +328,9 @@ argument_list|,
 name|arg
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't change group of '%s' to '%s'."
+literal|"couldn't change group of '%s' to '%s'"
 argument_list|,
 name|arg
 argument_list|,

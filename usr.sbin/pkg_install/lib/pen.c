@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pen.c,v 1.24 1997/02/22 16:09:50 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * Routines for managing the "play pen".  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -320,11 +326,18 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|barf
+name|cleanup
 argument_list|(
-literal|"Can't find enough temporary space to extract the files, please set\n"
-literal|"your PKG_TMPDIR environment variable to a location with at least %d bytes\n"
-literal|"free."
+literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't find enough temporary space to extract the files, please set your\n"
+literal|"PKG_TMPDIR environment variable to a location with at least %d bytes\n"
+literal|"free"
 argument_list|,
 name|sz
 argument_list|)
@@ -378,16 +391,20 @@ name|pen
 argument_list|)
 condition|)
 block|{
-name|barf
+name|cleanup
 argument_list|(
-literal|"Can't mktemp '%s'."
+literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't mktemp '%s'"
 argument_list|,
 name|pen
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
 block|}
 if|if
 condition|(
@@ -401,16 +418,20 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|barf
+name|cleanup
 argument_list|(
-literal|"Can't mkdir '%s'."
+literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't mkdir '%s'"
 argument_list|,
 name|pen
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
 block|}
 if|if
 condition|(
@@ -456,18 +477,22 @@ argument_list|(
 name|pen
 argument_list|)
 expr_stmt|;
-name|barf
+name|cleanup
 argument_list|(
-literal|"Not enough free space to create: `%s'\n"
+literal|0
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"not enough free space to create '%s'.\n"
 literal|"Please set your PKG_TMPDIR environment variable to a location\n"
-literal|"with more space and\ntry the command again."
+literal|"with more space and\ntry the command again"
 argument_list|,
 name|pen
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
 block|}
 if|if
 condition|(
@@ -513,9 +538,16 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Can't chdir to '%s'."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't chdir to '%s'"
 argument_list|,
 name|pen
 argument_list|)
@@ -579,9 +611,16 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Can't chdir back to '%s'."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't chdir back to '%s'"
 argument_list|,
 name|Previous
 argument_list|)
@@ -611,9 +650,9 @@ argument_list|,
 name|Current
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Couldn't remove temporary dir '%s'"
+literal|"couldn't remove temporary dir '%s'"
 argument_list|,
 name|Current
 argument_list|)
@@ -681,9 +720,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"Error in statfs"
+literal|"statfs"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: create.h,v 1.11 1997/02/22 16:09:24 peter Exp $ */
+comment|/* $Id: create.h,v 1.12 1997/06/06 12:19:11 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -146,23 +146,6 @@ modifier|*
 parameter_list|,
 name|Package
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

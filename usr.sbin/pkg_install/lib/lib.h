@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: lib.h,v 1.24 1997/02/22 16:09:49 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1078,23 +1078,6 @@ end_function_decl
 begin_comment
 comment|/* For all */
 end_comment
-
-begin_function_decl
-name|void
-name|usage
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int

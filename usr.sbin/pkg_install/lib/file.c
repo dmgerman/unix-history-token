@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: file.c,v 1.27 1997/02/22 16:09:47 peter Exp $"
+literal|"$Id: file.c,v 1.28 1997/07/01 06:13:50 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"lib.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -896,7 +902,7 @@ operator|*
 name|cp
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
 literal|"URL `%s' has bad host part!"
 argument_list|,
@@ -925,7 +931,7 @@ operator|*
 name|cp
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
 literal|"URL `%s' has bad filename part!"
 argument_list|,
@@ -956,9 +962,9 @@ operator|!
 name|pw
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't get user name for ID %d\n."
+literal|"can't get user name for ID %d"
 argument_list|,
 name|getuid
 argument_list|()
@@ -1418,9 +1424,16 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Can't stat '%s'."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't stat '%s'"
 argument_list|,
 name|fname
 argument_list|)
@@ -1457,9 +1470,16 @@ name|fd
 operator|==
 name|FAIL
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Unable to open '%s' for reading."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"unable to open '%s' for reading"
 argument_list|,
 name|fname
 argument_list|)
@@ -1481,9 +1501,16 @@ name|sb
 operator|.
 name|st_size
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Short read on '%s' - did not get %qd bytes."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"short read on '%s' - did not get %qd bytes"
 argument_list|,
 name|fname
 argument_list|,
@@ -1763,9 +1790,16 @@ condition|(
 operator|!
 name|fp
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Cannot fopen '%s' for writing."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"cannot fopen '%s' for writing"
 argument_list|,
 name|name
 argument_list|)
@@ -1792,9 +1826,16 @@ argument_list|)
 operator|!=
 name|len
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Short fwrite on '%s', tried to write %d bytes."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"short fwrite on '%s', tried to write %d bytes"
 argument_list|,
 name|name
 argument_list|,
@@ -1808,9 +1849,16 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"failure to fclose '%s'."
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"failure to fclose '%s'"
 argument_list|,
 name|name
 argument_list|)
@@ -1886,9 +1934,16 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Could not perform '%s'"
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -1964,9 +2019,16 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"Could not perform '%s'"
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -2071,9 +2133,16 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
-name|barf
+name|cleanup
 argument_list|(
-literal|"copy_file: Could not perform '%s'"
+literal|0
+argument_list|)
+operator|,
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"copy_file: could not perform '%s'"
 argument_list|,
 name|cmd
 argument_list|)
@@ -2211,9 +2280,9 @@ literal|""
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Tar extract of %s failed!"
+literal|"tar extract of %s failed!"
 argument_list|,
 name|pkg
 argument_list|)

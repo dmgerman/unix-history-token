@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: global.c,v 1.5 1997/02/22 16:09:48 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

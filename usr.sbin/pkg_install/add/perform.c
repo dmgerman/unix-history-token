@@ -9,10 +9,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
 name|rcsid
+index|[]
 init|=
-literal|"$Id: perform.c,v 1.41 1997/02/22 16:09:20 peter Exp $"
+literal|"$Id: perform.c,v 1.42 1997/06/29 10:41:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ end_endif
 begin_comment
 comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the main body of the add module.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -293,9 +299,9 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"pkg_add in SLAVE mode can't chdir to %s."
+literal|"pkg_add in SLAVE mode can't chdir to %s"
 argument_list|,
 name|playpen
 argument_list|)
@@ -344,9 +350,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to fetch `%s' by URL."
+literal|"unable to fetch `%s' by URL"
 argument_list|,
 name|pkg
 argument_list|)
@@ -381,9 +387,9 @@ operator|!
 name|cfile
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to open table of contents file `%s' - not a package?"
+literal|"unable to open table of contents file `%s' - not a package?"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -439,9 +445,9 @@ operator|==
 name|FAIL
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't stat package file '%s'."
+literal|"can't stat package file '%s'"
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -496,9 +502,9 @@ condition|(
 operator|!
 name|Home
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to make playpen for %d bytes.\n"
+literal|"unable to make playpen for %d bytes"
 argument_list|,
 name|sb
 operator|.
@@ -521,9 +527,9 @@ name|extract
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to extract table of contents file from `%s' - not a package?."
+literal|"unable to extract table of contents file from `%s' - not a package?"
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -547,9 +553,9 @@ operator|!
 name|cfile
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to open table of contents file `%s' - not a package?"
+literal|"unable to open table of contents file `%s' - not a package?"
 argument_list|,
 name|CONTENTS_FNAME
 argument_list|)
@@ -658,18 +664,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|whinge
+name|warn
 argument_list|(
-literal|"Unable to change directory to `%s' - no permission?"
+literal|"unable to change directory to `%s'"
 argument_list|,
 name|p
 operator|->
 name|name
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"chdir"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -690,9 +691,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"No prefix specified in `%s' - this is a bad package!"
+literal|"no prefix specified in `%s' - this is a bad package!"
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -720,11 +721,11 @@ operator|*
 literal|4
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Projected size of %d exceeds available free space.\n"
+literal|"projected size of %d exceeds available free space.\n"
 literal|"Please set your PKG_TMPDIR variable to point to a location with more\n"
-literal|"free space and try again."
+literal|"free space and try again"
 argument_list|,
 name|sb
 operator|.
@@ -733,9 +734,9 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-name|whinge
+name|warnx
 argument_list|(
-literal|"Not extracting %s\ninto %s, sorry!"
+literal|"not extracting %s\ninto %s, sorry!"
 argument_list|,
 name|pkg_fullname
 argument_list|,
@@ -767,9 +768,9 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Unable to extract `%s'!"
+literal|"unable to extract `%s'!"
 argument_list|,
 name|pkg_fullname
 argument_list|)
@@ -928,9 +929,9 @@ operator|!
 name|Force
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package `%s' already recorded as installed.\n"
+literal|"package `%s' already recorded as installed"
 argument_list|,
 name|PkgName
 argument_list|)
@@ -1094,9 +1095,9 @@ name|cp
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Autoload of dependency `%s' failed%s"
+literal|"autoload of dependency `%s' failed%s"
 argument_list|,
 name|cp
 argument_list|,
@@ -1159,9 +1160,9 @@ literal|"+CONTENTS"
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Autoloaded package %s has no +CONTENTS file?"
+literal|"autoloaded package %s has no +CONTENTS file?"
 argument_list|,
 name|p
 operator|->
@@ -1192,7 +1193,7 @@ literal|""
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
 literal|"pkg_add of dependency `%s' failed%s"
 argument_list|,
@@ -1346,9 +1347,9 @@ name|PkgName
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package %s fails requirements %s"
+literal|"package %s fails requirements %s"
 argument_list|,
 name|pkg_fullname
 argument_list|,
@@ -1356,7 +1357,7 @@ name|Force
 condition|?
 literal|"installing anyway"
 else|:
-literal|"- not installed."
+literal|"- not installed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1422,9 +1423,9 @@ name|PkgName
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Install script returned error status."
+literal|"install script returned error status"
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -1533,9 +1534,9 @@ else|:
 literal|"/"
 argument_list|)
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"mtree returned a non-zero status - continuing."
+literal|"mtree returned a non-zero status - continuing"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1583,9 +1584,9 @@ name|PkgName
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Install script returned error status."
+literal|"install script returned error status"
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -1639,9 +1640,9 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Not running as root - trying to record install anyway."
+literal|"not running as root - trying to record install anyway"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1650,9 +1651,9 @@ operator|!
 name|PkgName
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"No package name!  Can't record package, sorry."
+literal|"no package name! can't record package, sorry"
 argument_list|)
 expr_stmt|;
 name|code
@@ -1705,9 +1706,9 @@ name|LogDir
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't record package into '%s', you're on your own!"
+literal|"can't record package into '%s', you're on your own!"
 argument_list|,
 name|LogDir
 argument_list|)
@@ -1794,9 +1795,9 @@ operator|!
 name|cfile
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Can't open new contents file '%s'!  Can't register pkg."
+literal|"can't open new contents file '%s'! can't register pkg"
 argument_list|,
 name|contents
 argument_list|)
@@ -1935,10 +1936,10 @@ condition|(
 operator|!
 name|cfile
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Warning: Can't open dependency file '%s'!\n"
-literal|"\tDependency registration is incomplete."
+literal|"can't open dependency file '%s'!\n"
+literal|"dependency registration is incomplete"
 argument_list|,
 name|contents
 argument_list|)
@@ -1963,9 +1964,9 @@ argument_list|)
 operator|==
 name|EOF
 condition|)
-name|whinge
+name|warnx
 argument_list|(
-literal|"Cannot properly close file %s"
+literal|"cannot properly close file %s"
 argument_list|,
 name|contents
 argument_list|)
@@ -2088,9 +2089,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|whinge
+name|warnx
 argument_list|(
-literal|"Cannot open %s as display file."
+literal|"cannot open %s as display file"
 argument_list|,
 name|buf
 argument_list|)
@@ -2170,9 +2171,9 @@ name|CONTENTS_FNAME
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package %s has no CONTENTS file!"
+literal|"package %s has no CONTENTS file!"
 argument_list|,
 name|pkg
 argument_list|)
@@ -2192,9 +2193,9 @@ name|COMMENT_FNAME
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package %s has no COMMENT file!"
+literal|"package %s has no COMMENT file!"
 argument_list|,
 name|pkg
 argument_list|)
@@ -2214,9 +2215,9 @@ name|DESC_FNAME
 argument_list|)
 condition|)
 block|{
-name|whinge
+name|warnx
 argument_list|(
-literal|"Package %s has no DESC file!"
+literal|"package %s has no DESC file!"
 argument_list|,
 name|pkg
 argument_list|)
