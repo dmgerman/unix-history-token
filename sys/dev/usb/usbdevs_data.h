@@ -235,15 +235,15 @@ literal|"mouse"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_LUCENT
+name|USB_VENDOR_EPSON
 block|,
-name|USB_PRODUCT_LUCENT_1284_BRIDGE
+name|USB_PRODUCT_EPSON_PRINTER3
 block|,
 literal|0
 block|,
-literal|"Lucent Technologies"
+literal|"Epson"
 block|,
-literal|"USB Smart Cable"
+literal|"printer adapter"
 block|, 	}
 block|,
 block|{
@@ -304,6 +304,18 @@ block|,
 literal|"Vision"
 block|,
 literal|"VC6452V002 Camera"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_AKS
+block|,
+name|USB_PRODUCT_AKS_USBHASP
+block|,
+literal|0
+block|,
+literal|"Aladdin Knowledge Systems"
+block|,
+literal|"USB-HASP 0.06"
 block|, 	}
 block|,
 block|{
@@ -451,18 +463,6 @@ literal|"Ethernet adapter"
 block|, 	}
 block|,
 block|{
-name|USB_VENDOR_PLX
-block|,
-name|USB_PRODUCT_PLX_TESTBOARD
-block|,
-literal|0
-block|,
-literal|"PLX"
-block|,
-literal|"test board"
-block|, 	}
-block|,
-block|{
 name|USB_VENDOR_ENTREGA
 block|,
 name|USB_PRODUCT_ENTREGA_CENTRONICS
@@ -484,6 +484,18 @@ block|,
 literal|"Entrega"
 block|,
 literal|"DB25 Serial connector"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_PLX
+block|,
+name|USB_PRODUCT_PLX_TESTBOARD
+block|,
+literal|0
+block|,
+literal|"PLX"
+block|,
+literal|"test board"
 block|, 	}
 block|,
 block|{
@@ -679,6 +691,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_EPSON
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Epson"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_3COM
 block|,
 literal|0
@@ -734,6 +758,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Vision"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_AKS
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Aladdin Knowledge Systems"
 block|,
 name|NULL
 block|, 	}

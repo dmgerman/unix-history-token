@@ -180,12 +180,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_VENDOR_LUCENT
+name|USB_VENDOR_EPSON
 value|0x04b8
 end_define
 
 begin_comment
-comment|/* Lucent Technologies */
+comment|/* Epson */
 end_comment
 
 begin_define
@@ -241,6 +241,17 @@ end_define
 
 begin_comment
 comment|/* Vision */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_AKS
+value|0x0529
+end_define
+
+begin_comment
+comment|/* Aladdin Knowledge Systems */
 end_comment
 
 begin_define
@@ -663,13 +674,13 @@ comment|/* mouse */
 end_comment
 
 begin_comment
-comment|/* Lucent Technologies products */
+comment|/* Epson products */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_LUCENT_1284_BRIDGE
+name|USB_PRODUCT_EPSON_PRINTER3
 value|0x0003
 end_define
 
@@ -750,6 +761,21 @@ end_define
 
 begin_comment
 comment|/* VC6452V002 Camera */
+end_comment
+
+begin_comment
+comment|/* AKS products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_AKS_USBHASP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* USB-HASP 0.06 */
 end_comment
 
 begin_comment
@@ -925,18 +951,7 @@ comment|/* Ethernet adapter */
 end_comment
 
 begin_comment
-comment|/* PLX products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_PLX_TESTBOARD
-value|0x9060
-end_define
-
-begin_comment
-comment|/* test board */
+comment|/* Entrega products */
 end_comment
 
 begin_define
@@ -959,6 +974,21 @@ end_define
 
 begin_comment
 comment|/* DB25 Serial connector */
+end_comment
+
+begin_comment
+comment|/* PLX products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_PLX_TESTBOARD
+value|0x9060
+end_define
+
+begin_comment
+comment|/* test board */
 end_comment
 
 begin_comment
