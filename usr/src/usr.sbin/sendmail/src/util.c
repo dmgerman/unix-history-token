@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.22 (Berkeley) %G%"
+literal|"@(#)util.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1878,7 +1878,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\t[mode %o]\tEPERM\n"
+literal|"\t[slink mode %o]\tEPERM\n"
+argument_list|,
+name|stbuf
+operator|.
+name|st_mode
 argument_list|)
 expr_stmt|;
 return|return
