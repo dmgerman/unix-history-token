@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_AMD64_BUS_DMA_H_
+name|_ALPHA_BUS_DMA_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_AMD64_BUS_DMA_H_
+name|_ALPHA_BUS_DMA_H_
 end_define
 
 begin_include
@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _AMD64_BUS_DMA_H_ */
+comment|/* _ALPHA_BUS_DMA_H_ */
 end_comment
 
 end_unit

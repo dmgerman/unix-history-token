@@ -18,14 +18,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_BUS_DMA_H_
+name|_BUS_DMA_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_BUS_DMA_H_
+name|_BUS_DMA_H_
 end_define
+
+begin_comment
+comment|/*  * Machine independent interface for mapping physical addresses to peripheral  * bus 'physical' addresses, and assisting with DMA operations.  *  * XXX This file is always included from<machine/bus_dma.h> and should not  *     (yet) be included directly.  */
+end_comment
 
 begin_comment
 comment|/*  * Flags used in various bus DMA methods.  */
@@ -117,6 +121,35 @@ directive|define
 name|BUS_DMA_BUS4
 value|0x80
 end_define
+
+begin_comment
+comment|/*  * The following two flags are non-standard or specific to only certain  * architectures  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUS_DMA_NOWRITE
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_DMA_NOCACHE
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_DMA_ISA
+value|0x400
+end_define
+
+begin_comment
+comment|/* map memory for AXP ISA dma */
+end_comment
 
 begin_comment
 comment|/* Forwards needed by prototypes below. */
@@ -272,6 +305,24 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * Generic helper function for manipulating mutexes.  */
+end_comment
+
+begin_function_decl
+name|void
+name|busdma_lock_mutex
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|bus_dma_lock_op_t
+name|op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Allocate a device specific dma_tag encapsulating the constraints of  * the parent tag in addition to other restrictions specified:  *  *	alignment:	Alignment for segments.  *	boundary:	Boundary that segments cannot cross.  *	lowaddr:	Low restricted address that cannot appear in a mapping.  *	highaddr:	High restricted address that cannot appear in a mapping.  *	filtfunc:	An optional function to further test if an address  *			within the range of lowaddr and highaddr cannot appear  *			in a mapping.  *	filtfuncarg:	An argument that will be passed to filtfunc in addition  *			to the address to test.  *	maxsize:	Maximum mapping size supported by this tag.  *	nsegments:	Number of discontinuities allowed in maps.  *	maxsegsz:	Maximum size of a segment in the map.  *	flags:		Bus DMA flags.  *	lockfunc:	An optional function to handle driver-defined lock  *			operations.  *	lockfuncarg:	An argument that will be passed to lockfunc in addition  *			to the lock operation.  *	dmat:		A pointer to set to a valid dma tag should the return  *			value of this function indicate success.  */
 end_comment
 
@@ -342,6 +393,66 @@ name|dmat
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * A function that processes a successfully loaded dma map or an error  * from a delayed load map.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|bus_dmamap_callback_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * Like bus_dmamap_callback but includes map size in bytes.  This is  * defined as a separate interface to maintain compatibility for users  * of bus_dmamap_callback_t--at some point these interfaces should be merged.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|bus_dmamap_callback2_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|bus_dma_segment_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|bus_size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * XXX sparc64 uses the same interface, but a much different implementation.  *<machine/bus_dma.h> for the sparc64 arch contains the equivalent  *     declarations.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Allocate a handle for mapping from kva/uva/physical  * address space into bus device space.  */
@@ -429,28 +540,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * A function that processes a successfully loaded dma map or an error  * from a delayed load map.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|bus_dmamap_callback_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
 comment|/*  * Map the buffer buf into bus space using the dmamap map.  */
 end_comment
 
@@ -484,30 +573,6 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Like bus_dmamap_callback but includes map size in bytes.  This is  * defined as a separate interface to maintain compatibility for users  * of bus_dmamap_callback_t--at some point these interfaces should be merged.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|bus_dmamap_callback2_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|bus_dma_segment_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|bus_size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
 
 begin_comment
 comment|/*  * Like bus_dmamap_load but for mbufs.  Note the use of the  * bus_dmamap_callback2_t interface.  */
@@ -666,23 +731,14 @@ define|\
 value|if ((dmamap) != NULL)				\ 		_bus_dmamap_unload(dmat, dmamap)
 end_define
 
-begin_comment
-comment|/*  * Generic helper function for manipulating mutexes.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_function_decl
-name|void
-name|busdma_lock_mutex
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|bus_dma_lock_op_t
-name|op
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* __sparc64__ */
+end_comment
 
 begin_endif
 endif|#
@@ -690,7 +746,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _I386_BUS_DMA_H_ */
+comment|/* _BUS_DMA_H_ */
 end_comment
 
 end_unit
