@@ -155,16 +155,7 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|u_int32_t
-name|astpending
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* need to trap before returning to user mode */
-end_comment
-
-begin_decl_stmt
+specifier|extern
 name|u_int32_t
 name|intr_nesting_level
 decl_stmt|;
@@ -175,6 +166,7 @@ comment|/* bookeeping only; counts software intr */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|u_int32_t
 name|want_resched
 decl_stmt|;
