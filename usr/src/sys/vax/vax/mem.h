@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.h	4.7	81/03/21	*/
+comment|/*	mem.h	4.8	81/04/02	*/
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M780_HIERR
+name|M780_HIER
 value|0x20000000
 end_define
 
@@ -98,6 +98,18 @@ begin_comment
 comment|/* error log request, in reg[2] */
 end_comment
 
+begin_comment
+comment|/* on a 780, memory crd's occur only when bit 15 is set in the SBIER */
+end_comment
+
+begin_comment
+comment|/* register; bit 14 there is an error bit which we also clear */
+end_comment
+
+begin_comment
+comment|/* these bits are in the back of the ``red book'' (or in the VMS code) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -105,7 +117,8 @@ name|M780_INH
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[2] = (M780_ICRD|M780_HIERR|M780_ERLOG))
+define|\
+value|(((mcr)->mc_reg[2] = (M780_ICRD|M780_HIER|M780_ERLOG)), mtpr(SBIER, 0))
 end_define
 
 begin_define
@@ -115,7 +128,8 @@ name|M780_ENA
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[2] = (M780_HIERR|M780_ERLOG))
+define|\
+value|(((mcr)->mc_reg[2] = (M780_HIER|M780_ERLOG)), mtpr(SBIER, 3<<14))
 end_define
 
 begin_define
@@ -125,6 +139,7 @@ name|M780_ERR
 parameter_list|(
 name|mcr
 parameter_list|)
+define|\
 value|((mcr)->mc_reg[2]& (M780_ERLOG))
 end_define
 
