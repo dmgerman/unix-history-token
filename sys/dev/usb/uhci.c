@@ -1748,6 +1748,12 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* stop the controller */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|UWRITE2
 argument_list|(
 name|sc
@@ -1758,6 +1764,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
+endif|#
+directive|endif
 name|uhci_busreset
 argument_list|(
 name|sc
