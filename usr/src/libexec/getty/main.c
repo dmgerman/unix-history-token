@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.2 (Berkeley) 83/07/07"
+literal|"@(#)main.c	4.3 (Berkeley) 83/07/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -1032,6 +1032,9 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+name|oflush
+argument_list|()
+expr_stmt|;
 name|makeenv
 argument_list|(
 name|env
@@ -1119,7 +1122,7 @@ expr_stmt|;
 name|char
 name|cs
 decl_stmt|;
-comment|/* 	 * interrupt may happen if we use CBREAK mode 	 */
+comment|/* 	 * Interrupt may happen if we use CBREAK mode 	 */
 if|if
 condition|(
 name|setjmp
