@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cache.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -172,8 +172,6 @@ name|vpp
 parameter_list|,
 name|cnp
 parameter_list|)
-comment|/* converted to CN.  NEEDSWORK: do callers */
-comment|/* old: cache_lookup(ndp) */
 name|struct
 name|vnode
 modifier|*
@@ -373,13 +371,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
 name|cnp
 operator|->
 name|cn_nameiop
-operator|&
-name|OPMASK
-operator|)
 operator|!=
 name|CREATE
 condition|)
@@ -647,14 +641,6 @@ argument_list|,
 argument|cnp
 argument_list|)
 end_macro
-
-begin_comment
-comment|/* converted to CN.  NEEDSWORK: do callers */
-end_comment
-
-begin_comment
-comment|/* old: cache_lookup(ndp) */
-end_comment
 
 begin_decl_stmt
 name|struct
