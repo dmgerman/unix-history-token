@@ -334,6 +334,12 @@ operator|&=
 name|DMA_ALIGN_MASK
 expr_stmt|;
 comment|/* realign things */
+name|DEB
+argument_list|(
+argument|printf(
+literal|"dsp_wrintr: dl %d -> %d\n"
+argument|, b->dl, l);
+argument_list|)
 comment|/* 	 * check if we need to reprogram the DMA on the sound card. 	 * This happens if the size has changed _and_ the new size 	 * is smaller, or it matches the blocksize. 	 */
 if|if
 condition|(
@@ -344,6 +350,12 @@ operator|->
 name|dl
 operator|&&
 operator|(
+name|b
+operator|->
+name|dl
+operator|==
+literal|0
+operator|||
 name|l
 operator|<
 name|b
@@ -381,12 +393,6 @@ name|rl
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEB
-argument_list|(
-argument|printf(
-literal|"wrintr: dl %d -> %d\n"
-argument|, b->dl, l);
-argument_list|)
 if|if
 condition|(
 name|b
@@ -3088,7 +3094,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"timeout flushing dbuf_out.chan, cnt 0x%x flags 0x%08lx\n"
+literal|"timeout flushing dbuf_out, chan %d cnt 0x%x flags 0x%08lx\n"
+argument_list|,
+name|b
+operator|->
+name|chan
 argument_list|,
 name|b
 operator|->
