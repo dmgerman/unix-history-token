@@ -218,8 +218,8 @@ specifier|extern
 name|int
 name|iface_SetFlags
 parameter_list|(
-name|struct
-name|iface
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 name|int
@@ -232,8 +232,8 @@ specifier|extern
 name|int
 name|iface_ClearFlags
 parameter_list|(
-name|struct
-name|iface
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 name|int

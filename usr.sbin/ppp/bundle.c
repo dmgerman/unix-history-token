@@ -3966,6 +3966,8 @@ argument_list|(
 name|bundle
 operator|.
 name|iface
+operator|->
+name|name
 argument_list|,
 name|IFF_UP
 argument_list|)
@@ -4647,6 +4649,8 @@ argument_list|(
 name|bundle
 operator|->
 name|iface
+operator|->
+name|name
 argument_list|,
 name|IFF_UP
 argument_list|)
