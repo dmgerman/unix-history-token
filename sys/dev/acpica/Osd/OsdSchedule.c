@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"acpi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_acpi.h"
 end_include
 
@@ -82,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|"acpi.h"
 end_include
 
 begin_include
@@ -549,10 +543,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ACPI_USE_THREADS */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FreeBSD_version>= 500000 */
+end_comment
+
+begin_comment
+comment|/* This function is called in interrupt context. */
+end_comment
 
 begin_function
 name|ACPI_STATUS
@@ -613,9 +619,10 @@ argument_list|,
 name|M_ACPITASK
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* Interrupt Context */
 if|if
 condition|(
 name|at
@@ -625,17 +632,6 @@ condition|)
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|at
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|at
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|at
@@ -718,11 +714,11 @@ expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
-operator|<
+operator|>=
 literal|500000
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi
+name|taskqueue_acpi
 argument_list|,
 operator|(
 expr|struct
@@ -736,7 +732,7 @@ else|#
 directive|else
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_acpi
+name|taskqueue_swi
 argument_list|,
 operator|(
 expr|struct
@@ -923,10 +919,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * We don't have any sleep granularity better than hz, so  * make do with that.  */
-end_comment
-
 begin_function
 name|void
 name|AcpiOsSleep
@@ -1045,7 +1037,7 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-comment|/* XXX do not add FUNCTION_TRACE here, results in recursive call */
+comment|/* XXX do not add ACPI_FUNCTION_TRACE here, results in recursive call. */
 name|p
 operator|=
 name|curproc
@@ -1081,6 +1073,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Returning 0 is not allowed. */
 return|return
 operator|(
 name|p
@@ -1090,7 +1083,6 @@ operator|+
 literal|1
 operator|)
 return|;
-comment|/* can't return 0 */
 block|}
 end_function
 
