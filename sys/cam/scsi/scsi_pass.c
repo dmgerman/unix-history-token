@@ -864,6 +864,13 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+if|if
+condition|(
+name|cgd
+operator|==
+name|NULL
+condition|)
+break|break;
 comment|/* 		 * Allocate a peripheral instance for 		 * this device and start the probe 		 * process. 		 */
 name|status
 operator|=

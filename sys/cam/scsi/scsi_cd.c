@@ -2114,6 +2114,13 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
+name|cgd
+operator|==
+name|NULL
+condition|)
+break|break;
+if|if
+condition|(
 name|SID_TYPE
 argument_list|(
 operator|&

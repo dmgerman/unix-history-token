@@ -1337,6 +1337,15 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
 name|inq_len
 operator|=
 name|cgd

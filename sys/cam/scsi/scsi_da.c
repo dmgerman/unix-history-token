@@ -3562,6 +3562,13 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
+name|cgd
+operator|==
+name|NULL
+condition|)
+break|break;
+if|if
+condition|(
 name|SID_TYPE
 argument_list|(
 operator|&
@@ -4404,6 +4411,7 @@ argument_list|,
 comment|/*retries*/
 literal|4
 argument_list|,
+comment|/* retry a few times */
 name|dadone
 argument_list|,
 name|tag_code
