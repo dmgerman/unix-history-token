@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,8 +80,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|stdoutn
+index|[
+literal|20
+index|]
 init|=
 literal|"Standard output"
 decl_stmt|;
@@ -667,11 +669,12 @@ parameter_list|()
 function_decl|;
 name|cp
 operator|=
-operator|(
+name|strcpy
+argument_list|(
 name|stdoutn
-operator|=
+argument_list|,
 literal|"/tmp/pxp00000"
-operator|)
+argument_list|)
 operator|+
 literal|13
 expr_stmt|;
