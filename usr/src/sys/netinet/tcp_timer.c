@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -772,7 +772,38 @@ name|t_rtt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * Close the congestion window down to one segment 		 * (we'll open it by one segment for each ack we get). 		 * Since we probably have a window's worth of unacked 		 * data accumulated, this "slow start" keeps us from 		 * dumping all that data as back-to-back packets (which 		 * might overwhelm an intermediate gateway). 		 */
+comment|/* 		 * Close the congestion window down to one segment 		 * (we'll open it by one segment for each ack we get). 		 * Since we probably have a window's worth of unacked 		 * data accumulated, this "slow start" keeps us from 		 * dumping all that data as back-to-back packets (which 		 * might overwhelm an intermediate gateway). 		 * 		 * There are two phases to the opening: Initially we 		 * open by one mss on each ack.  This makes the window 		 * size increase exponentially with time.  If the 		 * window is larger than the path can handle, this 		 * exponential growth results in dropped packet(s) 		 * almost immediately.  To get more time between  		 * drops but still "push" the network to take advantage 		 * of improving conditions, we switch from exponential 		 * to linear window opening at some threshhold size. 		 * For a threshhold, we use half the current window 		 * size, truncated to a multiple of the mss. 		 * 		 * (the minimum cwnd that will give us exponential 		 * growth is 2 mss.  We don't allow the threshhold 		 * to go below this.) 		 */
+block|{
+name|u_int
+name|win
+init|=
+name|MIN
+argument_list|(
+name|tp
+operator|->
+name|snd_wnd
+argument_list|,
+name|tp
+operator|->
+name|snd_cwnd
+argument_list|)
+operator|/
+literal|2
+operator|/
+name|tp
+operator|->
+name|t_maxseg
+decl_stmt|;
+if|if
+condition|(
+name|win
+operator|<
+literal|2
+condition|)
+name|win
+operator|=
+literal|2
+expr_stmt|;
 name|tp
 operator|->
 name|snd_cwnd
@@ -781,6 +812,17 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
+name|tp
+operator|->
+name|snd_ssthresh
+operator|=
+name|win
+operator|*
+name|tp
+operator|->
+name|t_maxseg
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
