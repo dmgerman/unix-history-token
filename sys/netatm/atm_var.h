@@ -141,24 +141,6 @@ name|atm_intrq
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|atm_intr_index
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|struct
