@@ -42,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kadm_err.h>
+file|<kerberosIV/kadm_err.h>
 end_include
 
 begin_include

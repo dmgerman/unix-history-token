@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kadm_err.h>
+file|<kerberosIV/kadm_err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<krb_err.h>
+file|<kerberosIV/krb_err.h>
 end_include
 
 begin_include
