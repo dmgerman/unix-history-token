@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_defs.h,v 1.4 1999/01/13 20:03:59 obrien Exp $  *  */
+comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: am_defs.h,v 1.10 1999/08/22 05:12:54 ezk Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_comment
@@ -137,6 +137,116 @@ end_endif
 
 begin_comment
 comment|/* not STDC_HEADERS */
+end_comment
+
+begin_comment
+comment|/*  * Handle gcc __attribute__ if available.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__attribute__
+end_ifndef
+
+begin_comment
+comment|/* This feature is available in gcc versions 2.5 and later.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|5
+operator|)
+operator|||
+name|__STRICT_ANSI__
+end_if
+
+begin_define
+define|#
+directive|define
+name|__attribute__
+parameter_list|(
+name|Spec
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* empty */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__< 2 ... */
+end_comment
+
+begin_comment
+comment|/*  * The __-protected variants of `format' and `printf' attributes  * are accepted by gcc versions 2.6.4 (effectively 2.7) and later.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|7
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__format__
+value|format
+end_define
+
+begin_define
+define|#
+directive|define
+name|__printf__
+value|printf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __GNUC__< 2 ... */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not __attribute__ */
 end_comment
 
 begin_comment
@@ -1170,7 +1280,7 @@ comment|/* HAVE_SYS_MNTENT_H */
 end_comment
 
 begin_comment
-comment|/*  * Actions to take if<ndbm.h> exists.  * Should be included before<rpcsvc/yp_prot.h> because on some systems  * like Linux, it also defines "struct datum".  */
+comment|/*  * Actions to take if<ndbm.h> or<db1/ndbm.h> exist.  * Should be included before<rpcsvc/yp_prot.h> because on some systems  * like Linux, it also defines "struct datum".  */
 end_comment
 
 begin_ifdef
@@ -1219,6 +1329,52 @@ begin_comment
 comment|/* HAVE_NDBM_H */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DB1_NDBM_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<db1/ndbm.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DATUM
+end_ifndef
+
+begin_comment
+comment|/* ensure that struct datum is not included again from<rpcsvc/yp_prot.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DATUM
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not DATUM */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_DB1_NDBM_H */
+end_comment
+
 begin_comment
 comment|/*  * Actions to take if<net/errno.h> exists.  */
 end_comment
@@ -1245,7 +1401,7 @@ comment|/* HAVE_NET_ERRNO_H */
 end_comment
 
 begin_comment
-comment|/*  * Actions to take if<net/if.h> exists.  */
+comment|/*  * Actions to take if<net/route.h> exists.  */
 end_comment
 
 begin_ifdef
@@ -1270,7 +1426,7 @@ comment|/* HAVE_NET_ROUTE_H */
 end_comment
 
 begin_comment
-comment|/*  * Actions to take if<net/if.h> exists.  */
+comment|/*  * Actions to take if<sys/mbuf.h> exists.  */
 end_comment
 
 begin_ifdef
@@ -1286,7 +1442,7 @@ file|<sys/mbuf.h>
 end_include
 
 begin_comment
-comment|/*  * OSF4 (DU-4.0) defines m_next and m_data also in<sys/mount> so I must  # undefine them here to avoid conflicts.  */
+comment|/*  * OSF4 (DU-4.0) defines m_next and m_data also in<sys/mount.h> so I must  # undefine them here to avoid conflicts.  */
 end_comment
 
 begin_ifdef
@@ -1332,7 +1488,7 @@ comment|/* m_data */
 end_comment
 
 begin_comment
-comment|/*  * AIX 3 defines MFREE and m_flags also in<sys/mount>.  */
+comment|/*  * AIX 3 defines MFREE and m_flags also in<sys/mount.h>.  */
 end_comment
 
 begin_ifdef
@@ -1886,7 +2042,7 @@ name|HAVE_LINUX_FS_H
 end_ifdef
 
 begin_comment
-comment|/*  * There's a conflict of definitions on redhat alpha linux between  *<netinet/in.h> and<linux/fs.h>.  */
+comment|/*  * There are various conflicts in definitions between RedHat Linux, newer  * 2.2 kernels, and<netinet/in.h> and<linux/fs.h>.  */
 end_comment
 
 begin_ifdef
@@ -1959,6 +2115,19 @@ directive|undef
 name|MS_RMT_MASK
 end_undef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+operator|&&
+name|__GLIBC__
+operator|>=
+literal|2
+end_if
+
 begin_comment
 comment|/* conflicts with<waitflags.h> */
 end_comment
@@ -1974,6 +2143,15 @@ undef|#
 directive|undef
 name|WUNTRACED
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__GLIBC__)&& __GLIBC__>= 2 */
+end_comment
 
 begin_comment
 comment|/* conflicts with<statfsbuf.h> */
@@ -1992,6 +2170,59 @@ end_endif
 
 begin_comment
 comment|/* HAVE_SOCKETBITS_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS_WAIT_H
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+operator|&&
+name|__GLIBC__
+operator|>=
+literal|2
+end_if
+
+begin_comment
+comment|/* conflicts with<bits/waitflags.h> (RedHat/Linux 6.0 and kernels 2.2 */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WNOHANG
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WUNTRACED
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__GLIBC__)&& __GLIBC__>= 2 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_WAIT_H */
 end_comment
 
 begin_ifdef
@@ -2037,7 +2268,7 @@ comment|/* _LINUX_BYTEORDER_GENERIC_H */
 end_comment
 
 begin_comment
-comment|/* conflicts with<sys/mount.h> in 2.1 kernels */
+comment|/* conflicts with<sys/mount.h> in 2.[12] kernels */
 end_comment
 
 begin_ifdef
@@ -2046,11 +2277,47 @@ directive|ifdef
 name|_SYS_MOUNT_H
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BLOCK_SIZE
-end_ifdef
+begin_undef
+undef|#
+directive|undef
+name|BLKFLSBUF
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|BLKGETSIZE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|BLKRAGET
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|BLKRASET
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|BLKROGET
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|BLKROSET
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|BLKRRPART
+end_undef
 
 begin_undef
 undef|#
@@ -2058,14 +2325,93 @@ directive|undef
 name|BLOCK_SIZE
 end_undef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_undef
+undef|#
+directive|undef
+name|MS_MANDLOCK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_MGC_VAL
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_NOATIME
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_NODEV
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_NODIRATIME
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_NOEXEC
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_NOSUID
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_RDONLY
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_REMOUNT
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_RMT_MASK
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MS_SYNCHRONOUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_APPEND
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S_IMMUTABLE
+end_undef
 
 begin_comment
-comment|/* BLOCK_SIZE */
+comment|/* conflicts with<statfsbuf.h> */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_SYS_STATFS_H
+end_define
 
 begin_endif
 endif|#
@@ -2361,7 +2707,7 @@ name|HAVE_NFS_NFS_MOUNT_H_off
 end_ifdef
 
 begin_comment
-comment|/* broken on netxtep3 (includes non-existing headers) */
+comment|/* broken on nexttep3 (includes non-existing headers) */
 end_comment
 
 begin_include
@@ -2878,6 +3224,45 @@ end_endif
 
 begin_comment
 comment|/* HAVE_SYS_FS_UFS_MOUNT_H */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UFS_UFS_UFSMOUNT_H_off
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|do not include this file here because on netbsd/openbsd it
+end_error
+
+begin_error
+error|#
+directive|error
+error|causes errors with other header files.  Instead, add it to the
+end_error
+
+begin_error
+error|#
+directive|error
+error|specific conf/nfs_prot_*.h file.
+end_error
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_UFS_UFS_UFSMOUNT_H */
 end_comment
 
 begin_comment
@@ -5021,6 +5406,44 @@ end_endif
 
 begin_comment
 comment|/* not HAVE_EXTERN_OPTARG */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_CLNT_SPCREATEERROR
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HAVE_EXTERN_CLNT_SPCREATEERROR
+argument_list|)
+end_if
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|clnt_spcreateerror
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(HAVE_CLNT_SPCREATEERROR)&& !defined(HAVE_EXTERN_CLNT_SPCREATEERROR) */
 end_comment
 
 begin_if
