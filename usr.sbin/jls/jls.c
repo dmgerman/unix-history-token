@@ -185,8 +185,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"sysctlbyname(): security.jail.list"
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
