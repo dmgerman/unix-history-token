@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -133,15 +139,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|CURFRMT
-value|"%Ef %H:%M"
+name|CURFRMTM
+value|"%b %e %H:%M"
 end_define
 
 begin_define
 define|#
 directive|define
-name|OLDFRMT
-value|"%Ef  %Y"
+name|OLDFRMTM
+value|"%b %e  %Y"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURFRMTD
+value|"%e %b %H:%M"
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLDFRMTD
+value|"%e %b  %Y"
 end_define
 
 begin_ifndef
@@ -168,6 +188,16 @@ directive|define
 name|UT_GRPSIZE
 value|6
 end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * ls_list()  *	list the members of an archive in ls format  */
@@ -286,6 +316,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
 comment|/* 	 * user wants long mode 	 */
 name|sbp
 operator|=
@@ -320,12 +368,20 @@ name|now
 condition|)
 name|timefrmt
 operator|=
-name|OLDFRMT
+name|d_first
+condition|?
+name|OLDFRMTD
+else|:
+name|OLDFRMTM
 expr_stmt|;
 else|else
 name|timefrmt
 operator|=
-name|CURFRMT
+name|d_first
+condition|?
+name|CURFRMTD
+else|:
+name|CURFRMTM
 expr_stmt|;
 comment|/* 	 * print file mode, link count, uid, gid and time 	 */
 if|if
@@ -669,6 +725,24 @@ name|timefrmt
 decl_stmt|;
 if|if
 condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|arcn
 operator|->
@@ -690,12 +764,20 @@ argument_list|)
 condition|)
 name|timefrmt
 operator|=
-name|OLDFRMT
+name|d_first
+condition|?
+name|OLDFRMTD
+else|:
+name|OLDFRMTM
 expr_stmt|;
 else|else
 name|timefrmt
 operator|=
-name|CURFRMT
+name|d_first
+condition|?
+name|CURFRMTD
+else|:
+name|CURFRMTM
 expr_stmt|;
 comment|/* 	 * convert time to string, and print 	 */
 if|if
