@@ -19,17 +19,6 @@ directive|define
 name|_SYS_IPC_H_
 end_define
 
-begin_typedef
-typedef|typedef
-name|long
-name|key_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* XXX should be in types.h */
-end_comment
-
 begin_struct
 struct|struct
 name|ipc_perm
@@ -245,6 +234,61 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ! KERNEL */
+end_comment
+
+begin_comment
+comment|/* XXX doesn't really belong here, but has been historical practice in SysV. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+name|key_t
+name|ftok
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! POSIX */
+end_comment
 
 begin_endif
 endif|#
