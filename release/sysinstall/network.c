@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.33.2.1 1999/02/05 22:20:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: network.c,v 1.33.2.2 1999/03/13 10:41:29 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -664,6 +664,8 @@ parameter_list|)
 block|{
 name|int
 name|fd2
+decl_stmt|,
+name|pulse
 decl_stmt|;
 name|FILE
 modifier|*
@@ -690,6 +692,22 @@ literal|16
 index|]
 decl_stmt|,
 name|speed
+index|[
+literal|16
+index|]
+decl_stmt|,
+name|authname
+index|[
+literal|32
+index|]
+decl_stmt|,
+name|authkey
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|phone
 index|[
 literal|16
 index|]
@@ -1012,6 +1030,110 @@ return|return
 literal|0
 return|;
 block|}
+name|authname
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|pulse
+operator|=
+literal|0
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dialog_yesno
+argument_list|(
+literal|""
+argument_list|,
+literal|"Does your ISP support PAP or CHAP ppp logins?"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+condition|)
+block|{
+name|val
+operator|=
+name|msgGetInput
+argument_list|(
+name|NULL
+argument_list|,
+literal|"Enter the name you use to login to your provider."
+argument_list|)
+expr_stmt|;
+name|SAFE_STRCPY
+argument_list|(
+name|authname
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|val
+operator|=
+name|msgGetInput
+argument_list|(
+name|NULL
+argument_list|,
+literal|"Enter the password you use to login to your provider."
+argument_list|)
+expr_stmt|;
+name|SAFE_STRCPY
+argument_list|(
+name|authkey
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|val
+operator|=
+name|msgGetInput
+argument_list|(
+name|NULL
+argument_list|,
+literal|"Enter the your provider's login phone number."
+argument_list|)
+expr_stmt|;
+name|SAFE_STRCPY
+argument_list|(
+name|phone
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|pulse
+operator|=
+name|dialog_yesno
+argument_list|(
+literal|""
+argument_list|,
+literal|"Does your telephone line support tone dialing?"
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -1071,6 +1193,64 @@ argument_list|,
 literal|" set log local phase\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|authname
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" set dial \"ABORT BUSY ABORT NO\\\\sCARRIER TIMEOUT 5 \\\"\\\" AT OK-AT-OK ATE1Q0 OK \\\\dATD%c\\\\T TIMEOUT 40 CONNECT\"\n"
+argument_list|,
+name|pulse
+condition|?
+literal|'P'
+else|:
+literal|'T'
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" set login\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" set authname %s\n"
+argument_list|,
+name|authname
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" set authkey %s\n"
+argument_list|,
+name|authkey
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" set phone %s\n"
+argument_list|,
+name|phone
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|fchmod
@@ -1341,11 +1521,12 @@ expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"NOTICE: The PPP command is now started on VTY3 (type ALT-F3 to\n"
-literal|"interact with it, ALT-F1 to switch back here). The only command\n"
-literal|"you'll probably want or need to use is the \"term\" command\n"
-literal|"which starts a terminal emulator you can use to talk to your\n"
-literal|"modem and dial the service provider.  Once you're connected,\n"
-literal|"come back to this screen and press return.\n\n"
+literal|"interact with it, ALT-F1 to switch back here). If you are using\n"
+literal|"a PAP or CHAP login simply enter \"dial\" otherwise you'll need\n"
+literal|"need to use is the \"term\" command which starts a terminal\n"
+literal|"emulator you can use to talk to your modem and dial the service\n"
+literal|"provider.  Once you're connected, come back to this screen and\n"
+literal|"press return.\n\n"
 literal|"DO NOT PRESS [ENTER] HERE UNTIL THE CONNECTION IS FULLY\n"
 literal|"ESTABLISHED!"
 argument_list|)
