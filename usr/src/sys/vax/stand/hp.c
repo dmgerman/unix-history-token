@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.1	83/01/16	*/
+comment|/*	hp.c	4.2	83/01/17	*/
 end_comment
 
 begin_comment
@@ -507,27 +507,9 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_struct
-struct|struct
-name|hpst
-block|{
-name|short
-name|nsect
-decl_stmt|;
-name|short
-name|ntrak
-decl_stmt|;
-name|short
-name|nspc
-decl_stmt|;
-name|short
-name|ncyl
-decl_stmt|;
-name|short
-modifier|*
-name|off
-decl_stmt|;
-block|}
+begin_decl_stmt
+name|struct
+name|st
 name|hpst
 index|[]
 init|=
@@ -683,8 +665,8 @@ literal|0
 block|,
 comment|/* rm02 - not used */
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -743,7 +725,7 @@ argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|hpst
+name|st
 modifier|*
 name|st
 decl_stmt|;
@@ -1240,7 +1222,7 @@ name|unit
 argument_list|)
 decl_stmt|;
 name|struct
-name|hpst
+name|st
 modifier|*
 name|st
 init|=
@@ -2377,7 +2359,7 @@ argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
-name|hpst
+name|st
 modifier|*
 name|st
 init|=
@@ -2983,7 +2965,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|hpst
+name|st
 modifier|*
 name|st
 init|=
@@ -2997,6 +2979,9 @@ operator|->
 name|i_unit
 index|]
 index|]
+decl_stmt|,
+modifier|*
+name|tmp
 decl_stmt|;
 name|struct
 name|mba_drv
@@ -3009,11 +2994,6 @@ name|io
 operator|->
 name|i_unit
 argument_list|)
-decl_stmt|;
-name|struct
-name|devdata
-modifier|*
-name|devd
 decl_stmt|;
 switch|switch
 condition|(
@@ -3036,46 +3016,20 @@ operator|==
 literal|0
 condition|)
 block|{
-name|devd
+name|tmp
 operator|=
 operator|(
 expr|struct
-name|devdata
+name|st
 operator|*
 operator|)
 name|arg
 expr_stmt|;
-name|devd
-operator|->
-name|ncyl
+operator|*
+name|tmp
 operator|=
+operator|*
 name|st
-operator|->
-name|ncyl
-expr_stmt|;
-name|devd
-operator|->
-name|ntrak
-operator|=
-name|st
-operator|->
-name|ntrak
-expr_stmt|;
-name|devd
-operator|->
-name|nspc
-operator|=
-name|st
-operator|->
-name|nspc
-expr_stmt|;
-name|devd
-operator|->
-name|nsect
-operator|=
-name|st
-operator|->
-name|nsect
 expr_stmt|;
 return|return
 operator|(
@@ -3127,15 +3081,11 @@ end_expr_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|devdata
+name|st
 modifier|*
 name|st
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* dirty, must be fixed */
-end_comment
 
 begin_block
 block|{
