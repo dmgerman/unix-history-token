@@ -373,6 +373,21 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|tcptw
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|tcp_timer_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|tcp_timer_2msl
@@ -385,12 +400,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|tcptw
+modifier|*
 name|tcp_timer_2msl_tw
 parameter_list|(
-name|void
-modifier|*
-name|xtw
+name|int
+name|_reuse
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,6 +414,33 @@ end_function_decl
 begin_comment
 comment|/* XXX temporary */
 end_comment
+
+begin_function_decl
+name|void
+name|tcp_timer_2msl_reset
+parameter_list|(
+name|struct
+name|tcptw
+modifier|*
+name|_tw
+parameter_list|,
+name|int
+name|_timeo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_timer_2msl_stop
+parameter_list|(
+name|struct
+name|tcptw
+modifier|*
+name|_tw
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

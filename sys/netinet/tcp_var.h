@@ -778,12 +778,15 @@ decl_stmt|;
 name|u_long
 name|t_starttime
 decl_stmt|;
-name|struct
-name|callout
-modifier|*
-name|tt_2msl
+name|int
+name|tw_time
 decl_stmt|;
-comment|/* 2*msl TIME_WAIT timer */
+name|LIST_ENTRY
+argument_list|(
+argument|tcptw
+argument_list|)
+name|tw_2msl
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1619,12 +1622,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|struct
+name|tcptw
+modifier|*
 name|tcp_twclose
 parameter_list|(
 name|struct
 name|tcptw
 modifier|*
+name|_tw
+parameter_list|,
+name|int
+name|_reuse
 parameter_list|)
 function_decl|;
 end_function_decl
