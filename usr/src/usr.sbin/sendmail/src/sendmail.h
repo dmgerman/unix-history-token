@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.60 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.59		%G%"
+literal|"@(#)sendmail.h	6.60		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1434,6 +1434,11 @@ modifier|*
 name|e_statmsg
 decl_stmt|;
 comment|/* stat msg (changes per delivery) */
+name|char
+modifier|*
+name|e_msgboundary
+decl_stmt|;
+comment|/* MIME-style message part boundary */
 name|char
 modifier|*
 name|e_macro
