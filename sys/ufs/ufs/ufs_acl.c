@@ -806,7 +806,7 @@ index|]
 operator|.
 name|ae_perm
 operator|=
-literal|0
+name|ACL_PERM_NONE
 expr_stmt|;
 name|ap
 operator|->
@@ -845,7 +845,7 @@ index|]
 operator|.
 name|ae_perm
 operator|=
-literal|0
+name|ACL_PERM_NONE
 expr_stmt|;
 name|ap
 operator|->
@@ -884,7 +884,7 @@ index|]
 operator|.
 name|ae_perm
 operator|=
-literal|0
+name|ACL_PERM_NONE
 expr_stmt|;
 name|ufs_sync_acl_from_inode
 argument_list|(
