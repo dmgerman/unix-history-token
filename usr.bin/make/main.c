@@ -2032,6 +2032,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|MACHINE
+specifier|static
 name|struct
 name|utsname
 name|utsname
