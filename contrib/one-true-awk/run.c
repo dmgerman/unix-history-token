@@ -7904,23 +7904,23 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|(
 operator|*
 name|s
 operator|!=
 literal|'\0'
 operator|&&
+operator|(
 name|strlen
 argument_list|(
 name|fs
 argument_list|)
 operator|>
 literal|1
-operator|)
 operator|||
 name|arg3type
 operator|==
 name|REGEXPR
+operator|)
 condition|)
 block|{
 comment|/* reg expr */

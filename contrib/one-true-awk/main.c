@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20030314"
+literal|"version 20030729"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,20 +224,6 @@ name|NULL
 decl_stmt|;
 name|setlocale
 argument_list|(
-name|LC_ALL
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|setlocale
-argument_list|(
-name|LC_COLLATE
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|setlocale
-argument_list|(
 name|LC_CTYPE
 argument_list|,
 literal|""
@@ -245,11 +231,12 @@ argument_list|)
 expr_stmt|;
 name|setlocale
 argument_list|(
-name|LC_MESSAGES
+name|LC_NUMERIC
 argument_list|,
-literal|""
+literal|"C"
 argument_list|)
 expr_stmt|;
+comment|/* for parsing cmdline& prog */
 name|cmdname
 operator|=
 name|argv
@@ -810,6 +797,14 @@ expr_stmt|;
 name|yyparse
 argument_list|()
 expr_stmt|;
+name|setlocale
+argument_list|(
+name|LC_NUMERIC
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* back to whatever it is locally */
 if|if
 condition|(
 name|fs

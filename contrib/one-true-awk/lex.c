@@ -3071,6 +3071,19 @@ name|bp
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+name|SYNTAX
+argument_list|(
+literal|"non-terminated regular expression %.10s..."
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|yylval
 operator|.
 name|s
