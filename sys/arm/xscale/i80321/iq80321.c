@@ -451,7 +451,7 @@ name|sc
 operator|->
 name|sc_atu_sh
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BARS
 operator|+
 literal|0x0
 argument_list|)
@@ -468,7 +468,7 @@ name|sc
 operator|->
 name|sc_atu_sh
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BARS
 operator|+
 literal|0x4
 argument_list|)
@@ -485,7 +485,7 @@ name|sc
 operator|->
 name|sc_atu_sh
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BARS
 operator|+
 literal|0x8
 argument_list|)
@@ -502,7 +502,7 @@ name|sc
 operator|->
 name|sc_atu_sh
 argument_list|,
-name|PCIR_MAPS
+name|PCIR_BARS
 operator|+
 literal|0xc
 argument_list|)
@@ -1012,6 +1012,11 @@ expr_stmt|;
 name|bus_generic_attach
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"attach\n"
 argument_list|)
 expr_stmt|;
 return|return
