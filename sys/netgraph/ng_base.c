@@ -6193,6 +6193,8 @@ name|binary
 decl_stmt|;
 name|int
 name|off
+init|=
+literal|0
 decl_stmt|;
 comment|/* Data area must contain at least a struct ng_mesg + '\0' */
 name|ascii
