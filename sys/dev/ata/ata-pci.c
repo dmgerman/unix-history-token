@@ -3430,8 +3430,6 @@ name|__alpha__
 return|return
 name|alpha_platform_setup_ide_intr
 argument_list|(
-name|child
-argument_list|,
 name|irq
 argument_list|,
 name|intr
@@ -3527,8 +3525,6 @@ name|__alpha__
 return|return
 name|alpha_platform_teardown_ide_intr
 argument_list|(
-name|child
-argument_list|,
 name|irq
 argument_list|,
 name|cookie
