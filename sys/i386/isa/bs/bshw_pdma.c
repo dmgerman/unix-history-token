@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*	$NecBSD: bshw_pdma.c,v 1.4 1997/10/31 17:43:39 honda Exp $	*/
 end_comment
 
@@ -67,7 +71,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|BS_INLINE
 name|void
 name|bshw_lc_smit_stop
 name|__P
@@ -367,7 +370,6 @@ end_define
 
 begin_function
 specifier|static
-name|BS_INLINE
 name|void
 name|bshw_lc_smit_stop
 parameter_list|(

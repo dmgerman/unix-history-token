@@ -4392,6 +4392,11 @@ name|second
 operator|)
 expr_stmt|;
 comment|/* sec now contains the	number of seconds, since Jan 1 1970, 	   in the local	time zone */
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
 comment|/* IBM-PC */

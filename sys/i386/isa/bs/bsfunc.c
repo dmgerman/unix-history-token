@@ -2785,6 +2785,9 @@ name|scsi_cmd
 operator|.
 name|length
 operator|=
+operator|(
+name|u_int8_t
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
