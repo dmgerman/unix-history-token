@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.20 (Berkeley) %G%"
+literal|"@(#)alias.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -452,11 +452,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|strchr
+name|strpbrk
 argument_list|(
 name|owner
 argument_list|,
-literal|','
+literal|",:/|\""
 argument_list|)
 operator|!=
 name|NULL
