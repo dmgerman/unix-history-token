@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.18	kern_clock.c	*/
+comment|/*	%H%	3.19	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -751,7 +751,7 @@ operator|&&
 name|pp
 operator|->
 name|p_stat
-operator|<
+operator|!=
 name|SZOMB
 condition|)
 block|{
