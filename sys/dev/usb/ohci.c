@@ -3969,58 +3969,15 @@ goto|goto
 name|reset
 goto|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|ctl
-operator|&
-name|OHCI_HCFS_MASK
-operator|)
-operator|!=
-name|OHCI_HCFS_RESET
-condition|)
-block|{
+if|#
+directive|if
+literal|0
+comment|/* Don't bother trying to reuse the BIOS init, we'll reset it anyway.  */
+block|} else if ((ctl& OHCI_HCFS_MASK) != OHCI_HCFS_RESET) {
 comment|/* BIOS started controller. */
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"ohci_init: BIOS active\n"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ctl
-operator|&
-name|OHCI_HCFS_MASK
-operator|)
-operator|!=
-name|OHCI_HCFS_OPERATIONAL
-condition|)
-block|{
-name|OWRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_CONTROL
-argument_list|,
-name|OHCI_HCFS_OPERATIONAL
-argument_list|)
-expr_stmt|;
-name|usb_delay_ms
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bus
-argument_list|,
-name|USB_RESUME_DELAY
-argument_list|)
-expr_stmt|;
-block|}
+block|DPRINTF(("ohci_init: BIOS active\n")); 		if ((ctl& OHCI_HCFS_MASK) != OHCI_HCFS_OPERATIONAL) { 			OWRITE4(sc, OHCI_CONTROL, OHCI_HCFS_OPERATIONAL); 			usb_delay_ms(&sc->sc_bus, USB_RESUME_DELAY); 		}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
