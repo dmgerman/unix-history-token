@@ -1374,18 +1374,29 @@ name|EIO
 return|;
 block|}
 comment|/* XXX 	 * Clear the bus reset event flag to start transactions even when 	 * interrupt is disabled during the boot process. 	 */
+name|DELAY
+argument_list|(
+literal|250
+argument_list|)
+expr_stmt|;
+comment|/* 2 cycles */
 name|s
 operator|=
 name|splfw
 argument_list|()
 expr_stmt|;
-name|fwohci_intr
+name|fwohci_poll
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
 name|sc
+argument_list|,
+literal|0
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|splx

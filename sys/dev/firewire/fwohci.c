@@ -949,25 +949,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|fwohci_poll
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|firewire_comm
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|fwohci_set_intr
 name|__P
 argument_list|(
@@ -12261,7 +12242,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fwohci_poll
 parameter_list|(

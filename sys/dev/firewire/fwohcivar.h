@@ -246,6 +246,24 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|fwohci_poll
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|firewire_comm
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|fwohci_reset
 name|__P
 argument_list|(
