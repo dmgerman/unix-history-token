@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -360,18 +360,11 @@ name|hotroot
 operator|=
 literal|0
 expr_stmt|;
-name|name
-operator|=
-name|blockcheck
+name|checkfilesys
 argument_list|(
 operator|*
 name|argv
 operator|++
-argument_list|)
-expr_stmt|;
-name|checkfilesys
-argument_list|(
-name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -1241,6 +1234,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Can't stat root\n"
@@ -1267,6 +1265,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Can't stat %s\n"
@@ -1293,6 +1296,26 @@ operator|==
 name|S_IFBLK
 condition|)
 block|{
+if|if
+condition|(
+name|stslash
+operator|.
+name|st_dev
+operator|==
+name|stblock
+operator|.
+name|st_rdev
+condition|)
+block|{
+name|hotroot
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|name
+operator|)
+return|;
+block|}
 name|raw
 operator|=
 name|rawname
@@ -1313,6 +1336,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+name|raw
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Can't stat %s\n"
@@ -1322,7 +1350,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|name
 operator|)
 return|;
 block|}
@@ -1338,35 +1366,11 @@ operator|)
 operator|==
 name|S_IFCHR
 condition|)
-block|{
-if|if
-condition|(
-name|stslash
-operator|.
-name|st_dev
-operator|==
-name|stblock
-operator|.
-name|st_rdev
-condition|)
-block|{
-name|hotroot
-operator|++
-expr_stmt|;
-name|raw
-operator|=
-name|unrawname
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|raw
 operator|)
 return|;
-block|}
 else|else
 block|{
 name|printf
@@ -1378,7 +1382,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|name
 operator|)
 return|;
 block|}
