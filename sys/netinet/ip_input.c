@@ -2727,6 +2727,33 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+ifdef|#
+directive|ifdef
+name|IPSEC
+comment|/* 		 * Enforce inbound IPsec SPD. 		 */
+if|if
+condition|(
+name|ipsec4_in_reject
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|ipsecstat
+operator|.
+name|in_polvio
+operator|++
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+endif|#
+directive|endif
+comment|/* IPSEC */
 name|ip_forward
 argument_list|(
 name|m
@@ -2734,6 +2761,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_FORWARD
