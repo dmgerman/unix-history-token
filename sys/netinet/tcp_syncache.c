@@ -5025,32 +5025,21 @@ operator|->
 name|inp_ip_tos
 expr_stmt|;
 comment|/* XXX */
-comment|/* 		 * See if we should do MTU discovery.  We do it only if the following 		 * are true: 		 *      1) we have a valid route to the destination 		 *      2) the MTU is not locked (if it is, then discovery has been   		 *         disabled) 		 */
+comment|/* 		 * See if we should do MTU discovery.  Route lookups are expensive, 		 * so we will only unset the DF bit if: 		 * 		 *	1) path_mtu_discovery is disabled 		 *	2) the SCF_UNREACH flag has been set 		 */
 if|if
 condition|(
 name|path_mtu_discovery
 operator|&&
 operator|(
-name|rt
-operator|!=
-name|NULL
-operator|)
-operator|&&
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_UP
-operator|&&
-operator|!
 operator|(
-name|rt
+name|sc
 operator|->
-name|rt_rmx
-operator|.
-name|rmx_locks
+name|sc_flags
 operator|&
-name|RTV_MTU
+name|SCF_UNREACH
+operator|)
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
