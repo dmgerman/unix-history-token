@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -687,7 +687,7 @@ name|UNMNT_ABOVE
 case|:
 name|cp
 operator|=
-literal|"<above>"
+literal|"<above>:"
 expr_stmt|;
 break|break;
 case|case
@@ -695,7 +695,7 @@ name|UNMNT_BELOW
 case|:
 name|cp
 operator|=
-literal|"<below>"
+literal|"<below>:"
 expr_stmt|;
 break|break;
 case|case
