@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.8
+literal|3.9
 operator|%
 name|G
 operator|%
@@ -81,7 +81,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|3.8
+literal|3.9
 operator|%
 name|G
 operator|%
@@ -197,12 +197,6 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
-name|char
-modifier|*
-name|host
-init|=
-literal|"localhost"
-decl_stmt|;
 name|struct
 name|sockaddr
 name|otherend
@@ -214,11 +208,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-name|rhost
-argument_list|(
-operator|&
-name|host
-argument_list|)
+literal|0
 expr_stmt|;
 comment|/* 	**  Try to actually open the connection. 	*/
 ifdef|#
@@ -230,9 +220,7 @@ name|Debug
 condition|)
 name|printf
 argument_list|(
-literal|"getconnection (%s)\n"
-argument_list|,
-name|host
+literal|"getconnection\n"
 argument_list|)
 expr_stmt|;
 endif|#
