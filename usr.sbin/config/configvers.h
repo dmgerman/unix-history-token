@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|CONFIGVERS
-value|600000
+value|600001
 end_define
 
 end_unit
