@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.99 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.100 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.99		%G%"
+literal|"@(#)sendmail.h	8.100		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4450,6 +4450,21 @@ end_define
 
 begin_comment
 comment|/* regular files only */
+end_comment
+
+begin_comment
+comment|/* flags that are actually specific to safefopen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_OPENASROOT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* open as root instead of real user */
 end_comment
 
 begin_comment
