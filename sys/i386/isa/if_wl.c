@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: if_wl.c,v 1.6 1997/08/01 03:36:12 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -15,13 +15,6 @@ begin_define
 define|#
 directive|define
 name|MULTICAST
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|WLCACHE
 value|1
 end_define
 
@@ -125,10 +118,6 @@ directive|include
 file|<net/if_dl.h>
 end_include
 
-begin_comment
-comment|/* #include<net/if_types.h>*/
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -145,12 +134,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
 end_include
 
 begin_include
@@ -188,12 +171,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
-end_include
 
 begin_include
 include|#
@@ -614,18 +591,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|wlwatchdog
-parameter_list|(
-name|struct
-name|wl_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -2867,9 +2838,6 @@ literal|0
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
@@ -3684,9 +3652,6 @@ literal|0
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
@@ -3850,9 +3815,6 @@ comment|/* set the watchdog timer so that if the board 	 * fails to interrupt we
 comment|/* try 10 ticks, not very long */
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
@@ -6249,12 +6211,18 @@ specifier|static
 name|void
 name|wlwatchdog
 parameter_list|(
+name|void
+modifier|*
+name|vsc
+parameter_list|)
+block|{
 name|struct
 name|wl_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+name|vsc
+decl_stmt|;
 name|int
 name|unit
 init|=
@@ -6830,9 +6798,6 @@ literal|0
 expr_stmt|;
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
 name|wlwatchdog
 argument_list|,
 name|sc
