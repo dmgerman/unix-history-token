@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3276,7 +3276,7 @@ name|dodata
 goto|;
 comment|/* XXX */
 block|}
-comment|/* 		 * If this segment advances the known urgent pointer, 		 * then mark the data stream.  This should not happen 		 * in CLOSE_WAIT, CLOSING, LAST_ACK or TIME_WAIT STATES since 		 * a FIN has been received from the remote side.  		 * In these states we ignore the URG. 		 */
+comment|/* 		 * If this segment advances the known urgent pointer, 		 * then mark the data stream.  This should not happen 		 * in CLOSE_WAIT, CLOSING, LAST_ACK or TIME_WAIT STATES since 		 * a FIN has been received from the remote side.  		 * In these states we ignore the URG. 		 * 		 * According to RFC961 (Assigned Protocols), 		 * the urgent pointer points to the last octet 		 * of urgent data.  We continue, however, 		 * to consider it to indicate the first octet 		 * of data past the urgent section 		 * as the original spec states. 		 */
 if|if
 condition|(
 name|SEQ_GT
@@ -3370,6 +3370,16 @@ operator|<=
 name|ti
 operator|->
 name|ti_len
+operator|&&
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_OOBINLINE
+operator|)
+operator|==
+literal|0
 condition|)
 name|tcp_pulloutofband
 argument_list|(
