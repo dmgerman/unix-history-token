@@ -571,8 +571,6 @@ name|vpgqueues
 modifier|*
 name|pq
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|queue
