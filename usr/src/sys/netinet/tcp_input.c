@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.36	81/12/07	*/
+comment|/*	tcp_input.c	1.37	81/12/09	*/
 end_comment
 
 begin_include
@@ -195,7 +195,7 @@ argument_list|(
 name|TCP_INPUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Get ip and tcp header together in first mbuf. 	 */
+comment|/* 	 * Get ip and tcp header together in first mbuf. 	 * Note: ip leaves ip header in first mbuf. 	 */
 name|m
 operator|=
 name|m0
@@ -213,9 +213,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
 name|ti
+operator|)
 operator|->
-name|ti_len
+name|ip_len
 operator|>
 sizeof|sizeof
 argument_list|(
@@ -339,14 +346,27 @@ name|ti
 operator|->
 name|ti_len
 operator|=
-name|htons
-argument_list|(
 operator|(
 name|u_short
 operator|)
 name|tlen
+expr_stmt|;
+if|#
+directive|if
+name|vax
+name|ti
+operator|->
+name|ti_len
+operator|=
+name|htons
+argument_list|(
+name|ti
+operator|->
+name|ti_len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
