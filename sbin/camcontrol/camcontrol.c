@@ -4720,9 +4720,6 @@ decl_stmt|,
 name|matchccb
 decl_stmt|;
 name|int
-name|curbus
-decl_stmt|;
-name|int
 name|fd
 decl_stmt|,
 name|retval
