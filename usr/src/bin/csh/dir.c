@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.18 (Berkeley) %G%"
+literal|"@(#)dir.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -976,13 +976,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|len
-operator|=
-name|Strlen
-argument_list|(
-name|hp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1004,6 +997,14 @@ argument_list|,
 name|STRslash
 argument_list|)
 operator|&&
+operator|(
+name|len
+operator|=
+name|Strlen
+argument_list|(
+name|hp
+argument_list|)
+operator|,
 name|Strncmp
 argument_list|(
 name|hp
@@ -1016,6 +1017,7 @@ name|len
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|&&
 operator|(
 name|dp
