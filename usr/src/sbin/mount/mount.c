@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.19 (Berkeley) %G%"
+literal|"@(#)mount.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1286,7 +1286,7 @@ name|sprintf
 argument_list|(
 name|execname
 argument_list|,
-literal|"%s/%s"
+literal|"%s/mount_%s"
 argument_list|,
 name|_PATH_EXECDIR
 argument_list|,
@@ -1418,9 +1418,20 @@ argument_list|,
 name|envp
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mount: cannot exec %s for %s: "
+argument_list|,
+name|execname
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-name|execname
+literal|""
 argument_list|)
 expr_stmt|;
 name|exit
