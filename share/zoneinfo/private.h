@@ -37,7 +37,7 @@ name|char
 name|privatehid
 index|[]
 init|=
-literal|"@(#)private.h	7.4"
+literal|"@(#)private.h	7.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,14 +196,20 @@ parameter_list|)
 value|x
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !defined __STDC__ */
+comment|/* defined __STDC__ */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
 
 begin_define
 define|#
@@ -258,14 +264,20 @@ name|genericptr_t
 typedef|;
 end_typedef
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !defined __STDC__ */
+comment|/* defined __STDC__ */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -442,14 +454,20 @@ name|FILENAME_MAX
 value|MAXPATHLEN
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !defined MAXPATHLEN */
+comment|/* defined MAXPATHLEN */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXPATHLEN
+end_ifndef
 
 begin_define
 define|#
@@ -551,14 +569,20 @@ name|fwrite_size_t
 value|size_t
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !defined __STDC__ */
+comment|/* defined __STDC__ */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
 
 begin_ifndef
 ifndef|#
@@ -601,14 +625,20 @@ name|qsort_size_t
 value|unsigned
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* !defined USG */
+comment|/* defined USG */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USG
+end_ifndef
 
 begin_define
 define|#
