@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	4.4 (Berkeley) %G%"
+literal|"@(#)look.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,15 +232,7 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* if nothing set, default to dictionary order and folding */
-if|if
-condition|(
-operator|!
-name|dict
-operator|&&
-operator|!
-name|fold
-condition|)
+comment|/* if default file, set to dictionary order and folding */
 name|dict
 operator|=
 name|fold
