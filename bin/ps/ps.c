@@ -258,34 +258,56 @@ begin_comment
 comment|/* "Terminate-element" list separators */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|KINFO
-modifier|*
-name|kinfo
-decl_stmt|;
-end_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LAZY_PS
+end_ifdef
 
-begin_decl_stmt
-name|struct
-name|varent
-modifier|*
-name|vhead
-decl_stmt|,
-modifier|*
-name|vtail
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|DEF_UREAD
+value|0
+end_define
 
-begin_decl_stmt
-name|int
-name|eval
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|OPT_LAZY_f
+value|"f"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEF_UREAD
+value|1
+end_define
 
 begin_comment
-comment|/* exit value */
+comment|/* Always do the more-expensive read. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OPT_LAZY_f
+end_define
+
+begin_comment
+comment|/* I.e., the `-f' option is not added. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -299,12 +321,22 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|optfatal
+name|eval
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Fatal error parsing some list-option */
+comment|/* Exit value */
+end_comment
+
+begin_decl_stmt
+name|time_t
+name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current time(3) value */
 end_comment
 
 begin_decl_stmt
@@ -334,7 +366,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* width of screen (0 == infinity) */
+comment|/* Width of the screen (0 == infinity). */
 end_comment
 
 begin_decl_stmt
@@ -344,18 +376,109 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* calculated width of requested variables */
+comment|/* Calculated-width of requested variables. */
 end_comment
 
 begin_decl_stmt
-name|time_t
-name|now
+name|struct
+name|varent
+modifier|*
+name|vhead
+decl_stmt|,
+modifier|*
+name|vtail
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|forceuread
+init|=
+name|DEF_UREAD
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* current time(3) value */
+comment|/* Do extra work to get u-area. */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|kvm_t
+modifier|*
+name|kd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|KINFO
+modifier|*
+name|kinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|needcomm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -o "command" */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|needenv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -e */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|needuser
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -o "user" */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|optfatal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Fatal error parsing some list-option. */
+end_comment
+
+begin_enum
+specifier|static
+enum|enum
+name|sort
+block|{
+name|DEFAULT
+block|,
+name|SORTMEM
+block|,
+name|SORTCPU
+block|}
+name|sortby
+init|=
+name|DEFAULT
+enum|;
+end_enum
 
 begin_struct_decl
 struct_decl|struct
@@ -431,85 +554,6 @@ union|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|int
-name|needuser
-decl_stmt|,
-name|needcomm
-decl_stmt|,
-name|needenv
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LAZY_PS
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|forceuread
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|OPT_LAZY_f
-value|"f"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|int
-name|forceuread
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|OPT_LAZY_f
-end_define
-
-begin_comment
-comment|/* I.e., the `-f' option is not added. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_enum
-specifier|static
-enum|enum
-name|sort
-block|{
-name|DEFAULT
-block|,
-name|SORTMEM
-block|,
-name|SORTCPU
-block|}
-name|sortby
-init|=
-name|DEFAULT
-enum|;
-end_enum
 
 begin_function_decl
 specifier|static
@@ -778,7 +822,8 @@ name|char
 name|lfmt
 index|[]
 init|=
-literal|"uid,pid,ppid,cpu,pri,nice,vsz,rss,wchan,state,tt,time,command"
+literal|"uid,pid,ppid,cpu,pri,nice,vsz,rss,wchan,state,"
+literal|"tt,time,command"
 decl_stmt|;
 end_decl_stmt
 
@@ -818,15 +863,8 @@ name|char
 name|vfmt
 index|[]
 init|=
-literal|"pid,state,time,sl,re,pagein,vsz,rss,lim,tsiz,%cpu,%mem,command"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|kvm_t
-modifier|*
-name|kd
+literal|"pid,state,time,sl,re,pagein,vsz,rss,lim,tsiz,"
+literal|"%cpu,%mem,command"
 decl_stmt|;
 end_decl_stmt
 
