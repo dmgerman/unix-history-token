@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)umount.c	8.8 (Berkeley) 5/8/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)umount.c	8.8 (Berkeley) 5/8/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,24 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -99,18 +95,6 @@ begin_include
 include|#
 directive|include
 file|<rpc/rpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/pmap_clnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/pmap_prot.h>
 end_include
 
 begin_include
@@ -449,7 +433,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"only one -t option may be specified."
+literal|"only one -t option may be specified"
 argument_list|)
 expr_stmt|;
 name|typelist
@@ -484,18 +468,22 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|argc
 operator|==
 literal|0
 operator|&&
 operator|!
 name|all
+operator|)
 operator|||
+operator|(
 name|argc
 operator|!=
 literal|0
 operator|&&
 name|all
+operator|)
 condition|)
 name|usage
 argument_list|()
@@ -701,8 +689,6 @@ name|fs
 decl_stmt|;
 name|int
 name|rval
-decl_stmt|,
-name|type
 decl_stmt|;
 name|char
 modifier|*
@@ -833,11 +819,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 operator|(
