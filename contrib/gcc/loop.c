@@ -3539,6 +3539,9 @@ name|loop_depth
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|in_libcall
+decl_stmt|;
 name|loop
 operator|->
 name|top
@@ -3862,6 +3865,10 @@ block|}
 comment|/* Scan through the loop finding insns that are safe to move.      Set REGS->ARRAY[I].SET_IN_LOOP negative for the reg I being set, so that      this reg will be considered invariant for subsequent insns.      We consider whether subsequent insns use the reg      in deciding whether it is worth actually moving.       MAYBE_NEVER is nonzero if we have passed a conditional jump insn      and therefore it is possible that the insns we are scanning      would never be executed.  At such times, we must make sure      that it is safe to execute the insn once instead of zero times.      When MAYBE_NEVER is 0, all insns will be executed at least once      so that is not a problem.  */
 for|for
 control|(
+name|in_libcall
+operator|=
+literal|0
+operator|,
 name|p
 operator|=
 name|next_insn_in_loop
@@ -3889,12 +3896,57 @@ control|)
 block|{
 if|if
 condition|(
+name|in_libcall
+operator|&&
+name|INSN_P
+argument_list|(
+name|p
+argument_list|)
+operator|&&
+name|find_reg_note
+argument_list|(
+name|p
+argument_list|,
+name|REG_RETVAL
+argument_list|,
+name|NULL_RTX
+argument_list|)
+condition|)
+name|in_libcall
+operator|--
+expr_stmt|;
+if|if
+condition|(
 name|GET_CODE
 argument_list|(
 name|p
 argument_list|)
 operator|==
 name|INSN
+condition|)
+block|{
+name|temp
+operator|=
+name|find_reg_note
+argument_list|(
+name|p
+argument_list|,
+name|REG_LIBCALL
+argument_list|,
+name|NULL_RTX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
+condition|)
+name|in_libcall
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|in_libcall
 operator|&&
 operator|(
 name|set
@@ -3972,7 +4024,7 @@ name|dependencies
 init|=
 literal|0
 decl_stmt|;
-comment|/* Figure out what to use as a source of this insn.  If a REG_EQUIV 	     note is given or if a REG_EQUAL note with a constant operand is 	     specified, use it as the source and mark that we should move 	     this insn by calling emit_move_insn rather that duplicating the 	     insn.  	     Otherwise, only use the REG_EQUAL contents if a REG_RETVAL note 	     is present.  */
+comment|/* Figure out what to use as a source of this insn.  If a 		 REG_EQUIV note is given or if a REG_EQUAL note with a 		 constant operand is specified, use it as the source and 		 mark that we should move this insn by calling 		 emit_move_insn rather that duplicating the insn.  		 Otherwise, only use the REG_EQUAL contents if a REG_RETVAL 		 note is present.  */
 name|temp
 operator|=
 name|find_reg_note
@@ -4064,7 +4116,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* A libcall block can use regs that don't appear in 		     the equivalent expression.  To move the libcall, 		     we must move those regs too.  */
+comment|/* A libcall block can use regs that don't appear in 			 the equivalent expression.  To move the libcall, 			 we must move those regs too.  */
 name|dependencies
 operator|=
 name|libcall_other_reg
@@ -4076,7 +4128,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* For parallels, add any possible uses to the depencies, as we can't move 	     the insn without resolving them first.  */
+comment|/* For parallels, add any possible uses to the depencies, as 		 we can't move the insn without resolving them first.  */
 if|if
 condition|(
 name|GET_CODE
@@ -4154,7 +4206,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Don't try to optimize a register that was made 	     by loop-optimization for an inner loop. 	     We don't know its life-span, so we can't compute the benefit.  */
+comment|/* Don't try to optimize a register that was made 		 by loop-optimization for an inner loop. 		 We don't know its life-span, so we can't compute 		 the benefit.  */
 if|if
 condition|(
 name|REGNO
@@ -4171,7 +4223,7 @@ empty_stmt|;
 elseif|else
 if|if
 condition|(
-comment|/* The register is used in basic blocks other 		      than the one where it is set (meaning that 		      something after this point in the loop might 		      depend on its value before the set).  */
+comment|/* The register is used in basic blocks other 			  than the one where it is set (meaning that 			  something after this point in the loop might 			  depend on its value before the set).  */
 operator|!
 name|reg_in_basic_block_p
 argument_list|(
@@ -4182,7 +4234,7 @@ argument_list|(
 name|set
 argument_list|)
 argument_list|)
-comment|/* And the set is not guaranteed to be executed once 		      the loop starts, or the value before the set is 		      needed before the set occurs...  		      ??? Note we have quadratic behaviour here, mitigated 		      by the fact that the previous test will often fail for 		      large loops.  Rather than re-scanning the entire loop 		      each time for register usage, we should build tables 		      of the register usage and use them here instead.  */
+comment|/* And the set is not guaranteed to be executed once 			  the loop starts, or the value before the set is 			  needed before the set occurs...  			  ??? Note we have quadratic behaviour here, mitigated 			  by the fact that the previous test will often fail for 			  large loops.  Rather than re-scanning the entire loop 			  each time for register usage, we should build tables 			  of the register usage and use them here instead.  */
 operator|&&
 operator|(
 name|maybe_never
@@ -4197,7 +4249,7 @@ name|p
 argument_list|)
 operator|)
 condition|)
-comment|/* It is unsafe to move the set.  	       This code used to consider it OK to move a set of a variable 	       which was not created by the user and not used in an exit test. 	       That behavior is incorrect and was removed.  */
+comment|/* It is unsafe to move the set.  		   This code used to consider it OK to move a set of a variable 		   which was not created by the user and not used in an exit 		   test. 		   That behavior is incorrect and was removed.  */
 empty_stmt|;
 elseif|else
 if|if
@@ -4281,7 +4333,7 @@ name|p
 argument_list|)
 operator|)
 operator|)
-comment|/* If the insn can cause a trap (such as divide by zero), 		      can't move it unless it's guaranteed to be executed 		      once loop is entered.  Even a function call might 		      prevent the trap insn from being reached 		      (since it might exit!)  */
+comment|/* If the insn can cause a trap (such as divide by zero), 			  can't move it unless it's guaranteed to be executed 			  once loop is entered.  Even a function call might 			  prevent the trap insn from being reached 			  (since it might exit!)  */
 operator|&&
 operator|!
 operator|(
@@ -4314,7 +4366,7 @@ name|set
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* A potential lossage is where we have a case where two insns 		 can be combined as long as they are both in the loop, but 		 we move one of them outside the loop.  For large loops, 		 this can lose.  The most common case of this is the address 		 of a function being called.  		 Therefore, if this register is marked as being used exactly 		 once if we are in a loop with calls (a "large loop"), see if 		 we can replace the usage of this register with the source 		 of this SET.  If we can, delete this insn.  		 Don't do this if P has a REG_RETVAL note or if we have 		 SMALL_REGISTER_CLASSES and SET_SRC is a hard register.  */
+comment|/* A potential lossage is where we have a case where two insns 		     can be combined as long as they are both in the loop, but 		     we move one of them outside the loop.  For large loops, 		     this can lose.  The most common case of this is the address 		     of a function being called.  		     Therefore, if this register is marked as being used 		     exactly once if we are in a loop with calls 		     (a "large loop"), see if we can replace the usage of 		     this register with the source of this SET.  If we can, 		     delete this insn.  		     Don't do this if P has a REG_RETVAL note or if we have 		     SMALL_REGISTER_CLASSES and SET_SRC is a hard register.  */
 if|if
 condition|(
 name|loop_info
@@ -4429,6 +4481,7 @@ argument_list|)
 operator|==
 name|REG
 operator|&&
+operator|(
 name|REGNO
 argument_list|(
 name|SET_SRC
@@ -4441,7 +4494,8 @@ name|FIRST_PSEUDO_REGISTER
 operator|)
 operator|)
 operator|)
-comment|/* This test is not redundant; SET_SRC (set) might be 		     a call-clobbered register and the life of REGNO 		     might span a call.  */
+operator|)
+comment|/* This test is not redundant; SET_SRC (set) might be 			 a call-clobbered register and the life of REGNO 			 might span a call.  */
 operator|&&
 operator|!
 name|modified_between_p
@@ -4500,7 +4554,7 @@ name|single_usage
 argument_list|)
 condition|)
 block|{
-comment|/* Replace any usage in a REG_EQUAL note.  Must copy the 		     new source, so that we don't get rtx sharing between the 		     SET_SOURCE and REG_NOTES of insn p.  */
+comment|/* Replace any usage in a REG_EQUAL note.  Must copy 			 the new source, so that we don't get rtx sharing 			 between the SET_SOURCE and REG_NOTES of insn p.  */
 name|REG_NOTES
 argument_list|(
 name|regs
@@ -4513,6 +4567,7 @@ operator|.
 name|single_usage
 argument_list|)
 operator|=
+operator|(
 name|replace_rtx
 argument_list|(
 name|REG_NOTES
@@ -4540,6 +4595,7 @@ name|set
 argument_list|)
 argument_list|)
 argument_list|)
+operator|)
 expr_stmt|;
 name|delete_insn
 argument_list|(
@@ -4717,7 +4773,7 @@ name|regno
 operator|=
 name|regno
 expr_stmt|;
-comment|/* Set M->cond if either loop_invariant_p 		 or consec_sets_invariant_p returned 2 		 (only conditionally invariant).  */
+comment|/* Set M->cond if either loop_invariant_p 		     or consec_sets_invariant_p returned 2 		     (only conditionally invariant).  */
 name|m
 operator|->
 name|cond
@@ -4852,7 +4908,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* It is possible for the first instruction to have a 		     REG_EQUAL note but a non-invariant SET_SRC, so we must 		     remember the status of the first instruction in case 		     the last instruction doesn't have a REG_EQUAL note.  */
+comment|/* It is possible for the first instruction to have a 			 REG_EQUAL note but a non-invariant SET_SRC, so we must 			 remember the status of the first instruction in case 			 the last instruction doesn't have a REG_EQUAL note.  */
 name|m
 operator|->
 name|move_insn_first
@@ -4889,7 +4945,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* We must now reset m->move_insn, m->is_equiv, and possibly 		     m->set_src to correspond to the effects of all the 		     insns.  */
+comment|/* We must now reset m->move_insn, m->is_equiv, and 			 possibly m->set_src to correspond to the effects of 			 all the insns.  */
 name|temp
 operator|=
 name|find_reg_note
@@ -4993,7 +5049,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-comment|/* If this register is always set within a STRICT_LOW_PART 	     or set to zero, then its high bytes are constant. 	     So clear them outside the loop and within the loop 	     just load the low bytes. 	     We must check that the machine has an instruction to do so. 	     Also, if the value loaded into the register 	     depends on the same register, this cannot be done.  */
+comment|/* If this register is always set within a STRICT_LOW_PART 		 or set to zero, then its high bytes are constant. 		 So clear them outside the loop and within the loop 		 just load the low bytes. 		 We must check that the machine has an instruction to do so. 		 Also, if the value loaded into the register 		 depends on the same register, this cannot be done.  */
 elseif|else
 if|if
 condition|(
@@ -5212,7 +5268,7 @@ name|partial
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If the insn may not be executed on some cycles, 		     we can't clear the whole reg; clear just high part. 		     Not even if the reg is used only within this loop. 		     Consider this: 		     while (1) 		       while (s != t) { 		         if (foo ()) x = *s; 			 use (x); 		       } 		     Clearing x before the inner loop could clobber a value 		     being saved from the last time around the outer loop. 		     However, if the reg is not used outside this loop 		     and all uses of the register are in the same 		     basic block as the store, there is no problem.  		     If this insn was made by loop, we don't know its 		     INSN_LUID and hence must make a conservative 		     assumption.  */
+comment|/* If the insn may not be executed on some cycles, 			 we can't clear the whole reg; clear just high part. 			 Not even if the reg is used only within this loop. 			 Consider this: 			 while (1) 			   while (s != t) { 			     if (foo ()) x = *s; 			     use (x); 			   } 			 Clearing x before the inner loop could clobber a value 			 being saved from the last time around the outer loop. 			 However, if the reg is not used outside this loop 			 and all uses of the register are in the same 			 basic block as the store, there is no problem.  			 If this insn was made by loop, we don't know its 			 INSN_LUID and hence must make a conservative 			 assumption.  */
 name|m
 operator|->
 name|global
@@ -5350,6 +5406,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -9090,7 +9147,7 @@ name|count
 operator|--
 control|)
 block|{
-comment|/* If this is the first insn of a library call sequence, 			 skip to the end.  */
+comment|/* If this is the first insn of a library call sequence, 			 something is very wrong.  */
 if|if
 condition|(
 name|GET_CODE
@@ -9113,14 +9170,8 @@ name|NULL_RTX
 argument_list|)
 operator|)
 condition|)
-name|p
-operator|=
-name|XEXP
-argument_list|(
-name|temp
-argument_list|,
-literal|0
-argument_list|)
+name|abort
+argument_list|()
 expr_stmt|;
 comment|/* If this is the last insn of a libcall sequence, then 			 delete every insn in the sequence except the last. 			 The last insn is handled in the normal manner.  */
 if|if
@@ -17792,6 +17843,18 @@ operator|->
 name|start
 decl_stmt|;
 name|rtx
+name|init_val
+init|=
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|class
+operator|->
+name|initial_value
+decl_stmt|;
+name|rtx
 name|add_val
 init|=
 name|simplify_gen_binary
@@ -17817,18 +17880,38 @@ name|PREFETCH_BLOCK
 argument_list|)
 argument_list|)
 decl_stmt|;
+comment|/* Functions called by LOOP_IV_ADD_EMIT_BEFORE expect a 		 non-constant INIT_VAL to have the same mode as REG, which 		 in this case we know to be Pmode.  */
+if|if
+condition|(
+name|GET_MODE
+argument_list|(
+name|init_val
+argument_list|)
+operator|!=
+name|Pmode
+operator|&&
+operator|!
+name|CONSTANT_P
+argument_list|(
+name|init_val
+argument_list|)
+condition|)
+name|init_val
+operator|=
+name|convert_to_mode
+argument_list|(
+name|Pmode
+argument_list|,
+name|init_val
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|loop_iv_add_mult_emit_before
 argument_list|(
 name|loop
 argument_list|,
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|class
-operator|->
-name|initial_value
+name|init_val
 argument_list|,
 name|info
 index|[

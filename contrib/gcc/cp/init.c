@@ -3800,6 +3800,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|name
+argument_list|)
+operator|==
+name|IDENTIFIER_NODE
+condition|)
 name|field
 operator|=
 name|lookup_field
@@ -3812,6 +3821,11 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|field
+operator|=
+name|name
 expr_stmt|;
 if|if
 condition|(

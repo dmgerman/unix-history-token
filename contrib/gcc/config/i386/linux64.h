@@ -76,7 +76,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{m32:%{!shared: \        %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \        %{!p:%{profile:gcrt1.o%s} %{!profile:crt1.o%s}}}} \      crti.o%s %{static:crtbeginT.o%s}\      %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}} \    %{!m32:%{!shared: \        %{pg:/usr/lib64/gcrt1.o%s} %{!pg:%{p:/usr/lib64/gcrt1.o%s} \        %{!p:%{profile:/usr/lib64/gcrt1.o%s} %{!profile:/usr/lib64/crt1.o%s}}}}\      /usr/lib64/crti.o%s %{static:crtbeginT.o%s} \      %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}}"
+value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} \      %{!p:%{profile:gcrt1.o%s} %{!profile:crt1.o%s}}}} \    crti.o%s %{static:crtbeginT.o%s} \    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
 end_define
 
 begin_undef
@@ -89,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_SPEC
-value|"\   %{m32:%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s} \   %{!m32:%{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib64/crtn.o%s}"
+value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 end_define
 
 begin_define

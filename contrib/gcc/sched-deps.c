@@ -3908,6 +3908,7 @@ name|code
 operator|==
 name|CLOBBER
 condition|)
+block|{
 name|sched_analyze_1
 argument_list|(
 name|deps
@@ -3917,6 +3918,25 @@ argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
+comment|/* Bare clobber insns are used for letting life analysis, reg-stack 	 and others know that a value is dead.  Depend on the last call 	 instruction so that reg-stack won't get confused.  */
+if|if
+condition|(
+name|code
+operator|==
+name|CLOBBER
+condition|)
+name|add_dependence_list
+argument_list|(
+name|insn
+argument_list|,
+name|deps
+operator|->
+name|last_function_call
+argument_list|,
+name|REG_DEP_OUTPUT
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

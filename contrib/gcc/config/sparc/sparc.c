@@ -35728,9 +35728,6 @@ operator|)
 return|;
 block|}
 case|case
-name|ASHIFT
-case|:
-case|case
 name|LSHIFTRT
 case|:
 return|return

@@ -13282,6 +13282,24 @@ argument_list|)
 endif|#
 directive|endif
 decl_stmt|;
+comment|/* If this was a CONST function, it is now PURE since 	     it now reads memory.  */
+if|if
+condition|(
+name|flags
+operator|&
+name|ECF_CONST
+condition|)
+block|{
+name|flags
+operator|&=
+operator|~
+name|ECF_CONST
+expr_stmt|;
+name|flags
+operator||=
+name|ECF_PURE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|GET_MODE

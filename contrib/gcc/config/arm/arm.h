@@ -2176,11 +2176,11 @@ begin_define
 define|#
 directive|define
 name|BASE_REG_CLASS
-value|(TARGET_THUMB ? BASE_REGS : GENERAL_REGS)
+value|(TARGET_THUMB ? LO_REGS : GENERAL_REGS)
 end_define
 
 begin_comment
-comment|/* For the Thumb the high registers cannot be used as base    registers when addressing quanitities in QI or HI mode.  */
+comment|/* For the Thumb the high registers cannot be used as base registers    when addressing quanitities in QI or HI mode; if we don't know the    mode, then we must be conservative.  After reload we must also be    conservative, since we can't support SP+reg addressing, and we    can't fix up any bad substitutions.  */
 end_comment
 
 begin_define
@@ -2191,7 +2191,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|(TARGET_ARM ? BASE_REGS :						\      (((MODE) == QImode || (MODE) == HImode || (MODE) == VOIDmode)	\      ? LO_REGS : BASE_REGS))
+value|(TARGET_ARM ? GENERAL_REGS :					\      (((MODE) == SImode&& !reload_completed) ? BASE_REGS : LO_REGS))
 end_define
 
 begin_comment

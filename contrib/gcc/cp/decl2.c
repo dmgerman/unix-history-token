@@ -7749,6 +7749,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|processing_template_decl
+condition|)
+block|{
 name|main_decl
 operator|=
 name|build_anon_union_vars
@@ -7811,8 +7817,9 @@ name|anon_union_decl
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
+block|}
 name|add_decl_stmt
 argument_list|(
 name|anon_union_decl
