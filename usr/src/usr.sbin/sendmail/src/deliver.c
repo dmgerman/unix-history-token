@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.92
+literal|3.93
 operator|%
 name|G
 operator|%
@@ -2895,6 +2895,16 @@ condition|)
 name|usrerr
 argument_list|(
 literal|"%s"
+argument_list|,
+name|statmsg
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|Xscript
+argument_list|,
+literal|"%s\n"
 argument_list|,
 name|statmsg
 argument_list|)
