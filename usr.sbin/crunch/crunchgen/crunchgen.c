@@ -2577,7 +2577,7 @@ name|sprintf
 argument_list|(
 name|path
 argument_list|,
-literal|"cd %s&& echo -n /usr/obj/`pwd`"
+literal|"cd %s&& echo -n /usr/obj`/bin/pwd`"
 argument_list|,
 name|p
 operator|->
