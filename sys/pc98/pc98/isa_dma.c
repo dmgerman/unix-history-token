@@ -180,6 +180,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DMA1_STATUS
+value|(IO_DMA + 0x10)
+end_define
+
+begin_comment
+comment|/* status register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DMA1_SMSK
 value|(IO_DMA + 0x14)
 end_define
@@ -2310,6 +2321,35 @@ expr_stmt|;
 return|return
 operator|(
 name|cnt
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reached terminal count yet ?  */
+end_comment
+
+begin_function
+name|int
+name|isa_dmatc
+parameter_list|(
+name|int
+name|chan
+parameter_list|)
+block|{
+return|return
+operator|(
+name|inb
+argument_list|(
+name|DMA1_STATUS
+argument_list|)
+operator|&
+operator|(
+literal|1
+operator|<<
+name|chan
+operator|)
 operator|)
 return|;
 block|}

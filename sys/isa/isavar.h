@@ -552,7 +552,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isa_dmacascade
 parameter_list|(
@@ -563,7 +562,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isa_dmadone
 parameter_list|(
@@ -583,7 +581,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isa_dmainit
 parameter_list|(
@@ -597,7 +594,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isa_dmastart
 parameter_list|(
@@ -617,7 +613,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|isa_dma_acquire
 parameter_list|(
@@ -628,7 +623,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|isa_dma_release
 parameter_list|(
@@ -639,7 +633,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|isa_dmastatus
 parameter_list|(
@@ -650,9 +643,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|isa_dmastop
+parameter_list|(
+name|int
+name|chan
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|isa_dmatc
 parameter_list|(
 name|int
 name|chan

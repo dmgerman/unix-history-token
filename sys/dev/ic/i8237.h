@@ -58,5 +58,38 @@ begin_comment
 comment|/* write the device, read memory operation */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC98
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DMA1_STATUS
+value|(IO_DMA1 + 1*8)
+end_define
+
+begin_comment
+comment|/* status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA2_STATUS
+value|(IO_DMA2 + 2*8)
+end_define
+
+begin_comment
+comment|/* status register */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 
