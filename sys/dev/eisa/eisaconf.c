@@ -241,6 +241,17 @@ name|EISA_SLOTS
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.eisa_slots"
+argument_list|,
+operator|&
+name|num_eisa_slots
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|devclass_t
