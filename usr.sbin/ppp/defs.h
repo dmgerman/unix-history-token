@@ -437,28 +437,46 @@ begin_define
 define|#
 directive|define
 name|EX_HANGUP
-value|10
+value|9
 end_define
 
 begin_define
 define|#
 directive|define
 name|EX_TERM
-value|11
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
 name|EX_NODIAL
-value|12
+value|11
 end_define
 
 begin_define
 define|#
 directive|define
 name|EX_NOLOGIN
+value|12
+end_define
+
+begin_comment
+comment|/* return values for -background mode, not really exits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EX_REDIAL
 value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|EX_RECONNECT
+value|14
 end_define
 
 begin_comment
@@ -736,6 +754,18 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|ex_desc
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

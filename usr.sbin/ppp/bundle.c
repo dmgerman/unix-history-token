@@ -661,7 +661,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|bundle_Notify
 parameter_list|(
@@ -686,8 +685,11 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
 name|write
 argument_list|(
 name|bundle
@@ -701,12 +703,27 @@ name|c
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+name|EX_REDIAL
+operator|&&
+name|c
+operator|!=
+name|EX_RECONNECT
+condition|)
+block|{
+if|if
+condition|(
+name|ret
 operator|==
 literal|1
 condition|)
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogCHAT
 argument_list|,
 literal|"Parent notified of %s\n"
 argument_list|,
@@ -722,9 +739,9 @@ expr_stmt|;
 else|else
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogERROR
 argument_list|,
-literal|"Failed to notify parent of success.\n"
+literal|"Failed to notify parent of success\n"
 argument_list|)
 expr_stmt|;
 name|close
@@ -744,6 +761,39 @@ name|fd
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|==
+literal|1
+condition|)
+name|log_Printf
+argument_list|(
+name|LogCHAT
+argument_list|,
+literal|"Parent notified of %s\n"
+argument_list|,
+name|ex_desc
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"Failed to notify parent of %s\n"
+argument_list|,
+name|ex_desc
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -6763,7 +6813,7 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Idle timer expired.\n"
+literal|"Idle timer expired\n"
 argument_list|)
 expr_stmt|;
 name|bundle_StopIdleTimer
@@ -9261,7 +9311,7 @@ name|UU_LOCK_OK
 condition|)
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogERROR
 argument_list|,
 literal|"uu_lock_txfr: %s\n"
 argument_list|,
@@ -9985,7 +10035,7 @@ argument_list|)
 expr_stmt|;
 name|log_Printf
 argument_list|(
-name|LogPHASE
+name|LogDEBUG
 argument_list|,
 literal|"%d -> %d: %s session control\n"
 argument_list|,
