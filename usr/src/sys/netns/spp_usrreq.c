@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2735,7 +2735,7 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-comment|/* 		 * Fill in mbuf with extended SP header 		 * and addresses and length put into network format. 		 */
+comment|/* 		 * Fill in mbuf with extended SP header 		 * and addresses and length put into network format. 		 * Long align so prepended ip headers will work on Gould. 		 */
 name|m
 operator|->
 name|m_off
@@ -2747,6 +2747,8 @@ argument_list|(
 expr|struct
 name|spidp
 argument_list|)
+operator|-
+literal|2
 expr_stmt|;
 name|m
 operator|->
@@ -3017,10 +3019,18 @@ name|credit
 init|=
 operator|(
 operator|(
+operator|(
+operator|(
+name|int
+operator|)
 name|sb2
 operator|->
 name|sb_mbmax
+operator|)
 operator|-
+operator|(
+name|int
+operator|)
 name|sb2
 operator|->
 name|sb_mbcnt
@@ -5028,23 +5038,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PRU_SEND
-case|:
-name|error
-operator|=
-name|spp_output
-argument_list|(
-name|cb
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|m
-operator|=
-name|NULL
-expr_stmt|;
-break|break;
-case|case
 name|PRU_ABORT
 case|:
 operator|(
@@ -5141,11 +5134,6 @@ operator|-
 literal|512
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ENOBUFS
@@ -5158,6 +5146,10 @@ name|s_oobflags
 operator||=
 name|SF_SOOB
 expr_stmt|;
+comment|/* fall into */
+case|case
+name|PRU_SEND
+case|:
 name|error
 operator|=
 name|spp_output
