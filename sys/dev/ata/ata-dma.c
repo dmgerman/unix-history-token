@@ -4637,6 +4637,7 @@ name|udmamode
 operator|>=
 literal|4
 operator|&&
+operator|!
 operator|(
 name|ATA_INB
 argument_list|(
@@ -4644,10 +4645,10 @@ name|scp
 operator|->
 name|r_bmio
 argument_list|,
-name|ATA_BDDEVSPEC_1
+name|ATA_BMDEVSPEC_1
 argument_list|)
 operator|&
-literal|0x20
+literal|0x04
 operator|)
 condition|)
 block|{

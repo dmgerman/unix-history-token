@@ -1805,7 +1805,7 @@ name|scp
 operator|->
 name|r_bmio
 argument_list|,
-name|ATA_BDDEVSPEC_1
+name|ATA_BMDEVSPEC_1
 argument_list|)
 operator|&
 literal|0x20

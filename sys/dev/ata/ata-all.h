@@ -1010,7 +1010,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_BDDEVSPEC_1
+name|ATA_BMDEVSPEC_1
 value|0x03
 end_define
 
