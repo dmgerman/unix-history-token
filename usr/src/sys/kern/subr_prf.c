@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.12	%G%	*/
+comment|/*	subr_prf.c	4.13	%G%	*/
 end_comment
 
 begin_include
@@ -706,13 +706,45 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Hard error is the preface to plaintive error messages  * about failing device transfers.  */
+comment|/*  * Warn that a system table is full.  */
+end_comment
+
+begin_macro
+name|tablefull
+argument_list|(
+argument|tab
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|tab
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"%s: table is full\n"
+argument_list|,
+name|tab
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Hard error is the preface to plaintive error messages  * about failing disk transfers.  */
 end_comment
 
 begin_macro
 name|harderr
 argument_list|(
 argument|bp
+argument_list|,
+argument|cp
 argument_list|)
 end_macro
 
@@ -724,11 +756,38 @@ name|bp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|printf
 argument_list|(
-literal|"hard err bn%d "
+literal|"%s%d%c: hard error sn%d "
+argument_list|,
+name|cp
+argument_list|,
+name|dkunit
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+literal|'a'
+operator|+
+operator|(
+name|minor
+argument_list|(
+name|bp
+operator|->
+name|b_dev
+argument_list|)
+operator|&
+literal|07
+operator|)
 argument_list|,
 name|bp
 operator|->
