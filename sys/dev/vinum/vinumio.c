@@ -1375,6 +1375,18 @@ expr_stmt|;
 comment|/* and get a pointer */
 if|if
 condition|(
+name|drive
+operator|->
+name|state
+operator|>=
+name|drive_down
+condition|)
+comment|/* up or down, we know it */
+return|return
+name|drive
+return|;
+if|if
+condition|(
 name|read_drive_label
 argument_list|(
 name|drive
@@ -3658,8 +3670,8 @@ operator|(
 name|drive
 operator|->
 name|state
-operator|!=
-name|drive_up
+operator|<
+name|drive_down
 operator|)
 condition|)
 name|free_drive
@@ -3791,8 +3803,8 @@ operator|(
 name|drive
 operator|->
 name|state
-operator|!=
-name|drive_up
+operator|<
+name|drive_down
 operator|)
 condition|)
 name|free_drive
