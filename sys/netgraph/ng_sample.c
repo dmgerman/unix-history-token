@@ -1112,6 +1112,8 @@ operator|==
 literal|1023
 condition|)
 block|{
+return|return
+operator|(
 name|ng_queue_data
 argument_list|(
 name|hook
@@ -1122,9 +1124,12 @@ name|m
 argument_list|,
 name|meta
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 block|}
+return|return
+operator|(
 name|ng_xxx_rcvdataq
 argument_list|(
 name|hook
@@ -1133,7 +1138,8 @@ name|m
 argument_list|,
 name|meta
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
