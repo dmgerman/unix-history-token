@@ -4746,6 +4746,13 @@ argument_list|()
 condition|)
 block|{
 comment|/* 		 * XXX This lock may not be necessary since BKGRDINPROG 		 * cannot be set while we hold the buf lock, it can only be 		 * cleared if it is already pending. 		 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_vp
+condition|)
+block|{
 name|VI_LOCK
 argument_list|(
 name|bp
@@ -4777,6 +4784,7 @@ operator|->
 name|b_vp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, not even NFS buffers now.  Two flags effect this.  If 	 * B_INVAL, the struct buf is invalidated but the VM object is kept 	 * around ( i.e. so it is trivial to reconstitute the buffer later ). 	 * 	 * If BIO_ERROR or B_NOCACHE is set, pages in the VM object will be 	 * invalidated.  BIO_ERROR cannot be set for a failed write unless the 	 * buffer is also B_INVAL because it hits the re-dirtying code above. 	 * 	 * Normally we can do this whether a buffer is B_DELWRI or not.  If 	 * the buffer is an NFS buffer, it is tracking piecemeal writes or 	 * the commit state and we cannot afford to lose the buffer. If the 	 * buffer has a background write in progress, we need to keep it 	 * around to prevent it from being reconstituted and starting a second 	 * background write. 	 */
 if|if
