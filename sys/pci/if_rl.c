@@ -5639,6 +5639,15 @@ expr_stmt|;
 if|if
 condition|(
 name|status
+operator|==
+literal|0xffff
+condition|)
+goto|goto
+name|done
+goto|;
+if|if
+condition|(
+name|status
 condition|)
 name|CSR_WRITE_2
 argument_list|(
@@ -5805,6 +5814,14 @@ argument_list|,
 name|RL_ISR
 argument_list|)
 expr_stmt|;
+comment|/* If the card has gone away the read returns 0xffff. */
+if|if
+condition|(
+name|status
+operator|==
+literal|0xffff
+condition|)
+break|break;
 if|if
 condition|(
 name|status
