@@ -2433,8 +2433,8 @@ name|hh_nbucket
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|hints_bucket
+operator|*
+name|blist
 argument_list|)
 argument_list|)
 operator|!=
@@ -2448,8 +2448,8 @@ name|hh_nbucket
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|hints_bucket
+operator|*
+name|blist
 argument_list|)
 argument_list|)
 condition|)
@@ -2882,8 +2882,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|hints_bucket
+operator|*
+name|blist
 argument_list|)
 operator|*
 name|hdr
@@ -2920,8 +2920,8 @@ name|hh_hashtab
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|hints_bucket
+operator|*
+name|blist
 argument_list|)
 operator|*
 name|hdr
