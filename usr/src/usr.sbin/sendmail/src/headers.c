@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.12 (Berkeley) %G%"
+literal|"@(#)headers.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2734,7 +2734,8 @@ name|TRUE
 expr_stmt|;
 comment|/* oops -- have to change our mind */
 name|anglelev
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2742,7 +2743,8 @@ operator|!
 name|skipping
 condition|)
 name|realanglelev
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 name|bp
 operator|=
@@ -2947,6 +2949,10 @@ literal|0
 condition|)
 name|bp
 operator|--
+expr_stmt|;
+name|quoteit
+operator|=
+name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
