@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lprm.c	5.6 (Berkeley) %G%"
+literal|"@(#)lprm.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,67 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lp.local.h"
 end_include
 
 begin_comment
@@ -138,7 +198,20 @@ begin_comment
 comment|/* buffer for person */
 end_comment
 
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -163,19 +236,6 @@ name|struct
 name|passwd
 modifier|*
 name|p
-decl_stmt|;
-name|struct
-name|direct
-modifier|*
-modifier|*
-name|files
-decl_stmt|;
-name|int
-name|nitems
-decl_stmt|,
-name|assasinated
-init|=
-literal|0
 decl_stmt|;
 name|name
 operator|=
@@ -434,15 +494,18 @@ expr_stmt|;
 name|rmjob
 argument_list|()
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
@@ -457,7 +520,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

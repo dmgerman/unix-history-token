@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pac.c	5.5 (Berkeley) %G%"
+literal|"@(#)pac.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,37 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lp.h"
 end_include
 
 begin_include
@@ -205,21 +235,6 @@ begin_comment
 comment|/* per-page cost in 100th of a cent */
 end_comment
 
-begin_function_decl
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pgetnum
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Grossness follows:  *  Names to be accumulated are hashed into the following  *  table.  */
 end_comment
@@ -277,65 +292,143 @@ begin_comment
 comment|/* Hash table proper */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|int
+name|account
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|any
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|chkprinter
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|dumpit
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|hash
+name|__P
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|hent
 modifier|*
 name|enter
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|hent
 modifier|*
 name|lookup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|NIL
-value|((struct hent *) 0)
-end_define
-
-begin_comment
-comment|/* The big zero */
-end_comment
-
-begin_function_decl
-name|double
-name|atof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|pgetstr
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|int
+name|qucmp
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|rewrite
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -597,19 +690,17 @@ begin_comment
 comment|/*  * Read the entire accounting file, accumulating statistics  * for the users that we have in the hash table.  If allflag  * is set, then just gather the facts on everyone.  * Note that we must accomodate both the active and summary file  * formats here.  * Host names are ignored if the -m flag is present.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|account
-argument_list|(
+parameter_list|(
 name|acct
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|acct
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 name|linebuf
@@ -766,7 +857,7 @@ if|if
 condition|(
 name|hp
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -807,18 +898,16 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Sort the hashed entries by name or footage  * and print it all out.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dumpit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|hent
@@ -847,10 +936,6 @@ decl_stmt|;
 name|float
 name|feet
 decl_stmt|;
-name|int
-name|qucmp
-parameter_list|()
-function_decl|;
 name|hp
 operator|=
 name|hashtab
@@ -899,7 +984,7 @@ while|while
 condition|(
 name|hp
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|hp
 operator|=
@@ -1031,18 +1116,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Rewrite the summary file with the summary information we have accumulated.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rewrite
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1194,7 +1277,7 @@ name|acctf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Hashing routines.  */
@@ -1238,7 +1321,7 @@ name|name
 argument_list|)
 operator|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1384,7 +1467,7 @@ index|]
 init|;
 name|hp
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|hp
 operator|=
@@ -1412,7 +1495,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1422,21 +1505,16 @@ begin_comment
 comment|/*  * Hash the passed name and return the index in  * the hash table to begin the search.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|hash
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 name|name
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1485,29 +1563,27 @@ name|HSHSIZE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Other stuff  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|any
-argument_list|(
-argument|ch
-argument_list|,
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ch
+parameter_list|,
+name|str
+parameter_list|)
+name|int
+name|ch
+decl_stmt|;
 name|char
 name|str
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1546,33 +1622,29 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The qsort comparison routine.  * The comparison is ascii collating order  * or by feet of typesetter film, according to sort.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|qucmp
-argument_list|(
-argument|left
-argument_list|,
-argument|right
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|hent
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+specifier|const
+name|void
 modifier|*
-modifier|*
-name|left
+name|a
 decl_stmt|,
-modifier|*
-modifier|*
-name|right
+decl|*
+name|b
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1592,12 +1664,24 @@ decl_stmt|;
 name|h1
 operator|=
 operator|*
-name|left
+operator|(
+expr|struct
+name|hent
+operator|*
+operator|*
+operator|)
+name|a
 expr_stmt|;
 name|h2
 operator|=
 operator|*
-name|right
+operator|(
+expr|struct
+name|hent
+operator|*
+operator|*
+operator|)
+name|b
 expr_stmt|;
 if|if
 condition|(
@@ -1655,19 +1739,17 @@ begin_comment
 comment|/*  * Perform lookup for printer name or abbreviation --  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|chkprinter
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -1843,7 +1925,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

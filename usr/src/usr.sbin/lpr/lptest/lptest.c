@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lptest.c	5.4 (Berkeley) %G%"
+literal|"@(#)lptest.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,9 +52,11 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * lptest -- line printer test program (and other devices).  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -62,7 +64,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_comment
+comment|/*  * lptest -- line printer test program (and other devices).  */
+end_comment
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -223,6 +230,11 @@ operator|)
 name|fflush
 argument_list|(
 name|stdout
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
