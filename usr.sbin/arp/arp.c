@@ -53,7 +53,7 @@ specifier|const
 name|freebsdid
 index|[]
 init|=
-literal|"$Id: arp.c,v 1.9 1997/02/22 16:04:19 peter Exp $"
+literal|"$Id: arp.c,v 1.10 1997/03/31 05:09:46 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2109,10 +2109,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|host
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|,
 modifier|*
 name|lim

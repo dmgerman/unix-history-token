@@ -1268,10 +1268,6 @@ decl_stmt|,
 modifier|*
 name|strcpy
 argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 name|p
 operator|=
