@@ -281,6 +281,24 @@ name|PCIR_HDRTYPE
 value|0x0e
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PCIR_HEADERTYPE
+value|PCIR_HDRTYPE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
