@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -122,11 +122,6 @@ begin_struct
 struct|struct
 name|tp_ref
 block|{
-comment|/*	u_char	 			tpr_state; /* values REF_FROZEN, etc. above */
-define|#
-directive|define
-name|tpr_state
-value|tpr_pcb->tp_refstate
 name|struct
 name|tp_pcb
 modifier|*
@@ -136,6 +131,10 @@ comment|/* back ptr to PCB */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* PER system stuff (one static structure instead of a bunch of names) */
+end_comment
 
 begin_struct
 struct|struct
@@ -155,21 +154,6 @@ decl_stmt|;
 name|int
 name|tpr_numopen
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|tp_param
-block|{
-comment|/* PER system stuff (one static structure instead of a bunch of names) */
-name|unsigned
-name|tpp_configed
-range|:
-literal|1
-decl_stmt|;
-comment|/* Has TP been initialized? */
 block|}
 struct|;
 end_struct
@@ -797,11 +781,6 @@ name|TM_NTIMERS
 index|]
 decl_stmt|;
 comment|/* C timers */
-name|struct
-name|Ecallarg
-name|tp_retransargs
-decl_stmt|;
-comment|/* dunt ask ... */
 name|struct
 name|sockbuf
 name|tp_Xsnd
