@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.3 1995/02/26 20:13:14 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.4 1995/03/02 07:40:26 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -2022,7 +2022,7 @@ argument_list|)
 name|DEBUGDO
 argument_list|(
 argument|printf(
-literal|"Physical address = %x\n"
+literal|"Physical address = %lx\n"
 argument|, kvtop(sc->maddr));
 argument_list|)
 name|DEBUGEND
@@ -3933,7 +3933,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  rfd_head = %x\t\trfd_tail = %x\n"
+literal|"  rfd_head = %lx\t\trfd_tail = %lx\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -3952,7 +3952,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  rbd_head = %x\t\trbd_tail = %x\n"
+literal|"  rbd_head = %lx\t\trbd_tail = %lx\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -3995,7 +3995,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"  %d:\trfd = %x\t\trbd = %x\t\trb = %x\n"
+literal|"  %d:\trfd = %lx\t\trbd = %lx\t\trb = %lx\n"
 argument_list|,
 name|i
 argument_list|,
@@ -4052,7 +4052,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\trbd->buffer = %x\n\n"
+literal|"\trbd->buffer = %lx\n\n"
 argument_list|,
 name|rbd
 operator|->
@@ -4073,7 +4073,7 @@ name|DEBUGDO
 argument_list|(
 name|printf
 argument_list|(
-literal|"  next rb would be at %x\n"
+literal|"  next rb would be at %lx\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -4464,7 +4464,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  cb_head = %x\t\tcb_tail = %x\n"
+literal|"  cb_head = %lx\t\tcb_tail = %lx\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -4483,7 +4483,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  tbd_head = %x\t\ttbd_tail = %x\n"
+literal|"  tbd_head = %lx\t\ttbd_tail = %lx\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -4526,7 +4526,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"  %d:\tcb = %x\t\ttbd = %x\t\ttb = %x\n"
+literal|"  %d:\tcb = %lx\t\ttbd = %lx\t\ttb = %lx\n"
 argument_list|,
 name|i
 argument_list|,
@@ -4592,7 +4592,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\ttbd->buffer = %x\n\n"
+literal|"\ttbd->buffer = %lx\n\n"
 argument_list|,
 name|tbd
 operator|->
@@ -4613,7 +4613,7 @@ name|DEBUGDO
 argument_list|(
 name|printf
 argument_list|(
-literal|"  next tb would be at %x\n"
+literal|"  next tb would be at %lx\n"
 argument_list|,
 name|kvtop
 argument_list|(
