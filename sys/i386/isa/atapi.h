@@ -511,12 +511,67 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AER_SK_BLANK_CHECK
+value|0x80
+end_define
+
+begin_comment
+comment|/* blank check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_VENDOR_SPECIFIC
+value|0x90
+end_define
+
+begin_comment
+comment|/* vendor specific skey */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_COPY_ABORTED
+value|0xa0
+end_define
+
+begin_comment
+comment|/* copy aborted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AER_SK_ABORTED_COMMAND
 value|0xb0
 end_define
 
 begin_comment
 comment|/* command aborted, try again */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_EQUAL
+value|0xc0
+end_define
+
+begin_comment
+comment|/* equal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_VOLUME_OVERFLOW
+value|0xd0
+end_define
+
+begin_comment
+comment|/* volume overflow */
 end_comment
 
 begin_define
@@ -529,6 +584,13 @@ end_define
 begin_comment
 comment|/* data did not match the medium */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AER_SK_RESERVED
+value|0xf0
+end_define
 
 begin_define
 define|#
@@ -670,6 +732,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_REZERO_UNIT
+value|0x01
+end_define
+
+begin_comment
+comment|/* reinit device */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_REQUEST_SENSE
 value|0x03
 end_define
@@ -736,12 +809,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_READ_TOC
-value|0x43
+name|ATAPI_SYNCHRONIZE_CACHE
+value|0x35
 end_define
 
 begin_comment
-comment|/* get table of contents */
+comment|/* flush write buf, close write chan */
 end_comment
 
 begin_define
@@ -758,7 +831,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATAPI_MODE_SELECT_BIG
+name|ATAPI_READ_TOC
+value|0x43
+end_define
+
+begin_comment
+comment|/* get table of contents */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_READ_TRACK_INFO
+value|0x52
+end_define
+
+begin_comment
+comment|/* get track information structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_MODE_SELECT
 value|0x55
 end_define
 
@@ -780,12 +875,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_CLOSE_TRACK
+value|0x5b
+end_define
+
+begin_comment
+comment|/* close track/session */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_LOAD_UNLOAD
+value|0xa6
+end_define
+
+begin_comment
+comment|/* changer control command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATAPI_PLAY_CD
 value|0xb4
 end_define
 
 begin_comment
 comment|/* universal play command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_MECH_STATUS
+value|0xbd
+end_define
+
+begin_comment
+comment|/* get changer mechanism status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_READ_CD
+value|0xbe
+end_define
+
+begin_comment
+comment|/* read data */
 end_comment
 
 begin_comment
@@ -839,6 +978,13 @@ end_define
 begin_comment
 comment|/* play by logical block address */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DSC_POLL_INTERVAL
+value|10
+end_define
 
 begin_comment
 comment|/*  * Drive parameter information  */
@@ -1195,6 +1341,12 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
+name|buf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|wcd
 struct_decl|;
 end_struct_decl
@@ -1321,7 +1473,21 @@ name|accel
 range|:
 literal|1
 decl_stmt|;
-comment|/* accelerated device */
+comment|/* accelerated reaction device */
+name|u_char
+name|use_dsc
+range|:
+literal|1
+decl_stmt|;
+comment|/* use DSC completition handeling */
+name|u_char
+name|wait_for_dsc
+range|:
+literal|1
+decl_stmt|;
+name|u_int
+name|dsc_timeout
+decl_stmt|;
 name|u_char
 name|attached
 index|[
@@ -1772,6 +1938,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ATAPI_MODE_SELECT_BIG
+value|0x55
+end_define
+
+begin_comment
+comment|/* set device parameters */
+end_comment
 
 end_unit
 

@@ -938,7 +938,13 @@ decl_stmt|;
 name|u_char
 name|sub_hdr_byte3
 decl_stmt|;
-comment|/* 	u_char 	vendor_specific_byte0; 	u_char 	vendor_specific_byte1; 	u_char 	vendor_specific_byte2; 	u_char 	vendor_specific_byte3; */
+if|#
+directive|if
+literal|0
+comment|/* these are reserved bytes, should not be read */
+block|u_char 	vendor_specific_byte0; 	u_char 	vendor_specific_byte1; 	u_char 	vendor_specific_byte2; 	u_char 	vendor_specific_byte3;
+endif|#
+directive|endif
 block|}
 name|__attribute__
 argument_list|(
@@ -1197,6 +1203,10 @@ name|wormio_prepare_track
 name|preptrack
 decl_stmt|;
 comment|/* Scratch region */
+name|u_long
+name|starting_lba
+decl_stmt|;
+comment|/* for multitrack */
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -1222,6 +1232,30 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|atapireq
+block|{
+name|u_char
+name|cmd
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|caddr_t
+name|databuf
+decl_stmt|;
+name|int
+name|datalen
+decl_stmt|;
+name|struct
+name|atapires
+name|result
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -1238,6 +1272,13 @@ define|#
 directive|define
 name|CDRIOCNEXTWRITEABLEADDR
 value|_IOR('c',101,int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CDRIOCATAPIREQ
+value|_IOWR('c',102,struct atapireq)
 end_define
 
 end_unit

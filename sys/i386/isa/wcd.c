@@ -959,6 +959,9 @@ literal|80
 index|]
 decl_stmt|;
 comment|/* Device description */
+name|int
+name|starting_lba
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -1437,6 +1440,12 @@ operator|->
 name|flags
 operator|=
 name|F_MEDIA_CHANGED
+expr_stmt|;
+name|t
+operator|->
+name|starting_lba
+operator|=
+literal|0
 expr_stmt|;
 name|t
 operator|->
@@ -2300,6 +2309,15 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|int
+name|track
+init|=
+name|dkslice
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|wcd
 modifier|*
@@ -2407,6 +2425,45 @@ name|flags
 operator||=
 name|F_BOPEN
 expr_stmt|;
+name|t
+operator|->
+name|starting_lba
+operator|=
+name|ntohl
+argument_list|(
+name|t
+operator|->
+name|toc
+operator|.
+name|tab
+index|[
+name|track
+index|]
+operator|.
+name|addr
+operator|.
+name|lba
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|track
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning, opening track %d at %d\n"
+argument_list|,
+name|track
+argument_list|,
+name|t
+operator|->
+name|starting_lba
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -2887,6 +2944,10 @@ block|}
 comment|/* We have a buf, now we should make a command 	 * First, translate the block to absolute and put it in terms of the 	 * logical blocksize of the device. 	 * What if something asks for 512 bytes not on a 2k boundary? */
 name|blkno
 operator|=
+name|t
+operator|->
+name|starting_lba
+operator|+
 name|bp
 operator|->
 name|b_blkno

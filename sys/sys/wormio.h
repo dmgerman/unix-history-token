@@ -144,6 +144,13 @@ name|WORMIOCFINISHTRACK
 value|_IO('W', 23)
 end_define
 
+begin_define
+define|#
+directive|define
+name|WORMIOCFINISHTRACK
+value|_IO('W', 23)
+end_define
+
 begin_endif
 endif|#
 directive|endif
