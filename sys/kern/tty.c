@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	8.8 (Berkeley) 1/21/94  * $Id: tty.c,v 1.60 1995/07/30 13:52:56 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	8.8 (Berkeley) 1/21/94  * $Id: tty.c,v 1.61 1995/07/31 18:29:28 bde Exp $  */
 end_comment
 
 begin_comment
@@ -171,6 +171,7 @@ operator|(
 expr|struct
 name|tty
 operator|*
+name|tp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -184,6 +185,78 @@ name|__P
 argument_list|(
 operator|(
 name|int
+name|c
+operator|,
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ttyoutput
+name|__P
+argument_list|(
+operator|(
+name|int
+name|c
+operator|,
+specifier|register
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ttypend
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ttyretype
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ttyrub
+name|__P
+argument_list|(
+operator|(
+name|int
+name|c
 operator|,
 expr|struct
 name|tty
@@ -204,8 +277,10 @@ operator|(
 expr|struct
 name|tty
 operator|*
+name|tp
 operator|,
 name|int
+name|cnt
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1598,13 +1673,13 @@ name|tp
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|tcflag_t
 name|iflag
 decl_stmt|,
 name|lflag
 decl_stmt|;
 specifier|register
-name|u_char
+name|cc_t
 modifier|*
 name|cc
 decl_stmt|;
@@ -2737,16 +2812,6 @@ argument_list|)
 condition|)
 block|{
 name|int
-name|alt
-init|=
-name|ISSET
-argument_list|(
-name|lflag
-argument_list|,
-name|ALTWERASE
-argument_list|)
-decl_stmt|;
-name|int
 name|ctype
 decl_stmt|;
 comment|/* 			 * erase whitespace 			 */
@@ -2892,9 +2957,13 @@ operator|!=
 literal|'\t'
 operator|&&
 operator|(
-name|alt
-operator|==
-literal|0
+operator|!
+name|ISSET
+argument_list|(
+name|lflag
+argument_list|,
+name|ALTWERASE
+argument_list|)
 operator|||
 name|ISALPHA
 argument_list|(
@@ -3273,7 +3342,7 @@ block|{
 comment|/* 			 * Place the cursor over the '^' of the ^D. 			 */
 name|i
 operator|=
-name|min
+name|imin
 argument_list|(
 literal|2
 argument_list|,
@@ -3382,6 +3451,7 @@ comment|/*  * Output a single character on a tty, doing output processing  * as 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ttyoutput
 parameter_list|(
@@ -3401,7 +3471,7 @@ name|tp
 decl_stmt|;
 block|{
 specifier|register
-name|long
+name|tcflag_t
 name|oflag
 decl_stmt|;
 specifier|register
@@ -5556,8 +5626,6 @@ name|p
 decl_stmt|;
 block|{
 name|int
-name|nread
-decl_stmt|,
 name|s
 decl_stmt|;
 if|if
@@ -5584,16 +5652,12 @@ block|{
 case|case
 name|FREAD
 case|:
-name|nread
-operator|=
+if|if
+condition|(
 name|ttnread
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nread
 operator|>
 literal|0
 operator|||
@@ -5997,6 +6061,11 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+condition|)
+block|{
+if|if
+condition|(
+name|error
 operator|==
 name|EWOULDBLOCK
 condition|)
@@ -6004,12 +6073,11 @@ name|error
 operator|=
 name|EIO
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 break|break;
 block|}
+block|}
+else|else
+break|break;
 block|}
 if|if
 condition|(
@@ -6955,6 +7023,7 @@ comment|/*  * Reinput pending characters after state switch  * call at spltty().
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ttypend
 parameter_list|(
@@ -6972,8 +7041,9 @@ name|clist
 name|tq
 decl_stmt|;
 specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 name|CLR
 argument_list|(
 name|tp
@@ -7890,7 +7960,7 @@ name|icc
 decl_stmt|;
 name|icc
 operator|=
-name|min
+name|imin
 argument_list|(
 name|uio
 operator|->
@@ -8462,7 +8532,7 @@ name|char
 modifier|*
 name|cp
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|register
 name|int
@@ -8798,7 +8868,7 @@ condition|)
 block|{
 name|cc
 operator|=
-name|min
+name|imin
 argument_list|(
 name|uio
 operator|->
@@ -9310,6 +9380,7 @@ comment|/*  * Rubout one character from the rawq of tp  * as cleanly as possible
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ttyrub
 parameter_list|(
@@ -9846,6 +9917,7 @@ comment|/*  * ttyretype --  *	Reprint the rawq line.  Note, it is assumed that c
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ttyretype
 parameter_list|(
