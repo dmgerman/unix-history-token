@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.11 (Berkeley) 84/06/03"
+literal|"@(#)main.c	4.12 (Berkeley) 84/10/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,6 +217,14 @@ name|N_UNIXSW
 value|17
 block|{
 literal|"_unixsw"
+block|}
+block|,
+define|#
+directive|define
+name|N_RTHASHSIZE
+value|18
+block|{
+literal|"_rthashsize"
 block|}
 block|,
 literal|""
@@ -1043,6 +1051,13 @@ argument_list|,
 name|nl
 index|[
 name|N_RTNET
+index|]
+operator|.
+name|n_value
+argument_list|,
+name|nl
+index|[
+name|N_RTHASHSIZE
 index|]
 operator|.
 name|n_value

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	4.8 84/05/17"
+literal|"@(#)route.c	4.9 84/10/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,16 +43,6 @@ include|#
 directive|include
 file|<net/if.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
-begin_comment
-comment|/* to get routehash and RTHASHSIZ */
-end_comment
 
 begin_include
 include|#
@@ -149,6 +139,8 @@ argument_list|(
 argument|hostaddr
 argument_list|,
 argument|netaddr
+argument_list|,
+argument|hashsizeaddr
 argument_list|)
 end_macro
 
@@ -157,6 +149,8 @@ name|off_t
 name|hostaddr
 decl_stmt|,
 name|netaddr
+decl_stmt|,
+name|hashsizeaddr
 decl_stmt|;
 end_decl_stmt
 
@@ -184,16 +178,6 @@ name|bits
 modifier|*
 name|p
 decl_stmt|;
-name|struct
-name|netent
-modifier|*
-name|np
-decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
-decl_stmt|;
 name|char
 name|name
 index|[
@@ -206,20 +190,17 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 name|routehash
-index|[
-name|RTHASHSIZ
-index|]
 decl_stmt|;
 name|struct
 name|ifnet
 name|ifnet
 decl_stmt|;
 name|int
-name|first
-init|=
-literal|1
-decl_stmt|,
+name|hashsize
+decl_stmt|;
+name|int
 name|i
 decl_stmt|,
 name|doinghost
@@ -254,6 +235,62 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|hashsizeaddr
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rthashsize: symbol not in namelist\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|klseek
+argument_list|(
+name|kmem
+argument_list|,
+name|hashsizeaddr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|read
+argument_list|(
+name|kmem
+argument_list|,
+operator|&
+name|hashsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hashsize
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|routehash
+operator|=
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|hashsize
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mbuf
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|klseek
 argument_list|(
 name|kmem
@@ -269,9 +306,13 @@ name|kmem
 argument_list|,
 name|routehash
 argument_list|,
+name|hashsize
+operator|*
 sizeof|sizeof
 argument_list|(
-name|routehash
+expr|struct
+name|mbuf
+operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -307,7 +348,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|RTHASHSIZ
+name|hashsize
 condition|;
 name|i
 operator|++
@@ -593,9 +634,13 @@ name|kmem
 argument_list|,
 name|routehash
 argument_list|,
+name|hashsize
+operator|*
 sizeof|sizeof
 argument_list|(
-name|routehash
+expr|struct
+name|mbuf
+operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -607,6 +652,11 @@ goto|goto
 name|again
 goto|;
 block|}
+name|free
+argument_list|(
+name|routehash
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -704,17 +754,6 @@ operator|=
 name|np
 operator|->
 name|n_name
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|net
-operator|==
-literal|0
-condition|)
-name|cp
-operator|=
-literal|"default"
 expr_stmt|;
 block|}
 elseif|else
