@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_inode.c	4.7	81/11/08	*/
+comment|/*	ffs_inode.c	4.8	82/02/15	*/
 end_comment
 
 begin_include
@@ -1933,7 +1933,9 @@ name|i_gid
 operator|=
 name|u
 operator|.
-name|u_gid
+name|u_pdir
+operator|->
+name|i_gid
 expr_stmt|;
 comment|/* 	 * Make sure inode goes to disk before directory entry. 	 */
 name|iupdat
