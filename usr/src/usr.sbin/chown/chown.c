@@ -35,7 +35,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.2 (Berkeley) %G%"
+literal|"@(#)chown.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|gid
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|group
 operator|=
 name|index
@@ -340,11 +345,21 @@ name|grp
 operator|->
 name|gr_gid
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|endgrent
 argument_list|()
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|*
+name|group
+operator|!=
+literal|'\0'
+condition|)
 name|gid
 operator|=
 name|atoi
@@ -458,18 +473,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|group
-operator|==
-name|NULL
-condition|)
-name|gid
-operator|=
-name|stbuf
-operator|.
-name|st_gid
-expr_stmt|;
-if|if
-condition|(
 name|rflag
 operator|&&
 name|stbuf
@@ -487,10 +490,6 @@ name|argv
 index|[
 name|c
 index|]
-argument_list|,
-name|group
-operator|!=
-name|NULL
 argument_list|,
 name|uid
 argument_list|,
@@ -590,11 +589,9 @@ name|chownr
 argument_list|(
 argument|dir
 argument_list|,
-argument|dogrp
-argument_list|,
 argument|uid
 argument_list|,
-argument|ogid
+argument|gid
 argument_list|)
 end_macro
 
@@ -618,7 +615,6 @@ name|direct
 modifier|*
 name|dp
 decl_stmt|;
-specifier|register
 name|struct
 name|stat
 name|st
@@ -631,9 +627,13 @@ index|]
 decl_stmt|;
 name|int
 name|ecode
-decl_stmt|,
-name|gid
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|getwd
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|getwd
@@ -641,6 +641,10 @@ argument_list|(
 name|savedir
 argument_list|)
 operator|==
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 condition|)
 name|fatal
@@ -661,7 +665,7 @@ name|dir
 argument_list|,
 name|uid
 argument_list|,
-name|ogid
+name|gid
 argument_list|)
 operator|<
 literal|0
@@ -791,21 +795,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|dogrp
-condition|)
-name|gid
-operator|=
-name|ogid
-expr_stmt|;
-else|else
-name|gid
-operator|=
-name|st
-operator|.
-name|st_gid
-expr_stmt|;
-if|if
-condition|(
 name|st
 operator|.
 name|st_mode
@@ -820,8 +809,6 @@ argument_list|(
 name|dp
 operator|->
 name|d_name
-argument_list|,
-name|dogrp
 argument_list|,
 name|uid
 argument_list|,
