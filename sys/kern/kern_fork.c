@@ -1790,13 +1790,6 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX: for VREF() */
 name|PROC_LOCK
 argument_list|(
 name|p2
@@ -2144,7 +2137,6 @@ name|p_sigparent
 operator|=
 name|SIGCHLD
 expr_stmt|;
-comment|/* Bump references to the text vnode (for procfs) */
 name|p2
 operator|->
 name|p_textvp
@@ -2153,26 +2145,6 @@ name|p1
 operator|->
 name|p_textvp
 expr_stmt|;
-if|if
-condition|(
-name|p2
-operator|->
-name|p_textvp
-condition|)
-name|VREF
-argument_list|(
-name|p2
-operator|->
-name|p_textvp
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* XXX: for VREF() */
 name|p2
 operator|->
 name|p_fd
@@ -2205,6 +2177,20 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p2
+argument_list|)
+expr_stmt|;
+comment|/* Bump references to the text vnode (for procfs) */
+if|if
+condition|(
+name|p2
+operator|->
+name|p_textvp
+condition|)
+name|vref
+argument_list|(
+name|p2
+operator|->
+name|p_textvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up linkage for kernel based threading. 	 */
