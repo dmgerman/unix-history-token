@@ -376,7 +376,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	_thread_sys_write(1, buf, strlen(buf));	\ } while (0)
+value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	__sys_write(1, buf, strlen(buf));	\ } while (0)
 end_define
 
 begin_define
@@ -387,7 +387,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	_thread_sys_write(2, buf, strlen(buf));	\ } while (0)
+value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	__sys_write(2, buf, strlen(buf));	\ } while (0)
 end_define
 
 begin_comment
