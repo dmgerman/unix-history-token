@@ -6078,7 +6078,7 @@ decl_stmt|;
 name|long
 name|rem
 decl_stmt|;
-name|int
+name|long
 name|y
 decl_stmt|;
 name|int
@@ -6469,7 +6469,7 @@ argument_list|)
 index|]
 condition|)
 block|{
-name|int
+name|long
 name|newy
 decl_stmt|;
 name|newy
@@ -7419,17 +7419,6 @@ name|time_t
 argument_list|)
 operator|-
 literal|1
-expr_stmt|;
-comment|/* 	 * Limit to 32 bits or the things go crazy 	 * when it tries to figure out times near 2^62 etc. 	 */
-if|if
-condition|(
-name|bits
-operator|>
-literal|31
-condition|)
-name|bits
-operator|=
-literal|31
 expr_stmt|;
 comment|/* 	** If time_t is signed, then 0 is just above the median, 	** assuming two's complement arithmetic. 	** If time_t is unsigned, then (1<< bits) is just above the median. 	*/
 name|t
