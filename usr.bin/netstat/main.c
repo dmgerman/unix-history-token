@@ -252,7 +252,7 @@ directive|define
 name|N_UNIXSW
 value|10
 block|{
-literal|"_unixsw"
+literal|"_localsw"
 block|}
 block|,
 define|#
