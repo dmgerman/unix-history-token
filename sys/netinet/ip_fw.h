@@ -554,6 +554,11 @@ name|u_int8_t
 name|set
 decl_stmt|;
 comment|/* rule set (0..31)		*/
+define|#
+directive|define
+name|RESVD_SET
+value|31
+comment|/* set for default and persistent rules */
 name|u_int8_t
 name|_pad
 decl_stmt|;

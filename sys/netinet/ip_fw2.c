@@ -327,7 +327,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set 31 is reserved for the default rule  * and CANNOT be disabled.  */
+comment|/*  * set_disable contains one bit per set value (0..31).  * If the bit is set, all rules with the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted explicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -9010,7 +9010,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Deletes all rules from a chain (including the default rule  * if the second argument is set).  * Must be called at splimp().  */
+comment|/*  * Deletes all rules from a chain (except rules in set RESVD_SET  * unless kill_default = 1).  * Must be called at splimp().  */
 end_comment
 
 begin_function
@@ -9031,47 +9031,68 @@ block|{
 name|struct
 name|ip_fw
 modifier|*
+name|prev
+decl_stmt|,
+modifier|*
 name|rule
 decl_stmt|;
 name|flush_rule_ptrs
 argument_list|()
 expr_stmt|;
 comment|/* more efficient to do outside the loop */
-while|while
-condition|(
-operator|(
+for|for
+control|(
+name|prev
+operator|=
+name|NULL
+operator|,
 name|rule
 operator|=
 operator|*
 name|chain
-operator|)
-operator|!=
-name|NULL
-operator|&&
-operator|(
+init|;
+name|rule
+condition|;
+control|)
+if|if
+condition|(
 name|kill_default
 operator|||
 name|rule
 operator|->
-name|rulenum
+name|set
 operator|!=
-name|IPFW_DEFAULT_RULE
-operator|)
+name|RESVD_SET
 condition|)
+name|rule
+operator|=
 name|delete_rule
 argument_list|(
 name|chain
 argument_list|,
-name|NULL
+name|prev
 argument_list|,
 name|rule
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|prev
+operator|=
+name|rule
+expr_stmt|;
+name|rule
+operator|=
+name|rule
+operator|->
+name|next
+expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/**  * Remove all rules with given number, and also do set manipulation.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *  *	0	delete rules with given number  *	1	delete rules with given set number  *	2	move rules with given number to new set  *	3	move rules with given set number to new set  *	4	swap sets with given numbers  */
+comment|/**  * Remove all rules with given number, and also do set manipulation.  * Assumes chain != NULL&& *chain != NULL.  *  * The argument is an u_int32_t. The low 16 bit are the rule or set number,  * the next 8 bits are the new set, the top 8 bits are the command:  *  *	0	delete rules with given number  *	1	delete rules with given set number  *	2	move rules with given number to new set  *	3	move rules with given set number to new set  *	4	swap sets with given numbers  */
 end_comment
 
 begin_function
@@ -9093,9 +9114,14 @@ name|struct
 name|ip_fw
 modifier|*
 name|prev
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|rule
+init|=
+operator|*
+name|chain
 decl_stmt|;
 name|int
 name|s
@@ -9103,6 +9129,7 @@ decl_stmt|;
 name|u_int16_t
 name|rulenum
 decl_stmt|;
+comment|/* rule or old_set */
 name|u_int8_t
 name|cmd
 decl_stmt|,
@@ -9147,7 +9174,7 @@ if|if
 condition|(
 name|new_set
 operator|>
-literal|30
+name|RESVD_SET
 condition|)
 return|return
 name|EINVAL
@@ -9166,7 +9193,7 @@ block|{
 if|if
 condition|(
 name|rulenum
-operator|==
+operator|>=
 name|IPFW_DEFAULT_RULE
 condition|)
 return|return
@@ -9179,8 +9206,9 @@ if|if
 condition|(
 name|rulenum
 operator|>
-literal|30
+name|RESVD_SET
 condition|)
+comment|/* old_set */
 return|return
 name|EINVAL
 return|;
@@ -9197,17 +9225,7 @@ comment|/* delete rules with given number */
 comment|/* 		 * locate first rule to delete 		 */
 for|for
 control|(
-name|prev
-operator|=
-name|NULL
-operator|,
-name|rule
-operator|=
-operator|*
-name|chain
 init|;
-name|rule
-operator|&&
 name|rule
 operator|->
 name|rulenum
@@ -9249,8 +9267,6 @@ expr_stmt|;
 while|while
 condition|(
 name|rule
-operator|&&
-name|rule
 operator|->
 name|rulenum
 operator|==
@@ -9285,20 +9301,14 @@ expr_stmt|;
 name|flush_rule_ptrs
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|prev
-operator|=
-name|NULL
-operator|,
+while|while
+condition|(
 name|rule
-operator|=
-operator|*
-name|chain
-init|;
-name|rule
-condition|;
-control|)
+operator|->
+name|rulenum
+operator|<
+name|IPFW_DEFAULT_RULE
+condition|)
 if|if
 condition|(
 name|rule
@@ -9348,12 +9358,12 @@ argument_list|()
 expr_stmt|;
 for|for
 control|(
-name|rule
-operator|=
-operator|*
-name|chain
 init|;
 name|rule
+operator|->
+name|rulenum
+operator|<
+name|IPFW_DEFAULT_RULE
 condition|;
 name|rule
 operator|=
@@ -9392,12 +9402,12 @@ argument_list|()
 expr_stmt|;
 for|for
 control|(
-name|rule
-operator|=
-operator|*
-name|chain
 init|;
 name|rule
+operator|->
+name|rulenum
+operator|<
+name|IPFW_DEFAULT_RULE
 condition|;
 name|rule
 operator|=
@@ -9436,12 +9446,12 @@ argument_list|()
 expr_stmt|;
 for|for
 control|(
-name|rule
-operator|=
-operator|*
-name|chain
 init|;
 name|rule
+operator|->
+name|rulenum
+operator|<
+name|IPFW_DEFAULT_RULE
 condition|;
 name|rule
 operator|=
@@ -11077,10 +11087,10 @@ operator|~
 operator|(
 literal|1
 operator|<<
-literal|31
+name|RESVD_SET
 operator|)
 expr_stmt|;
-comment|/* set 31 always enabled */
+comment|/* set RESVD_SET always enabled */
 else|else
 name|error
 operator|=
@@ -11446,7 +11456,7 @@ name|default_rule
 operator|.
 name|set
 operator|=
-literal|31
+name|RESVD_SET
 expr_stmt|;
 name|default_rule
 operator|.
