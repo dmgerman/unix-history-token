@@ -4605,6 +4605,11 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|status
+operator|)
+return|;
 block|}
 end_function
 
