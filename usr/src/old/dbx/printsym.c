@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c 1.8 %G%"
+literal|"@(#)printsym.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,9 +774,6 @@ name|FILET
 case|:
 case|case
 name|SET
-case|:
-case|case
-name|VARNT
 case|:
 case|case
 name|BADUSE
