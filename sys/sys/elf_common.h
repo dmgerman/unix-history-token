@@ -213,6 +213,28 @@ name|ELFMAG3
 value|'F'
 end_define
 
+begin_define
+define|#
+directive|define
+name|ELFMAG
+value|"\177ELF"
+end_define
+
+begin_comment
+comment|/* magic string */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SELFMAG
+value|4
+end_define
+
+begin_comment
+comment|/* magic string size */
+end_comment
+
 begin_comment
 comment|/* Values for e_ident[EI_VERSION] and e_version. */
 end_comment
@@ -1005,6 +1027,17 @@ end_define
 
 begin_comment
 comment|/* dynamic symbol table section */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_NUM
+value|12
+end_define
+
+begin_comment
+comment|/* number of section types */
 end_comment
 
 begin_define
