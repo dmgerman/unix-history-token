@@ -3680,9 +3680,9 @@ literal|0x14d2
 block|,
 literal|0x8080
 block|,
-literal|0x14d2
+literal|0
 block|,
-literal|0x8080
+literal|0
 block|}
 block|,
 block|{
@@ -3690,9 +3690,9 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-literal|0xffff
+literal|0
 block|,
-literal|0xffff
+literal|0
 block|}
 block|,
 block|{
