@@ -4,7 +4,7 @@ comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: db_disasm.c,v $  * Revision 1.1  1992/03/25  21:42:01  pace  * Initial revision  *  * Revision 2.3  91/02/05  17:11:03  mrt  * 	Changed to new Mach copyright  * 	[91/02/01  17:31:03  mrt]  *   * Revision 2.2  90/08/27  21:55:56  dbg  * 	Fix register operand for move to/from control/test/debug  * 	register instructions.  Add i486 instructions.  * 	[90/08/27            dbg]  *   * 	Import db_sym.h.  Print instruction displacements in  * 	current radix (signed).  Change calling sequence of  * 	db_disasm.  * 	[90/08/21            dbg]  * 	Fix includes.  * 	[90/08/08            dbg]  * 	Created.  * 	[90/07/25            dbg]  *   */
+comment|/*  * HISTORY  * $Log: db_disasm.c,v $  * Revision 1.1.1.1  1993/06/12  14:58:07  rgrimes  * Initial import, 0.1 + pk 0.2.4-B1  *  * Revision 1.1  1992/03/25  21:42:01  pace  * Initial revision  *  * Revision 2.3  91/02/05  17:11:03  mrt  * 	Changed to new Mach copyright  * 	[91/02/01  17:31:03  mrt]  *   * Revision 2.2  90/08/27  21:55:56  dbg  * 	Fix register operand for move to/from control/test/debug  * 	register instructions.  Add i486 instructions.  * 	[90/08/27            dbg]  *   * 	Import db_sym.h.  Print instruction displacements in  * 	current radix (signed).  Change calling sequence of  * 	db_disasm.  * 	[90/08/21            dbg]  * 	Fix includes.  * 	[90/08/08            dbg]  * 	Created.  * 	[90/07/25            dbg]  *   */
 end_comment
 
 begin_comment
@@ -7355,7 +7355,7 @@ block|}
 block|,
 comment|/*ac*/
 block|{
-literal|"ldos"
+literal|"lods"
 block|,
 name|FALSE
 block|,
@@ -7371,7 +7371,7 @@ block|}
 block|,
 comment|/*ad*/
 block|{
-literal|"ldos"
+literal|"lods"
 block|,
 name|FALSE
 block|,
