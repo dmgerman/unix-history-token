@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.13 (Berkeley) %G%"
+literal|"@(#)man.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3811,7 +3811,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: man [-ac] [-C file] [-M path] [-m path] [section] title ...\n"
+literal|"usage: man [-achw] [-C file] [-M path] [-m path] [section] title ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
