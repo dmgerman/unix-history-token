@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.5	%G%	*/
+comment|/*	dz.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -1231,6 +1231,15 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|dz_brk
+index|[
+name|NDZ11
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -1570,6 +1579,47 @@ name|l_close
 operator|)
 operator|(
 name|tp
+operator|)
+block|;
+comment|/* 	 * Turn the break bit off in case it was left on by a TIOCSBRK 	 * but not turned off by TIOCCBRK 	 */
+operator|(
+operator|(
+expr|struct
+name|pdma
+operator|*
+operator|)
+operator|(
+name|tp
+operator|->
+name|t_addr
+operator|)
+operator|)
+operator|->
+name|p_addr
+operator|->
+name|dzbrk
+operator|=
+operator|(
+name|dz_brk
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|>>
+literal|3
+index|]
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+operator|(
+name|dev
+operator|&
+literal|07
+operator|)
+operator|)
 operator|)
 block|;
 if|if
@@ -2016,13 +2066,6 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-specifier|static
-name|char
-name|dz_brk
-index|[
-name|NDZ11
-index|]
 decl_stmt|;
 name|tp
 operator|=
