@@ -8450,9 +8450,9 @@ literal|"rwhod_enable=YES"
 block|}
 block|,
 block|{
-literal|" Sshd"
+literal|" SSHd"
 block|,
-literal|"This machine wants to run the ssh daemon"
+literal|"This machine wants to run the SSH daemon"
 block|,
 name|dmenuVarCheck
 block|,
@@ -12571,16 +12571,6 @@ block|,
 literal|'<'
 block|}
 block|,
-block|{
-literal|" Security Profile"
-block|,
-literal|"Select a security profile for the system"
-block|,
-name|NULL
-block|,
-name|configSecurityProfile
-block|}
-block|,
 if|#
 directive|if
 literal|0
@@ -12599,62 +12589,6 @@ block|,
 name|NULL
 block|,
 literal|"nfs_reserved_port_only=YES"
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-block|;
-name|DMenu
-name|MenuSecurityProfile
-operator|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Default system security profile"
-block|,
-literal|"Each item in this list will set what it considers to\n"
-literal|"be \"appropriate\" values in that category for various\n"
-literal|"security-related knobs in /etc/rc.conf."
-block|,
-literal|"Select a canned security profile - F1 for help"
-block|,
-literal|"security"
-block|,
-comment|/* help file */
-block|{
-block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
-literal|"Moderate"
-block|,
-literal|"Moderate security settings."
-block|,
-name|NULL
-block|,
-name|configSecurityModerate
-block|}
-block|,
-block|{
-literal|"Extreme"
-block|,
-literal|"Very restrictive security settings."
-block|,
-name|NULL
-block|,
-name|configSecurityExtreme
 block|}
 block|,
 block|{

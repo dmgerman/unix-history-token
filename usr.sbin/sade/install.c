@@ -2351,12 +2351,6 @@ name|i
 operator||=
 name|DITEM_LEAVE_MENU
 expr_stmt|;
-comment|/* Set default security level */
-name|configSecurityModerate
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure
 argument_list|()
@@ -2672,6 +2666,26 @@ condition|(
 operator|!
 name|msgNoYes
 argument_list|(
+literal|"Would you like to enable SSH login?"
+argument_list|)
+condition|)
+name|variable_set2
+argument_list|(
+literal|"sshd_enable"
+argument_list|,
+literal|"YES"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgNoYes
+argument_list|(
 literal|"Do you want to have anonymous FTP access to this machine?"
 argument_list|)
 condition|)
@@ -2714,26 +2728,6 @@ argument_list|,
 literal|"YES"
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|msgNoYes
-argument_list|(
-literal|"Do you want to select a default security profile for\n"
-literal|"this host (select No for \"moderate\" security)?"
-argument_list|)
-condition|)
-name|configSecurityProfile
-argument_list|(
-name|self
-argument_list|)
-expr_stmt|;
-else|else
-name|configSecurityModerate
-argument_list|(
-name|self
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3030,12 +3024,6 @@ operator|==
 name|DITEM_SUCCESS
 condition|)
 block|{
-comment|/* Set default security level */
-name|configSecurityModerate
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure
 argument_list|()
