@@ -35,8 +35,6 @@ block|,
 name|LM_EXEC
 block|,
 name|LM_MISC
-block|,
-name|LM_UNKNOWN
 block|}
 name|MODTYPE
 typedef|;
