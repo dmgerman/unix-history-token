@@ -2476,7 +2476,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"truncated request, got %d, expected %d"
+literal|"truncated request, got %u, expected %d"
 argument_list|,
 name|len
 argument_list|,
