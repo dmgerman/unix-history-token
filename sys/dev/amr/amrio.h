@@ -13,6 +13,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_comment
 comment|/*  * Fetch the driver's interface version.  */
 end_comment
@@ -87,6 +93,64 @@ directive|define
 name|AMR_IO_COMMAND
 value|_IOWR('A', 0x201, struct amr_user_ioctl)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
+begin_struct
+struct|struct
+name|amr_user_ioctl32
+block|{
+name|unsigned
+name|char
+name|au_cmd
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* command text from userspace */
+name|u_int32_t
+name|au_buffer
+decl_stmt|;
+comment|/* 32-bit pointer to uspace buf */
+name|u_int32_t
+name|au_length
+decl_stmt|;
+comment|/* length of the uspace buffer */
+name|int32_t
+name|au_direction
+decl_stmt|;
+comment|/* data transfer direction */
+name|int32_t
+name|au_status
+decl_stmt|;
+comment|/* command status returned by adapter */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AMR_IO_COMMAND32
+value|_IOWR('A', 0x201, struct amr_user_ioctl32)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
