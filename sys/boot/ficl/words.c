@@ -16504,6 +16504,36 @@ block|}
 end_function
 
 begin_comment
+comment|/* ** Retrieves free space remaining on the dictionary */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|freeHeap
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+block|{
+name|stackPushINT
+argument_list|(
+name|pVM
+operator|->
+name|pStack
+argument_list|,
+name|dictCellsAvail
+argument_list|(
+name|ficlGetDict
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* ** exit-inner  ** Signals execXT that an inner loop has completed */
 end_comment
 
@@ -18297,6 +18327,17 @@ argument_list|,
 literal|"seconds"
 argument_list|,
 name|pseconds
+argument_list|,
+name|FW_DEFAULT
+argument_list|)
+expr_stmt|;
+name|dictAppendWord
+argument_list|(
+name|dp
+argument_list|,
+literal|"heap?"
+argument_list|,
+name|freeHeap
 argument_list|,
 name|FW_DEFAULT
 argument_list|)
