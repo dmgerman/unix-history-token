@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.45 1997/05/22 21:26:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.51.2.46 1997/05/23 18:46:51 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2671,42 +2671,10 @@ block|}
 else|#
 directive|else
 comment|/* USE_XIG_ENVIRONMENT */
-comment|/* Pre-extract base sets in kludge to work around chicken-and-egg problem with CDE and Xaccel */
-if|if
-condition|(
-name|directory_exists
-argument_list|(
-literal|"/dist/CDE"
-argument_list|)
-operator|&&
-operator|!
-name|file_readable
-argument_list|(
-literal|"/usr/X11R6/bin/xterm"
-argument_list|)
-condition|)
-block|{
-name|msgNotify
-argument_list|(
-literal|"Installing bootstrap X11 tools from CDE distribution."
-argument_list|)
-expr_stmt|;
-name|systemExecute
-argument_list|(
-literal|"tar xpf /dist/CDE/FreeBSD/packages/X11-RUN/archive -C /"
-argument_list|)
-expr_stmt|;
-name|systemExecute
-argument_list|(
-literal|"tar xpf /dist/CDE/FreeBSD/packages/X11-PRG/archive -C /"
-argument_list|)
-expr_stmt|;
-block|}
-name|systemExecute
-argument_list|(
-literal|"/sbin/ldconfig /usr/lib /usr/X11R6/lib /usr/local/lib /usr/lib/compat"
-argument_list|)
-expr_stmt|;
+name|int
+name|i
+decl_stmt|;
+comment|/* Make sure we're sane first */
 if|if
 condition|(
 operator|!
@@ -2741,11 +2709,112 @@ operator||
 name|DITEM_RESTORE
 return|;
 block|}
-else|else
+if|if
+condition|(
+name|mediaDevice
+operator|&&
+name|mediaDevice
+operator|->
+name|type
+operator|!=
+name|MEDIA_CDROM
+condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|mediaSetCDROM
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+operator|!=
+name|DITEM_SUCCESS
+operator|||
+operator|!
+name|mediaDevice
+operator|||
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"I can't mount the CDE distribution from CDROM, sorry.\n"
+literal|"Please make sure you have the 1st CD of your FreeBSD Desktop/Pro\n"
+literal|"distribution in the drive before trying this operation."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|directory_exists
+argument_list|(
+literal|"/dist/CDE/"
+argument_list|)
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Hmmm!  I can't find the CDE distribution.  Please please the 1st CD of your\n"
+literal|"FreeBSD Desktop/Pro distribution in the drive and try this operation again."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+comment|/* Pre-extract base sets in kludge to work around chicken-and-egg problem with CDE and Xaccel */
+if|if
+condition|(
+name|directory_exists
+argument_list|(
+literal|"/dist/CDE/"
+argument_list|)
+operator|&&
+operator|!
+name|file_readable
+argument_list|(
+literal|"/usr/X11R6/bin/xterm"
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Installing bootstrap X11 tools from CDE distribution."
+argument_list|)
+expr_stmt|;
+name|systemExecute
+argument_list|(
+literal|"tar xpf /dist/CDE/FreeBSD/packages/X11-RUN/archive -C /"
+argument_list|)
+expr_stmt|;
+name|systemExecute
+argument_list|(
+literal|"tar xpf /dist/CDE/FreeBSD/packages/X11-PRG/archive -C /"
+argument_list|)
+expr_stmt|;
+block|}
+name|systemExecute
+argument_list|(
+literal|"/sbin/ldconfig /usr/lib /usr/X11R6/lib /usr/dt/lib /usr/local/lib /usr/lib/compat"
+argument_list|)
+expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
@@ -2844,13 +2913,26 @@ literal|"to it will actually be /cdrom/CDE/dtinstall when you run it later).\n"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* Repair the damage done by the CDE installation */
+name|msgNotify
+argument_list|(
+literal|"Doing final adjustments to Xaccel distribution..."
+argument_list|)
+expr_stmt|;
+name|systemExecute
+argument_list|(
+literal|"/usr/X11R6/lib/X11/AcceleratedX/bin/Xinstall"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_RESTORE
 return|;
-block|}
 endif|#
 directive|endif
 comment|/* USE_XIG_ENVIRONMENT */
