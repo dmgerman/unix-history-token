@@ -101,6 +101,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/consio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -245,6 +251,16 @@ begin_comment
 comment|/* lock terminal forever */
 end_comment
 
+begin_decl_stmt
+name|int
+name|vtyunlock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Unlock flag and code. */
+end_comment
+
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
@@ -297,6 +313,8 @@ decl_stmt|,
 name|sectimeout
 decl_stmt|,
 name|usemine
+decl_stmt|,
+name|vtylock
 decl_stmt|;
 name|char
 modifier|*
@@ -352,6 +370,10 @@ name|no_timeout
 operator|=
 literal|0
 expr_stmt|;
+name|vtylock
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -363,7 +385,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"npt:"
+literal|"npt:v"
 argument_list|)
 operator|)
 operator|!=
@@ -446,6 +468,14 @@ case|case
 literal|'n'
 case|:
 name|no_timeout
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|vtylock
 operator|=
 literal|1
 expr_stmt|;
@@ -812,47 +842,116 @@ operator|&
 name|otimer
 argument_list|)
 expr_stmt|;
-comment|/* header info */
 if|if
 condition|(
-name|no_timeout
+name|vtylock
+condition|)
+block|{
+comment|/* 		 * If this failed, we want to err out; warn isn't good 		 * enough, since we don't want the user to think that 		 * everything is nice and locked because they got a 		 * "Key:" prompt. 		 */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_LOCKSWITCH
+argument_list|,
+operator|&
+name|vtylock
+argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|ioctl
 argument_list|(
-literal|"lock: %s on %s. no timeout\ntime now is %.20s%s%s"
+literal|0
 argument_list|,
-name|ttynam
+name|TIOCSETP
 argument_list|,
-name|hostname
+operator|&
+name|tty
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|ap
-argument_list|,
-name|tzn
-argument_list|,
-name|ap
-operator|+
-literal|19
+literal|"locking vty"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+name|vtyunlock
+operator|=
+literal|0x2
+expr_stmt|;
+block|}
+comment|/* header info */
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"lock: %s on %s. timeout in %d minutes\ntime now is %.20s%s%s"
+literal|"lock: %s on %s."
 argument_list|,
 name|ttynam
 argument_list|,
 name|hostname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|no_timeout
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" no timeout."
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" timeout in %d minute%s."
 argument_list|,
 name|sectimeout
+argument_list|,
+name|sectimeout
+operator|!=
+literal|1
+condition|?
+literal|"s"
+else|:
+literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vtylock
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" vty locked."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\ntime now is %.20s%s%s"
 argument_list|,
 name|ap
 argument_list|,
@@ -863,7 +962,6 @@ operator|+
 literal|19
 argument_list|)
 expr_stmt|;
-block|}
 name|failures
 operator|=
 literal|0
@@ -1064,7 +1162,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lock [-n] [-p] [-t timeout]\n"
+literal|"usage: lock [-npv] [-t timeout]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1192,6 +1290,23 @@ operator|&
 name|tty
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vtyunlock
+condition|)
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_LOCKSWITCH
+argument_list|,
+operator|&
+name|vtyunlock
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
@@ -1226,6 +1341,23 @@ name|TIOCSETP
 argument_list|,
 operator|&
 name|tty
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vtyunlock
+condition|)
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_LOCKSWITCH
+argument_list|,
+operator|&
+name|vtyunlock
 argument_list|)
 expr_stmt|;
 operator|(
