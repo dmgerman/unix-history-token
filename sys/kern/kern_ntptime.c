@@ -1755,7 +1755,7 @@ modifier|*
 name|tcp
 parameter_list|)
 block|{
-name|u_int32_t
+name|time_t
 modifier|*
 name|newsec
 decl_stmt|;
@@ -1768,7 +1768,9 @@ operator|=
 operator|&
 name|tcp
 operator|->
-name|tc_offset_sec
+name|tc_nanotime
+operator|.
+name|tv_sec
 expr_stmt|;
 comment|/* 	 * On rollover of the second both the nanosecond and microsecond 	 * clocks are updated and the state machine cranked as 	 * necessary. The phase adjustment to be used for the next 	 * second is calculated and the maximum error is increased by 	 * the tolerance. 	 */
 name|time_maxerror
