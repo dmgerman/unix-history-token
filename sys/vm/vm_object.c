@@ -2236,11 +2236,6 @@ decl_stmt|;
 name|vm_pindex_t
 name|pi
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|int
 name|clearobjflags
 decl_stmt|;
@@ -2305,12 +2300,6 @@ condition|?
 name|VM_PAGER_PUT_INVAL
 else|:
 literal|0
-expr_stmt|;
-name|vp
-operator|=
-name|object
-operator|->
-name|handle
 expr_stmt|;
 name|vm_object_set_flag
 argument_list|(
