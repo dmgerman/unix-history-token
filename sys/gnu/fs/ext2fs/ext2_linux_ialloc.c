@@ -92,8 +92,20 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__i386__
+name|__alpha__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<gnu/ext2fs/alpha-bitops.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|__i386__
+end_elif
 
 begin_include
 include|#
@@ -104,13 +116,13 @@ end_include
 begin_elif
 elif|#
 directive|elif
-name|__alpha__
+name|__ia64__
 end_elif
 
 begin_include
 include|#
 directive|include
-file|<gnu/ext2fs/alpha-bitops.h>
+file|<gnu/ext2fs/ia64-bitops.h>
 end_include
 
 begin_else
