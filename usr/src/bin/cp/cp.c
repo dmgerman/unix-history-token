@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.27 (Berkeley) %G%"
+literal|"@(#)cp.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -870,7 +870,7 @@ condition|(
 operator|(
 name|curr
 operator|->
-name|fts_pathlen
+name|fts_namelen
 operator|+
 name|to
 operator|.
@@ -896,7 +896,7 @@ name|p_path
 argument_list|,
 name|curr
 operator|->
-name|fts_path
+name|fts_name
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -946,11 +946,11 @@ literal|1
 argument_list|,
 name|curr
 operator|->
-name|fts_path
+name|fts_name
 argument_list|,
 name|curr
 operator|->
-name|fts_pathlen
+name|fts_namelen
 argument_list|)
 expr_stmt|;
 name|to
@@ -963,7 +963,7 @@ name|target_end
 operator|+
 name|curr
 operator|->
-name|fts_pathlen
+name|fts_namelen
 operator|+
 literal|1
 expr_stmt|;
