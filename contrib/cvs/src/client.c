@@ -16508,7 +16508,7 @@ name|hostname
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|client_sai
+name|sin
 operator|.
 name|sin_addr
 argument_list|)
@@ -16551,7 +16551,7 @@ name|hostname
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|client_sai
+name|sin
 operator|.
 name|sin_addr
 argument_list|)
