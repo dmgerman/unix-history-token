@@ -8603,21 +8603,19 @@ operator|)
 operator|/
 name|hz
 expr_stmt|;
-name|pipe_bp
-operator|->
-name|fs
-operator|.
-name|flags_fs
-operator||=
-name|DN_IS_PIPE
-expr_stmt|;
-comment|/* cleanup pointers */
+comment|/* 	 * XXX the following is a hack based on ->next being the 	 * first field in dn_pipe and dn_flow_set. The correct 	 * solution would be to move the dn_flow_set to the beginning 	 * of struct dn_pipe. 	 */
 name|pipe_bp
 operator|->
 name|next
 operator|=
-name|NULL
+operator|(
+expr|struct
+name|dn_pipe
+operator|*
+operator|)
+name|DN_IS_PIPE
 expr_stmt|;
+comment|/* clean pointers */
 name|pipe_bp
 operator|->
 name|head
@@ -8715,17 +8713,17 @@ name|set
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fs_bp
-operator|->
-name|flags_fs
-operator||=
-name|DN_IS_QUEUE
-expr_stmt|;
+comment|/* XXX same hack as above */
 name|fs_bp
 operator|->
 name|next
 operator|=
-name|NULL
+operator|(
+expr|struct
+name|dn_flow_set
+operator|*
+operator|)
+name|DN_IS_QUEUE
 expr_stmt|;
 name|fs_bp
 operator|->
