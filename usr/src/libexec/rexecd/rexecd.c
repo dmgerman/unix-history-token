@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	4.2 82/11/14"
+literal|"@(#)rexecd.c	4.3 82/11/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -874,9 +874,7 @@ argument_list|(
 operator|(
 name|u_short
 operator|)
-name|fromp
-operator|->
-name|sin_port
+name|port
 argument_list|)
 expr_stmt|;
 if|if
