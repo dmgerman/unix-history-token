@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.18 2002/04/07 20:55:49 wpaul Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/mii/miidevs,v 1.20 2002/07/05 11:07:24 benno Exp   */
 end_comment
 
 begin_comment
@@ -433,15 +433,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MII_MODEL_BROADCOM_3c905Cphy
+name|MII_MODEL_BROADCOM_3C905B
+value|0x0012
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_BROADCOM_3C905B
+value|"3c905B 10/100 internal PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_BROADCOM_3C905C
 value|0x0017
 end_define
 
 begin_define
 define|#
 directive|define
-name|MII_STR_BROADCOM_3c905Cphy
+name|MII_STR_BROADCOM_3C905C
 value|"3c905C 10/100 internal PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_BROADCOM_BCM5201
+value|0x0021
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_BROADCOM_BCM5201
+value|"BCM5201 10/100baseTX PHY"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_MODEL_BROADCOM_BCM5221
+value|0x001e
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_STR_BROADCOM_BCM5221
+value|"BCM5221 10/100baseTX PHY"
 end_define
 
 begin_define
