@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: podd.h,v 1.3 2000/03/27 04:36:34 sumikawa Exp $	*/
+comment|/*	$KAME: podd.h,v 1.4 2001/09/10 04:03:58 itojun Exp $	*/
 end_comment
 
 begin_comment

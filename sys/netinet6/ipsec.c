@@ -8328,7 +8328,7 @@ argument_list|(
 argument|KEYDEBUG_IPSEC_DATA
 argument_list|,
 argument|printf(
-literal|"ipsec_in_reject: using SP\n"
+literal|"ipsec_hdrsiz: using SP\n"
 argument|); 		kdebug_secpolicy(sp)
 argument_list|)
 empty_stmt|;
@@ -8425,7 +8425,7 @@ name|clen
 operator|=
 literal|0
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 endif|#
 directive|endif
 break|break;
@@ -8891,7 +8891,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET6*/
+comment|/* INET6 */
 end_comment
 
 begin_ifdef
@@ -9400,7 +9400,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/*clear DF bit*/
+comment|/* clear DF bit */
 name|ip
 operator|->
 name|ip_off
@@ -9415,7 +9415,7 @@ break|break;
 case|case
 literal|1
 case|:
-comment|/*set DF bit*/
+comment|/* set DF bit */
 name|ip
 operator|->
 name|ip_off
@@ -9427,7 +9427,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/*copy DF bit*/
+comment|/* copy DF bit */
 break|break;
 block|}
 name|ip
@@ -9587,7 +9587,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET*/
+comment|/* INET */
 end_comment
 
 begin_ifdef
@@ -10084,7 +10084,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET6*/
+comment|/* INET6 */
 end_comment
 
 begin_comment
@@ -10640,7 +10640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * shift variable length bunffer to left.  * IN:	bitmap: pointer to the buffer  * 	nbit:	the number of to shift.  *	wsize:	buffer size (bytes).  */
+comment|/*  * shift variable length buffer to left.  * IN:	bitmap: pointer to the buffer  * 	nbit:	the number of to shift.  *	wsize:	buffer size (bytes).  */
 end_comment
 
 begin_function
@@ -11156,7 +11156,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET6*/
+comment|/* INET6 */
 end_comment
 
 begin_function
@@ -12798,7 +12798,7 @@ name|state
 condition|)
 name|panic
 argument_list|(
-literal|"state == NULL in ipsec6_output"
+literal|"state == NULL in ipsec6_output_trans"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12810,7 +12810,7 @@ name|m
 condition|)
 name|panic
 argument_list|(
-literal|"state->m == NULL in ipsec6_output"
+literal|"state->m == NULL in ipsec6_output_trans"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12820,7 +12820,7 @@ name|nexthdrp
 condition|)
 name|panic
 argument_list|(
-literal|"nexthdrp == NULL in ipsec6_output"
+literal|"nexthdrp == NULL in ipsec6_output_trans"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12830,7 +12830,7 @@ name|mprev
 condition|)
 name|panic
 argument_list|(
-literal|"mprev == NULL in ipsec6_output"
+literal|"mprev == NULL in ipsec6_output_trans"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12840,7 +12840,7 @@ name|sp
 condition|)
 name|panic
 argument_list|(
-literal|"sp == NULL in ipsec6_output"
+literal|"sp == NULL in ipsec6_output_trans"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12850,7 +12850,7 @@ name|tun
 condition|)
 name|panic
 argument_list|(
-literal|"tun == NULL in ipsec6_output"
+literal|"tun == NULL in ipsec6_output_trans"
 argument_list|)
 expr_stmt|;
 name|KEYDEBUG
@@ -13452,7 +13452,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 goto|goto
 name|bad
 goto|;
@@ -13583,7 +13583,7 @@ name|state
 condition|)
 name|panic
 argument_list|(
-literal|"state == NULL in ipsec6_output"
+literal|"state == NULL in ipsec6_output_tunnel"
 argument_list|)
 expr_stmt|;
 if|if
@@ -13595,7 +13595,7 @@ name|m
 condition|)
 name|panic
 argument_list|(
-literal|"state->m == NULL in ipsec6_output"
+literal|"state->m == NULL in ipsec6_output_tunnel"
 argument_list|)
 expr_stmt|;
 if|if
@@ -13605,7 +13605,7 @@ name|sp
 condition|)
 name|panic
 argument_list|(
-literal|"sp == NULL in ipsec6_output"
+literal|"sp == NULL in ipsec6_output_tunnel"
 argument_list|)
 expr_stmt|;
 name|KEYDEBUG
@@ -14578,7 +14578,7 @@ case|case
 name|IPPROTO_IPCOMP
 case|:
 comment|/* XXX code should be here */
-comment|/*FALLTHROUGH*/
+comment|/* FALLTHROUGH */
 default|default:
 name|ipseclog
 argument_list|(
@@ -14671,7 +14671,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 goto|goto
 name|bad
 goto|;
@@ -14729,7 +14729,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET6*/
+comment|/* INET6 */
 end_comment
 
 begin_ifdef
@@ -16922,7 +16922,7 @@ condition|)
 return|return
 name|ENOSPC
 return|;
-comment|/*XXX*/
+comment|/* XXX */
 name|p
 operator|=
 operator|(

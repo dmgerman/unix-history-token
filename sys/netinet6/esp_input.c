@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: esp_input.c,v 1.55 2001/03/23 08:08:47 itojun Exp $	*/
+comment|/*	$KAME: esp_input.c,v 1.62 2002/01/07 11:39:57 kjc Exp $	*/
 end_comment
 
 begin_comment
@@ -832,7 +832,7 @@ name|sav
 argument_list|)
 condition|)
 empty_stmt|;
-comment|/*okey*/
+comment|/* okey */
 else|else
 block|{
 name|ipsecstat
@@ -1500,7 +1500,7 @@ operator|<
 name|hlen
 condition|)
 block|{
-comment|/*?*/
+comment|/* ? */
 name|ipseclog
 argument_list|(
 operator|(
@@ -1738,14 +1738,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* XXX should call ipfw rather than ipsec_in_reject, shouldn't it ? */
-comment|/* drop it if it does not match the default policy */
-block|if (ipsec4_in_reject(m, NULL)) { 			ipsecstat.in_polvio++; 			goto bad; 		}
-endif|#
-directive|endif
 name|key_sa_recordxfer
 argument_list|(
 name|sav
@@ -1823,7 +1815,7 @@ argument_list|(
 name|NETISR_IP
 argument_list|)
 expr_stmt|;
-comment|/*can be skipped but to make sure*/
+comment|/* can be skipped but to make sure */
 name|nxt
 operator|=
 name|IPPROTO_DONE
@@ -2644,7 +2636,7 @@ name|sav
 argument_list|)
 condition|)
 empty_stmt|;
-comment|/*okey*/
+comment|/* okey */
 else|else
 block|{
 name|ipsec6stat
@@ -3094,7 +3086,7 @@ argument_list|,
 name|IPPROTO_DONE
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 else|#
 directive|else
 name|IP6_EXTHDR_GET
@@ -3147,7 +3139,7 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*set it again just in case*/
+comment|/* set it again just in case */
 comment|/* 	 * pre-compute and cache intermediate key 	 */
 if|if
 condition|(
@@ -3318,7 +3310,7 @@ name|ip6_hdr
 argument_list|)
 condition|)
 block|{
-comment|/*?*/
+comment|/* ? */
 name|ipseclog
 argument_list|(
 operator|(
@@ -3397,7 +3389,7 @@ comment|/* 		 * strip off all the headers that precedes ESP header. 		 *	IP6 xx 
 name|u_int32_t
 name|flowinfo
 decl_stmt|;
-comment|/*net endian*/
+comment|/* net endian */
 name|flowinfo
 operator|=
 name|ip6
@@ -3549,14 +3541,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* XXX should call ipfw rather than ipsec_in_reject, shouldn't it ? */
-comment|/* drop it if it does not match the default policy */
-block|if (ipsec6_in_reject(m, NULL)) { 			ipsec6stat.in_polvio++; 			goto bad; 		}
-endif|#
-directive|endif
 name|key_sa_recordxfer
 argument_list|(
 name|sav
@@ -3634,7 +3618,7 @@ argument_list|(
 name|NETISR_IPV6
 argument_list|)
 expr_stmt|;
-comment|/*can be skipped but to make sure*/
+comment|/* can be skipped but to make sure */
 name|nxt
 operator|=
 name|IPPROTO_DONE

@@ -6294,7 +6294,7 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-comment|/*nothing*/
+comment|/* nothing */
 init|;
 name|n
 operator|&&
@@ -6478,7 +6478,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/*dummy, it is called IPPROTO_IP*/
+comment|/* dummy, it is called IPPROTO_IP */
 name|off
 operator|=
 literal|0
@@ -6508,7 +6508,7 @@ name|advancewidth
 operator|=
 literal|0
 expr_stmt|;
-comment|/*safety*/
+comment|/* safety */
 name|again
 label|:
 comment|/* gory. */
@@ -6521,7 +6521,7 @@ case|case
 operator|-
 literal|1
 case|:
-comment|/*first one only*/
+comment|/* first one only */
 block|{
 comment|/* 		 * copy ip hdr, modify to fit the AH checksum rule, 		 * then take a checksum. 		 */
 name|struct

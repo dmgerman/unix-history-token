@@ -433,7 +433,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/*INET*/
+comment|/* INET */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -515,7 +515,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/*INET6*/
+comment|/* INET6 */
 default|default:
 ifdef|#
 directive|ifdef
@@ -876,7 +876,7 @@ expr_stmt|;
 return|return
 name|ENETUNREACH
 return|;
-comment|/*XXX*/
+comment|/* XXX */
 block|}
 if|#
 directive|if

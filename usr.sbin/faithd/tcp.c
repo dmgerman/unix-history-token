@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: tcp.c,v 1.5 2000/09/29 03:48:31 sakane Exp $	*/
+comment|/*	$KAME: tcp.c,v 1.8 2001/11/21 07:40:22 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+specifier|volatile
 name|time_t
 name|child_lastactive
 init|=
@@ -775,7 +775,10 @@ name|exit_failure
 argument_list|(
 literal|"writing relay data failed: %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|FD_SET
@@ -970,7 +973,10 @@ name|exit_failure
 argument_list|(
 literal|"select: %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1105,7 +1111,10 @@ argument_list|(
 literal|"reading oob data failed"
 literal|": %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1164,7 +1173,10 @@ name|exit_failure
 argument_list|(
 literal|"reading relay data failed: %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -1294,7 +1306,10 @@ name|exit_failure
 argument_list|(
 literal|"tcp_relay: can't fork grand child: %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */

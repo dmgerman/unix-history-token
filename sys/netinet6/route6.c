@@ -558,7 +558,7 @@ endif|#
 directive|endif
 condition|)
 block|{
-comment|/* 		 * Type 0 routing header can't contain more than 23 addresses. 		 * RFC 2462: this limitation was removed since stict/loose 		 * bitmap field was deleted. 		 */
+comment|/* 		 * Type 0 routing header can't contain more than 23 addresses. 		 * RFC 2462: this limitation was removed since strict/loose 		 * bitmap field was deleted. 		 */
 name|ip6stat
 operator|.
 name|ip6s_badoptions

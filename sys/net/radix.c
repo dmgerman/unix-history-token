@@ -3561,7 +3561,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Non-unique normal route, mask not entered"
+literal|"Non-unique normal route, mask not entered\n"
 argument_list|)
 expr_stmt|;
 return|return

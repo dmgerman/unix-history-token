@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah_output.c,v 1.30 2001/02/21 00:50:53 itojun Exp $	*/
+comment|/*	$KAME: ah_output.c,v 1.31 2001/07/26 06:53:15 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -483,19 +483,19 @@ name|hlen
 init|=
 literal|0
 decl_stmt|;
-comment|/*IP header+option in bytes*/
+comment|/* IP header+option in bytes */
 name|size_t
 name|plen
 init|=
 literal|0
 decl_stmt|;
-comment|/*AH payload size in bytes*/
+comment|/* AH payload size in bytes */
 name|size_t
 name|ahlen
 init|=
 literal|0
 decl_stmt|;
-comment|/*plen + sizeof(ah)*/
+comment|/* plen + sizeof(ah) */
 name|struct
 name|ip
 modifier|*
@@ -695,7 +695,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/*XXX pad to 8byte?*/
+comment|/* XXX pad to 8byte? */
 name|ahlen
 operator|=
 name|plen
@@ -733,7 +733,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/*XXX pad to 8byte?*/
+comment|/* XXX pad to 8byte? */
 name|ahlen
 operator|=
 name|plen
@@ -937,7 +937,7 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*just to be sure*/
+comment|/* just to be sure */
 comment|/* 	 * initialize AH. 	 */
 if|if
 condition|(
@@ -1329,7 +1329,7 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*just to make sure*/
+comment|/* just to make sure */
 name|ip
 operator|->
 name|ip_dst
@@ -1451,7 +1451,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/*XXX pad to 8byte?*/
+comment|/* XXX pad to 8byte? */
 name|ahlen
 operator|=
 name|plen
@@ -1489,7 +1489,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/*XXX pad to 8byte?*/
+comment|/* XXX pad to 8byte? */
 name|ahlen
 operator|=
 name|plen
@@ -1588,7 +1588,7 @@ decl_stmt|;
 name|size_t
 name|plen
 decl_stmt|;
-comment|/*AH payload size in bytes*/
+comment|/* AH payload size in bytes */
 name|int
 name|error
 init|=

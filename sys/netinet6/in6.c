@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6.c,v 1.187 2001/05/24 07:43:59 itojun Exp $	*/
+comment|/*	$KAME: in6.c,v 1.259 2002/01/21 11:37:50 keiichi Exp $	*/
 end_comment
 
 begin_comment
@@ -167,12 +167,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<netinet6/nd6.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/ip6.h>
 end_include
 
@@ -180,6 +174,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/ip6_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/nd6.h>
 end_include
 
 begin_include
@@ -813,7 +813,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Some of BSD variants do not remove cloned routes 	 * from an interface direct route, when removing the direct route 	 * (see comments in net/net_osdep.h).  Even for variants that do remove 	 * cloned routes, they could fail to remove the cloned routes when 	 * we handle multple addresses that share a common prefix. 	 * So, we should remove the route corresponding to the deleted address 	 * regardless of the result of in6_is_ifloop_auto(). 	 */
-comment|/* 	 * Delete the entry only if exact one ifa exists. More than one ifa 	 * can exist if we assign a same single address to multiple 	 * (probably p2p) interfaces. 	 * XXX: we should avoid such a configuration in IPv6... 	 */
+comment|/* 	 * Delete the entry only if exact one ifa exists.  More than one ifa 	 * can exist if we assign a same single address to multiple 	 * (probably p2p) interfaces. 	 * XXX: we should avoid such a configuration in IPv6... 	 */
 for|for
 control|(
 name|ia
@@ -866,7 +866,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* 		 * Before deleting, check if a corresponding loopbacked host 		 * route surely exists. With this check, we can avoid to 		 * delete an interface direct route whose destination is same 		 * as the address being removed. This can happen when remofing 		 * a subnet-router anycast address on an interface attahced 		 * to a shared medium. 		 */
+comment|/* 		 * Before deleting, check if a corresponding loopbacked host 		 * route surely exists.  With this check, we can avoid to 		 * delete an interface direct route whose destination is same 		 * as the address being removed.  This can happen when remofing 		 * a subnet-router anycast address on an interface attahced 		 * to a shared medium. 		 */
 name|rt
 operator|=
 name|rtalloc1
@@ -1497,7 +1497,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/*fall through*/
+comment|/* fall through */
 case|case
 name|OSIOCGIFINFO_IN6
 case|:
@@ -1655,7 +1655,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/*fall through*/
+comment|/* fall through */
 case|case
 name|SIOCGLIFADDR
 case|:
@@ -2471,7 +2471,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-comment|/* 		 * XXX: since we don't have enough APIs, we just set inifinity 		 * to lifetimes.  They can be overridden by later advertised 		 * RAs (when accept_rtadv is non 0), but we'd rather intend 		 * such a behavior. 		 */
+comment|/* 		 * XXX: since we don't have an API to set prefix (not address) 		 * lifetimes, we just use the same lifetimes as addresses. 		 * The (temporarily) installed lifetimes can be overridden by 		 * later advertised RAs (when accept_rtadv is non 0), which is 		 * an intended behavior. 		 */
 name|pr0
 operator|.
 name|ndpr_raf_onlink
@@ -3131,7 +3131,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 		 * In this case, ia must not be NULL. We just use its prefix 		 * length. 		 */
+comment|/* 		 * In this case, ia must not be NULL.  We just use its prefix 		 * length. 		 */
 name|plen
 operator|=
 name|in6_mask2len
@@ -5351,7 +5351,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/*FALLTHROUGH*/
+comment|/* FALLTHROUGH */
 case|case
 name|SIOCALIFADDR
 case|:
@@ -5446,12 +5446,12 @@ name|EINVAL
 return|;
 break|break;
 default|default:
-comment|/*shouldn't happen*/
+comment|/* shouldn't happen */
 if|#
 directive|if
 literal|0
 block|panic("invalid cmd to in6_lifaddr_ioctl");
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 else|#
 directive|else
 return|return
@@ -6042,7 +6042,7 @@ name|cmp
 operator|=
 literal|0
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 block|}
 else|else
 block|{
@@ -6458,7 +6458,7 @@ name|ia
 operator|->
 name|ia6_flags
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 return|return
 literal|0
 return|;
@@ -6620,7 +6620,7 @@ block|}
 return|return
 name|EOPNOTSUPP
 return|;
-comment|/*just for safety*/
+comment|/* just for safety */
 block|}
 end_function
 
@@ -6870,7 +6870,7 @@ operator||=
 name|RTF_CLONING
 expr_stmt|;
 block|}
-comment|/* Add ownaddr as loopback rtentry, if necessary(ex. on p2p link). */
+comment|/* Add ownaddr as loopback rtentry, if necessary (ex. on p2p link). */
 if|if
 condition|(
 name|newhost
@@ -9049,7 +9049,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/*last-resort: deprecated*/
+comment|/* last-resort: deprecated */
 name|dep
 index|[
 literal|0
@@ -9678,7 +9678,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert sockaddr_in6 to sockaddr_in. Original sockaddr_in6 must be  * v4 mapped addr or v4 compat addr  */
+comment|/*  * Convert sockaddr_in6 to sockaddr_in.  Original sockaddr_in6 must be  * v4 mapped addr or v4 compat addr  */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec.h,v 1.44 2001/03/23 08:08:47 itojun Exp $	*/
+comment|/*	$KAME: ipsec.h,v 1.53 2001/11/20 08:32:38 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*  * Security Policy Index  * NOTE: Ensure to be same address family and upper layer protocol.  * NOTE: ul_proto, port number, uid, gid:  *	ANY: reserved for waldcard.  *	0 to (~0 - 1): is one of the number of each value.  */
+comment|/*  * Security Policy Index  * Ensure that both address families in the "src" and "dst" are same.  * When the value of the ul_proto is ICMPv6, the port field in "src"  * specifies ICMPv6 type, and the port field in "dst" specifies ICMPv6 code.  */
 end_comment
 
 begin_struct
@@ -313,7 +313,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_KERNEL*/
+comment|/* _KERNEL */
 end_comment
 
 begin_comment
@@ -739,7 +739,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*obsolete, do not reuse*/
+comment|/* obsolete, do not reuse */
 end_comment
 
 begin_define
@@ -1487,7 +1487,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_KERNEL*/
+comment|/* _KERNEL */
 end_comment
 
 begin_ifndef
@@ -1563,7 +1563,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*!_KERNEL*/
+comment|/* !_KERNEL */
 end_comment
 
 begin_endif
@@ -1572,7 +1572,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_NETINET6_IPSEC_H_*/
+comment|/* _NETINET6_IPSEC_H_ */
 end_comment
 
 end_unit

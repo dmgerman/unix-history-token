@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: prefix.c,v 1.8 2000/11/24 06:16:56 itojun Exp $	*/
+comment|/*	$KAME: prefix.c,v 1.9 2001/07/02 14:36:49 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -594,6 +594,7 @@ condition|(
 name|getnameinfo
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*

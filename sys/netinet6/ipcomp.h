@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipcomp.h,v 1.8 2000/09/26 07:55:14 itojun Exp $	*/
+comment|/*	$KAME: ipcomp.h,v 1.11 2001/09/04 08:43:19 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -246,7 +246,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*KERNEL*/
+comment|/* KERNEL */
 end_comment
 
 begin_endif
@@ -255,7 +255,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_NETINET6_IPCOMP_H_*/
+comment|/* _NETINET6_IPCOMP_H_ */
 end_comment
 
 end_unit

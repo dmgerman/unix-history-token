@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_rmx.c,v 1.10 2001/05/24 05:44:58 itojun Exp $	*/
+comment|/*	$KAME: in6_rmx.c,v 1.11 2001/07/26 06:53:16 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -1639,7 +1639,7 @@ name|time_second
 operator|+
 literal|30
 expr_stmt|;
-comment|/*last resort*/
+comment|/* last resort */
 block|}
 name|timeout
 argument_list|(

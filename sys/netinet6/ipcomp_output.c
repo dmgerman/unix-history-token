@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipcomp_output.c,v 1.23 2001/01/23 08:59:37 itojun Exp $	*/
+comment|/*	$KAME: ipcomp_output.c,v 1.24 2001/07/26 06:53:18 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -365,7 +365,7 @@ name|plen0
 decl_stmt|,
 name|plen
 decl_stmt|;
-comment|/*payload length to be compressed*/
+comment|/* payload length to be compressed */
 name|size_t
 name|compoff
 decl_stmt|;
@@ -898,7 +898,7 @@ name|hlen
 init|=
 literal|0
 decl_stmt|;
-comment|/*ip header len*/
+comment|/* ip header len */
 name|size_t
 name|complen
 init|=
@@ -1389,7 +1389,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET*/
+comment|/* INET */
 end_comment
 
 begin_ifdef
@@ -1489,7 +1489,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET6*/
+comment|/* INET6 */
 end_comment
 
 end_unit

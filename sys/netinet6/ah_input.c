@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah_input.c,v 1.59 2001/05/16 04:01:27 jinmei Exp $	*/
+comment|/*	$KAME: ah_input.c,v 1.67 2002/01/07 11:39:56 kjc Exp $	*/
 end_comment
 
 begin_comment
@@ -1092,7 +1092,7 @@ name|sav
 argument_list|)
 condition|)
 empty_stmt|;
-comment|/*okey*/
+comment|/* okey */
 else|else
 block|{
 name|ipsecstat
@@ -1390,10 +1390,10 @@ name|INET6
 block|else if (ah->ah_nxt == IPPROTO_IPV6) { 		m->m_flags&= ~M_AUTHIPHDR; 		m->m_flags&= ~M_AUTHIPDGM; 	}
 endif|#
 directive|endif
-comment|/*INET6*/
+comment|/* INET6 */
 endif|#
 directive|endif
-comment|/*0*/
+comment|/* 0 */
 if|if
 condition|(
 name|m
@@ -1701,14 +1701,6 @@ goto|;
 block|}
 if|#
 directive|if
-literal|0
-comment|/* XXX should we call ipfw rather than ipsec_in_reject? */
-comment|/* drop it if it does not match the default policy */
-block|if (ipsec4_in_reject(m, NULL)) { 			ipsecstat.in_polvio++; 			goto fail; 		}
-endif|#
-directive|endif
-if|#
-directive|if
 literal|1
 comment|/* 		 * Should the inner packet be considered authentic? 		 * My current answer is: NO. 		 * 		 * host1 -- gw1 === gw2 -- host2 		 *	In this case, gw2 can trust the	authenticity of the 		 *	outer packet, but NOT inner.  Packet may be altered 		 *	between host1 and gw1. 		 * 		 * host1 -- gw1 === host2 		 *	This case falls into the same scenario as above. 		 * 		 * host1 === host2 		 *	This case is the only case when we may be able to leave 		 *	M_AUTHIPHDR and M_AUTHIPDGM set. 		 *	However, if host1 is wrongly configured, and allows 		 *	attacker to inject some packet with src=host1 and 		 *	dst=host2, you are in risk. 		 */
 name|m
@@ -1804,7 +1796,7 @@ argument_list|(
 name|NETISR_IP
 argument_list|)
 expr_stmt|;
-comment|/*can be skipped but to make sure*/
+comment|/* can be skipped but to make sure */
 name|nxt
 operator|=
 name|IPPROTO_DONE
@@ -2448,7 +2440,7 @@ name|ah
 operator|->
 name|ah_nxt
 expr_stmt|;
-comment|/* find the sassoc.  */
+comment|/* find the sassoc. */
 name|spi
 operator|=
 name|ah
@@ -2908,7 +2900,7 @@ name|sav
 argument_list|)
 condition|)
 empty_stmt|;
-comment|/*okey*/
+comment|/* okey */
 else|else
 block|{
 name|ipsec6stat
@@ -3317,7 +3309,7 @@ comment|/* 		 * strip off all the headers that precedes AH. 		 *	IP6 xx AH IP6' 
 name|u_int32_t
 name|flowinfo
 decl_stmt|;
-comment|/*net endian*/
+comment|/* net endian */
 name|flowinfo
 operator|=
 name|ip6
@@ -3461,14 +3453,6 @@ goto|;
 block|}
 if|#
 directive|if
-literal|0
-comment|/* XXX should we call ipfw rather than ipsec_in_reject? */
-comment|/* drop it if it does not match the default policy */
-block|if (ipsec6_in_reject(m, NULL)) { 			ipsec6stat.in_polvio++; 			goto fail; 		}
-endif|#
-directive|endif
-if|#
-directive|if
 literal|1
 comment|/* 		 * should the inner packet be considered authentic? 		 * see comment in ah4_input(). 		 */
 name|m
@@ -3564,7 +3548,7 @@ argument_list|(
 name|NETISR_IPV6
 argument_list|)
 expr_stmt|;
-comment|/*can be skipped but to make sure*/
+comment|/* can be skipped but to make sure */
 name|nxt
 operator|=
 name|IPPROTO_DONE

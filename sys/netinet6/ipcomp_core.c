@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipcomp_core.c,v 1.24 2000/10/23 04:24:22 itojun Exp $	*/
+comment|/*	$KAME: ipcomp_core.c,v 1.25 2001/07/26 06:53:17 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -542,7 +542,7 @@ comment|/* keep the reply buffer into our chain */
 value|\ 	if (n) {						\ 		n->m_len = zs.total_out - offset;		\ 		offset = zs.total_out;				\ 		*np = n;					\ 		np =&n->m_next;				\ 		n = NULL;					\ 	}							\ 								\
 comment|/* get a fresh reply buffer */
 value|\ 	MGET(n, M_DONTWAIT, MT_DATA);				\ 	if (n) {						\ 		MCLGET(n, M_DONTWAIT);				\ 	}							\ 	if (!n) {						\ 		error = ENOBUFS;				\ 		goto fail;					\ 	}							\ 	n->m_len = 0;						\ 	n->m_len = M_TRAILINGSPACE(n);				\ 	n->m_next = NULL;					\
-comment|/*							\ 	 * if this is the first reply buffer, reserve		\ 	 * region for ipcomp header.				\ 	 */
+comment|/* 							\ 	 * if this is the first reply buffer, reserve		\ 	 * region for ipcomp header.				\ 	 */
 value|\ 	if (*np == NULL) {					\ 		n->m_len -= sizeof(struct ipcomp);		\ 		n->m_data += sizeof(struct ipcomp);		\ 	}							\ 								\ 	zs.next_out = mtod(n, u_int8_t *);			\ 	zs.avail_out = n->m_len;				\ } while (0)
 for|for
 control|(
@@ -798,7 +798,7 @@ operator|==
 name|Z_STREAM_END
 condition|)
 empty_stmt|;
-comment|/*once more.*/
+comment|/* once more. */
 elseif|else
 if|if
 condition|(
@@ -826,7 +826,7 @@ name|terminate
 goto|;
 else|else
 empty_stmt|;
-comment|/*once more.*/
+comment|/* once more. */
 block|}
 else|else
 block|{
@@ -984,7 +984,7 @@ operator|==
 name|Z_OK
 condition|)
 empty_stmt|;
-comment|/*once more.*/
+comment|/* once more. */
 else|else
 block|{
 if|if
