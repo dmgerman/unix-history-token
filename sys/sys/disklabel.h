@@ -313,9 +313,6 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* pack identifier */
-ifndef|#
-directive|ifndef
-name|_KERNEL
 struct|struct
 block|{
 name|char
@@ -331,8 +328,6 @@ comment|/* secondary bootstrap name */
 block|}
 name|un_b
 struct|;
-endif|#
-directive|endif
 block|}
 name|d_un
 union|;
@@ -340,9 +335,6 @@ define|#
 directive|define
 name|d_packname
 value|d_un.un_d_packname
-ifndef|#
-directive|ifndef
-name|_KERNEL
 define|#
 directive|define
 name|d_boot0
@@ -351,8 +343,6 @@ define|#
 directive|define
 name|d_boot1
 value|d_un.un_b.un_d_boot1
-endif|#
-directive|endif
 comment|/* disk geometry: */
 name|u_int32_t
 name|d_secsize
