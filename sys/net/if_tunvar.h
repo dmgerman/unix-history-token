@@ -57,6 +57,10 @@ name|TUN_ASYNC
 value|0x0080
 define|#
 directive|define
+name|TUN_IFHEAD
+value|0x0100
+define|#
+directive|define
 name|TUN_READY
 value|(TUN_OPEN | TUN_INITED)
 name|pid_t

@@ -122,6 +122,20 @@ name|TUNSIFPID
 value|_IO('t', 95)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TUNSIFHEAD
+value|_IOW('t', 96, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUNGIFHEAD
+value|_IOR('t', 97, int)
+end_define
+
 begin_endif
 endif|#
 directive|endif
