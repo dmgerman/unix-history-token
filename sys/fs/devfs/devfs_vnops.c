@@ -2522,7 +2522,6 @@ name|i
 operator|==
 literal|0
 condition|)
-block|{
 name|destroy_dev
 argument_list|(
 name|vp
@@ -2530,26 +2529,6 @@ operator|->
 name|v_rdev
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Reclaim<%s> %d %d Killed\n"
-argument_list|,
-name|vp
-operator|->
-name|v_rdev
-operator|->
-name|si_name
-argument_list|,
-name|vp
-operator|->
-name|v_rdev
-operator|->
-name|si_flags
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
