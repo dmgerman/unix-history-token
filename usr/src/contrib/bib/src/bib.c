@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.8	%G%"
+literal|"@(#)bib.c	2.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,6 +1279,20 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|doacite
+operator|&&
+operator|(
+name|tail
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+operator|)
+condition|)
 name|fprintf
 argument_list|(
 name|tfd
@@ -1295,11 +1309,25 @@ name|info
 argument_list|,
 name|CITEEND
 argument_list|,
-name|doacite
-condition|?
 name|tail
-else|:
-literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|tfd
+argument_list|,
+literal|"%c%d%c%s%c"
+argument_list|,
+name|c
+argument_list|,
+name|n
+argument_list|,
+name|c
+argument_list|,
+name|info
+argument_list|,
+name|CITEEND
 argument_list|)
 expr_stmt|;
 block|}
