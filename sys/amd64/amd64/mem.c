@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -108,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -128,6 +140,22 @@ include|#
 directive|include
 file|<machine/memdev.h>
 end_include
+
+begin_comment
+comment|/*  * Used in /dev/mem drivers and elsewhere  */
+end_comment
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_MEMDESC
+argument_list|,
+literal|"memdesc"
+argument_list|,
+literal|"memory range descriptors"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
