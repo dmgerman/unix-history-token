@@ -3573,6 +3573,15 @@ break|break;
 case|case
 name|sConnectionsPerPeriod
 case|:
+operator|(
+name|void
+operator|)
+name|strdelim
+argument_list|(
+operator|&
+name|cp
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"ConnectionsPerPeriod has been deprecated!"
