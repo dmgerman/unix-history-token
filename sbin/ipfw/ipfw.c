@@ -386,7 +386,7 @@ define|#
 directive|define
 name|A_LIST
 value|8
-literal|"p"
+literal|"po"
 block|,
 define|#
 directive|define
