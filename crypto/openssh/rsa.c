@@ -521,7 +521,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|rsa_private_decrypt
 parameter_list|(
 name|BIGNUM
@@ -610,11 +610,15 @@ operator|)
 operator|<=
 literal|0
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
-literal|"rsa_private_decrypt() failed."
+literal|"rsa_private_decrypt() failed"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|BN_bin2bn
 argument_list|(
 name|outbuf
@@ -624,6 +628,7 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
+block|}
 name|memset
 argument_list|(
 name|outbuf
@@ -652,6 +657,9 @@ argument_list|(
 name|inbuf
 argument_list|)
 expr_stmt|;
+return|return
+name|len
+return|;
 block|}
 end_function
 

@@ -4410,6 +4410,11 @@ name|plen
 decl_stmt|,
 name|slen
 decl_stmt|;
+name|int
+name|rsafail
+init|=
+literal|0
+decl_stmt|;
 name|BIGNUM
 modifier|*
 name|session_key_int
@@ -4906,7 +4911,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* Private key has bigger modulus. */
+comment|/* Server key has bigger modulus. */
 if|if
 condition|(
 name|BN_num_bits
@@ -4959,6 +4964,8 @@ name|SSH_KEY_BITS_RESERVED
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|rsa_private_decrypt
 argument_list|(
 name|session_key_int
@@ -4969,7 +4976,14 @@ name|sensitive_data
 operator|.
 name|private_key
 argument_list|)
+operator|<=
+literal|0
+condition|)
+name|rsafail
+operator|++
 expr_stmt|;
+if|if
+condition|(
 name|rsa_private_decrypt
 argument_list|(
 name|session_key_int
@@ -4980,6 +4994,11 @@ name|sensitive_data
 operator|.
 name|host_key
 argument_list|)
+operator|<=
+literal|0
+condition|)
+name|rsafail
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -5037,6 +5056,8 @@ name|SSH_KEY_BITS_RESERVED
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|rsa_private_decrypt
 argument_list|(
 name|session_key_int
@@ -5047,7 +5068,14 @@ name|sensitive_data
 operator|.
 name|host_key
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|rsafail
+operator|++
 expr_stmt|;
+if|if
+condition|(
 name|rsa_private_decrypt
 argument_list|(
 name|session_key_int
@@ -5058,6 +5086,11 @@ name|sensitive_data
 operator|.
 name|private_key
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|rsafail
+operator|++
 expr_stmt|;
 block|}
 name|compute_session_id
@@ -5084,6 +5117,12 @@ name|destroy_sensitive_data
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Extract session key from the decrypted integer.  The key is in the 	 * least significant 256 bits of the integer; the first byte of the 	 * key is in the highest bits. 	 */
+if|if
+condition|(
+operator|!
+name|rsafail
+condition|)
+block|{
 name|BN_mask_bits
 argument_list|(
 name|session_key_int
@@ -5116,9 +5155,11 @@ argument_list|(
 name|session_key
 argument_list|)
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
-literal|"do_connection: bad len from %s: session_key_int %d> sizeof(session_key) %d"
+literal|"do_connection: bad session key len from %s: "
+literal|"session_key_int %d> sizeof(session_key) %d"
 argument_list|,
 name|get_remote_ipaddr
 argument_list|()
@@ -5131,6 +5172,12 @@ name|session_key
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|rsafail
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 name|memset
 argument_list|(
 name|session_key
@@ -5157,6 +5204,60 @@ operator|-
 name|len
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|rsafail
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"do_connection: generating a fake encryption key"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SSH_SESSION_KEY_LENGTH
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|i
+operator|%
+literal|4
+operator|==
+literal|0
+condition|)
+name|rand
+operator|=
+name|arc4random
+argument_list|()
+expr_stmt|;
+name|session_key
+index|[
+name|i
+index|]
+operator|=
+name|rand
+operator|&
+literal|0xff
+expr_stmt|;
+name|rand
+operator|>>=
+literal|8
+expr_stmt|;
+block|}
+block|}
 comment|/* Destroy the decrypted integer.  It is no longer needed. */
 name|BN_clear_free
 argument_list|(

@@ -110,7 +110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|rsa_private_decrypt
 name|__P
 argument_list|(
