@@ -210,6 +210,10 @@ operator|->
 name|desc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX some SCSI adapter drivers print out things while the 	 * device-specific attach routine is running. The result is 	 * something of a mess. This hack at least keeps it so each 	 * line will begin with foodev0:. 	 */
+name|sc_print_init
+argument_list|()
+expr_stmt|;
 name|dev
 operator|=
 name|scsi_dev_lookup
@@ -281,6 +285,9 @@ name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
+expr_stmt|;
+name|sc_print_finish
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

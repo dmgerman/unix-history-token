@@ -4691,6 +4691,17 @@ end_expr_stmt
 
 begin_function
 name|void
+name|sc_print_init
+parameter_list|()
+block|{
+name|sc_printing
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|sc_print_start
 parameter_list|(
 name|sc_link
@@ -4810,7 +4821,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nodevice"
+literal|"nodevice at "
 argument_list|)
 expr_stmt|;
 block|}
@@ -4848,9 +4859,10 @@ name|sc_link
 operator|->
 name|dev_unit
 argument_list|,
-literal|" at "
+literal|": "
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|printf
 argument_list|(

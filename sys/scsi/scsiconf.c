@@ -3203,7 +3203,7 @@ operator|>
 literal|2
 name|printf
 argument_list|(
-literal|"%s%d waiting for scsi devices to settle\n"
+literal|"%s%d: waiting for scsi devices to settle\n"
 argument_list|,
 name|sc_link_proto
 operator|->
