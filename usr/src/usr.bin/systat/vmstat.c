@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.8 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -628,7 +628,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* uses 8 rows and 11 cols */
+comment|/* uses 9 rows and 11 cols */
 end_comment
 
 begin_define
@@ -1417,7 +1417,7 @@ name|GENSTATCOL
 operator|+
 literal|8
 argument_list|,
-literal|"Flt"
+literal|"Sof"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1430,7 +1430,7 @@ name|GENSTATCOL
 operator|+
 literal|8
 argument_list|,
-literal|"Scn"
+literal|"Flt"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -1438,6 +1438,19 @@ argument_list|(
 name|GENSTATROW
 operator|+
 literal|7
+argument_list|,
+name|GENSTATCOL
+operator|+
+literal|8
+argument_list|,
+literal|"Scn"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+name|GENSTATROW
+operator|+
+literal|8
 argument_list|,
 name|GENSTATCOL
 operator|+
@@ -2756,11 +2769,11 @@ name|putrate
 argument_list|(
 name|rate
 operator|.
-name|v_faults
+name|v_soft
 argument_list|,
 name|oldrate
 operator|.
-name|v_faults
+name|v_soft
 argument_list|,
 name|GENSTATROW
 operator|+
@@ -2775,6 +2788,25 @@ name|putrate
 argument_list|(
 name|rate
 operator|.
+name|v_faults
+argument_list|,
+name|oldrate
+operator|.
+name|v_faults
+argument_list|,
+name|GENSTATROW
+operator|+
+literal|6
+argument_list|,
+name|GENSTATCOL
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+name|putrate
+argument_list|(
+name|rate
+operator|.
 name|v_scan
 argument_list|,
 name|oldrate
@@ -2783,7 +2815,7 @@ name|v_scan
 argument_list|,
 name|GENSTATROW
 operator|+
-literal|6
+literal|7
 argument_list|,
 name|GENSTATCOL
 argument_list|,
@@ -2802,7 +2834,7 @@ name|v_rev
 argument_list|,
 name|GENSTATROW
 operator|+
-literal|7
+literal|8
 argument_list|,
 name|GENSTATCOL
 argument_list|,
