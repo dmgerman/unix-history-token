@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * %sccs.include.redist.c%  *  *	@(#)vfs_init.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed  * to Berkeley by John Heidemann of the UCLA Ficus project.  *  * Source: * @(#)i405_init.c 2.10 92/04/27 UCLA Ficus project  *  * %sccs.include.redist.c%  *  *	@(#)vfs_init.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -578,18 +578,6 @@ end_function
 begin_comment
 comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
-name|vfreeh
-decl_stmt|,
-modifier|*
-modifier|*
-name|vfreet
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
