@@ -31,6 +31,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -78,9 +84,8 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0x80000001
+name|FP_ILOGB0
 return|;
-comment|/* ilogb(0) = 0x80000001 */
 else|else
 comment|/* subnormal x */
 for|for
@@ -126,9 +131,19 @@ operator|)
 operator|-
 literal|127
 return|;
+elseif|else
+if|if
+condition|(
+name|hx
+operator|>
+literal|0x7f800000
+condition|)
+return|return
+name|FP_ILOGBNAN
+return|;
 else|else
 return|return
-literal|0x7fffffff
+name|INT_MAX
 return|;
 block|}
 end_function
