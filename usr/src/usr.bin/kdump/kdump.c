@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kdump.c	8.1 (Berkeley) %G%"
+literal|"@(#)kdump.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1085,22 +1085,22 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|narg
-operator|=
-name|ktr
-operator|->
-name|ktr_narg
-expr_stmt|;
-specifier|register
 name|int
 modifier|*
 name|ip
+decl_stmt|,
+name|narg
 decl_stmt|;
 name|char
 modifier|*
 name|ioctlname
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|ktr
@@ -1162,6 +1162,17 @@ expr|struct
 name|ktr_syscall
 argument_list|)
 operator|)
+expr_stmt|;
+name|narg
+operator|=
+name|ktr
+operator|->
+name|ktr_argsize
+operator|/
+sizeof|sizeof
+argument_list|(
+name|register_t
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
