@@ -926,6 +926,7 @@ name|mdproc
 modifier|*
 name|mdp
 decl_stmt|;
+comment|/* Reset pc->pcb_gs and %gs before possibly invalidating it. */
 name|mdp
 operator|=
 operator|&
@@ -941,11 +942,26 @@ name|mdp
 operator|->
 name|md_ldt
 condition|)
+block|{
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_gs
+operator|=
+name|_udatasel
+expr_stmt|;
+name|load_gs
+argument_list|(
+name|_udatasel
+argument_list|)
+expr_stmt|;
 name|user_ldt_free
 argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|reset_dbregs
 argument_list|()
 expr_stmt|;
