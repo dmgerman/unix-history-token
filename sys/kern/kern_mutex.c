@@ -2272,11 +2272,6 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|struct
-name|turnstile
-modifier|*
-name|ts
-decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2468,9 +2463,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|ts
-operator|=
-name|turnstile_lookup
+name|turnstile_lock
 argument_list|(
 operator|&
 name|m
@@ -2525,13 +2518,6 @@ operator|==
 name|MTX_CONTESTED
 condition|)
 block|{
-name|MPASS
-argument_list|(
-name|ts
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|mtx_lock
@@ -2545,7 +2531,10 @@ name|MTX_CONTESTED
 expr_stmt|;
 name|turnstile_claim
 argument_list|(
-name|ts
+operator|&
+name|m
+operator|->
+name|mtx_object
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2750,8 +2739,6 @@ directive|endif
 comment|/* 		 * Block on the turnstile. 		 */
 name|turnstile_wait
 argument_list|(
-name|ts
-argument_list|,
 operator|&
 name|m
 operator|->
@@ -3093,6 +3080,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|turnstile_lock
+argument_list|(
+operator|&
+name|m
+operator|->
+name|mtx_object
+argument_list|)
+expr_stmt|;
 name|ts
 operator|=
 name|turnstile_lookup

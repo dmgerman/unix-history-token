@@ -192,6 +192,11 @@ name|sleepqueue
 modifier|*
 name|sq
 decl_stmt|;
+name|sleepq_lock
+argument_list|(
+name|cvp
+argument_list|)
+expr_stmt|;
 name|sq
 operator|=
 name|sleepq_lookup
@@ -241,11 +246,6 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|struct
-name|sleepqueue
-modifier|*
-name|sq
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -328,9 +328,7 @@ block|{
 comment|/* 		 * During autoconfiguration, just give interrupts 		 * a chance, then just return.  Don't run any other 		 * thread or panic below, in case this is the idle 		 * process and already asleep. 		 */
 return|return;
 block|}
-name|sq
-operator|=
-name|sleepq_lookup
+name|sleepq_lock
 argument_list|(
 name|cvp
 argument_list|)
@@ -350,8 +348,6 @@ argument_list|)
 expr_stmt|;
 name|sleepq_add
 argument_list|(
-name|sq
-argument_list|,
 name|cvp
 argument_list|,
 name|mp
@@ -429,11 +425,6 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
-name|struct
-name|sleepqueue
-modifier|*
-name|sq
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -536,9 +527,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|sq
-operator|=
-name|sleepq_lookup
+name|sleepq_lock
 argument_list|(
 name|cvp
 argument_list|)
@@ -596,8 +585,6 @@ argument_list|)
 expr_stmt|;
 name|sleepq_add
 argument_list|(
-name|sq
-argument_list|,
 name|cvp
 argument_list|,
 name|mp
@@ -708,11 +695,6 @@ name|timo
 parameter_list|)
 block|{
 name|struct
-name|sleepqueue
-modifier|*
-name|sq
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -803,9 +785,7 @@ return|return
 literal|0
 return|;
 block|}
-name|sq
-operator|=
-name|sleepq_lookup
+name|sleepq_lock
 argument_list|(
 name|cvp
 argument_list|)
@@ -825,8 +805,6 @@ argument_list|)
 expr_stmt|;
 name|sleepq_add
 argument_list|(
-name|sq
-argument_list|,
 name|cvp
 argument_list|,
 name|mp
@@ -921,11 +899,6 @@ name|int
 name|timo
 parameter_list|)
 block|{
-name|struct
-name|sleepqueue
-modifier|*
-name|sq
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -1031,9 +1004,7 @@ return|return
 literal|0
 return|;
 block|}
-name|sq
-operator|=
-name|sleepq_lookup
+name|sleepq_lock
 argument_list|(
 name|cvp
 argument_list|)
@@ -1091,8 +1062,6 @@ argument_list|)
 expr_stmt|;
 name|sleepq_add
 argument_list|(
-name|sq
-argument_list|,
 name|cvp
 argument_list|,
 name|mp
@@ -1205,6 +1174,11 @@ modifier|*
 name|cvp
 parameter_list|)
 block|{
+name|sleepq_lock
+argument_list|(
+name|cvp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cvp
@@ -1230,6 +1204,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|sleepq_release
+argument_list|(
+name|cvp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1250,6 +1230,11 @@ name|int
 name|pri
 parameter_list|)
 block|{
+name|sleepq_lock
+argument_list|(
+name|cvp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cvp
@@ -1275,6 +1260,12 @@ name|pri
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|sleepq_release
+argument_list|(
+name|cvp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

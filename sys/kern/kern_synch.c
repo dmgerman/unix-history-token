@@ -391,11 +391,6 @@ name|wmesg
 decl_stmt|;
 block|{
 name|struct
-name|sleepqueue
-modifier|*
-name|sq
-decl_stmt|;
-name|struct
 name|thread
 modifier|*
 name|td
@@ -574,9 +569,7 @@ operator|->
 name|td_wchan
 argument_list|)
 expr_stmt|;
-name|sq
-operator|=
-name|sleepq_lookup
+name|sleepq_lock
 argument_list|(
 name|ident
 argument_list|)
@@ -703,8 +696,6 @@ name|SLEEPQ_INTERRUPTIBLE
 expr_stmt|;
 name|sleepq_add
 argument_list|(
-name|sq
-argument_list|,
 name|ident
 argument_list|,
 name|mtx
@@ -911,6 +902,11 @@ modifier|*
 name|ident
 decl_stmt|;
 block|{
+name|sleepq_lock
+argument_list|(
+name|ident
+argument_list|)
+expr_stmt|;
 name|sleepq_broadcast
 argument_list|(
 name|ident
@@ -940,6 +936,11 @@ modifier|*
 name|ident
 decl_stmt|;
 block|{
+name|sleepq_lock
+argument_list|(
+name|ident
+argument_list|)
+expr_stmt|;
 name|sleepq_signal
 argument_list|(
 name|ident

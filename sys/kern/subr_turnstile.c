@@ -1326,7 +1326,44 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up the turnstile for a lock in the hash table locking the associated  * turnstile chain along the way.  Return with the turnstile chain locked.  * If no turnstile is found in the hash table, NULL is returned.  */
+comment|/*  * Lock the turnstile chain associated with the specified lock.  */
+end_comment
+
+begin_function
+name|void
+name|turnstile_lock
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+name|lock
+parameter_list|)
+block|{
+name|struct
+name|turnstile_chain
+modifier|*
+name|tc
+decl_stmt|;
+name|tc
+operator|=
+name|TC_LOOKUP
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tc
+operator|->
+name|tc_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Look up the turnstile for a lock in the hash table locking the associated  * turnstile chain along the way.  If no turnstile is found in the hash  * table, NULL is returned.  */
 end_comment
 
 begin_function
@@ -1358,12 +1395,14 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_assert
 argument_list|(
 operator|&
 name|tc
 operator|->
 name|tc_lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -1441,15 +1480,20 @@ name|void
 name|turnstile_claim
 parameter_list|(
 name|struct
-name|turnstile
+name|lock_object
 modifier|*
-name|ts
+name|lock
 parameter_list|)
 block|{
 name|struct
 name|turnstile_chain
 modifier|*
 name|tc
+decl_stmt|;
+name|struct
+name|turnstile
+modifier|*
+name|ts
 decl_stmt|;
 name|struct
 name|thread
@@ -1463,9 +1507,7 @@ name|tc
 operator|=
 name|TC_LOOKUP
 argument_list|(
-name|ts
-operator|->
-name|ts_lockobj
+name|lock
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -1476,6 +1518,20 @@ operator|->
 name|tc_lock
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|ts
+operator|=
+name|turnstile_lookup
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+name|ts
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
 name|owner
@@ -1572,18 +1628,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Block the current thread on the turnstile ts.  This function will context  * switch and not return until this thread has been woken back up.  This  * function must be called with the appropriate turnstile chain locked and  * will return with it unlocked.  */
+comment|/*  * Block the current thread on the turnstile assicated with 'lock'.  This  * function will context switch and not return until this thread has been  * woken back up.  This function must be called with the appropriate  * turnstile chain locked and will return with it unlocked.  */
 end_comment
 
 begin_function
 name|void
 name|turnstile_wait
 parameter_list|(
-name|struct
-name|turnstile
-modifier|*
-name|ts
-parameter_list|,
 name|struct
 name|lock_object
 modifier|*
@@ -1599,6 +1650,11 @@ name|struct
 name|turnstile_chain
 modifier|*
 name|tc
+decl_stmt|;
+name|struct
+name|turnstile
+modifier|*
+name|ts
 decl_stmt|;
 name|struct
 name|thread
@@ -1656,7 +1712,15 @@ operator|==
 name|P_MAGIC
 argument_list|)
 expr_stmt|;
-comment|/* If the passed in turnstile is NULL, use this thread's turnstile. */
+comment|/* Look up the turnstile associated with the lock 'lock'. */
+name|ts
+operator|=
+name|turnstile_lookup
+argument_list|(
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If the lock does not already have a turnstile, use this thread's 	 * turnstile.  Otherwise insert the current thread into the 	 * turnstile already in use by this lock. 	 */
 if|if
 condition|(
 name|ts

@@ -184,13 +184,13 @@ modifier|*
 name|sq_wchan
 decl_stmt|;
 comment|/* (c) Wait channel. */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|int
 name|sq_type
 decl_stmt|;
 comment|/* (c) Queue type. */
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|struct
 name|mtx
 modifier|*
@@ -688,7 +688,43 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up the sleep queue associated with a given wait channel in the hash  * table locking the associated sleep queue chain.  Return holdind the sleep  * queue chain lock.  If no queue is found in the table, NULL is returned.  */
+comment|/*  * Lock the sleep queue chain associated with the specified wait channel.  */
+end_comment
+
+begin_function
+name|void
+name|sleepq_lock
+parameter_list|(
+name|void
+modifier|*
+name|wchan
+parameter_list|)
+block|{
+name|struct
+name|sleepqueue_chain
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|SC_LOOKUP
+argument_list|(
+name|wchan
+argument_list|)
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Look up the sleep queue associated with a given wait channel in the hash  * table locking the associated sleep queue chain.  If no queue is found in  * the table, NULL is returned.  */
 end_comment
 
 begin_function
@@ -732,12 +768,14 @@ argument_list|(
 name|wchan
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_assert
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_lock
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -813,11 +851,6 @@ begin_function
 name|void
 name|sleepq_add
 parameter_list|(
-name|struct
-name|sleepqueue
-modifier|*
-name|sq
-parameter_list|,
 name|void
 modifier|*
 name|wchan
@@ -840,6 +873,11 @@ name|struct
 name|sleepqueue_chain
 modifier|*
 name|sc
+decl_stmt|;
+name|struct
+name|sleepqueue
+modifier|*
+name|sq
 decl_stmt|;
 name|struct
 name|thread
@@ -886,7 +924,15 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* If the passed in sleep queue is NULL, use this thread's queue. */
+comment|/* Look up the sleep queue associated with the wait channel 'wchan'. */
+name|sq
+operator|=
+name|sleepq_lookup
+argument_list|(
+name|wchan
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If the wait channel does not already have a sleep queue, use 	 * this thread's sleep queue.  Otherwise, insert the current thread 	 * into the sleep queue already in use by this wait channel. 	 */
 if|if
 condition|(
 name|sq
@@ -1014,8 +1060,6 @@ name|sq_lock
 operator|=
 name|lock
 expr_stmt|;
-endif|#
-directive|endif
 name|sq
 operator|->
 name|sq_type
@@ -1024,6 +1068,8 @@ name|flags
 operator|&
 name|SLEEPQ_TYPE
 expr_stmt|;
+endif|#
+directive|endif
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1055,6 +1101,19 @@ operator|==
 name|sq
 operator|->
 name|sq_lock
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
+operator|(
+name|flags
+operator|&
+name|SLEEPQ_TYPE
+operator|)
+operator|==
+name|sq
+operator|->
+name|sq_type
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -1447,6 +1506,11 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there were pending signals and this thread is still on 	 * the sleep queue, remove it from the sleep queue.  If the 	 * thread was removed from the sleep queue while we were blocked 	 * above, then clear TDF_SINTR before returning. 	 */
+name|sleepq_lock
+argument_list|(
+name|wchan
+argument_list|)
+expr_stmt|;
 name|sq
 operator|=
 name|sleepq_lookup
@@ -2568,22 +2632,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX: Do for all sleep queues eventually. */
-if|if
-condition|(
-name|flags
-operator|&
-name|SLEEPQ_CONDVAR
-condition|)
-name|mtx_assert
-argument_list|(
-name|sq
-operator|->
-name|sq_lock
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 comment|/* Remove first thread from queue and awaken it. */
 name|td
 operator|=
@@ -2715,22 +2763,6 @@ literal|"%s: mismatch between sleep/wakeup and cv_*"
 operator|,
 name|__func__
 operator|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX: Do for all sleep queues eventually. */
-if|if
-condition|(
-name|flags
-operator|&
-name|SLEEPQ_CONDVAR
-condition|)
-name|mtx_assert
-argument_list|(
-name|sq
-operator|->
-name|sq_lock
-argument_list|,
-name|MA_OWNED
 argument_list|)
 expr_stmt|;
 comment|/* Move blocked threads from the sleep queue to a temporary list. */
@@ -2916,6 +2948,11 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|sleepq_lock
+argument_list|(
+name|wchan
+argument_list|)
+expr_stmt|;
 name|sq
 operator|=
 name|sleepq_lookup
@@ -3093,6 +3130,11 @@ argument_list|(
 name|wchan
 operator|!=
 name|NULL
+argument_list|)
+expr_stmt|;
+name|sleepq_lock
+argument_list|(
+name|wchan
 argument_list|)
 expr_stmt|;
 name|sq

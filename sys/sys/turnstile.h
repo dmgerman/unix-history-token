@@ -16,7 +16,7 @@ name|_SYS_TURNSTILE_H_
 end_define
 
 begin_comment
-comment|/*  * Turnstile interface.  Non-sleepable locks use a turnstile for the  * queue of threads blocked on them when they are contested.  *  * A thread calls turnstile_lookup() to look up the proper turnstile in  * the hash table.  This function returns a pointer to the turnstile and  * locks the associated turnstile chain.  A thread calls turnstile_wait()  * when the lock is contested to be put on the queue and block.  If a  * thread needs to retry a lock operation instead of blocking, it should  * call turnstile_release() to unlock the associated turnstile chain lock.  *  * When a lock is released, either turnstile_signal() or turnstile_broadcast()  * is called to mark blocked threads for a pending wakeup.  * turnstile_signal() marks the highest priority blocked thread while  * turnstile_broadcast() marks all blocked threads.  The turnstile_signal()  * function returns true if the turnstile became empty as a result.  After  * the higher level code finishes releasing the lock, turnstile_unpend()  * must be called to wakeup the pending thread(s).  *  * When a lock is acquired that already has at least one thread contested  * on it, the new owner of the lock must claim ownership of the turnstile  * via turnstile_claim().  *  * Each thread allocates a turnstile at thread creation via turnstile_alloc()  * and releases it at thread destruction via turnstile_free().  Note that  * a turnstile is not tied to a specific thread and that the turnstile  * released at thread destruction may not be the same turnstile that the  * thread allocated when it was created.  *  * A function can query a turnstile to see if it is empty via  * turnstile_empty().  The highest priority thread blocked on a turnstile  * can be obtained via turnstile_head().  */
+comment|/*  * Turnstile interface.  Non-sleepable locks use a turnstile for the  * queue of threads blocked on them when they are contested.  *  * A thread calls turnstile_lock() to lock the turnstile chain associated  * with a given lock.  A thread calls turnstile_wait() when the lock is  * contested to be put on the queue and block.  If a thread needs to retry  * a lock operation instead of blocking, it should call turnstile_release()  * to unlock the associated turnstile chain lock.  *  * When a lock is released, the thread calls turnstile_lookup() to loop  * up the turnstile associated with the given lock in the hash table.  Then  * it calls either turnstile_signal() or turnstile_broadcast() to mark  * blocked threads for a pending wakeup.  turnstile_signal() marks the  * highest priority blocked thread while turnstile_broadcast() marks all  * blocked threads.  The turnstile_signal() function returns true if the  * turnstile became empty as a result.  After the higher level code finishes  * releasing the lock, turnstile_unpend() must be called to wake up the  * pending thread(s).  *  * When a lock is acquired that already has at least one thread contested  * on it, the new owner of the lock must claim ownership of the turnstile  * via turnstile_claim().  *  * Each thread allocates a turnstile at thread creation via turnstile_alloc()  * and releases it at thread destruction via turnstile_free().  Note that  * a turnstile is not tied to a specific thread and that the turnstile  * released at thread destruction may not be the same turnstile that the  * thread allocated when it was created.  *  * A function can query a turnstile to see if it is empty via  * turnstile_empty().  The highest priority thread blocked on a turnstile  * can be obtained via turnstile_head().  */
 end_comment
 
 begin_struct_decl
@@ -79,7 +79,7 @@ name|void
 name|turnstile_claim
 parameter_list|(
 name|struct
-name|turnstile
+name|lock_object
 modifier|*
 parameter_list|)
 function_decl|;
@@ -115,6 +115,17 @@ name|turnstile_head
 parameter_list|(
 name|struct
 name|turnstile
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|turnstile_lock
+parameter_list|(
+name|struct
+name|lock_object
 modifier|*
 parameter_list|)
 function_decl|;
@@ -170,10 +181,6 @@ begin_function_decl
 name|void
 name|turnstile_wait
 parameter_list|(
-name|struct
-name|turnstile
-modifier|*
-parameter_list|,
 name|struct
 name|lock_object
 modifier|*
