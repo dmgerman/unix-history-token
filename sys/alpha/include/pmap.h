@@ -462,17 +462,12 @@ name|pv_entry
 struct_decl|;
 end_struct_decl
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|md_page
 block|{
 name|int
 name|pv_list_count
-decl_stmt|;
-name|struct
-name|vm_page
-modifier|*
-name|pv_vm_page
 decl_stmt|;
 name|int
 name|pv_flags
@@ -485,9 +480,8 @@ argument_list|)
 name|pv_list
 expr_stmt|;
 block|}
-name|pv_table_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#

@@ -3037,10 +3037,7 @@ name|dirty
 operator|||
 name|pmap_is_modified
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 condition|)
 name|mincoreinfo
@@ -3059,10 +3056,7 @@ operator|)
 operator|||
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -4107,6 +4101,10 @@ condition|(
 name|type
 operator|==
 name|OBJT_DEVICE
+operator|||
+name|type
+operator|==
+name|OBJT_PHYS
 condition|)
 block|{
 name|flags

@@ -1776,10 +1776,7 @@ argument_list|)
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_flag_clear
@@ -2055,10 +2052,7 @@ expr_stmt|;
 block|}
 name|pmap_clear_modify
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_undirty
@@ -3215,10 +3209,7 @@ expr_stmt|;
 comment|/* should be an assert? XXX */
 name|pmap_clear_modify
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|mt
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

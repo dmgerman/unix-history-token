@@ -923,7 +923,7 @@ operator|->
 name|object
 expr_stmt|;
 comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
-comment|/* 	 * Don't mess with the page if it's busy. 	 */
+comment|/* 	 * Don't mess with the page if it's busy, held, or special 	 */
 if|if
 condition|(
 operator|(
@@ -948,13 +948,19 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|)
 condition|)
+block|{
 return|return
 literal|0
 return|;
+block|}
 name|mc
 index|[
 name|vm_pageout_page_count
@@ -1051,7 +1057,11 @@ name|p
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 name|p
@@ -1199,7 +1209,11 @@ name|p
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 name|p
@@ -1465,10 +1479,7 @@ case|:
 comment|/* 			 * Page outside of range of object. Right now we 			 * essentially lose the changes by pretending it 			 * worked. 			 */
 name|pmap_clear_modify
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|mt
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_undirty
@@ -1586,6 +1597,12 @@ operator|->
 name|type
 operator|==
 name|OBJT_DEVICE
+operator|||
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_PHYS
 condition|)
 return|return;
 while|while
@@ -1713,7 +1730,11 @@ name|p
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 operator|!
@@ -1724,10 +1745,7 @@ argument_list|(
 name|map
 argument_list|)
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|p
-argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1741,10 +1759,7 @@ name|actcount
 operator|=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|p
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2686,10 +2701,7 @@ argument_list|)
 expr_stmt|;
 name|pmap_clear_reference
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Otherwise, if the page has been referenced while in the  		 * inactive queue, we bump the "activation count" upwards,  		 * making it less likely that the page will be added back to  		 * the inactive queue prematurely again.  Here we check the  		 * page tables (or emulated bits, if any), given the upper  		 * level VM system not knowing anything about existing  		 * references. 		 */
@@ -2714,10 +2726,7 @@ name|actcount
 operator|=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 operator|)
 condition|)
@@ -2764,10 +2773,7 @@ name|actcount
 operator|=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_activate
@@ -3575,10 +3581,7 @@ name|actcount
 operator|+=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3859,7 +3862,11 @@ name|m
 operator|->
 name|flags
 operator|&
+operator|(
 name|PG_BUSY
+operator||
+name|PG_UNMANAGED
+operator|)
 operator|)
 operator|||
 name|m
@@ -4472,10 +4479,7 @@ name|actcount
 operator|+=
 name|pmap_ts_referenced
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

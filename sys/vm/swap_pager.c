@@ -4256,10 +4256,7 @@ block|{
 comment|/* 			 * For read success, clear dirty bits.  Nobody should 			 * have this page mapped but don't take any chances, 			 * make sure the pmap modify bits are also cleared. 			 * 			 * NOTE: for reads, m->dirty will probably be  			 * overridden by the original caller of getpages so 			 * we cannot set them in order to free the underlying 			 * swap in a low-swap situation.  I don't think we'd 			 * want to do that anyway, but it was an optimization 			 * that existed in the old swapper for a time before 			 * it got ripped out due to precisely this problem. 			 * 			 * clear PG_ZERO in page. 			 * 			 * If not the requested page then deactivate it. 			 * 			 * Note that the requested page, reqpage, is left 			 * busied, but we still have to wake it up.  The 			 * other pages are released (unbusied) by  			 * vm_page_wakeup().  We do not set reqpage's 			 * valid bits here, it is up to the caller. 			 */
 name|pmap_clear_modify
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -4324,10 +4321,7 @@ argument_list|)
 expr_stmt|;
 name|pmap_clear_modify
 argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|vm_page_undirty

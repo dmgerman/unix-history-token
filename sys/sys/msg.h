@@ -44,6 +44,12 @@ begin_comment
 comment|/* don't complain about too long msgs */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|msg
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|msqid_ds
@@ -116,34 +122,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|msg
-block|{
-name|struct
-name|msg
-modifier|*
-name|msg_next
-decl_stmt|;
-comment|/* next msg in the chain */
-name|long
-name|msg_type
-decl_stmt|;
-comment|/* type of this message */
-comment|/*>0 -> type of this message */
-comment|/* 0 -> free header */
-name|u_short
-name|msg_ts
-decl_stmt|;
-comment|/* size of this message */
-name|short
-name|msg_spot
-decl_stmt|;
-comment|/* location of start of msg in buffer */
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Structure describing a message.  The SVID doesn't suggest any  * particular name for this structure.  There is a reference in the  * msgop man page that reads "The structure mymsg is an example of what  * this user defined buffer might look like, and includes the following  * members:".  This sentence is followed by two lines equivalent  * to the mtype and mtext field declarations below.  It isn't clear  * if "mymsg" refers to the naem of the structure type or the name of an  * instance of the structure...  */
 end_comment
@@ -166,6 +144,12 @@ comment|/* message body */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Based on the configuration parameters described in an SVR2 (yes, two)  * config(1m) man page.  *  * Each message is broken up and stored in segments that are msgssz bytes  * long.  For efficiency reasons, this should be a power of two.  Also,  * it doesn't make sense if it is less than 8 or greater than about 256.  * Consequently, msginit in kern/sysv_msg.c checks that msgssz is a power of  * two between 8 and 1024 inclusive (and panic's if it isn't).  */
@@ -198,12 +182,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -212,243 +190,10 @@ name|msginfo
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSGSSZ
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSGSSZ
-value|8
-end_define
-
-begin_comment
-comment|/* Each segment must be 2^N long */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSGSEG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSGSEG
-value|2048
-end_define
-
-begin_comment
-comment|/* must be less than 32767 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|MSGMAX
-value|(MSGSSZ*MSGSEG)
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSGMNB
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSGMNB
-value|2048
-end_define
-
-begin_comment
-comment|/* max # of bytes in a queue */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSGMNI
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSGMNI
-value|40
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MSGTQL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MSGTQL
-value|40
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * macros to convert between msqid_ds's and msqid's.  * (specific to this implementation)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSQID
-parameter_list|(
-name|ix
-parameter_list|,
-name|ds
-parameter_list|)
-value|((ix)& 0xffff | (((ds).msg_perm.seq<< 16)& 0xffff0000))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSQID_IX
-parameter_list|(
-name|id
-parameter_list|)
-value|((id)& 0xffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSQID_SEQ
-parameter_list|(
-name|id
-parameter_list|)
-value|(((id)>> 16)& 0xffff)
-end_define
-
-begin_comment
-comment|/*  * The rest of this file is specific to this particular implementation.  */
-end_comment
-
-begin_comment
-comment|/*  * Stuff allocated in machdep.h  */
-end_comment
-
-begin_struct
-struct|struct
-name|msgmap
-block|{
-name|short
-name|next
-decl_stmt|;
-comment|/* next segment in buffer */
-comment|/* -1 -> available */
-comment|/* 0..(MSGSEG-1) -> index of next segment */
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|msgpool
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MSGMAX byte long msg buffer pool */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|msgmap
-modifier|*
-name|msgmaps
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MSGSEG msgmap structures */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|msg
-modifier|*
-name|msghdrs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MSGTQL msg headers */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|msqid_ds
-modifier|*
-name|msqids
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* MSGMNI msqid_ds struct's */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSG_LOCKED
-value|01000
-end_define
-
-begin_comment
-comment|/* Is this msqid_ds locked? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
 
 begin_ifndef
 ifndef|#

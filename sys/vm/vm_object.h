@@ -43,6 +43,8 @@ name|OBJT_VNODE
 block|,
 name|OBJT_DEVICE
 block|,
+name|OBJT_PHYS
+block|,
 name|OBJT_DEAD
 block|}
 enum|;

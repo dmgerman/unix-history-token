@@ -1185,10 +1185,7 @@ name|addr
 operator|+
 name|i
 argument_list|,
-name|VM_PAGE_TO_PHYS
-argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,

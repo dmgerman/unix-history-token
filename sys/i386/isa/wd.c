@@ -9142,10 +9142,8 @@ operator|)
 name|addr
 argument_list|)
 condition|)
-name|pmap_enter
+name|pmap_kenter
 argument_list|(
-name|kernel_pmap
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -9158,17 +9156,11 @@ name|vm_offset_t
 operator|)
 name|addr
 argument_list|)
-argument_list|,
-name|VM_PROT_READ
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 else|else
-name|pmap_enter
+name|pmap_kenter
 argument_list|(
-name|kernel_pmap
-argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
@@ -9178,10 +9170,6 @@ name|trunc_page
 argument_list|(
 literal|0
 argument_list|)
-argument_list|,
-name|VM_PROT_READ
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* Ready to send data? */
