@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip_ecn.h,v 1.6 2001/05/03 14:51:48 itojun Exp $	*/
+comment|/*	$KAME: ip_ecn.h,v 1.8 2002/01/07 11:34:47 kjc Exp $	*/
 end_comment
 
 begin_comment
@@ -14,6 +14,18 @@ end_comment
 begin_comment
 comment|/*  * ECN consideration on tunnel ingress/egress operation.  * http://www.aciri.org/floyd/papers/draft-ipsec-ecn-00.txt  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NETINET_IP_ECN_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NETINET_IP_ECN_H_
+end_define
 
 begin_if
 if|#
@@ -99,7 +111,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ip_ecn_egress
 parameter_list|(
 name|int
@@ -113,6 +125,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

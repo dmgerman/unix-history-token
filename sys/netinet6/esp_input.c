@@ -1699,6 +1699,9 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* ECN consideration. */
+if|if
+condition|(
+operator|!
 name|ip_ecn_egress
 argument_list|(
 name|ip4_ipsec_ecn
@@ -1711,7 +1714,17 @@ name|ip
 operator|->
 name|ip_tos
 argument_list|)
+condition|)
+block|{
+name|ipsecstat
+operator|.
+name|in_inval
+operator|++
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3508,6 +3521,9 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* ECN consideration. */
+if|if
+condition|(
+operator|!
 name|ip6_ecn_egress
 argument_list|(
 name|ip6_ipsec_ecn
@@ -3520,7 +3536,17 @@ name|ip6
 operator|->
 name|ip6_flow
 argument_list|)
+condition|)
+block|{
+name|ipsec6stat
+operator|.
+name|in_inval
+operator|++
 expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 if|if
 condition|(
 operator|!

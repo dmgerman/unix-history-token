@@ -204,8 +204,14 @@ name|IPTOS_MINCOST
 value|0x02
 end_define
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_comment
-comment|/* ECN bits proposed by Sally Floyd */
+comment|/* ECN RFC3168 obsoletes RFC2481, and these will be deprecated soon. */
 end_comment
 
 begin_define
@@ -215,10 +221,6 @@ name|IPTOS_CE
 value|0x01
 end_define
 
-begin_comment
-comment|/* congestion experienced */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -226,9 +228,10 @@ name|IPTOS_ECT
 value|0x02
 end_define
 
-begin_comment
-comment|/* ECN-capable transport */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Definitions for IP precedence (also in ip_tos) (hopefully unused)  */
@@ -289,6 +292,65 @@ directive|define
 name|IPTOS_PREC_ROUTINE
 value|0x00
 end_define
+
+begin_comment
+comment|/*  * ECN (Explicit Congestion Notification) codepoints in RFC3168  * mapped to the lower 2 bits of the TOS field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_ECN_NOTECT
+value|0x00
+end_define
+
+begin_comment
+comment|/* not-ECT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_ECN_ECT1
+value|0x01
+end_define
+
+begin_comment
+comment|/* ECN-capable transport (1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_ECN_ECT0
+value|0x02
+end_define
+
+begin_comment
+comment|/* ECN-capable transport (0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_ECN_CE
+value|0x03
+end_define
+
+begin_comment
+comment|/* congestion experienced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_ECN_MASK
+value|0x03
+end_define
+
+begin_comment
+comment|/* ECN field mask */
+end_comment
 
 begin_comment
 comment|/*  * Definitions for options.  */

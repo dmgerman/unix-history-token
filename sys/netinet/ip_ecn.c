@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip_ecn.c,v 1.11 2001/05/03 16:09:29 itojun Exp $	*/
+comment|/*	$KAME: ip_ecn.c,v 1.12 2002/01/07 11:34:47 kjc Exp $	*/
 end_comment
 
 begin_comment
@@ -110,6 +110,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * ECN and TOS (or TCLASS) processing rules at tunnel encapsulation and  * decapsulation from RFC3168:  *  *                      Outer Hdr at                 Inner Hdr at  *                      Encapsulator                 Decapsulator  *   Header fields:     --------------------         ------------  *     DS Field         copied from inner hdr        no change  *     ECN Field        constructed by (I)           constructed by (E)  *  * ECN_ALLOWED (full functionality):  *    (I) if the ECN field in the inner header is set to CE, then set the  *    ECN field in the outer header to ECT(0).  *    otherwise, copy the ECN field to the outer header.  *  *    (E) if the ECN field in the outer header is set to CE and the ECN  *    field of the inner header is not-ECT, drop the packet.  *    if the ECN field in the inner header is set to ECT(0) or ECT(1)  *    and the ECN field in the outer header is set to CE, then copy CE to  *    the inner header.  otherwise, make no change to the inner header.  *  * ECN_FORBIDDEN (limited functionality):  *    (I) set the ECN field to not-ECT in the outer header.  *  *    (E) if the ECN field in the outer header is set to CE, drop the packet.  *    otherwise, make no change to the ECN field in the inner header.  *  * the drop rule is for backward compatibility and protection against  * erasure of CE.  */
+end_comment
+
+begin_comment
 comment|/*  * modify outer ECN (TOS) field on ingress operation (tunnel encapsulation).  */
 end_comment
 
@@ -164,26 +168,35 @@ case|case
 name|ECN_ALLOWED
 case|:
 comment|/* ECN allowed */
+comment|/* 		 * full-functionality: if the inner is CE, set ECT(0) 		 * to the outer.  otherwise, copy the ECN field. 		 */
+if|if
+condition|(
+operator|(
+operator|*
+name|inner
+operator|&
+name|IPTOS_ECN_MASK
+operator|)
+operator|==
+name|IPTOS_ECN_CE
+condition|)
 operator|*
 name|outer
 operator|&=
 operator|~
-name|IPTOS_CE
+name|IPTOS_ECN_ECT1
 expr_stmt|;
 break|break;
 case|case
 name|ECN_FORBIDDEN
 case|:
 comment|/* ECN forbidden */
+comment|/* 		 * limited-functionality: set not-ECT to the outer 		 */
 operator|*
 name|outer
 operator|&=
 operator|~
-operator|(
-name|IPTOS_ECT
-operator||
-name|IPTOS_CE
-operator|)
+name|IPTOS_ECN_MASK
 expr_stmt|;
 break|break;
 case|case
@@ -196,11 +209,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * modify inner ECN (TOS) field on egress operation (tunnel decapsulation).  */
+comment|/*  * modify inner ECN (TOS) field on egress operation (tunnel decapsulation).  * the caller should drop the packet if the return value is 0.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ip_ecn_egress
 parameter_list|(
 name|mode
@@ -243,29 +256,75 @@ block|{
 case|case
 name|ECN_ALLOWED
 case|:
+comment|/* 		 * full-functionality: if the outer is CE and the inner is 		 * not-ECT, should drop it.  otherwise, copy CE. 		 */
 if|if
 condition|(
+operator|(
 operator|*
 name|outer
 operator|&
-name|IPTOS_CE
+name|IPTOS_ECN_MASK
+operator|)
+operator|==
+name|IPTOS_ECN_CE
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|inner
+operator|&
+name|IPTOS_ECN_MASK
+operator|)
+operator|==
+name|IPTOS_ECN_NOTECT
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 operator|*
 name|inner
 operator||=
-name|IPTOS_CE
+name|IPTOS_ECN_CE
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ECN_FORBIDDEN
 case|:
 comment|/* ECN forbidden */
+comment|/* 		 * limited-functionality: if the outer is CE, should drop it. 		 * otherwise, leave the inner. 		 */
+if|if
+condition|(
+operator|(
+operator|*
+name|outer
+operator|&
+name|IPTOS_ECN_MASK
+operator|)
+operator|==
+name|IPTOS_ECN_CE
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+break|break;
 case|case
 name|ECN_NOCARE
 case|:
 comment|/* no consideration to ECN */
 break|break;
 block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
@@ -315,20 +374,6 @@ name|panic
 argument_list|(
 literal|"NULL pointer passed to ip6_ecn_ingress"
 argument_list|)
-expr_stmt|;
-name|outer8
-operator|=
-operator|(
-name|ntohl
-argument_list|(
-operator|*
-name|outer
-argument_list|)
-operator|>>
-literal|20
-operator|)
-operator|&
-literal|0xff
 expr_stmt|;
 name|inner8
 operator|=
@@ -383,7 +428,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|ip6_ecn_egress
 parameter_list|(
 name|mode
@@ -409,6 +454,8 @@ name|u_int8_t
 name|outer8
 decl_stmt|,
 name|inner8
+decl_stmt|,
+name|oinner8
 decl_stmt|;
 if|if
 condition|(
@@ -439,6 +486,8 @@ literal|0xff
 expr_stmt|;
 name|inner8
 operator|=
+name|oinner8
+operator|=
 operator|(
 name|ntohl
 argument_list|(
@@ -451,6 +500,8 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
+if|if
+condition|(
 name|ip_ecn_egress
 argument_list|(
 name|mode
@@ -461,7 +512,21 @@ argument_list|,
 operator|&
 name|inner8
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|inner8
+operator|!=
+name|oinner8
+condition|)
+block|{
 operator|*
 name|inner
 operator|&=
@@ -486,6 +551,12 @@ operator|<<
 literal|20
 argument_list|)
 expr_stmt|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
