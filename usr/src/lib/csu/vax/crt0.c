@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)crt0.c	4.2 (Berkeley) %G%"
+literal|"@(#)crt0.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,6 +160,10 @@ end_block
 begin_comment
 comment|/*  * null mcount, just in case some routine is compiled for profiling  */
 end_comment
+
+begin_asm
+asm|asm("	.globl	mcount");
+end_asm
 
 begin_asm
 asm|asm("mcount:	rsb");
