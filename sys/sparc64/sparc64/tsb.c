@@ -160,6 +160,14 @@ file|<machine/tte.h>
 end_include
 
 begin_decl_stmt
+name|struct
+name|stte
+modifier|*
+name|tsb_kernel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_offset_t
 name|tsb_kernel_phys
 decl_stmt|;
@@ -720,7 +728,7 @@ argument_list|)
 expr_stmt|;
 name|CTR3
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_lookup: kernel va=%#lx stp=%#lx data=%#lx"
 argument_list|,
@@ -749,7 +757,7 @@ condition|)
 block|{
 name|CTR1
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_lookup: match va=%#lx"
 argument_list|,
@@ -768,7 +776,7 @@ goto|;
 block|}
 name|CTR2
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_lookup: ctx=%#lx va=%#lx"
 argument_list|,
@@ -815,7 +823,7 @@ argument_list|)
 expr_stmt|;
 name|CTR2
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_lookup: lvl=%d b=%p"
 argument_list|,
@@ -873,7 +881,7 @@ index|]
 expr_stmt|;
 name|CTR2
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_lookup: match va=%#lx stp=%p"
 argument_list|,
@@ -894,7 +902,7 @@ name|out
 label|:
 name|CTR2
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_lookup: miss ctx=%#lx va=%#lx"
 argument_list|,
@@ -951,7 +959,7 @@ name|i
 decl_stmt|;
 name|CTR3
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_promote: ctx=%#x va=%#lx stp=%p"
 argument_list|,
@@ -1040,7 +1048,7 @@ name|st_tte
 expr_stmt|;
 name|CTR3
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_promote: replace stp=%p va=%#lx pa=%#lx"
 argument_list|,
@@ -1113,7 +1121,7 @@ condition|)
 do|;
 name|CTR1
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_stte_promote: return stp=%p"
 argument_list|,
@@ -1263,7 +1271,7 @@ name|i
 decl_stmt|;
 name|CTR3
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_tte_enter: ctx=%#lx va=%#lx data=%#lx"
 argument_list|,
@@ -1376,7 +1384,7 @@ argument_list|)
 expr_stmt|;
 name|CTR3
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_tte_enter: va=%#lx bucket=%p level=%d"
 argument_list|,
@@ -1642,7 +1650,7 @@ expr_stmt|;
 block|}
 name|CTR1
 argument_list|(
-name|KTR_CT1
+name|KTR_PMAP
 argument_list|,
 literal|"tsb_tte_enter: return stp=%p"
 argument_list|,
