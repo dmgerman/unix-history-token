@@ -257,6 +257,7 @@ name|TELCMDS
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|telcmds
@@ -830,6 +831,7 @@ name|TELOPTS
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|telopts
@@ -1398,7 +1400,7 @@ begin_define
 define|#
 directive|define
 name|SLC_NAMELIST
-value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR", \ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP", \ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2",	\ 			"MCL", "MCR", "MCWL", "MCWR", "MCBOL",		\ 			"MCEOL", "INSRT", "OVER", "ECR", "EWR",		\ 			"EBOL", "EEOL",					\ 			0
+value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR",	\ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP",	\ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2",	\ 			"MCL", "MCR", "MCWL", "MCWR", "MCBOL",		\ 			"MCEOL", "INSRT", "OVER", "ECR", "EWR",		\ 			"EBOL", "EEOL",					\ 			0
 end_define
 
 begin_ifdef
@@ -1408,6 +1410,7 @@ name|SLC_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|slc_names
@@ -1709,6 +1712,7 @@ name|AUTH_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|authtype_names
@@ -1910,6 +1914,7 @@ name|ENCRYPT_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|encrypt_names
@@ -1940,6 +1945,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|enctype_names

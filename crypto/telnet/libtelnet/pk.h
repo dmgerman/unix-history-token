@@ -25,29 +25,12 @@ index|]
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|typedef unsigned long word, DesKeys[32];
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|DesKeys
 value|des_key_schedule
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -62,37 +45,6 @@ directive|define
 name|DES_ENCRYPT
 value|1
 end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|extern void des_fixup_key_parity();
-comment|/* (DesData *key) */
-end_comment
-
-begin_comment
-unit|extern int des_key_sched();
-comment|/* (DesData *key, DesKeys *m) */
-end_comment
-
-begin_comment
-unit|extern int des_ecb_encrypt();
-comment|/* (DesData *src, *dst, DesKeys *m, int mode) */
-end_comment
-
-begin_comment
-unit|extern int des_cbc_encrypt();
-comment|/* (char *src, *dst, int length, 				    DesKeys *m, DesData *init, int mode) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* public key routines */

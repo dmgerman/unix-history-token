@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *      Dave Safford.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1991, 1993  *      Dave Safford.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* public key routines */
@@ -14,19 +28,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<openssl/des.h>
 end_include
 
 begin_include
@@ -38,7 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/des.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -53,57 +73,43 @@ directive|include
 file|"pk.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOLARIS2
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LINUX
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|static
+name|void
+name|adjust
+parameter_list|(
+name|char
+name|keyout
+index|[
+name|HEXKEYBYTES
+operator|+
+literal|1
+index|]
+parameter_list|,
+name|char
+modifier|*
+name|keyin
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Choose top 128 bits of the common key to use as our idea key.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|extractideakey
-argument_list|(
-argument|ck
-argument_list|,
-argument|ideakey
-argument_list|)
+parameter_list|(
 name|MINT
-operator|*
+modifier|*
 name|ck
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|IdeaData
 modifier|*
 name|ideakey
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|MINT
 modifier|*
@@ -242,34 +248,25 @@ name|a
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Choose middle 64 bits of the common key to use as our des key, possibly  * overwriting the lower order bits by setting parity.   */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|extractdeskey
-argument_list|(
-argument|ck
-argument_list|,
-argument|deskey
-argument_list|)
+parameter_list|(
 name|MINT
-operator|*
+modifier|*
 name|ck
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|DesData
 modifier|*
 name|deskey
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|MINT
 modifier|*
@@ -410,7 +407,7 @@ name|a
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * get common key from my secret key and his public key  */
@@ -504,23 +501,11 @@ argument_list|,
 name|ideakey
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|DES_OSTHOLM
-name|des_fixup_key_parity
-argument_list|(
-name|deskey
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|des_set_odd_parity
 argument_list|(
 name|deskey
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mfree
 argument_list|(
 name|common
@@ -549,29 +534,18 @@ comment|/*  * Generate a seed  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getseed
 parameter_list|(
-name|seed
-parameter_list|,
-name|seedsize
-parameter_list|)
 name|char
 modifier|*
 name|seed
-decl_stmt|;
+parameter_list|,
 name|int
 name|seedsize
-decl_stmt|;
+parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|int i,f;         int rseed;         struct timeval tv; 	long devrand;          (void)gettimeofday(&tv, (struct timezone *)NULL);         rseed = tv.tv_sec + tv.tv_usec;
-comment|/* XXX What the hell is this?! */
-block|for (i = 0; i< 8; i++) {                 rseed ^= (rseed<< 8);         }  	f=open("/dev/random",O_NONBLOCK|O_RDONLY); 	if (f>=0) 	{ 		read(f,&devrand,sizeof(devrand)); 		close(f); 	}         srand48((long)rseed^devrand);          for (i = 0; i< seedsize; i++) {                 seed[i] = (lrand48()& 0xff);         }
-else|#
-directive|else
 name|int
 name|i
 decl_stmt|;
@@ -603,8 +577,6 @@ operator|&
 literal|0xff
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -616,20 +588,16 @@ begin_function
 name|void
 name|genkeys
 parameter_list|(
+name|char
+modifier|*
 name|public
 parameter_list|,
+name|char
+modifier|*
 name|secret
 parameter_list|)
-name|char
-modifier|*
-name|public
-decl_stmt|;
-name|char
-modifier|*
-name|secret
-decl_stmt|;
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 define|#
@@ -873,16 +841,11 @@ begin_comment
 comment|/*  * Adjust the input key so that it is 0-filled on the left  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|adjust
-argument_list|(
-argument|keyout
-argument_list|,
-argument|keyin
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 name|keyout
 index|[
@@ -890,17 +853,11 @@ name|HEXKEYBYTES
 operator|+
 literal|1
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|keyin
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -964,7 +921,7 @@ literal|'0'
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -986,29 +943,18 @@ begin_function
 name|void
 name|pk_encode
 parameter_list|(
-name|in
-parameter_list|,
-name|out
-parameter_list|,
-name|key
-parameter_list|)
 name|char
 modifier|*
 name|in
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|out
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|DesData
 modifier|*
 name|key
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1159,7 +1105,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* given a DES key, translate input from hex and decrypt */
@@ -1169,29 +1115,18 @@ begin_function
 name|void
 name|pk_decode
 parameter_list|(
-name|in
-parameter_list|,
-name|out
-parameter_list|,
-name|key
-parameter_list|)
 name|char
 modifier|*
 name|in
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|out
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|DesData
 modifier|*
 name|key
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1206,13 +1141,14 @@ name|des_key_schedule
 name|k
 decl_stmt|;
 name|int
-name|l
-decl_stmt|,
 name|n1
 decl_stmt|,
 name|n2
 decl_stmt|,
 name|op
+decl_stmt|;
+name|size_t
+name|l
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1413,7 +1349,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
