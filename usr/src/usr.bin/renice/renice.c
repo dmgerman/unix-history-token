@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)renice.c	4.2 (Berkeley) 83/03/19"
+literal|"@(#)renice.c	4.3 (Berkeley) 83/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,13 +23,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<resource.h>
+file|<sys/resource.h>
 end_include
 
 begin_include

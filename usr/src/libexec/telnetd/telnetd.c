@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.22 83/06/12"
+literal|"@(#)telnetd.c	4.23 (Berkeley) 83/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,6 +34,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -70,12 +76,6 @@ begin_include
 include|#
 directive|include
 file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<wait.h>
 end_include
 
 begin_include

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arff.c	4.14 (Berkeley) 83/06/07"
+literal|"@(#)arff.c	4.15 (Berkeley) 83/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include

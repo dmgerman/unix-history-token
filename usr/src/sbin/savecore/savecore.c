@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.12 (Berkeley) 83/05/03"
+literal|"@(#)savecore.c	4.13 (Berkeley) 83/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_define

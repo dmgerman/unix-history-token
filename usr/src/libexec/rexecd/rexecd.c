@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	4.9 83/06/12"
+literal|"@(#)rexecd.c	4.10 (Berkeley) 83/07/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -60,12 +66,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<wait.h>
 end_include
 
 begin_include
