@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	5.3 (Berkeley) %G%"
+literal|"@(#)restore.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,7 +175,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vprintf
+name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
