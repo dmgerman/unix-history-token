@@ -33,7 +33,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"8.7.Beta.1"
+literal|"8.7.Beta.2"
 decl_stmt|;
 end_decl_stmt
 
