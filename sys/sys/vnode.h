@@ -223,12 +223,6 @@ name|int
 name|v_writecount
 decl_stmt|;
 comment|/* v ref count of writers */
-name|struct
-name|vm_object
-modifier|*
-name|v_object
-decl_stmt|;
-comment|/* v Place to store VM object */
 name|daddr_t
 name|v_lastw
 decl_stmt|;
@@ -466,6 +460,13 @@ end_define
 begin_comment
 comment|/* XXX: These are temporary to avoid a source sweep at this time */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|v_object
+value|v_bufobj.bo_object
+end_define
 
 begin_define
 define|#

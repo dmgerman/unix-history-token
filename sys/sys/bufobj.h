@@ -178,6 +178,12 @@ modifier|*
 name|bo_ops
 decl_stmt|;
 comment|/* - buffer operatoins */
+name|struct
+name|vm_object
+modifier|*
+name|bo_object
+decl_stmt|;
+comment|/* v Place to store VM object */
 block|}
 struct|;
 end_struct
