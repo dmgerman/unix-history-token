@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -162,7 +168,7 @@ name|FOLD
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii(c)&& isupper(c) ? tolower(c) : (c))
+value|(isupper(c) ? tolower(c) : (unsigned char) (c))
 end_define
 
 begin_define
@@ -172,7 +178,9 @@ name|DICT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii(c)&& isalnum(c) ? (c) : NO_COMPARE)
+value|(isalnum(c) ? (c)& 0xFF
+comment|/* int */
+value|: NO_COMPARE)
 end_define
 
 begin_decl_stmt
@@ -190,12 +198,15 @@ name|binary_search
 name|__P
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -209,12 +220,15 @@ name|compare
 name|__P
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -246,12 +260,15 @@ name|linear_search
 name|__P
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -265,12 +282,15 @@ name|look
 name|__P
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -284,12 +304,15 @@ name|print_from
 name|__P
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|,
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -337,6 +360,7 @@ name|fd
 decl_stmt|,
 name|termchar
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|back
@@ -353,6 +377,16 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|file
 operator|=
 name|_PATH_WORDS
@@ -626,6 +660,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|string
@@ -645,6 +680,7 @@ name|int
 name|ch
 decl_stmt|;
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|readp
@@ -787,6 +823,7 @@ parameter_list|,
 name|back
 parameter_list|)
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|string
@@ -802,6 +839,7 @@ end_function
 begin_block
 block|{
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|p
@@ -902,6 +940,7 @@ name|front
 parameter_list|,
 name|back
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|string
@@ -992,6 +1031,7 @@ parameter_list|,
 name|back
 parameter_list|)
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|string
@@ -1101,6 +1141,7 @@ parameter_list|,
 name|back
 parameter_list|)
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|s1
