@@ -9700,6 +9700,11 @@ comment|/* Outgoing packets automatically pass/match */
 name|match
 operator|=
 operator|(
+name|hlen
+operator|>
+literal|0
+operator|&&
+operator|(
 operator|(
 name|oif
 operator|!=
@@ -9727,6 +9732,7 @@ operator|.
 name|rcvif
 argument_list|)
 operator|)
+operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -9735,6 +9741,11 @@ case|:
 comment|/* Outgoing packets automatically pass/match */
 name|match
 operator|=
+operator|(
+name|hlen
+operator|>
+literal|0
+operator|&&
 operator|(
 operator|(
 name|oif
@@ -9748,6 +9759,7 @@ name|src_ip
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 operator|)
 expr_stmt|;
 break|break;
