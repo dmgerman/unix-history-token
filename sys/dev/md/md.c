@@ -3884,9 +3884,6 @@ case|:
 case|case
 name|MD_PRELOAD
 case|:
-case|case
-name|MD_PRELOAD_COMPRESSED
-case|:
 return|return
 operator|(
 name|mddestroy
