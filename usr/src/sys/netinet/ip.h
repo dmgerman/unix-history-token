@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip.h 1.6 81/11/08 */
+comment|/* ip.h 1.7 81/11/14 */
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Structure of an internet header, naked of options.  *  * SHOULD MAKE A VERSION OF THIS FOR KERNEL SO USER  * VERSION CAN BE union FREE AND INITIALIZABLE.  */
+comment|/*  * Structure of an internet header, naked of options.  *  * We declare ip_len and ip_off to be short, rather than u_short  * pragmatically since otherwise unsigned comparisons can result  * against negative integers quite easily, and fail in subtle ways.  */
 end_comment
 
 begin_struct
@@ -37,16 +37,6 @@ name|u_char
 name|ip_tos
 decl_stmt|;
 comment|/* type of service */
-comment|/* we copy the IP_MF to ip_tos on input */
-define|#
-directive|define
-name|ip_mff
-value|ip_tos
-comment|/* more fragments flag */
-comment|/* by rights, ip_len should be a u_short, but this makes operations */
-comment|/* on it very dangerous as comparisons become unsigned and comparing */
-comment|/* against negative numbers then fails... we don't expect any> 32767 */
-comment|/* byte packets, so pragmatically delcare it to be a short */
 name|short
 name|ip_len
 decl_stmt|;
@@ -55,7 +45,6 @@ name|u_short
 name|ip_id
 decl_stmt|;
 comment|/* identification */
-comment|/* ip_off should also, by rights, be u_short, ala ip_len */
 name|short
 name|ip_off
 decl_stmt|;
@@ -82,54 +71,13 @@ name|u_short
 name|ip_sum
 decl_stmt|;
 comment|/* checksum */
-union|union
-block|{
 name|struct
 name|ip_addr
-name|ip_s
-decl_stmt|;
-comment|/* source address */
-name|struct
-name|ip
-modifier|*
-name|ip_nxt
-decl_stmt|;
-comment|/* next fragment */
-block|}
-name|I_sun
-union|;
-define|#
-directive|define
 name|ip_src
-value|I_sun.ip_s
-define|#
-directive|define
-name|ip_next
-value|I_sun.ip_nxt
-union|union
-block|{
-name|struct
-name|ip_addr
-name|ip_d
-decl_stmt|;
-comment|/* destination address */
-name|struct
-name|ip
-modifier|*
-name|ip_prv
-decl_stmt|;
-comment|/* prev fragment */
-block|}
-name|I_dun
-union|;
-define|#
-directive|define
+decl_stmt|,
 name|ip_dst
-value|I_dun.ip_d
-define|#
-directive|define
-name|ip_prev
-value|I_dun.ip_prv
+decl_stmt|;
+comment|/* source and dest address */
 block|}
 struct|;
 end_struct
@@ -435,54 +383,6 @@ value|0x6bc5
 end_define
 
 begin_comment
-comment|/*  * Ip reassembly queue structure.  Each fragment  * being reassambled is attached to one of these structures.  * They are timed out after ipq_ttl drops to 0, and may also  * be reclaimed if memory becomes tight.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ipq
-block|{
-name|struct
-name|ipq
-modifier|*
-name|next
-decl_stmt|,
-modifier|*
-name|prev
-decl_stmt|;
-comment|/* to other reass headers */
-name|u_char
-name|ipq_ttl
-decl_stmt|;
-comment|/* time for reass q to live */
-name|u_char
-name|ipq_p
-decl_stmt|;
-comment|/* protocol of this fragment */
-name|u_short
-name|ipq_id
-decl_stmt|;
-comment|/* sequence id for reassembly */
-name|struct
-name|ip
-modifier|*
-name|ipq_next
-decl_stmt|,
-modifier|*
-name|ipq_prev
-decl_stmt|;
-comment|/* to ip headers of fragments */
-name|struct
-name|ip_addr
-name|ipq_src
-decl_stmt|,
-name|ipq_dst
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Internet implementation parameters.  */
 end_comment
 
@@ -507,47 +407,6 @@ end_define
 begin_comment
 comment|/* time to live for frag chains */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|ipq
-name|ipq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ip reass. queue */
-end_comment
-
-begin_function_decl
-name|struct
-name|ipq
-modifier|*
-name|ip_freef
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|u_short
-name|ip_id
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ip packet ctr, for ids */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

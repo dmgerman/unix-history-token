@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.6 81/11/08 */
+comment|/* if_en.c 4.7 81/11/14 */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ file|"../net/tcp.h"
 end_include
 
 begin_comment
-comment|/* ### */
+comment|/* XXX */
 end_comment
 
 begin_include
@@ -245,7 +245,7 @@ name|en_header
 name|enp_h
 decl_stmt|;
 name|struct
-name|th
+name|tcpiphdr
 name|enp_th
 decl_stmt|;
 block|}
@@ -2323,7 +2323,7 @@ operator|+=
 operator|(
 operator|(
 expr|struct
-name|th
+name|tcpiphdr
 operator|*
 operator|)
 name|ip

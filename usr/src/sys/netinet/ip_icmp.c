@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.c 4.2 81/11/08 */
+comment|/* ip_icmp.c 4.3 81/11/14 */
 end_comment
 
 begin_include
@@ -663,9 +663,9 @@ literal|0
 expr_stmt|;
 name|icp
 operator|->
-name|icmp_inet_cksum
+name|icmp_cksum
 operator|=
-name|cksum
+name|inet_cksum
 argument_list|(
 name|dtom
 argument_list|(
@@ -675,7 +675,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* ### */
+comment|/* XXX */
 comment|/* what about ttl? */
 name|ip_output
 argument_list|(

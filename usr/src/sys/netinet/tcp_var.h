@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.1	81/11/08	*/
+comment|/*	tcp_var.h	4.2	81/11/14	*/
 end_comment
 
 begin_comment
@@ -13,13 +13,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|tcb
-block|{
-struct|struct
-name|tcb_hd
+name|tcpcb
 block|{
 name|struct
-name|th
+name|tcpiphdr
 modifier|*
 name|seg_next
 decl_stmt|,
@@ -28,45 +25,15 @@ name|seg_prev
 decl_stmt|;
 comment|/* seq queue */
 name|struct
-name|tcb
-modifier|*
-name|tcb_next
-decl_stmt|,
-modifier|*
-name|tcb_prev
-decl_stmt|;
-comment|/* other tcb's */
-block|}
-name|tcb_hd
-struct|;
-name|struct
-name|th
+name|tcpiphdr
 modifier|*
 name|t_template
 decl_stmt|;
 comment|/* skeletal packet for transmit */
 name|struct
-name|socket
+name|inpcb
 modifier|*
-name|t_socket
-decl_stmt|;
-comment|/* back pointer to socket */
-name|struct
-name|mbuf
-modifier|*
-name|seg_unack
-decl_stmt|;
-comment|/* unacked message queue */
-name|struct
-name|host
-modifier|*
-name|t_host
-decl_stmt|;
-name|short
-name|seqcnt
-decl_stmt|;
-name|short
-name|xxx
+name|t_inpcb
 decl_stmt|;
 name|seq_t
 name|iss
@@ -144,6 +111,15 @@ name|seq_t
 name|rcv_adv
 decl_stmt|;
 comment|/* advertised window */
+name|struct
+name|mbuf
+modifier|*
+name|seg_unack
+decl_stmt|;
+comment|/* unacked message queue */
+name|short
+name|seqcnt
+decl_stmt|;
 name|u_short
 name|tc_flags
 decl_stmt|;
@@ -161,14 +137,6 @@ directive|define
 name|TO_URG
 value|0x02
 comment|/* urgent mode */
-name|u_short
-name|t_lport
-decl_stmt|;
-comment|/* local port */
-name|u_short
-name|t_fport
-decl_stmt|;
-comment|/* foreign port */
 name|u_char
 name|t_state
 decl_stmt|;
@@ -181,7 +149,7 @@ comment|/* timers... must be in order */
 name|short
 name|t_init
 decl_stmt|;
-comment|/* initialization too long */
+comment|/* init */
 name|short
 name|t_rexmt
 decl_stmt|;
@@ -233,15 +201,8 @@ begin_comment
 comment|/* retransmit timer cancelled */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TC_DROPPED_TXT
-value|0x0004
-end_define
-
 begin_comment
-comment|/* dropped incoming data */
+comment|/* ... */
 end_comment
 
 begin_define
@@ -433,6 +394,26 @@ name|TNTIMERS
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|intotcpcb
+parameter_list|(
+name|ip
+parameter_list|)
+value|((struct tcpcb *)(ip)->inp_ppcb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sototcpcb
+parameter_list|(
+name|so
+parameter_list|)
+value|(intotcpcb(sotoinpcb(so)))
+end_define
+
 begin_comment
 comment|/*  * Tcp machine predicates  */
 end_comment
@@ -484,7 +465,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_socket->so_rcv.sb_mb == NULL&& \        (x)->tcb_hd.seg_next == (x)->tcb_hd.seg_prev))
+value|(((x)->tc_flags&TC_USR_ABORT) || \       ((x)->t_inpcb->inp_socket->so_rcv.sb_mb == NULL&& \        (x)->seg_next == (x)->seg_prev))
 end_define
 
 begin_define
@@ -512,6 +493,13 @@ end_comment
 begin_comment
 comment|/*  * THESE NEED TO BE JUSTIFIED!  *  * *2 here is because slow timeout routine called every 1/2 second.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|T_INIT
+value|(30*2)
+end_define
 
 begin_define
 define|#
@@ -594,7 +582,7 @@ name|td_tod
 decl_stmt|;
 comment|/* time of day */
 name|struct
-name|tcb
+name|tcbcb
 modifier|*
 name|td_tcb
 decl_stmt|;
@@ -651,17 +639,6 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|struct
-name|tcb_hd
-name|tcb
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tcp tcb list head */
-end_comment
-
-begin_decl_stmt
 name|seq_t
 name|tcp_iss
 decl_stmt|;
@@ -680,6 +657,13 @@ end_decl_stmt
 begin_comment
 comment|/* set to 1 traces on console */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|inpcb
+name|tcb
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -714,7 +698,7 @@ end_comment
 
 begin_function_decl
 name|struct
-name|th
+name|tcpiphdr
 modifier|*
 name|tcp_template
 parameter_list|()
@@ -773,15 +757,6 @@ name|b
 parameter_list|)
 value|((int)((a)-(b))>= 0)
 end_define
-
-begin_function_decl
-name|struct
-name|th
-modifier|*
-name|tcp_template
-parameter_list|()
-function_decl|;
-end_function_decl
 
 end_unit
 
