@@ -3134,6 +3134,13 @@ block|,
 comment|/* PNP0511 */
 comment|/* Devices that do not have a compatid */
 block|{
+literal|0x12206804
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ACH2012 - 5634BTS 56K Video Ready Modem */
+block|{
 literal|0x7602a904
 block|,
 name|NULL
