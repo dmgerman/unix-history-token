@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -78,6 +78,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|vnode
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ufs_args
 struct_decl|;
 end_struct_decl
 
@@ -433,6 +439,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|ufs_free_addrlist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ufsmount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ufs_getattr
 name|__P
@@ -440,6 +460,24 @@ argument_list|(
 operator|(
 expr|struct
 name|vop_getattr_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ufs_hang_addrlist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+expr|struct
+name|ufs_args
 operator|*
 operator|)
 argument_list|)

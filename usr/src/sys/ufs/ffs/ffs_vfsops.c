@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.69 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.70 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -664,7 +664,7 @@ if|if
 condition|(
 name|error
 operator|=
-name|hang_addrlist
+name|ufs_hang_addrlist
 argument_list|(
 name|mp
 argument_list|,
@@ -693,7 +693,7 @@ operator|&
 name|MNT_DELEXPORT
 condition|)
 block|{
-name|free_addrlist
+name|ufs_free_addrlist
 argument_list|(
 name|ump
 argument_list|)
