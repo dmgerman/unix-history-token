@@ -492,7 +492,7 @@ name|linker_class_t
 name|lc
 parameter_list|)
 block|{
-comment|/* 	 * We disallow any class registration passt SI_ORDER_ANY 	 * of SI_SUB_KLD. 	 */
+comment|/* 	 * We disallow any class registration past SI_ORDER_ANY 	 * of SI_SUB_KLD.  We bump the reference count to keep the 	 * ops from being freed. 	 */
 if|if
 condition|(
 name|linker_no_more_classes
@@ -522,7 +522,7 @@ operator|->
 name|refs
 operator|++
 expr_stmt|;
-comment|/* prevent ops being freed */
+comment|/* XXX: kobj_mtx */
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&

@@ -3774,6 +3774,7 @@ operator|->
 name|refs
 operator|++
 expr_stmt|;
+comment|/* XXX: kobj_mtx */
 comment|/* 	 * Call BUS_DRIVER_ADDED for any existing busses in this class. 	 */
 for|for
 control|(
@@ -4037,6 +4038,7 @@ argument_list|,
 name|M_BUS
 argument_list|)
 expr_stmt|;
+comment|/* XXX: kobj_mtx */
 name|driver
 operator|->
 name|refs
