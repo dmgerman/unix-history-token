@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -133,7 +137,7 @@ define|#
 directive|define
 name|CHUNK_BSD_COMPAT
 value|2
-comment|/* this chunk is in the BSD-compatibility, and has a short name          * too, ie wd0s4f -> wd0f          */
+comment|/* this chunk is in the BSD-compatibility, and has a  			 * short name too, ie wd0s4f -> wd0f          		*/
 define|#
 directive|define
 name|CHUNK_BAD144
@@ -160,29 +164,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|Free_Disk
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|Debug_Disk
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-name|disk
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* Will open the named disk, and return populated tree. 	 */
+end_comment
 
 begin_function_decl
 name|struct
@@ -197,6 +181,42 @@ name|disk
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Clone a copy of a tree.  Useful for "Undo" functionality 	 */
+end_comment
+
+begin_function_decl
+name|void
+name|Free_Disk
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|disk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Free a tree made with Open_Disk() or Clone_Disk() 	 */
+end_comment
+
+begin_function_decl
+name|void
+name|Debug_Disk
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+name|disk
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Print the content of the tree to stdout 	 */
+end_comment
 
 begin_function_decl
 name|struct
@@ -221,6 +241,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Use a different physical geometry.  Makes sense for ST506 disks only. 	 * The tree returned is read from the disk, using this geometry. 	 */
+end_comment
+
 begin_function_decl
 name|void
 name|Set_Bios_Geom
@@ -242,6 +266,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Set the geometry the bios uses. 	 */
+end_comment
+
 begin_function_decl
 name|int
 name|Delete_Chunk
@@ -251,17 +279,16 @@ name|disk
 modifier|*
 name|disk
 parameter_list|,
-name|u_long
-name|offset
-parameter_list|,
-name|u_long
-name|end
-parameter_list|,
-name|chunk_e
-name|type
+name|struct
+name|chunk
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Free a chunk of disk_space  	 */
+end_comment
 
 begin_function_decl
 name|void
@@ -274,6 +301,10 @@ name|disk
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Experimental, do not use. 	 */
+end_comment
 
 begin_function_decl
 name|int
@@ -291,6 +322,10 @@ name|chunk
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Experimental, do not use. 	 */
+end_comment
 
 begin_function_decl
 name|int
@@ -320,7 +355,27 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Implementation details */
+comment|/* Create a chunk with the specified paramters 	 */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|CheckRules
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return char* to warnings about broken design rules in this disklayout 	 */
+end_comment
+
+begin_comment
+comment|/*   * Implementation details>>> DO NOT USE<<<  */
 end_comment
 
 begin_function_decl
