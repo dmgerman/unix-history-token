@@ -14,7 +14,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 2.14 %G%"
+literal|"@(#)main.c 2.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -982,6 +982,13 @@ name|nohost
 goto|;
 endif|#
 directive|endif
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* no longer need or want root privileges */
 name|doit
 argument_list|(
 name|command
