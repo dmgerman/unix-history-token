@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.18	%G%"
+literal|"@(#)deliver.c	3.19	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2771,6 +2771,7 @@ operator||=
 name|QBADADDR
 expr_stmt|;
 else|else
+block|{
 name|a
 operator|->
 name|q_home
@@ -2800,6 +2801,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return;
 block|}

@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.10	%G%"
+literal|"@(#)alias.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -864,6 +864,15 @@ argument_list|)
 condition|)
 return|return;
 comment|/* good address -- look for .forward file in home */
+name|define
+argument_list|(
+literal|'z'
+argument_list|,
+name|user
+operator|->
+name|q_home
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
