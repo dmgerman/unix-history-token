@@ -2075,6 +2075,8 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
+operator||
+name|IFF_NEEDSGIANT
 expr_stmt|;
 name|ifp
 operator|->
