@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPPOE_NODE_TYPE
-value|"PPPoE"
+value|"pppoe"
 end_define
 
 begin_define
@@ -171,7 +171,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ngPPPoEstat
+name|ngpppoestat
 block|{
 name|u_int
 name|packets_in
@@ -191,7 +191,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ngPPPoE_init_data
+name|ngpppoe_init_data
 block|{
 name|char
 name|hook
@@ -223,7 +223,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ngPPPoE_sts
+name|ngpppoe_sts
 block|{
 name|char
 name|hook
@@ -239,7 +239,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************************************  * Constants and definitions specific to PPPoE  ********************************************************************/
+comment|/********************************************************************  * Constants and definitions specific to pppoe  ********************************************************************/
 end_comment
 
 begin_define
@@ -385,7 +385,7 @@ value|0x8863
 end_define
 
 begin_comment
-comment|/* PPPoE discovery packets     */
+comment|/* pppoe discovery packets     */
 end_comment
 
 begin_define
@@ -396,7 +396,7 @@ value|0x8864
 end_define
 
 begin_comment
-comment|/* PPPoE session packets       */
+comment|/* pppoe session packets       */
 end_comment
 
 begin_else
@@ -482,7 +482,7 @@ value|0x6388
 end_define
 
 begin_comment
-comment|/* PPPoE discovery packets     */
+comment|/* pppoe discovery packets     */
 end_comment
 
 begin_define
@@ -493,7 +493,7 @@ value|0x6488
 end_define
 
 begin_comment
-comment|/* PPPoE session packets       */
+comment|/* pppoe session packets       */
 end_comment
 
 begin_endif

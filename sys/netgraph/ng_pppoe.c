@@ -125,7 +125,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|ng_PPPoE_constructor
+name|ng_pppoe_constructor
 parameter_list|(
 name|node_p
 modifier|*
@@ -137,7 +137,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ng_PPPoE_rcvmsg
+name|ng_pppoe_rcvmsg
 parameter_list|(
 name|node_p
 name|node
@@ -164,7 +164,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ng_PPPoE_rmnode
+name|ng_pppoe_rmnode
 parameter_list|(
 name|node_p
 name|node
@@ -175,7 +175,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ng_PPPoE_newhook
+name|ng_pppoe_newhook
 parameter_list|(
 name|node_p
 name|node
@@ -194,7 +194,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ng_PPPoE_connect
+name|ng_pppoe_connect
 parameter_list|(
 name|hook_p
 name|hook
@@ -205,7 +205,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ng_PPPoE_rcvdata
+name|ng_pppoe_rcvdata
 parameter_list|(
 name|hook_p
 name|hook
@@ -224,7 +224,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|ng_PPPoE_disconnect
+name|ng_pppoe_disconnect
 parameter_list|(
 name|hook_p
 name|hook
@@ -249,23 +249,23 @@ name|NG_PPPOE_NODE_TYPE
 block|,
 name|NULL
 block|,
-name|ng_PPPoE_constructor
+name|ng_pppoe_constructor
 block|,
-name|ng_PPPoE_rcvmsg
+name|ng_pppoe_rcvmsg
 block|,
-name|ng_PPPoE_rmnode
+name|ng_pppoe_rmnode
 block|,
-name|ng_PPPoE_newhook
+name|ng_pppoe_newhook
 block|,
 name|NULL
 block|,
-name|ng_PPPoE_connect
+name|ng_pppoe_connect
 block|,
-name|ng_PPPoE_rcvdata
+name|ng_pppoe_rcvdata
 block|,
-name|ng_PPPoE_rcvdata
+name|ng_pppoe_rcvdata
 block|,
-name|ng_PPPoE_disconnect
+name|ng_pppoe_disconnect
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -273,7 +273,7 @@ end_decl_stmt
 begin_expr_stmt
 name|NETGRAPH_INIT
 argument_list|(
-name|PPPoE
+name|pppoe
 argument_list|,
 operator|&
 name|typestruct
@@ -1776,7 +1776,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_PPPoE_constructor
+name|ng_pppoe_constructor
 parameter_list|(
 name|node_p
 modifier|*
@@ -1891,7 +1891,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_PPPoE_newhook
+name|ng_pppoe_newhook
 parameter_list|(
 name|node_p
 name|node
@@ -2046,7 +2046,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_PPPoE_rcvmsg
+name|ng_pppoe_rcvmsg
 parameter_list|(
 name|node_p
 name|node
@@ -2076,7 +2076,7 @@ operator|->
 name|private
 decl_stmt|;
 name|struct
-name|ngPPPoE_init_data
+name|ngpppoe_init_data
 modifier|*
 name|ourmsg
 init|=
@@ -2145,7 +2145,7 @@ name|ourmsg
 operator|=
 operator|(
 expr|struct
-name|ngPPPoE_init_data
+name|ngpppoe_init_data
 operator|*
 operator|)
 name|msg
@@ -2191,7 +2191,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"PPPoE_rcvmsg: bad arg size"
+literal|"pppoe_rcvmsg: bad arg size"
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -2614,7 +2614,7 @@ name|NGM_PPPOE_GET_STATUS
 case|:
 block|{
 name|struct
-name|ngPPPoEstat
+name|ngpppoestat
 modifier|*
 name|stats
 decl_stmt|;
@@ -2649,7 +2649,7 @@ name|stats
 operator|=
 operator|(
 expr|struct
-name|ngPPPoEstat
+name|ngpppoestat
 operator|*
 operator|)
 name|resp
@@ -3115,7 +3115,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_PPPoE_rcvdata
+name|ng_pppoe_rcvdata
 parameter_list|(
 name|hook_p
 name|hook
@@ -4962,7 +4962,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_PPPoE_rmnode
+name|ng_pppoe_rmnode
 parameter_list|(
 name|node_p
 name|node
@@ -5028,7 +5028,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_PPPoE_connect
+name|ng_pppoe_connect
 parameter_list|(
 name|hook_p
 name|hook
@@ -5050,7 +5050,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|ng_PPPoE_disconnect
+name|ng_pppoe_disconnect
 parameter_list|(
 name|hook_p
 name|hook
@@ -6052,7 +6052,7 @@ modifier|*
 name|msg
 decl_stmt|;
 name|struct
-name|ngPPPoE_sts
+name|ngpppoe_sts
 modifier|*
 name|sts
 decl_stmt|;
@@ -6068,7 +6068,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ngPPPoE_sts
+name|ngpppoe_sts
 argument_list|)
 argument_list|,
 name|M_NOWAIT
@@ -6078,7 +6078,7 @@ name|sts
 operator|=
 operator|(
 expr|struct
-name|ngPPPoE_sts
+name|ngpppoe_sts
 operator|*
 operator|)
 name|msg
