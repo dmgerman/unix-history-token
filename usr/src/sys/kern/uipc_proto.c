@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	6.1	83/07/29	*/
+comment|/*	uipc_proto.c	6.2	84/08/21	*/
 end_comment
 
 begin_include
@@ -61,6 +61,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|domain
+name|unixdomain
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* or at least forward */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|protosw
 name|unixsw
@@ -70,7 +82,8 @@ block|{
 block|{
 name|SOCK_STREAM
 block|,
-name|PF_UNIX
+operator|&
+name|unixdomain
 block|,
 literal|0
 block|,
@@ -100,7 +113,8 @@ block|,
 block|{
 name|SOCK_DGRAM
 block|,
-name|PF_UNIX
+operator|&
+name|unixdomain
 block|,
 literal|0
 block|,
@@ -161,6 +175,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|unp_externalize
+argument_list|()
+decl_stmt|,
+name|unp_dispose
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|domain
 name|unixdomain
@@ -169,6 +193,12 @@ block|{
 name|AF_UNIX
 block|,
 literal|"unix"
+block|,
+literal|0
+block|,
+name|unp_externalize
+block|,
+name|unp_dispose
 block|,
 name|unixsw
 block|,

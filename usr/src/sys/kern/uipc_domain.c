@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_domain.c	6.1	83/07/29	*/
+comment|/*	uipc_domain.c	6.2	84/08/21	*/
 end_comment
 
 begin_include
@@ -133,6 +133,21 @@ name|dp
 operator|->
 name|dom_next
 control|)
+block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|dom_init
+condition|)
+call|(
+modifier|*
+name|dp
+operator|->
+name|dom_init
+call|)
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|pr
@@ -164,6 +179,7 @@ name|pr_init
 call|)
 argument_list|()
 expr_stmt|;
+block|}
 name|pffasttimo
 argument_list|()
 expr_stmt|;
