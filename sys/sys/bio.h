@@ -473,12 +473,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_BAD
+name|B_UNUSED0
 value|0x00000008
 end_define
 
 begin_comment
-comment|/* Bad block revectoring in progress. */
+comment|/* Old B_BAD */
 end_comment
 
 begin_define

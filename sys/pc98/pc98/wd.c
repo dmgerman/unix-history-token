@@ -3608,9 +3608,7 @@ endif|#
 directive|endif
 argument|lp =&du->dk_dd; 	secpertrk = lp->d_nsectors; 	secpercyl = lp->d_secpercyl;  	if (du->dk_skip ==
 literal|0
-argument|) { 		du->dk_bc = bp->b_bcount;  		if (bp->b_flags& B_BAD
-comment|/* 		     * XXX handle large transfers inefficiently instead 		     * of crashing on them. 		     */
-argument||| howmany(du->dk_bc, DEV_BSIZE)> MAXTRANSFER) 			du->dk_flags |= DKFL_SINGLE; 	}  	wdtab[ctrlr].b_active =
+argument|) 		du->dk_bc = bp->b_bcount;  	wdtab[ctrlr].b_active =
 literal|1
 argument|;
 comment|/* mark controller active */
