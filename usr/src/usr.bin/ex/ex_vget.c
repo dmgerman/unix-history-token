@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vget.c	6.3 %G%"
+literal|"@(#)ex_vget.c	6.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,12 @@ end_block
 begin_decl_stmt
 name|short
 name|precbksl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|jmp_buf
+name|readbuf
 decl_stmt|;
 end_decl_stmt
 
@@ -320,6 +326,16 @@ argument_list|()
 expr_stmt|;
 name|again
 label|:
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|readbuf
+argument_list|)
+condition|)
+goto|goto
+name|getATTN
+goto|;
 if|if
 condition|(
 operator|(
