@@ -156,6 +156,17 @@ case|:
 case|case
 name|UT_FP_EXCEPTION_OTHER
 case|:
+name|__fpu_exception
+argument_list|(
+name|uf
+argument_list|)
+expr_stmt|;
+name|UF_DONE
+argument_list|(
+name|uf
+argument_list|)
+expr_stmt|;
+return|return;
 case|case
 name|UT_ILLEGAL_INSTRUCTION
 case|:

@@ -68,10 +68,34 @@ block|,
 name|NULL
 block|}
 block|,
+block|{
+name|UT_FP_EXCEPTION_IEEE_754
+block|,
+name|__sparc_utrap_gen
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+name|UT_FP_EXCEPTION_OTHER
+block|,
+name|__sparc_utrap_gen
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 if|#
 directive|if
 literal|0
-block|{ UT_FP_EXCEPTION_IEEE_754, __sparc_utrap_gen, NULL, NULL, NULL }, 	{ UT_FP_EXCEPTION_OTHER, __sparc_utrap_gen, NULL, NULL, NULL }, 	{ UT_ILLEGAL_INSTRUCTION, __sparc_utrap_gen, NULL, NULL, NULL }, 	{ UT_MEM_ADDRESS_NOT_ALIGNED, __sparc_utrap_gen, NULL, NULL, NULL },
+block|{ UT_ILLEGAL_INSTRUCTION, __sparc_utrap_gen, NULL, NULL, NULL }, 	{ UT_MEM_ADDRESS_NOT_ALIGNED, __sparc_utrap_gen, NULL, NULL, NULL },
 endif|#
 directive|endif
 block|{
