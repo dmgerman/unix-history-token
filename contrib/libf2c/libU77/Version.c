@@ -14,7 +14,7 @@ name|char
 name|__G77_LIBU77_VERSION__
 index|[]
 init|=
-literal|"3.2.1 20021119 (release)"
+literal|"3.2.2 20030205 (release)"
 decl_stmt|;
 end_decl_stmt
 
