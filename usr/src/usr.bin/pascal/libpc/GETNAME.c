@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.4 %G%"
+literal|"@(#)GETNAME.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,6 +287,12 @@ name|FDEF
 operator|)
 operator|==
 literal|0
+operator|&&
+name|filep
+operator|->
+name|fbuf
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* 			 * have a previous buffer, close associated file 			 */
@@ -355,20 +361,19 @@ operator|&
 name|TEMP
 operator|)
 operator|&&
-operator|(
 name|name
 operator|!=
 name|NULL
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|unlink
 argument_list|(
 name|filep
 operator|->
 name|pfname
 argument_list|)
-operator|)
 condition|)
 block|{
 name|ERROR
@@ -381,6 +386,7 @@ name|pfname
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 name|filep
@@ -418,7 +424,7 @@ name|filep
 operator|)
 return|;
 block|}
-comment|/* 		 * no name given and no previous name, so generate 		 * a new one of the form tmp.xxxxxx 		 */
+comment|/* 		 * no name given and no previous name, so generate 		 * a new one of the form #tmp.xxxxxx 		 */
 name|filep
 operator|->
 name|funit
@@ -431,7 +437,7 @@ name|filep
 operator|->
 name|fname
 argument_list|,
-literal|"tmp.%c%d"
+literal|"#tmp.%c%d"
 argument_list|,
 literal|'a'
 operator|+
