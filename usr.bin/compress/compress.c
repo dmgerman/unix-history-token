@@ -35,14 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)compress.c	8.2 (Berkeley) 1/7/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)compress.c	8.2 (Berkeley) 1/7/94"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,12 +71,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -1918,7 +1924,7 @@ argument_list|)
 condition|)
 name|cwarn
 argument_list|(
-literal|"chown: %s"
+literal|"chmod: %s"
 argument_list|,
 name|name
 argument_list|)
