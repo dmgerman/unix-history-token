@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.8	83/03/28	*/
+comment|/*	rx.c	4.9	83/03/29	*/
 end_comment
 
 begin_include
@@ -18,11 +18,11 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * RX02 floppy disk device driver  *  * -- WARNING, NOT THOROUGHLY TESTED --  */
+comment|/*  * RX02 floppy disk device driver  *  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  *    -	Make the driver recognize when the drive subsystem   * 	has been turned off, so it can initialize the controller.   *    - Make it possible to access blocks containing less than  *	512 bytes properly.  *  * 	Note: If the drive subsystem is  * 	powered off at boot time, the controller won't interrupt!  */
+comment|/*  * TODO:  *    - Make it possible to access blocks containing less than  *	512 bytes properly.  *  * 	Note: If the drive subsystem is  * 	powered off at boot time, the controller won't interrupt!  */
 end_comment
 
 begin_include
@@ -967,13 +967,6 @@ name|rxwstart
 operator|=
 literal|0
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"rxclose: dev=0x%x\n"
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1624,6 +1617,36 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|rxaddr
+operator|->
+name|rxcs
+operator|==
+literal|0x800
+condition|)
+block|{
+comment|/* 		 * Simulated check for 'volume valid', check 		 * if the drive unit has been powered down 		 */
+name|rxaddr
+operator|->
+name|rxcs
+operator|=
+name|RX_INIT
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|rxaddr
+operator|->
+name|rxcs
+operator|&
+name|RX_DONE
+operator|)
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+block|}
+if|if
+condition|(
 name|bp
 operator|->
 name|b_flags
@@ -1675,35 +1698,8 @@ name|bp
 operator|->
 name|b_flags
 operator|&
-name|B_WRITE
+name|B_READ
 condition|)
-block|{
-name|rxc
-operator|->
-name|rxc_state
-operator|=
-name|RXS_FILL
-expr_stmt|;
-comment|/* write */
-name|um
-operator|->
-name|um_cmd
-operator|=
-name|RX_FILL
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|ubago
-argument_list|(
-name|rxdinfo
-index|[
-name|unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|rxmap
 argument_list|(
@@ -1778,6 +1774,36 @@ operator|)
 name|track
 expr_stmt|;
 block|}
+else|else
+block|{
+name|rxc
+operator|->
+name|rxc_state
+operator|=
+name|RXS_FILL
+expr_stmt|;
+comment|/* write */
+name|um
+operator|->
+name|um_cmd
+operator|=
+name|RX_FILL
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ubago
+argument_list|(
+name|rxdinfo
+index|[
+name|unit
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|RXDEBUG
 name|printf
 argument_list|(
 literal|"rxstart: flgs=0x%x, unit=%d, tr=%d, sc=%d, bl=%d, cnt=%d\n"
@@ -1801,6 +1827,8 @@ operator|->
 name|b_bcount
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -2128,6 +2156,9 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
 name|printf
 argument_list|(
 literal|"rxintr: dev=0x%x, state=0x%x, status=0x%x\n"
@@ -2145,6 +2176,8 @@ operator|->
 name|rxcs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2340,7 +2373,7 @@ name|bp
 operator|->
 name|b_error
 operator|=
-name|EBUSY
+name|EIO
 expr_stmt|;
 name|bp
 operator|->
@@ -2465,6 +2498,13 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+name|bp
+operator|=
+name|bp
+operator|->
+name|b_back
+expr_stmt|;
+comment|/* kludge, see 'rderr:' */
 goto|goto
 name|done
 goto|;
@@ -2565,7 +2605,7 @@ condition|(
 operator|(
 name|rxaddr
 operator|->
-name|rxdb
+name|rxcs
 operator|&
 name|RX_DONE
 operator|)
@@ -2617,7 +2657,7 @@ name|bp
 operator|->
 name|b_error
 operator|=
-name|EIO
+name|ENODEV
 expr_stmt|;
 name|bp
 operator|->
@@ -2666,6 +2706,17 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
+name|erxbuf
+index|[
+name|unit
+index|]
+operator|.
+name|b_back
+operator|=
+name|bp
+expr_stmt|;
+comment|/* kludge to save the buffer pointer */
+comment|/* while processing the error */
 name|er
 operator|->
 name|rxcs
@@ -3178,7 +3229,7 @@ condition|(
 operator|(
 name|rxaddr
 operator|->
-name|rxdb
+name|rxcs
 operator|&
 name|RX_DONE
 operator|)
