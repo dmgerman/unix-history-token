@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfscanf.c,v 1.3.2.1 1997/02/02 18:30:54 joerg Exp $"
+literal|"$Id: vfscanf.c,v 1.3.2.2 1997/03/07 09:12:11 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,13 @@ begin_comment
 comment|/* do not skip blanks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QUAD
+value|0x400
+end_define
+
 begin_comment
 comment|/*  * The following are used in numeric conversions only:  * SIGNOK, NDIGITS, DPTOK, and EXPOK are for floating point;  * SIGNOK, NDIGITS, PFXOK, and NZDIGITS are for integral.  */
 end_comment
@@ -322,7 +329,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* integer, i.e., strtol or strtoul */
+comment|/* integer, i.e., strtoq or strtouq */
 end_comment
 
 begin_define
@@ -451,15 +458,15 @@ comment|/* number of characters consumed from fp */
 name|int
 name|base
 decl_stmt|;
-comment|/* base argument to strtol/strtoul */
-name|u_long
+comment|/* base argument to strtoq/strtouq */
+name|u_quad_t
 function_decl|(
 modifier|*
 name|ccfn
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* conversion function (strtol/strtoul) */
+comment|/* conversion function (strtoq/strtouq) */
 name|char
 name|ccltab
 index|[
@@ -720,6 +727,16 @@ goto|goto
 name|again
 goto|;
 case|case
+literal|'q'
+case|:
+name|flags
+operator||=
+name|QUAD
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+case|case
 literal|'L'
 case|:
 name|flags
@@ -802,13 +819,13 @@ expr_stmt|;
 name|ccfn
 operator|=
 operator|(
-name|u_long
+name|u_quad_t
 argument_list|(
 operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|strtol
+name|strtoq
 expr_stmt|;
 name|base
 operator|=
@@ -825,13 +842,13 @@ expr_stmt|;
 name|ccfn
 operator|=
 operator|(
-name|u_long
+name|u_quad_t
 argument_list|(
 operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|strtol
+name|strtoq
 expr_stmt|;
 name|base
 operator|=
@@ -856,7 +873,7 @@ name|CT_INT
 expr_stmt|;
 name|ccfn
 operator|=
-name|strtoul
+name|strtouq
 expr_stmt|;
 name|base
 operator|=
@@ -872,7 +889,7 @@ name|CT_INT
 expr_stmt|;
 name|ccfn
 operator|=
-name|strtoul
+name|strtouq
 expr_stmt|;
 name|base
 operator|=
@@ -902,7 +919,7 @@ name|CT_INT
 expr_stmt|;
 name|ccfn
 operator|=
-name|strtoul
+name|strtouq
 expr_stmt|;
 name|base
 operator|=
@@ -998,7 +1015,7 @@ name|CT_INT
 expr_stmt|;
 name|ccfn
 operator|=
-name|strtoul
+name|strtouq
 expr_stmt|;
 name|base
 operator|=
@@ -1054,6 +1071,24 @@ argument_list|)
 operator|=
 name|nread
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|QUAD
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|quad_t
+operator|*
+argument_list|)
+operator|=
+name|nread
+expr_stmt|;
 else|else
 operator|*
 name|va_arg
@@ -1097,13 +1132,13 @@ expr_stmt|;
 name|ccfn
 operator|=
 operator|(
-name|u_long
+name|u_quad_t
 argument_list|(
 operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|strtol
+name|strtoq
 expr_stmt|;
 name|base
 operator|=
@@ -1713,7 +1748,7 @@ continue|continue;
 case|case
 name|CT_INT
 case|:
-comment|/* scan an integer as if by strtol/strtoul */
+comment|/* scan an integer as if by strtoq/strtouq */
 ifdef|#
 directive|ifdef
 name|hardway
@@ -2174,7 +2209,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|u_long
+name|u_quad_t
 name|res
 decl_stmt|;
 operator|*
@@ -2221,6 +2256,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|u_long
+operator|)
 name|res
 expr_stmt|;
 elseif|else
@@ -2254,6 +2292,24 @@ argument_list|(
 name|ap
 argument_list|,
 name|long
+operator|*
+argument_list|)
+operator|=
+name|res
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|QUAD
+condition|)
+operator|*
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|quad_t
 operator|*
 argument_list|)
 operator|=
