@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.17 1996/11/14 05:22:12 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.18 1996/11/14 06:59:39 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -1902,14 +1902,10 @@ decl_stmt|;
 name|int
 name|port
 decl_stmt|;
-specifier|static
 name|FILE
 modifier|*
 name|fp
-init|=
-name|NULL
-decl_stmt|;
-name|FILE
+decl_stmt|,
 modifier|*
 name|fp2
 decl_stmt|;
@@ -1922,22 +1918,6 @@ name|retcode
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|fp
-condition|)
-block|{
-comment|/* Close previous managed connection */
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|fp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|get_url_info
@@ -1990,10 +1970,7 @@ if|if
 condition|(
 operator|!
 name|fp2
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|retcode
 condition|)
 operator|*
@@ -2009,11 +1986,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-name|fp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 return|return
 name|fp2
 return|;
