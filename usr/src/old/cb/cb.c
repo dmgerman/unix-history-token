@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cb.c	4.3 (Berkeley) %G%"
+literal|"@(#)cb.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2150,6 +2150,10 @@ literal|'\n'
 case|:
 name|puts
 argument_list|()
+expr_stmt|;
+name|i
+operator|=
+literal|0
 expr_stmt|;
 name|sflg
 operator|=
