@@ -6227,6 +6227,13 @@ operator|->
 name|p_siglist
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|P_CONTINUED
+expr_stmt|;
 block|}
 name|SIGADDSET
 argument_list|(
@@ -6300,6 +6307,12 @@ name|p_flag
 operator|&=
 operator|~
 name|P_STOPPED_SGNL
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|P_CONTINUED
 expr_stmt|;
 if|if
 condition|(
