@@ -641,7 +641,7 @@ comment|/* system-wide uid */
 name|int32_t
 name|fs_pad
 decl_stmt|;
-comment|/* padding for non-i386 */
+comment|/* due to alignment of fs_swuid */
 comment|/* these fields retain the current block allocation info */
 name|int32_t
 name|fs_cgrotor
@@ -805,6 +805,35 @@ comment|/* magic number */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Sanity checking. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|fs
+argument_list|)
+operator|==
+literal|1376
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Filesystem identification  */
