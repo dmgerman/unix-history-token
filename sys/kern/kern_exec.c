@@ -314,7 +314,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
