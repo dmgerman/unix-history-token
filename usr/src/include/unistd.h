@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	8.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)unistd.h	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1487,7 +1487,7 @@ operator|(
 name|int
 operator|,
 specifier|const
-name|int
+name|gid_t
 operator|*
 operator|)
 argument_list|)
