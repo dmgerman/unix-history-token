@@ -98,7 +98,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.4 1997/06/30 06:42:41 charnier Exp $"
+literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.5 1998/12/15 12:20:27 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,24 +337,7 @@ specifier|const
 name|char
 modifier|*
 specifier|const
-name|c_src_prolog
-index|[]
-init|=
-block|{
-literal|"static const char * const text[] = {\n"
-block|,
-literal|0
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|krc_src_prolog
+name|noargs_def
 index|[]
 init|=
 block|{
@@ -369,8 +352,6 @@ block|,
 literal|"#define const\n"
 block|,
 literal|"#endif\n\n"
-block|,
-literal|"static const char * const text[] = {\n"
 block|,
 literal|0
 block|, }
@@ -1056,41 +1037,39 @@ name|c_file
 argument_list|)
 expr_stmt|;
 comment|/* prologue */
-if|if
-condition|(
-name|language
-operator|==
-name|lang_C
-condition|)
+for|for
+control|(
 name|cpp
 operator|=
-name|c_src_prolog
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|language
-operator|==
-name|lang_KRC
-condition|)
-name|cpp
-operator|=
-name|krc_src_prolog
-expr_stmt|;
-else|else
-name|abort
-argument_list|()
-expr_stmt|;
-while|while
-condition|(
+name|noargs_def
+init|;
 operator|*
 name|cpp
-condition|)
+condition|;
+name|cpp
+operator|++
+control|)
+block|{
 name|fputs
 argument_list|(
 operator|*
 name|cpp
-operator|++
+argument_list|,
+name|cfile
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+name|hfile
+argument_list|)
+expr_stmt|;
+block|}
+name|fputs
+argument_list|(
+literal|"static const char * const text[] = {\n"
 argument_list|,
 name|cfile
 argument_list|)
@@ -1154,19 +1133,9 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"void initialize_%s_error_table (%s) {\n"
+literal|"void initialize_%s_error_table (NOARGS) {\n"
 argument_list|,
 name|table_name
-argument_list|,
-operator|(
-name|language
-operator|==
-name|lang_C
-operator|)
-condition|?
-literal|"void"
-else|:
-literal|"NOARGS"
 argument_list|)
 expr_stmt|;
 name|fputs
@@ -1220,19 +1189,9 @@ name|fprintf
 argument_list|(
 name|hfile
 argument_list|,
-literal|"extern void initialize_%s_error_table (%s);\n"
+literal|"extern void initialize_%s_error_table (NOARGS);\n"
 argument_list|,
 name|table_name
-argument_list|,
-operator|(
-name|language
-operator|==
-name|lang_C
-operator|)
-condition|?
-literal|"void"
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 name|fprintf
