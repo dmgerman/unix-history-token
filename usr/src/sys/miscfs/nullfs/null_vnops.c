@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from the null layer of  * John Heidemann of the UCLA Ficus project and  * the Jan-Simon Pendry's loopback file system.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	1.3 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from the null layer of  * John Heidemann from the UCLA Ficus project and  * Jan-Simon Pendry's loopback file system.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	1.4 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
 end_comment
 
 begin_comment
-comment|/*  * Null Layer  *  * The null layer duplicates a portion of the file system  * name space under a new name.  In this respect, it is  * similar to the loopback file system.  It differs from  * the loopback fs in two respects:  it is implemented using  * a bypass operation, and it's "null-nodes" stack above  * all lower-layer vnodes, not just over directory vnodes.  *  * The null layer is the minimum file system layer,  * simply bypassing all possible operations to the lower layer  * for processing there.  All but vop_getattr, _inactive, _reclaim,  * and _print are bypassed.  *  * Vop_getattr is not bypassed so that we can change the fsid being  * returned.  Vop_{inactive,reclaim} are bypassed so that  * they can handle freeing null-layer specific data.  * Vop_print is not bypassed for debugging.  *  * NEEDSWORK: Describe methods to invoke operations on the lower layer  * (bypass vs. VOP).  */
+comment|/*  * Null Layer  *  * The null layer duplicates a portion of the file system  * name space under a new name.  In this respect, it is  * similar to the loopback file system.  It differs from  * the loopback fs in two respects:  it is implemented using  * a bypass operation, and it's "null-node"s stack above  * all lower-layer vnodes, not just over directory vnodes.  *  * The null layer is the minimum file system layer,  * simply bypassing all possible operations to the lower layer  * for processing there.  All but vop_getattr, _inactive, _reclaim,  * and _print are bypassed.  *  * Vop_getattr is not bypassed so that we can change the fsid being  * returned.  Vop_{inactive,reclaim} are bypassed so that  * they can handle freeing null-layer specific data.  * Vop_print is not bypassed for debugging.  *  *  * INVOKING OPERATIONS ON LOWER LAYERS  *  * NEEDSWORK: Describe methods to invoke operations on the lower layer  * (bypass vs. VOP).  *  *  * CREATING NEW FILESYSTEM LAYERS  *  * One of the easiest ways to construct new file system layers is to make  * a copy of the null layer, rename all files and variables, and  * then begin modifing the copy.  Sed can be used to easily rename  * all variables.  *  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lofs/lofs.h>
+file|<nullfs/null.h>
 end_include
 
 begin_decl_stmt
@@ -96,13 +96,26 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|nvop_generic_args
+name|vop_generic_args
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
+specifier|extern
 name|int
+function_decl|(
+modifier|*
+modifier|*
+name|null_vnodeop_p
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* not extern, really "forward" */
+specifier|register
+name|struct
+name|vnode
+modifier|*
+modifier|*
 name|this_vp_p
 decl_stmt|;
 name|int
@@ -142,8 +155,6 @@ operator|->
 name|a_desc
 decl_stmt|;
 name|int
-name|maps
-decl_stmt|,
 name|reles
 decl_stmt|,
 name|i
@@ -190,17 +201,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Map the vnodes going in. 	 * Later, we'll invoke the operation based on 	 * the first mapped vnode's operation vector. 	 */
-name|maps
-operator|=
-name|descp
-operator|->
-name|vdesc_flags
-expr_stmt|;
 name|reles
 operator|=
 name|descp
 operator|->
-name|vdesc_rele_flags
+name|vdesc_flags
 expr_stmt|;
 for|for
 control|(
@@ -212,10 +217,6 @@ name|i
 operator|<
 name|VDESC_MAX_VPS
 condition|;
-name|maps
-operator|>>=
-literal|1
-operator|,
 name|reles
 operator|>>=
 literal|1
@@ -237,14 +238,6 @@ name|VDESC_NO_OFFSET
 condition|)
 break|break;
 comment|/* bail out at end of list */
-if|if
-condition|(
-name|maps
-operator|&
-literal|1
-condition|)
-comment|/* skip vps that aren't to be mapped */
-continue|continue;
 name|vps_p
 index|[
 name|i
@@ -269,6 +262,29 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
+comment|/* 		 * We're not guaranteed that any but the first vnode 		 * are of our type.  Check for and don't map any 		 * that aren't. 		 */
+if|if
+condition|(
+operator|(
+operator|*
+name|this_vp_p
+operator|)
+operator|->
+name|v_op
+operator|!=
+name|null_vnodeop_p
+condition|)
+block|{
+name|old_vps
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|old_vps
 index|[
 name|i
@@ -285,13 +301,10 @@ name|i
 index|]
 operator|)
 operator|=
-name|NULLTOLOWERVP
-argument_list|(
-name|VTONULLNODE
+name|NULLVPTOLOWERVP
 argument_list|(
 operator|*
 name|this_vp_p
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -306,6 +319,8 @@ operator|*
 name|this_vp_p
 argument_list|)
 expr_stmt|;
+block|}
+empty_stmt|;
 block|}
 empty_stmt|;
 comment|/* 	 * Call the operation on the lower layer 	 * with the modified argument structure. 	 */
@@ -329,17 +344,11 @@ name|ap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Maintain the illusion of call-by-value 	 * by restoring vnodes in the argument structure 	 * to their original value. 	 */
-name|maps
-operator|=
-name|descp
-operator|->
-name|vdesc_flags
-expr_stmt|;
 name|reles
 operator|=
 name|descp
 operator|->
-name|vdesc_rele_flags
+name|vdesc_flags
 expr_stmt|;
 for|for
 control|(
@@ -351,7 +360,7 @@ name|i
 operator|<
 name|VDESC_MAX_VPS
 condition|;
-name|maps
+name|reles
 operator|>>=
 literal|1
 operator|,
@@ -374,12 +383,12 @@ break|break;
 comment|/* bail out at end of list */
 if|if
 condition|(
-name|maps
-operator|&
-literal|1
+name|old_vps
+index|[
+name|i
+index|]
 condition|)
-comment|/* skip vps that aren't to be mapped */
-continue|continue;
+block|{
 operator|*
 operator|(
 name|vps_p
@@ -410,6 +419,8 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+empty_stmt|;
 block|}
 empty_stmt|;
 comment|/* 	 * Map the possible out-going vpp. 	 */
@@ -453,7 +464,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|make_null_node
+name|null_node_create
 argument_list|(
 name|old_vps
 index|[
@@ -491,7 +502,7 @@ parameter_list|(
 name|ap
 parameter_list|)
 name|struct
-name|nvop_getattr_args
+name|vop_getattr_args
 modifier|*
 name|ap
 decl_stmt|;
@@ -539,288 +550,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-unit|null_rename (ap) 	struct vop_rename_args *ap; { 	USES_VOP_RENAME; 	struct vnode *fvp, *tvp; 	struct vnode *tdvp;
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|struct vnode *fsvp, *tsvp;
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-unit|int error;
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_comment
-unit|printf("null_rename(fdvp = %x->%x)\n", ap->a_fdvp, NULLTOLOWERVP(ap->a_fdvp));
-comment|/*printf("null_rename(tdvp = %x->%x)\n", tndp->ni_dvp, NULLTOLOWERVP(tndp->ni_dvp));*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - switch source dvp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 	 * Switch source directory to point to lofsed vnode 	 */
-end_comment
-
-begin_ifdef
-unit|PUSHREF(fdvp, ap->a_fdvp); 	VREF(ap->a_fdvp);
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - switch source vp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 	 * And source object if it is lofsed... 	 */
-end_comment
-
-begin_if
-unit|fvp = ap->a_fvp; 	if (fvp&& fvp->v_op == null_vnodeop_p) { 		ap->a_fvp = NULLTOLOWERVP(fvp); 		VREF(ap->a_fvp); 	} else { 		fvp = 0; 	}
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - switch source start vp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 	 * And source startdir object if it is lofsed... 	 */
-end_comment
-
-begin_endif
-unit|fsvp = fndp->ni_startdir; 	if (fsvp&& fsvp->v_op == null_vnodeop_p) { 		fndp->ni_startdir = NULLTOLOWERVP(fsvp); 		VREF(fndp->ni_startdir); 	} else { 		fsvp = 0; 	}
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - switch target dvp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  	 * Switch target directory to point to lofsed vnode 	 */
-end_comment
-
-begin_ifdef
-unit|tdvp = ap->a_tdvp; 	if (tdvp&& tdvp->v_op == null_vnodeop_p) { 		ap->a_tdvp = NULLTOLOWERVP(tdvp); 		VREF(ap->a_tdvp); 	} else { 		tdvp = 0; 	}
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - switch target vp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 	 * And target object if it is lofsed... 	 */
-end_comment
-
-begin_if
-unit|tvp = ap->a_tvp; 	if (tvp&& tvp->v_op == null_vnodeop_p) { 		ap->a_tvp = NULLTOLOWERVP(tvp); 		VREF(ap->a_tvp); 	} else { 		tvp = 0; 	}
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - switch target start vp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 	 * And target startdir object if it is lofsed... 	 */
-end_comment
-
-begin_endif
-unit|tsvp = tndp->ni_startdir; 	if (tsvp&& tsvp->v_op == null_vnodeop_p) { 		tndp->ni_startdir = NULLTOLOWERVP(fsvp); 		VREF(tndp->ni_startdir); 	} else { 		tsvp = 0; 	}
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - VOP_RENAME(%x, %x, %x, %x)\n", 		ap->a_fdvp, ap->a_fvp, ap->a_tdvp, ap->a_tvp); 	vprint("ap->a_fdvp", ap->a_fdvp); 	vprint("ap->a_fvp", ap->a_fvp); 	vprint("ap->a_tdvp", ap->a_tdvp); 	if (ap->a_tvp) vprint("ap->a_tvp", ap->a_tvp); 	DELAY(16000000);
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-unit|error = VOP_RENAME(ap->a_fdvp, ap->a_fvp, ap->a_fcnp, ap->a_tdvp, ap->a_tvp, ap->a_tcnp);
-comment|/* 	 * Put everything back... 	 */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - restore target startdir\n");
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|if (tsvp) { 		if (tndp->ni_startdir) 			vrele(tndp->ni_startdir); 		tndp->ni_startdir = tsvp; 	}
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - restore target vp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-unit|if (tvp) { 		ap->a_tvp = tvp; 		vrele(ap->a_tvp); 	}
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - restore target dvp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_if
-unit|if (tdvp) { 		ap->a_tdvp = tdvp; 		vrele(ap->a_tdvp); 	}
-if|#
-directive|if
-literal|0
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - restore source startdir\n");
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|if (fsvp) { 		if (fndp->ni_startdir) 			vrele(fndp->ni_startdir); 		fndp->ni_startdir = fsvp; 	}
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - restore source vp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-unit|if (fvp) { 		ap->a_fvp = fvp; 		vrele(ap->a_fvp); 	}
-ifdef|#
-directive|ifdef
-name|NULLFS_DIAGNOSTIC
-end_ifdef
-
-begin_endif
-unit|printf("null_rename - restore source dvp\n");
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|POP(fdvp, ap->a_fdvp); 	vrele(ap->a_fdvp);  	return (error); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|int
 name|null_inactive
@@ -844,7 +573,7 @@ name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -878,8 +607,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_RECLAIM
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -896,7 +623,7 @@ name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -908,7 +635,7 @@ endif|#
 directive|endif
 name|remque
 argument_list|(
-name|VTONULLNODE
+name|VTONULL
 argument_list|(
 name|ap
 operator|->
@@ -919,7 +646,7 @@ expr_stmt|;
 comment|/* NEEDSWORK: What? */
 name|vrele
 argument_list|(
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -972,8 +699,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NULLFS_DIAGNOSTIC
@@ -985,7 +710,7 @@ name|ap
 operator|->
 name|a_vp
 argument_list|,
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -998,7 +723,7 @@ directive|endif
 return|return
 name|VOP_BMAP
 argument_list|(
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1038,8 +763,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1061,7 +784,7 @@ name|a_bp
 operator|->
 name|b_vp
 argument_list|,
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 argument_list|(
 name|ap
 operator|->
@@ -1132,7 +855,7 @@ literal|"tag VT_NULLFS, vp=%x, lowervp=%x\n"
 argument_list|,
 name|vp
 argument_list|,
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 argument_list|(
 name|vp
 argument_list|)
@@ -1166,7 +889,7 @@ end_function_decl
 begin_decl_stmt
 name|struct
 name|vnodeopv_entry_desc
-name|lofs_vnodeop_entries
+name|null_vnodeop_entries
 index|[]
 init|=
 block|{
@@ -1243,13 +966,13 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|vnodeopv_desc
-name|lofs_vnodeop_opv_desc
+name|null_vnodeop_opv_desc
 init|=
 block|{
 operator|&
 name|null_vnodeop_p
 block|,
-name|lofs_vnodeop_entries
+name|null_vnodeop_entries
 block|}
 decl_stmt|;
 end_decl_stmt

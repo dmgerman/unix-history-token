@@ -79,7 +79,7 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
-name|make_null_node
+name|null_node_create
 name|__P
 argument_list|(
 operator|(
@@ -87,6 +87,11 @@ expr|struct
 name|mount
 operator|*
 name|mp
+operator|,
+expr|struct
+name|vnode
+operator|*
+name|target
 operator|,
 expr|struct
 name|vnode
@@ -152,11 +157,11 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 parameter_list|(
 name|vp
 parameter_list|)
-value|null_checkvp(vp, __FILE__, __LINE__)
+value|null_checkvp((vp), __FILE__, __LINE__)
 end_define
 
 begin_else
@@ -167,11 +172,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|NULLTOLOWERVP
+name|NULLVPTOLOWERVP
 parameter_list|(
 name|vp
 parameter_list|)
-value|(VTONULLNODE(vp)->null_lowervp)
+value|(VTONULL(vp)->null_lowervp)
 end_define
 
 begin_endif

@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lofs/lofs.h>
+file|<nullfs/null.h>
 end_include
 
 begin_define
