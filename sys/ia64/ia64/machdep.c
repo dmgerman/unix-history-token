@@ -4827,7 +4827,28 @@ name|tf
 operator|->
 name|tf_scratch_fp
 expr_stmt|;
-comment|/* XXX High FP */
+comment|/* 		 * XXX If the thread never used the high FP registers, we 		 * probably shouldn't waste time saving them. 		 */
+name|ia64_highfp_save
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|mc
+operator|->
+name|mc_flags
+operator||=
+name|_MC_FLAGS_HIGHFP_VALID
+expr_stmt|;
+name|mc
+operator|->
+name|mc_high_fp
+operator|=
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_high_fp
+expr_stmt|;
 block|}
 name|save_callee_saved
 argument_list|(
@@ -5006,7 +5027,24 @@ name|mc
 operator|->
 name|mc_scratch_fp
 expr_stmt|;
-comment|/* XXX High FP */
+if|if
+condition|(
+name|mc
+operator|->
+name|mc_flags
+operator|&
+name|_MC_FLAGS_HIGHFP_VALID
+condition|)
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_high_fp
+operator|=
+name|mc
+operator|->
+name|mc_high_fp
+expr_stmt|;
 block|}
 else|else
 block|{
