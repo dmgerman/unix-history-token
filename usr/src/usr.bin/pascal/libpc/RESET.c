@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RESET.c 1.4 %G%"
+literal|"@(#)RESET.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,20 @@ name|SYNC
 operator||
 name|FREAD
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|filep
+operator|->
+name|funit
+operator|&
+name|FTEXT
+condition|)
+name|filep
+operator|->
+name|funit
+operator||=
+name|EOLN
 expr_stmt|;
 if|if
 condition|(
