@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.13 1997/03/06 10:21:57 jkh Exp $"
+literal|"$Id: perform.c,v 1.14 1997/10/08 07:46:52 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -756,6 +756,11 @@ name|sig
 parameter_list|)
 block|{
 comment|/* Nothing to do */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

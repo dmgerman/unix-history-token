@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.21 1997/02/22 16:09:42 peter Exp $"
+literal|"$Id: perform.c,v 1.22 1997/10/08 07:47:29 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -946,6 +946,11 @@ block|{
 name|leave_playpen
 argument_list|(
 name|Home
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

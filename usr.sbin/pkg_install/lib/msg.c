@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: msg.c,v 1.8 1997/02/22 16:09:50 peter Exp $"
+literal|"$Id: msg.c,v 1.9 1997/10/08 07:48:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,11 +61,6 @@ expr_stmt|;
 name|cleanup
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -124,18 +119,18 @@ condition|(
 operator|!
 name|tty
 condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"can't open /dev/tty!"
+argument_list|)
+expr_stmt|;
 name|cleanup
 argument_list|(
 literal|0
 argument_list|)
-operator|,
-name|errx
-argument_list|(
-literal|2
-argument_list|,
-literal|"can't open /dev/tty!"
-argument_list|)
 expr_stmt|;
+block|}
 while|while
 condition|(
 name|ch
