@@ -449,22 +449,6 @@ operator|-
 literal|1
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|_fetch_info
-argument_list|(
-literal|"got reply '%.*s'"
-argument_list|,
-name|lr_length
-operator|-
-literal|2
-argument_list|,
-name|last_reply
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|isftpinfo
@@ -510,22 +494,6 @@ operator|-
 literal|1
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|_fetch_info
-argument_list|(
-literal|"got reply '%.*s'"
-argument_list|,
-name|lr_length
-operator|-
-literal|2
-argument_list|,
-name|last_reply
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 while|while
@@ -687,18 +655,18 @@ operator|-
 literal|1
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|_fetch_info
+name|DEBUG
 argument_list|(
-literal|"sending '%s'"
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\033[1m>>> %s\n\033[m"
 argument_list|,
 name|msg
 argument_list|)
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|iov
 index|[
 literal|0
