@@ -720,7 +720,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_Respond
+name|doRespond
 name|__P
 argument_list|(
 operator|(
@@ -733,7 +733,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_respond
+name|dorespond
 name|__P
 argument_list|(
 operator|(
@@ -1891,6 +1891,9 @@ operator|*
 operator|,
 expr|struct
 name|name
+operator|*
+operator|,
+name|char
 operator|*
 operator|,
 name|char

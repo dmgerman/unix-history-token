@@ -686,8 +686,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GREPLYTO
+value|0x10
+end_define
+
+begin_comment
+comment|/* And the Reply-To: line */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GINREPLYTO
+value|0x20
+end_define
+
+begin_comment
+comment|/* The In-Reply-To: line */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GMASK
-value|(GTO|GSUBJECT|GCC|GBCC)
+value|(GTO|GSUBJECT|GCC|GBCC|GREPLYTO|GINREPLYTO)
 end_define
 
 begin_comment
@@ -698,7 +720,7 @@ begin_define
 define|#
 directive|define
 name|GNL
-value|16
+value|0x40
 end_define
 
 begin_comment
@@ -709,7 +731,7 @@ begin_define
 define|#
 directive|define
 name|GDEL
-value|32
+value|0x80
 end_define
 
 begin_comment
@@ -720,7 +742,7 @@ begin_define
 define|#
 directive|define
 name|GCOMMA
-value|64
+value|0x100
 end_define
 
 begin_comment
@@ -758,6 +780,16 @@ modifier|*
 name|h_bcc
 decl_stmt|;
 comment|/* Blind carbon copies */
+name|char
+modifier|*
+name|h_replyto
+decl_stmt|;
+comment|/* Reply address */
+name|char
+modifier|*
+name|h_inreplyto
+decl_stmt|;
+comment|/* Reference */
 name|struct
 name|name
 modifier|*

@@ -863,7 +863,7 @@ break|break;
 case|case
 literal|'s'
 case|:
-comment|/* 			 * Set the Subject list. 			 */
+comment|/* 			 * Set the Subject line. 			 */
 name|cp
 operator|=
 operator|&
@@ -886,6 +886,39 @@ expr_stmt|;
 name|hp
 operator|->
 name|h_subject
+operator|=
+name|savestr
+argument_list|(
+name|cp
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+comment|/* 			 * Set the Reply-To line. 			 */
+name|cp
+operator|=
+operator|&
+name|linebuf
+index|[
+literal|2
+index|]
+expr_stmt|;
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|)
+name|cp
+operator|++
+expr_stmt|;
+name|hp
+operator|->
+name|h_replyto
 operator|=
 name|savestr
 argument_list|(
