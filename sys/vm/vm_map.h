@@ -220,6 +220,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|MAP_ENTRY_IN_TRANSITION
+value|0x0100
+end_define
+
+begin_comment
+comment|/* entry being changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_ENTRY_NEEDS_WAKEUP
+value|0x0200
+end_define
+
+begin_comment
+comment|/* waiter's in transition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAP_ENTRY_NOCOREDUMP
 value|0x0400
 end_define
@@ -227,6 +249,17 @@ end_define
 begin_comment
 comment|/* don't include in a core */
 end_comment
+
+begin_comment
+comment|/*  * flags for vm_map_[un]clip_range()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_CLIP_NO_HOLES
+value|0x0001
+end_define
 
 begin_function
 specifier|static

@@ -223,6 +223,14 @@ name|u_int
 name|v_kthreadpages
 decl_stmt|;
 comment|/* number of VM pages affected by fork() by kernel */
+name|u_int
+name|v_intrans_coll
+decl_stmt|;
+comment|/* intransit map collisions (total) */
+name|u_int
+name|v_intrans_wait
+decl_stmt|;
+comment|/* intransit map collisions which blocked */
 block|}
 struct|;
 end_struct

@@ -1815,6 +1815,11 @@ block|{
 operator|++
 name|buffreekvacnt
 expr_stmt|;
+name|vm_map_lock
+argument_list|(
+name|buffer_map
+argument_list|)
+expr_stmt|;
 name|bufspace
 operator|-=
 name|bp
@@ -1842,6 +1847,11 @@ operator|+
 name|bp
 operator|->
 name|b_kvasize
+argument_list|)
+expr_stmt|;
+name|vm_map_unlock
+argument_list|(
+name|buffer_map
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6592,6 +6602,11 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|vm_map_lock
+argument_list|(
+name|buffer_map
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm_map_findspace
@@ -6611,6 +6626,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * Uh oh.  Buffer map is to fragmented.  We 				 * must defragment the map. 				 */
+name|vm_map_unlock
+argument_list|(
+name|buffer_map
+argument_list|)
+expr_stmt|;
 operator|++
 name|bufdefragcnt
 expr_stmt|;
@@ -6684,6 +6704,11 @@ operator|++
 name|bufreusecnt
 expr_stmt|;
 block|}
+name|vm_map_unlock
+argument_list|(
+name|buffer_map
+argument_list|)
+expr_stmt|;
 block|}
 name|bp
 operator|->
