@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c	5.3 (Berkeley) %G%"
+literal|"@(#)pc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 modifier|*
 name|pc0
 init|=
-literal|"/usr/lib/pc0"
+literal|"/usr/libexec/pc0"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ name|char
 modifier|*
 name|pc1
 init|=
-literal|"/lib/f1"
+literal|"/usr/libexec/f1"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ name|char
 modifier|*
 name|pc2
 init|=
-literal|"/usr/lib/pc2"
+literal|"/usr/libexec/pc2"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,7 +106,7 @@ name|char
 modifier|*
 name|c2
 init|=
-literal|"/lib/c2"
+literal|"/usr/libexec/c2"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +115,7 @@ name|char
 modifier|*
 name|pc3
 init|=
-literal|"/usr/lib/pc3"
+literal|"/usr/libexec/pc3"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ name|char
 modifier|*
 name|ld
 init|=
-literal|"/bin/ld"
+literal|"/usr/bin/ld"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 modifier|*
 name|as
 init|=
-literal|"/bin/as"
+literal|"/usr/bin/as"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ name|char
 modifier|*
 name|crt0
 init|=
-literal|"/lib/crt0.o"
+literal|"/usr/libexec/crt0.o"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,7 +160,7 @@ name|char
 modifier|*
 name|mcrt0
 init|=
-literal|"/lib/mcrt0.o"
+literal|"/usr/libexec/mcrt0.o"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +169,7 @@ name|char
 modifier|*
 name|gcrt0
 init|=
-literal|"/usr/lib/gcrt0.o"
+literal|"/usr/libexec/gcrt0.o"
 decl_stmt|;
 end_decl_stmt
 
