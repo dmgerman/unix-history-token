@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4229,6 +4229,17 @@ name|bswlist
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Only kick the pageout daemon if we are really hurting 	 * for pages, otherwise this page will be picked up later. 	 */
+if|if
+condition|(
+name|cnt
+operator|.
+name|v_free_count
+operator|<
+name|cnt
+operator|.
+name|v_free_min
+condition|)
 name|thread_wakeup
 argument_list|(
 operator|(
