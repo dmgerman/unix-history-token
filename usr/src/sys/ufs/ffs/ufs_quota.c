@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1702,17 +1702,21 @@ index|[
 name|type
 index|]
 expr_stmt|;
+name|NDINIT
+argument_list|(
+operator|&
 name|nd
-operator|.
-name|ni_segflg
-operator|=
+argument_list|,
+name|LOOKUP
+argument_list|,
+name|FOLLOW
+argument_list|,
 name|UIO_USERSPACE
-expr_stmt|;
-name|nd
-operator|.
-name|ni_dirp
-operator|=
+argument_list|,
 name|fname
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1722,8 +1726,6 @@ name|vn_open
 argument_list|(
 operator|&
 name|nd
-argument_list|,
-name|p
 argument_list|,
 name|FREAD
 operator||
