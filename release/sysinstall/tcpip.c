@@ -1298,6 +1298,9 @@ block|}
 if|if
 condition|(
 operator|!
+name|cancel
+operator|&&
+operator|!
 name|verifySettings
 argument_list|()
 condition|)
