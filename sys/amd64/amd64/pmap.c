@@ -3222,8 +3222,6 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|pa
-operator|&
-name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -7636,8 +7634,6 @@ operator|=
 name|PHYS_TO_VM_PAGE
 argument_list|(
 name|opa
-operator|&
-name|PG_FRAME
 argument_list|)
 expr_stmt|;
 name|vm_page_dirty
@@ -10694,9 +10690,10 @@ argument_list|)
 expr_stmt|;
 name|pa
 operator|=
+name|trunc_page
+argument_list|(
 name|pa
-operator|&
-name|PG_FRAME
+argument_list|)
 expr_stmt|;
 for|for
 control|(
