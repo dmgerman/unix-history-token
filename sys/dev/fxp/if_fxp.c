@@ -1974,8 +1974,6 @@ name|maxtxseg
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|ipcbxmit_disable
 decl_stmt|;
 name|sc
 operator|->
@@ -2895,37 +2893,9 @@ operator||=
 name|FXP_FLAG_SAVE_BAD
 expr_stmt|;
 block|}
-comment|/* 	 * Enable use of extended RFDs and TCBs for 82550 	 * and later chips. Note: we need extended TXCB support 	 * too, but that's already enabled by the code above. 	 * Be careful to do this only on the right devices. 	 * 	 * At least some 82550 cards probed as "chip=0x12298086 rev=0x0d" 	 * truncate packets that end with an mbuf containing 1 to 3 bytes 	 * when used with this feature enabled in the previous version of the 	 * driver.  This problem appears to be fixed now that the driver 	 * always sets the hardware parse bit in the IPCB structure, which 	 * the "Intel 8255x 10/100 Mbps Ethernet Controller Family Open 	 * Source Software Developer Manual" says is necessary in the 	 * cases where packet truncation was observed. 	 * 	 * The device hint "hint.fxp.UNIT_NUMBER.ipcbxmit_disable" 	 * allows this feature to be disabled at boot time. 	 * 	 * If fxp is not compiled into the kernel, this feature may also 	 * be disabled at run time: 	 *    # kldunload fxp 	 *    # kenv hint.fxp.0.ipcbxmit_disable=1 	 *    # kldload fxp 	 */
+comment|/* 	 * Enable use of extended RFDs and TCBs for 82550 	 * and later chips. Note: we need extended TXCB support 	 * too, but that's already enabled by the code above. 	 * Be careful to do this only on the right devices. 	 */
 if|if
 condition|(
-name|resource_int_value
-argument_list|(
-literal|"fxp"
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|"ipcbxmit_disable"
-argument_list|,
-operator|&
-name|ipcbxmit_disable
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|ipcbxmit_disable
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|ipcbxmit_disable
-operator|==
-literal|0
-operator|&&
-operator|(
 name|sc
 operator|->
 name|revision
@@ -2937,7 +2907,6 @@ operator|->
 name|revision
 operator|==
 name|FXP_REV_82550_C
-operator|)
 condition|)
 block|{
 name|sc
