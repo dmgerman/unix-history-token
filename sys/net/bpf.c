@@ -350,6 +350,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|bpf_maxbufsize
+init|=
+name|BPF_MAXBUFSIZE
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bpf_maxbufsize
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|bpf_maxbufsize
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  *  bpf_iflist is the list of interfaces; each corresponds to an ifnet  */
 end_comment
@@ -2577,7 +2607,7 @@ if|if
 condition|(
 name|size
 operator|>
-name|BPF_MAXBUFSIZE
+name|bpf_maxbufsize
 condition|)
 operator|*
 operator|(
@@ -2588,7 +2618,7 @@ name|addr
 operator|=
 name|size
 operator|=
-name|BPF_MAXBUFSIZE
+name|bpf_maxbufsize
 expr_stmt|;
 elseif|else
 if|if

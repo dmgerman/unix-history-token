@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|BPF_MAXBUFSIZE
-value|0x8000
+value|0x80000
 end_define
 
 begin_define
