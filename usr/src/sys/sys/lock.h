@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.5 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -27,12 +27,12 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * An atomic spin lock.  *  * This structure only sets one bit of data, but is sized based on the  * minimum word size that can be operated on by the hardware test-and-set  * instruction. It is only needed for multiprocessors, as uniprocessors  * will always run to completion or a sleep. It is an error to hold one  * of these locks while a process is sleeping.  */
+comment|/*  * A simple spin lock.  *  * This structure only sets one bit of data, but is sized based on the  * minimum word size that can be operated on by the hardware test-and-set  * instruction. It is only needed for multiprocessors, as uniprocessors  * will always run to completion or a sleep. It is an error to hold one  * of these locks while a process is sleeping.  */
 end_comment
 
 begin_struct
 struct|struct
-name|atomic_lk
+name|simple_lock
 block|{
 name|int
 name|lock_data
@@ -40,6 +40,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * XXX end of stuff that belongs in<machine/param.h>  */
+end_comment
 
 begin_comment
 comment|/*  * The general lock structure.  Provides for multiple shared locks,  * upgrading from shared to exclusive, and sleeping until the lock  * can be gained.  */
@@ -50,7 +54,7 @@ struct|struct
 name|lock
 block|{
 name|struct
-name|atomic_lk
+name|simple_lock
 name|lk_interlock
 decl_stmt|;
 comment|/* lock on remaining fields */
@@ -377,18 +381,19 @@ literal|1
 end_if
 
 begin_comment
-comment|/*  * The simple-lock routines are the primitives out of which the lock  * package is built. The machine-dependent code must implement an  * atomic test_and_set operation that indivisibly sets the atomic_lk  * to non-zero and returns its old value. It also assumes that the  * setting of the lock to zero below is indivisible. Atomic locks may  * only be used for exclusive locks.  */
+comment|/*  * The simple-lock routines are the primitives out of which the lock  * package is built. The machine-dependent code must implement an  * atomic test_and_set operation that indivisibly sets the simple_lock  * to non-zero and returns its old value. It also assumes that the  * setting of the lock to zero below is indivisible. Simple locks may  * only be used for exclusive locks.  */
 end_comment
 
 begin_function
+specifier|static
 name|__inline
 name|void
-name|atomic_lock_init
+name|simple_lock_init
 parameter_list|(
 name|lkp
 parameter_list|)
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|lkp
 decl_stmt|;
@@ -403,15 +408,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|__inline
 name|void
-name|atomic_lock
+name|simple_lock
 parameter_list|(
 name|lkp
 parameter_list|)
 name|__volatile
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|lkp
 decl_stmt|;
@@ -431,15 +437,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|__inline
 name|int
-name|atomic_lock_try
+name|simple_lock_try
 parameter_list|(
 name|lkp
 parameter_list|)
 name|__volatile
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|lkp
 decl_stmt|;
@@ -459,14 +466,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|__inline
 name|void
-name|atomic_unlock
+name|simple_unlock
 parameter_list|(
 name|lkp
 parameter_list|)
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|lkp
 decl_stmt|;
@@ -496,14 +504,15 @@ name|DEBUG
 end_ifdef
 
 begin_function
+specifier|static
 name|__inline
 name|void
-name|atomic_lock_init
+name|simple_lock_init
 parameter_list|(
 name|alp
 parameter_list|)
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|alp
 decl_stmt|;
@@ -518,19 +527,26 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|__inline
 name|void
-name|atomic_lock
+name|simple_lock
 parameter_list|(
 name|alp
 parameter_list|)
 name|__volatile
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|alp
 decl_stmt|;
 block|{
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|simple_lock_held
+decl_stmt|;
 if|if
 condition|(
 name|alp
@@ -541,7 +557,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"atomic lock held"
+name|simple_lock_held
 argument_list|)
 expr_stmt|;
 name|alp
@@ -554,19 +570,26 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|__inline
 name|int
-name|atomic_lock_try
+name|simple_lock_try
 parameter_list|(
 name|alp
 parameter_list|)
 name|__volatile
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|alp
 decl_stmt|;
 block|{
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|simple_lock_held
+decl_stmt|;
 if|if
 condition|(
 name|alp
@@ -577,7 +600,7 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"atomic lock held"
+name|simple_lock_held
 argument_list|)
 expr_stmt|;
 name|alp
@@ -595,18 +618,25 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|__inline
 name|void
-name|atomic_unlock
+name|simple_unlock
 parameter_list|(
 name|alp
 parameter_list|)
 name|struct
-name|atomic_lk
+name|simple_lock
 modifier|*
 name|alp
 decl_stmt|;
 block|{
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|simple_lock_not_held
+decl_stmt|;
 if|if
 condition|(
 name|alp
@@ -617,7 +647,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"atomic lock not held"
+name|simple_lock_not_held
 argument_list|)
 expr_stmt|;
 name|alp
@@ -641,7 +671,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|atomic_lock_init
+name|simple_lock_init
 parameter_list|(
 name|alp
 parameter_list|)
@@ -650,7 +680,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_lock
+name|simple_lock
 parameter_list|(
 name|alp
 parameter_list|)
@@ -659,7 +689,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_lock_try
+name|simple_lock_try
 parameter_list|(
 name|alp
 parameter_list|)
@@ -673,7 +703,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|atomic_unlock
+name|simple_unlock
 parameter_list|(
 name|alp
 parameter_list|)
