@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_pmap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -19,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
 end_include
 
 begin_include
@@ -43,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -74,6 +92,30 @@ include|#
 directive|include
 file|<machine/tlb.h>
 end_include
+
+begin_expr_stmt
+name|PMAP_STATS_VAR
+argument_list|(
+name|tlb_ncontext_demap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PMAP_STATS_VAR
+argument_list|(
+name|tlb_npage_demap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PMAP_STATS_VAR
+argument_list|(
+name|tlb_nrange_demap
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -109,6 +151,11 @@ name|u_long
 name|s
 decl_stmt|;
 comment|/* 	 * It is important that we are not interrupted or preempted while 	 * doing the IPIs. The interrupted CPU may hold locks, and since 	 * it will wait for the CPU that sent the IPI, this can lead 	 * to a deadlock when an interrupt comes in on that CPU and it's 	 * handler tries to grab one of that locks. This will only happen for 	 * spin locks, but these IPI types are delivered even if normal 	 * interrupts are disabled, so the lock critical section will not 	 * protect the target processor from entering the IPI handler with 	 * the lock held. 	 */
+name|PMAP_STATS_INC
+argument_list|(
+name|tlb_ncontext_demap
+argument_list|)
+expr_stmt|;
 name|cookie
 operator|=
 name|ipi_tlb_context_demap
@@ -217,6 +264,11 @@ decl_stmt|;
 name|u_long
 name|s
 decl_stmt|;
+name|PMAP_STATS_INC
+argument_list|(
+name|tlb_npage_demap
+argument_list|)
+expr_stmt|;
 name|cookie
 operator|=
 name|ipi_tlb_page_demap
@@ -358,6 +410,11 @@ decl_stmt|;
 name|u_long
 name|s
 decl_stmt|;
+name|PMAP_STATS_INC
+argument_list|(
+name|tlb_nrange_demap
+argument_list|)
+expr_stmt|;
 name|cookie
 operator|=
 name|ipi_tlb_range_demap
