@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)itime.c	1.4 (Berkeley) %G%"
+literal|"@(#)itime.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1037,15 +1037,13 @@ expr_stmt|;
 comment|/* calc number of TP_BSIZE blocks */
 name|s
 operator|=
-name|roundup
+name|fragroundup
 argument_list|(
+name|sblock
+argument_list|,
 name|ip
 operator|->
 name|di_size
-argument_list|,
-name|sblock
-operator|->
-name|fs_fsize
 argument_list|)
 operator|/
 name|TP_BSIZE
