@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.122 1996/09/28 22:37:38 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.123 1996/10/09 19:47:19 bde Exp $  */
 end_comment
 
 begin_comment
@@ -351,6 +351,26 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|pa_index
+parameter_list|(
+name|pa
+parameter_list|)
+value|atop((pa) - vm_first_phys)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pa_to_pvh
+parameter_list|(
+name|pa
+parameter_list|)
+value|(&pv_table[pa_index(pa)])
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -529,6 +549,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|pv_table_t
+modifier|*
+name|pv_table
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|caddr_t
 name|CADDR1
 decl_stmt|,
@@ -575,6 +603,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|PMAP_INLINE
 name|void
 name|free_pv_entry
 name|__P
@@ -663,6 +692,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|PMAP_INLINE
 name|int
 name|pmap_is_managed
 name|__P
@@ -905,6 +935,23 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|vm_page_t
+name|pmap_page_lookup
+name|__P
+argument_list|(
+operator|(
+name|vm_object_t
+name|object
+operator|,
+name|vm_pindex_t
+name|pindex
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|PMAP_INLINE
 name|void
 name|pmap_lock
@@ -945,6 +992,23 @@ name|pmap1
 operator|,
 name|pmap_t
 name|pmap2
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pmap_unuse_pt
+name|__P
+argument_list|(
+operator|(
+name|pmap_t
+operator|,
+name|vm_offset_t
+operator|,
+name|vm_page_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2031,6 +2095,7 @@ comment|/*  * Super fast pmap_pte routine best used when scanning  * the pv list
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 modifier|*
 name|pmap_pte_quick
@@ -2710,6 +2775,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|vm_page_t
 name|pmap_page_lookup
 parameter_list|(
@@ -3009,6 +3075,7 @@ comment|/*  * After removing a page table entry, this routine is used to  * cond
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pmap_unuse_pt
 parameter_list|(
