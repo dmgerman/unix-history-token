@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCompExpr.c --  *  *	This file contains the code to compile Tcl expressions.  *  * Copyright (c) 1996-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCompExpr.c 1.31 97/08/07 10:14:07  */
+comment|/*   * tclCompExpr.c --  *  *	This file contains the code to compile Tcl expressions.  *  * Copyright (c) 1996-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCompExpr.c 1.34 97/11/03 14:29:18  */
 end_comment
 
 begin_include
@@ -5126,9 +5126,17 @@ name|token
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|theToken
 operator|!=
 name|DOLLAR
+operator|)
+operator|&&
+operator|(
+name|theToken
+operator|!=
+name|OPEN_PAREN
+operator|)
 condition|)
 block|{
 name|infoPtr
@@ -6560,7 +6568,14 @@ return|return
 name|TCL_ERROR
 return|;
 block|}
-comment|/* 	     * Find/create an object in envPtr's object array that contains 	     * the integer. 	     */
+if|if
+condition|(
+name|termPtr
+operator|!=
+name|src
+condition|)
+block|{
+comment|/* 		 * src was the start of a valid integer. Find/create an 		 * object in envPtr's object array to contain the integer. 		 */
 name|savedChar
 operator|=
 operator|*
@@ -6646,6 +6661,7 @@ expr_stmt|;
 return|return
 name|TCL_OK
 return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -6823,10 +6839,8 @@ modifier|*
 name|string
 init|=
 name|src
-operator|+
-literal|1
 decl_stmt|;
-comment|/* Points just after the starting '{'. */
+comment|/* Set below to point just after the 				  * starting '{'. */
 name|char
 modifier|*
 name|last
@@ -6989,7 +7003,10 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Create a string object for the braced string. This starts at 	 * "string" and ends just after "last" (which points to the final 	 * character before the terminating '}'). If backslash-newlines were 	 * found, we copy characters one at a time into a heap-allocated 	 * buffer and do backslash-newline substitutions. 	 */
+comment|/* 	 * Create a string object for the braced string. This will start at 	 * "string" and ends just after "last" (which points to the final 	 * character before the terminating '}'). If backslash-newlines were 	 * found, we copy characters one at a time into a heap-allocated 	 * buffer and do backslash-newline substitutions. 	 */
+name|string
+operator|++
+expr_stmt|;
 name|numChars
 operator|=
 operator|(

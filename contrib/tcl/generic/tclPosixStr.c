@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclPosixStr.c --  *  *	This file contains procedures that generate strings  *	corresponding to various POSIX-related codes, such  *	as errno and signals.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPosixStr.c 1.32 96/10/10 10:09:42  */
+comment|/*   * tclPosixStr.c --  *  *	This file contains procedures that generate strings  *	corresponding to various POSIX-related codes, such  *	as errno and signals.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclPosixStr.c 1.33 97/10/08 12:40:12  */
 end_comment
 
 begin_include
@@ -3908,6 +3908,20 @@ operator|!=
 name|SIGPROF
 operator|)
 operator|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|SIGIO
+argument_list|)
+operator|||
+operator|(
+name|SIGLOST
+operator|!=
+name|SIGIO
+operator|)
+operator|)
 case|case
 name|SIGLOST
 case|:
@@ -4489,6 +4503,34 @@ operator|(
 name|SIGLOST
 operator|!=
 name|SIGURG
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|SIGPROF
+argument_list|)
+operator|||
+operator|(
+name|SIGLOST
+operator|!=
+name|SIGPROF
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|SIGIO
+argument_list|)
+operator|||
+operator|(
+name|SIGLOST
+operator|!=
+name|SIGIO
 operator|)
 operator|)
 case|case

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixPipe.c --  *  *	This file implements the UNIX-specific exec pipeline functions,  *	the "pipe" channel driver, and the "pid" Tcl command.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixPipe.c 1.36 97/05/14 13:24:24  */
+comment|/*   * tclUnixPipe.c --  *  *	This file implements the UNIX-specific exec pipeline functions,  *	the "pipe" channel driver, and the "pid" Tcl command.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixPipe.c 1.37 97/10/31 17:23:37  */
 end_comment
 
 begin_include
@@ -26,7 +26,7 @@ name|MakeFile
 parameter_list|(
 name|fd
 parameter_list|)
-value|((TclFile)((fd)+1))
+value|((TclFile)(((int)fd)+1))
 end_define
 
 begin_define
@@ -307,8 +307,8 @@ name|direction
 decl_stmt|;
 comment|/* Either TCL_READABLE or TCL_WRITABLE. */
 block|{
-name|int
-name|fd
+name|ClientData
+name|data
 decl_stmt|;
 if|if
 condition|(
@@ -323,7 +323,7 @@ name|ClientData
 operator|*
 operator|)
 operator|&
-name|fd
+name|data
 argument_list|)
 operator|==
 name|TCL_OK
@@ -332,7 +332,10 @@ block|{
 return|return
 name|MakeFile
 argument_list|(
-name|fd
+operator|(
+name|int
+operator|)
+name|data
 argument_list|)
 return|;
 block|}

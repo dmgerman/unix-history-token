@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclStringObj.c --  *  *	This file contains procedures that implement string operations  *	on Tcl objects.  To do this efficiently (i.e. to allow many  *	appends to be done to an object without constantly reallocating  *	the space for the string representation) we overallocate the  *	space for the string and use the internal representation to keep  *	track of the extra space.  Objects with this internal  *	representation are called "expandable string objects".  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclStringObj.c 1.30 97/07/24 18:53:30  */
+comment|/*   * tclStringObj.c --  *  *	This file contains procedures that implement string operations  *	on Tcl objects.  To do this efficiently (i.e. to allow many  *	appends to be done to an object without constantly reallocating  *	the space for the string representation) we overallocate the  *	space for the string and use the internal representation to keep  *	track of the extra space.  Objects with this internal  *	representation are called "expandable string objects".  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclStringObj.c 1.31 97/10/30 13:56:35  */
 end_comment
 
 begin_include
@@ -211,6 +211,7 @@ condition|)
 block|{
 name|length
 operator|=
+operator|(
 name|bytes
 condition|?
 name|strlen
@@ -219,6 +220,7 @@ name|bytes
 argument_list|)
 else|:
 literal|0
+operator|)
 expr_stmt|;
 block|}
 name|TclNewObj
@@ -311,10 +313,16 @@ condition|)
 block|{
 name|length
 operator|=
+operator|(
+name|bytes
+condition|?
 name|strlen
 argument_list|(
 name|bytes
 argument_list|)
+else|:
+literal|0
+operator|)
 expr_stmt|;
 block|}
 name|TclDbNewObj

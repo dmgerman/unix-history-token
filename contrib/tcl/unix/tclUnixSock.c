@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixSock.c --  *  *	This file contains Unix-specific socket related code.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixSock.c 1.7 97/07/24 17:54:02  */
+comment|/*   * tclUnixSock.c --  *  *	This file contains Unix-specific socket related code.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixSock.c 1.9 97/10/09 18:24:49  */
 end_comment
 
 begin_include
@@ -85,7 +85,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_GetHostName --  *  *	Get the network name for this machine, in a system dependent way.  *  * Results:  *	A string containing the network name for this machine, or  *	an empty string if we can't figure out the name.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_GetHostName --  *  *	Returns the name of the local host.  *  * Results:  *	A string containing the network name for this machine, or  *	an empty string if we can't figure out the name.  The caller   *	must not modify or free this string.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -120,6 +120,31 @@ block|}
 ifndef|#
 directive|ifndef
 name|NO_UNAME
+operator|(
+name|VOID
+operator|*
+operator|)
+name|memset
+argument_list|(
+operator|(
+name|VOID
+operator|*
+operator|)
+operator|&
+name|u
+argument_list|,
+operator|(
+name|int
+operator|)
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|utsname
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uname

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclIOUtil.c --  *  *	This file contains a collection of utility procedures that  *	are shared by the platform specific IO drivers.  *  *	Parts of this file are based on code contributed by Karl  *	Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOUtil.c 1.132 97/04/23 16:21:42  */
+comment|/*   * tclIOUtil.c --  *  *	This file contains a collection of utility procedures that  *	are shared by the platform specific IO drivers.  *  *	Parts of this file are based on code contributed by Karl  *	Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOUtil.c 1.133 97/09/24 16:38:57  */
 end_comment
 
 begin_include
@@ -877,6 +877,10 @@ decl_stmt|;
 name|Tcl_Channel
 name|chan
 decl_stmt|;
+name|Tcl_Obj
+modifier|*
+name|cmdObjPtr
+decl_stmt|;
 name|Tcl_ResetResult
 argument_list|(
 name|interp
@@ -1156,13 +1160,41 @@ goto|goto
 name|error
 goto|;
 block|}
+comment|/*      * Transfer the buffer memory allocated above to the object system.      * Tcl_EvalObj will own this new string object if needed,      * so past the Tcl_EvalObj point, we must not ckfree(cmdBuffer)      * but rather use the reference counting mechanism.      * (Nb: and we must not thus not use goto error after this point)      */
+name|cmdObjPtr
+operator|=
+name|Tcl_NewObj
+argument_list|()
+expr_stmt|;
+name|cmdObjPtr
+operator|->
+name|bytes
+operator|=
+name|cmdBuffer
+expr_stmt|;
+name|cmdObjPtr
+operator|->
+name|length
+operator|=
+name|result
+expr_stmt|;
+name|Tcl_IncrRefCount
+argument_list|(
+name|cmdObjPtr
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
-name|Tcl_Eval
+name|Tcl_EvalObj
 argument_list|(
 name|interp
 argument_list|,
-name|cmdBuffer
+name|cmdObjPtr
+argument_list|)
+expr_stmt|;
+name|Tcl_DecrRefCount
+argument_list|(
+name|cmdObjPtr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1221,11 +1253,6 @@ operator|->
 name|scriptFile
 operator|=
 name|oldScriptFile
-expr_stmt|;
-name|ckfree
-argument_list|(
-name|cmdBuffer
-argument_list|)
 expr_stmt|;
 name|Tcl_DStringFree
 argument_list|(

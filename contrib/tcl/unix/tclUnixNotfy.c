@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tclUnixNotify.c --  *  *	This file contains the implementation of the select-based  *	Unix-specific notifier, which is the lowest-level part of the  *	Tcl event loop.  This file works together with  *	../generic/tclNotify.c.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixNotfy.c 1.42 97/07/02 20:55:44  */
+comment|/*  * tclUnixNotify.c --  *  *	This file contains the implementation of the select-based  *	Unix-specific notifier, which is the lowest-level part of the  *	Tcl event loop.  This file works together with  *	../generic/tclNotify.c.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixNotfy.c 1.44 97/11/05 13:02:20  */
 end_comment
 
 begin_include
@@ -624,9 +624,11 @@ name|index
 decl_stmt|,
 name|bit
 decl_stmt|,
-name|mask
-decl_stmt|,
 name|i
+decl_stmt|;
+name|unsigned
+name|long
+name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -815,7 +817,7 @@ name|index
 operator|--
 control|)
 block|{
-name|mask
+name|flags
 operator|=
 name|notifier
 operator|.
@@ -852,7 +854,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|mask
+name|flags
 condition|)
 block|{
 for|for
@@ -878,10 +880,16 @@ control|)
 block|{
 if|if
 condition|(
-name|mask
+name|flags
 operator|&
 operator|(
+operator|(
+operator|(
+name|unsigned
+name|long
+operator|)
 literal|1
+operator|)
 operator|<<
 operator|(
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixTime.c --  *  *	Contains Unix specific versions of Tcl functions that  *	obtain time values from the operating system.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTime.c 1.12 97/01/08 17:38:15  */
+comment|/*   * tclUnixTime.c --  *  *	Contains Unix specific versions of Tcl functions that  *	obtain time values from the operating system.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTime.c 1.13 97/10/31 15:04:58  */
 end_comment
 
 begin_include
@@ -229,7 +229,7 @@ init|=
 name|localtime
 argument_list|(
 operator|&
-name|currentTime
+name|curTime
 argument_list|)
 decl_stmt|;
 name|int

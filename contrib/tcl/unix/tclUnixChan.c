@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixChan.c  *  *	Common channel driver for Unix channels based on files, command  *	pipes and TCP sockets.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixChan.c 1.203 97/06/20 13:03:18  */
+comment|/*   * tclUnixChan.c  *  *	Common channel driver for Unix channels based on files, command  *	pipes and TCP sockets.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixChan.c 1.207 97/11/04 14:45:29  */
 end_comment
 
 begin_include
@@ -6172,7 +6172,7 @@ operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|peername
+name|sockname
 operator|.
 name|sin_addr
 argument_list|)
@@ -8308,6 +8308,9 @@ name|Tcl_ChannelType
 modifier|*
 name|chanTypePtr
 decl_stmt|;
+name|ClientData
+name|data
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
@@ -8478,12 +8481,19 @@ name|ClientData
 operator|*
 operator|)
 operator|&
-name|fd
+name|data
 argument_list|)
 operator|==
 name|TCL_OK
 condition|)
 block|{
+name|fd
+operator|=
+operator|(
+name|int
+operator|)
+name|data
+expr_stmt|;
 comment|/* 	     * The call to fdopen below is probably dangerous, since it will 	     * truncate an existing file if the file is being opened 	     * for writing.... 	     */
 name|f
 operator|=

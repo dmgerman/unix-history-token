@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclNotify.c --  *  *	This file implements the generic portion of the Tcl notifier.  *	The notifier is lowest-level part of the event system.  It  *	manages an event queue that holds Tcl_Event structures.  The  *	platform specific portion of the notifier is defined in the  *	tcl*Notify.c files in each platform directory.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclNotify.c 1.15 97/06/18 17:14:04  */
+comment|/*   * tclNotify.c --  *  *	This file implements the generic portion of the Tcl notifier.  *	The notifier is lowest-level part of the event system.  It  *	manages an event queue that holds Tcl_Event structures.  The  *	platform specific portion of the notifier is defined in the  *	tcl*Notify.c files in each platform directory.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclNotify.c 1.16 97/09/15 15:12:52  */
 end_comment
 
 begin_include
@@ -1675,6 +1675,14 @@ condition|(
 name|flags
 operator|&
 name|TCL_DONT_WAIT
+condition|)
+block|{
+break|break;
+block|}
+comment|/* 	 * If Tcl_WaitForEvent has returned 1, 	 * indicating that one system event has been dispatched 	 * (and thus that some Tcl code might have been indirectly executed), 	 * we break out of the loop. 	 * We do this to give VwaitCmd for instance a chance to check  	 * if that system event had the side effect of changing the  	 * variable (so the vwait can return and unwind properly). 	 * 	 * NB: We will process idle events if any first, because 	 *     otherwise we might never do the idle events if the notifier 	 *     always gets system events. 	 */
+if|if
+condition|(
+name|result
 condition|)
 block|{
 break|break;

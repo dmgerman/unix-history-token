@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclProc.c --  *  *	This file contains routines that implement Tcl procedures,  *	including the "proc" and "uplevel" commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclProc.c 1.115 97/08/12 13:36:11  */
+comment|/*   * tclProc.c --  *  *	This file contains routines that implement Tcl procedures,  *	including the "proc" and "uplevel" commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclProc.c 1.116 97/10/29 18:33:24  */
 end_comment
 
 begin_include
@@ -2659,11 +2659,7 @@ name|varPtr
 operator|->
 name|nsPtr
 operator|=
-name|procPtr
-operator|->
-name|cmdPtr
-operator|->
-name|nsPtr
+name|NULL
 expr_stmt|;
 name|varPtr
 operator|->
