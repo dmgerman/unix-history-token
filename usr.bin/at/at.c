@@ -147,7 +147,11 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|MAXLOGNAME
+operator|-
+literal|1
+operator|)
 operator|>
 name|UT_NAMESIZE
 end_if
@@ -168,7 +172,7 @@ begin_define
 define|#
 directive|define
 name|LOGNAMESIZE
-value|MAXLOGNAME
+value|(MAXLOGNAME-1)
 end_define
 
 begin_endif
