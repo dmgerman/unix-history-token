@@ -702,7 +702,7 @@ operator|.
 name|divert_rule
 operator|=
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m0
 operator|->
