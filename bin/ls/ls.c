@@ -2562,7 +2562,7 @@ operator|||
 name|f_octal_escape
 condition|)
 block|{
-name|int
+name|u_long
 name|t
 init|=
 name|len_octal

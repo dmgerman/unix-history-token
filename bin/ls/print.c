@@ -326,6 +326,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|defcolors
@@ -2255,6 +2256,7 @@ name|parsecolors
 parameter_list|(
 name|cs
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cs
