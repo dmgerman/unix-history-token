@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989  Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -117,7 +117,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|rn_maskhead
+name|rn_masktop
 value|(mask_rnhead->rnh_treetop)
 end_define
 
@@ -486,6 +486,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -496,7 +497,7 @@ parameter_list|,
 name|head
 parameter_list|)
 name|struct
-name|radix_node
+name|radix_node_head
 modifier|*
 name|head
 decl_stmt|;
@@ -511,6 +512,8 @@ modifier|*
 name|t
 init|=
 name|head
+operator|->
+name|rnh_treetop
 decl_stmt|,
 modifier|*
 name|x
@@ -534,6 +537,11 @@ name|struct
 name|radix_node
 modifier|*
 name|saved_t
+decl_stmt|,
+modifier|*
+name|top
+init|=
+name|t
 decl_stmt|;
 name|int
 name|off
@@ -553,7 +561,7 @@ name|cp
 decl_stmt|,
 name|matched_off
 decl_stmt|;
-comment|/* 	 * Open code rn_search(v, head) to avoid overhead of extra 	 * subroutine call. 	 */
+comment|/* 	 * Open code rn_search(v, top) to avoid overhead of extra 	 * subroutine call. 	 */
 for|for
 control|(
 init|;
@@ -903,7 +911,7 @@ do|while
 condition|(
 name|t
 operator|!=
-name|head
+name|top
 condition|)
 do|;
 return|return
@@ -939,6 +947,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|rn_saveinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rn_debug
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1090,15 +1106,8 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-name|rn_debug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -1116,7 +1125,7 @@ name|caddr_t
 name|v
 decl_stmt|;
 name|struct
-name|radix_node
+name|radix_node_head
 modifier|*
 name|head
 decl_stmt|;
@@ -1132,10 +1141,19 @@ literal|2
 index|]
 decl_stmt|;
 block|{
+name|struct
+name|radix_node
+modifier|*
+name|top
+init|=
+name|head
+operator|->
+name|rnh_treetop
+decl_stmt|;
 name|int
 name|head_off
 init|=
-name|head
+name|top
 operator|->
 name|rn_off
 decl_stmt|,
@@ -1163,7 +1181,7 @@ name|rn_search
 argument_list|(
 name|v
 argument_list|,
-name|head
+name|top
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -1290,7 +1308,7 @@ decl_stmt|,
 modifier|*
 name|x
 init|=
-name|head
+name|top
 decl_stmt|;
 name|cp
 operator|=
@@ -1553,7 +1571,7 @@ name|rn_search
 argument_list|(
 name|netmask
 argument_list|,
-name|rn_maskhead
+name|rn_masktop
 argument_list|)
 expr_stmt|;
 name|mlen
@@ -1661,7 +1679,7 @@ name|rn_insert
 argument_list|(
 name|netmask
 argument_list|,
-name|rn_maskhead
+name|mask_rnhead
 argument_list|,
 operator|&
 name|maskduplicated
@@ -1779,6 +1797,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -1798,7 +1817,7 @@ decl_stmt|,
 name|netmask
 decl_stmt|;
 name|struct
-name|radix_node
+name|radix_node_head
 modifier|*
 name|head
 decl_stmt|;
@@ -1829,6 +1848,18 @@ name|x
 decl_stmt|,
 modifier|*
 name|tt
+decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+name|saved_tt
+decl_stmt|,
+modifier|*
+name|top
+init|=
+name|head
+operator|->
+name|rnh_treetop
 decl_stmt|;
 name|short
 name|b
@@ -1868,11 +1899,6 @@ modifier|*
 modifier|*
 name|mp
 decl_stmt|;
-name|struct
-name|radix_node
-modifier|*
-name|saved_tt
-decl_stmt|;
 comment|/* 	 * In dealing with non-contiguous masks, there may be 	 * many different routes which have the same mask. 	 * We will find it useful to have a unique pointer to 	 * the mask to speed avoiding duplicate references at 	 * nodes and possibly save time in calculating indices. 	 */
 if|if
 condition|(
@@ -1885,7 +1911,7 @@ name|rn_search
 argument_list|(
 name|netmask
 argument_list|,
-name|rn_maskhead
+name|rn_masktop
 argument_list|)
 expr_stmt|;
 name|mlen
@@ -1921,7 +1947,7 @@ name|netmask
 argument_list|,
 literal|0
 argument_list|,
-name|head
+name|top
 operator|->
 name|rn_off
 argument_list|)
@@ -2434,7 +2460,7 @@ name|rn_b
 operator|&&
 name|x
 operator|!=
-name|head
+name|top
 condition|)
 do|;
 comment|/* 	 * Search through routes associated with node to 	 * insert new route according to index. 	 * For nodes of equal index, place more specific 	 * masks first. 	 */
@@ -2590,6 +2616,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|radix_node
 modifier|*
@@ -2607,7 +2634,7 @@ decl_stmt|,
 name|netmask
 decl_stmt|;
 name|struct
-name|radix_node
+name|radix_node_head
 modifier|*
 name|head
 decl_stmt|;
@@ -2625,6 +2652,8 @@ modifier|*
 name|x
 init|=
 name|head
+operator|->
+name|rnh_treetop
 decl_stmt|;
 specifier|register
 name|struct
@@ -2678,6 +2707,11 @@ modifier|*
 name|saved_tt
 init|=
 name|tt
+decl_stmt|,
+modifier|*
+name|top
+init|=
+name|x
 decl_stmt|;
 if|if
 condition|(
@@ -2727,7 +2761,7 @@ name|rn_search
 argument_list|(
 name|netmask
 argument_list|,
-name|rn_maskhead
+name|rn_masktop
 argument_list|)
 operator|->
 name|rn_key
@@ -2863,7 +2897,7 @@ name|rn_b
 operator|&&
 name|x
 operator|!=
-name|head
+name|top
 condition|)
 do|;
 for|for
@@ -3462,22 +3496,24 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|rn_walk
+begin_macro
+name|rn_walktree
 argument_list|(
-name|rn
+argument|h
 argument_list|,
-name|f
+argument|f
 argument_list|,
-name|w
+argument|w
 argument_list|)
-specifier|register
-expr|struct
-name|radix_node
-operator|*
-name|rn
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|struct
+name|radix_node_head
+modifier|*
+name|h
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|register
@@ -3508,6 +3544,16 @@ name|base
 decl_stmt|,
 modifier|*
 name|next
+decl_stmt|;
+specifier|register
+name|struct
+name|radix_node
+modifier|*
+name|rn
+init|=
+name|h
+operator|->
+name|rnh_treetop
 decl_stmt|;
 comment|/* 	 * This gets complicated because we may delete the node 	 * while applying the function f to it, so we need to calculate 	 * the successor node in advance. 	 */
 comment|/* First time through node, go left */
@@ -3825,27 +3871,27 @@ name|rn_ones
 expr_stmt|;
 name|rnh
 operator|->
-name|rnh_add
+name|rnh_addaddr
 operator|=
 name|rn_addroute
 expr_stmt|;
 name|rnh
 operator|->
-name|rnh_delete
+name|rnh_deladdr
 operator|=
 name|rn_delete
 expr_stmt|;
 name|rnh
 operator|->
-name|rnh_match
+name|rnh_matchaddr
 operator|=
 name|rn_match
 expr_stmt|;
 name|rnh
 operator|->
-name|rnh_walk
+name|rnh_walktree
 operator|=
-name|rn_walk
+name|rn_walktree
 expr_stmt|;
 name|rnh
 operator|->

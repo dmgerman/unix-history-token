@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)radix.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -232,13 +232,22 @@ name|radix_node
 modifier|*
 name|rnh_treetop
 decl_stmt|;
+name|int
+name|rnh_addrsize
+decl_stmt|;
+comment|/* permit, but not require fixed keys */
+name|int
+name|rnh_pktsize
+decl_stmt|;
+comment|/* permit, but not require fixed keys */
 name|struct
 name|radix_node
 modifier|*
 argument_list|(
 operator|*
-name|rnh_add
+name|rnh_addaddr
 argument_list|)
+comment|/* add based on sockaddr */
 name|__P
 argument_list|(
 operator|(
@@ -246,16 +255,16 @@ name|caddr_t
 name|v
 operator|,
 name|caddr_t
-name|netmask
+name|mask
 operator|,
 expr|struct
-name|radix_node
+name|radix_node_head
 operator|*
 name|head
 operator|,
 expr|struct
 name|radix_node
-name|treenodes
+name|nodes
 index|[]
 operator|)
 argument_list|)
@@ -265,8 +274,9 @@ name|radix_node
 modifier|*
 argument_list|(
 operator|*
-name|rnh_delete
+name|rnh_addpkt
 argument_list|)
+comment|/* add based on packet hdr */
 name|__P
 argument_list|(
 operator|(
@@ -274,10 +284,39 @@ name|caddr_t
 name|v
 operator|,
 name|caddr_t
-name|netmask
+name|mask
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+name|head
 operator|,
 expr|struct
 name|radix_node
+name|nodes
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+argument_list|(
+operator|*
+name|rnh_deladdr
+argument_list|)
+comment|/* remove based on sockaddr */
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+name|v
+operator|,
+name|caddr_t
+name|mask
+operator|,
+expr|struct
+name|radix_node_head
 operator|*
 name|head
 operator|)
@@ -288,8 +327,33 @@ name|radix_node
 modifier|*
 argument_list|(
 operator|*
-name|rnh_match
+name|rnh_delpkt
 argument_list|)
+comment|/* remove based on packet hdr */
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+name|v
+operator|,
+name|caddr_t
+name|mask
+operator|,
+expr|struct
+name|radix_node_head
+operator|*
+name|head
+operator|)
+argument_list|)
+decl_stmt|;
+name|struct
+name|radix_node
+modifier|*
+argument_list|(
+operator|*
+name|rnh_matchaddr
+argument_list|)
+comment|/* locate based on sockaddr */
 name|__P
 argument_list|(
 operator|(
@@ -297,7 +361,28 @@ name|caddr_t
 name|v
 operator|,
 expr|struct
+name|radix_node_head
+operator|*
+name|head
+operator|)
+argument_list|)
+decl_stmt|;
+name|struct
 name|radix_node
+modifier|*
+argument_list|(
+operator|*
+name|rnh_matchpkt
+argument_list|)
+comment|/* locate based on packet hdr */
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+name|v
+operator|,
+expr|struct
+name|radix_node_head
 operator|*
 name|head
 operator|)
@@ -305,15 +390,16 @@ argument_list|)
 decl_stmt|;
 name|int
 argument_list|(
-argument|*rnh_walk
+argument|*rnh_walktree
 argument_list|)
+comment|/* traverse tree */
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|radix_node
+name|radix_node_head
 operator|*
-name|rn
+name|head
 operator|,
 name|int
 argument_list|(
@@ -335,6 +421,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+comment|/* empty tree for common case */
 block|}
 struct|;
 end_struct
