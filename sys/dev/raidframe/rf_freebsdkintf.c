@@ -6846,14 +6846,12 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* bp->b_flags       = B_PHYS | rw_flag; */
 name|bp
 operator|->
 name|bio_cmd
 operator|=
 name|rw_flag
 expr_stmt|;
-comment|/* XXX need B_PHYS here too? */
 name|bp
 operator|->
 name|bio_bcount
@@ -7836,6 +7834,12 @@ name|DEV_BSIZE
 expr_stmt|;
 name|bp
 operator|->
+name|b_offset
+operator|=
+name|RF_COMPONENT_INFO_OFFSET
+expr_stmt|;
+name|bp
+operator|->
 name|b_bcount
 operator|=
 name|RF_COMPONENT_INFO_SIZE
@@ -7989,6 +7993,12 @@ operator|=
 name|RF_COMPONENT_INFO_OFFSET
 operator|/
 name|DEV_BSIZE
+expr_stmt|;
+name|bp
+operator|->
+name|b_offset
+operator|=
+name|RF_COMPONENT_INFO_OFFSET
 expr_stmt|;
 name|bp
 operator|->
