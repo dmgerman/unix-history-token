@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.3 (Berkeley) 1/12/94  * $Id: malloc.h,v 1.7 1995/03/12 13:25:01 ugen Exp $  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)malloc.h	8.3 (Berkeley) 1/12/94  * $Id: malloc.h,v 1.8 1995/04/20 03:18:15 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -834,8 +834,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LAST
+name|M_PKTCLASS
 value|79
+end_define
+
+begin_comment
+comment|/* structures used in packet classifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LAST
+value|80
 end_define
 
 begin_comment
@@ -988,6 +999,8 @@ value|\ 	"IpFw/IpAcct",
 comment|/* 77 M_IPFW */
 value|\ 	"isa_devlist",
 comment|/* 78 M_DEVL */
+value|\ 	"PktClass",
+comment|/* 79 M_PKTCLASS */
 value|\ }
 end_define
 
@@ -1146,7 +1159,7 @@ value|(size)<= (MINALLOCSIZE * 128) \ 		? (size)<= (MINALLOCSIZE * 8) \ 			? (si
 end_define
 
 begin_comment
-comment|/*  * Turn virtual addresses into kmem map indicies  */
+comment|/*  * Turn virtual addresses into kmem map indices  */
 end_comment
 
 begin_define
@@ -1225,7 +1238,7 @@ name|addr
 parameter_list|,
 name|type
 parameter_list|)
-value|free((caddr_t)(addr), type)
+value|free((addr), type)
 end_define
 
 begin_else
@@ -1264,7 +1277,7 @@ name|addr
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	register struct kmembuckets *kbp; \ 	register struct kmemusage *kup = btokup(addr); \ 	long s = splimp(); \ 	if (1<< kup->ku_indx> MAXALLOCSAVE) { \ 		free((caddr_t)(addr), type); \ 	} else { \ 		kbp =&bucket[kup->ku_indx]; \ 		if (kbp->kb_next == NULL) \ 			kbp->kb_next = (caddr_t)(addr); \ 		else \ 			*(caddr_t *)(kbp->kb_last) = (caddr_t)(addr); \ 		*(caddr_t *)(addr) = NULL; \ 		kbp->kb_last = (caddr_t)(addr); \ 	} \ 	splx(s); \ }
+value|{ \ 	register struct kmembuckets *kbp; \ 	register struct kmemusage *kup = btokup(addr); \ 	long s = splimp(); \ 	if (1<< kup->ku_indx> MAXALLOCSAVE) { \ 		free((addr), type); \ 	} else { \ 		kbp =&bucket[kup->ku_indx]; \ 		if (kbp->kb_next == NULL) \ 			kbp->kb_next = (caddr_t)(addr); \ 		else \ 			*(caddr_t *)(kbp->kb_last) = (caddr_t)(addr); \ 		*(caddr_t *)(addr) = NULL; \ 		kbp->kb_last = (caddr_t)(addr); \ 	} \ 	splx(s); \ }
 end_define
 
 begin_endif
