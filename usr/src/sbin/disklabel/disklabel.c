@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	8.3 (Berkeley) %G%"
+literal|"@(#)disklabel.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
