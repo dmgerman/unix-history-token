@@ -142,13 +142,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NISA
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_ISA
+end_ifdef
 
 begin_include
 include|#
