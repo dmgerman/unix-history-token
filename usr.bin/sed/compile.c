@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: compile.c,v 1.8.2.1 1997/08/12 06:36:11 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3535,6 +3535,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|text
+index|[
+name|size
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 return|return
 operator|(
 name|xrealloc
