@@ -178,7 +178,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_MASK
-value|0x2F
+value|0x3F
 end_define
 
 begin_comment
