@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// __enc_traits layer for filebuf -*- C++ -*-
+comment|// filebuf with __enc_traits state type -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -111,8 +111,9 @@ begin_decl_stmt
 name|namespace
 name|__gnu_cxx
 block|{
-comment|// Custom traits type with __enc_traits for state type, all other bits
-comment|// equivalent to the required char_traits instantiations.
+comment|// Custom traits type with __enc_traits for the state type, and the
+comment|// associated fpos<__enc_traits> for the position type, all other
+comment|// bits equivalent to the required char_traits instantiations.
 name|template
 operator|<
 name|typename
@@ -135,8 +136,24 @@ operator|::
 name|__enc_traits
 name|state_type
 expr_stmt|;
+typedef|typedef
+name|typename
+name|std
+operator|::
+name|fpos
+operator|<
+name|state_type
+operator|>
+name|pos_type
+expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -161,15 +178,35 @@ block|{
 name|public
 operator|:
 typedef|typedef
-name|typename
 name|enc_char_traits
 operator|<
 name|_CharT
 operator|>
+name|traits_type
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|typename
+name|traits_type
 operator|::
 name|state_type
 name|state_type
 expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|typename
+name|traits_type
+operator|::
+name|pos_type
+name|pos_type
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|enc_filebuf
 argument_list|(
 name|state_type
@@ -187,39 +224,39 @@ name|enc_char_traits
 operator|<
 name|_CharT
 operator|>
-block|>
+expr|>
 operator|(
 operator|)
 block|{
-comment|// Set state type to something useful.
-comment|// Something more than copyconstructible is needed here, so
-comment|// require copyconstructible + assignment operator.
-name|__glibcpp_class_requires
-argument_list|(
-name|state_type
-argument_list|,
-name|_SGIAssignableConcept
-argument_list|)
-block|;
-name|_M_state_cur
+name|this
+operator|->
+name|_M_state_beg
 operator|=
 name|__state
 block|;
-name|_M_state_cur
+name|this
+operator|->
+name|_M_state_beg
 operator|.
 name|_M_init
 argument_list|()
 block|;       }
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+name|private
+operator|:
+comment|// concept requirements:
+comment|// Set state type to something useful.
+comment|// Something more than copyconstructible is needed here, so
+comment|// require default and copy constructible + assignment operator.
+name|__glibcxx_class_requires
+argument_list|(
+argument|state_type
+argument_list|,
+argument|_SGIAssignableConcept
+argument_list|)
+end_expr_stmt
 
 begin_comment
-unit|}
+unit|}; }
 comment|// namespace __gnu_cxx
 end_comment
 

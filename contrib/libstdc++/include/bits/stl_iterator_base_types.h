@@ -4,7 +4,7 @@ comment|// Types used in iterator implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_ITERATOR_BASE_TYPES_H
+name|_ITERATOR_BASE_TYPES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_ITERATOR_BASE_TYPES_H
+name|_ITERATOR_BASE_TYPES_H
+value|1
 end_define
 
 begin_pragma
@@ -146,7 +147,8 @@ name|public
 name|input_iterator_tag
 block|{}
 decl_stmt|;
-comment|/// Bidirectional iterators support a superset of forward iterator operations.
+comment|/// Bidirectional iterators support a superset of forward iterator
+comment|/// operations.
 name|struct
 name|bidirectional_iterator_tag
 range|:
@@ -154,7 +156,8 @@ name|public
 name|forward_iterator_tag
 block|{}
 decl_stmt|;
-comment|/// Random-access iterators support a superset of bidirectional iterator operations.
+comment|/// Random-access iterators support a superset of bidirectional iterator
+comment|/// operations.
 name|struct
 name|random_access_iterator_tag
 range|:
@@ -437,7 +440,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_ITERATOR_BASE_TYPES_H */
+comment|/* _ITERATOR_BASE_TYPES_H */
 end_comment
 
 end_unit

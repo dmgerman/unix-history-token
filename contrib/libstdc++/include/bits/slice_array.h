@@ -4,7 +4,11 @@ comment|// The template and inlines for the -*- C++ -*- slice_array class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +110,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_SLICE_ARRAY_H
+name|_SLICE_ARRAY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_SLICE_ARRAY_H
+name|_SLICE_ARRAY_H
 value|1
 end_define
 
@@ -127,14 +131,17 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|/**    *  @brief  Class defining one-dimensional subset of an array.    *    *  The slice class represents a one-dimensional subset of an array,    *  specified by three parameters: start offset, size, and stride.  The    *  start offset is the index of the first element of the array that is part    *  of the subset.  The size is the total number of elements in the subset.    *  Stride is the distance between each successive array element to include    *  in the subset.    *    *  For example, with an array of size 10, and a slice with offset 1, size 3    *  and stride 2, the subset consists of array elements 1, 3, and 5.    */
 name|class
 name|slice
 block|{
 name|public
 label|:
+comment|///  Construct an empty slice.
 name|slice
 argument_list|()
 expr_stmt|;
+comment|/**      *  @brief  Construct a slice.      *      *  @param  o  Offset in array of first element.      *  @param  d  Number of elements in slice.      *  @param  s  Stride between array elements.      */
 name|slice
 argument_list|(
 name|size_t
@@ -144,16 +151,19 @@ argument_list|,
 name|size_t
 argument_list|)
 expr_stmt|;
+comment|///  Return array offset of first slice element.
 name|size_t
 name|start
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|///  Return size of slice.
 name|size_t
 name|size
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|///  Return array stride of slice.
 name|size_t
 name|stride
 argument_list|()
@@ -246,6 +256,7 @@ return|return
 name|_M_st
 return|;
 block|}
+comment|/**    *  @brief  Reference to one-dimensional subset of an array.    *    *  A slice_array is a reference to the actual elements of an array    *  specified by a slice.  The way to get a slice_array is to call    *  operator[](slice) on a valarray.  The returned slice_array then permits    *  carrying operations out on the referenced subset of elements in the    *  original valarray.  For example, operator+=(valarray) will add values    *  to the subset of elements in the underlying valarray this slice_array    *  refers to.    *    *  @param  Tp  Element type.    */
 name|template
 operator|<
 name|typename
@@ -260,7 +271,9 @@ typedef|typedef
 name|_Tp
 name|value_type
 typedef|;
-comment|// This constructor is implemented since we need to return a value.
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 253. valarray helper functions are almost entirely useless
+comment|///  Copy constructor.  Both slices refer to the same underlying array.
 name|slice_array
 argument_list|(
 specifier|const
@@ -268,7 +281,8 @@ name|slice_array
 operator|&
 argument_list|)
 expr_stmt|;
-comment|// This operator must be public.  See DR-253.
+comment|///  Assignment operator.  Assigns slice elements to corresponding
+comment|///  elements of @a a.
 name|slice_array
 modifier|&
 name|operator
@@ -279,6 +293,7 @@ name|slice_array
 operator|&
 operator|)
 decl_stmt|;
+comment|///  Assign slice elements to corresponding elements of @a v.
 name|void
 name|operator
 init|=
@@ -292,6 +307,7 @@ operator|&
 operator|)
 specifier|const
 decl_stmt|;
+comment|///  Multiply slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|*=
@@ -305,6 +321,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Divide slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|/=
@@ -318,6 +335,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Modulo slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|%=
@@ -331,6 +349,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Add corresponding elements of @a v to slice elements.
 name|void
 name|operator
 operator|+=
@@ -344,6 +363,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Subtract corresponding elements of @a v from slice elements.
 name|void
 name|operator
 operator|-=
@@ -357,6 +377,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Logical xor slice elements with corresponding elements of @a v.
 name|void
 name|operator
 operator|^=
@@ -370,6 +391,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Logical and slice elements with corresponding elements of @a v.
 name|void
 name|operator
 operator|&=
@@ -383,6 +405,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Logical or slice elements with corresponding elements of @a v.
 name|void
 name|operator
 operator||=
@@ -396,6 +419,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Left shift slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|<<=
@@ -409,6 +433,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Right shift slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|>>=
@@ -422,6 +447,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Assign all slice elements to @a t.
 name|void
 name|operator
 init|=
@@ -818,6 +844,8 @@ operator|&
 name|__a
 operator|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__a
@@ -867,6 +895,8 @@ name|__t
 operator|)
 specifier|const
 block|{
+name|std
+operator|::
 name|__valarray_fill
 argument_list|(
 name|_M_array
@@ -903,6 +933,8 @@ name|__v
 operator|)
 specifier|const
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|_Array
@@ -952,6 +984,8 @@ name|__e
 operator|)
 specifier|const
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__e
@@ -1055,7 +1089,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_SLICE_ARRAY_H */
+comment|/* _SLICE_ARRAY_H */
 end_comment
 
 begin_comment

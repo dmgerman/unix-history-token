@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_MATH_H_
+name|_GLIBCXX_MATH_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_MATH_H_
+name|_GLIBCXX_MATH_H
 value|1
 end_define
 
@@ -301,7 +301,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_C99
+name|_GLIBCXX_USE_C99
 end_if
 
 begin_expr_stmt

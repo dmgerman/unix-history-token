@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_FUNCTIONAL
+name|_GLIBCXX_FUNCTIONAL
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_FUNCTIONAL
+name|_GLIBCXX_FUNCTIONAL
 value|1
 end_define
 
@@ -147,19 +147,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_FUNCTIONAL */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
+comment|/* _GLIBCXX_FUNCTIONAL */
 end_comment
 
 end_unit

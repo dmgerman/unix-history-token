@@ -4,7 +4,7 @@ comment|// File descriptor layer for filebuf -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -102,13 +102,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_EXT_STDIO_FILEBUF
+name|_STDIO_FILEBUF_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_EXT_STDIO_FILEBUF
+name|_STDIO_FILEBUF_H
+value|1
 end_define
 
 begin_pragma
@@ -195,30 +196,34 @@ operator|::
 name|size_t
 name|size_t
 expr_stmt|;
-name|protected
-label|:
-comment|// Stack-based buffer for unbuffered input.
-name|char_type
-name|_M_unbuf
-index|[
-literal|4
-index|]
-decl_stmt|;
 name|public
 label|:
-comment|/**        *  @param  fd  An open file descriptor.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  del  Whether to close the file on destruction.        *  @param  size  Optimal or preferred size of internal buffer, in bytes.        *        *  This constructor associates a file stream buffer with an open        *  POSIX file descriptor.  Iff @a del is true, then the associated        *  file will be closed when the stdio_filebuf is closed/destroyed.       */
+comment|/**        * deferred initialization       */
+name|stdio_filebuf
+argument_list|()
+operator|:
+name|std
+operator|::
+name|basic_filebuf
+operator|<
+name|_CharT
+operator|,
+name|_Traits
+operator|>
+operator|(
+operator|)
+block|{}
+comment|/**        *  @param  fd  An open file descriptor.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  size  Optimal or preferred size of internal buffer, in chars.        *        *  This constructor associates a file stream buffer with an open        *  POSIX file descriptor. The file descriptor will be automatically        *  closed when the stdio_filebuf is closed/destroyed.       */
 name|stdio_filebuf
 argument_list|(
 argument|int __fd
 argument_list|,
 argument|std::ios_base::openmode __mode
 argument_list|,
-argument|bool __del
-argument_list|,
-argument|size_t __size
+argument|size_t __size = static_cast<size_t>(BUFSIZ)
 argument_list|)
-empty_stmt|;
-comment|/**        *  @param  f  An open @c FILE*.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  size  Optimal or preferred size of internal buffer, in bytes.        *                Defaults to system's @c BUFSIZ.        *        *  This constructor associates a file stream buffer with an open        *  C @c FILE*.  The @c FILE* will not be automatically closed when the        *  stdio_filebuf is closed/destroyed.       */
+expr_stmt|;
+comment|/**        *  @param  f  An open @c FILE*.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  size  Optimal or preferred size of internal buffer, in chars.        *                Defaults to system's @c BUFSIZ.        *        *  This constructor associates a file stream buffer with an open        *  C @c FILE*.  The @c FILE* will not be automatically closed when the        *  stdio_filebuf is closed/destroyed.       */
 name|stdio_filebuf
 argument_list|(
 argument|std::__c_file* __f
@@ -228,7 +233,7 @@ argument_list|,
 argument|size_t __size = static_cast<size_t>(BUFSIZ)
 argument_list|)
 empty_stmt|;
-comment|/**        *  Possibly closes the external data stream, in the case of the file        *  descriptor constructor and @c del @c == @c true.       */
+comment|/**        *  Closes the external data stream if the file descriptor constructor        *  was used.       */
 name|virtual
 operator|~
 name|stdio_filebuf
@@ -240,9 +245,28 @@ name|fd
 parameter_list|()
 block|{
 return|return
+name|this
+operator|->
 name|_M_file
 operator|.
 name|fd
+argument_list|()
+return|;
+block|}
+comment|/**        *  @return  The underlying FILE*.        *        *  This function can be used to access the underlying "C" file pointer.        *  Note that there is no way for the library to track what you do        *  with the file, so be careful.        */
+name|std
+operator|::
+name|__c_file
+operator|*
+name|file
+argument_list|()
+block|{
+return|return
+name|this
+operator|->
+name|_M_file
+operator|.
+name|file
 argument_list|()
 return|;
 block|}
@@ -294,11 +318,11 @@ argument|int __fd
 argument_list|,
 argument|std::ios_base::openmode __mode
 argument_list|,
-argument|bool __del
-argument_list|,
 argument|size_t __size
 argument_list|)
 block|{
+name|this
+operator|->
 name|_M_file
 operator|.
 name|sys_open
@@ -306,8 +330,6 @@ argument_list|(
 name|__fd
 argument_list|,
 name|__mode
-argument_list|,
-name|__del
 argument_list|)
 block|;
 if|if
@@ -318,59 +340,48 @@ name|is_open
 argument_list|()
 condition|)
 block|{
+name|this
+operator|->
 name|_M_mode
 operator|=
 name|__mode
 expr_stmt|;
-if|if
-condition|(
-name|__size
-operator|>
-literal|0
-operator|&&
-name|__size
-operator|<
-literal|4
-condition|)
-block|{
-comment|// Specify not to use an allocated buffer.
-name|_M_buf
-operator|=
-name|_M_unbuf
-expr_stmt|;
+name|this
+operator|->
 name|_M_buf_size
 operator|=
 name|__size
 expr_stmt|;
-name|_M_buf_size_opt
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_else
-else|else
-block|{
-name|_M_buf_size_opt
-operator|=
-name|__size
-expr_stmt|;
+name|this
+operator|->
 name|_M_allocate_internal_buffer
 argument_list|()
 expr_stmt|;
-block|}
-end_else
-
-begin_expr_stmt
-name|_M_set_indeterminate
-argument_list|()
+name|this
+operator|->
+name|_M_reading
+operator|=
+name|false
 expr_stmt|;
+name|this
+operator|->
+name|_M_writing
+operator|=
+name|false
+expr_stmt|;
+name|this
+operator|->
+name|_M_set_buffer
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 end_expr_stmt
 
 begin_expr_stmt
-unit|}     }
-name|template
+unit|}    template
 operator|<
 name|typename
 name|_CharT
@@ -394,6 +405,8 @@ argument_list|,
 argument|size_t __size
 argument_list|)
 block|{
+name|this
+operator|->
 name|_M_file
 operator|.
 name|sys_open
@@ -411,58 +424,48 @@ name|is_open
 argument_list|()
 condition|)
 block|{
+name|this
+operator|->
 name|_M_mode
 operator|=
 name|__mode
 expr_stmt|;
-if|if
-condition|(
-name|__size
-operator|>
-literal|0
-operator|&&
-name|__size
-operator|<
-literal|4
-condition|)
-block|{
-comment|// Specify not to use an allocated buffer.
-name|_M_buf
-operator|=
-name|_M_unbuf
-expr_stmt|;
+name|this
+operator|->
 name|_M_buf_size
 operator|=
 name|__size
 expr_stmt|;
-name|_M_buf_size_opt
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_else
-else|else
-block|{
-name|_M_buf_size_opt
-operator|=
-name|__size
-expr_stmt|;
+name|this
+operator|->
 name|_M_allocate_internal_buffer
 argument_list|()
 expr_stmt|;
-block|}
-end_else
-
-begin_expr_stmt
-name|_M_set_indeterminate
-argument_list|()
+name|this
+operator|->
+name|_M_reading
+operator|=
+name|false
 expr_stmt|;
+name|this
+operator|->
+name|_M_writing
+operator|=
+name|false
+expr_stmt|;
+name|this
+operator|->
+name|_M_set_buffer
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 end_expr_stmt
 
 begin_comment
-unit|}     } }
+unit|} }
 comment|// namespace __gnu_cxx
 end_comment
 
@@ -470,10 +473,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _EXT_STDIO_FILEBUF */
-end_comment
 
 end_unit
 

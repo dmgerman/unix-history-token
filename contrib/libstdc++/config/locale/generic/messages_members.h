@@ -4,7 +4,7 @@ comment|// std::messages implementation details, generic version -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -131,8 +131,6 @@ argument_list|(
 argument|size_t __refs
 argument_list|)
 operator|:
-name|locale
-operator|::
 name|facet
 argument_list|(
 argument|__refs
@@ -140,7 +138,8 @@ argument_list|)
 block|{
 name|_M_c_locale_messages
 operator|=
-name|_S_c_locale
+name|_S_get_c_locale
+argument_list|()
 block|; }
 name|template
 operator|<
@@ -161,8 +160,6 @@ argument_list|,
 argument|size_t __refs
 argument_list|)
 operator|:
-name|locale
-operator|::
 name|facet
 argument_list|(
 argument|__refs
@@ -170,7 +167,8 @@ argument_list|)
 block|{
 name|_M_c_locale_messages
 operator|=
-name|_S_c_locale
+name|_S_get_c_locale
+argument_list|()
 block|; }
 name|template
 operator|<
@@ -347,19 +345,54 @@ operator|(
 name|__refs
 operator|)
 block|{
+if|if
+condition|(
+name|std
+operator|::
+name|strcmp
+argument_list|(
+name|__s
+argument_list|,
+literal|"C"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|std
+operator|::
+name|strcmp
+argument_list|(
+name|__s
+argument_list|,
+literal|"POSIX"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|this
+operator|->
 name|_S_destroy_c_locale
 argument_list|(
+name|this
+operator|->
 name|_M_c_locale_messages
 argument_list|)
-block|;
+expr_stmt|;
+name|this
+operator|->
 name|_S_create_c_locale
 argument_list|(
+name|this
+operator|->
 name|_M_c_locale_messages
 argument_list|,
 name|__s
 argument_list|)
-block|;       }
+expr_stmt|;
+block|}
 end_expr_stmt
 
+unit|}
 end_unit
 

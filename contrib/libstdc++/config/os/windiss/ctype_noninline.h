@@ -154,13 +154,10 @@ argument_list|,
 argument|size_t __refs
 argument_list|)
 operator|:
-name|__ctype_abstract_base
-operator|<
-name|char
-operator|>
-operator|(
+name|facet
+argument_list|(
 name|__refs
-operator|)
+argument_list|)
 operator|,
 name|_M_del
 argument_list|(
@@ -187,7 +184,39 @@ argument|__table ==
 literal|0
 argument|? classic_table() : __table
 argument_list|)
-block|{ }
+block|{
+name|memset
+argument_list|(
+name|_M_widen
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_widen
+argument_list|)
+argument_list|)
+block|;
+name|_M_widen_ok
+operator|=
+literal|0
+block|;
+name|memset
+argument_list|(
+name|_M_narrow
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_narrow
+argument_list|)
+argument_list|)
+block|;
+name|_M_narrow_ok
+operator|=
+literal|0
+block|;   }
 name|ctype
 operator|<
 name|char
@@ -202,13 +231,10 @@ argument_list|,
 argument|size_t __refs
 argument_list|)
 operator|:
-name|__ctype_abstract_base
-operator|<
-name|char
-operator|>
-operator|(
+name|facet
+argument_list|(
 name|__refs
-operator|)
+argument_list|)
 operator|,
 name|_M_del
 argument_list|(
@@ -235,7 +261,39 @@ argument|__table ==
 literal|0
 argument|? classic_table() : __table
 argument_list|)
-block|{ }
+block|{
+name|memset
+argument_list|(
+name|_M_widen
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_widen
+argument_list|)
+argument_list|)
+block|;
+name|_M_widen_ok
+operator|=
+literal|0
+block|;
+name|memset
+argument_list|(
+name|_M_narrow
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_M_narrow
+argument_list|)
+argument_list|)
+block|;
+name|_M_narrow_ok
+operator|=
+literal|0
+block|;   }
 name|char
 name|ctype
 operator|<

@@ -4,7 +4,7 @@ comment|// Stream iterators
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STREAM_ITERATOR_H
+name|_STREAM_ITERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STREAM_ITERATOR_H
+name|_STREAM_ITERATOR_H
 value|1
 end_define
 
@@ -119,10 +119,17 @@ name|GCC
 name|system_header
 end_pragma
 
+begin_include
+include|#
+directive|include
+file|<debug/debug.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|/// Provides input iterator semantics for streams.
 name|template
 operator|<
 name|typename
@@ -200,6 +207,7 @@ name|_M_ok
 decl_stmt|;
 name|public
 label|:
+comment|///  Construct end of input stream iterator.
 name|istream_iterator
 argument_list|()
 operator|:
@@ -213,6 +221,7 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
+comment|///  Construct start of input stream iterator.
 name|istream_iterator
 argument_list|(
 name|istream_type
@@ -264,6 +273,24 @@ operator|(
 operator|)
 specifier|const
 block|{
+name|__glibcxx_requires_cond
+argument_list|(
+name|_M_ok
+argument_list|,
+name|_M_message
+argument_list|(
+name|__gnu_debug
+operator|::
+name|__msg_deref_istream
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
 return|return
 name|_M_value
 return|;
@@ -297,6 +324,24 @@ operator|++
 operator|(
 operator|)
 block|{
+name|__glibcxx_requires_cond
+argument_list|(
+name|_M_ok
+argument_list|,
+name|_M_message
+argument_list|(
+name|__gnu_debug
+operator|::
+name|__msg_inc_istream
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
 name|_M_read
 argument_list|()
 block|;
@@ -315,6 +360,24 @@ operator|(
 name|int
 operator|)
 block|{
+name|__glibcxx_requires_cond
+argument_list|(
+name|_M_ok
+argument_list|,
+name|_M_message
+argument_list|(
+name|__gnu_debug
+operator|::
+name|__msg_inc_istream
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
 name|istream_iterator
 name|__tmp
 operator|=
@@ -410,8 +473,12 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|///  Return true if x and y are both end or not end, or x and y are the same.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -470,6 +537,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|///  Return false if x and y are both end or not end, or x and y are the same.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -532,6 +603,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/**    *  @brief  Provides output iterator semantics for streams.    *    *  This class provides an iterator to write to an ostream.  The type Tp is    *  the only type written by this iterator and there must be an    *  operator<<(Tp) defined.    *    *  @param  Tp  The type to write to the ostream.    *  @param  CharT  The ostream char_type.    *  @param  Traits  The ostream char_traits.   */
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -570,6 +645,8 @@ operator|>
 block|{
 name|public
 operator|:
+comment|//@{
+comment|/// Public typedef
 typedef|typedef
 name|_CharT
 name|char_type
@@ -594,6 +671,10 @@ operator|>
 name|ostream_type
 expr_stmt|;
 end_typedef
+
+begin_comment
+comment|//@}
+end_comment
 
 begin_label
 name|private
@@ -620,6 +701,10 @@ name|public
 label|:
 end_label
 
+begin_comment
+comment|/// Construct from an ostream.
+end_comment
+
 begin_expr_stmt
 name|ostream_iterator
 argument_list|(
@@ -639,6 +724,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/**        *  Construct from an ostream.        *        *  The delimiter string @a c is written to the stream after every Tp        *  written to the stream.  The delimiter is not copied, and thus must        *  not be destroyed while this iterator is in use.        *        *  @param  s  Underlying ostream to write to.        *  @param  c  CharT delimiter string to insert.       */
 name|ostream_iterator
 argument_list|(
 name|ostream_type
@@ -662,6 +748,7 @@ argument_list|(
 argument|__c
 argument_list|)
 block|{ }
+comment|/// Copy constructor.
 name|ostream_iterator
 argument_list|(
 specifier|const
@@ -682,6 +769,8 @@ argument_list|(
 argument|__obj._M_string
 argument_list|)
 block|{ }
+comment|/// Writes @a value to underlying ostream using operator<<.  If
+comment|/// constructed with delimiter string, writes delimiter to ostream.
 name|ostream_iterator
 operator|&
 name|operator
@@ -693,6 +782,26 @@ operator|&
 name|__value
 operator|)
 block|{
+name|__glibcxx_requires_cond
+argument_list|(
+name|_M_stream
+operator|!=
+literal|0
+argument_list|,
+name|_M_message
+argument_list|(
+name|__gnu_debug
+operator|::
+name|__msg_output_ostream
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
 operator|*
 name|_M_stream
 operator|<<
@@ -717,7 +826,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}              ostream_iterator
+unit|}        ostream_iterator
 operator|&
 name|operator
 operator|*

@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: PowerPC version  -*- C++ -
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 1999, 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,18 +95,11 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -138,16 +131,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
-
 begin_decl_stmt
-specifier|static
-specifier|inline
+name|namespace
+name|__gnu_cxx
+block|{
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -173,16 +160,11 @@ name|__res
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	"/* Inline exchange& add */\n" 	"0:\t" 	"lwarx    %0,0,%2 \n\t" 	"add%I3   %1,%0,%3 \n\t" 	_STWCX "  %1,0,%2 \n\t" 	"bne-     0b \n\t" 	"/* End exchange& add */" 	: "=&b"(__res), "=&r"(__tmp) 	: "r" (__mem), "Ir"(__val) 	: "cr0", "memory");
+asm|( 			  "/* Inline exchange& add */\n" 			  "0:\t" 			  "lwarx    %0,0,%3 \n\t" 			  "add%I4   %1,%0,%4 \n\t" 			  _STWCX "  %1,0,%3 \n\t" 			  "bne-     0b \n\t" 			  "/* End exchange& add */" 			  : "=&b"(__res), "=&r"(__tmp), "=m" (*__mem) 			  : "r" (__mem), "Ir"(__val), "m" (*__mem) 			  : "cr0");
 return|return
 name|__res
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -206,17 +188,13 @@ name|__tmp
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	"/* Inline atomic add */\n" 	"0:\t" 	"lwarx    %0,0,%1 \n\t" 	"add%I2   %0,%0,%2 \n\t" 	_STWCX "  %0,0,%1 \n\t" 	"bne-     0b \n\t" 	"/* End atomic add */" 	: "=&b"(__tmp) 	: "r" (__mem), "Ir"(__val) 	: "cr0", "memory");
+asm|( 			  "/* Inline atomic add */\n" 			  "0:\t" 			  "lwarx    %0,0,%2 \n\t" 			  "add%I3   %0,%0,%3 \n\t" 			  _STWCX "  %0,0,%2 \n\t" 			  "bne-     0b \n\t" 			  "/* End atomic add */" 			  : "=&b"(__tmp), "=m" (*__mem) 			  : "r" (__mem), "Ir"(__val), "m" (*__mem) 			  : "cr0");
+block|}
 block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

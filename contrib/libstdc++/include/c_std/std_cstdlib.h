@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CSTDLIB
+name|_GLIBCXX_CSTDLIB
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CSTDLIB
+name|_GLIBCXX_CSTDLIB
 value|1
 end_define
 
@@ -397,6 +397,9 @@ name|using
 operator|::
 name|malloc
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_HAVE_MBSTATE_T
 name|using
 operator|::
 name|mblen
@@ -409,6 +412,9 @@ name|using
 operator|::
 name|mbtowc
 expr_stmt|;
+endif|#
+directive|endif
+comment|// _GLIBCXX_HAVE_MBSTATE_T
 name|using
 operator|::
 name|qsort
@@ -441,6 +447,9 @@ name|using
 operator|::
 name|system
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_USE_WCHAR_T
 name|using
 operator|::
 name|wcstombs
@@ -449,6 +458,9 @@ name|using
 operator|::
 name|wctomb
 expr_stmt|;
+endif|#
+directive|endif
+comment|// _GLIBCXX_USE_WCHAR_T
 specifier|inline
 name|long
 name|abs
@@ -490,7 +502,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_C99
+name|_GLIBCXX_USE_C99
 end_if
 
 begin_undef
@@ -548,7 +560,7 @@ block|{
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 name|using
 operator|::
 name|lldiv_t
@@ -557,9 +569,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|_GLIBCPP_USE_C99_CHECK
+name|_GLIBCXX_USE_C99_CHECK
 operator|||
-name|_GLIBCPP_USE_C99_DYNAMIC
+name|_GLIBCXX_USE_C99_DYNAMIC
 extern|extern
 literal|"C"
 name|void
@@ -575,7 +587,7 @@ directive|endif
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_DYNAMIC
+name|_GLIBCXX_USE_C99_DYNAMIC
 name|using
 operator|::
 name|_Exit
@@ -627,7 +639,7 @@ block|}
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 specifier|inline
 name|lldiv_t
 name|div
@@ -704,9 +716,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|_GLIBCPP_USE_C99_LONG_LONG_CHECK
+name|_GLIBCXX_USE_C99_LONG_LONG_CHECK
 operator|||
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 extern|extern
 literal|"C"
 name|long
@@ -771,7 +783,7 @@ directive|endif
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 name|using
 operator|::
 name|atoll
@@ -804,7 +816,7 @@ block|{
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 name|using
 name|__gnu_cxx
 operator|::
@@ -830,7 +842,7 @@ expr_stmt|;
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 name|using
 name|__gnu_cxx
 operator|::

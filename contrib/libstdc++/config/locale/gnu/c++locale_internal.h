@@ -4,7 +4,7 @@ comment|// Prototypes for GLIBC thread locale __-prefixed functions -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -197,50 +197,6 @@ argument_list|(
 argument|strtold_l
 argument_list|)
 name|__strtold_l
-expr_stmt|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|strtol_l
-argument_list|)
-name|__strtol_l
-expr_stmt|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|strtoll_l
-argument_list|)
-name|__strtoll_l
-expr_stmt|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|strtoul_l
-argument_list|)
-name|__strtoul_l
-expr_stmt|;
-end_extern
-
-begin_extern
-extern|extern
-literal|"C"
-name|__typeof
-argument_list|(
-argument|strtoull_l
-argument_list|)
-name|__strtoull_l
 expr_stmt|;
 end_extern
 

@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: CRIS version  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,52 +95,27 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
-
-begin_comment
-comment|// This entity must not cross a page boundary.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-name|__attribute__
-typedef|((
-name|__aligned__
-typedef|(4)));
-end_typedef
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
 begin_decl_stmt
-specifier|static
-specifier|inline
+name|namespace
+name|__gnu_cxx
+block|{
 name|_Atomic_word
-name|__attribute__
-argument_list|(
-operator|(
-name|__unused__
-operator|)
-argument_list|)
 name|__exchange_and_add
-argument_list|(
+parameter_list|(
+specifier|volatile
 name|_Atomic_word
-operator|*
+modifier|*
 name|__mem
-argument_list|,
+parameter_list|,
 name|int
 name|__val
-argument_list|)
+parameter_list|)
 block|{
 name|int
 name|__tmp
@@ -157,39 +132,33 @@ literal|10
 operator|)
 asm|__asm__
 specifier|__volatile__
-asm|(" clearf		\n" 			"0:			\n" 			" move.d %4,%2		\n" 			" move.d [%3],%0	\n" 			" add.d %0,%2		\n" 			" ax			\n" 			" move.d %2,[%3]	\n" 			" bwf 0b		\n" 			" clearf		\n" 			:  "=&r" (__result), "=m" (*__mem), "=&r" (__tmp) 			: "r" (__mem), "g" (__val), "m" (*__mem) 			: "memory");
+asm|(" clearf		\n" 			"0:			\n" 			" move.d %4,%2		\n" 			" move.d [%3],%0	\n" 			" add.d %0,%2		\n" 			" ax			\n" 			" move.d %2,[%3]	\n" 			" bwf 0b		\n" 			" clearf		\n" 			:  "=&r" (__result), "=m" (*__mem), "=&r" (__tmp) 			: "r" (__mem), "g" (__val), "m" (*__mem)
+comment|/* The memory clobber must stay, regardless of 			   current uses of this function.  */
+asm|: "memory");
 else|#
 directive|else
 asm|__asm__
 specifier|__volatile__
-asm|(" move $ccr,$r9		\n" 			" di			\n" 			" move.d %4,%2		\n" 			" move.d [%3],%0	\n" 			" add.d %0,%2		\n" 			" move.d %2,[%3]	\n" 			" move $r9,$ccr		\n" 			:  "=&r" (__result), "=m" (*__mem), "=&r" (__tmp) 			: "r" (__mem), "g" (__val), "m" (*__mem) 			: "memory", "r9");
+asm|(" move $ccr,$r9	\n" 			" di			\n" 			" move.d %4,%2		\n" 			" move.d [%3],%0	\n" 			" add.d %0,%2		\n" 			" move.d %2,[%3]	\n" 			" move $r9,$ccr		\n" 			:  "=&r" (__result), "=m" (*__mem), "=&r" (__tmp) 			: "r" (__mem), "g" (__val), "m" (*__mem) 			: "r9",
+comment|/* The memory clobber must stay, regardless of 			     current uses of this function.  */
+asm|"memory");
 endif|#
 directive|endif
 return|return
 name|__result
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
-name|__attribute__
-argument_list|(
-operator|(
-name|__unused__
-operator|)
-argument_list|)
 name|__atomic_add
-argument_list|(
+parameter_list|(
+specifier|volatile
 name|_Atomic_word
-operator|*
+modifier|*
 name|__mem
-argument_list|,
+parameter_list|,
 name|int
 name|__val
-argument_list|)
+parameter_list|)
 block|{
 name|__exchange_and_add
 argument_list|(
@@ -199,15 +168,11 @@ name|__val
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 value|1
 end_define
 
@@ -114,6 +114,17 @@ end_comment
 
 begin_comment
 comment|// file will come before all others.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__C9X__
+value|1
+end_define
+
+begin_comment
+comment|// for sinf etc
 end_comment
 
 begin_endif

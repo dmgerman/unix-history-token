@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- indirect_array class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004
 end_comment
 
 begin_comment
@@ -110,13 +110,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_INDIRECT_ARRAY_H
+name|_INDIRECT_ARRAY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_INDIRECT_ARRAY_H
+name|_INDIRECT_ARRAY_H
 value|1
 end_define
 
@@ -131,6 +131,7 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|/**    *  @brief  Reference to arbitrary subset of an array.    *    *  An indirect_array is a reference to the actual elements of an array    *  specified by an ordered array of indices.  The way to get an indirect_array is to    *  call operator[](valarray<size_t>) on a valarray.  The returned    *  indirect_array then permits carrying operations out on the referenced    *  subset of elements in the original valarray.    *    *  For example, if an indirect_array is obtained using the array (4,2,0) as    *  an argument, and then assigned to an array containing (1,2,3), then the    *  underlying array will have array[0]==3, array[2]==2, and array[4]==1.    *    *  @param  Tp  Element type.    */
 name|template
 operator|<
 name|class
@@ -145,17 +146,29 @@ typedef|typedef
 name|_Tp
 name|value_type
 typedef|;
-comment|// XXX: This is a proposed resolution for DR-253.
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 253. valarray helper functions are almost entirely useless
+comment|///  Copy constructor.  Both slices refer to the same underlying array.
+name|indirect_array
+argument_list|(
+specifier|const
 name|indirect_array
 operator|&
+argument_list|)
+expr_stmt|;
+comment|///  Assignment operator.  Assigns elements to corresponding elements
+comment|///  of @a a.
+name|indirect_array
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|indirect_array
 operator|&
 operator|)
-expr_stmt|;
+decl_stmt|;
+comment|///  Assign slice elements to corresponding elements of @a v.
 name|void
 name|operator
 init|=
@@ -169,6 +182,7 @@ operator|&
 operator|)
 specifier|const
 decl_stmt|;
+comment|///  Multiply slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|*=
@@ -182,6 +196,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Divide slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|/=
@@ -195,6 +210,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Modulo slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|%=
@@ -208,6 +224,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Add corresponding elements of @a v to slice elements.
 name|void
 name|operator
 operator|+=
@@ -221,6 +238,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Subtract corresponding elements of @a v from slice elements.
 name|void
 name|operator
 operator|-=
@@ -234,6 +252,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Logical xor slice elements with corresponding elements of @a v.
 name|void
 name|operator
 operator|^=
@@ -247,6 +266,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Logical and slice elements with corresponding elements of @a v.
 name|void
 name|operator
 operator|&=
@@ -260,6 +280,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Logical or slice elements with corresponding elements of @a v.
 name|void
 name|operator
 operator||=
@@ -273,6 +294,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Left shift slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|<<=
@@ -286,6 +308,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Right shift slice elements by corresponding elements of @a v.
 name|void
 name|operator
 operator|>>=
@@ -299,6 +322,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Assign all slice elements to @a t.
 name|void
 name|operator
 init|=
@@ -532,13 +556,7 @@ specifier|const
 expr_stmt|;
 name|private
 label|:
-name|indirect_array
-argument_list|(
-specifier|const
-name|indirect_array
-operator|&
-argument_list|)
-expr_stmt|;
+comment|///  Copy constructor.  Both slices refer to the same underlying array.
 name|indirect_array
 argument_list|(
 name|_Array
@@ -702,6 +720,8 @@ operator|&
 name|__a
 operator|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__a
@@ -749,6 +769,8 @@ name|__t
 operator|)
 specifier|const
 block|{
+name|std
+operator|::
 name|__valarray_fill
 argument_list|(
 name|_M_array
@@ -785,6 +807,8 @@ name|__v
 operator|)
 specifier|const
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|_Array
@@ -834,6 +858,8 @@ name|__e
 operator|)
 specifier|const
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__e
@@ -937,7 +963,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_INDIRECT_ARRAY_H */
+comment|/* _INDIRECT_ARRAY_H */
 end_comment
 
 begin_comment

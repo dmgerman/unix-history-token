@@ -4,7 +4,7 @@ comment|// underlying io library  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_IO_STDIO_H
+name|_C_IO_STDIO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_IO_STDIO_H
+name|_C_IO_STDIO_H
 value|1
 end_define
 
@@ -134,29 +134,6 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
-comment|// for fpos.h
-typedef|typedef
-name|long
-name|streamoff
-typedef|;
-typedef|typedef
-name|ptrdiff_t
-name|streamsize
-typedef|;
-comment|// Signed integral type
-if|#
-directive|if
-name|_GLIBCPP_USE_WCHAR_T
-typedef|typedef
-name|ptrdiff_t
-name|wstreamsize
-typedef|;
-endif|#
-directive|endif
-typedef|typedef
-name|fpos_t
-name|__c_streampos
-typedef|;
 typedef|typedef
 name|__gthread_mutex_t
 name|__c_lock
@@ -384,10 +361,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// _CPP_IO_STDIO_H
-end_comment
 
 end_unit
 

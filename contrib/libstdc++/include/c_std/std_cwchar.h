@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CWCHAR
+name|_GLIBCXX_CWCHAR
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CWCHAR
+name|_GLIBCXX_CWCHAR
 value|1
 end_define
 
@@ -156,7 +156,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_HAVE_WCHAR_H
+name|_GLIBCXX_HAVE_WCHAR_H
 end_if
 
 begin_include
@@ -181,7 +181,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_HAVE_MBSTATE_T
+name|_GLIBCXX_HAVE_MBSTATE_T
 end_ifndef
 
 begin_extern
@@ -343,11 +343,22 @@ directive|undef
 name|vfwprintf
 end_undef
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VFWSCANF
+end_if
+
 begin_undef
 undef|#
 directive|undef
 name|vfwscanf
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -355,11 +366,22 @@ directive|undef
 name|vswprintf
 end_undef
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VSWSCANF
+end_if
+
 begin_undef
 undef|#
 directive|undef
 name|vswscanf
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -367,11 +389,22 @@ directive|undef
 name|vwprintf
 end_undef
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VWSCANF
+end_if
+
 begin_undef
 undef|#
 directive|undef
 name|vwscanf
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -481,11 +514,22 @@ directive|undef
 name|wcstod
 end_undef
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_WCSTOF
+end_if
+
 begin_undef
 undef|#
 directive|undef
 name|wcstof
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -562,7 +606,7 @@ end_undef
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_if
 
 begin_decl_stmt
@@ -653,26 +697,41 @@ name|using
 operator|::
 name|vfwprintf
 expr_stmt|;
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VFWSCANF
 name|using
 operator|::
 name|vfwscanf
 expr_stmt|;
+endif|#
+directive|endif
 name|using
 operator|::
 name|vswprintf
 expr_stmt|;
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VSWSCANF
 name|using
 operator|::
 name|vswscanf
 expr_stmt|;
+endif|#
+directive|endif
 name|using
 operator|::
 name|vwprintf
 expr_stmt|;
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VWSCANF
 name|using
 operator|::
 name|vwscanf
 expr_stmt|;
+endif|#
+directive|endif
 name|using
 operator|::
 name|wcrtomb
@@ -729,10 +788,15 @@ name|using
 operator|::
 name|wcstod
 expr_stmt|;
+if|#
+directive|if
+name|_GLIBCXX_HAVE_WCSTOF
 name|using
 operator|::
 name|wcstof
 expr_stmt|;
+endif|#
+directive|endif
 name|using
 operator|::
 name|wcstok
@@ -893,6 +957,7 @@ name|wchar_t
 modifier|*
 name|__s1
 parameter_list|,
+specifier|const
 name|wchar_t
 modifier|*
 name|__s2
@@ -960,7 +1025,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_C99
+name|_GLIBCXX_USE_C99
 end_if
 
 begin_undef
@@ -987,9 +1052,9 @@ name|__gnu_cxx
 block|{
 if|#
 directive|if
-name|_GLIBCPP_USE_C99_CHECK
+name|_GLIBCXX_USE_C99_CHECK
 operator|||
-name|_GLIBCPP_USE_C99_DYNAMIC
+name|_GLIBCXX_USE_C99_DYNAMIC
 extern|extern
 literal|"C"
 name|long
@@ -1014,7 +1079,7 @@ directive|endif
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_DYNAMIC
+name|_GLIBCXX_USE_C99_DYNAMIC
 name|using
 operator|::
 name|wcstold
@@ -1023,9 +1088,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|_GLIBCPP_USE_C99_LONG_LONG_CHECK
+name|_GLIBCXX_USE_C99_LONG_LONG_CHECK
 operator|||
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 extern|extern
 literal|"C"
 name|long
@@ -1076,7 +1141,7 @@ directive|endif
 if|#
 directive|if
 operator|!
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
 name|using
 operator|::
 name|wcstoll
@@ -1123,7 +1188,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//_GLIBCPP_USE_WCHAR_T
+comment|//_GLIBCXX_USE_WCHAR_T
 end_comment
 
 begin_endif

@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 value|1
 end_define
 
@@ -119,42 +119,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE_C99_CHECK
+name|_GLIBCXX_USE_C99_CHECK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE_C99_DYNAMIC
+name|_GLIBCXX_USE_C99_DYNAMIC
 value|(!(__ISO_C_VISIBLE>= 1999))
 end_define
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE_C99_LONG_LONG_CHECK
+name|_GLIBCXX_USE_C99_LONG_LONG_CHECK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE_C99_LONG_LONG_DYNAMIC
-value|(_GLIBCPP_USE_C99_DYNAMIC || !defined __LONG_LONG_SUPPORTED)
+name|_GLIBCXX_USE_C99_LONG_LONG_DYNAMIC
+value|(_GLIBCXX_USE_C99_DYNAMIC || !defined __LONG_LONG_SUPPORTED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE_C99_FLOAT_TRANSCENDENTALS_CHECK
+name|_GLIBCXX_USE_C99_FLOAT_TRANSCENDENTALS_CHECK
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE_C99_FLOAT_TRANSCENDENTALS_DYNAMIC
+name|_GLIBCXX_USE_C99_FLOAT_TRANSCENDENTALS_DYNAMIC
 value|defined _XOPEN_SOURCE
 end_define
 

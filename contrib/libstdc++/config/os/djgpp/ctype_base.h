@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -203,6 +203,8 @@ name|mask
 name|alnum
 init|=
 name|__dj_ISALPHA
+operator||
+name|__dj_ISDIGIT
 decl_stmt|;
 comment|// Alphanumeric
 specifier|static
@@ -210,7 +212,11 @@ specifier|const
 name|mask
 name|graph
 init|=
-name|__dj_ISGRAPH
+name|__dj_ISALPHA
+operator||
+name|__dj_ISDIGIT
+operator||
+name|__dj_ISPUNCT
 decl_stmt|;
 comment|// Graphical
 block|}

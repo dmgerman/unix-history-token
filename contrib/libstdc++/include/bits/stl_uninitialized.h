@@ -4,7 +4,7 @@ comment|// Raw memory manipulators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STL_UNINITIALIZED_H
+name|_STL_UNINITIALIZED_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STL_UNINITIALIZED_H
+name|_STL_UNINITIALIZED_H
 value|1
 end_define
 
@@ -130,25 +130,27 @@ comment|// uninitialized_copy
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|,
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|>
 specifier|inline
-name|_ForwardIter
+name|_ForwardIterator
 name|__uninitialized_copy_aux
 argument_list|(
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|,
-argument|_ForwardIter __result
+argument|_ForwardIterator __result
 argument_list|,
 argument|__true_type
 argument_list|)
 block|{
 return|return
+name|std
+operator|::
 name|copy
 argument_list|(
 name|__first
@@ -162,24 +164,25 @@ block|}
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|,
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|>
-name|_ForwardIter
+specifier|inline
+name|_ForwardIterator
 name|__uninitialized_copy_aux
 argument_list|(
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|,
-argument|_ForwardIter __result
+argument|_ForwardIterator __result
 argument_list|,
 argument|__false_type
 argument_list|)
 block|{
-name|_ForwardIter
+name|_ForwardIterator
 name|__cur
 operator|=
 name|__result
@@ -199,6 +202,8 @@ operator|,
 operator|++
 name|__cur
 control|)
+name|std
+operator|::
 name|_Construct
 argument_list|(
 operator|&
@@ -218,6 +223,8 @@ argument_list|(
 argument|...
 argument_list|)
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
 name|__result
@@ -239,27 +246,27 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|,
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|>
 specifier|inline
-name|_ForwardIter
+name|_ForwardIterator
 name|uninitialized_copy
 argument_list|(
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|,
-argument|_ForwardIter __result
+argument|_ForwardIterator __result
 argument_list|)
 block|{
 typedef|typedef
 name|typename
 name|iterator_traits
 operator|<
-name|_ForwardIter
+name|_ForwardIterator
 operator|>
 operator|::
 name|value_type
@@ -282,6 +289,8 @@ end_typedef
 
 begin_return
 return|return
+name|std
+operator|::
 name|__uninitialized_copy_aux
 argument_list|(
 name|__first
@@ -317,6 +326,8 @@ modifier|*
 name|__result
 parameter_list|)
 block|{
+name|std
+operator|::
 name|memmove
 argument_list|(
 name|__result
@@ -361,6 +372,8 @@ modifier|*
 name|__result
 parameter_list|)
 block|{
+name|std
+operator|::
 name|memmove
 argument_list|(
 name|__result
@@ -403,7 +416,7 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Tp
@@ -412,15 +425,17 @@ specifier|inline
 name|void
 name|__uninitialized_fill_aux
 argument_list|(
-argument|_ForwardIter __first
+argument|_ForwardIterator __first
 argument_list|,
-argument|_ForwardIter __last
+argument|_ForwardIterator __last
 argument_list|,
 argument|const _Tp& __x
 argument_list|,
 argument|__true_type
 argument_list|)
 block|{
+name|std
+operator|::
 name|fill
 argument_list|(
 name|__first
@@ -433,7 +448,7 @@ block|; }
 name|template
 operator|<
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Tp
@@ -441,16 +456,16 @@ operator|>
 name|void
 name|__uninitialized_fill_aux
 argument_list|(
-argument|_ForwardIter __first
+argument|_ForwardIterator __first
 argument_list|,
-argument|_ForwardIter __last
+argument|_ForwardIterator __last
 argument_list|,
 argument|const _Tp& __x
 argument_list|,
 argument|__false_type
 argument_list|)
 block|{
-name|_ForwardIter
+name|_ForwardIterator
 name|__cur
 operator|=
 name|__first
@@ -467,6 +482,8 @@ condition|;
 operator|++
 name|__cur
 control|)
+name|std
+operator|::
 name|_Construct
 argument_list|(
 operator|&
@@ -482,6 +499,8 @@ argument_list|(
 argument|...
 argument_list|)
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
 name|__first
@@ -490,7 +509,7 @@ name|__cur
 argument_list|)
 block|;
 name|__throw_exception_again
-block|;  	}
+block|; 	}
 end_expr_stmt
 
 begin_comment
@@ -502,7 +521,7 @@ begin_expr_stmt
 unit|template
 operator|<
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Tp
@@ -511,9 +530,9 @@ specifier|inline
 name|void
 name|uninitialized_fill
 argument_list|(
-argument|_ForwardIter __first
+argument|_ForwardIterator __first
 argument_list|,
-argument|_ForwardIter __last
+argument|_ForwardIterator __last
 argument_list|,
 argument|const _Tp& __x
 argument_list|)
@@ -522,7 +541,7 @@ typedef|typedef
 name|typename
 name|iterator_traits
 operator|<
-name|_ForwardIter
+name|_ForwardIterator
 operator|>
 operator|::
 name|value_type
@@ -544,6 +563,8 @@ expr_stmt|;
 end_typedef
 
 begin_expr_stmt
+name|std
+operator|::
 name|__uninitialized_fill_aux
 argument_list|(
 name|__first
@@ -571,7 +592,7 @@ begin_expr_stmt
 unit|template
 operator|<
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Size
@@ -580,10 +601,10 @@ name|typename
 name|_Tp
 operator|>
 specifier|inline
-name|_ForwardIter
+name|_ForwardIterator
 name|__uninitialized_fill_n_aux
 argument_list|(
-argument|_ForwardIter __first
+argument|_ForwardIterator __first
 argument_list|,
 argument|_Size __n
 argument_list|,
@@ -593,6 +614,8 @@ argument|__true_type
 argument_list|)
 block|{
 return|return
+name|std
+operator|::
 name|fill_n
 argument_list|(
 name|__first
@@ -609,7 +632,7 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Size
@@ -617,10 +640,10 @@ operator|,
 name|typename
 name|_Tp
 operator|>
-name|_ForwardIter
+name|_ForwardIterator
 name|__uninitialized_fill_n_aux
 argument_list|(
-argument|_ForwardIter __first
+argument|_ForwardIterator __first
 argument_list|,
 argument|_Size __n
 argument_list|,
@@ -629,7 +652,7 @@ argument_list|,
 argument|__false_type
 argument_list|)
 block|{
-name|_ForwardIter
+name|_ForwardIterator
 name|__cur
 operator|=
 name|__first
@@ -649,6 +672,8 @@ operator|,
 operator|++
 name|__cur
 control|)
+name|std
+operator|::
 name|_Construct
 argument_list|(
 operator|&
@@ -673,6 +698,8 @@ end_macro
 
 begin_block
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
 name|__first
@@ -694,7 +721,7 @@ begin_expr_stmt
 unit|template
 operator|<
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Size
@@ -703,10 +730,10 @@ name|typename
 name|_Tp
 operator|>
 specifier|inline
-name|_ForwardIter
+name|_ForwardIterator
 name|uninitialized_fill_n
 argument_list|(
-argument|_ForwardIter __first
+argument|_ForwardIterator __first
 argument_list|,
 argument|_Size __n
 argument_list|,
@@ -717,7 +744,7 @@ typedef|typedef
 name|typename
 name|iterator_traits
 operator|<
-name|_ForwardIter
+name|_ForwardIterator
 operator|>
 operator|::
 name|value_type
@@ -740,6 +767,8 @@ end_typedef
 
 begin_return
 return|return
+name|std
+operator|::
 name|__uninitialized_fill_n_aux
 argument_list|(
 name|__first
@@ -783,32 +812,34 @@ begin_expr_stmt
 unit|template
 operator|<
 name|typename
-name|_InputIter1
+name|_InputIterator1
 operator|,
 name|typename
-name|_InputIter2
+name|_InputIterator2
 operator|,
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|>
 specifier|inline
-name|_ForwardIter
+name|_ForwardIterator
 name|__uninitialized_copy_copy
 argument_list|(
-argument|_InputIter1 __first1
+argument|_InputIterator1 __first1
 argument_list|,
-argument|_InputIter1 __last1
+argument|_InputIterator1 __last1
 argument_list|,
-argument|_InputIter2 __first2
+argument|_InputIterator2 __first2
 argument_list|,
-argument|_InputIter2 __last2
+argument|_InputIterator2 __last2
 argument_list|,
-argument|_ForwardIter __result
+argument|_ForwardIterator __result
 argument_list|)
 block|{
-name|_ForwardIter
+name|_ForwardIterator
 name|__mid
 operator|=
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__first1
@@ -821,6 +852,8 @@ block|;
 name|try
 block|{
 return|return
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__first2
@@ -836,6 +869,8 @@ argument_list|(
 argument|...
 argument_list|)
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
 name|__result
@@ -844,7 +879,7 @@ name|__mid
 argument_list|)
 block|;
 name|__throw_exception_again
-block|;  	}
+block|; 	}
 end_expr_stmt
 
 begin_comment
@@ -864,29 +899,31 @@ begin_expr_stmt
 unit|template
 operator|<
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Tp
 operator|,
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|>
 specifier|inline
-name|_ForwardIter
+name|_ForwardIterator
 name|__uninitialized_fill_copy
 argument_list|(
-argument|_ForwardIter __result
+argument|_ForwardIterator __result
 argument_list|,
-argument|_ForwardIter __mid
+argument|_ForwardIterator __mid
 argument_list|,
 argument|const _Tp& __x
 argument_list|,
-argument|_InputIter __first
+argument|_InputIterator __first
 argument_list|,
-argument|_InputIter __last
+argument|_InputIterator __last
 argument_list|)
 block|{
+name|std
+operator|::
 name|uninitialized_fill
 argument_list|(
 name|__result
@@ -899,6 +936,8 @@ block|;
 name|try
 block|{
 return|return
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__first
@@ -914,6 +953,8 @@ argument_list|(
 argument|...
 argument_list|)
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
 name|__result
@@ -922,7 +963,7 @@ name|__mid
 argument_list|)
 block|;
 name|__throw_exception_again
-block|;  	}
+block|; 	}
 end_expr_stmt
 
 begin_comment
@@ -942,10 +983,10 @@ begin_expr_stmt
 unit|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|,
 name|typename
-name|_ForwardIter
+name|_ForwardIterator
 operator|,
 name|typename
 name|_Tp
@@ -954,20 +995,22 @@ specifier|inline
 name|void
 name|__uninitialized_copy_fill
 argument_list|(
-argument|_InputIter __first1
+argument|_InputIterator __first1
 argument_list|,
-argument|_InputIter __last1
+argument|_InputIterator __last1
 argument_list|,
-argument|_ForwardIter __first2
+argument|_ForwardIterator __first2
 argument_list|,
-argument|_ForwardIter __last2
+argument|_ForwardIterator __last2
 argument_list|,
 argument|const _Tp& __x
 argument_list|)
 block|{
-name|_ForwardIter
+name|_ForwardIterator
 name|__mid2
 operator|=
+name|std
+operator|::
 name|uninitialized_copy
 argument_list|(
 name|__first1
@@ -979,6 +1022,8 @@ argument_list|)
 block|;
 name|try
 block|{
+name|std
+operator|::
 name|uninitialized_fill
 argument_list|(
 name|__mid2
@@ -987,12 +1032,14 @@ name|__last2
 argument_list|,
 name|__x
 argument_list|)
-block|;       }
+block|; 	}
 name|catch
 argument_list|(
 argument|...
 argument_list|)
 block|{
+name|std
+operator|::
 name|_Destroy
 argument_list|(
 name|__first2
@@ -1001,7 +1048,7 @@ name|__mid2
 argument_list|)
 block|;
 name|__throw_exception_again
-block|;  	}
+block|; 	}
 block|}
 end_expr_stmt
 
@@ -1016,19 +1063,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_STL_UNINITIALIZED_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
+comment|/* _STL_UNINITIALIZED_H */
 end_comment
 
 end_unit

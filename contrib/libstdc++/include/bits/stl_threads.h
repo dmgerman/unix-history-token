@@ -4,7 +4,7 @@ comment|// Threading support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,17 +106,28 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__SGI_STL_INTERNAL_THREADS_H
+name|_STL_THREADS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__SGI_STL_INTERNAL_THREADS_H
+name|_STL_THREADS_H
+value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<cstddef>
+end_include
+
 begin_comment
-comment|// The only supported threading model is GCC's own gthr.h abstraction layer.
+comment|// The only supported threading model is GCC's own gthr.h abstraction
+end_comment
+
+begin_comment
+comment|// layer.
 end_comment
 
 begin_include
@@ -127,270 +138,8 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|std
+name|__gnu_internal
 block|{
-comment|// Class _Refcount_Base provides a type, _RC_t, a data member,
-comment|// _M_ref_count, and member functions _M_incr and _M_decr, which perform
-comment|// atomic preincrement/predecrement.  The constructor initializes
-comment|// _M_ref_count.
-struct|struct
-name|_Refcount_Base
-block|{
-comment|// The type _RC_t
-typedef|typedef
-name|size_t
-name|_RC_t
-typedef|;
-comment|// The data member _M_ref_count
-specifier|volatile
-name|_RC_t
-name|_M_ref_count
-decl_stmt|;
-comment|// Constructor
-name|__gthread_mutex_t
-name|_M_ref_count_lock
-decl_stmt|;
-name|_Refcount_Base
-argument_list|(
-argument|_RC_t __n
-argument_list|)
-block|:
-name|_M_ref_count
-argument_list|(
-argument|__n
-argument_list|)
-block|{
-ifdef|#
-directive|ifdef
-name|__GTHREAD_MUTEX_INIT
-name|__gthread_mutex_t
-name|__tmp
-init|=
-name|__GTHREAD_MUTEX_INIT
-decl_stmt|;
-name|_M_ref_count_lock
-operator|=
-name|__tmp
-expr_stmt|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__GTHREAD_MUTEX_INIT_FUNCTION
-argument_list|)
-name|__GTHREAD_MUTEX_INIT_FUNCTION
-argument_list|(
-operator|&
-name|_M_ref_count_lock
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-error|#
-directive|error
-error|__GTHREAD_MUTEX_INIT or __GTHREAD_MUTEX_INIT_FUNCTION should be defined by gthr.h abstraction layer, report problem to libstdc++@gcc.gnu.org.
-endif|#
-directive|endif
-block|}
-name|void
-name|_M_incr
-parameter_list|()
-block|{
-name|__gthread_mutex_lock
-argument_list|(
-operator|&
-name|_M_ref_count_lock
-argument_list|)
-expr_stmt|;
-operator|++
-name|_M_ref_count
-expr_stmt|;
-name|__gthread_mutex_unlock
-argument_list|(
-operator|&
-name|_M_ref_count_lock
-argument_list|)
-expr_stmt|;
-block|}
-name|_RC_t
-name|_M_decr
-parameter_list|()
-block|{
-name|__gthread_mutex_lock
-argument_list|(
-operator|&
-name|_M_ref_count_lock
-argument_list|)
-expr_stmt|;
-specifier|volatile
-name|_RC_t
-name|__tmp
-init|=
-operator|--
-name|_M_ref_count
-decl_stmt|;
-name|__gthread_mutex_unlock
-argument_list|(
-operator|&
-name|_M_ref_count_lock
-argument_list|)
-expr_stmt|;
-return|return
-name|__tmp
-return|;
-block|}
-block|}
-struct|;
-comment|// Atomic swap on unsigned long
-comment|// This is guaranteed to behave as though it were atomic only if all
-comment|// possibly concurrent updates use _Atomic_swap.
-comment|// In some cases the operation is emulated with a lock.
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GTHREAD_MUTEX_INIT
-argument_list|)
-comment|// This could be optimized to use the atomicity.h abstraction layer.
-comment|// vyzo: simple _Atomic_swap implementation following the guidelines above
-comment|// We use a template here only to get a unique initialized instance.
-name|template
-operator|<
-name|int
-name|__dummy
-operator|>
-expr|struct
-name|_Swap_lock_struct
-block|{
-specifier|static
-name|__gthread_mutex_t
-name|_S_swap_lock
-block|; }
-expr_stmt|;
-name|template
-operator|<
-name|int
-name|__dummy
-operator|>
-name|__gthread_mutex_t
-name|_Swap_lock_struct
-operator|<
-name|__dummy
-operator|>
-operator|::
-name|_S_swap_lock
-operator|=
-name|__GTHREAD_MUTEX_INIT
-expr_stmt|;
-comment|// This should be portable, but performance is expected to be quite
-comment|// awful.  This really needs platform specific code.
-specifier|inline
-name|unsigned
-name|long
-name|_Atomic_swap
-parameter_list|(
-name|unsigned
-name|long
-modifier|*
-name|__p
-parameter_list|,
-name|unsigned
-name|long
-name|__q
-parameter_list|)
-block|{
-name|__gthread_mutex_lock
-argument_list|(
-operator|&
-name|_Swap_lock_struct
-operator|<
-literal|0
-operator|>
-operator|::
-name|_S_swap_lock
-argument_list|)
-expr_stmt|;
-name|unsigned
-name|long
-name|__result
-init|=
-operator|*
-name|__p
-decl_stmt|;
-operator|*
-name|__p
-operator|=
-name|__q
-expr_stmt|;
-name|__gthread_mutex_unlock
-argument_list|(
-operator|&
-name|_Swap_lock_struct
-operator|<
-literal|0
-operator|>
-operator|::
-name|_S_swap_lock
-argument_list|)
-expr_stmt|;
-return|return
-name|__result
-return|;
-block|}
-endif|#
-directive|endif
-block|}
-end_decl_stmt
-
-begin_comment
-comment|//namespace std
-end_comment
-
-begin_comment
-comment|// Locking class.  Note that this class *does not have a
-end_comment
-
-begin_comment
-comment|// constructor*.  It must be initialized either statically, with
-end_comment
-
-begin_comment
-comment|// __STL_MUTEX_INITIALIZER, or dynamically, by explicitly calling
-end_comment
-
-begin_comment
-comment|// the _M_initialize member function.  (This is similar to the ways
-end_comment
-
-begin_comment
-comment|// that a pthreads mutex can be initialized.)  There are explicit
-end_comment
-
-begin_comment
-comment|// member functions for acquiring and releasing the lock.
-end_comment
-
-begin_comment
-comment|// There is no constructor because static initialization is
-end_comment
-
-begin_comment
-comment|// essential for some uses, and only a class aggregate (see section
-end_comment
-
-begin_comment
-comment|// 8.5.1 of the C++ standard) can be initialized that way.  That
-end_comment
-
-begin_comment
-comment|// means we must have no constructors, no base classes, no virtual
-end_comment
-
-begin_comment
-comment|// functions, and no private or protected members.
-end_comment
-
-begin_if
 if|#
 directive|if
 operator|!
@@ -403,51 +152,57 @@ name|defined
 argument_list|(
 name|__GTHREAD_MUTEX_INIT_FUNCTION
 argument_list|)
-end_if
+specifier|extern
+name|__gthread_mutex_t
+name|_GLIBCXX_mutex
+decl_stmt|;
+specifier|extern
+name|__gthread_mutex_t
+modifier|*
+name|_GLIBCXX_mutex_address
+decl_stmt|;
+specifier|extern
+name|__gthread_once_t
+name|_GLIBCXX_once
+decl_stmt|;
+specifier|extern
+name|void
+name|_GLIBCXX_mutex_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|_GLIBCXX_mutex_address_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __gnu_internal
+end_comment
 
 begin_decl_stmt
 name|namespace
 name|__gnu_cxx
 block|{
-specifier|extern
-name|__gthread_mutex_t
-name|_GLIBCPP_mutex
-decl_stmt|;
-specifier|extern
-name|__gthread_mutex_t
-modifier|*
-name|_GLIBCPP_mutex_address
-decl_stmt|;
-specifier|extern
-name|__gthread_once_t
-name|_GLIBCPP_once
-decl_stmt|;
-specifier|extern
-name|void
-name|_GLIBCPP_mutex_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|extern
-name|void
-name|_GLIBCPP_mutex_address_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-block|}
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-name|namespace
-name|std
-block|{
+comment|// Locking class.  Note that this class *does not have a
+comment|// constructor*.  It must be initialized either statically, with
+comment|// __STL_MUTEX_INITIALIZER, or dynamically, by explicitly calling
+comment|// the _M_initialize member function.  (This is similar to the ways
+comment|// that a pthreads mutex can be initialized.)  There are explicit
+comment|// member functions for acquiring and releasing the lock.
+comment|// There is no constructor because static initialization is
+comment|// essential for some uses, and only a class aggregate (see section
+comment|// 8.5.1 of the C++ standard) can be initialized that way.  That
+comment|// means we must have no constructors, no base classes, no virtual
+comment|// functions, and no private or protected members.
 struct|struct
 name|_STL_mutex_lock
 block|{
@@ -500,13 +255,13 @@ condition|(
 name|__gthread_once
 argument_list|(
 operator|&
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_GLIBCPP_once
+name|_GLIBCXX_once
 argument_list|,
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_GLIBCPP_mutex_init
+name|_GLIBCXX_mutex_init
 argument_list|)
 operator|!=
 literal|0
@@ -520,9 +275,9 @@ expr_stmt|;
 name|__gthread_mutex_lock
 argument_list|(
 operator|&
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_GLIBCPP_mutex
+name|_GLIBCXX_mutex
 argument_list|)
 expr_stmt|;
 if|if
@@ -534,9 +289,9 @@ block|{
 comment|// Even though we have a global lock, we use __gthread_once to be
 comment|// absolutely certain the _M_lock mutex is only initialized once on
 comment|// multiprocessor systems.
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_GLIBCPP_mutex_address
+name|_GLIBCXX_mutex_address
 operator|=
 operator|&
 name|_M_lock
@@ -548,9 +303,9 @@ argument_list|(
 operator|&
 name|_M_once
 argument_list|,
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_GLIBCPP_mutex_address_init
+name|_GLIBCXX_mutex_address_init
 argument_list|)
 operator|!=
 literal|0
@@ -569,9 +324,9 @@ block|}
 name|__gthread_mutex_unlock
 argument_list|(
 operator|&
-name|__gnu_cxx
+name|__gnu_internal
 operator|::
-name|_GLIBCPP_mutex
+name|_GLIBCXX_mutex
 argument_list|)
 expr_stmt|;
 endif|#
@@ -676,68 +431,11 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|// A locking class that uses _STL_mutex_lock.  The constructor takes a
-comment|// reference to an _STL_mutex_lock, and acquires a lock.  The
-comment|// destructor releases the lock.  It's not clear that this is exactly
-comment|// the right functionality.  It will probably change in the future.
-struct|struct
-name|_STL_auto_lock
-block|{
-name|_STL_mutex_lock
-modifier|&
-name|_M_lock
-decl_stmt|;
-name|_STL_auto_lock
-argument_list|(
-name|_STL_mutex_lock
-operator|&
-name|__lock
-argument_list|)
-operator|:
-name|_M_lock
-argument_list|(
-argument|__lock
-argument_list|)
-block|{
-name|_M_lock
-operator|.
-name|_M_acquire_lock
-argument_list|()
-block|; }
-operator|~
-name|_STL_auto_lock
-argument_list|()
-block|{
-name|_M_lock
-operator|.
-name|_M_release_lock
-argument_list|()
-block|; }
-name|private
-operator|:
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|_STL_auto_lock
-operator|&
-operator|)
-expr_stmt|;
-name|_STL_auto_lock
-argument_list|(
-specifier|const
-name|_STL_auto_lock
-operator|&
-argument_list|)
-expr_stmt|;
-block|}
-struct|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace std
+comment|// namespace __gnu_cxx
 end_comment
 
 begin_endif

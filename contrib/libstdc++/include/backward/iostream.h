@@ -94,13 +94,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BACKWARD_IOSTREAM_H
+name|_BACKWARD_IOSTREAM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BACKWARD_IOSTREAM_H
+name|_BACKWARD_IOSTREAM_H
 value|1
 end_define
 
@@ -191,7 +191,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_ifdef
 
 begin_expr_stmt

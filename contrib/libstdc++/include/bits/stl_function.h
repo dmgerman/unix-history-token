@@ -4,7 +4,7 @@ comment|// Functor implementations -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_FUNCTION_H
+name|_FUNCTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_FUNCTION_H
+name|_FUNCTION_H
+value|1
 end_define
 
 begin_decl_stmt
@@ -120,8 +121,8 @@ name|namespace
 name|std
 block|{
 comment|// 20.3.1 base classes
-comment|/** @defgroup s20_3_1_base Functor Base Classes  *  Function objects, or @e functors, are objects with an @c operator()  *  defined and accessible.  They can be passed as arguments to algorithm  *  templates and used in place of a function pointer.  Not only is the  *  resulting expressiveness of the library increased, but the generated  *  code can be more efficient than what you might write by hand.  When we  *  refer to "functors," then, generally we include function pointers in  *  the description as well.  *  *  Often, functors are only created as temporaries passed to algorithm  *  calls, rather than being created as named variables.  *  *  Two examples taken from the standard itself follow.  To perform a  *  by-element addition of two vectors @c a and @c b containing @c double,  *  and put the result in @c a, use  *  \code  *  transform (a.begin(), a.end(), b.begin(), a.begin(), plus<double>());  *  \endcode  *  To negate every element in @c a, use  *  \code  *  transform(a.begin(), a.end(), a.begin(), negate<double>());  *  \endcode  *  The addition and negation functions will be inlined directly.  *  *  The standard functiors are derived from structs named @c unary_function  *  and @c binary_function.  These two classes contain nothing but typedefs,  *  to aid in generic (template) programming.  If you write your own  *  functors, you might consider doing the same.  *  *  @{ */
-comment|/**  *  This is one of the @link s20_3_1_base functor base classes@endlink. */
+comment|/** @defgroup s20_3_1_base Functor Base Classes    *  Function objects, or @e functors, are objects with an @c operator()    *  defined and accessible.  They can be passed as arguments to algorithm    *  templates and used in place of a function pointer.  Not only is the    *  resulting expressiveness of the library increased, but the generated    *  code can be more efficient than what you might write by hand.  When we    *  refer to "functors," then, generally we include function pointers in    *  the description as well.    *    *  Often, functors are only created as temporaries passed to algorithm    *  calls, rather than being created as named variables.    *    *  Two examples taken from the standard itself follow.  To perform a    *  by-element addition of two vectors @c a and @c b containing @c double,    *  and put the result in @c a, use    *  \code    *  transform (a.begin(), a.end(), b.begin(), a.begin(), plus<double>());    *  \endcode    *  To negate every element in @c a, use    *  \code    *  transform(a.begin(), a.end(), a.begin(), negate<double>());    *  \endcode    *  The addition and negation functions will be inlined directly.    *    *  The standard functiors are derived from structs named @c unary_function    *  and @c binary_function.  These two classes contain nothing but typedefs,    *  to aid in generic (template) programming.  If you write your own    *  functors, you might consider doing the same.    *    *  @{    */
+comment|/**    *  This is one of the @link s20_3_1_base functor base classes@endlink.    */
 name|template
 operator|<
 name|class
@@ -137,7 +138,8 @@ typedef|typedef
 name|_Arg
 name|argument_type
 typedef|;
-comment|///< @c argument_type is the type of the argument (no surprises here)
+comment|///< @c argument_type is the type of the
+comment|///     argument (no surprises here)
 typedef|typedef
 name|_Result
 name|result_type
@@ -151,7 +153,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**  *  This is one of the @link s20_3_1_base functor base classes@endlink. */
+comment|/**    *  This is one of the @link s20_3_1_base functor base classes@endlink.    */
 end_comment
 
 begin_expr_stmt
@@ -176,7 +178,11 @@ typedef|;
 end_expr_stmt
 
 begin_comment
-comment|///< the type of the first argument (no surprises here)
+comment|///< the type of the first argument
+end_comment
+
+begin_comment
+comment|///  (no surprises here)
 end_comment
 
 begin_typedef
@@ -211,7 +217,7 @@ comment|// 20.3.2 arithmetic
 end_comment
 
 begin_comment
-comment|/** @defgroup s20_3_2_arithmetic Arithmetic Classes  *  Because basic math often needs to be done during an algorithm, the library  *  provides functors for those operations.  See the documentation for  *  @link s20_3_1_base the base classes@endlink for examples of their use.  *  *  @{ */
+comment|/** @defgroup s20_3_2_arithmetic Arithmetic Classes    *  Because basic math often needs to be done during an algorithm, the library    *  provides functors for those operations.  See the documentation for    *  @link s20_3_1_base the base classes@endlink for examples of their use.    *    *  @{    */
 end_comment
 
 begin_comment
@@ -503,7 +509,7 @@ comment|// 20.3.3 comparisons
 end_comment
 
 begin_comment
-comment|/** @defgroup s20_3_3_comparisons Comparison Classes  *  The library provides six wrapper functors for all the basic comparisons  *  in C++, like @c<.  *  *  @{ */
+comment|/** @defgroup s20_3_3_comparisons Comparison Classes    *  The library provides six wrapper functors for all the basic comparisons    *  in C++, like @c<.    *    *  @{    */
 end_comment
 
 begin_comment
@@ -803,7 +809,7 @@ comment|// 20.3.4 logical operations
 end_comment
 
 begin_comment
-comment|/** @defgroup s20_3_4_logical Boolean Operations Classes  *  Here are wrapper functors for Boolean operations:  @c&&, @c ||, and @c !.  *  *  @{ */
+comment|/** @defgroup s20_3_4_logical Boolean Operations Classes    *  Here are wrapper functors for Boolean operations:  @c&&, @c ||, and @c !.    *    *  @{    */
 end_comment
 
 begin_comment
@@ -951,7 +957,7 @@ comment|// 20.3.5 negators
 end_comment
 
 begin_comment
-comment|/** @defgroup s20_3_5_negators Negators  *  The functions @c not1 and @c not2 each take a predicate functor  *  and return an instance of @c unary_negate or  *  @c binary_negate, respectively.  These classes are functors whose  *  @c operator() performs the stored predicate function and then returns  *  the negation of the result.  *  *  For example, given a vector of integers and a trivial predicate,  *  \code  *  struct IntGreaterThanThree  *    : public std::unary_function<int, bool>  *  {  *      bool operator() (int x) { return x> 3; }  *  };  *    *  std::find_if (v.begin(), v.end(), not1(IntGreaterThanThree()));  *  \endcode  *  The call to @c find_if will locate the first index (i) of @c v for which  *  "!(v[i]> 3)" is true.  *  *  The not1/unary_negate combination works on predicates taking a single  *  argument.  The not2/binary_negate combination works on predicates which  *  take two arguments.  *  *  @{ */
+comment|/** @defgroup s20_3_5_negators Negators    *  The functions @c not1 and @c not2 each take a predicate functor    *  and return an instance of @c unary_negate or    *  @c binary_negate, respectively.  These classes are functors whose    *  @c operator() performs the stored predicate function and then returns    *  the negation of the result.    *    *  For example, given a vector of integers and a trivial predicate,    *  \code    *  struct IntGreaterThanThree    *    : public std::unary_function<int, bool>    *  {    *      bool operator() (int x) { return x> 3; }    *  };    *    *  std::find_if (v.begin(), v.end(), not1(IntGreaterThanThree()));    *  \endcode    *  The call to @c find_if will locate the first index (i) of @c v for which    *  "!(v[i]> 3)" is true.    *    *  The not1/unary_negate combination works on predicates taking a single    *  argument.  The not2/binary_negate combination works on predicates which    *  take two arguments.    *    *  @{    */
 end_comment
 
 begin_comment
@@ -1105,7 +1111,7 @@ name|_M_pred
 argument_list|(
 argument|__x
 argument_list|)
-block|{}
+block|{ }
 name|bool
 name|operator
 argument_list|()
@@ -1182,7 +1188,7 @@ comment|// 20.3.6 binders
 end_comment
 
 begin_comment
-comment|/** @defgroup s20_3_6_binder Binder Classes  *  Binders turn functions/functors with two arguments into functors with  *  a single argument, storing an argument to be applied later.  For  *  example, an variable @c B of type @c binder1st is constructed from a functor  *  @c f and an argument @c x.  Later, B's @c operator() is called with a  *  single argument @c y.  The return value is the value of @c f(x,y).  *  @c B can be "called" with various arguments (y1, y2, ...) and will in  *  turn call @c f(x,y1), @c f(x,y2), ...  *  *  The function @c bind1st is provided to save some typing.  It takes the  *  function and an argument as parameters, and returns an instance of  *  @c binder1st.  *  *  The type @c binder2nd and its creator function @c bind2nd do the same  *  thing, but the stored argument is passed as the second parameter instead  *  of the first, e.g., @c bind2nd(std::minus<float>,1.3) will create a  *  functor whose @c operator() accepts a floating-point number, subtracts  *  1.3 from it, and returns the result.  (If @c bind1st had been used,  *  the functor would perform "1.3 - x" instead.  *  *  Creator-wrapper functions like @c bind1st are intended to be used in  *  calling algorithms.  Their return values will be temporary objects.  *  (The goal is to not require you to type names like  *  @c std::binder1st<std::plus<int>> for declaring a variable to hold the  *  return value from @c bind1st(std::plus<int>,5).  *  *  These become more useful when combined with the composition functions.  *  *  @{ */
+comment|/** @defgroup s20_3_6_binder Binder Classes    *  Binders turn functions/functors with two arguments into functors with    *  a single argument, storing an argument to be applied later.  For    *  example, an variable @c B of type @c binder1st is constructed from a    *  functor @c f and an argument @c x.  Later, B's @c operator() is called    *  with a single argument @c y.  The return value is the value of @c f(x,y).    *  @c B can be "called" with various arguments (y1, y2, ...) and will in    *  turn call @c f(x,y1), @c f(x,y2), ...    *    *  The function @c bind1st is provided to save some typing.  It takes the    *  function and an argument as parameters, and returns an instance of    *  @c binder1st.    *    *  The type @c binder2nd and its creator function @c bind2nd do the same    *  thing, but the stored argument is passed as the second parameter instead    *  of the first, e.g., @c bind2nd(std::minus<float>,1.3) will create a    *  functor whose @c operator() accepts a floating-point number, subtracts    *  1.3 from it, and returns the result.  (If @c bind1st had been used,    *  the functor would perform "1.3 - x" instead.    *    *  Creator-wrapper functions like @c bind1st are intended to be used in    *  calling algorithms.  Their return values will be temporary objects.    *  (The goal is to not require you to type names like    *  @c std::binder1st<std::plus<int>> for declaring a variable to hold the    *  return value from @c bind1st(std::plus<int>,5).    *    *  These become more useful when combined with the composition functions.    *    *  @{    */
 end_comment
 
 begin_comment
@@ -1268,10 +1274,8 @@ name|__x
 argument_list|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-comment|//109.  Missing binders for non-const sequence elements
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 109.  Missing binders for non-const sequence elements
 name|typename
 name|_Operation
 operator|::
@@ -1298,11 +1302,6 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 unit|};
@@ -1440,10 +1439,8 @@ name|value
 argument_list|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-comment|//109.  Missing binders for non-const sequence elements
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 109.  Missing binders for non-const sequence elements
 name|typename
 name|_Operation
 operator|::
@@ -1470,11 +1467,6 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 unit|};
@@ -1538,7 +1530,7 @@ comment|// 20.3.7 adaptors pointers functions
 end_comment
 
 begin_comment
-comment|/** @defgroup s20_3_7_adaptors Adaptors for pointers to functions  *  The advantage of function objects over pointers to functions is that  *  the objects in the standard library declare nested typedefs describing  *  their argument and result types with uniform names (e.g., @c result_type  *  from the base classes @c unary_function and @c binary_function).  *  Sometimes those typedefs are required, not just optional.  *  *  Adaptors are provided to turn pointers to unary (single-argument) and  *  binary (double-argument) functions into function objects.  The long-winded  *  functor @c pointer_to_unary_function is constructed with a function  *  pointer @c f, and its @c operator() called with argument @c x returns  *  @c f(x).  The functor @c pointer_to_binary_function does the same thing,  *  but with a double-argument @c f and @c operator().  *  *  The function @c ptr_fun takes a pointer-to-function @c f and constructs  *  an instance of the appropriate functor.  *  *  @{ */
+comment|/** @defgroup s20_3_7_adaptors Adaptors for pointers to functions    *  The advantage of function objects over pointers to functions is that    *  the objects in the standard library declare nested typedefs describing    *  their argument and result types with uniform names (e.g., @c result_type    *  from the base classes @c unary_function and @c binary_function).    *  Sometimes those typedefs are required, not just optional.    *    *  Adaptors are provided to turn pointers to unary (single-argument) and    *  binary (double-argument) functions into function objects.  The    *  long-winded functor @c pointer_to_unary_function is constructed with a    *  function pointer @c f, and its @c operator() called with argument @c x    *  returns @c f(x).  The functor @c pointer_to_binary_function does the same    *  thing, but with a double-argument @c f and @c operator().    *    *  The function @c ptr_fun takes a pointer-to-function @c f and constructs    *  an instance of the appropriate functor.    *    *  @{    */
 end_comment
 
 begin_comment
@@ -1985,7 +1977,7 @@ comment|// 20.3.8 adaptors pointers members
 end_comment
 
 begin_comment
-comment|/** @defgroup s20_3_8_memadaptors Adaptors for pointers to members  *  There are a total of 16 = 2^4 function objects in this family.  *   (1) Member functions taking no arguments vs member functions taking  *        one argument.  *   (2) Call through pointer vs call through reference.  *   (3) Member function with void return type vs member function with  *       non-void return type.  *   (4) Const vs non-const member function.  *  *  Note that choice (3) is nothing more than a workaround: according  *   to the draft, compilers should handle void and non-void the same way.  *   This feature is not yet widely implemented, though.  You can only use  *   member functions returning void if your compiler supports partial  *   specialization.  *  *  All of this complexity is in the function objects themselves.  You can  *   ignore it by using the helper function mem_fun and mem_fun_ref,  *   which create whichever type of adaptor is appropriate.  *  *  @{ */
+comment|/** @defgroup s20_3_8_memadaptors Adaptors for pointers to members    *  There are a total of 16 = 2^4 function objects in this family.    *   (1) Member functions taking no arguments vs member functions taking    *        one argument.    *   (2) Call through pointer vs call through reference.    *   (3) Member function with void return type vs member function with    *       non-void return type.    *   (4) Const vs non-const member function.    *    *  Note that choice (3) is nothing more than a workaround: according    *   to the draft, compilers should handle void and non-void the same way.    *   This feature is not yet widely implemented, though.  You can only use    *   member functions returning void if your compiler supports partial    *   specialization.    *    *  All of this complexity is in the function objects themselves.  You can    *   ignore it by using the helper function mem_fun and mem_fun_ref,    *   which create whichever type of adaptor is appropriate.    *    *  @{    */
 end_comment
 
 begin_comment
@@ -2737,7 +2729,7 @@ operator|*
 name|_M_f
 argument_list|)
 argument_list|()
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -2816,7 +2808,7 @@ argument_list|)
 operator|(
 operator|)
 specifier|const
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -2894,7 +2886,7 @@ operator|*
 name|_M_f
 argument_list|)
 argument_list|()
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -2971,7 +2963,7 @@ argument_list|)
 operator|(
 operator|)
 specifier|const
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -3065,7 +3057,7 @@ argument_list|)
 argument_list|(
 name|_Arg
 argument_list|)
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -3157,7 +3149,7 @@ operator|(
 name|_Arg
 operator|)
 specifier|const
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -3250,7 +3242,7 @@ argument_list|)
 argument_list|(
 name|_Arg
 argument_list|)
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -3340,7 +3332,7 @@ operator|(
 name|_Arg
 operator|)
 specifier|const
-block|; }
+block|;     }
 expr_stmt|;
 end_expr_stmt
 
@@ -3675,7 +3667,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_FUNCTION_H */
+comment|/* _FUNCTION_H */
 end_comment
 
 begin_comment

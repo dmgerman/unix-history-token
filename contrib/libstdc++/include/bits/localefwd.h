@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_LOCALE_FWD_H
+name|_LOCALE_FWD_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_LOCALE_FWD_H
+name|_LOCALE_FWD_H
 value|1
 end_define
 
@@ -407,7 +407,7 @@ operator|>
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 name|template
 operator|<
 operator|>
@@ -463,7 +463,7 @@ operator|>
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 name|template
 operator|<
 operator|>
@@ -714,6 +714,19 @@ operator|<
 name|typename
 name|_Facet
 operator|>
+name|bool
+name|has_facet
+argument_list|(
+argument|const locale& __loc
+argument_list|)
+name|throw
+argument_list|()
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|_Facet
+operator|>
 specifier|const
 name|_Facet
 operator|&
@@ -730,18 +743,32 @@ operator|<
 name|typename
 name|_Facet
 operator|>
-name|bool
-name|has_facet
+specifier|inline
+specifier|const
+name|_Facet
+operator|&
+name|__check_facet
 argument_list|(
-argument|const locale& __loc
+argument|const _Facet* __f
 argument_list|)
-name|throw
+block|{
+if|if
+condition|(
+operator|!
+name|__f
+condition|)
+name|__throw_bad_cast
 argument_list|()
 expr_stmt|;
+return|return
+operator|*
+name|__f
+return|;
 block|}
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// namespace std
 end_comment
 

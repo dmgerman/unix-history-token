@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: Sparc version  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,35 +95,19 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
-
-begin_ifdef
+begin_decl_stmt
+name|namespace
+name|__gnu_cxx
+block|{
 ifdef|#
 directive|ifdef
 name|__arch64__
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|long
-name|_Atomic_word
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -147,18 +131,18 @@ name|__tmp1
 decl_stmt|,
 name|__tmp2
 decl_stmt|;
+name|_Atomic_word
+name|__val_extended
+init|=
+name|__val
+decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("1:	ldx	[%2], %0\n\t" 		       "	add	%0, %3, %1\n\t" 		       "	casx	[%2], %0, %1\n\t" 		       "	sub	%0, %1, %0\n\t" 		       "	brnz,pn	%0, 1b\n\t" 		       "	 nop" 		       : "=&r" (__tmp1), "=&r" (__tmp2) 		       : "r" (__mem), "r" (__val) 		       : "memory");
+asm|("1:	ldx	[%3], %0\n\t" 			 "	add	%0, %4, %1\n\t" 			 "	casx	[%3], %0, %1\n\t" 			 "	sub	%0, %1, %0\n\t" 			 "	brnz,pn	%0, 1b\n\t" 			 "	 nop" 			 : "=&r" (__tmp1), "=&r" (__tmp2), "=m" (*__mem) 			 : "r" (__mem), "r" (__val_extended), "m" (*__mem));
 return|return
 name|__tmp2
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -182,46 +166,32 @@ name|__tmp1
 decl_stmt|,
 name|__tmp2
 decl_stmt|;
+name|_Atomic_word
+name|__val_extended
+init|=
+name|__val
+decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("1:	ldx	[%2], %0\n\t" 		       "	add	%0, %3, %1\n\t" 		       "	casx	[%2], %0, %1\n\t" 		       "	sub	%0, %1, %0\n\t" 		       "	brnz,pn	%0, 1b\n\t" 		       "	 nop" 		       : "=&r" (__tmp1), "=&r" (__tmp2) 		       : "r" (__mem), "r" (__val) 		       : "memory");
+asm|("1:	ldx	[%3], %0\n\t" 			 "	add	%0, %4, %1\n\t" 			 "	casx	[%3], %0, %1\n\t" 			 "	sub	%0, %1, %0\n\t" 			 "	brnz,pn	%0, 1b\n\t" 			 "	 nop" 			 : "=&r" (__tmp1), "=&r" (__tmp2), "=m" (*__mem) 			 : "r" (__mem), "r" (__val_extended), "m" (*__mem));
 block|}
-end_decl_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* __arch32__ */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
-
-begin_expr_stmt
 name|template
 operator|<
 name|int
 name|__inst
 operator|>
 expr|struct
-name|__Atomicity_lock
+name|_Atomicity_lock
 block|{
 specifier|static
 name|unsigned
 name|char
 name|_S_atomicity_lock
-block|; }
+block|;     }
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -229,7 +199,7 @@ name|__inst
 operator|>
 name|unsigned
 name|char
-name|__Atomicity_lock
+name|_Atomicity_lock
 operator|<
 name|__inst
 operator|>
@@ -238,24 +208,17 @@ name|_S_atomicity_lock
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 name|unsigned
 name|char
-name|__Atomicity_lock
+name|_Atomicity_lock
 operator|<
 literal|0
 operator|>
 operator|::
 name|_S_atomicity_lock
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
+name|_Atomic_word
 name|__attribute__
 argument_list|(
 operator|(
@@ -280,7 +243,7 @@ name|__tmp
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("1:	ldstub	[%1], %0\n\t" 		       "	cmp	%0, 0\n\t" 		       "	bne	1b\n\t" 		       "	 nop" 		       : "=&r" (__tmp) 		       : "r" (&__Atomicity_lock<0>::_S_atomicity_lock) 		       : "memory");
+asm|("1:	ldstub	[%1], %0\n\t" 			 "	cmp	%0, 0\n\t" 			 "	bne	1b\n\t" 			 "	 nop" 			 : "=&r" (__tmp) 			 : "r" (&_Atomicity_lock<0>::_S_atomicity_lock) 			 : "memory");
 name|__result
 operator|=
 operator|*
@@ -293,17 +256,13 @@ name|__val
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("stb	%%g0, [%0]" 		       :
+asm|("stb	%%g0, [%0]" 			 :
 comment|/* no outputs */
-asm|: "r" (&__Atomicity_lock<0>::_S_atomicity_lock) 		       : "memory");
+asm|: "r" (&_Atomicity_lock<0>::_S_atomicity_lock) 			 : "memory");
 return|return
 name|__result
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|__attribute__
 argument_list|(
@@ -327,7 +286,7 @@ name|__tmp
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("1:	ldstub	[%1], %0\n\t" 		       "	cmp	%0, 0\n\t" 		       "	bne	1b\n\t" 		       "	 nop" 		       : "=&r" (__tmp) 		       : "r" (&__Atomicity_lock<0>::_S_atomicity_lock) 		       : "memory");
+asm|("1:	ldstub	[%1], %0\n\t" 			 "	cmp	%0, 0\n\t" 			 "	bne	1b\n\t" 			 "	 nop" 			 : "=&r" (__tmp) 			 : "r" (&_Atomicity_lock<0>::_S_atomicity_lock) 			 : "memory");
 operator|*
 name|__mem
 operator|+=
@@ -335,28 +294,18 @@ name|__val
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("stb	%%g0, [%0]" 		       :
+asm|("stb	%%g0, [%0]" 			 :
 comment|/* no outputs */
-asm|: "r" (&__Atomicity_lock<0>::_S_atomicity_lock) 		       : "memory");
+asm|: "r" (&_Atomicity_lock<0>::_S_atomicity_lock) 			 : "memory");
+block|}
+endif|#
+directive|endif
+comment|/* __arch32__ */
 block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* __arch32__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

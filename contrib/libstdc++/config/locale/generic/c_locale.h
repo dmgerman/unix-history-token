@@ -4,7 +4,7 @@ comment|// Wrapper for underlying C-language localization -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -114,13 +114,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_C_LOCALE_H
+name|_C_LOCALE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_C_LOCALE_H
+name|_C_LOCALE_H
 value|1
 end_define
 
@@ -137,10 +137,30 @@ directive|include
 file|<clocale>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<cstring>
+end_include
+
+begin_comment
+comment|// get std::strlen
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<cstdio>
+end_include
+
+begin_comment
+comment|// get std::snprintf or std::sprintf
+end_comment
+
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_NUM_CATEGORIES
+name|_GLIBCXX_NUM_CATEGORIES
 value|0
 end_define
 
@@ -167,7 +187,7 @@ name|__convert_from_v
 argument_list|(
 argument|char* __out
 argument_list|,
-argument|const int __attribute__ ((__unused__)) __size
+argument|const int __size __attribute__((__unused__))
 argument_list|,
 argument|const char* __fmt
 argument_list|,
@@ -183,6 +203,8 @@ name|char
 operator|*
 name|__old
 operator|=
+name|std
+operator|::
 name|setlocale
 argument_list|(
 name|LC_ALL
@@ -194,47 +216,43 @@ name|char
 operator|*
 name|__sav
 operator|=
-name|static_cast
-operator|<
+name|new
 name|char
-operator|*
-operator|>
-operator|(
-name|malloc
-argument_list|(
+index|[
+name|std
+operator|::
 name|strlen
 argument_list|(
 name|__old
 argument_list|)
 operator|+
 literal|1
-argument_list|)
-operator|)
+index|]
 block|;
-if|if
-condition|(
-name|__sav
-condition|)
+name|std
+operator|::
 name|strcpy
 argument_list|(
 name|__sav
 argument_list|,
 name|__old
 argument_list|)
-expr_stmt|;
+block|;
+name|std
+operator|::
 name|setlocale
 argument_list|(
 name|LC_ALL
 argument_list|,
 literal|"C"
 argument_list|)
-expr_stmt|;
+block|;
 name|int
 name|__ret
-decl_stmt|;
+block|;
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_C99
+name|_GLIBCXX_USE_C99
 if|if
 condition|(
 name|__prec
@@ -243,6 +261,8 @@ literal|0
 condition|)
 name|__ret
 operator|=
+name|std
+operator|::
 name|snprintf
 argument_list|(
 name|__out
@@ -259,6 +279,8 @@ expr_stmt|;
 else|else
 name|__ret
 operator|=
+name|std
+operator|::
 name|snprintf
 argument_list|(
 name|__out
@@ -280,6 +302,8 @@ literal|0
 condition|)
 name|__ret
 operator|=
+name|std
+operator|::
 name|sprintf
 argument_list|(
 name|__out
@@ -294,6 +318,8 @@ expr_stmt|;
 else|else
 name|__ret
 operator|=
+name|std
+operator|::
 name|sprintf
 argument_list|(
 name|__out
@@ -305,6 +331,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|std
+operator|::
 name|setlocale
 argument_list|(
 name|LC_ALL
@@ -312,11 +340,10 @@ argument_list|,
 name|__sav
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
+name|delete
+index|[]
 name|__sav
-argument_list|)
-expr_stmt|;
+decl_stmt|;
 return|return
 name|__ret
 return|;

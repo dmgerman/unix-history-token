@@ -4,7 +4,7 @@ comment|// -*- C++ -*- forwarding header.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -110,13 +110,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CFLOAT
+name|_GLIBCXX_CFLOAT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CFLOAT
+name|_GLIBCXX_CFLOAT
 value|1
 end_define
 

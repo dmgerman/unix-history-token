@@ -4,7 +4,7 @@ comment|// Functions used by iterators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_ITERATOR_BASE_FUNCS_H
+name|_ITERATOR_BASE_FUNCS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_ITERATOR_BASE_FUNCS_H
+name|_ITERATOR_BASE_FUNCS_H
+value|1
 end_define
 
 begin_pragma
@@ -155,7 +156,7 @@ argument|input_iterator_tag
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_InputIteratorConcept<_InputIterator>
 argument_list|)
@@ -211,9 +212,9 @@ argument|random_access_iterator_tag
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
-argument|_RandomAccessIteratorConcept<_RandomAccessIterator>
+argument|_RandomAccessIteratorConcept< 				  _RandomAccessIterator>
 argument_list|)
 return|return
 name|__last
@@ -244,12 +245,16 @@ argument_list|)
 block|{
 comment|// concept requirements -- taken care of in __distance
 return|return
+name|std
+operator|::
 name|__distance
 argument_list|(
 name|__first
 argument_list|,
 name|__last
 argument_list|,
+name|std
+operator|::
 name|__iterator_category
 argument_list|(
 name|__first
@@ -260,7 +265,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|_InputIter
+name|_InputIterator
 operator|,
 name|typename
 name|_Distance
@@ -269,7 +274,7 @@ specifier|inline
 name|void
 name|__advance
 argument_list|(
-argument|_InputIter& __i
+argument|_InputIterator& __i
 argument_list|,
 argument|_Distance __n
 argument_list|,
@@ -277,9 +282,9 @@ argument|input_iterator_tag
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
-argument|_InputIteratorConcept<_InputIter>
+argument|_InputIteratorConcept<_InputIterator>
 argument_list|)
 while|while
 condition|(
@@ -310,9 +315,9 @@ argument|bidirectional_iterator_tag
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
-argument|_BidirectionalIteratorConcept<_BidirectionalIterator>
+argument|_BidirectionalIteratorConcept< 				  _BidirectionalIterator>
 argument_list|)
 if|if
 condition|(
@@ -358,9 +363,9 @@ argument|random_access_iterator_tag
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
-argument|_RandomAccessIteratorConcept<_RandomAccessIterator>
+argument|_RandomAccessIteratorConcept< 				  _RandomAccessIterator>
 argument_list|)
 name|__i
 operator|+=
@@ -385,12 +390,16 @@ argument|_Distance __n
 argument_list|)
 block|{
 comment|// concept requirements -- taken care of in __advance
+name|std
+operator|::
 name|__advance
 argument_list|(
 name|__i
 argument_list|,
 name|__n
 argument_list|,
+name|std
+operator|::
 name|__iterator_category
 argument_list|(
 name|__i
@@ -410,7 +419,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_ITERATOR_BASE_FUNCS_H */
+comment|/* _ITERATOR_BASE_FUNCS_H */
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// Output streams -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
 end_comment
 
 begin_comment
@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_OSTREAM
+name|_GLIBCXX_OSTREAM
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_OSTREAM
+name|_GLIBCXX_OSTREAM
 value|1
 end_define
 
@@ -228,22 +228,18 @@ operator|>
 name|__ostream_type
 expr_stmt|;
 typedef|typedef
+name|num_put
+operator|<
+name|_CharT
+operator|,
 name|ostreambuf_iterator
 operator|<
 name|_CharT
 operator|,
 name|_Traits
 operator|>
-name|__ostreambuf_iter
-expr_stmt|;
-typedef|typedef
-name|num_put
-operator|<
-name|_CharT
-operator|,
-name|__ostreambuf_iter
-operator|>
-name|__numput_type
+expr|>
+name|__num_put_type
 expr_stmt|;
 typedef|typedef
 name|ctype
@@ -438,6 +434,7 @@ comment|// [27.6.2.5] formatted output
 comment|// [27.6.2.5.3]  basic_ostream::operator<<
 comment|//@{
 comment|/**        *  @brief  Interface for manipulators.        *        *  Manuipulators such as @c std::endl and @c std::hex use these        *  functions in constructs like "std::cout<< std::endl".  For more        *  information, see the iomanip header.       */
+specifier|inline
 name|__ostream_type
 operator|&
 name|operator
@@ -455,6 +452,7 @@ operator|&
 argument_list|)
 operator|)
 expr_stmt|;
+specifier|inline
 name|__ostream_type
 operator|&
 name|operator
@@ -472,6 +470,7 @@ operator|&
 argument_list|)
 operator|)
 expr_stmt|;
+specifier|inline
 name|__ostream_type
 operator|&
 name|operator
@@ -732,7 +731,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_LONG_LONG
+name|_GLIBCXX_USE_LONG_LONG
 name|__ostream_type
 operator|&
 name|operator
@@ -811,7 +810,7 @@ operator|*
 name|__p
 operator|)
 expr_stmt|;
-comment|/**        *  @brief  Extracting from another streambuf.        *  @param  sb  A pointer to a streambuf        *        *  This function behaves like one of the basic arithmetic extractors,        *  in that it also constructs a sentry onject and has the same error        *  handling behavior.        *        *  If @a sb is NULL, the stream will set failbit in its error state.        *        *  Characters are extracted from @a sb and inserted into @c *this        *  until one of the following occurs:        *        *  - the input stream reaches end-of-file,        *  - insertion into the output sequence fails (in this case, the        *    character that would have been inserted is not extracted), or        *  - an exception occurs while getting a character from @a sb, which        *    sets failbit in the error state        *        *  If the function inserts no characters, failbit is set.       */
+comment|/**        *  @brief  Extracting from another streambuf.        *  @param  sb  A pointer to a streambuf        *        *  This function behaves like one of the basic arithmetic extractors,        *  in that it also constructs a sentry object and has the same error        *  handling behavior.        *        *  If @a sb is NULL, the stream will set failbit in its error state.        *        *  Characters are extracted from @a sb and inserted into @c *this        *  until one of the following occurs:        *        *  - the input stream reaches end-of-file,        *  - insertion into the output sequence fails (in this case, the        *    character that would have been inserted is not extracted), or        *  - an exception occurs while getting a character from @a sb, which        *    sets failbit in the error state        *        *  If the function inserts no characters, failbit is set.       */
 name|__ostream_type
 operator|&
 name|operator
@@ -835,6 +834,50 @@ name|char_type
 name|__c
 parameter_list|)
 function_decl|;
+comment|// Core write functionality, without sentry.
+name|void
+name|_M_write
+parameter_list|(
+specifier|const
+name|char_type
+modifier|*
+name|__s
+parameter_list|,
+name|streamsize
+name|__n
+parameter_list|)
+block|{
+name|streamsize
+name|__put
+init|=
+name|this
+operator|->
+name|rdbuf
+argument_list|()
+operator|->
+name|sputn
+argument_list|(
+name|__s
+argument_list|,
+name|__n
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|__put
+operator|!=
+name|__n
+condition|)
+name|this
+operator|->
+name|setstate
+argument_list|(
+name|ios_base
+operator|::
+name|badbit
+argument_list|)
+expr_stmt|;
+block|}
 comment|/**        *  @brief  Character string insertion.        *  @param  s  The array to insert.        *  @param  n  Maximum number of characters to insert.        *  @return  *this        *        *  Characters are copied from @a s and inserted into the stream until        *  one of the following happens:        *        *  - @a n characters are inserted        *  - inserting into the output sequence fails (in this case, badbit        *    will be set in the stream's error state)        *        *  @note  This function is not overloaded on signed char and        *         unsigned char.       */
 name|__ostream_type
 modifier|&
@@ -882,6 +925,12 @@ operator|::
 name|seekdir
 argument_list|)
 decl_stmt|;
+name|protected
+label|:
+name|explicit
+name|basic_ostream
+parameter_list|()
+block|{ }
 block|}
 end_decl_stmt
 
@@ -997,6 +1046,7 @@ comment|/**        *  @brief  Quick status checking.        *  @return  The sent
 name|operator
 name|bool
 argument_list|()
+specifier|const
 block|{
 return|return
 name|_M_ok
@@ -1588,28 +1638,11 @@ unit|}
 comment|// namespace std
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|export
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_FULLY_COMPLIANT_HEADERS
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
@@ -1628,7 +1661,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_OSTREAM */
+comment|/* _GLIBCXX_OSTREAM */
 end_comment
 
 end_unit

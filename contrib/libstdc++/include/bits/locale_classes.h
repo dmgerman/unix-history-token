@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 end_comment
 
 begin_comment
@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_LOCALE_CLASSES_H
+name|_LOCALE_CLASSES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_LOCALE_CLASSES_H
+name|_LOCALE_CLASSES_H
 value|1
 end_define
 
@@ -163,30 +163,26 @@ directive|include
 file|<bits/atomicity.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<bits/gthr.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|std
 block|{
-name|class
-name|__locale_cache_base
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|_Facet
-operator|>
-name|class
-name|__locale_cache
-expr_stmt|;
 comment|// 22.1.1 Class locale
+comment|/**    *  @brief  Container class for localization functionality.    *    *  The locale class is first a class wrapper for C library locales.  It is    *  also an extensible container for user-defined localization.  A locale is    *  a collection of facets that implement various localization features such    *  as money, time, and number printing.    *    *  Constructing C++ locales does not change the C library locale.    *    *  This library supports efficient construction and copying of locales    *  through a reference counting implementation of the locale class.   */
 name|class
 name|locale
 block|{
 name|public
 label|:
 comment|// Types:
+comment|/// Definition of locale::category.
 typedef|typedef
-name|unsigned
 name|int
 name|category
 typedef|;
@@ -214,22 +210,6 @@ name|typename
 name|_Facet
 operator|>
 name|friend
-specifier|const
-name|_Facet
-operator|&
-name|use_facet
-argument_list|(
-specifier|const
-name|locale
-operator|&
-argument_list|)
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|_Facet
-operator|>
-name|friend
 name|bool
 name|has_facet
 argument_list|(
@@ -245,20 +225,26 @@ name|_Facet
 operator|>
 name|friend
 specifier|const
-name|__locale_cache
-operator|<
 name|_Facet
-operator|>
 operator|&
-name|__use_cache
+name|use_facet
 argument_list|(
 specifier|const
 name|locale
 operator|&
 argument_list|)
 expr_stmt|;
-comment|// Category values:
-comment|// NB: Order must match _S_facet_categories definition in locale.cc
+name|template
+operator|<
+name|typename
+name|_Cache
+operator|>
+name|friend
+expr|struct
+name|__use_cache
+expr_stmt|;
+comment|//@{
+comment|/**      *  @brief  Category values.      *      *  The standard category values are none, ctype, numeric, collate, time,      *  monetary, and messages.  They form a bitmask that supports union and      *  intersection.  The category all is the union of these values.      *      *  @if maint      *  NB: Order must match _S_facet_categories definition in locale.cc      *  @endif     */
 specifier|static
 specifier|const
 name|category
@@ -339,12 +325,15 @@ operator||
 name|messages
 operator|)
 decl_stmt|;
+comment|//@}
 comment|// Construct/copy/destroy:
+comment|/**      *  @brief  Default constructor.      *      *  Constructs a copy of the global locale.  If no locale has been      *  explicitly set, this is the "C" locale.     */
 name|locale
 argument_list|()
 name|throw
 argument_list|()
 expr_stmt|;
+comment|/**      *  @brief  Copy constructor.      *      *  Constructs a copy of @a other.      *      *  @param  other  The locale to copy.     */
 name|locale
 argument_list|(
 argument|const locale& __other
@@ -352,6 +341,7 @@ argument_list|)
 name|throw
 argument_list|()
 expr_stmt|;
+comment|/**      *  @brief  Named locale constructor.      *      *  Constructs a copy of the named C library locale.      *      *  @param  s  Name of the locale to construct.      *  @throw  std::runtime_error if s is null or an undefined locale.     */
 name|explicit
 name|locale
 parameter_list|(
@@ -361,6 +351,7 @@ modifier|*
 name|__s
 parameter_list|)
 function_decl|;
+comment|/**      *  @brief  Construct locale with facets from another locale.      *      *  Constructs a copy of the locale @a base.  The facets specified by @a      *  cat are replaced with those from the locale named by @a s.  If base is      *  named, this locale instance will also be named.      *      *  @param  base  The locale to copy.      *  @param  s  Name of the locale to use facets from.      *  @param  cat  Set of categories defining the facets to use from s.      *  @throw  std::runtime_error if s is null or an undefined locale.     */
 name|locale
 argument_list|(
 argument|const locale& __base
@@ -370,6 +361,7 @@ argument_list|,
 argument|category __cat
 argument_list|)
 empty_stmt|;
+comment|/**      *  @brief  Construct locale with facets from another locale.      *      *  Constructs a copy of the locale @a base.  The facets specified by @a      *  cat are replaced with those from the locale @a add.  If @a base and @a      *  add are named, this locale instance will also be named.      *      *  @param  base  The locale to copy.      *  @param  add  The locale to use facets from.      *  @param  cat  Set of categories defining the facets to use from add.     */
 name|locale
 argument_list|(
 argument|const locale& __base
@@ -379,6 +371,7 @@ argument_list|,
 argument|category __cat
 argument_list|)
 empty_stmt|;
+comment|/**      *  @brief  Construct locale with another facet.      *      *  Constructs a copy of the locale @a other.  The facet @f is added to      *  @other, replacing an existing facet of type Facet if there is one.  If      *  @f is null, this locale is a copy of @a other.      *      *  @param  other  The locale to copy.      *  @param  f  The facet to add in.     */
 name|template
 operator|<
 name|typename
@@ -396,12 +389,14 @@ operator|*
 name|__f
 argument_list|)
 expr_stmt|;
+comment|/// Locale destructor.
 operator|~
 name|locale
 argument_list|()
 name|throw
 argument_list|()
 expr_stmt|;
+comment|/**      *  @brief  Assignment operator.      *      *  Set this locale to be a copy of @a other.      *      *  @param  other  The locale to copy.      *  @return  A reference to this locale.     */
 specifier|const
 name|locale
 modifier|&
@@ -416,6 +411,7 @@ operator|)
 name|throw
 argument_list|()
 decl_stmt|;
+comment|/**      *  @brief  Construct locale with another facet.      *      *  Constructs and returns a new copy of this locale.  Adds or replaces an      *  existing facet of type Facet from the locale @a other into the new      *  locale.      *      *  @param  Facet  The facet type to copy from other      *  @param  other  The locale to copy from.      *  @return  Newly constructed locale.      *  @throw  std::runtime_error if other has no facet of type Facet.     */
 name|template
 operator|<
 name|typename
@@ -429,11 +425,13 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|// Locale operations:
+comment|/**      *  @brief  Return locale name.      *  @return  Locale name or "*" if unnamed.     */
 name|string
 name|name
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/**      *  @brief  Locale equality.      *      *  @param  other  The locale to compare against.      *  @return  True if other and this refer to the same locale instance, are      *		 copies, or have the same name.  False otherwise.     */
 name|bool
 name|operator
 operator|==
@@ -447,6 +445,7 @@ specifier|const
 name|throw
 argument_list|()
 expr_stmt|;
+comment|/**      *  @brief  Locale inequality.      *      *  @param  other  The locale to compare against.      *  @return  ! (*this == other)     */
 specifier|inline
 name|bool
 name|operator
@@ -474,6 +473,7 @@ operator|)
 operator|)
 return|;
 block|}
+comment|/**      *  @brief  Compare two strings according to collate.      *      *  Template operator to compare two strings using the compare function of      *  the collate facet in this locale.  One use is to provide the locale to      *  the sort function.  For example, a vector v of strings could be sorted      *  according to locale loc by doing:      *  @code      *  std::sort(v.begin(), v.end(), loc);      *  @endcode      *      *  @param  s1  First string to compare.      *  @param  s2  Second string to compare.      *  @return  True if collate<Char> facet compares s1< s2, else false.     */
 name|template
 operator|<
 name|typename
@@ -516,6 +516,7 @@ operator|)
 specifier|const
 expr_stmt|;
 comment|// Global locale objects:
+comment|/**      *  @brief  Set global locale      *      *  This function sets the global locale to the argument and returns a      *  copy of the previous global locale.  If the argument has a name, it      *  will also call std::setlocale(LC_ALL, loc.name()).      *      *  @param  locale  The new locale to make global.      *  @return  Copy of the old global locale.     */
 specifier|static
 name|locale
 name|global
@@ -525,6 +526,7 @@ name|locale
 modifier|&
 parameter_list|)
 function_decl|;
+comment|/**      *  @brief  Return reference to the "C" locale.     */
 specifier|static
 specifier|const
 name|locale
@@ -551,30 +553,6 @@ name|_Impl
 modifier|*
 name|_S_global
 decl_stmt|;
-comment|// Number of standard categories. For C++, these categories are
-comment|// collate, ctype, monetary, numeric, time, and messages. These
-comment|// directly correspond to ISO C99 macros LC_COLLATE, LC_CTYPE,
-comment|// LC_MONETARY, LC_NUMERIC, and LC_TIME. In addition, POSIX (IEEE
-comment|// 1003.1-2001) specifies LC_MESSAGES.
-specifier|static
-specifier|const
-name|size_t
-name|_S_categories_size
-init|=
-literal|6
-decl_stmt|;
-comment|// In addition to the standard categories, the underlying
-comment|// operating system is allowed to define extra LC_*
-comment|// macros. For GNU systems, the following are also valid:
-comment|// LC_PAPER, LC_NAME, LC_ADDRESS, LC_TELEPHONE, LC_MEASUREMENT,
-comment|// and LC_IDENTIFICATION.
-specifier|static
-specifier|const
-name|size_t
-name|_S_extra_categories_size
-init|=
-name|_GLIBCPP_NUM_CATEGORIES
-decl_stmt|;
 comment|// Names of underlying locale categories.
 comment|// NB: locale::global() has to know how to modify all the
 comment|// underlying categories, not just the ones required by the C++
@@ -583,13 +561,39 @@ specifier|static
 specifier|const
 name|char
 modifier|*
+specifier|const
+modifier|*
+specifier|const
 name|_S_categories
-index|[
-name|_S_categories_size
-operator|+
-name|_S_extra_categories_size
-index|]
 decl_stmt|;
+comment|// Number of standard categories. For C++, these categories are
+comment|// collate, ctype, monetary, numeric, time, and messages. These
+comment|// directly correspond to ISO C99 macros LC_COLLATE, LC_CTYPE,
+comment|// LC_MONETARY, LC_NUMERIC, and LC_TIME. In addition, POSIX (IEEE
+comment|// 1003.1-2001) specifies LC_MESSAGES.
+comment|// In addition to the standard categories, the underlying
+comment|// operating system is allowed to define extra LC_*
+comment|// macros. For GNU systems, the following are also valid:
+comment|// LC_PAPER, LC_NAME, LC_ADDRESS, LC_TELEPHONE, LC_MEASUREMENT,
+comment|// and LC_IDENTIFICATION.
+specifier|static
+specifier|const
+name|size_t
+name|_S_categories_size
+init|=
+literal|6
+operator|+
+name|_GLIBCXX_NUM_CATEGORIES
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__GTHREADS
+specifier|static
+name|__gthread_once_t
+name|_S_once
+decl_stmt|;
+endif|#
+directive|endif
 name|explicit
 name|locale
 parameter_list|(
@@ -600,20 +604,15 @@ function_decl|throw
 parameter_list|()
 function_decl|;
 specifier|static
-specifier|inline
 name|void
 name|_S_initialize
 parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|_S_classic
-condition|)
-name|classic
-argument_list|()
-expr_stmt|;
-block|}
+function_decl|;
+specifier|static
+name|void
+name|_S_initialize_once
+parameter_list|()
+function_decl|;
 specifier|static
 name|category
 name|_S_normalize_category
@@ -640,15 +639,15 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|// Implementation object for locale
+comment|// 22.1.1.1.2  Class locale::facet
+comment|/**    *  @brief  Localization functionality base class.    *    *  The facet class is the base class for a localization feature, such as    *  money, time, and number printing.  It provides common support for facets    *  and reference management.    *    *  Facets may not be copied or assigned.   */
 name|class
 name|locale
 operator|::
-name|_Impl
+name|facet
 block|{
-name|public
+name|private
 operator|:
-comment|// Friends.
 name|friend
 name|class
 name|locale
@@ -657,7 +656,219 @@ name|friend
 name|class
 name|locale
 operator|::
+name|_Impl
+block|;
+name|mutable
+name|_Atomic_word
+name|_M_refcount
+block|;
+comment|// Contains data from the underlying "C" library for the classic locale.
+specifier|static
+name|__c_locale
+name|_S_c_locale
+block|;
+comment|// String literal for the name of the classic locale.
+specifier|static
+specifier|const
+name|char
+name|_S_c_name
+index|[
+literal|2
+index|]
+block|;
+ifdef|#
+directive|ifdef
+name|__GTHREADS
+specifier|static
+name|__gthread_once_t
+name|_S_once
+block|;
+endif|#
+directive|endif
+specifier|static
+name|void
+name|_S_initialize_once
+argument_list|()
+block|;
+name|protected
+operator|:
+comment|/**      *  @brief  Facet constructor.      *      *  This is the constructor provided by the standard.  If refs is 0, the      *  facet is destroyed when the last referencing locale is destroyed.      *  Otherwise the facet will never be destroyed.      *      *  @param refs  The initial value for reference count.     */
+name|explicit
 name|facet
+argument_list|(
+argument|size_t __refs =
+literal|0
+argument_list|)
+name|throw
+argument_list|()
+operator|:
+name|_M_refcount
+argument_list|(
+argument|__refs ?
+literal|1
+argument|:
+literal|0
+argument_list|)
+block|{ }
+comment|/// Facet destructor.
+name|virtual
+operator|~
+name|facet
+argument_list|()
+block|;
+specifier|static
+name|void
+name|_S_create_c_locale
+argument_list|(
+argument|__c_locale& __cloc
+argument_list|,
+argument|const char* __s
+argument_list|,
+argument|__c_locale __old =
+literal|0
+argument_list|)
+block|;
+specifier|static
+name|__c_locale
+name|_S_clone_c_locale
+argument_list|(
+name|__c_locale
+operator|&
+name|__cloc
+argument_list|)
+block|;
+specifier|static
+name|void
+name|_S_destroy_c_locale
+argument_list|(
+name|__c_locale
+operator|&
+name|__cloc
+argument_list|)
+block|;
+comment|// Returns data from the underlying "C" library data for the
+comment|// classic locale.
+specifier|static
+name|__c_locale
+name|_S_get_c_locale
+argument_list|()
+block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|_S_get_c_name
+argument_list|()
+block|;
+name|private
+operator|:
+specifier|inline
+name|void
+name|_M_add_reference
+argument_list|()
+specifier|const
+name|throw
+argument_list|()
+block|{
+name|__gnu_cxx
+operator|::
+name|__atomic_add
+argument_list|(
+operator|&
+name|_M_refcount
+argument_list|,
+literal|1
+argument_list|)
+block|; }
+specifier|inline
+name|void
+name|_M_remove_reference
+argument_list|()
+specifier|const
+name|throw
+argument_list|()
+block|{
+if|if
+condition|(
+name|__gnu_cxx
+operator|::
+name|__exchange_and_add
+argument_list|(
+operator|&
+name|_M_refcount
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|try
+block|{
+name|delete
+name|this
+decl_stmt|;
+block|}
+name|catch
+argument_list|(
+argument|...
+argument_list|)
+block|{
+block|}
+block|}
+block|}
+name|facet
+argument_list|(
+specifier|const
+name|facet
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// Not defined.
+name|facet
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|facet
+operator|&
+operator|)
+decl_stmt|;
+comment|// Not defined.
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// 22.1.1.1.3 Class locale::id
+end_comment
+
+begin_comment
+comment|/**    *  @brief  Facet ID class.    *    *  The ID class provides facets with an index used to identify them.    *  Every facet class must define a public static member locale::id, or be    *  derived from a facet that provides this member, otherwise the facet    *  cannot be used in a locale.  The locale::id ensures that each class    *  type gets a unique identifier.   */
+end_comment
+
+begin_expr_stmt
+name|class
+name|locale
+operator|::
+name|id
+block|{
+name|private
+operator|:
+name|friend
+name|class
+name|locale
+block|;
+name|friend
+name|class
+name|locale
+operator|::
+name|_Impl
 block|;
 name|template
 operator|<
@@ -689,6 +900,89 @@ argument_list|)
 name|throw
 argument_list|()
 block|;
+comment|// NB: There is no accessor for _M_index because it may be used
+comment|// before the constructor is run; the effect of calling a member
+comment|// function (even an inline) would be undefined.
+name|mutable
+name|size_t
+name|_M_index
+block|;
+comment|// Last id number assigned.
+specifier|static
+name|_Atomic_word
+name|_S_refcount
+block|;
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|id
+operator|&
+operator|)
+block|;
+comment|// Not defined.
+name|id
+argument_list|(
+specifier|const
+name|id
+operator|&
+argument_list|)
+block|;
+comment|// Not defined.
+name|public
+operator|:
+comment|// NB: This class is always a static data member, and thus can be
+comment|// counted on to be zero-initialized.
+comment|/// Constructor.
+name|id
+argument_list|()
+block|{ }
+name|size_t
+name|_M_id
+argument_list|()
+specifier|const
+block|;   }
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Implementation object for locale.
+end_comment
+
+begin_expr_stmt
+name|class
+name|locale
+operator|::
+name|_Impl
+block|{
+name|public
+operator|:
+comment|// Friends.
+name|friend
+name|class
+name|locale
+block|;
+name|friend
+name|class
+name|locale
+operator|::
+name|facet
+block|;
+name|template
+operator|<
+name|typename
+name|_Facet
+operator|>
+name|friend
+name|bool
+name|has_facet
+argument_list|(
+argument|const locale&
+argument_list|)
+name|throw
+argument_list|()
+block|;
 name|template
 operator|<
 name|typename
@@ -696,24 +990,31 @@ name|_Facet
 operator|>
 name|friend
 specifier|const
-name|__locale_cache
-operator|<
 name|_Facet
-operator|>
 operator|&
-name|__use_cache
+name|use_facet
 argument_list|(
 specifier|const
 name|locale
 operator|&
 argument_list|)
 block|;
+name|template
+operator|<
+name|typename
+name|_Cache
+operator|>
+name|friend
+expr|struct
+name|__use_cache
+block|;
 name|private
 operator|:
 comment|// Data Members.
 name|_Atomic_word
-name|_M_references
+name|_M_refcount
 block|;
+specifier|const
 name|facet
 operator|*
 operator|*
@@ -722,14 +1023,16 @@ block|;
 name|size_t
 name|_M_facets_size
 block|;
+specifier|const
+name|facet
+operator|*
+operator|*
+name|_M_caches
+block|;
 name|char
 operator|*
+operator|*
 name|_M_names
-index|[
-name|_S_categories_size
-operator|+
-name|_S_extra_categories_size
-index|]
 block|;
 specifier|static
 specifier|const
@@ -810,10 +1113,12 @@ argument_list|()
 name|throw
 argument_list|()
 block|{
+name|__gnu_cxx
+operator|::
 name|__atomic_add
 argument_list|(
 operator|&
-name|_M_references
+name|_M_refcount
 argument_list|,
 literal|1
 argument_list|)
@@ -827,10 +1132,12 @@ argument_list|()
 block|{
 if|if
 condition|(
+name|__gnu_cxx
+operator|::
 name|__exchange_and_add
 argument_list|(
 operator|&
-name|_M_references
+name|_M_refcount
 argument_list|,
 operator|-
 literal|1
@@ -849,19 +1156,23 @@ name|catch
 argument_list|(
 argument|...
 argument_list|)
-block|{
+block|{ }
 block|}
-block|}
-block|}
-name|_Impl
-argument_list|(
+end_expr_stmt
+
+begin_expr_stmt
+unit|}      _Impl
+operator|(
 specifier|const
 name|_Impl
 operator|&
-argument_list|,
+operator|,
 name|size_t
-argument_list|)
+operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_Impl
 argument_list|(
 specifier|const
@@ -871,23 +1182,31 @@ argument_list|,
 name|size_t
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|_Impl
 argument_list|(
-name|facet
-operator|*
-operator|*
-argument_list|,
-name|size_t
-argument_list|,
-name|bool
+argument|size_t
 argument_list|)
+end_macro
+
+begin_expr_stmt
+name|throw
+argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|~
 name|_Impl
 argument_list|()
 name|throw
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_Impl
 argument_list|(
 specifier|const
@@ -895,7 +1214,13 @@ name|_Impl
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Not defined.
+end_comment
+
+begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -905,7 +1230,13 @@ name|_Impl
 operator|&
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Not defined.
+end_comment
+
+begin_function
 specifier|inline
 name|bool
 name|_M_check_same_name
@@ -928,8 +1259,6 @@ operator|&&
 name|__i
 operator|<
 name|_S_categories_size
-operator|+
-name|_S_extra_categories_size
 operator|-
 literal|1
 condition|;
@@ -937,8 +1266,9 @@ operator|++
 name|__i
 control|)
 name|__ret
-operator|&=
-operator|(
+operator|=
+name|std
+operator|::
 name|strcmp
 argument_list|(
 name|_M_names
@@ -955,12 +1285,14 @@ index|]
 argument_list|)
 operator|==
 literal|0
-operator|)
 expr_stmt|;
 return|return
 name|__ret
 return|;
 block|}
+end_function
+
+begin_function_decl
 name|void
 name|_M_replace_categories
 parameter_list|(
@@ -971,6 +1303,9 @@ parameter_list|,
 name|category
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|void
 name|_M_replace_category
 argument_list|(
@@ -987,6 +1322,9 @@ specifier|const
 operator|*
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|_M_replace_facet
 argument_list|(
@@ -1001,6 +1339,9 @@ name|id
 operator|*
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|_M_install_facet
 argument_list|(
@@ -1010,10 +1351,14 @@ operator|::
 name|id
 operator|*
 argument_list|,
+specifier|const
 name|facet
 operator|*
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -1035,71 +1380,33 @@ name|id
 argument_list|,
 name|__facet
 argument_list|)
-block|;  }
-comment|// Retrieve the cache at __index.  0 is returned if the cache is
-comment|// missing.  Cache is actually located at __index +
-comment|// _M_facets_size.  __index must be< _M_facets_size.
-specifier|inline
-name|__locale_cache_base
-operator|*
-name|_M_get_cache
-argument_list|(
-argument|size_t __index
-argument_list|)
-block|{
-return|return
-operator|(
-name|__locale_cache_base
-operator|*
-operator|)
-name|_M_facets
-index|[
-name|__index
-operator|+
-name|_M_facets_size
-index|]
-return|;
-block|}
-comment|// Save the supplied cache at __id.  Assumes _M_get_cache has been
-comment|// called.
+block|; }
 name|void
 name|_M_install_cache
-parameter_list|(
-name|__locale_cache_base
-modifier|*
-name|__cache
-parameter_list|,
-name|int
-name|__id
-parameter_list|)
+argument_list|(
+argument|const facet* __cache
+argument_list|,
+argument|size_t __index
+argument_list|)
+name|throw
+argument_list|()
 block|{
-name|_M_facets
+name|__cache
+operator|->
+name|_M_add_reference
+argument_list|()
+block|;
+name|_M_caches
 index|[
-name|__id
-operator|+
-name|_M_facets_size
+name|__index
 index|]
 operator|=
-name|reinterpret_cast
-operator|<
-name|locale
-operator|::
-name|facet
-operator|*
-operator|>
-operator|(
 name|__cache
-operator|)
-expr_stmt|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+block|;     }
+end_expr_stmt
 
 begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -1127,6 +1434,55 @@ argument_list|,
 literal|1
 argument_list|)
 block|;
+name|char
+operator|*
+name|_M_tmp_names
+index|[
+name|_S_categories_size
+index|]
+block|;
+name|size_t
+name|__i
+operator|=
+literal|0
+block|;
+name|try
+block|{
+for|for
+control|(
+init|;
+name|__i
+operator|<
+name|_S_categories_size
+condition|;
+operator|++
+name|__i
+control|)
+block|{
+name|_M_tmp_names
+index|[
+name|__i
+index|]
+operator|=
+name|new
+name|char
+index|[
+literal|2
+index|]
+expr_stmt|;
+name|std
+operator|::
+name|strcpy
+argument_list|(
+name|_M_tmp_names
+index|[
+name|__i
+index|]
+argument_list|,
+literal|"*"
+argument_list|)
+expr_stmt|;
+block|}
 name|_M_impl
 operator|->
 name|_M_install_facet
@@ -1138,23 +1494,57 @@ name|id
 argument_list|,
 name|__f
 argument_list|)
+block|; 	}
+name|catch
+argument_list|(
+argument|...
+argument_list|)
+block|{
+name|_M_impl
+operator|->
+name|_M_remove_reference
+argument_list|()
 block|;
 for|for
 control|(
 name|size_t
-name|__i
+name|__j
 init|=
 literal|0
 init|;
-name|__i
+name|__j
 operator|<
-name|_S_categories_size
-operator|+
-name|_S_extra_categories_size
+name|__i
 condition|;
 operator|++
-name|__i
+name|__j
 control|)
+name|delete
+index|[]
+name|_M_tmp_names
+index|[
+name|__j
+index|]
+decl_stmt|;
+name|__throw_exception_again
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|}        for
+operator|(
+name|size_t
+name|__k
+operator|=
+literal|0
+expr|;
+name|__k
+operator|<
+name|_S_categories_size
+expr|;
+operator|++
+name|__k
+operator|)
 block|{
 name|delete
 index|[]
@@ -1162,281 +1552,25 @@ name|_M_impl
 operator|->
 name|_M_names
 index|[
-name|__i
+name|__k
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|__new
-init|=
-name|new
-name|char
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|strcpy
-argument_list|(
-name|__new
-argument_list|,
-literal|"*"
-argument_list|)
-expr_stmt|;
+block|;
 name|_M_impl
 operator|->
 name|_M_names
 index|[
-name|__i
+name|__k
 index|]
 operator|=
-name|__new
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|}
-comment|// 22.1.1.1.2  Class locale::facet
-end_comment
-
-begin_expr_stmt
-unit|class
-name|locale
-operator|::
-name|facet
-block|{
-name|private
-operator|:
-name|friend
-name|class
-name|locale
-block|;
-name|friend
-name|class
-name|locale
-operator|::
-name|_Impl
-block|;
-name|_Atomic_word
-name|_M_references
-block|;
-name|protected
-operator|:
-comment|// Contains data from the underlying "C" library for the classic locale.
-specifier|static
-name|__c_locale
-name|_S_c_locale
-block|;
-comment|// String literal for the name of the classic locale.
-specifier|static
-name|char
-name|_S_c_name
+name|_M_tmp_names
 index|[
-literal|2
+name|__k
 index|]
-block|;
-name|explicit
-name|facet
-argument_list|(
-argument|size_t __refs =
-literal|0
-argument_list|)
-name|throw
-argument_list|()
-block|;
-name|virtual
-operator|~
-name|facet
-argument_list|()
-block|;
-specifier|static
-name|void
-name|_S_create_c_locale
-argument_list|(
-argument|__c_locale& __cloc
-argument_list|,
-argument|const char* __s
-argument_list|,
-argument|__c_locale __old =
-literal|0
-argument_list|)
-block|;
-specifier|static
-name|__c_locale
-name|_S_clone_c_locale
-argument_list|(
-name|__c_locale
-operator|&
-name|__cloc
-argument_list|)
-block|;
-specifier|static
-name|void
-name|_S_destroy_c_locale
-argument_list|(
-name|__c_locale
-operator|&
-name|__cloc
-argument_list|)
-block|;
-name|private
-operator|:
-name|void
-name|_M_add_reference
-argument_list|()
-name|throw
-argument_list|()
-block|;
-name|void
-name|_M_remove_reference
-argument_list|()
-name|throw
-argument_list|()
-block|;
-name|facet
-argument_list|(
-specifier|const
-name|facet
-operator|&
-argument_list|)
-block|;
-comment|// Not defined.
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|facet
-operator|&
-operator|)
-block|;
-comment|// Not defined.
-block|}
-expr_stmt|;
+block|; 	}
 end_expr_stmt
 
 begin_comment
-comment|// 22.1.1.1.3 Class locale::id
-end_comment
-
-begin_expr_stmt
-name|class
-name|locale
-operator|::
-name|id
-block|{
-name|private
-operator|:
-name|friend
-name|class
-name|locale
-block|;
-name|friend
-name|class
-name|locale
-operator|::
-name|_Impl
-block|;
-name|template
-operator|<
-name|typename
-name|_Facet
-operator|>
-name|friend
-specifier|const
-name|_Facet
-operator|&
-name|use_facet
-argument_list|(
-specifier|const
-name|locale
-operator|&
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|_Facet
-operator|>
-name|friend
-name|bool
-name|has_facet
-argument_list|(
-argument|const locale&
-argument_list|)
-name|throw
-argument_list|()
-block|;
-comment|// NB: There is no accessor for _M_index because it may be used
-comment|// before the constructor is run; the effect of calling a member
-comment|// function (even an inline) would be undefined.
-name|mutable
-name|size_t
-name|_M_index
-block|;
-comment|// Last id number assigned.
-specifier|static
-name|_Atomic_word
-name|_S_highwater
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|id
-operator|&
-operator|)
-block|;
-comment|// Not defined.
-name|id
-argument_list|(
-specifier|const
-name|id
-operator|&
-argument_list|)
-block|;
-comment|// Not defined.
-name|public
-operator|:
-comment|// NB: This class is always a static data member, and thus can be
-comment|// counted on to be zero-initialized.
-name|id
-argument_list|()
-block|;
-specifier|inline
-name|size_t
-name|_M_id
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-operator|!
-name|_M_index
-condition|)
-name|_M_index
-operator|=
-literal|1
-operator|+
-name|__exchange_and_add
-argument_list|(
-operator|&
-name|_S_highwater
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-return|return
-name|_M_index
-operator|-
-literal|1
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|}; }
+unit|} }
 comment|// namespace std
 end_comment
 

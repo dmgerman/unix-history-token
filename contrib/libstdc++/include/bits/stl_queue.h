@@ -4,7 +4,7 @@ comment|// Queue implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,19 +106,26 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_QUEUE_H
+name|_QUEUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_QUEUE_H
+name|_QUEUE_H
+value|1
 end_define
 
 begin_include
 include|#
 directive|include
 file|<bits/concept_check.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<debug/debug.h>
 end_include
 
 begin_decl_stmt
@@ -226,25 +233,25 @@ operator|::
 name|value_type
 name|_Sequence_value_type
 expr_stmt|;
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Tp
 argument_list|,
 argument|_SGIAssignableConcept
 argument_list|)
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Sequence
 argument_list|,
 argument|_FrontInsertionSequenceConcept
 argument_list|)
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Sequence
 argument_list|,
 argument|_BackInsertionSequenceConcept
 argument_list|)
-name|__glibcpp_class_requires2
+name|__glibcxx_class_requires2
 argument_list|(
 argument|_Tp
 argument_list|,
@@ -352,13 +359,13 @@ name|container_type
 typedef|;
 name|protected
 label|:
-comment|/**      *  'c' is the underlying container.  Maintainers wondering why this isn't      *  uglified as per style guidelines should note that this name is      *  specified in the standard, [23.2.3.1].  (Why?  Presumably for the same      *  reason that it's protected instead of private:  to allow derivation.      *  But none of the other containers allow for derivation.  Odd.)     */
+comment|/**        *  'c' is the underlying container.  Maintainers wondering why        *  this isn't uglified as per style guidelines should note that        *  this name is specified in the standard, [23.2.3.1].  (Why?        *  Presumably for the same reason that it's protected instead        *  of private: to allow derivation.  But none of the other        *  containers allow for derivation.  Odd.)        */
 name|_Sequence
 name|c
 decl_stmt|;
 name|public
 label|:
-comment|/**      *  @brief  Default constructor creates no elements.     */
+comment|/**        *  @brief  Default constructor creates no elements.        */
 name|explicit
 name|queue
 argument_list|(
@@ -376,7 +383,7 @@ argument_list|(
 argument|__c
 argument_list|)
 block|{}
-comment|/**      *  Returns true if the %queue is empty.     */
+comment|/**        *  Returns true if the %queue is empty.        */
 name|bool
 name|empty
 argument_list|()
@@ -402,11 +409,14 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/**      *  Returns a read/write reference to the data at the first element of the      *  %queue.     */
+comment|/**        *  Returns a read/write reference to the data at the first        *  element of the %queue.        */
 name|reference
 name|front
 parameter_list|()
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+expr_stmt|;
 return|return
 name|c
 operator|.
@@ -414,12 +424,15 @@ name|front
 argument_list|()
 return|;
 block|}
-comment|/**      *  Returns a read-only (constant) reference to the data at the first      *  element of the %queue.     */
+comment|/**        *  Returns a read-only (constant) reference to the data at the first        *  element of the %queue.        */
 name|const_reference
 name|front
 argument_list|()
 specifier|const
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+block|;
 return|return
 name|c
 operator|.
@@ -427,11 +440,14 @@ name|front
 argument_list|()
 return|;
 block|}
-comment|/**      *  Returns a read/write reference to the data at the last element of the      *  %queue.     */
+comment|/**        *  Returns a read/write reference to the data at the last        *  element of the %queue.        */
 name|reference
 name|back
 parameter_list|()
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+expr_stmt|;
 return|return
 name|c
 operator|.
@@ -439,12 +455,15 @@ name|back
 argument_list|()
 return|;
 block|}
-comment|/**      *  Returns a read-only (constant) reference to the data at the last      *  element of the %queue.     */
+comment|/**        *  Returns a read-only (constant) reference to the data at the last        *  element of the %queue.        */
 name|const_reference
 name|back
 argument_list|()
 specifier|const
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+block|;
 return|return
 name|c
 operator|.
@@ -452,7 +471,7 @@ name|back
 argument_list|()
 return|;
 block|}
-comment|/**      *  @brief  Add data to the end of the %queue.      *  @param  x  Data to be added.      *      *  This is a typical %queue operation.  The function creates an element at      *  the end of the %queue and assigns the given data to it.      *  The time complexity of the operation depends on the underlying      *  sequence.     */
+comment|/**        *  @brief  Add data to the end of the %queue.        *  @param  x  Data to be added.        *        *  This is a typical %queue operation.  The function creates an        *  element at the end of the %queue and assigns the given data        *  to it.  The time complexity of the operation depends on the        *  underlying sequence.        */
 name|void
 name|push
 parameter_list|(
@@ -470,11 +489,14 @@ name|__x
 argument_list|)
 expr_stmt|;
 block|}
-comment|/**      *  @brief  Removes first element.      *      *  This is a typical %queue operation.  It shrinks the %queue by one.      *  The time complexity of the operation depends on the underlying      *  sequence.      *      *  Note that no data is returned, and if the first element's data is      *  needed, it should be retrieved before pop() is called.     */
+comment|/**        *  @brief  Removes first element.        *        *  This is a typical %queue operation.  It shrinks the %queue by one.        *  The time complexity of the operation depends on the underlying        *  sequence.        *        *  Note that no data is returned, and if the first element's        *  data is needed, it should be retrieved before pop() is        *  called.        */
 name|void
 name|pop
 parameter_list|()
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+expr_stmt|;
 name|c
 operator|.
 name|pop_front
@@ -540,7 +562,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  Queue ordering relation.    *  @param  x  A %queue.    *  @param  y  A %queue of the same type as @a x.    *  @return  True iff @a x is lexographically less than @a y.    *    *  This is an total ordering relation.  Complexity and semantics depend on    *  the underlying sequence type, but the expected rules are:  this relation    *  is linear in the size of the sequences, the elements must be comparable    *  with @c<, and std::lexographical_compare() is usually used to make the    *  determination.   */
+comment|/**    *  @brief  Queue ordering relation.    *  @param  x  A %queue.    *  @param  y  A %queue of the same type as @a x.    *  @return  True iff @a x is lexicographically less than @a y.    *    *  This is an total ordering relation.  Complexity and semantics    *  depend on the underlying sequence type, but the expected rules    *  are: this relation is linear in the size of the sequences, the    *  elements must be comparable with @c<, and    *  std::lexicographical_compare() is usually used to make the    *  determination.   */
 end_comment
 
 begin_expr_stmt
@@ -788,7 +810,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  A standard container automatically sorting its contents.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  This is not a true container, but an @e adaptor.  It holds another    *  container, and provides a wrapper interface to that container.  The    *  wrapper is what enforces sorting and first-in-first-out %queue behavior.    *  Very few of the standard container/sequence interface requirements are    *  met (e.g., iterators).    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::vector, but it can be any type    *  that supports @c front(), @c push_back, @c pop_back, and random-access    *  iterators, such as std::deque or an appropriate user-defined type.    *    *  The third template parameter supplies the means of making priority    *  comparisons.  It defaults to @c less<value_type> but can be anything    *  defining a strict weak ordering.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c push,    *  @c pop, and @c top, which are standard %queue/FIFO operations.    *    *  @note  No equality/comparison operators are provided for %priority_queue.    *    *  @note  Sorting of the elements takes place as they are added to, and    *         removed from, the %priority_queue using the %priority_queue's    *         member functions.  If you access the elements by other means, and    *         change their data such that the sorting order would be different,    *         the %priority_queue will not re-sort the elements for you.  (How    *         could it know to do so?)   */
+comment|/**    *  @brief  A standard container automatically sorting its contents.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  This is not a true container, but an @e adaptor.  It holds    *  another container, and provides a wrapper interface to that    *  container.  The wrapper is what enforces sorting and    *  first-in-first-out %queue behavior.  Very few of the standard    *  container/sequence interface requirements are met (e.g.,    *  iterators).    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::vector, but it can be    *  any type that supports @c front(), @c push_back, @c pop_back,    *  and random-access iterators, such as std::deque or an    *  appropriate user-defined type.    *    *  The third template parameter supplies the means of making    *  priority comparisons.  It defaults to @c less<value_type> but    *  can be anything defining a strict weak ordering.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c    *  push, @c pop, and @c top, which are standard %queue/FIFO    *  operations.    *    *  @note No equality/comparison operators are provided for    *  %priority_queue.    *    *  @note Sorting of the elements takes place as they are added to,    *  and removed from, the %priority_queue using the    *  %priority_queue's member functions.  If you access the elements    *  by other means, and change their data such that the sorting    *  order would be different, the %priority_queue will not re-sort    *  the elements for you.  (How could it know to do so?)   */
 end_comment
 
 begin_expr_stmt
@@ -827,25 +849,25 @@ operator|::
 name|value_type
 name|_Sequence_value_type
 expr_stmt|;
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Tp
 argument_list|,
 argument|_SGIAssignableConcept
 argument_list|)
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Sequence
 argument_list|,
 argument|_SequenceConcept
 argument_list|)
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Sequence
 argument_list|,
 argument|_RandomAccessContainerConcept
 argument_list|)
-name|__glibcpp_class_requires2
+name|__glibcxx_class_requires2
 argument_list|(
 argument|_Tp
 argument_list|,
@@ -853,7 +875,7 @@ argument|_Sequence_value_type
 argument_list|,
 argument|_SameTypeConcept
 argument_list|)
-name|__glibcpp_class_requires4
+name|__glibcxx_class_requires4
 argument_list|(
 argument|_Compare
 argument_list|,
@@ -943,7 +965,7 @@ label|:
 end_label
 
 begin_comment
-comment|/**      *  @brief  Default constructor creates no elements.     */
+comment|/**        *  @brief  Default constructor creates no elements.        */
 end_comment
 
 begin_macro
@@ -980,6 +1002,8 @@ argument_list|(
 argument|__x
 argument_list|)
 block|{
+name|std
+operator|::
 name|make_heap
 argument_list|(
 name|c
@@ -995,7 +1019,7 @@ argument_list|,
 name|comp
 argument_list|)
 block|; }
-comment|/**      *  @brief  Builds a %queue from a range.      *  @param  first  An input iterator.      *  @param  last  An input iterator.      *  @param  x  A comparison functor describing a strict weak ordering.      *  @param  s  An initial sequence with which to start.      *       *  Begins by copying @a s, inserting a copy of the elements from      *  @a [first,last) into the copy of @a s, then ordering the copy      *  according to @a x.      *      *  For more information on function objects, see the documentation on      *  @link s20_3_1_base functor base classes@endlink.     */
+comment|/**        *  @brief  Builds a %queue from a range.        *  @param  first  An input iterator.        *  @param  last  An input iterator.        *  @param  x  A comparison functor describing a strict weak ordering.        *  @param  s  An initial sequence with which to start.        *        *  Begins by copying @a s, inserting a copy of the elements        *  from @a [first,last) into the copy of @a s, then ordering        *  the copy according to @a x.        *        *  For more information on function objects, see the        *  documentation on @link s20_3_1_base functor base        *  classes@endlink.        */
 name|template
 operator|<
 name|typename
@@ -1022,6 +1046,13 @@ argument_list|(
 argument|__x
 argument_list|)
 block|{
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+block|;
 name|c
 operator|.
 name|insert
@@ -1036,6 +1067,8 @@ argument_list|,
 name|__last
 argument_list|)
 block|;
+name|std
+operator|::
 name|make_heap
 argument_list|(
 name|c
@@ -1050,8 +1083,8 @@ argument_list|()
 argument_list|,
 name|comp
 argument_list|)
-block|;       }
-comment|/**      *  Returns true if the %queue is empty.     */
+block|; 	}
+comment|/**        *  Returns true if the %queue is empty.        */
 name|bool
 name|empty
 argument_list|()
@@ -1086,7 +1119,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  Returns a read-only (constant) reference to the data at the first      *  element of the %queue.     */
+comment|/**        *  Returns a read-only (constant) reference to the data at the first        *  element of the %queue.        */
 end_comment
 
 begin_expr_stmt
@@ -1095,6 +1128,9 @@ name|top
 argument_list|()
 specifier|const
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+block|;
 return|return
 name|c
 operator|.
@@ -1105,7 +1141,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**      *  @brief  Add data to the %queue.      *  @param  x  Data to be added.      *      *  This is a typical %queue operation.      *  The time complexity of the operation depends on the underlying      *  sequence.     */
+comment|/**        *  @brief  Add data to the %queue.        *  @param  x  Data to be added.        *        *  This is a typical %queue operation.        *  The time complexity of the operation depends on the underlying        *  sequence.        */
 end_comment
 
 begin_function
@@ -1127,6 +1163,8 @@ argument_list|(
 name|__x
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|push_heap
 argument_list|(
 name|c
@@ -1160,7 +1198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**      *  @brief  Removes first element.      *      *  This is a typical %queue operation.  It shrinks the %queue by one.      *  The time complexity of the operation depends on the underlying      *  sequence.      *      *  Note that no data is returned, and if the first element's data is      *  needed, it should be retrieved before pop() is called.     */
+comment|/**        *  @brief  Removes first element.        *        *  This is a typical %queue operation.  It shrinks the %queue        *  by one.  The time complexity of the operation depends on the        *  underlying sequence.        *        *  Note that no data is returned, and if the first element's        *  data is needed, it should be retrieved before pop() is        *  called.        */
 end_comment
 
 begin_function
@@ -1168,8 +1206,13 @@ name|void
 name|pop
 parameter_list|()
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+expr_stmt|;
 name|try
 block|{
+name|std
+operator|::
 name|pop_heap
 argument_list|(
 name|c
@@ -1223,7 +1266,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_QUEUE_H */
+comment|/* _QUEUE_H */
 end_comment
 
 end_unit

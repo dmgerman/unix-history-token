@@ -4,7 +4,7 @@ comment|// Iostreams base classes -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// ISO C++ 14882: 27.8  File-based streams
+comment|// ISO C++ 14882: 27.4  Iostreams base classes
 end_comment
 
 begin_comment
@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_IOSBASE_H
+name|_IOS_BASE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_IOSBASE_H
+name|_IOS_BASE_H
 value|1
 end_define
 
@@ -164,7 +164,7 @@ comment|// expressions involving them are no longer compile-time constants.
 enum|enum
 name|_Ios_Fmtflags
 block|{
-name|_M_ios_fmtflags_end
+name|_S_ios_fmtflags_end
 init|=
 literal|1L
 operator|<<
@@ -379,7 +379,7 @@ begin_enum
 enum|enum
 name|_Ios_Openmode
 block|{
-name|_M_ios_openmode_end
+name|_S_ios_openmode_end
 init|=
 literal|1L
 operator|<<
@@ -600,7 +600,7 @@ begin_enum
 enum|enum
 name|_Ios_Iostate
 block|{
-name|_M_ios_iostate_end
+name|_S_ios_iostate_end
 init|=
 literal|1L
 operator|<<
@@ -821,7 +821,7 @@ begin_enum
 enum|enum
 name|_Ios_Seekdir
 block|{
-name|_M_ios_seekdir_end
+name|_S_ios_seekdir_end
 init|=
 literal|1L
 operator|<<
@@ -854,10 +854,8 @@ name|exception
 block|{
 name|public
 operator|:
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-comment|//48.  Use of non-existent exception constructor
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 48.  Use of non-existent exception constructor
 name|explicit
 name|failure
 argument_list|(
@@ -887,22 +885,9 @@ argument_list|()
 block|;
 name|private
 operator|:
-expr|enum
-block|{
-name|_M_bufsize
-operator|=
-literal|256
-block|}
-block|;
-name|char
-name|_M_name
-index|[
-name|_M_bufsize
-index|]
-block|;
-endif|#
-directive|endif
-block|}
+name|string
+name|_M_msg
+block|;     }
 decl_stmt|;
 comment|// 27.4.2.1.2  Type ios_base::fmtflags
 comment|/**      *  @brief This is a bitmask type.      *      *  @c "_Ios_Fmtflags" is implementation-defined, but it is valid to      *  perform bitwise operations on these values and expect the Right      *  Thing to happen.  Defined objects of type fmtflags are:      *  - boolalpha      *  - dec      *  - fixed      *  - hex      *  - internal      *  - left      *  - oct      *  - right      *  - scientific      *  - showbase      *  - showpoint      *  - showpos      *  - skipws      *  - unitbuf      *  - uppercase      *  - adjustfield      *  - basefield      *  - floatfield     */
@@ -1338,7 +1323,7 @@ argument_list|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_DEPRECATED
+name|_GLIBCXX_DEPRECATED
 comment|// Annex D.6
 typedef|typedef
 name|int
@@ -1367,7 +1352,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|// Callbacks;
-comment|/**      *  @doctodo     */
+comment|/**      *  @brief  The set of events that may be passed to an event callback.      *      *  erase_event is used during ~ios() and copyfmt().  imbue_event is used      *  during imbue().  copyfmt_event is used during copyfmt().     */
 enum|enum
 name|event
 block|{
@@ -1378,7 +1363,7 @@ block|,
 name|copyfmt_event
 block|}
 enum|;
-comment|/**      *  @doctodo     */
+comment|/**      *  @brief  The type of an event callback function.      *  @param  event  One of the members of the event enum.      *  @param  ios_base  Reference to the ios_base object.      *  @param  int  The integer provided when the callback was registered.      *      *  Event callbacks are user defined functions that get called during      *  several ios_base and basic_ios functions, specifically imbue(),      *  copyfmt(), and ~ios().     */
 typedef|typedef
 name|void
 function_decl|(
@@ -1394,7 +1379,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-comment|/**      *  @doctodo     */
+comment|/**      *  @brief  Add the callback __fn with parameter __index.      *  @param  __fn  The function to add.      *  @param  __index  The integer to pass to the function when invoked.      *      *  Registers a function as an event callback with an integer parameter to      *  be passed to the function when invoked.  Multiple copies of the      *  function are allowed.  If there are multiple callbacks, they are      *  invoked in the order they were registered.     */
 name|void
 name|register_callback
 parameter_list|(
@@ -1480,6 +1465,8 @@ name|void
 name|_M_add_reference
 argument_list|()
 block|{
+name|__gnu_cxx
+operator|::
 name|__atomic_add
 argument_list|(
 operator|&
@@ -1494,6 +1481,8 @@ name|_M_remove_reference
 argument_list|()
 block|{
 return|return
+name|__gnu_cxx
+operator|::
 name|__exchange_and_add
 argument_list|(
 operator|&
@@ -1584,6 +1573,9 @@ name|_M_grow_words
 parameter_list|(
 name|int
 name|__index
+parameter_list|,
+name|bool
+name|__iword
 parameter_list|)
 function_decl|;
 comment|// Members for locale and locale caching.
@@ -1616,36 +1608,11 @@ operator|~
 name|Init
 argument_list|()
 expr_stmt|;
-specifier|static
-name|void
-name|_S_ios_create
-parameter_list|(
-name|bool
-name|__sync
-parameter_list|)
-function_decl|;
-specifier|static
-name|void
-name|_S_ios_destroy
-parameter_list|()
-function_decl|;
-comment|// NB: Allows debugger applications use of the standard streams
-comment|// from operator new. _S_ios_base_init must be incremented in
-comment|// _S_ios_create _after_ initialization is completed.
-specifier|static
-name|bool
-name|_S_initialized
-parameter_list|()
-block|{
-return|return
-name|_S_ios_base_init
-return|;
-block|}
 name|private
 label|:
 specifier|static
-name|int
-name|_S_ios_base_init
+name|_Atomic_word
+name|_S_refcount
 decl_stmt|;
 specifier|static
 name|bool
@@ -1837,7 +1804,7 @@ name|true
 parameter_list|)
 function_decl|;
 comment|// [27.4.2.3] ios_base locale functions
-comment|/**      *  @brief  Setting a new locale.      *  @param  loc  The new locale.      *  @return  The previous locale.      *      *  Sets the new locale for this stream, and      *  [XXX does something with callbacks].     */
+comment|/**      *  @brief  Setting a new locale.      *  @param  loc  The new locale.      *  @return  The previous locale.      *      *  Sets the new locale for this stream, and then invokes each callback      *  with imbue_event.     */
 name|locale
 name|imbue
 parameter_list|(
@@ -1872,7 +1839,7 @@ name|_M_ios_locale
 return|;
 block|}
 comment|// [27.4.2.5] ios_base storage functions
-comment|/**      *  @doctodo     */
+comment|/**      *  @brief  Access to unique indices.      *  @return  An integer different from all previous calls.      *      *  This function returns a unique integer every time it is called.  It      *  can be used for any purpose, but is primarily intended to be a unique      *  index for the iword and pword functions.  The expectation is that an      *  application calls xalloc in order to obtain an index in the iword and      *  pword arrays that can be used without fear of conflict.      *      *  The implementation maintains a static variable that is incremented and      *  returned on each invocation.  xalloc is guaranteed to return an index      *  that is safe to use in the iword and pword arrays.     */
 specifier|static
 name|int
 name|xalloc
@@ -1880,7 +1847,7 @@ parameter_list|()
 function_decl|throw
 parameter_list|()
 function_decl|;
-comment|/**      *  @doctodo     */
+comment|/**      *  @brief  Access to integer array.      *  @param  __ix  Index into the array.      *  @return  A reference to an integer associated with the index.      *      *  The iword function provides access to an array of integers that can be      *  used for any purpose.  The array grows as required to hold the      *  supplied index.  All integers in the array are initialized to 0.      *      *  The implementation reserves several indices.  You should use xalloc to      *  obtain an index that is safe to use.  Also note that since the array      *  can grow dynamically, it is not safe to hold onto the reference.     */
 specifier|inline
 name|long
 modifier|&
@@ -1908,6 +1875,8 @@ else|:
 name|_M_grow_words
 argument_list|(
 name|__ix
+argument_list|,
+name|true
 argument_list|)
 decl_stmt|;
 return|return
@@ -1916,7 +1885,7 @@ operator|.
 name|_M_iword
 return|;
 block|}
-comment|/**      *  @doctodo     */
+comment|/**      *  @brief  Access to void pointer array.      *  @param  __ix  Index into the array.      *  @return  A reference to a void* associated with the index.      *      *  The pword function provides access to an array of pointers that can be      *  used for any purpose.  The array grows as required to hold the      *  supplied index.  All pointers in the array are initialized to 0.      *      *  The implementation reserves several indices.  You should use xalloc to      *  obtain an index that is safe to use.  Also note that since the array      *  can grow dynamically, it is not safe to hold onto the reference.     */
 specifier|inline
 name|void
 modifier|*
@@ -1945,6 +1914,8 @@ else|:
 name|_M_grow_words
 argument_list|(
 name|__ix
+argument_list|,
+name|false
 argument_list|)
 decl_stmt|;
 return|return
@@ -1954,7 +1925,8 @@ name|_M_pword
 return|;
 block|}
 comment|// Destructor
-comment|/**      *  Destroys local storage and      *  [XXX does something with callbacks].     */
+comment|/**      *  Invokes each callback with erase_event.  Destroys local storage.      *      *  Note that the ios_base object for the standard streams never gets      *  destroyed.  As a result, any callbacks registered with the standard      *  streams will not get invoked with erase_event (unless copyfmt is      *  used).     */
+name|virtual
 operator|~
 name|ios_base
 argument_list|()
@@ -1964,10 +1936,8 @@ label|:
 name|ios_base
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-comment|//50.  Copy constructor and assignment operator of ios_base
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 50.  Copy constructor and assignment operator of ios_base
 name|private
 label|:
 name|ios_base
@@ -1987,8 +1957,6 @@ name|ios_base
 operator|&
 operator|)
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 end_decl_stmt
 
@@ -2715,7 +2683,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_IOSBASE_H */
+comment|/* _IOS_BASE_H */
 end_comment
 
 end_unit

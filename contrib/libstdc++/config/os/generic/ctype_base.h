@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -197,10 +197,25 @@ specifier|const
 name|mask
 name|graph
 init|=
+operator|(
 literal|1
 operator|<<
-literal|7
+literal|2
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|9
+operator|)
 decl_stmt|;
+comment|// alnum|punct
 specifier|static
 specifier|const
 name|mask
@@ -224,10 +239,19 @@ specifier|const
 name|mask
 name|alnum
 init|=
+operator|(
 literal|1
 operator|<<
-literal|10
+literal|2
+operator|)
+operator||
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
 decl_stmt|;
+comment|// alpha|digit
 block|}
 struct|;
 end_struct

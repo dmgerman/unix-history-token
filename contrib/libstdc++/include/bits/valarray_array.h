@@ -4,7 +4,11 @@ comment|// The template and inlines for the -*- C++ -*- internal _Array helper c
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2003
+end_comment
+
+begin_comment
+comment|//  Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +110,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_ARRAY_H
+name|_VALARRAY_ARRAY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_ARRAY_H
+name|_VALARRAY_ARRAY_H
 value|1
 end_define
 
@@ -200,6 +204,8 @@ operator|*
 name|__restrict__
 operator|>
 operator|(
+name|std
+operator|::
 name|__valarray_get_memory
 argument_list|(
 name|__n
@@ -293,6 +299,8 @@ argument_list|,
 argument|_Tp* __restrict__ __e
 argument_list|)
 block|{
+name|std
+operator|::
 name|memset
 argument_list|(
 name|__b
@@ -541,6 +549,8 @@ argument_list|,
 argument|_Tp* __restrict__ __o
 argument_list|)
 block|{
+name|std
+operator|::
 name|memcpy
 argument_list|(
 name|__o
@@ -957,6 +967,8 @@ argument_list|,
 argument|_Tp* __restrict__ __b
 argument_list|)
 block|{
+name|std
+operator|::
 name|memcpy
 argument_list|(
 name|__b
@@ -1634,6 +1646,8 @@ argument_list|,
 argument|const _Tp& __t
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_fill
 argument_list|(
 name|__a
@@ -1663,6 +1677,8 @@ argument_list|,
 argument|const _Tp& __t
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_fill
 argument_list|(
 name|__a
@@ -1694,6 +1710,8 @@ argument_list|,
 argument|const _Tp& __t
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_fill
 argument_list|(
 name|__a
@@ -1726,6 +1744,8 @@ argument_list|,
 argument|_Array<_Tp> __b
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__a
@@ -1758,6 +1778,8 @@ argument_list|,
 argument|_Array<_Tp> __b
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__a
@@ -1829,6 +1851,8 @@ argument_list|,
 argument|size_t __s2
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__a
@@ -1865,6 +1889,8 @@ argument_list|,
 argument|size_t __n
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__a
@@ -1901,6 +1927,8 @@ argument_list|,
 argument|_Array<size_t> __i
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__a
@@ -1940,6 +1968,8 @@ argument_list|,
 argument|_Array<size_t> __j
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__src
@@ -1982,6 +2012,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__n)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_default_construct
 argument_list|(
 name|_M_data
@@ -2062,6 +2094,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__s)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|__b
@@ -2101,7 +2135,7 @@ parameter_list|,
 name|_Name
 parameter_list|)
 define|\
-value|template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, const _Tp& __t)	\ {									\   for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p)		\     *__p _Op##= __t;							\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, _Array<_Tp> __b)	\ {									\   _Tp* __p = __a._M_data;						\   for (_Tp* __q=__b._M_data; __q<__b._M_data+__n; ++__p, ++__q)		\     *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, 				\                          const _Expr<_Dom,_Tp>& __e, size_t __n)	\ {									\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, ++__p) *__p _Op##= __e[__i];	\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, size_t __s, 	\ 			 _Array<_Tp> __b)				\ {					       				\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__s*__n; __p+=__s, ++__q) \       *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<_Tp> __b, 		\ 			 size_t __n, size_t __s)			\ {									\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p, __q+=__s)	\       *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __s,			\                           const _Expr<_Dom,_Tp>& __e, size_t __n)	\ {									\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, __p+=__s) *__p _Op##= __e[__i];	\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<size_t> __i,		\                           _Array<_Tp> __b, size_t __n)			\ {									\     _Tp* __q (__b._M_data);						\     for (size_t* __j=__i._M_data; __j<__i._M_data+__n; ++__j, ++__q)	\         __a._M_data[*__j] _Op##= *__q;					\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n,			\                           _Array<_Tp> __b, _Array<size_t> __i)		\ {									\     _Tp* __p (__a._M_data);						\     for (size_t* __j=__i._M_data; __j<__i._M_data+__n; ++__j, ++__p)	\         *__p _Op##= __b._M_data[*__j];					\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<size_t> __i,		\                           const _Expr<_Dom, _Tp>& __e, size_t __n)	\ {									\     size_t* __j (__i._M_data);						\     for (size_t __k=0; __k<__n; ++__k, ++__j) 				\       __a._M_data[*__j] _Op##= __e[__k];				\ }									\ 									\ template<typename _Tp>							\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<bool> __m,		\                           _Array<_Tp> __b, size_t __n)			\ {									\     bool* ok (__m._M_data);						\     _Tp* __p (__a._M_data);						\     for (_Tp* __q=__b._M_data; __q<__b._M_data+__n; ++__q, ++ok, ++__p) { \         while (! *ok) {							\             ++ok;							\             ++__p;							\         }								\         *__p _Op##= *__q;						\     }									\ }									\ 									\ template<typename _Tp>							\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n,			\                          _Array<_Tp> __b, _Array<bool> __m)		\ {									\     bool* ok (__m._M_data);						\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p, ++ok, ++__q) { \         while (! *ok) {							\             ++ok;							\             ++__q;							\         }								\         *__p _Op##= *__q;						\     }									\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<bool> __m,		\                           const _Expr<_Dom, _Tp>& __e, size_t __n)	\ {									\     bool* ok(__m._M_data);						\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, ++ok, ++__p) {			\         while (! *ok) {							\             ++ok;							\             ++__p;							\         }								\         *__p _Op##= __e[__i];						\     }									\ }
+value|template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, const _Tp& __t)	\ {									\   for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p)		\     *__p _Op##= __t;							\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, _Array<_Tp> __b)	\ {									\   _Tp* __p = __a._M_data;						\   for (_Tp* __q=__b._M_data; __q<__b._M_data+__n; ++__p, ++__q)		\     *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a,				\                          const _Expr<_Dom,_Tp>& __e, size_t __n)	\ {									\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, ++__p) *__p _Op##= __e[__i];	\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n, size_t __s,	\ 			 _Array<_Tp> __b)				\ {									\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__s*__n; __p+=__s, ++__q) \       *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<_Tp> __b,		\ 			 size_t __n, size_t __s)			\ {									\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p, __q+=__s)	\       *__p _Op##= *__q;							\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __s,			\                           const _Expr<_Dom,_Tp>& __e, size_t __n)	\ {									\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, __p+=__s) *__p _Op##= __e[__i];	\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<size_t> __i,		\                           _Array<_Tp> __b, size_t __n)			\ {									\     _Tp* __q (__b._M_data);						\     for (size_t* __j=__i._M_data; __j<__i._M_data+__n; ++__j, ++__q)	\         __a._M_data[*__j] _Op##= *__q;					\ }									\ 									\ template<typename _Tp>							\ inline void								\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n,			\                           _Array<_Tp> __b, _Array<size_t> __i)		\ {									\     _Tp* __p (__a._M_data);						\     for (size_t* __j=__i._M_data; __j<__i._M_data+__n; ++__j, ++__p)	\         *__p _Op##= __b._M_data[*__j];					\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<size_t> __i,		\                           const _Expr<_Dom, _Tp>& __e, size_t __n)	\ {									\     size_t* __j (__i._M_data);						\     for (size_t __k=0; __k<__n; ++__k, ++__j)				\       __a._M_data[*__j] _Op##= __e[__k];				\ }									\ 									\ template<typename _Tp>							\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<bool> __m,		\                           _Array<_Tp> __b, size_t __n)			\ {									\     bool* ok (__m._M_data);						\     _Tp* __p (__a._M_data);						\     for (_Tp* __q=__b._M_data; __q<__b._M_data+__n; ++__q, ++ok, ++__p) { \         while (! *ok) {							\             ++ok;							\             ++__p;							\         }								\         *__p _Op##= *__q;						\     }									\ }									\ 									\ template<typename _Tp>							\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, size_t __n,			\                          _Array<_Tp> __b, _Array<bool> __m)		\ {									\     bool* ok (__m._M_data);						\     _Tp* __q (__b._M_data);						\     for (_Tp* __p=__a._M_data; __p<__a._M_data+__n; ++__p, ++ok, ++__q) { \         while (! *ok) {							\             ++ok;							\             ++__q;							\         }								\         *__p _Op##= *__q;						\     }									\ }									\ 									\ template<typename _Tp, class _Dom>					\ void									\ _Array_augmented_##_Name (_Array<_Tp> __a, _Array<bool> __m,		\                           const _Expr<_Dom, _Tp>& __e, size_t __n)	\ {									\     bool* ok(__m._M_data);						\     _Tp* __p (__a._M_data);						\     for (size_t __i=0; __i<__n; ++__i, ++ok, ++__p) {			\         while (! *ok) {							\             ++ok;							\             ++__p;							\         }								\         *__p _Op##= __e[__i];						\     }									\ }
 name|_DEFINE_ARRAY_FUNCTION
 argument_list|(
 argument|+
@@ -2169,20 +2203,14 @@ expr|}
 end_decl_stmt
 
 begin_comment
-comment|// std::
+comment|// namespace std
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|export
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
@@ -2201,19 +2229,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_ARRAY_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:c++
-end_comment
-
-begin_comment
-comment|// End:
+comment|/* _ARRAY_H */
 end_comment
 
 end_unit

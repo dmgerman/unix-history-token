@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: x86, x>= 4 version  -*- C+
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,29 +95,16 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
 begin_decl_stmt
-specifier|static
-specifier|inline
+name|namespace
+name|__gnu_cxx
+block|{
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -142,16 +129,11 @@ name|__result
 decl_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|("lock; xadd{l} {%0,%1|%1,%0}" 			: "=r" (__result), "+m" (*__mem)                          : "0" (__val)                         : "memory");
+asm|("lock; xadd{l} {%0,%1|%1,%0}" 			  : "=r" (__result), "=m" (*__mem)  			  : "0" (__val), "m" (*__mem));
 return|return
 name|__result
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -172,17 +154,13 @@ argument_list|)
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|("lock; add{l} {%1,%0|%0,%1}" 			: "+m" (*__mem) : "ir" (__val) : "memory");
+asm|("lock; add{l} {%1,%0|%0,%1}" 			  : "=m" (*__mem) : "ir" (__val), "m" (*__mem));
+block|}
 block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

@@ -4,7 +4,11 @@ comment|// String based streams -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2002, 2003, 2004
+end_comment
+
+begin_comment
+comment|// Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -114,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_SSTREAM
+name|_GLIBCXX_SSTREAM
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_SSTREAM
+name|_GLIBCXX_SSTREAM
 value|1
 end_define
 
@@ -182,16 +186,12 @@ typedef|typedef
 name|_Traits
 name|traits_type
 typedef|;
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
 comment|// 251. basic_stringbuf missing allocator_type
 typedef|typedef
 name|_Alloc
 name|allocator_type
 typedef|;
-endif|#
-directive|endif
 typedef|typedef
 name|typename
 name|traits_type
@@ -245,6 +245,12 @@ expr_stmt|;
 comment|//@}
 name|protected
 label|:
+comment|/**        *  @if maint        *  Place to stash in || out || in | out settings for current stringbuf.        *  @endif       */
+name|ios_base
+operator|::
+name|openmode
+name|_M_mode
+expr_stmt|;
 comment|// Data Members:
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__string_type
@@ -272,6 +278,9 @@ name|out
 argument_list|)
 range|:
 name|__streambuf_type
+argument_list|()
+decl_stmt|,
+name|_M_mode
 argument_list|()
 decl_stmt|,
 name|_M_string
@@ -309,6 +318,9 @@ range|:
 name|__streambuf_type
 argument_list|()
 decl_stmt|,
+name|_M_mode
+argument_list|()
+decl_stmt|,
 name|_M_string
 argument_list|(
 name|__str
@@ -335,55 +347,63 @@ name|str
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
+specifier|const
+name|bool
+name|__testout
+operator|=
+name|this
+operator|->
 name|_M_mode
 operator|&
 name|ios_base
 operator|::
 name|out
-condition|)
-block|{
-comment|// This is the deal: _M_string.size() is a value that
-comment|// represents the size of the initial string that makes
-comment|// _M_string, and may not be the correct size of the
-comment|// current stringbuf internal buffer.
-name|__size_type
-name|__len
-init|=
-name|_M_string
-operator|.
-name|size
-argument_list|()
-decl_stmt|;
+block|;
 if|if
 condition|(
-name|_M_out_end
-operator|>
-name|_M_out_beg
+name|__testout
 condition|)
-name|__len
-operator|=
-name|max
-argument_list|(
-name|__size_type
-argument_list|(
-name|_M_out_end
-operator|-
-name|_M_out_beg
-argument_list|)
-argument_list|,
-name|__len
-argument_list|)
-expr_stmt|;
+block|{
+comment|// The current egptr() may not be the actual string end.
+if|if
+condition|(
+name|this
+operator|->
+name|pptr
+argument_list|()
+operator|>
+name|this
+operator|->
+name|egptr
+argument_list|()
+condition|)
 return|return
 name|__string_type
 argument_list|(
-name|_M_out_beg
+name|this
+operator|->
+name|pbase
+argument_list|()
 argument_list|,
-name|_M_out_beg
-operator|+
-name|__len
+name|this
+operator|->
+name|pptr
+argument_list|()
+argument_list|)
+return|;
+else|else
+return|return
+name|__string_type
+argument_list|(
+name|this
+operator|->
+name|pbase
+argument_list|()
+argument_list|,
+name|this
+operator|->
+name|egptr
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -420,6 +440,8 @@ argument_list|)
 expr_stmt|;
 name|_M_stringbuf_init
 argument_list|(
+name|this
+operator|->
 name|_M_mode
 argument_list|)
 expr_stmt|;
@@ -437,32 +459,21 @@ name|openmode
 name|__mode
 argument_list|)
 block|{
-comment|// _M_buf_size is a convenient alias for "what the streambuf
-comment|// thinks the allocated size of the string really is." This is
-comment|// necessary as ostringstreams are implemented with the
-comment|// streambufs having control of the allocation and
-comment|// re-allocation of the internal string object, _M_string.
-name|_M_buf_size
-operator|=
-name|_M_string
-operator|.
-name|size
-argument_list|()
-expr_stmt|;
-comment|// NB: Start ostringstream buffers at 512 bytes. This is an
-comment|// experimental value (pronounced "arbitrary" in some of the
-comment|// hipper english-speaking countries), and can be changed to
-comment|// suit particular needs.
-name|_M_buf_size_opt
-operator|=
-literal|512
-expr_stmt|;
+name|this
+operator|->
 name|_M_mode
 operator|=
 name|__mode
 expr_stmt|;
+name|__size_type
+name|__len
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
+name|this
+operator|->
 name|_M_mode
 operator|&
 operator|(
@@ -475,55 +486,39 @@ operator|::
 name|app
 operator|)
 condition|)
-name|_M_really_sync
-argument_list|(
-literal|0
-argument_list|,
-name|_M_buf_size
-argument_list|)
+name|__len
+operator|=
+name|_M_string
+operator|.
+name|size
+argument_list|()
 expr_stmt|;
-else|else
-name|_M_really_sync
+name|_M_sync
 argument_list|(
-literal|0
+name|const_cast
+operator|<
+name|char_type
+operator|*
+operator|>
+operator|(
+name|_M_string
+operator|.
+name|data
+argument_list|()
+operator|)
 argument_list|,
 literal|0
+argument_list|,
+name|__len
 argument_list|)
 expr_stmt|;
 block|}
-comment|// Overridden virtual functions:
 comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|underflow
 parameter_list|()
-block|{
-if|if
-condition|(
-name|_M_in_cur
-operator|&&
-name|_M_in_cur
-operator|<
-name|_M_in_end
-condition|)
-return|return
-name|traits_type
-operator|::
-name|to_int_type
-argument_list|(
-operator|*
-name|gptr
-argument_list|()
-argument_list|)
-return|;
-else|else
-return|return
-name|traits_type
-operator|::
-name|eof
-argument_list|()
-return|;
-block|}
+function_decl|;
 comment|// [documentation is inherited]
 name|virtual
 name|int_type
@@ -571,8 +566,15 @@ condition|(
 name|__s
 operator|&&
 name|__n
+operator|>=
+literal|0
 condition|)
 block|{
+comment|// This is implementation-defined behavior, and assumes
+comment|// that an external char_type array of length __n exists
+comment|// and has been pre-allocated. If this is not the case,
+comment|// things will quickly blow up.
+comment|// Step 1: Destroy the current internal array.
 name|_M_string
 operator|=
 name|__string_type
@@ -582,8 +584,11 @@ argument_list|,
 name|__n
 argument_list|)
 expr_stmt|;
-name|_M_really_sync
+comment|// Step 2: Use the external array.
+name|_M_sync
 argument_list|(
+name|__s
+argument_list|,
 literal|0
 argument_list|,
 literal|0
@@ -650,10 +655,13 @@ comment|// Assumes: contents of _M_string and internal buffer match exactly.
 comment|// __i == _M_in_cur - _M_in_beg
 comment|// __o == _M_out_cur - _M_out_beg
 comment|/**        *  @if maint        *  @doctodo        *  @endif       */
-name|virtual
-name|int
-name|_M_really_sync
+name|void
+name|_M_sync
 parameter_list|(
+name|char_type
+modifier|*
+name|__base
+parameter_list|,
 name|__size_type
 name|__i
 parameter_list|,
@@ -661,40 +669,31 @@ name|__size_type
 name|__o
 parameter_list|)
 block|{
-name|char_type
-modifier|*
-name|__base
-init|=
-name|const_cast
-operator|<
-name|char_type
-operator|*
-operator|>
-operator|(
-name|_M_string
-operator|.
-name|data
-argument_list|()
-operator|)
-decl_stmt|;
+specifier|const
 name|bool
 name|__testin
 init|=
+name|this
+operator|->
 name|_M_mode
 operator|&
 name|ios_base
 operator|::
 name|in
 decl_stmt|;
+specifier|const
 name|bool
 name|__testout
 init|=
+name|this
+operator|->
 name|_M_mode
 operator|&
 name|ios_base
 operator|::
 name|out
 decl_stmt|;
+specifier|const
 name|__size_type
 name|__len
 init|=
@@ -703,10 +702,6 @@ operator|.
 name|size
 argument_list|()
 decl_stmt|;
-name|_M_buf
-operator|=
-name|__base
-expr_stmt|;
 if|if
 condition|(
 name|__testin
@@ -739,17 +734,136 @@ name|__base
 argument_list|,
 name|__base
 operator|+
+name|_M_string
+operator|.
+name|capacity
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|pbump
+argument_list|(
+name|__o
+argument_list|)
+expr_stmt|;
+comment|// We need a pointer to the string end anyway, even when
+comment|// !__testin: in that case, however, for the correct
+comment|// functioning of the streambuf inlines all the get area
+comment|// pointers must be identical.
+if|if
+condition|(
+operator|!
+name|__testin
+condition|)
+name|this
+operator|->
+name|setg
+argument_list|(
+name|__base
+operator|+
+name|__len
+argument_list|,
+name|__base
+operator|+
+name|__len
+argument_list|,
+name|__base
+operator|+
 name|__len
 argument_list|)
 expr_stmt|;
-name|_M_out_cur
-operator|+=
-name|__o
-expr_stmt|;
 block|}
-return|return
-literal|0
-return|;
+block|}
+comment|// Internal function for correctly updating egptr() to the actual
+comment|// string end.
+name|void
+name|_M_update_egptr
+parameter_list|()
+block|{
+specifier|const
+name|bool
+name|__testin
+init|=
+name|this
+operator|->
+name|_M_mode
+operator|&
+name|ios_base
+operator|::
+name|in
+decl_stmt|;
+specifier|const
+name|bool
+name|__testout
+init|=
+name|this
+operator|->
+name|_M_mode
+operator|&
+name|ios_base
+operator|::
+name|out
+decl_stmt|;
+if|if
+condition|(
+name|__testout
+operator|&&
+name|this
+operator|->
+name|pptr
+argument_list|()
+operator|>
+name|this
+operator|->
+name|egptr
+argument_list|()
+condition|)
+if|if
+condition|(
+name|__testin
+condition|)
+name|this
+operator|->
+name|setg
+argument_list|(
+name|this
+operator|->
+name|eback
+argument_list|()
+argument_list|,
+name|this
+operator|->
+name|gptr
+argument_list|()
+argument_list|,
+name|this
+operator|->
+name|pptr
+argument_list|()
+argument_list|)
+expr_stmt|;
+else|else
+name|this
+operator|->
+name|setg
+argument_list|(
+name|this
+operator|->
+name|pptr
+argument_list|()
+argument_list|,
+name|this
+operator|->
+name|pptr
+argument_list|()
+argument_list|,
+name|this
+operator|->
+name|pptr
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_decl_stmt
@@ -805,11 +919,9 @@ name|traits_type
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-end_ifdef
+begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
 
 begin_comment
 comment|// 251. basic_stringbuf missing allocator_type
@@ -821,11 +933,6 @@ name|_Alloc
 name|allocator_type
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -944,9 +1051,7 @@ name|in
 argument_list|)
 range|:
 name|__istream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|_M_stringbuf
 argument_list|(
@@ -992,9 +1097,7 @@ name|in
 argument_list|)
 range|:
 name|__istream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|_M_stringbuf
 argument_list|(
@@ -1140,11 +1243,9 @@ name|traits_type
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-end_ifdef
+begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
 
 begin_comment
 comment|// 251. basic_stringbuf missing allocator_type
@@ -1156,11 +1257,6 @@ name|_Alloc
 name|allocator_type
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -1279,9 +1375,7 @@ name|out
 argument_list|)
 range|:
 name|__ostream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|_M_stringbuf
 argument_list|(
@@ -1327,9 +1421,7 @@ name|out
 argument_list|)
 range|:
 name|__ostream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|_M_stringbuf
 argument_list|(
@@ -1475,11 +1567,9 @@ name|traits_type
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-end_ifdef
+begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
 
 begin_comment
 comment|// 251. basic_stringbuf missing allocator_type
@@ -1491,11 +1581,6 @@ name|_Alloc
 name|allocator_type
 typedef|;
 end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -1618,9 +1703,7 @@ name|in
 argument_list|)
 range|:
 name|__iostream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|_M_stringbuf
 argument_list|(
@@ -1666,9 +1749,7 @@ name|in
 argument_list|)
 range|:
 name|__iostream_type
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 decl_stmt|,
 name|_M_stringbuf
 argument_list|(
@@ -1767,28 +1848,11 @@ unit|}; }
 comment|// namespace std
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_NO_TEMPLATE_EXPORT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|export
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_FULLY_COMPLIANT_HEADERS
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GLIBCXX_EXPORT_TEMPLATE
+end_ifndef
 
 begin_include
 include|#
@@ -1805,6 +1869,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _GLIBCXX_SSTREAM */
+end_comment
 
 end_unit
 

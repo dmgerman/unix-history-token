@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -195,7 +195,11 @@ specifier|const
 name|mask
 name|graph
 init|=
-name|_CTYPE_G
+name|_CTYPE_A
+operator||
+name|_CTYPE_D
+operator||
+name|_CTYPE_P
 decl_stmt|;
 specifier|static
 specifier|const
@@ -277,7 +281,11 @@ specifier|const
 name|mask
 name|graph
 init|=
-name|_G
+name|_A
+operator||
+name|_D
+operator||
+name|_P
 decl_stmt|;
 specifier|static
 specifier|const

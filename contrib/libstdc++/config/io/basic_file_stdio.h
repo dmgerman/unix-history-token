@@ -4,7 +4,7 @@ comment|// Wrapper of C-language FILE struct -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -114,13 +114,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BASIC_FILE
+name|_BASIC_FILE_STDIO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BASIC_FILE
+name|_BASIC_FILE_STDIO_H
 value|1
 end_define
 
@@ -186,18 +186,6 @@ operator|=
 literal|0
 argument_list|)
 block|;
-name|void
-name|_M_open_mode
-argument_list|(
-argument|ios_base::openmode __mode
-argument_list|,
-argument|int& __p_mode
-argument_list|,
-argument|int& __rw_mode
-argument_list|,
-argument|char* __c_mode
-argument_list|)
-block|;
 name|__basic_file
 operator|*
 name|open
@@ -230,18 +218,6 @@ argument_list|(
 argument|int __fd
 argument_list|,
 argument|ios_base::openmode __mode
-argument_list|,
-argument|bool __del
-argument_list|)
-block|;
-name|int
-name|sys_getc
-argument_list|()
-block|;
-name|int
-name|sys_ungetc
-argument_list|(
-name|int
 argument_list|)
 block|;
 name|__basic_file
@@ -258,6 +234,11 @@ name|int
 name|fd
 argument_list|()
 block|;
+name|__c_file
+operator|*
+name|file
+argument_list|()
+block|;
 operator|~
 name|__basic_file
 argument_list|()
@@ -268,6 +249,18 @@ argument_list|(
 argument|const char* __s
 argument_list|,
 argument|streamsize __n
+argument_list|)
+block|;
+name|streamsize
+name|xsputn_2
+argument_list|(
+argument|const char* __s1
+argument_list|,
+argument|streamsize __n1
+argument_list|,
+argument|const char* __s2
+argument_list|,
+argument|streamsize __n2
 argument_list|)
 block|;
 name|streamsize
@@ -284,16 +277,6 @@ argument_list|(
 argument|streamoff __off
 argument_list|,
 argument|ios_base::seekdir __way
-argument_list|,
-argument|ios_base::openmode __mode = ios_base::in | ios_base::out
-argument_list|)
-block|;
-name|streamoff
-name|seekpos
-argument_list|(
-argument|streamoff __pos
-argument_list|,
-argument|ios_base::openmode __mode = ios_base::in | ios_base::out
 argument_list|)
 block|;
 name|int
@@ -301,7 +284,7 @@ name|sync
 argument_list|()
 block|;
 name|streamsize
-name|showmanyc_helper
+name|showmanyc
 argument_list|()
 block|;     }
 expr_stmt|;
@@ -316,10 +299,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// _CPP_BASIC_FILE
-end_comment
 
 end_unit
 

@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 value|1
 end_define
 
@@ -188,6 +188,16 @@ define|#
 directive|define
 name|_G_USING_THUNKS
 value|0
+end_define
+
+begin_comment
+comment|// FINOREAD takes an "off_t *" as argument.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_GLIBCXX_FIONREAD_TAKES_OFF_T
 end_define
 
 begin_endif

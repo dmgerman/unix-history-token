@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- numeric_limits classes.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -126,13 +126,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_NUMERIC_LIMITS
+name|_GLIBCXX_NUMERIC_LIMITS
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_NUMERIC_LIMITS
+name|_GLIBCXX_NUMERIC_LIMITS
 value|1
 end_define
 
@@ -284,13 +284,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 value|true
 end_define
 
@@ -314,13 +314,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_float_has_denorm_loss
+name|__glibcxx_float_has_denorm_loss
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_float_has_denorm_loss
+name|__glibcxx_float_has_denorm_loss
 value|false
 end_define
 
@@ -332,13 +332,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_float_traps
+name|__glibcxx_float_traps
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_float_traps
+name|__glibcxx_float_traps
 value|false
 end_define
 
@@ -350,13 +350,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_float_tinyness_before
+name|__glibcxx_float_tinyness_before
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_float_tinyness_before
+name|__glibcxx_float_tinyness_before
 value|false
 end_define
 
@@ -376,13 +376,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_double_has_denorm_loss
+name|__glibcxx_double_has_denorm_loss
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_double_has_denorm_loss
+name|__glibcxx_double_has_denorm_loss
 value|false
 end_define
 
@@ -394,13 +394,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_double_traps
+name|__glibcxx_double_traps
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_double_traps
+name|__glibcxx_double_traps
 value|false
 end_define
 
@@ -412,13 +412,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_double_tinyness_before
+name|__glibcxx_double_tinyness_before
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_double_tinyness_before
+name|__glibcxx_double_tinyness_before
 value|false
 end_define
 
@@ -438,13 +438,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_long_double_has_denorm_loss
+name|__glibcxx_long_double_has_denorm_loss
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_long_double_has_denorm_loss
+name|__glibcxx_long_double_has_denorm_loss
 value|false
 end_define
 
@@ -456,13 +456,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_long_double_traps
+name|__glibcxx_long_double_traps
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_long_double_traps
+name|__glibcxx_long_double_traps
 value|false
 end_define
 
@@ -474,13 +474,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__glibcpp_long_double_tinyness_before
+name|__glibcxx_long_double_tinyness_before
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_long_double_tinyness_before
+name|__glibcxx_long_double_tinyness_before
 value|false
 end_define
 
@@ -496,7 +496,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__glibcpp_signed
+name|__glibcxx_signed
 parameter_list|(
 name|T
 parameter_list|)
@@ -506,34 +506,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|__glibcpp_min
+name|__glibcxx_min
 parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|(__glibcpp_signed (T) ? (T)1<< __glibcpp_digits (T) : (T)0)
+value|(__glibcxx_signed (T) ? (T)1<< __glibcxx_digits (T) : (T)0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_max
+name|__glibcxx_max
 parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|(__glibcpp_signed (T) ? ((T)1<< __glibcpp_digits (T)) - 1 : ~(T)0)
+value|(__glibcxx_signed (T) ? ((T)1<< __glibcxx_digits (T)) - 1 : ~(T)0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_digits
+name|__glibcxx_digits
 parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|(sizeof(T) * __CHAR_BIT__ - __glibcpp_signed (T))
+value|(sizeof(T) * __CHAR_BIT__ - __glibcxx_signed (T))
 end_define
 
 begin_comment
@@ -543,18 +543,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 parameter_list|(
 name|T
 parameter_list|)
 define|\
-value|(__glibcpp_digits (T) * 643 / 2136)
+value|(__glibcxx_digits (T) * 643 / 2136)
 end_define
 
 begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|/**    *  @brief Describes the rounding style for floating-point types.    *    *  This is used in the std::numeric_limits class.   */
 enum|enum
 name|float_round_style
 block|{
@@ -563,46 +564,54 @@ init|=
 operator|-
 literal|1
 block|,
+comment|///< Self-explanatory.
 name|round_toward_zero
 init|=
 literal|0
 block|,
+comment|///< Self-explanatory.
 name|round_to_nearest
 init|=
 literal|1
 block|,
+comment|///< To the nearest representable value.
 name|round_toward_infinity
 init|=
 literal|2
 block|,
+comment|///< Self-explanatory.
 name|round_toward_neg_infinity
 init|=
 literal|3
+comment|///< Self-explanatory.
 block|}
 enum|;
+comment|/**    *  @brief Describes the denormalization for floating-point types.    *    *  These values represent the presence or absence of a variable number    *  of exponent bits.  This type is used in the std::numeric_limits class.   */
 enum|enum
 name|float_denorm_style
 block|{
+comment|/// Indeterminate at compile time whether denormalized values are allowed.
 name|denorm_indeterminate
 init|=
 operator|-
 literal|1
 block|,
+comment|/// The type does not allow denormalized values.
 name|denorm_absent
 init|=
 literal|0
 block|,
+comment|/// The type allows denormalized values.
 name|denorm_present
 init|=
 literal|1
 block|}
 enum|;
-comment|//
-comment|// The primary class traits
-comment|//
+comment|/**    *  @brief Part of std::numeric_limits.    *    *  The @c static @c const members are usable as integral constant    *  expressions.    *    *  @note This is a seperate class for purposes of efficiency; you    *        should only access these members as part of an instantiation    *        of the std::numeric_limits class.   */
 struct|struct
 name|__numeric_limits_base
 block|{
+comment|/** This will be true for all fundamental types (which have         specializations), and false for everything else.  */
 specifier|static
 specifier|const
 name|bool
@@ -610,6 +619,7 @@ name|is_specialized
 init|=
 name|false
 decl_stmt|;
+comment|/** The number of @c radix digits that be represented without change:  for         integer types, the number of non-sign bits in the mantissa; for         floating types, the number of @c radix digits in the mantissa.  */
 specifier|static
 specifier|const
 name|int
@@ -617,6 +627,7 @@ name|digits
 init|=
 literal|0
 decl_stmt|;
+comment|/** The number of base 10 digits that can be represented without change. */
 specifier|static
 specifier|const
 name|int
@@ -624,6 +635,7 @@ name|digits10
 init|=
 literal|0
 decl_stmt|;
+comment|/** True if the type is signed.  */
 specifier|static
 specifier|const
 name|bool
@@ -631,6 +643,7 @@ name|is_signed
 init|=
 name|false
 decl_stmt|;
+comment|/** True if the type is integer.      *  @if maint      *  Is this supposed to be "if the type is integral"?      *  @endif     */
 specifier|static
 specifier|const
 name|bool
@@ -638,6 +651,7 @@ name|is_integer
 init|=
 name|false
 decl_stmt|;
+comment|/** True if the type uses an exact representation.  "All integer types are         exact, but not all exact types are integer.  For example, rational and         fixed-exponent representations are exact but not integer."         [18.2.1.2]/15  */
 specifier|static
 specifier|const
 name|bool
@@ -645,6 +659,7 @@ name|is_exact
 init|=
 name|false
 decl_stmt|;
+comment|/** For integer types, specifies the base of the representation.  For         floating types, specifies the base of the exponent representation.  */
 specifier|static
 specifier|const
 name|int
@@ -652,6 +667,7 @@ name|radix
 init|=
 literal|0
 decl_stmt|;
+comment|/** The minimum negative integer such that @c radix raised to the power of         (one less than that integer) is a normalized floating point number.  */
 specifier|static
 specifier|const
 name|int
@@ -659,6 +675,7 @@ name|min_exponent
 init|=
 literal|0
 decl_stmt|;
+comment|/** The minimum negative integer such that 10 raised to that power is in         the range of normalized floating point numbers.  */
 specifier|static
 specifier|const
 name|int
@@ -666,6 +683,7 @@ name|min_exponent10
 init|=
 literal|0
 decl_stmt|;
+comment|/** The maximum positive integer such that @c radix raised to the power of         (one less than that integer) is a representable finite floating point 	number.  */
 specifier|static
 specifier|const
 name|int
@@ -673,6 +691,7 @@ name|max_exponent
 init|=
 literal|0
 decl_stmt|;
+comment|/** The maximum positive integer such that 10 raised to that power is in         the range of representable finite floating point numbers.  */
 specifier|static
 specifier|const
 name|int
@@ -680,6 +699,7 @@ name|max_exponent10
 init|=
 literal|0
 decl_stmt|;
+comment|/** True if the type has a representation for positive infinity.  */
 specifier|static
 specifier|const
 name|bool
@@ -687,6 +707,7 @@ name|has_infinity
 init|=
 name|false
 decl_stmt|;
+comment|/** True if the type has a representation for a quiet (non-signaling)         "Not a Number."  */
 specifier|static
 specifier|const
 name|bool
@@ -694,6 +715,7 @@ name|has_quiet_NaN
 init|=
 name|false
 decl_stmt|;
+comment|/** True if the type has a representation for a signaling         "Not a Number."  */
 specifier|static
 specifier|const
 name|bool
@@ -701,6 +723,7 @@ name|has_signaling_NaN
 init|=
 name|false
 decl_stmt|;
+comment|/** See std::float_denorm_style for more information.  */
 specifier|static
 specifier|const
 name|float_denorm_style
@@ -708,6 +731,7 @@ name|has_denorm
 init|=
 name|denorm_absent
 decl_stmt|;
+comment|/** "True if loss of accuracy is detected as a denormalization loss,         rather than as an inexact result." [18.2.1.2]/42  */
 specifier|static
 specifier|const
 name|bool
@@ -715,6 +739,7 @@ name|has_denorm_loss
 init|=
 name|false
 decl_stmt|;
+comment|/** True if-and-only-if the type adheres to the IEC 559 standard, also         known as IEEE 754.  (Only makes sense for floating point types.)  */
 specifier|static
 specifier|const
 name|bool
@@ -722,6 +747,7 @@ name|is_iec559
 init|=
 name|false
 decl_stmt|;
+comment|/** "True if the set of values representable by the type is finite.   All         built-in types are bounded, this member would be false for arbitrary 	precision types." [18.2.1.2]/54  */
 specifier|static
 specifier|const
 name|bool
@@ -729,6 +755,7 @@ name|is_bounded
 init|=
 name|false
 decl_stmt|;
+comment|/** True if the type is @e modulo, that is, if it is possible to add two         positive numbers and have a result that wraps around to a third number         that is less.  Typically false for floating types, true for unsigned         integers, and true for signed integers.  */
 specifier|static
 specifier|const
 name|bool
@@ -736,6 +763,7 @@ name|is_modulo
 init|=
 name|false
 decl_stmt|;
+comment|/** True if trapping is implemented for this type.  */
 specifier|static
 specifier|const
 name|bool
@@ -743,6 +771,7 @@ name|traps
 init|=
 name|false
 decl_stmt|;
+comment|/** True if tinyness is detected before rounding.  (see IEC 559)  */
 specifier|static
 specifier|const
 name|bool
@@ -750,6 +779,7 @@ name|tinyness_before
 init|=
 name|false
 decl_stmt|;
+comment|/** See std::float_round_style for more information.  This is only         meaningful for floating types; integer types will all be 	round_toward_zero.  */
 specifier|static
 specifier|const
 name|float_round_style
@@ -759,6 +789,7 @@ name|round_toward_zero
 decl_stmt|;
 block|}
 struct|;
+comment|/**    *  @brief Properties of fundamental types.    *    *  This class allows a program to obtain information about the    *  representation of a fundamental type on a given platform.  For    *  non-fundamental types, the functions will return 0 and the data    *  members will all be @c false.    *    *  @if maint    *  _GLIBCXX_RESOLVE_LIB_DEFECTS:  DRs 201 and 184 (hi Gaby!) are    *  noted, but not incorporated in this documented (yet).    *  @endif   */
 name|template
 operator|<
 name|typename
@@ -770,6 +801,7 @@ operator|:
 name|public
 name|__numeric_limits_base
 block|{
+comment|/** The minimum finite value, or for floating types with           denormalization, the minimum positive normalized value.  */
 specifier|static
 name|_Tp
 name|min
@@ -787,6 +819,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/** The maximum finite value.  */
 specifier|static
 name|_Tp
 name|max
@@ -804,6 +837,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/** The @e machine @e epsilon:  the difference between 1 and the least           value greater than 1 that is representable.  */
 specifier|static
 name|_Tp
 name|epsilon
@@ -821,6 +855,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/** The maximum rounding error measurement (see LIA-1).  */
 specifier|static
 name|_Tp
 name|round_error
@@ -838,6 +873,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/** The representation of positive infinity, if @c has_infinity.  */
 specifier|static
 name|_Tp
 name|infinity
@@ -855,6 +891,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/** The representation of a quiet "Not a Number," if @c has_quiet_NaN. */
 specifier|static
 name|_Tp
 name|quiet_NaN
@@ -872,6 +909,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/** The representation of a signaling "Not a Number," if           @c has_signaling_NaN. */
 specifier|static
 name|_Tp
 name|signaling_NaN
@@ -889,6 +927,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/** The minimum positive denormalized value.  For types where           @c has_denorm is false, this is the minimum positive normalized 	  value.  */
 specifier|static
 name|_Tp
 name|denorm_min
@@ -1148,7 +1187,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -1189,7 +1228,7 @@ name|throw
 argument_list|()
 block|{
 return|return
-name|__glibcpp_min
+name|__glibcxx_min
 argument_list|(
 name|char
 argument_list|)
@@ -1203,7 +1242,7 @@ name|throw
 argument_list|()
 block|{
 return|return
-name|__glibcpp_max
+name|__glibcxx_max
 argument_list|(
 name|char
 argument_list|)
@@ -1214,7 +1253,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 name|char
 argument_list|)
@@ -1224,7 +1263,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 name|char
 argument_list|)
@@ -1234,7 +1273,7 @@ specifier|const
 name|bool
 name|is_signed
 operator|=
-name|__glibcpp_signed
+name|__glibcxx_signed
 argument_list|(
 name|char
 argument_list|)
@@ -1424,7 +1463,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -1490,7 +1529,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 argument|signed char
 argument_list|)
@@ -1500,7 +1539,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 argument|signed char
 argument_list|)
@@ -1722,7 +1761,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -1789,7 +1828,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 argument|unsigned char
 argument_list|)
@@ -1799,7 +1838,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 argument|unsigned char
 argument_list|)
@@ -2021,7 +2060,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -2062,7 +2101,7 @@ name|throw
 argument_list|()
 block|{
 return|return
-name|__glibcpp_min
+name|__glibcxx_min
 argument_list|(
 name|wchar_t
 argument_list|)
@@ -2076,7 +2115,7 @@ name|throw
 argument_list|()
 block|{
 return|return
-name|__glibcpp_max
+name|__glibcxx_max
 argument_list|(
 name|wchar_t
 argument_list|)
@@ -2087,7 +2126,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 name|wchar_t
 argument_list|)
@@ -2097,7 +2136,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 name|wchar_t
 argument_list|)
@@ -2107,7 +2146,7 @@ specifier|const
 name|bool
 name|is_signed
 operator|=
-name|__glibcpp_signed
+name|__glibcxx_signed
 argument_list|(
 name|wchar_t
 argument_list|)
@@ -2292,7 +2331,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -2355,7 +2394,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 name|short
 argument_list|)
@@ -2365,7 +2404,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 name|short
 argument_list|)
@@ -2557,7 +2596,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -2624,7 +2663,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 argument|unsigned short
 argument_list|)
@@ -2634,7 +2673,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 argument|unsigned short
 argument_list|)
@@ -2856,7 +2895,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -2919,7 +2958,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 name|int
 argument_list|)
@@ -2929,7 +2968,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 name|int
 argument_list|)
@@ -3141,7 +3180,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -3208,7 +3247,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 argument|unsigned int
 argument_list|)
@@ -3218,7 +3257,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 argument|unsigned int
 argument_list|)
@@ -3440,7 +3479,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -3503,7 +3542,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 name|long
 argument_list|)
@@ -3513,7 +3552,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 name|long
 argument_list|)
@@ -3725,7 +3764,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -3792,7 +3831,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 argument|unsigned long
 argument_list|)
@@ -3802,7 +3841,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 argument|unsigned long
 argument_list|)
@@ -4024,7 +4063,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -4090,7 +4129,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 argument|long long
 argument_list|)
@@ -4100,7 +4139,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 argument|long long
 argument_list|)
@@ -4322,7 +4361,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -4392,7 +4431,7 @@ specifier|const
 name|int
 name|digits
 operator|=
-name|__glibcpp_digits
+name|__glibcxx_digits
 argument_list|(
 argument|unsigned long long
 argument_list|)
@@ -4402,7 +4441,7 @@ specifier|const
 name|int
 name|digits10
 operator|=
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 argument_list|(
 argument|unsigned long long
 argument_list|)
@@ -4634,7 +4673,7 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_integral_traps
+name|__glibcxx_integral_traps
 block|;
 specifier|static
 specifier|const
@@ -4786,28 +4825,14 @@ specifier|const
 name|bool
 name|has_infinity
 operator|=
-name|__builtin_huge_valf
-argument_list|()
-operator|/
-literal|2
-operator|==
-name|__builtin_huge_valf
-argument_list|()
+name|__FLT_HAS_INFINITY__
 block|;
 specifier|static
 specifier|const
 name|bool
 name|has_quiet_NaN
 operator|=
-name|__builtin_nanf
-argument_list|(
-literal|""
-argument_list|)
-operator|!=
-name|__builtin_nanf
-argument_list|(
-literal|""
-argument_list|)
+name|__FLT_HAS_QUIET_NAN__
 block|;
 specifier|static
 specifier|const
@@ -4832,7 +4857,7 @@ specifier|const
 name|bool
 name|has_denorm_loss
 operator|=
-name|__glibcpp_float_has_denorm_loss
+name|__glibcxx_float_has_denorm_loss
 block|;
 specifier|static
 name|float
@@ -4917,14 +4942,14 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_float_traps
+name|__glibcxx_float_traps
 block|;
 specifier|static
 specifier|const
 name|bool
 name|tinyness_before
 operator|=
-name|__glibcpp_float_tinyness_before
+name|__glibcxx_float_tinyness_before
 block|;
 specifier|static
 specifier|const
@@ -4936,13 +4961,13 @@ block|;     }
 block|;
 undef|#
 directive|undef
-name|__glibcpp_float_has_denorm_loss
+name|__glibcxx_float_has_denorm_loss
 undef|#
 directive|undef
-name|__glibcpp_float_traps
+name|__glibcxx_float_traps
 undef|#
 directive|undef
-name|__glibcpp_float_tinyness_before
+name|__glibcxx_float_tinyness_before
 name|template
 operator|<
 operator|>
@@ -5078,28 +5103,14 @@ specifier|const
 name|bool
 name|has_infinity
 operator|=
-name|__builtin_huge_val
-argument_list|()
-operator|/
-literal|2
-operator|==
-name|__builtin_huge_val
-argument_list|()
+name|__DBL_HAS_INFINITY__
 block|;
 specifier|static
 specifier|const
 name|bool
 name|has_quiet_NaN
 operator|=
-name|__builtin_nan
-argument_list|(
-literal|""
-argument_list|)
-operator|!=
-name|__builtin_nan
-argument_list|(
-literal|""
-argument_list|)
+name|__DBL_HAS_QUIET_NAN__
 block|;
 specifier|static
 specifier|const
@@ -5124,7 +5135,7 @@ specifier|const
 name|bool
 name|has_denorm_loss
 operator|=
-name|__glibcpp_double_has_denorm_loss
+name|__glibcxx_double_has_denorm_loss
 block|;
 specifier|static
 name|double
@@ -5209,14 +5220,14 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_double_traps
+name|__glibcxx_double_traps
 block|;
 specifier|static
 specifier|const
 name|bool
 name|tinyness_before
 operator|=
-name|__glibcpp_double_tinyness_before
+name|__glibcxx_double_tinyness_before
 block|;
 specifier|static
 specifier|const
@@ -5228,13 +5239,13 @@ block|;     }
 block|;
 undef|#
 directive|undef
-name|__glibcpp_double_has_denorm_loss
+name|__glibcxx_double_has_denorm_loss
 undef|#
 directive|undef
-name|__glibcpp_double_traps
+name|__glibcxx_double_traps
 undef|#
 directive|undef
-name|__glibcpp_double_tinyness_before
+name|__glibcxx_double_tinyness_before
 name|template
 operator|<
 operator|>
@@ -5375,28 +5386,14 @@ specifier|const
 name|bool
 name|has_infinity
 operator|=
-name|__builtin_huge_vall
-argument_list|()
-operator|/
-literal|2
-operator|==
-name|__builtin_huge_vall
-argument_list|()
+name|__LDBL_HAS_INFINITY__
 block|;
 specifier|static
 specifier|const
 name|bool
 name|has_quiet_NaN
 operator|=
-name|__builtin_nanl
-argument_list|(
-literal|""
-argument_list|)
-operator|!=
-name|__builtin_nanl
-argument_list|(
-literal|""
-argument_list|)
+name|__LDBL_HAS_QUIET_NAN__
 block|;
 specifier|static
 specifier|const
@@ -5421,7 +5418,7 @@ specifier|const
 name|bool
 name|has_denorm_loss
 operator|=
-name|__glibcpp_long_double_has_denorm_loss
+name|__glibcxx_long_double_has_denorm_loss
 block|;
 specifier|static
 name|long
@@ -5510,14 +5507,14 @@ specifier|const
 name|bool
 name|traps
 operator|=
-name|__glibcpp_long_double_traps
+name|__glibcxx_long_double_traps
 block|;
 specifier|static
 specifier|const
 name|bool
 name|tinyness_before
 operator|=
-name|__glibcpp_long_double_tinyness_before
+name|__glibcxx_long_double_tinyness_before
 block|;
 specifier|static
 specifier|const
@@ -5529,13 +5526,13 @@ block|;     }
 block|;
 undef|#
 directive|undef
-name|__glibcpp_long_double_has_denorm_loss
+name|__glibcxx_long_double_has_denorm_loss
 undef|#
 directive|undef
-name|__glibcpp_long_double_traps
+name|__glibcxx_long_double_traps
 undef|#
 directive|undef
-name|__glibcpp_long_double_tinyness_before
+name|__glibcxx_long_double_tinyness_before
 block|}
 end_decl_stmt
 
@@ -5546,31 +5543,31 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|__glibcpp_signed
+name|__glibcxx_signed
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|__glibcpp_min
+name|__glibcxx_min
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|__glibcpp_max
+name|__glibcxx_max
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|__glibcpp_digits
+name|__glibcxx_digits
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|__glibcpp_digits10
+name|__glibcxx_digits10
 end_undef
 
 begin_endif
@@ -5579,7 +5576,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _CPP_NUMERIC_LIMITS
+comment|// _GLIBCXX_NUMERIC_LIMITS
 end_comment
 
 end_unit

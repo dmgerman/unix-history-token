@@ -4,7 +4,7 @@ comment|// -*- C++ -*- compatibility header.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_WCHAR_H_
+name|_GLIBCXX_WCHAR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_WCHAR_H_
+name|_GLIBCXX_WCHAR_H
 value|1
 end_define
 
@@ -125,7 +125,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 end_if
 
 begin_expr_stmt
@@ -240,6 +240,12 @@ name|vfwprintf
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VFWSCANF
+end_if
+
 begin_expr_stmt
 name|using
 name|std
@@ -247,6 +253,11 @@ operator|::
 name|vfwscanf
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|using
@@ -256,6 +267,12 @@ name|vswprintf
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VSWSCANF
+end_if
+
 begin_expr_stmt
 name|using
 name|std
@@ -263,6 +280,11 @@ operator|::
 name|vswscanf
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|using
@@ -272,6 +294,12 @@ name|vwprintf
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_VWSCANF
+end_if
+
 begin_expr_stmt
 name|using
 name|std
@@ -279,6 +307,11 @@ operator|::
 name|vwscanf
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|using
@@ -392,6 +425,12 @@ name|wcstod
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|#
+directive|if
+name|_GLIBCXX_HAVE_WCSTOF
+end_if
+
 begin_expr_stmt
 name|using
 name|std
@@ -399,6 +438,11 @@ operator|::
 name|wcstof
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|using
@@ -595,7 +639,7 @@ end_expr_stmt
 begin_if
 if|#
 directive|if
-name|_GLIBCPP_USE_C99
+name|_GLIBCXX_USE_C99
 end_if
 
 begin_expr_stmt
@@ -633,7 +677,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//_GLIBCPP_USE_WCHAR_T
+comment|//_GLIBCXX_USE_WCHAR_T
 end_comment
 
 begin_endif

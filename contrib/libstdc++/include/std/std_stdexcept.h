@@ -114,13 +114,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_STDEXCEPT
+name|_GLIBCXX_STDEXCEPT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_STDEXCEPT
+name|_GLIBCXX_STDEXCEPT
 value|1
 end_define
 
@@ -375,7 +375,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _CPP_STDEXCEPT
+comment|/* _GLIBCXX_STDEXCEPT */
 end_comment
 
 end_unit

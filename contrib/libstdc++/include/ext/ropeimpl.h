@@ -4,7 +4,7 @@ comment|// SGI's rope class implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<iostream>
+file|<ostream>
 end_include
 
 begin_include
@@ -174,11 +174,6 @@ name|using
 name|std
 operator|::
 name|__throw_length_error
-expr_stmt|;
-name|using
-name|std
-operator|::
-name|__alloc
 expr_stmt|;
 name|using
 name|std
@@ -253,7 +248,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
@@ -304,12 +299,12 @@ name|_M_size
 expr_stmt|;
 break|break;
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -499,7 +494,7 @@ name|_RopeRep
 operator|*
 name|__path
 index|[
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 operator|+
@@ -655,17 +650,17 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -679,7 +674,7 @@ goto|goto
 name|done
 goto|;
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 case|:
@@ -1112,7 +1107,7 @@ end_expr_stmt
 begin_while
 while|while
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 operator|==
@@ -1420,6 +1415,8 @@ name|_M_root_rope
 operator|->
 name|_M_tree_ptr
 operator|!=
+name|this
+operator|->
 name|_M_root
 condition|)
 block|{
@@ -1428,9 +1425,13 @@ name|_RopeRep
 operator|::
 name|_S_unref
 argument_list|(
+name|this
+operator|->
 name|_M_root
 argument_list|)
 expr_stmt|;
+name|this
+operator|->
 name|_M_root
 operator|=
 name|_M_root_rope
@@ -1441,9 +1442,13 @@ name|_RopeRep
 operator|::
 name|_S_ref
 argument_list|(
+name|this
+operator|->
 name|_M_root
 argument_list|)
 expr_stmt|;
+name|this
+operator|->
 name|_M_buf_ptr
 operator|=
 literal|0
@@ -1539,6 +1544,8 @@ name|_RopeRep
 operator|::
 name|_S_ref
 argument_list|(
+name|this
+operator|->
 name|_M_root
 argument_list|)
 block|; }
@@ -1641,6 +1648,8 @@ block|{
 name|size_t
 name|__size
 init|=
+name|this
+operator|->
 name|_M_size
 operator|+
 literal|1
@@ -1654,6 +1663,8 @@ operator|+
 name|__size
 argument_list|)
 expr_stmt|;
+name|this
+operator|->
 name|_Data_deallocate
 argument_list|(
 name|__cstr
@@ -1787,6 +1798,8 @@ name|_M_tag
 condition|)
 block|{
 case|case
+name|_Rope_constants
+operator|::
 name|_S_leaf
 case|:
 block|{
@@ -1836,6 +1849,8 @@ end_expr_stmt
 
 begin_case
 case|case
+name|_Rope_constants
+operator|::
 name|_S_concat
 case|:
 end_case
@@ -1888,6 +1903,8 @@ end_block
 
 begin_case
 case|case
+name|_Rope_constants
+operator|::
 name|_S_function
 case|:
 end_case
@@ -1940,6 +1957,8 @@ end_block
 
 begin_case
 case|case
+name|_Rope_constants
+operator|::
 name|_S_substringfn
 case|:
 end_case
@@ -2452,7 +2471,7 @@ literal|1000
 operator|||
 name|__depth
 operator|>
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 operator|)
@@ -2516,7 +2535,7 @@ return|;
 end_return
 
 begin_return
-unit|}    else
+unit|}   else
 return|return
 name|__result
 return|;
@@ -2604,7 +2623,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -2645,7 +2664,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 operator|==
@@ -2653,7 +2672,7 @@ name|__r
 operator|->
 name|_M_tag
 operator|&&
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -2979,7 +2998,7 @@ name|__slen
 operator|<=
 name|_S_copy_max
 operator|&&
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -3012,7 +3031,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 operator|==
@@ -3043,7 +3062,7 @@ operator|)
 decl_stmt|;
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -3304,7 +3323,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -3315,7 +3334,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -3366,7 +3385,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 operator|==
@@ -3374,7 +3393,7 @@ name|__left
 operator|->
 name|_M_tag
 operator|&&
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -3679,7 +3698,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 case|:
@@ -3804,7 +3823,7 @@ name|__result
 return|;
 block|}
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
@@ -3913,7 +3932,7 @@ name|__result
 return|;
 block|}
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -3987,7 +4006,7 @@ block|}
 comment|// *** else fall through: ***
 block|}
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
@@ -4524,7 +4543,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 case|:
@@ -4647,7 +4666,7 @@ return|return
 name|true
 return|;
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
@@ -4678,12 +4697,12 @@ argument_list|)
 return|;
 block|}
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -4716,8 +4735,9 @@ operator|(
 name|_CharT
 operator|*
 operator|)
-name|__alloc
-operator|::
+name|_Alloc
+argument_list|()
+operator|.
 name|allocate
 argument_list|(
 name|__len
@@ -4755,8 +4775,9 @@ argument_list|,
 name|__len
 argument_list|)
 expr_stmt|;
-name|__alloc
-operator|::
+name|_Alloc
+argument_list|()
+operator|.
 name|deallocate
 argument_list|(
 name|__buffer
@@ -4775,8 +4796,9 @@ argument_list|(
 argument|...
 argument_list|)
 block|{
-name|__alloc
-operator|::
+name|_Alloc
+argument_list|()
+operator|.
 name|deallocate
 argument_list|(
 name|__buffer
@@ -5255,6 +5277,8 @@ name|_S_apply_to_pieces
 argument_list|(
 name|__c
 argument_list|,
+name|this
+operator|->
 name|_M_tree_ptr
 argument_list|,
 name|__start
@@ -5344,7 +5368,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 case|:
@@ -5396,7 +5420,7 @@ argument_list|)
 return|;
 block|}
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
@@ -5429,12 +5453,12 @@ name|second
 return|;
 block|}
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -5554,7 +5578,7 @@ end_if
 begin_if
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 operator|==
@@ -5681,7 +5705,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
@@ -5691,7 +5715,7 @@ literal|"Leaf"
 expr_stmt|;
 break|break;
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
@@ -5701,7 +5725,7 @@ literal|"Function"
 expr_stmt|;
 break|break;
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -5884,12 +5908,7 @@ operator|>
 operator|::
 name|_S_min_len
 index|[
-name|_Rope_RopeRep
-operator|<
-name|_CharT
-operator|,
-name|_Alloc
-operator|>
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 operator|+
@@ -6077,7 +6096,7 @@ name|_RopeRep
 operator|*
 name|__forest
 index|[
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 operator|+
@@ -6106,7 +6125,7 @@ literal|0
 init|;
 name|__i
 operator|<=
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 condition|;
@@ -6137,7 +6156,7 @@ literal|0
 init|;
 name|__i
 operator|<=
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 condition|;
@@ -6223,7 +6242,7 @@ literal|0
 init|;
 name|__i
 operator|<=
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 condition|;
@@ -6249,13 +6268,16 @@ name|__result
 operator|->
 name|_M_depth
 operator|>
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 operator|)
 name|__throw_length_error
 argument_list|(
-literal|"rope too long"
+name|__N
+argument_list|(
+literal|"rope::_S_balance"
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6563,7 +6585,7 @@ if|if
 condition|(
 name|__i
 operator|==
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 operator|||
@@ -6654,7 +6676,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 case|:
@@ -6712,7 +6734,7 @@ block|}
 block|}
 break|break;
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
@@ -6737,12 +6759,12 @@ index|]
 return|;
 block|}
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -6829,7 +6851,7 @@ name|_RopeRep
 operator|*
 name|__clrstack
 index|[
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_max_rope_depth
 index|]
@@ -6864,7 +6886,7 @@ name|_M_tag
 condition|)
 block|{
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_concat
 case|:
@@ -6947,7 +6969,7 @@ end_empty_stmt
 
 begin_case
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 case|:
@@ -7032,7 +7054,7 @@ end_block
 
 begin_case
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_function
 case|:
@@ -7040,7 +7062,7 @@ end_case
 
 begin_case
 case|case
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_substringfn
 case|:
@@ -7155,7 +7177,7 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -7278,7 +7300,7 @@ parameter_list|)
 function_decl|;
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
@@ -7742,6 +7764,8 @@ else|else
 block|{
 name|__rest_buffer
 operator|=
+name|this
+operator|->
 name|_Data_allocate
 argument_list|(
 name|_S_rounded_up_size
@@ -7824,6 +7848,8 @@ name|_CharT
 modifier|*
 name|__base_buffer
 init|=
+name|this
+operator|->
 name|_Data_allocate
 argument_list|(
 name|_S_rounded_up_size
@@ -7951,6 +7977,8 @@ block|}
 end_if
 
 begin_expr_stmt
+name|this
+operator|->
 name|_M_tree_ptr
 operator|=
 name|__result
@@ -7960,6 +7988,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|this
+operator|->
 name|_M_tree_ptr
 operator|->
 name|_M_ref_nonnil
@@ -8018,6 +8048,8 @@ if|if
 condition|(
 literal|0
 operator|==
+name|this
+operator|->
 name|_M_tree_ptr
 condition|)
 block|{
@@ -8041,65 +8073,66 @@ return|return
 name|_S_empty_c_str
 return|;
 block|}
+name|__gthread_mutex_lock
+argument_list|(
+operator|&
+name|this
+operator|->
+name|_M_tree_ptr
+operator|->
+name|_M_c_string_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|__GC_CONST
 name|_CharT
-operator|*
-name|__old_c_string
-operator|=
+modifier|*
+name|__result
+init|=
+name|this
+operator|->
 name|_M_tree_ptr
 operator|->
 name|_M_c_string
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|if
 condition|(
 literal|0
-operator|!=
-name|__old_c_string
+operator|==
+name|__result
 condition|)
-return|return
-operator|(
-name|__old_c_string
-operator|)
-return|;
-end_if
-
-begin_decl_stmt
+block|{
 name|size_t
 name|__s
 init|=
 name|size
 argument_list|()
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|_CharT
-modifier|*
 name|__result
-init|=
+operator|=
+name|this
+operator|->
 name|_Data_allocate
 argument_list|(
 name|__s
 operator|+
 literal|1
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+expr_stmt|;
 name|_S_flatten
 argument_list|(
+name|this
+operator|->
 name|_M_tree_ptr
 argument_list|,
 name|__result
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|__result
 index|[
 name|__s
@@ -8114,98 +8147,29 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GC
-end_ifdef
-
-begin_expr_stmt
+name|this
+operator|->
 name|_M_tree_ptr
 operator|->
 name|_M_c_string
 operator|=
 name|__result
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|if
-condition|(
-operator|(
-name|__old_c_string
-operator|=
-operator|(
-name|__GC_CONST
-name|_CharT
-operator|*
-operator|)
-name|std
-operator|::
-name|_Atomic_swap
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|*
-operator|)
-operator|(
-operator|&
-operator|(
-name|_M_tree_ptr
-operator|->
-name|_M_c_string
-operator|)
-operator|)
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|__result
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|// It must have been added in the interim.  Hence it had to have been
-comment|// separately allocated.  Deallocate the old copy, since we just
-comment|// replaced it.
-name|_Destroy
-argument_list|(
-name|__old_c_string
-argument_list|,
-name|__old_c_string
-operator|+
-name|__s
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|_Data_deallocate
-argument_list|(
-name|__old_c_string
-argument_list|,
-name|__s
-operator|+
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 end_if
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|__gthread_mutex_unlock
+argument_list|(
+operator|&
+name|this
+operator|->
+name|_M_tree_ptr
+operator|->
+name|_M_c_string_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
@@ -8241,6 +8205,8 @@ if|if
 condition|(
 literal|0
 operator|==
+name|this
+operator|->
 name|_M_tree_ptr
 condition|)
 block|{
@@ -8267,6 +8233,8 @@ name|_CharT
 operator|*
 name|__old_c_string
 operator|=
+name|this
+operator|->
 name|_M_tree_ptr
 operator|->
 name|_M_c_string
@@ -8276,10 +8244,12 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|_RopeRep
+name|_Rope_constants
 operator|::
 name|_S_leaf
 operator|==
+name|this
+operator|->
 name|_M_tree_ptr
 operator|->
 name|_M_tag
@@ -8311,6 +8281,8 @@ name|_CharT
 modifier|*
 name|__result
 init|=
+name|this
+operator|->
 name|_Data_allocate
 argument_list|(
 name|_S_rounded_up_size
@@ -8324,6 +8296,8 @@ end_decl_stmt
 begin_expr_stmt
 name|_S_flatten
 argument_list|(
+name|this
+operator|->
 name|_M_tree_ptr
 argument_list|,
 name|__result
@@ -8349,6 +8323,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|this
+operator|->
 name|_M_tree_ptr
 operator|->
 name|_M_unref_nonnil
@@ -8357,6 +8333,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|this
+operator|->
 name|_M_tree_ptr
 operator|=
 name|_S_new_RopeLeaf
@@ -8365,6 +8343,8 @@ name|__result
 argument_list|,
 name|__s
 argument_list|,
+name|this
+operator|->
 name|get_allocator
 argument_list|()
 argument_list|)

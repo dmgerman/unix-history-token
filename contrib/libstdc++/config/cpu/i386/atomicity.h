@@ -4,7 +4,7 @@ comment|// Low-level functions for atomic operations: x86, x>= 3 version  -*- C+
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2003 Free Software Foundation, Inc.
+comment|// Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -95,44 +95,30 @@ begin_comment
 comment|// the GNU General Public License.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_BITS_ATOMICITY_H
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<bits/atomicity.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|_BITS_ATOMICITY_H
-value|1
-end_define
-
-begin_typedef
-typedef|typedef
-name|int
-name|_Atomic_word
-typedef|;
-end_typedef
-
-begin_expr_stmt
+begin_decl_stmt
+name|namespace
+name|__gnu_cxx
+block|{
 name|template
 operator|<
 name|int
 name|__inst
 operator|>
 expr|struct
-name|__Atomicity_lock
+name|_Atomicity_lock
 block|{
 specifier|static
 specifier|volatile
 name|_Atomic_word
 name|_S_atomicity_lock
-block|; }
+block|;     }
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|int
@@ -140,7 +126,7 @@ name|__inst
 operator|>
 specifier|volatile
 name|_Atomic_word
-name|__Atomicity_lock
+name|_Atomicity_lock
 operator|<
 name|__inst
 operator|>
@@ -149,24 +135,16 @@ name|_S_atomicity_lock
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 specifier|volatile
 name|_Atomic_word
-name|__Atomicity_lock
+name|_Atomicity_lock
 operator|<
 literal|0
 operator|>
 operator|::
 name|_S_atomicity_lock
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|_Atomic_word
 name|__attribute__
 argument_list|(
@@ -193,12 +171,12 @@ name|__tmp
 init|=
 literal|1
 decl_stmt|;
-comment|/* obtain the atomic exchange/add spin lock */
+comment|// Obtain the atomic exchange/add spin lock.
 do|do
 block|{
 asm|__asm__
 specifier|__volatile__
-asm|("xchg{l} {%0,%1|%1,%0}" 			  : "+m" (__Atomicity_lock<0>::_S_atomicity_lock), 			    "+r" (__tmp));
+asm|("xchg{l} {%0,%1|%1,%0}" 			      : "=m" (_Atomicity_lock<0>::_S_atomicity_lock), 			      "+r" (__tmp) 			      : "m" (_Atomicity_lock<0>::_S_atomicity_lock));
 block|}
 do|while
 condition|(
@@ -215,8 +193,8 @@ name|__mem
 operator|+=
 name|__val
 expr_stmt|;
-comment|/* release spin lock */
-name|__Atomicity_lock
+comment|// Release spin lock.
+name|_Atomicity_lock
 operator|<
 literal|0
 operator|>
@@ -229,11 +207,6 @@ return|return
 name|__result
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|inline
 name|void
 name|__attribute__
 argument_list|(
@@ -260,15 +233,11 @@ name|__val
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* atomicity.h */
+comment|// namespace __gnu_cxx
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// std::rel_ops implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STL_RELOPS_H
+name|_STL_RELOPS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STL_RELOPS_H
+name|_STL_RELOPS_H
 value|1
 end_define
 
@@ -123,8 +123,8 @@ block|{
 name|namespace
 name|rel_ops
 block|{
-comment|/** @namespace std::rel_ops        *  @brief  The generated relational operators are sequestered here.        */
-comment|/**  *  @brief Defines @c != for arbitrary types, in terms of @c ==.  *  @param  x  A thing.  *  @param  y  Another thing.  *  @return   x != y  *  *  This function uses @c == to determine its result. */
+comment|/** @namespace std::rel_ops      *  @brief  The generated relational operators are sequestered here.      */
+comment|/**      *  @brief Defines @c != for arbitrary types, in terms of @c ==.      *  @param  x  A thing.      *  @param  y  Another thing.      *  @return   x != y      *      *  This function uses @c == to determine its result.      */
 name|template
 operator|<
 name|class
@@ -155,7 +155,7 @@ name|__y
 operator|)
 return|;
 block|}
-comment|/**  *  @brief Defines @c> for arbitrary types, in terms of @c<.  *  @param  x  A thing.  *  @param  y  Another thing.  *  @return   x> y  *  *  This function uses @c< to determine its result. */
+comment|/**      *  @brief Defines @c> for arbitrary types, in terms of @c<.      *  @param  x  A thing.      *  @param  y  Another thing.      *  @return   x> y      *      *  This function uses @c< to determine its result.      */
 name|template
 operator|<
 name|class
@@ -183,7 +183,7 @@ operator|<
 name|__x
 return|;
 block|}
-comment|/**  *  @brief Defines @c<= for arbitrary types, in terms of @c<.  *  @param  x  A thing.  *  @param  y  Another thing.  *  @return   x<= y  *  *  This function uses @c< to determine its result. */
+comment|/**      *  @brief Defines @c<= for arbitrary types, in terms of @c<.      *  @param  x  A thing.      *  @param  y  Another thing.      *  @return   x<= y      *      *  This function uses @c< to determine its result.      */
 name|template
 operator|<
 name|class
@@ -214,7 +214,7 @@ name|__x
 operator|)
 return|;
 block|}
-comment|/**  *  @brief Defines @c>= for arbitrary types, in terms of @c<.  *  @param  x  A thing.  *  @param  y  Another thing.  *  @return   x>= y  *  *  This function uses @c< to determine its result. */
+comment|/**      *  @brief Defines @c>= for arbitrary types, in terms of @c<.      *  @param  x  A thing.      *  @param  y  Another thing.      *  @return   x>= y      *      *  This function uses @c< to determine its result.      */
 name|template
 operator|<
 name|class
@@ -260,19 +260,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_STL_RELOPS_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
+comment|/* _STL_RELOPS_H */
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// Heap implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,20 +106,244 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STL_HEAP_H
+name|_STL_HEAP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STL_HEAP_H
+name|_STL_HEAP_H
 value|1
 end_define
+
+begin_include
+include|#
+directive|include
+file|<debug/debug.h>
+end_include
 
 begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|// is_heap, a predicate testing whether or not a range is
+comment|// a heap.  This function is an extension, not part of the C++
+comment|// standard.
+name|template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|,
+name|typename
+name|_Distance
+operator|>
+name|bool
+name|__is_heap
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_Distance __n
+argument_list|)
+block|{
+name|_Distance
+name|__parent
+operator|=
+literal|0
+block|;
+for|for
+control|(
+name|_Distance
+name|__child
+init|=
+literal|1
+init|;
+name|__child
+operator|<
+name|__n
+condition|;
+operator|++
+name|__child
+control|)
+block|{
+if|if
+condition|(
+name|__first
+index|[
+name|__parent
+index|]
+operator|<
+name|__first
+index|[
+name|__child
+index|]
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+operator|(
+name|__child
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+operator|++
+name|__parent
+expr_stmt|;
+block|}
+return|return
+name|true
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|,
+name|typename
+name|_Distance
+operator|,
+name|typename
+name|_StrictWeakOrdering
+operator|>
+name|bool
+name|__is_heap
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_StrictWeakOrdering __comp
+argument_list|,
+argument|_Distance __n
+argument_list|)
+block|{
+name|_Distance
+name|__parent
+operator|=
+literal|0
+block|;
+for|for
+control|(
+name|_Distance
+name|__child
+init|=
+literal|1
+init|;
+name|__child
+operator|<
+name|__n
+condition|;
+operator|++
+name|__child
+control|)
+block|{
+if|if
+condition|(
+name|__comp
+argument_list|(
+name|__first
+index|[
+name|__parent
+index|]
+argument_list|,
+name|__first
+index|[
+name|__child
+index|]
+argument_list|)
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+operator|(
+name|__child
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+operator|++
+name|__parent
+expr_stmt|;
+block|}
+return|return
+name|true
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|>
+name|bool
+name|__is_heap
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_RandomAccessIterator __last
+argument_list|)
+block|{
+return|return
+name|std
+operator|::
+name|__is_heap
+argument_list|(
+name|__first
+argument_list|,
+name|std
+operator|::
+name|distance
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|_RandomAccessIterator
+operator|,
+name|typename
+name|_StrictWeakOrdering
+operator|>
+name|bool
+name|__is_heap
+argument_list|(
+argument|_RandomAccessIterator __first
+argument_list|,
+argument|_RandomAccessIterator __last
+argument_list|,
+argument|_StrictWeakOrdering __comp
+argument_list|)
+block|{
+return|return
+name|std
+operator|::
+name|__is_heap
+argument_list|(
+name|__first
+argument_list|,
+name|__comp
+argument_list|,
+name|std
+operator|::
+name|distance
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|// Heap-manipulation functions: push_heap, pop_heap, make_heap, sort_heap.
 name|template
 operator|<
@@ -210,6 +434,7 @@ operator|=
 name|__value
 expr_stmt|;
 block|}
+comment|/**    *  @brief  Push an element onto a heap.    *  @param  first  Start of heap.    *  @param  last   End of heap + element.    *  @ingroup heap    *    *  This operation pushes the element at last-1 onto the valid heap over the    *  range [first,last-1).  After completion, [first,last) is a valid heap.   */
 name|template
 operator|<
 name|typename
@@ -245,14 +470,24 @@ name|difference_type
 name|_DistanceType
 expr_stmt|;
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_LessThanComparableConcept<_ValueType>
 argument_list|)
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+comment|//      __glibcxx_requires_heap(__first, __last - 1);
+name|std
+operator|::
 name|__push_heap
 argument_list|(
 name|__first
@@ -386,8 +621,13 @@ name|__value
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|/**    *  @brief  Push an element onto a heap using comparison functor.    *  @param  first  Start of heap.    *  @param  last   End of heap + element.    *  @param  comp   Comparison functor.    *  @ingroup heap    *    *  This operation pushes the element at last-1 onto the valid heap over the    *  range [first,last-1).  After completion, [first,last) is a valid heap.    *  Compare operations are performed using comp.   */
+end_comment
+
 begin_expr_stmt
-unit|}    template
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -436,13 +676,39 @@ comment|// concept requirements
 end_comment
 
 begin_macro
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
 end_macro
 
 begin_expr_stmt
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__glibcxx_requires_heap_pred
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+operator|-
+literal|1
+argument_list|,
+name|__comp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
 name|__push_heap
 argument_list|(
 name|__first
@@ -502,6 +768,7 @@ argument_list|,
 argument|_Tp __value
 argument_list|)
 block|{
+specifier|const
 name|_Distance
 name|__topIndex
 operator|=
@@ -613,6 +880,8 @@ block|}
 end_if
 
 begin_expr_stmt
+name|std
+operator|::
 name|__push_heap
 argument_list|(
 name|__first
@@ -667,6 +936,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|std
+operator|::
 name|__adjust_heap
 argument_list|(
 name|__first
@@ -688,8 +959,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|/**    *  @brief  Pop an element off a heap.    *  @param  first  Start of heap.    *  @param  last   End of heap.    *  @ingroup heap    *    *  This operation pops the top of the heap.  The elements first and last-1    *  are swapped and [first,last-1) is made into a heap.   */
+end_comment
+
 begin_expr_stmt
-unit|}    template
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -714,14 +990,36 @@ name|value_type
 name|_ValueType
 expr_stmt|;
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_LessThanComparableConcept<_ValueType>
 argument_list|)
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__glibcxx_requires_heap
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
 name|__pop_heap
 argument_list|(
 name|__first
@@ -776,6 +1074,7 @@ argument_list|,
 argument|_Compare __comp
 argument_list|)
 block|{
+specifier|const
 name|_Distance
 name|__topIndex
 operator|=
@@ -890,6 +1189,8 @@ block|}
 end_if
 
 begin_expr_stmt
+name|std
+operator|::
 name|__push_heap
 argument_list|(
 name|__first
@@ -951,6 +1252,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|std
+operator|::
 name|__adjust_heap
 argument_list|(
 name|__first
@@ -974,8 +1277,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|/**    *  @brief  Pop an element off a heap using comparison functor.    *  @param  first  Start of heap.    *  @param  last   End of heap.    *  @param  comp   Comparison functor to use.    *  @ingroup heap    *    *  This operation pops the top of the heap.  The elements first and last-1    *  are swapped and [first,last-1) is made into a heap.  Comparisons are    *  made using comp.   */
+end_comment
+
 begin_expr_stmt
-unit|}    template
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -995,10 +1303,26 @@ argument|_Compare __comp
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+block|;
+name|__glibcxx_requires_heap_pred
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__comp
+argument_list|)
+block|;
 typedef|typedef
 name|typename
 name|iterator_traits
@@ -1009,6 +1333,8 @@ operator|::
 name|value_type
 name|_ValueType
 expr_stmt|;
+name|std
+operator|::
 name|__pop_heap
 argument_list|(
 name|__first
@@ -1036,8 +1362,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+unit|}
+comment|/**    *  @brief  Construct a heap over a range.    *  @param  first  Start of heap.    *  @param  last   End of heap.    *  @ingroup heap    *    *  This operation makes the elements in [first,last) into a heap.   */
+end_comment
+
 begin_expr_stmt
-unit|}    template
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -1080,18 +1411,28 @@ comment|// concept requirements
 end_comment
 
 begin_macro
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
 end_macro
 
 begin_macro
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_LessThanComparableConcept<_ValueType>
 argument_list|)
 end_macro
+
+begin_expr_stmt
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|if
@@ -1106,6 +1447,7 @@ return|return;
 end_if
 
 begin_decl_stmt
+specifier|const
 name|_DistanceType
 name|__len
 init|=
@@ -1135,6 +1477,8 @@ condition|(
 name|true
 condition|)
 block|{
+name|std
+operator|::
 name|__adjust_heap
 argument_list|(
 name|__first
@@ -1167,8 +1511,13 @@ expr_stmt|;
 block|}
 end_while
 
+begin_comment
+unit|}
+comment|/**    *  @brief  Construct a heap over a range using comparison functor.    *  @param  first  Start of heap.    *  @param  last   End of heap.    *  @param  comp   Comparison functor to use.    *  @ingroup heap    *    *  This operation makes the elements in [first,last) into a heap.    *  Comparisons are made using comp.   */
+end_comment
+
 begin_expr_stmt
-unit|}    template
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -1217,11 +1566,21 @@ comment|// concept requirements
 end_comment
 
 begin_macro
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
 end_macro
+
+begin_expr_stmt
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|if
@@ -1236,6 +1595,7 @@ return|return;
 end_if
 
 begin_decl_stmt
+specifier|const
 name|_DistanceType
 name|__len
 init|=
@@ -1265,6 +1625,8 @@ condition|(
 name|true
 condition|)
 block|{
+name|std
+operator|::
 name|__adjust_heap
 argument_list|(
 name|__first
@@ -1299,8 +1661,13 @@ expr_stmt|;
 block|}
 end_while
 
+begin_comment
+unit|}
+comment|/**    *  @brief  Sort a heap.    *  @param  first  Start of heap.    *  @param  last   End of heap.    *  @ingroup heap    *    *  This operation sorts the valid heap in the range [first,last).   */
+end_comment
+
 begin_expr_stmt
-unit|}    template
+unit|template
 operator|<
 name|typename
 name|_RandomAccessIterator
@@ -1314,14 +1681,22 @@ argument|_RandomAccessIterator __last
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_LessThanComparableConcept< 	    typename iterator_traits<_RandomAccessIterator>::value_type>
 argument_list|)
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+block|;
+comment|//      __glibcxx_requires_heap(__first, __last);
 while|while
 condition|(
 name|__last
@@ -1330,6 +1705,8 @@ name|__first
 operator|>
 literal|1
 condition|)
+name|std
+operator|::
 name|pop_heap
 argument_list|(
 name|__first
@@ -1340,6 +1717,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/**    *  @brief  Sort a heap using comparison functor.    *  @param  first  Start of heap.    *  @param  last   End of heap.    *  @param  comp   Comparison functor to use.    *  @ingroup heap    *    *  This operation sorts the valid heap in the range [first,last).    *  Comparisons are made using comp.   */
+end_comment
 
 begin_expr_stmt
 name|template
@@ -1361,10 +1742,26 @@ argument|_Compare __comp
 argument_list|)
 block|{
 comment|// concept requirements
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 argument_list|(
 argument|_Mutable_RandomAccessIteratorConcept< 	    _RandomAccessIterator>
 argument_list|)
+name|__glibcxx_requires_valid_range
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|)
+block|;
+name|__glibcxx_requires_heap_pred
+argument_list|(
+name|__first
+argument_list|,
+name|__last
+argument_list|,
+name|__comp
+argument_list|)
+block|;
 while|while
 condition|(
 name|__last
@@ -1373,6 +1770,8 @@ name|__first
 operator|>
 literal|1
 condition|)
+name|std
+operator|::
 name|pop_heap
 argument_list|(
 name|__first
@@ -1397,7 +1796,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _CPP_BITS_STL_HEAP_H */
+comment|/* _STL_HEAP_H */
 end_comment
 
 begin_comment

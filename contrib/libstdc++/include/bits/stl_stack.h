@@ -4,7 +4,7 @@ comment|// Stack implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_STACK_H
+name|_STACK_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_STACK_H
+name|_STACK_H
+value|1
 end_define
 
 begin_include
@@ -121,11 +122,18 @@ directive|include
 file|<bits/concept_check.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<debug/debug.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|std
 block|{
-comment|// Forward declarations of operators == and<, needed for friend declaration.
+comment|// Forward declarations of operators == and<, needed for friend
+comment|// declaration.
 name|template
 operator|<
 name|typename
@@ -210,7 +218,7 @@ operator|&
 name|__y
 operator|)
 expr_stmt|;
-comment|/**    *  @brief  A standard container giving FILO behavior.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets many of the requirements of a    *<a href="tables.html#65">container</a>,    *  but does not define anything to do with iterators.  Very few of the    *  other standard container interfaces are defined.    *    *  This is not a true container, but an @e adaptor.  It holds another    *  container, and provides a wrapper interface to that container.  The    *  wrapper is what enforces strict first-in-last-out %stack behavior.    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::deque, but it can be any type    *  that supports @c back, @c push_back, and @c pop_front, such as    *  std::list, std::vector, or an appropriate user-defined type.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c push,    *  @c pop, and @c top, which are standard %stack/FILO operations.   */
+comment|/**    *  @brief  A standard container giving FILO behavior.    *    *  @ingroup Containers    *  @ingroup Sequences    *    *  Meets many of the requirements of a    *<a href="tables.html#65">container</a>,    *  but does not define anything to do with iterators.  Very few of the    *  other standard container interfaces are defined.    *    *  This is not a true container, but an @e adaptor.  It holds    *  another container, and provides a wrapper interface to that    *  container.  The wrapper is what enforces strict    *  first-in-last-out %stack behavior.    *    *  The second template parameter defines the type of the underlying    *  sequence/container.  It defaults to std::deque, but it can be    *  any type that supports @c back, @c push_back, and @c pop_front,    *  such as std::list, std::vector, or an appropriate user-defined    *  type.    *    *  Members not found in "normal" containers are @c container_type,    *  which is a typedef for the second Sequence parameter, and @c    *  push, @c pop, and @c top, which are standard %stack/FILO    *  operations.   */
 name|template
 operator|<
 name|typename
@@ -230,19 +238,19 @@ operator|::
 name|value_type
 name|_Sequence_value_type
 expr_stmt|;
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Tp
 argument_list|,
 argument|_SGIAssignableConcept
 argument_list|)
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 argument_list|(
 argument|_Sequence
 argument_list|,
 argument|_BackInsertionSequenceConcept
 argument_list|)
-name|__glibcpp_class_requires2
+name|__glibcxx_class_requires2
 argument_list|(
 argument|_Tp
 argument_list|,
@@ -357,7 +365,7 @@ decl_stmt|;
 name|public
 label|:
 comment|// XXX removed old def ctor, added def arg to this one to match 14882
-comment|/**      *  @brief  Default constructor creates no elements.     */
+comment|/**        *  @brief  Default constructor creates no elements.        */
 name|explicit
 name|stack
 argument_list|(
@@ -375,7 +383,7 @@ argument_list|(
 argument|__c
 argument_list|)
 block|{}
-comment|/**      *  Returns true if the %stack is empty.     */
+comment|/**        *  Returns true if the %stack is empty.        */
 name|bool
 name|empty
 argument_list|()
@@ -401,11 +409,14 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/**      *  Returns a read/write reference to the data at the first element of the      *  %stack.     */
+comment|/**        *  Returns a read/write reference to the data at the first        *  element of the %stack.        */
 name|reference
 name|top
 parameter_list|()
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+expr_stmt|;
 return|return
 name|c
 operator|.
@@ -413,12 +424,15 @@ name|back
 argument_list|()
 return|;
 block|}
-comment|/**      *  Returns a read-only (constant) reference to the data at the first      *  element of the %stack.     */
+comment|/**        *  Returns a read-only (constant) reference to the data at the first        *  element of the %stack.        */
 name|const_reference
 name|top
 argument_list|()
 specifier|const
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+block|;
 return|return
 name|c
 operator|.
@@ -426,7 +440,7 @@ name|back
 argument_list|()
 return|;
 block|}
-comment|/**      *  @brief  Add data to the top of the %stack.      *  @param  x  Data to be added.      *      *  This is a typical %stack operation.  The function creates an element at      *  the top of the %stack and assigns the given data to it.      *  The time complexity of the operation depends on the underlying      *  sequence.     */
+comment|/**        *  @brief  Add data to the top of the %stack.        *  @param  x  Data to be added.        *        *  This is a typical %stack operation.  The function creates an        *  element at the top of the %stack and assigns the given data        *  to it.  The time complexity of the operation depends on the        *  underlying sequence.        */
 name|void
 name|push
 parameter_list|(
@@ -444,11 +458,14 @@ name|__x
 argument_list|)
 expr_stmt|;
 block|}
-comment|/**      *  @brief  Removes first element.      *      *  This is a typical %stack operation.  It shrinks the %stack by one.      *  The time complexity of the operation depends on the underlying      *  sequence.      *      *  Note that no data is returned, and if the first element's data is      *  needed, it should be retrieved before pop() is called.     */
+comment|/**        *  @brief  Removes first element.        *        *  This is a typical %stack operation.  It shrinks the %stack        *  by one.  The time complexity of the operation depends on the        *  underlying sequence.        *        *  Note that no data is returned, and if the first element's        *  data is needed, it should be retrieved before pop() is        *  called.        */
 name|void
 name|pop
 parameter_list|()
 block|{
+name|__glibcxx_requires_nonempty
+argument_list|()
+expr_stmt|;
 name|c
 operator|.
 name|pop_back
@@ -463,7 +480,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/**    *  @brief  Stack equality comparison.    *  @param  x  A %stack.    *  @param  y  A %stack of the same type as @a x.    *  @return  True iff the size and elements of the stacks are equal.    *    *  This is an equivalence relation.  Complexity and semantics depend on the    *  underlying sequence type, but the expected rules are:  this relation is    *  linear in the size of the sequences, and stacks are considered equivalent    *  if their sequences compare equal.   */
+comment|/**    *  @brief  Stack equality comparison.    *  @param  x  A %stack.    *  @param  y  A %stack of the same type as @a x.    *  @return  True iff the size and elements of the stacks are equal.    *    *  This is an equivalence relation.  Complexity and semantics    *  depend on the underlying sequence type, but the expected rules    *  are: this relation is linear in the size of the sequences, and    *  stacks are considered equivalent if their sequences compare    *  equal.   */
 end_comment
 
 begin_expr_stmt
@@ -514,7 +531,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  Stack ordering relation.    *  @param  x  A %stack.    *  @param  y  A %stack of the same type as @a x.    *  @return  True iff @a x is lexographically less than @a y.    *    *  This is an total ordering relation.  Complexity and semantics depend on    *  the underlying sequence type, but the expected rules are:  this relation    *  is linear in the size of the sequences, the elements must be comparable    *  with @c<, and std::lexographical_compare() is usually used to make the    *  determination.   */
+comment|/**    *  @brief  Stack ordering relation.    *  @param  x  A %stack.    *  @param  y  A %stack of the same type as @a x.    *  @return  True iff @a x is lexicographically less than @a y.    *    *  This is an total ordering relation.  Complexity and semantics    *  depend on the underlying sequence type, but the expected rules    *  are: this relation is linear in the size of the sequences, the    *  elements must be comparable with @c<, and    *  std::lexicographical_compare() is usually used to make the    *  determination.   */
 end_comment
 
 begin_expr_stmt
@@ -772,7 +789,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_STACK_H */
+comment|/* _STACK_H */
 end_comment
 
 end_unit

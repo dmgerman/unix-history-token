@@ -4,7 +4,7 @@ comment|// Pair implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GLIBCPP_INTERNAL_PAIR_H
+name|_PAIR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__GLIBCPP_INTERNAL_PAIR_H
+name|_PAIR_H
+value|1
 end_define
 
 begin_decl_stmt
@@ -149,11 +150,9 @@ name|_T2
 name|second
 decl_stmt|;
 comment|///< @c second is a copy of the second object
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-comment|//265.  std::pair::pair() effects overly restrictive
-comment|/** The default constructor creates @c first and @c second using their    *  respective default constructors.  */
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 265.  std::pair::pair() effects overly restrictive
+comment|/** The default constructor creates @c first and @c second using their        *  respective default constructors.  */
 name|pair
 argument_list|()
 operator|:
@@ -162,25 +161,7 @@ argument_list|()
 operator|,
 name|second
 argument_list|()
-block|{}
-else|#
-directive|else
-name|pair
-argument_list|()
-operator|:
-name|first
-argument_list|(
-name|_T1
-argument_list|()
-argument_list|)
-operator|,
-name|second
-argument_list|(
-argument|_T2()
-argument_list|)
-block|{}
-endif|#
-directive|endif
+block|{ }
 comment|/** Two objects may be passed to a @c pair constructor to be copied.  */
 name|pair
 argument_list|(
@@ -204,7 +185,7 @@ name|second
 argument_list|(
 argument|__b
 argument_list|)
-block|{}
+block|{ }
 comment|/** There is also a templated copy ctor for the @c pair class itself.  */
 name|template
 operator|<
@@ -238,7 +219,7 @@ name|second
 argument_list|(
 argument|__p.second
 argument_list|)
-block|{}
+block|{ }
 block|}
 end_decl_stmt
 
@@ -575,7 +556,15 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**  *  @brief A convenience wrapper for creating a pair from two objects.  *  @param  x  The first object.  *  @param  y  The second object.  *  @return   A newly-constructed pair<> object of the appropriate type.  *  *  The standard requires that the objects be passed by reference-to-const,  *  but LWG issue #181 says they should be passed by const value.  We follow  *  the LWG by default. */
+comment|/**    *  @brief A convenience wrapper for creating a pair from two objects.    *  @param  x  The first object.    *  @param  y  The second object.    *  @return   A newly-constructed pair<> object of the appropriate type.    *    *  The standard requires that the objects be passed by reference-to-const,    *  but LWG issue #181 says they should be passed by const value.  We follow    *  the LWG by default.    */
+end_comment
+
+begin_comment
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
+
+begin_comment
+comment|// 181.  make_pair() unintended behavior
 end_comment
 
 begin_expr_stmt
@@ -587,10 +576,6 @@ operator|,
 name|class
 name|_T2
 operator|>
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-comment|//181.  make_pair() unintended behavior
 specifier|inline
 name|pair
 operator|<
@@ -604,23 +589,6 @@ argument|_T1 __x
 argument_list|,
 argument|_T2 __y
 argument_list|)
-else|#
-directive|else
-specifier|inline
-name|pair
-operator|<
-name|_T1
-operator|,
-name|_T2
-operator|>
-name|make_pair
-argument_list|(
-argument|const _T1& __x
-argument_list|,
-argument|const _T2& __y
-argument_list|)
-endif|#
-directive|endif
 block|{
 return|return
 name|pair
@@ -649,19 +617,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBCPP_INTERNAL_PAIR_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
+comment|/* _PAIR_H */
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// Specific definitions for generic platforms  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 end_define
 
 begin_comment
@@ -114,6 +114,57 @@ end_comment
 begin_comment
 comment|// file will come before all others.
 end_comment
+
+begin_comment
+comment|//  Define as 0, if you want, to enable inlining of gthread functions.
+end_comment
+
+begin_comment
+comment|//  By default, don't pollute libstdc++ with win32api names.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GTHREAD_HIDE_WIN32API
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__GTHREAD_HIDE_WIN32API
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// Don't let win32api windef.h define min and max as macros
+end_comment
+
+begin_comment
+comment|// if included after stl_algobase.h.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NOMINMAX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NOMINMAX
+value|1
+end_define
 
 begin_endif
 endif|#

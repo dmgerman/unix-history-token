@@ -4,7 +4,7 @@ comment|// Streambuf iterators
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_STREAMBUF_ITERATOR_H
+name|_STREAMBUF_ITERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_STREAMBUF_ITERATOR_H
+name|_STREAMBUF_ITERATOR_H
 value|1
 end_define
 
@@ -129,6 +129,12 @@ directive|include
 file|<streambuf>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<debug/debug.h>
+end_include
+
 begin_comment
 comment|// NB: Should specialize copy, find algorithms for streambuf iterators.
 end_comment
@@ -138,6 +144,7 @@ name|namespace
 name|std
 block|{
 comment|// 24.5.3 Template class istreambuf_iterator
+comment|/// Provides input iterator semantics for streambufs.
 name|template
 operator|<
 name|typename
@@ -171,6 +178,8 @@ block|{
 name|public
 operator|:
 comment|// Types:
+comment|//@{
+comment|/// Public typedefs
 typedef|typedef
 name|_CharT
 name|char_type
@@ -204,6 +213,7 @@ name|_Traits
 operator|>
 name|istream_type
 expr_stmt|;
+comment|//@}
 name|private
 label|:
 comment|// 24.5.3 istreambuf_iterator
@@ -223,6 +233,7 @@ name|_M_c
 decl_stmt|;
 name|public
 label|:
+comment|///  Construct end of input stream iterator.
 name|istreambuf_iterator
 argument_list|()
 name|throw
@@ -238,6 +249,7 @@ argument_list|(
 argument|traits_type::eof()
 argument_list|)
 block|{ }
+comment|///  Construct start of input stream iterator.
 name|istreambuf_iterator
 argument_list|(
 argument|istream_type& __s
@@ -258,6 +270,7 @@ argument_list|(
 argument|traits_type::eof()
 argument_list|)
 block|{ }
+comment|///  Construct start of streambuf iterator.
 name|istreambuf_iterator
 argument_list|(
 argument|streambuf_type* __s
@@ -275,7 +288,9 @@ argument_list|(
 argument|traits_type::eof()
 argument_list|)
 block|{ }
-comment|// NB: The result of operator*() on an end of stream is undefined.
+comment|///  Return the current character pointed to by iterator.  This returns
+comment|///  streambuf.sgetc().  It cannot be assigned.  NB: The result of
+comment|///  operator*() on an end of stream is undefined.
 name|char_type
 name|operator
 operator|*
@@ -283,6 +298,33 @@ operator|(
 operator|)
 specifier|const
 block|{
+ifdef|#
+directive|ifdef
+name|_GLIBCXX_DEBUG_PEDANTIC
+comment|// Dereferencing a past-the-end istreambuf_iterator is a
+comment|// libstdc++ extension
+name|__glibcxx_requires_cond
+argument_list|(
+operator|!
+name|_M_at_eof
+argument_list|()
+argument_list|,
+name|_M_message
+argument_list|(
+name|__gnu_debug
+operator|::
+name|__msg_deref_istreambuf
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
+endif|#
+directive|endif
 return|return
 name|traits_type
 operator|::
@@ -293,6 +335,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// Advance the iterator.  Calls streambuf.sbumpc().
 name|istreambuf_iterator
 operator|&
 name|operator
@@ -300,6 +343,26 @@ operator|++
 operator|(
 operator|)
 block|{
+name|__glibcxx_requires_cond
+argument_list|(
+operator|!
+name|_M_at_eof
+argument_list|()
+argument_list|,
+name|_M_message
+argument_list|(
+name|__gnu_debug
+operator|::
+name|__msg_inc_istreambuf
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
 specifier|const
 name|int_type
 name|__eof
@@ -341,6 +404,10 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// Advance the iterator.  Calls streambuf.sbumpc().
+end_comment
+
 begin_expr_stmt
 name|istreambuf_iterator
 name|operator
@@ -349,6 +416,26 @@ operator|(
 name|int
 operator|)
 block|{
+name|__glibcxx_requires_cond
+argument_list|(
+operator|!
+name|_M_at_eof
+argument_list|()
+argument_list|,
+name|_M_message
+argument_list|(
+name|__gnu_debug
+operator|::
+name|__msg_inc_istreambuf
+argument_list|)
+operator|.
+name|_M_iterator
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
+block|;
 specifier|const
 name|int_type
 name|__eof
@@ -403,12 +490,10 @@ name|__old
 return|;
 end_return
 
-begin_ifdef
+begin_comment
 unit|}
-ifdef|#
-directive|ifdef
-name|_GLIBCPP_RESOLVE_LIB_DEFECTS
-end_ifdef
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+end_comment
 
 begin_comment
 comment|// 110 istreambuf_iterator::equal not const
@@ -416,6 +501,10 @@ end_comment
 
 begin_comment
 comment|// NB: there is also number 111 (NAD, Future) pending on this function.
+end_comment
+
+begin_comment
+comment|/// Return true both iterators are end or both are not end.
 end_comment
 
 begin_macro
@@ -430,41 +519,20 @@ begin_expr_stmt
 specifier|const
 block|{
 specifier|const
-name|int_type
-name|__eof
-operator|=
-name|traits_type
-operator|::
-name|eof
-argument_list|()
-block|;
 name|bool
 name|__thiseof
 operator|=
-name|traits_type
-operator|::
-name|eq_int_type
-argument_list|(
-name|_M_get
+name|_M_at_eof
 argument_list|()
-argument_list|,
-name|__eof
-argument_list|)
 block|;
+specifier|const
 name|bool
 name|__beof
 operator|=
-name|traits_type
-operator|::
-name|eq_int_type
-argument_list|(
 name|__b
 operator|.
-name|_M_get
+name|_M_at_eof
 argument_list|()
-argument_list|,
-name|__eof
-argument_list|)
 block|;
 return|return
 operator|(
@@ -483,11 +551,6 @@ operator|)
 return|;
 block|}
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_label
 name|private
@@ -567,12 +630,40 @@ name|__ret
 return|;
 end_return
 
-begin_empty_stmt
-unit|}     }
-empty_stmt|;
-end_empty_stmt
+begin_macro
+unit|}        bool
+name|_M_at_eof
+argument_list|()
+end_macro
 
 begin_expr_stmt
+specifier|const
+block|{
+specifier|const
+name|int_type
+name|__eof
+operator|=
+name|traits_type
+operator|::
+name|eof
+argument_list|()
+block|;
+return|return
+name|traits_type
+operator|::
+name|eq_int_type
+argument_list|(
+name|_M_get
+argument_list|()
+argument_list|,
+name|__eof
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|typename
@@ -665,6 +756,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Provides output iterator semantics for streambufs.
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -694,6 +789,8 @@ block|{
 name|public
 operator|:
 comment|// Types:
+comment|//@{
+comment|/// Public typedefs
 typedef|typedef
 name|_CharT
 name|char_type
@@ -731,6 +828,10 @@ name|ostream_type
 expr_stmt|;
 end_typedef
 
+begin_comment
+comment|//@}
+end_comment
+
 begin_label
 name|private
 label|:
@@ -753,6 +854,10 @@ begin_label
 name|public
 label|:
 end_label
+
+begin_comment
+comment|///  Construct output iterator from ostream.
+end_comment
 
 begin_macro
 name|ostreambuf_iterator
@@ -778,6 +883,7 @@ argument_list|(
 argument|!_M_sbuf
 argument_list|)
 block|{ }
+comment|///  Construct output iterator from streambuf.
 name|ostreambuf_iterator
 argument_list|(
 argument|streambuf_type* __s
@@ -795,6 +901,7 @@ argument_list|(
 argument|!_M_sbuf
 argument_list|)
 block|{ }
+comment|///  Write character to streambuf.  Calls streambuf.sputc().
 name|ostreambuf_iterator
 operator|&
 name|operator
@@ -839,15 +946,18 @@ name|this
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// Return *this.
+end_comment
+
 begin_expr_stmt
-unit|}        ostreambuf_iterator
+unit|ostreambuf_iterator
 operator|&
 name|operator
 operator|*
 operator|(
 operator|)
-name|throw
-argument_list|()
 block|{
 return|return
 operator|*
@@ -855,6 +965,10 @@ name|this
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Return *this.
+end_comment
 
 begin_expr_stmt
 name|ostreambuf_iterator
@@ -864,8 +978,6 @@ operator|++
 operator|(
 name|int
 operator|)
-name|throw
-argument_list|()
 block|{
 return|return
 operator|*
@@ -874,6 +986,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Return *this.
+end_comment
+
 begin_expr_stmt
 name|ostreambuf_iterator
 operator|&
@@ -881,8 +997,6 @@ name|operator
 operator|++
 operator|(
 operator|)
-name|throw
-argument_list|()
 block|{
 return|return
 operator|*
@@ -890,6 +1004,10 @@ name|this
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// Return true if previous operator=() failed.
+end_comment
 
 begin_expr_stmt
 name|bool

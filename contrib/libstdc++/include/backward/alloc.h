@@ -4,7 +4,7 @@ comment|// Backward-compat support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BACKWARD_ALLOC_H
+name|_BACKWARD_ALLOC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BACKWARD_ALLOC_H
+name|_BACKWARD_ALLOC_H
 value|1
 end_define
 
@@ -127,62 +127,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/stl_alloc.h>
+file|<bits/allocator.h>
 end_include
 
 begin_expr_stmt
 name|using
 name|std
 operator|::
-name|__malloc_alloc_template
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__simple_alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__debug_alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__single_client_alloc
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
 name|allocator
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|std
-operator|::
-name|__default_alloc_template
 expr_stmt|;
 end_expr_stmt
 

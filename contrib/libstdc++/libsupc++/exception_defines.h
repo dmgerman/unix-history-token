@@ -4,7 +4,7 @@ comment|// -fno-exceptions Support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -110,6 +110,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_EXCEPTION_DEFINES_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_EXCEPTION_DEFINES_H
+value|1
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__EXCEPTIONS
 end_ifndef
 
@@ -155,6 +168,11 @@ directive|define
 name|__throw_exception_again
 value|throw
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_CONCEPT_CHECK
+name|_CONCEPT_CHECK_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_CONCEPT_CHECK
+name|_CONCEPT_CHECK_H
 value|1
 end_define
 
@@ -152,13 +152,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_CONCEPT_CHECKS
+name|_GLIBCXX_CONCEPT_CHECKS
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -167,7 +167,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 parameter_list|(
 name|_a
 parameter_list|,
@@ -178,7 +178,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires2
+name|__glibcxx_class_requires2
 parameter_list|(
 name|_a
 parameter_list|,
@@ -191,7 +191,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires3
+name|__glibcxx_class_requires3
 parameter_list|(
 name|_a
 parameter_list|,
@@ -206,7 +206,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires4
+name|__glibcxx_class_requires4
 parameter_list|(
 name|_a
 parameter_list|,
@@ -244,7 +244,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//#define glibcpp_function_requires(C) boost::function_requires< boost::C>()
+comment|//#define glibcxx_function_requires(C) boost::function_requires< boost::C>()
 end_comment
 
 begin_comment
@@ -274,7 +274,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__glibcpp_function_requires
+name|__glibcxx_function_requires
 parameter_list|(
 modifier|...
 parameter_list|)
@@ -285,20 +285,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires
+name|__glibcxx_class_requires
 parameter_list|(
 name|_a
 parameter_list|,
 name|_C
 parameter_list|)
 define|\
-value|_GLIBCPP_CLASS_REQUIRES(_a, __gnu_cxx, _C);
+value|_GLIBCXX_CLASS_REQUIRES(_a, __gnu_cxx, _C);
 end_define
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires2
+name|__glibcxx_class_requires2
 parameter_list|(
 name|_a
 parameter_list|,
@@ -307,13 +307,13 @@ parameter_list|,
 name|_C
 parameter_list|)
 define|\
-value|_GLIBCPP_CLASS_REQUIRES2(_a, _b, __gnu_cxx, _C);
+value|_GLIBCXX_CLASS_REQUIRES2(_a, _b, __gnu_cxx, _C);
 end_define
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires3
+name|__glibcxx_class_requires3
 parameter_list|(
 name|_a
 parameter_list|,
@@ -324,13 +324,13 @@ parameter_list|,
 name|_C
 parameter_list|)
 define|\
-value|_GLIBCPP_CLASS_REQUIRES3(_a, _b, _c, __gnu_cxx, _C);
+value|_GLIBCXX_CLASS_REQUIRES3(_a, _b, _c, __gnu_cxx, _C);
 end_define
 
 begin_define
 define|#
 directive|define
-name|__glibcpp_class_requires4
+name|__glibcxx_class_requires4
 parameter_list|(
 name|_a
 parameter_list|,
@@ -343,7 +343,7 @@ parameter_list|,
 name|_C
 parameter_list|)
 define|\
-value|_GLIBCPP_CLASS_REQUIRES4(_a, _b, _c, _d, __gnu_cxx, _C);
+value|_GLIBCXX_CLASS_REQUIRES4(_a, _b, _c, _d, __gnu_cxx, _C);
 end_define
 
 begin_endif
@@ -361,7 +361,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _GLIBCPP_CONCEPT_CHECK
+comment|// _GLIBCXX_CONCEPT_CHECK
 end_comment
 
 end_unit

@@ -4,7 +4,7 @@ comment|// The  -*- C++ -*- type traits classes for internal use in libstdc++
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_BITS_CPP_TYPE_TRAITS_H
+name|_CPP_TYPE_TRAITS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_BITS_CPP_TYPE_TRAITS_H
+name|_CPP_TYPE_TRAITS_H
 value|1
 end_define
 
@@ -219,10 +219,131 @@ begin_comment
 comment|//
 end_comment
 
+begin_comment
+comment|// NB: g++ can not compile these if declared within the class
+end_comment
+
+begin_comment
+comment|// __is_pod itself.
+end_comment
+
+begin_decl_stmt
+name|namespace
+name|__gnu_internal
+block|{
+typedef|typedef
+name|char
+name|__one
+typedef|;
+typedef|typedef
+name|char
+name|__two
+index|[
+literal|2
+index|]
+typedef|;
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+name|__one
+name|__test_type
+argument_list|(
+argument|int _Tp::*
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+name|__two
+operator|&
+name|__test_type
+argument_list|(
+operator|...
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace __gnu_internal
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|// Compare for equality of types.
+name|template
+operator|<
+name|typename
+operator|,
+name|typename
+operator|>
+expr|struct
+name|__are_same
+block|{       enum
+block|{
+name|_M_type
+operator|=
+literal|0
+block|}
+block|;     }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__are_same
+operator|<
+name|_Tp
+operator|,
+name|_Tp
+operator|>
+block|{       enum
+block|{
+name|_M_type
+operator|=
+literal|1
+block|}
+block|;     }
+expr_stmt|;
+comment|// Define a nested type if some predicate holds.
+name|template
+operator|<
+name|typename
+operator|,
+name|bool
+operator|>
+expr|struct
+name|__enable_if
+block|{     }
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|_Tp
+operator|>
+expr|struct
+name|__enable_if
+operator|<
+name|_Tp
+operator|,
+name|true
+operator|>
+block|{
+typedef|typedef
+name|_Tp
+name|_M_type
+typedef|;
+block|}
+empty_stmt|;
+comment|// Holds if the template-argument is a void type.
 name|template
 operator|<
 name|typename
@@ -333,17 +454,17 @@ operator|<
 name|unsigned
 name|char
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_GLIBCPP_USE_WCHAR_T
+name|_GLIBCXX_USE_WCHAR_T
 name|template
 operator|<
 operator|>
@@ -352,13 +473,13 @@ name|__is_integer
 operator|<
 name|wchar_t
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 endif|#
 directive|endif
@@ -370,13 +491,13 @@ name|__is_integer
 operator|<
 name|short
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 name|template
 operator|<
@@ -387,13 +508,13 @@ operator|<
 name|unsigned
 name|short
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 name|template
 operator|<
@@ -403,13 +524,13 @@ name|__is_integer
 operator|<
 name|int
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 name|template
 operator|<
@@ -420,13 +541,13 @@ operator|<
 name|unsigned
 name|int
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 name|template
 operator|<
@@ -436,47 +557,13 @@ name|__is_integer
 operator|<
 name|long
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
-expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|__is_integer
-operator|<
-name|unsigned
-name|long
-operator|>
-block|{     enum
-block|{
-name|_M_type
-operator|=
-literal|1
-block|}
-block|;   }
-expr_stmt|;
-name|template
-operator|<
-operator|>
-expr|struct
-name|__is_integer
-operator|<
-name|long
-name|long
-operator|>
-block|{     enum
-block|{
-name|_M_type
-operator|=
-literal|1
-block|}
-block|;   }
+block|;     }
 expr_stmt|;
 name|template
 operator|<
@@ -486,15 +573,49 @@ name|__is_integer
 operator|<
 name|unsigned
 name|long
-name|long
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|__is_integer
+operator|<
+name|long
+name|long
+operator|>
+block|{       enum
+block|{
+name|_M_type
+operator|=
+literal|1
+block|}
+block|;     }
+expr_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|__is_integer
+operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+block|{       enum
+block|{
+name|_M_type
+operator|=
+literal|1
+block|}
+block|;     }
 expr_stmt|;
 comment|//
 comment|// Floating point types
@@ -506,13 +627,13 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_floating
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|0
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 comment|// three specializations (float, double and 'long double')
 name|template
@@ -523,13 +644,13 @@ name|__is_floating
 operator|<
 name|float
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 name|template
 operator|<
@@ -539,13 +660,13 @@ name|__is_floating
 operator|<
 name|double
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 name|template
 operator|<
@@ -556,13 +677,13 @@ operator|<
 name|long
 name|double
 operator|>
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
 literal|1
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 comment|//
 comment|// An arithmetic type is an integer type or a floating point type
@@ -574,7 +695,7 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_arithmetic
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
@@ -592,7 +713,7 @@ operator|>
 operator|::
 name|_M_type
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 comment|//
 comment|// A fundamental type is `void' or and arithmetic type
@@ -604,7 +725,7 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_fundamental
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
@@ -622,7 +743,7 @@ operator|>
 operator|::
 name|_M_type
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 comment|//
 comment|// For the immediate use, the following is a good approximation
@@ -634,18 +755,33 @@ name|_Tp
 operator|>
 expr|struct
 name|__is_pod
-block|{     enum
+block|{       enum
 block|{
 name|_M_type
 operator|=
-name|__is_fundamental
+operator|(
+sizeof|sizeof
+argument_list|(
+name|__gnu_internal
+operator|::
+name|__test_type
 operator|<
 name|_Tp
 operator|>
+operator|(
+literal|0
+operator|)
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|__gnu_internal
 operator|::
-name|_M_type
+name|__one
+argument_list|)
+operator|)
 block|}
-block|;   }
+block|;     }
 expr_stmt|;
 block|}
 end_decl_stmt
@@ -660,7 +796,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//_CPP_BITS_CPP_TYPE_TRAITS_H
+comment|//_CPP_TYPE_TRAITS_H
 end_comment
 
 end_unit

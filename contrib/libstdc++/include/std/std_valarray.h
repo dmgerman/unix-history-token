@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- valarray class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004
 end_comment
 
 begin_comment
@@ -110,13 +110,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_VALARRAY
+name|_GLIBCXX_VALARRAY
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_VALARRAY
+name|_GLIBCXX_VALARRAY
 value|1
 end_define
 
@@ -161,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<debug/debug.h>
 end_include
 
 begin_decl_stmt
@@ -393,13 +399,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bits/valarray_meta.h>
+file|<bits/valarray_before.h>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|/**    *  @brief  Smart array designed to support numeric processing.    *    *  A valarray is an array that provides constraints intended to allow for    *  effective optimization of numeric array processing by reducing the    *  aliasing that can result from pointer representations.  It represents a    *  one-dimensional array from which different multidimensional subsets can    *  be accessed and modified.    *      *  @param  Tp  Type of object in the array.    */
 name|template
 operator|<
 name|class
@@ -453,15 +460,18 @@ name|_Tp
 name|value_type
 typedef|;
 comment|// _lib.valarray.cons_ construct/destroy:
+comment|///  Construct an empty array.
 name|valarray
 argument_list|()
 expr_stmt|;
+comment|///  Construct an array with @a n elements.
 name|explicit
 name|valarray
 parameter_list|(
 name|size_t
 parameter_list|)
 function_decl|;
+comment|///  Construct an array with @a n elements initialized to @a t.
 name|valarray
 argument_list|(
 specifier|const
@@ -471,6 +481,7 @@ argument_list|,
 name|size_t
 argument_list|)
 expr_stmt|;
+comment|///  Construct an array initialized to the first @a n elements of @a t.
 name|valarray
 argument_list|(
 specifier|const
@@ -481,6 +492,7 @@ argument_list|,
 name|size_t
 argument_list|)
 expr_stmt|;
+comment|///  Copy constructor.
 name|valarray
 argument_list|(
 specifier|const
@@ -488,6 +500,7 @@ name|valarray
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Construct an array with the same size and values in @a sa.
 name|valarray
 argument_list|(
 specifier|const
@@ -498,6 +511,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Construct an array with the same size and values in @a ga.
 name|valarray
 argument_list|(
 specifier|const
@@ -508,6 +522,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Construct an array with the same size and values in @a ma.
 name|valarray
 argument_list|(
 specifier|const
@@ -518,6 +533,7 @@ operator|>
 operator|&
 argument_list|)
 expr_stmt|;
+comment|///  Construct an array with the same size and values in @a ia.
 name|valarray
 argument_list|(
 specifier|const
@@ -551,6 +567,7 @@ name|valarray
 argument_list|()
 expr_stmt|;
 comment|// _lib.valarray.assign_ assignment:
+comment|/**        *  @brief  Assign elements to an array.        *        *  Assign elements of array to values in @a v.  Results are undefined        *  if @a v is not the same size as this array.        *        *  @param  v  Valarray to get values from.        */
 name|valarray
 operator|<
 name|_Tp
@@ -567,6 +584,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Assign elements to a value.        *        *  Assign all elements of array to @a t.        *        *  @param  t  Value for elements.        */
 name|valarray
 operator|<
 name|_Tp
@@ -580,6 +598,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Assign elements to an array subset.        *        *  Assign elements of array to values in @a sa.  Results are undefined        *  if @a sa is not the same size as this array.        *        *  @param  sa  Array slice to get values from.        */
 name|valarray
 operator|<
 name|_Tp
@@ -596,6 +615,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Assign elements to an array subset.        *        *  Assign elements of array to values in @a ga.  Results are undefined        *  if @a ga is not the same size as this array.        *        *  @param  ga  Array slice to get values from.        */
 name|valarray
 operator|<
 name|_Tp
@@ -612,6 +632,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Assign elements to an array subset.        *        *  Assign elements of array to values in @a ma.  Results are undefined        *  if @a ma is not the same size as this array.        *        *  @param  ma  Array slice to get values from.        */
 name|valarray
 operator|<
 name|_Tp
@@ -628,6 +649,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Assign elements to an array subset.        *        *  Assign elements of array to values in @a ia.  Results are undefined        *  if @a ia is not the same size as this array.        *        *  @param  ia  Array slice to get values from.        */
 name|valarray
 operator|<
 name|_Tp
@@ -668,7 +690,17 @@ operator|&
 operator|)
 expr_stmt|;
 comment|// _lib.valarray.access_ element access:
-comment|// XXX: LWG to be resolved.
+comment|/**        *  Return a reference to the i'th array element.          *        *  @param  i  Index of element to return.        *  @return  Reference to the i'th element.        */
+name|_Tp
+modifier|&
+name|operator
+function_decl|[]
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+comment|// _GLIBCXX_RESOLVE_LIB_DEFECTS
+comment|// 389. Const overload of valarray::operator[] returns by value.
 specifier|const
 name|_Tp
 modifier|&
@@ -679,15 +711,8 @@ name|size_t
 argument_list|)
 decl|const
 decl_stmt|;
-name|_Tp
-modifier|&
-name|operator
-function_decl|[]
-parameter_list|(
-name|size_t
-parameter_list|)
-function_decl|;
 comment|// _lib.valarray.sub_ subset operations:
+comment|/**        *  @brief  Return an array subset.        *        *  Returns a new valarray containing the elements of the array        *  indicated by the slice argument.  The new valarray is the size of        *  the input slice.  @see slice.        *        *  @param  s  The source slice.        *  @return  New valarray containing elements in @a s.        */
 name|_Expr
 operator|<
 name|_SClos
@@ -706,6 +731,7 @@ name|slice
 operator|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Return a reference to an array subset.        *        *  Returns a new valarray containing the elements of the array        *  indicated by the slice argument.  The new valarray is the size of        *  the input slice.  @see slice.        *        *  @param  s  The source slice.        *  @return  New valarray containing elements in @a s.        */
 name|slice_array
 operator|<
 name|_Tp
@@ -716,6 +742,7 @@ operator|(
 name|slice
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Return an array subset.        *        *  Returns a slice_array referencing the elements of the array        *  indicated by the slice argument.  @see gslice.        *        *  @param  s  The source slice.        *  @return  Slice_array referencing elements indicated by @a s.        */
 name|_Expr
 operator|<
 name|_GClos
@@ -736,6 +763,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Return a reference to an array subset.        *        *  Returns a new valarray containing the elements of the array        *  indicated by the gslice argument.  The new valarray is        *  the size of the input gslice.  @see gslice.        *        *  @param  s  The source gslice.        *  @return  New valarray containing elements in @a s.        */
 name|gslice_array
 operator|<
 name|_Tp
@@ -748,6 +776,7 @@ name|gslice
 operator|&
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Return an array subset.        *        *  Returns a new valarray containing the elements of the array        *  indicated by the argument.  The input is a valarray of bool which        *  represents a bitmask indicating which elements should be copied into        *  the new valarray.  Each element of the array is added to the return        *  valarray if the corresponding element of the argument is true.        *        *  @param  m  The valarray bitmask.        *  @return  New valarray containing elements indicated by @a m.        */
 name|valarray
 operator|<
 name|_Tp
@@ -764,6 +793,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Return a reference to an array subset.        *        *  Returns a new mask_array referencing the elements of the array        *  indicated by the argument.  The input is a valarray of bool which        *  represents a bitmask indicating which elements are part of the        *  subset.  Elements of the array are part of the subset if the        *  corresponding element of the argument is true.        *        *  @param  m  The valarray bitmask.        *  @return  New valarray containing elements indicated by @a m.        */
 name|mask_array
 operator|<
 name|_Tp
@@ -779,6 +809,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|/**        *  @brief  Return an array subset.        *        *  Returns a new valarray containing the elements of the array        *  indicated by the argument.  The elements in the argument are        *  interpreted as the indices of elements of this valarray to copy to        *  the return valarray.        *        *  @param  i  The valarray element index list.        *  @return  New valarray containing elements in @a s.        */
 name|_Expr
 operator|<
 name|_IClos
@@ -802,6 +833,7 @@ operator|&
 operator|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Return a reference to an array subset.        *        *  Returns an indirect_array referencing the elements of the array        *  indicated by the argument.  The elements in the argument are        *  interpreted as the indices of elements of this valarray to include        *  in the subset.  The returned indirect_array refers to these        *  elements.        *        *  @param  i  The valarray element index list.        *  @return  Indirect_array referencing elements in @a i.        */
 name|indirect_array
 operator|<
 name|_Tp
@@ -818,6 +850,7 @@ operator|&
 operator|)
 expr_stmt|;
 comment|// _lib.valarray.unary_ unary operators:
+comment|///  Return a new valarray by applying unary + to each element.
 name|typename
 name|_UnaryOp
 operator|<
@@ -831,6 +864,7 @@ operator|(
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Return a new valarray by applying unary - to each element.
 name|typename
 name|_UnaryOp
 operator|<
@@ -844,6 +878,7 @@ operator|(
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Return a new valarray by applying unary ~ to each element.
 name|typename
 name|_UnaryOp
 operator|<
@@ -857,6 +892,7 @@ operator|(
 operator|)
 specifier|const
 expr_stmt|;
+comment|///  Return a new valarray by applying unary ! to each element.
 name|typename
 name|_UnaryOp
 operator|<
@@ -871,6 +907,7 @@ operator|)
 specifier|const
 expr_stmt|;
 comment|// _lib.valarray.cassign_ computed assignment:
+comment|///  Multiply each element of array by @a t.
 name|valarray
 operator|<
 name|_Tp
@@ -884,6 +921,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Divide each element of array by @a t.
 name|valarray
 operator|<
 name|_Tp
@@ -897,6 +935,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Set each element e of array to e % @a t.
 name|valarray
 operator|<
 name|_Tp
@@ -910,6 +949,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Add @a t to each element of array.
 name|valarray
 operator|<
 name|_Tp
@@ -923,6 +963,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Subtract @a t to each element of array.
 name|valarray
 operator|<
 name|_Tp
@@ -936,6 +977,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Set each element e of array to e ^ @a t.
 name|valarray
 operator|<
 name|_Tp
@@ -949,6 +991,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Set each element e of array to e& @a t.
 name|valarray
 operator|<
 name|_Tp
@@ -962,6 +1005,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Set each element e of array to e | @a t.
 name|valarray
 operator|<
 name|_Tp
@@ -975,6 +1019,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Left shift each element e of array by @a t bits.
 name|valarray
 operator|<
 name|_Tp
@@ -988,6 +1033,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Right shift each element e of array by @a t bits.
 name|valarray
 operator|<
 name|_Tp
@@ -1001,6 +1047,7 @@ name|_Tp
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Multiply elements of array by corresponding elements of @a v.
 name|valarray
 operator|<
 name|_Tp
@@ -1017,6 +1064,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Divide elements of array by corresponding elements of @a v.
 name|valarray
 operator|<
 name|_Tp
@@ -1033,6 +1081,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Modulo elements of array by corresponding elements of @a v.
 name|valarray
 operator|<
 name|_Tp
@@ -1049,6 +1098,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Add corresponding elements of @a v to elements of array.
 name|valarray
 operator|<
 name|_Tp
@@ -1065,6 +1115,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Subtract corresponding elements of @a v from elements of array.
 name|valarray
 operator|<
 name|_Tp
@@ -1081,6 +1132,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Logical xor corresponding elements of @a v with elements of array.
 name|valarray
 operator|<
 name|_Tp
@@ -1097,6 +1149,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Logical or corresponding elements of @a v with elements of array.
 name|valarray
 operator|<
 name|_Tp
@@ -1113,6 +1166,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Logical and corresponding elements of @a v with elements of array.
 name|valarray
 operator|<
 name|_Tp
@@ -1129,6 +1183,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Left shift elements of array by corresponding elements of @a v.
 name|valarray
 operator|<
 name|_Tp
@@ -1145,6 +1200,7 @@ operator|>
 operator|&
 operator|)
 expr_stmt|;
+comment|///  Right shift elements of array by corresponding elements of @a v.
 name|valarray
 operator|<
 name|_Tp
@@ -1392,21 +1448,25 @@ operator|&
 operator|)
 expr_stmt|;
 comment|// _lib.valarray.members_ member functions:
+comment|///  Return the number of elements in array.
 name|size_t
 name|size
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Return the sum of all elements in the array.        *        *  Accumulates the sum of all elements into a Tp using +=.  The order        *  of adding the elements is unspecified.        */
 name|_Tp
 name|sum
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|///  Return the minimum element using operator<().
 name|_Tp
 name|min
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|///  Return the maximum element using operator<().
 name|_Tp
 name|max
 argument_list|()
@@ -1414,6 +1474,7 @@ specifier|const
 expr_stmt|;
 comment|//           // FIXME: Extension
 comment|//       _Tp    product () const;
+comment|/**        *  @brief  Return a shifted array.        *        *  A new valarray is constructed as a copy of this array with elements        *  in shifted positions.  For an element with index i, the new position        *  is i - n.  The new valarray is the same size as the current one.        *  New elements without a value are set to 0.  Elements whos new        *  position is outside the bounds of the array are discarded.        *        *  Positive arguments shift toward index 0, discarding elements [0, n).        *  Negative arguments discard elements from the top of the array.        *        *  @param  n  Number of element positions to shift.        *  @return  New valarray with elements in shifted positions.        */
 name|valarray
 operator|<
 name|_Tp
@@ -1424,6 +1485,7 @@ argument|int
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Return a rotated array.        *        *  A new valarray is constructed as a copy of this array with elements        *  in shifted positions.  For an element with index i, the new position        *  is (i - n) % size().  The new valarray is the same size as the        *  current one.  Elements that are shifted beyond the array bounds are        *  shifted into the other end of the array.  No elements are lost.        *        *  Positive arguments shift toward index 0, wrapping around the top.        *  Negative arguments shift towards the top, wrapping around to 0.        *        *  @param  n  Number of element positions to rotate.        *  @return  New valarray with elements in shifted positions.        */
 name|valarray
 operator|<
 name|_Tp
@@ -1434,6 +1496,7 @@ argument|int
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Apply a function to the array.        *        *  Returns a new valarray with elements assigned to the result of        *  applying func to the corresponding element of this array.  The new        *  array is the same size as this one.        *        *  @param  func  Function of Tp returning Tp to apply.        *  @return  New valarray with transformed elements.        */
 name|_Expr
 operator|<
 name|_ValFunClos
@@ -1451,6 +1514,7 @@ argument|_Tp func(_Tp)
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Apply a function to the array.        *        *  Returns a new valarray with elements assigned to the result of        *  applying func to the corresponding element of this array.  The new        *  array is the same size as this one.        *        *  @param  func  Function of const Tp& returning Tp to apply.        *  @return  New valarray with transformed elements.        */
 name|_Expr
 operator|<
 name|_RefFunClos
@@ -1468,6 +1532,7 @@ argument|_Tp func(const _Tp&)
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/**        *  @brief  Resize array.        *        *  Resize this array to be @a size and set all elements to @a c.  All        *  references and iterators are invalidated.        *        *  @param  size  New array size.        *  @param  c  New value for all elements.        */
 name|void
 name|resize
 parameter_list|(
@@ -1528,6 +1593,11 @@ name|__i
 operator|)
 specifier|const
 block|{
+name|__glibcxx_requires_subscript
+argument_list|(
+name|__i
+argument_list|)
+block|;
 return|return
 name|_M_data
 index|[
@@ -1558,6 +1628,11 @@ name|size_t
 name|__i
 operator|)
 block|{
+name|__glibcxx_requires_subscript
+argument_list|(
+name|__i
+argument_list|)
+block|;
 return|return
 name|_M_data
 index|[
@@ -1571,6 +1646,12 @@ begin_comment
 unit|}
 comment|// std::
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<bits/valarray_after.h>
+end_include
 
 begin_include
 include|#
@@ -1659,6 +1740,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__n)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_default_construct
 argument_list|(
 name|_M_data
@@ -1696,6 +1779,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__n)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_fill_construct
 argument_list|(
 name|_M_data
@@ -1735,6 +1820,19 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__n)
 argument_list|)
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|__p
+operator|!=
+literal|0
+operator|||
+name|__n
+operator|==
+literal|0
+argument_list|)
+block|;
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|__p
@@ -1745,7 +1843,7 @@ name|__n
 argument_list|,
 name|_M_data
 argument_list|)
-block|; }
+block|;      }
 name|template
 operator|<
 name|typename
@@ -1780,6 +1878,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__v._M_size)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|__v
@@ -1829,6 +1929,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__sa._M_sz)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__sa
@@ -1889,6 +1991,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(_M_size)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__ga
@@ -1950,6 +2054,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__ma._M_sz)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__ma
@@ -2005,6 +2111,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(__ia._M_sz)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__ia
@@ -2068,6 +2176,8 @@ argument_list|(
 argument|__valarray_get_storage<_Tp>(_M_size)
 argument_list|)
 block|{
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__e
@@ -2098,6 +2208,8 @@ operator|~
 name|valarray
 argument_list|()
 block|{
+name|std
+operator|::
 name|__valarray_destroy_elements
 argument_list|(
 name|_M_data
@@ -2107,6 +2219,8 @@ operator|+
 name|_M_size
 argument_list|)
 block|;
+name|std
+operator|::
 name|__valarray_release_memory
 argument_list|(
 name|_M_data
@@ -2140,6 +2254,17 @@ operator|&
 name|__v
 operator|)
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|==
+name|__v
+operator|.
+name|_M_size
+argument_list|)
+block|;
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__v
@@ -2181,6 +2306,8 @@ operator|&
 name|__t
 operator|)
 block|{
+name|std
+operator|::
 name|__valarray_fill
 argument_list|(
 name|_M_data
@@ -2223,6 +2350,17 @@ operator|&
 name|__sa
 operator|)
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|==
+name|__sa
+operator|.
+name|_M_sz
+argument_list|)
+block|;
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__sa
@@ -2279,6 +2417,20 @@ operator|&
 name|__ga
 operator|)
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|==
+name|__ga
+operator|.
+name|_M_index
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__ga
@@ -2339,6 +2491,17 @@ operator|&
 name|__ma
 operator|)
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|==
+name|__ma
+operator|.
+name|_M_sz
+argument_list|)
+block|;
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__ma
@@ -2393,6 +2556,17 @@ operator|&
 name|__ia
 operator|)
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|==
+name|__ia
+operator|.
+name|_M_sz
+argument_list|)
+block|;
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__ia
@@ -2454,6 +2628,18 @@ operator|&
 name|__e
 operator|)
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|==
+name|__e
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+name|std
+operator|::
 name|__valarray_copy
 argument_list|(
 name|__e
@@ -3066,7 +3252,16 @@ name|sum
 argument_list|()
 specifier|const
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|>
+literal|0
+argument_list|)
+block|;
 return|return
+name|std
+operator|::
 name|__valarray_sum
 argument_list|(
 name|_M_data
@@ -3154,6 +3349,8 @@ operator|==
 literal|0
 condition|)
 comment|// no shift
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3183,6 +3380,8 @@ argument_list|)
 operator|>
 name|_M_size
 condition|)
+name|std
+operator|::
 name|__valarray_default_construct
 argument_list|(
 name|__a
@@ -3194,6 +3393,8 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3207,6 +3408,8 @@ argument_list|,
 name|__a
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|__valarray_default_construct
 argument_list|(
 name|__a
@@ -3230,6 +3433,8 @@ end_comment
 
 begin_block
 block|{
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3245,6 +3450,8 @@ operator|-
 name|__n
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|__valarray_default_construct
 argument_list|(
 name|__a
@@ -3322,6 +3529,8 @@ operator|==
 literal|0
 condition|)
 comment|// no cshift
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3342,6 +3551,8 @@ literal|0
 condition|)
 comment|// cshift left
 block|{
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3357,6 +3568,8 @@ operator|-
 name|__n
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3377,6 +3590,8 @@ begin_else
 else|else
 comment|// cshift right
 block|{
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3392,6 +3607,8 @@ argument_list|,
 name|__a
 argument_list|)
 expr_stmt|;
+name|std
+operator|::
 name|__valarray_copy_construct
 argument_list|(
 name|_M_data
@@ -3447,6 +3664,8 @@ block|{
 comment|// This complication is so to make valarray<valarray<T>> work
 comment|// even though it is not required by the standard.  Nobody should
 comment|// be saying valarray<valarray<T>> anyway.  See the specs.
+name|std
+operator|::
 name|__valarray_destroy_elements
 argument_list|(
 name|_M_data
@@ -3463,6 +3682,8 @@ operator|!=
 name|__n
 condition|)
 block|{
+name|std
+operator|::
 name|__valarray_release_memory
 argument_list|(
 name|_M_data
@@ -3483,6 +3704,8 @@ name|__n
 operator|)
 expr_stmt|;
 block|}
+name|std
+operator|::
 name|__valarray_fill_construct
 argument_list|(
 name|_M_data
@@ -3513,8 +3736,17 @@ name|min
 argument_list|()
 specifier|const
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|>
+literal|0
+argument_list|)
+block|;
 return|return
 operator|*
+name|std
+operator|::
 name|min_element
 argument_list|(
 name|_M_data
@@ -3544,8 +3776,17 @@ name|max
 argument_list|()
 specifier|const
 block|{
+name|_GLIBCXX_DEBUG_ASSERT
+argument_list|(
+name|_M_size
+operator|>
+literal|0
+argument_list|)
+block|;
 return|return
 operator|*
+name|std
+operator|::
 name|max_element
 argument_list|(
 name|_M_data
@@ -3729,7 +3970,7 @@ parameter_list|,
 name|_Name
 parameter_list|)
 define|\
-value|template<class _Tp>							\     inline valarray<_Tp>&						\     valarray<_Tp>::operator _Op##=(const _Tp&__t)			\     {									\       _Array_augmented_##_Name(_Array<_Tp>(_M_data), _M_size, __t);	\       return *this;							\     }									\ 									\   template<class _Tp>							\     inline valarray<_Tp>&						\     valarray<_Tp>::operator _Op##=(const valarray<_Tp>&__v)		\     {									\       _Array_augmented_##_Name(_Array<_Tp>(_M_data), _M_size, 		\ 			       _Array<_Tp>(__v._M_data));		\       return *this;							\     }
+value|template<class _Tp>							\     inline valarray<_Tp>&						\     valarray<_Tp>::operator _Op##=(const _Tp&__t)			\     {									\       _Array_augmented_##_Name(_Array<_Tp>(_M_data), _M_size, __t);	\       return *this;							\     }									\ 									\   template<class _Tp>							\     inline valarray<_Tp>&						\     valarray<_Tp>::operator _Op##=(const valarray<_Tp>&__v)		\     {									\       _GLIBCXX_DEBUG_ASSERT(_M_size == __v._M_size);                    \       _Array_augmented_##_Name(_Array<_Tp>(_M_data), _M_size, 		\ 			       _Array<_Tp>(__v._M_data));		\       return *this;							\     }
 name|_DEFINE_VALARRAY_AUGMENTED_ASSIGNMENT
 argument_list|(
 argument|+
@@ -3875,7 +4116,7 @@ parameter_list|,
 name|_Name
 parameter_list|)
 define|\
-value|template<typename _Tp>						\     inline _Expr<_BinClos<_Name,_ValArray,_ValArray,_Tp,_Tp>,           \                  typename __fun<_Name, _Tp>::result_type>               \     operator _Op(const valarray<_Tp>& __v, const valarray<_Tp>& __w)	\     {									\       typedef _BinClos<_Name,_ValArray,_ValArray,_Tp,_Tp> _Closure;     \       typedef typename __fun<_Name, _Tp>::result_type _Rt;              \       return _Expr<_Closure, _Rt>(_Closure(__v, __w));                  \     }									\ 									\   template<typename _Tp>						\   inline _Expr<_BinClos<_Name,_ValArray,_Constant,_Tp,_Tp>,             \                typename __fun<_Name, _Tp>::result_type>                 \   operator _Op(const valarray<_Tp>& __v, const _Tp& __t)		\   {									\     typedef _BinClos<_Name,_ValArray,_Constant,_Tp,_Tp> _Closure;	\     typedef typename __fun<_Name, _Tp>::result_type _Rt;                \     return _Expr<_Closure, _Rt>(_Closure(__v, __t));	                \   }									\ 									\   template<typename _Tp>						\   inline _Expr<_BinClos<_Name,_Constant,_ValArray,_Tp,_Tp>,             \                typename __fun<_Name, _Tp>::result_type>                 \   operator _Op(const _Tp& __t, const valarray<_Tp>& __v)		\   {									\     typedef _BinClos<_Name,_Constant,_ValArray,_Tp,_Tp> _Closure;       \     typedef typename __fun<_Name, _Tp>::result_type _Rt;                \     return _Expr<_Closure, _Tp>(_Closure(__t, __v));        	        \   }
+value|template<typename _Tp>						\     inline _Expr<_BinClos<_Name,_ValArray,_ValArray,_Tp,_Tp>,           \                  typename __fun<_Name, _Tp>::result_type>               \     operator _Op(const valarray<_Tp>& __v, const valarray<_Tp>& __w)	\     {									\       _GLIBCXX_DEBUG_ASSERT(__v.size() == __w.size());                  \       typedef _BinClos<_Name,_ValArray,_ValArray,_Tp,_Tp> _Closure;     \       typedef typename __fun<_Name, _Tp>::result_type _Rt;              \       return _Expr<_Closure, _Rt>(_Closure(__v, __w));                  \     }									\ 									\   template<typename _Tp>						\   inline _Expr<_BinClos<_Name,_ValArray,_Constant,_Tp,_Tp>,             \                typename __fun<_Name, _Tp>::result_type>                 \   operator _Op(const valarray<_Tp>& __v, const _Tp& __t)		\   {									\     typedef _BinClos<_Name,_ValArray,_Constant,_Tp,_Tp> _Closure;	\     typedef typename __fun<_Name, _Tp>::result_type _Rt;                \     return _Expr<_Closure, _Rt>(_Closure(__v, __t));	                \   }									\ 									\   template<typename _Tp>						\   inline _Expr<_BinClos<_Name,_Constant,_ValArray,_Tp,_Tp>,             \                typename __fun<_Name, _Tp>::result_type>                 \   operator _Op(const _Tp& __t, const valarray<_Tp>& __v)		\   {									\     typedef _BinClos<_Name,_Constant,_ValArray,_Tp,_Tp> _Closure;       \     typedef typename __fun<_Name, _Tp>::result_type _Rt;                \     return _Expr<_Closure, _Tp>(_Closure(__t, __v));        	        \   }
 name|_DEFINE_BINARY_OPERATOR
 argument_list|(
 argument|+
@@ -3997,19 +4238,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// _CPP_VALARRAY
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:c++
-end_comment
-
-begin_comment
-comment|// End:
+comment|/* _GLIBCXX_VALARRAY */
 end_comment
 
 end_unit

@@ -118,13 +118,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_CPP_CTIME
+name|_GLIBCXX_CTIME
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_CPP_CTIME
+name|_GLIBCXX_CTIME
 value|1
 end_define
 

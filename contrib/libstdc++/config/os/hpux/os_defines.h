@@ -4,7 +4,7 @@ comment|// Specific definitions for HPUX  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -98,13 +98,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_OS_DEFINES
+name|_GLIBCXX_OS_DEFINES
 value|1
 end_define
 
@@ -149,7 +149,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* HP-UX, for reasons unknown choose to use a different name for    the string to [unsigned] long long conversion routines.     Furthermore, instead of having the prototypes in stdlib.h like    everyone else, they put them into a non-standard header<inttypes.h>.  Ugh.<inttypes.h> defines a variety of things, some of which we     probably do not want.  So we don't want to include it here.     Luckily we can just declare strtoll and strtoull with the    __asm extension which effectively renames calls at the    source level without namespace pollution.     Also note that the compiler defines _INCLUDE_LONGLONG for C++    unconditionally, which makes intmax_t and uintmax_t long long    types.     We also force _GLIBCPP_USE_LONG_LONG here so that we don't have    to bastardize configure to deal with this sillyness.  */
+comment|/* HP-UX, for reasons unknown choose to use a different name for    the string to [unsigned] long long conversion routines.     Furthermore, instead of having the prototypes in stdlib.h like    everyone else, they put them into a non-standard header<inttypes.h>.  Ugh.<inttypes.h> defines a variety of things, some of which we     probably do not want.  So we don't want to include it here.     Luckily we can just declare strtoll and strtoull with the    __asm extension which effectively renames calls at the    source level without namespace pollution.     Also note that the compiler defines _INCLUDE_LONGLONG for C++    unconditionally, which makes intmax_t and uintmax_t long long    types.     We also force _GLIBCXX_USE_LONG_LONG here so that we don't have    to bastardize configure to deal with this sillyness.  */
 end_comment
 
 begin_decl_stmt
@@ -227,7 +227,7 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_USE_LONG_LONG
+name|_GLIBCXX_USE_LONG_LONG
 value|1
 end_define
 
@@ -257,7 +257,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_VTABLE_PADDING
+name|_GLIBCXX_VTABLE_PADDING
 value|8
 end_define
 
@@ -308,44 +308,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* We need explicit instantiation of the atomicity lock on HPPA if    there is no weak support.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_GLIBCPP_SUPPORTS_WEAK
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__hppa__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|_GLIBCPP_INST_ATOMICITY_LOCK
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* Don't use pragma weak in gthread headers.  HP-UX rejects programs    with unsatisfied external references even if all of those references    are weak; gthread relies on such unsatisfied references being resolved    to null pointers when weak symbol support is on.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|_GLIBCPP_GTHREAD_USE_WEAK
+name|_GLIBCXX_GTHREAD_USE_WEAK
 value|0
 end_define
 
