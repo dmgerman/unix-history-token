@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.6 (Berkeley) %G%"
+literal|"@(#)printf.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1026,7 +1026,7 @@ name|char
 modifier|*
 name|number
 init|=
-literal|"+-0123456789"
+literal|"+-.0123456789"
 decl_stmt|;
 end_decl_stmt
 
