@@ -2301,12 +2301,14 @@ name|status
 init|=
 literal|0
 decl_stmt|,
-name|count
-init|=
-literal|0
-decl_stmt|,
 name|i
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int count = 0;
+endif|#
+directive|endif
 name|int
 name|delay
 decl_stmt|;
@@ -2818,6 +2820,7 @@ name|scheduled
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|dp
 operator|=
 name|TAILQ_FIRST
@@ -2828,6 +2831,9 @@ index|[
 name|NLORAN
 index|]
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE
