@@ -46,6 +46,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|f_lomac
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show LOMAC attributes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|f_inode
 decl_stmt|;
 end_decl_stmt
@@ -202,6 +213,9 @@ name|int
 name|s_flags
 decl_stmt|;
 name|int
+name|s_lattr
+decl_stmt|;
+name|int
 name|s_group
 decl_stmt|;
 name|int
@@ -236,6 +250,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|flags
+decl_stmt|;
+name|char
+modifier|*
+name|lattr
 decl_stmt|;
 name|char
 name|data

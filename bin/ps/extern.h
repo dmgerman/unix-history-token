@@ -630,6 +630,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|lattr
+name|__P
+argument_list|(
+operator|(
+name|KINFO
+operator|*
+operator|,
+name|VARENT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro

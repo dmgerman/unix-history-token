@@ -577,6 +577,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+name|Zfmt
+index|[]
+init|=
+literal|"lvl"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|kvm_t
 modifier|*
 name|kd
@@ -830,7 +839,7 @@ name|defined
 argument_list|(
 name|LAZY_PS
 argument_list|)
-literal|"aCcefghjLlM:mN:O:o:p:rSTt:U:uvW:wx"
+literal|"aCcefghjLlM:mN:O:o:p:rSTt:U:uvW:wxZ"
 argument_list|)
 operator|)
 operator|!=
@@ -839,7 +848,7 @@ literal|1
 condition|)
 else|#
 directive|else
-literal|"aCceghjLlM:mN:O:o:p:rSTt:U:uvW:wx"
+literal|"aCceghjLlM:mN:O:o:p:rSTt:U:uvW:wxZ"
 block|)
 end_function
 
@@ -1360,6 +1369,22 @@ case|:
 name|xflg
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|parsefmt
+argument_list|(
+name|Zfmt
+argument_list|)
+expr_stmt|;
+name|Zfmt
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 break|break;
 case|case
@@ -2037,6 +2062,12 @@ name|free
 argument_list|(
 name|uids
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|lomac_stop
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

@@ -698,6 +698,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|f_lomac
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%-*s "
+argument_list|,
+name|dp
+operator|->
+name|s_lattr
+argument_list|,
+name|np
+operator|->
+name|lattr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|S_ISCHR
 argument_list|(
 name|sp
