@@ -561,16 +561,14 @@ operator|->
 name|tc_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If this turnstile has no threads on its blocked queue 		 * then it's possible that it was just woken up on another 		 * CPU.  If so, we are done. 		 */
+comment|/* 		 * This thread may not be blocked on this turnstile anymore 		 * but instead might already be woken up on another CPU 		 * that is waiting on sched_lock in turnstile_unpend() to 		 * finish waking this thread up.  We can detect this case 		 * by checking to see if this thread has been given a 		 * turnstile by either turnstile_signal() or 		 * turnstile_wakeup().  In this case, treat the thread as 		 * if it was already running. 		 */
 if|if
 condition|(
-name|TAILQ_EMPTY
-argument_list|(
-operator|&
-name|ts
+name|td
 operator|->
-name|ts_blocked
-argument_list|)
+name|td_turnstile
+operator|!=
+name|NULL
 condition|)
 block|{
 name|mtx_unlock_spin
@@ -810,17 +808,12 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|thread0
 operator|.
 name|td_turnstile
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1596,17 +1589,12 @@ name|ts_owner
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|td
 operator|->
 name|td_turnstile
 operator|=
 name|NULL
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -2403,7 +2391,7 @@ name|td_priority
 operator|=
 name|pri
 expr_stmt|;
-comment|/* 	 * Wake up all the pending threads.  If a thread is not blocked 	 * on a lock, then it is currently executing on another CPU in 	 * turnstile_wait().  Set a flag to force it to try to acquire 	 * the lock again instead of blocking. 	 */
+comment|/* 	 * Wake up all the pending threads.  If a thread is not blocked 	 * on a lock, then it is currently executing on another CPU in 	 * turnstile_wait() or sitting on a run queue waiting to resume 	 * in turnstile_wait().  Set a flag to force it to try to acquire 	 * the lock again instead of blocking. 	 */
 while|while
 condition|(
 operator|!
@@ -2493,6 +2481,11 @@ expr_stmt|;
 name|MPASS
 argument_list|(
 name|TD_IS_RUNNING
+argument_list|(
+name|td
+argument_list|)
+operator|||
+name|TD_ON_RUNQ
 argument_list|(
 name|td
 argument_list|)
