@@ -27,14 +27,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
 begin_include
 include|#
 directive|include
@@ -47,10 +39,11 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
 
 begin_include
 include|#
@@ -63,26 +56,6 @@ include|#
 directive|include
 file|<machine/resource.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_typedef
-typedef|typedef
-name|vm_offset_t
-name|vm_paddr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -249,126 +222,103 @@ name|ACPI_FLAG_WAKE_ENABLED
 value|0x1
 end_define
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
 begin_comment
-comment|/*  * In 4.x, ACPI is protected by splhigh().  */
+comment|/*  * Entry points to ACPI from above are global functions defined in this  * file, sysctls, and I/O on the control device.  Entry points from below  * are interrupts (the SCI), notifies, task queue threads, and the thermal  * zone polling thread.  *  * ACPI tables and global shared data are protected by a global lock  * (acpi_mutex).    *  * Each ACPI device can have its own driver-specific mutex for protecting  * shared access to local data.  The ACPI_LOCK macros handle mutexes.  *  * Drivers that need to serialize access to functions (e.g., to route  * interrupts, get/set control paths, etc.) should use the sx lock macros  * (ACPI_SERIAL).  *  * ACPI-CA handles its own locking and should not be called with locks held.  *  * The most complicated path is:  *     GPE -> EC runs _Qxx -> _Qxx reads EC space -> GPE  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|acpi_mutex
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|ACPI_LOCK
-value|s = splhigh()
+parameter_list|(
+name|sys
+parameter_list|)
+value|mtx_lock(&sys##_mutex)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_UNLOCK
-value|splx(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_ASSERTLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MSLEEP
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
+name|sys
 parameter_list|)
-value|tsleep(a, c, d, e)
+value|mtx_unlock(&sys##_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOCK_ASSERT
+parameter_list|(
+name|sys
+parameter_list|)
+value|mtx_assert(&sys##_mutex, MA_OWNED);
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_LOCK_DECL
-value|int s
-end_define
-
-begin_define
-define|#
-directive|define
-name|kthread_create
 parameter_list|(
-name|a
+name|sys
 parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|,
-name|f
+name|name
 parameter_list|)
-value|kthread_create(a, b, c, f)
+define|\
+value|static struct mtx sys##_mutex;				\ 	MTX_SYSINIT(sys##_mutex,&sys##_mutex, name, MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|tc_init
+name|ACPI_SERIAL_BEGIN
 parameter_list|(
-name|a
+name|sys
 parameter_list|)
-value|init_timecounter(a)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_LOCK
+value|sx_xlock(&sys##_sxlock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_UNLOCK
+name|ACPI_SERIAL_END
+parameter_list|(
+name|sys
+parameter_list|)
+value|sx_xunlock(&sys##_sxlock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_ASSERTLOCK
+name|ACPI_SERIAL_ASSERT
+parameter_list|(
+name|sys
+parameter_list|)
+value|sx_assert(&sys##_sxlock, SX_XLOCKED);
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_LOCK_DECL
+name|ACPI_SERIAL_DECL
+parameter_list|(
+name|sys
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|static struct sx sys##_sxlock;				\ 	SX_SYSINIT(sys##_sxlock,&sys##_sxlock, name)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * ACPI CA does not define layers for non-ACPI CA drivers.  * We define some here within the range provided.  */
@@ -2045,14 +1995,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2071,36 +2013,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|ACPI_MAX_THREADS
-operator|>
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_THREADS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_USE_THREADS
-end_ifdef
-
 begin_comment
 comment|/* ACPI task kernel thread initialization. */
 end_comment
@@ -2113,11 +2025,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
