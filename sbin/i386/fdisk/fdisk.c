@@ -3330,7 +3330,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|bcopy
+name|memcpy
 argument_list|(
 name|partp
 argument_list|,
