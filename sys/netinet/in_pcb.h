@@ -24,6 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -36,12 +48,6 @@ end_include
 begin_comment
 comment|/* for IPSEC */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/uma.h>
-end_include
 
 begin_define
 define|#
@@ -698,7 +704,9 @@ decl_stmt|;
 name|u_short
 name|lasthi
 decl_stmt|;
-name|uma_zone_t
+name|struct
+name|uma_zone
+modifier|*
 name|ipi_zone
 decl_stmt|;
 comment|/* zone to allocate pcbs from */
