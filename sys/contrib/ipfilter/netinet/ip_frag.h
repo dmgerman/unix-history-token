@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.0.2.12.2.1 1998/05/23 14:29:39 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_frag.h	1.5 3/24/96  * $Id: ip_frag.h,v 2.4 2000/03/13 22:10:21 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -62,8 +62,9 @@ decl_stmt|;
 name|u_short
 name|ipfr_ttl
 decl_stmt|;
-name|u_char
-name|ipfr_pass
+name|frentry_t
+modifier|*
+name|ipfr_rule
 decl_stmt|;
 block|}
 name|ipfr_t
@@ -127,6 +128,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|fr_frag_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|ipfrstat_t
 modifier|*
 name|ipfr_fragstats
@@ -152,7 +160,7 @@ operator|,
 name|fr_info_t
 operator|*
 operator|,
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -171,7 +179,7 @@ operator|,
 name|fr_info_t
 operator|*
 operator|,
-name|int
+name|u_int
 operator|,
 expr|struct
 name|nat
@@ -201,7 +209,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|frentry_t
+modifier|*
 name|ipfr_knownfrag
 name|__P
 argument_list|(
@@ -243,6 +252,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipfr_fragexpire
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -260,6 +282,21 @@ name|__sgi
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOLARIS2
+argument_list|)
+operator|&&
+operator|(
+name|SOLARIS2
+operator|<
+literal|7
+operator|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -272,6 +309,30 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipfr_slowtimer
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

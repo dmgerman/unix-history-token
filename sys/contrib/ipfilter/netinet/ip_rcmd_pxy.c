@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id$  * $FreeBSD$  */
+comment|/*  * $Id: ip_rcmd_pxy.c,v 1.4.2.1 2000/05/06 11:19:34 darrenr Exp $  */
 end_comment
 
 begin_comment
@@ -704,6 +704,29 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|int
+name|slen
+decl_stmt|;
+name|slen
+operator|=
+name|ip
+operator|->
+name|ip_len
+expr_stmt|;
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|fin
+operator|->
+name|fin_hlen
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tcp
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -762,6 +785,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX - don't specify remote port */
+name|tcp2
+operator|->
+name|th_off
+operator|=
+literal|5
+expr_stmt|;
 name|fi
 operator|.
 name|fin_data
@@ -861,6 +890,12 @@ name|FI_W_DPORT
 argument_list|)
 expr_stmt|;
 block|}
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|slen
+expr_stmt|;
 name|ip
 operator|->
 name|ip_src
