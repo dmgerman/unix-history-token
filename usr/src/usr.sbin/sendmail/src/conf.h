@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -876,6 +876,67 @@ begin_comment
 comment|/* we have seteuid(2) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ERRLIST_PREDEFINED
+end_define
+
+begin_comment
+comment|/* don't declare sys_errlist */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SCO Unix */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SCO_unix_
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_comment
+comment|/* include all the System V defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* need unsetenv(3) support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|fork
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXPATHLEN
+value|PATHSIZE
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1294,11 +1355,21 @@ begin_comment
 comment|/* HASUNAME */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|MAXHOSTNAMELEN
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_SCO_unix_
+argument_list|)
+end_if
 
 begin_define
 define|#
