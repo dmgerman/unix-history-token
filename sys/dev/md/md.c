@@ -5460,8 +5460,11 @@ condition|(
 name|mdio
 operator|->
 name|md_file
+index|[
+literal|0
+index|]
 operator|!=
-name|NULL
+literal|'\0'
 operator|||
 name|mdio
 operator|->
