@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence   * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)bpf.c	7.5 (Berkeley) 7/15/91  */
+comment|/*-  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)bpf.c	7.5 (Berkeley) 7/15/91  */
 end_comment
 
 begin_if
@@ -31,8 +31,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf_filter.c,v 1.35 2000/10/23 19:32:21 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/bpf/net/bpf_filter.c,v 1.43.2.1 2003/11/15 23:26:49 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +41,44 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pcap-stdinc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* WIN32 */
+end_comment
 
 begin_include
 include|#
@@ -145,10 +184,19 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIN32 */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
+file|<pcap-bpf.h>
 end_include
 
 begin_if
@@ -198,6 +246,10 @@ directive|ifndef
 name|LBL_ALIGN
 end_ifndef
 
+begin_comment
+comment|/*  * XXX - IA-64?  If not, this probably won't work on Win64 IA-64  * systems, unless LBL_ALIGN is defined elsewhere for them.  * XXX - SuperH?  If not, this probably won't work on WinCE SuperH  * systems, unless LBL_ALIGN is defined elsewhere for them.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -208,15 +260,20 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|__sparc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|mips
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|ibm032
 argument_list|)
 operator|||
-expr|\
 name|defined
 argument_list|(
 name|__alpha
@@ -225,6 +282,12 @@ operator|||
 name|defined
 argument_list|(
 name|__hpux
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__arm__
 argument_list|)
 end_if
 
@@ -250,11 +313,22 @@ directive|ifndef
 name|LBL_ALIGN
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIN32
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2150,7 +2224,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return true if the 'fcode' is a valid filter program.  * The constraints are that each jump be forward and to a valid  * code.  The code must terminate with either an accept or reject.   * 'valid' is an array for use by the routine (it must be at least  * 'len' bytes long).    *  * The kernel needs to be able to verify an application's filter code.  * Otherwise, a bogus program could easily crash the system.  */
+comment|/*  * Return true if the 'fcode' is a valid filter program.  * The constraints are that each jump be forward and to a valid  * code.  The code must terminate with either an accept or reject.  * 'valid' is an array for use by the routine (it must be at least  * 'len' bytes long).  *  * The kernel needs to be able to verify an application's filter code.  * Otherwise, a bogus program could easily crash the system.  */
 end_comment
 
 begin_function
@@ -2194,7 +2268,7 @@ operator|++
 name|i
 control|)
 block|{
-comment|/* 		 * Check that that jumps are forward, and within  		 * the code block. 		 */
+comment|/* 		 * Check that that jumps are forward, and within 		 * the code block. 		 */
 name|p
 operator|=
 operator|&

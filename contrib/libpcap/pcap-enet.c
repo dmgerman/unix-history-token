@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-enet.c,v 1.5 2000/10/12 03:53:59 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-enet.c,v 1.7.2.1 2003/11/15 23:26:44 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/bpf.h>
+file|<pcap-bpf.h>
 end_include
 
 begin_include

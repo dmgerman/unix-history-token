@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  pcap-linux.c: Packet capture interface to the Linux kernel  *  *  Copyright (c) 2000 Torsten Landschoff<torsten@debian.org>  *  		       Sebastian Krahmer<krahmer@cs.uni-potsdam.de>  *    *  License: BSD  *    *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *    *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in  *     the documentation and/or other materials provided with the  *     distribution.  *  3. The names of the authors may not be used to endorse or promote  *     products derived from this software without specific prior  *     written permission.  *    *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  *  pcap-linux.c: Packet capture interface to the Linux kernel  *  *  Copyright (c) 2000 Torsten Landschoff<torsten@debian.org>  *  		       Sebastian Krahmer<krahmer@cs.uni-potsdam.de>  *  *  License: BSD  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions  *  are met:  *  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright  *     notice, this list of conditions and the following disclaimer in  *     the documentation and/or other materials provided with the  *     distribution.  *  3. The names of the authors may not be used to endorse or promote  *     products derived from this software without specific prior  *     written permission.  *  *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  *  IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.73 2001/12/10 07:14:16 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-linux.c,v 1.98.2.4 2003/11/21 10:20:46 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +58,27 @@ include|#
 directive|include
 file|"sll.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_API
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"pcap-dag.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_DAG_API */
+end_comment
 
 begin_include
 include|#
@@ -243,6 +265,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOL_PACKET
+end_ifndef
+
+begin_comment
+comment|/*  * This is being compiled on a system that lacks SOL_PACKET; define it  * with the value it has in the 2.2 and later kernels, so that we can  * set promiscuous mode in the good modern way rather than the old  * 2.0-kernel crappy way.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOL_PACKET
+value|263
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -251,7 +295,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*   * When capturing on all interfaces we use this as the buffer size.   * Should be bigger then all MTUs that occur in real life.  * 64kB should be enough for now.  */
+comment|/*  * When capturing on all interfaces we use this as the buffer size.  * Should be bigger then all MTUs that occur in real life.  * 64kB should be enough for now.  */
 end_comment
 
 begin_define
@@ -274,6 +318,8 @@ name|pcap_t
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -286,6 +332,7 @@ parameter_list|(
 name|pcap_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -307,6 +354,7 @@ parameter_list|(
 name|pcap_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -323,6 +371,24 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|pcap_read_linux
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|pcap_handler
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|pcap_read_packet
 parameter_list|(
 name|pcap_t
@@ -331,6 +397,47 @@ parameter_list|,
 name|pcap_handler
 parameter_list|,
 name|u_char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pcap_stats_linux
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|struct
+name|pcap_stat
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pcap_setfilter_linux
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|struct
+name|bpf_program
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pcap_close_linux
+parameter_list|(
+name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -563,7 +670,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  Get a handle for a live capture from the given device. You can   *  pass NULL as device to get all packages (without link level   *  information of course). If you pass 1 as promisc the interface  *  will be set to promiscous mode (XXX: I think this usage should   *  be deprecated and functions be added to select that later allow  *  modification of that values -- Torsten).  *    *  See also pcap(3).  */
+comment|/*  *  Get a handle for a live capture from the given device. You can  *  pass NULL as device to get all packages (without link level  *  information of course). If you pass 1 as promisc the interface  *  will be set to promiscous mode (XXX: I think this usage should  *  be deprecated and functions be added to select that later allow  *  modification of that values -- Torsten).  *  *  See also pcap(3).  */
 end_comment
 
 begin_function
@@ -571,6 +678,7 @@ name|pcap_t
 modifier|*
 name|pcap_open_live
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|device
@@ -596,10 +704,49 @@ decl_stmt|;
 name|int
 name|mtu
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|int
+name|live_open_ok
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|utsname
 name|utsname
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_API
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|device
+argument_list|,
+literal|"dag"
+argument_list|)
+condition|)
+block|{
+return|return
+name|dag_open_live
+argument_list|(
+name|device
+argument_list|,
+name|snaplen
+argument_list|,
+name|promisc
+argument_list|,
+name|to_ms
+argument_list|,
+name|ebuf
+argument_list|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* HAVE_DAG_API */
 comment|/* Allocate a handle for this session. */
 name|handle
 operator|=
@@ -665,7 +812,7 @@ name|timeout
 operator|=
 name|to_ms
 expr_stmt|;
-comment|/* 	 * NULL and "any" are special devices which give us the hint to  	 * monitor all devices. 	 */
+comment|/* 	 * NULL and "any" are special devices which give us the hint to 	 * monitor all devices. 	 */
 if|if
 condition|(
 operator|!
@@ -763,11 +910,12 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/*  	 * Current Linux kernels use the protocol family PF_PACKET to  	 * allow direct access to all packets on the network while  	 * older kernels had a special socket type SOCK_PACKET to  	 * implement this feature. 	 * While this old implementation is kind of obsolete we need 	 * to be compatible with older kernels for a while so we are  	 * trying both methods with the newer method preferred. 	 */
+comment|/* 	 * Current Linux kernels use the protocol family PF_PACKET to 	 * allow direct access to all packets on the network while 	 * older kernels had a special socket type SOCK_PACKET to 	 * implement this feature. 	 * While this old implementation is kind of obsolete we need 	 * to be compatible with older kernels for a while so we are 	 * trying both methods with the newer method preferred. 	 */
 if|if
 condition|(
-operator|!
 operator|(
+name|err
+operator|=
 name|live_open_new
 argument_list|(
 name|handle
@@ -780,7 +928,25 @@ name|to_ms
 argument_list|,
 name|ebuf
 argument_list|)
-operator|||
+operator|)
+operator|==
+literal|1
+condition|)
+name|live_open_ok
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Non-fatal error; try old way */
+if|if
+condition|(
 name|live_open_old
 argument_list|(
 name|handle
@@ -793,10 +959,29 @@ name|to_ms
 argument_list|,
 name|ebuf
 argument_list|)
-operator|)
+condition|)
+name|live_open_ok
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|live_open_ok
 condition|)
 block|{
-comment|/*  		 * Both methods to open the packet socket failed. Tidy 		 * up and report our failure (ebuf is expected to be 		 * set by the functions above).  		 */
+comment|/* 		 * Both methods to open the packet socket failed. Tidy 		 * up and report our failure (ebuf is expected to be 		 * set by the functions above). 		 */
+if|if
+condition|(
+name|handle
+operator|->
+name|md
+operator|.
+name|device
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|handle
@@ -870,20 +1055,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|close
+name|pcap_close_linux
 argument_list|(
 name|handle
-operator|->
-name|fd
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|handle
-operator|->
-name|md
-operator|.
-name|device
 argument_list|)
 expr_stmt|;
 name|free
@@ -972,20 +1146,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|close
+name|pcap_close_linux
 argument_list|(
 name|handle
-operator|->
-name|fd
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|handle
-operator|->
-name|md
-operator|.
-name|device
 argument_list|)
 expr_stmt|;
 name|free
@@ -997,6 +1160,58 @@ return|return
 name|NULL
 return|;
 block|}
+comment|/* 	 * "handle->fd" is a socket, so "select()" and "poll()" 	 * should work on it. 	 */
+name|handle
+operator|->
+name|selectable_fd
+operator|=
+name|handle
+operator|->
+name|fd
+expr_stmt|;
+name|handle
+operator|->
+name|read_op
+operator|=
+name|pcap_read_linux
+expr_stmt|;
+name|handle
+operator|->
+name|setfilter_op
+operator|=
+name|pcap_setfilter_linux
+expr_stmt|;
+name|handle
+operator|->
+name|set_datalink_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* can't change data link type */
+name|handle
+operator|->
+name|getnonblock_op
+operator|=
+name|pcap_getnonblock_fd
+expr_stmt|;
+name|handle
+operator|->
+name|setnonblock_op
+operator|=
+name|pcap_setnonblock_fd
+expr_stmt|;
+name|handle
+operator|->
+name|stats_op
+operator|=
+name|pcap_stats_linux
+expr_stmt|;
+name|handle
+operator|->
+name|close_op
+operator|=
+name|pcap_close_linux
+expr_stmt|;
 return|return
 name|handle
 return|;
@@ -1004,12 +1219,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Read at most max_packets from the capture stream and call the callback  *  for each of them. Returns the number of packets handled or -1 if an  *  error occured.   */
+comment|/*  *  Read at most max_packets from the capture stream and call the callback  *  for each of them. Returns the number of packets handled or -1 if an  *  error occured.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|pcap_read
+name|pcap_read_linux
 parameter_list|(
 name|pcap_t
 modifier|*
@@ -1041,7 +1257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Read a packet from the socket calling the handler provided by   *  the user. Returns the number of packets received or -1 if an  *  error occured.  */
+comment|/*  *  Read a packet from the socket calling the handler provided by  *  the user. Returns the number of packets received or -1 if an  *  error occured.  */
 end_comment
 
 begin_function
@@ -1143,6 +1359,26 @@ name|offset
 expr_stmt|;
 do|do
 block|{
+comment|/* 		 * Has "pcap_breakloop()" been called? 		 */
+if|if
+condition|(
+name|handle
+operator|->
+name|break_loop
+condition|)
+block|{
+comment|/* 			 * Yes - clear the flag that indicates that it 			 * has, and return -2 as an indication that we 			 * were told to break out of the loop. 			 */
+name|handle
+operator|->
+name|break_loop
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|-
+literal|2
+return|;
+block|}
 name|fromlen
 operator|=
 sizeof|sizeof
@@ -1445,7 +1681,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * XXX: According to the kernel source we should get the real  	 * packet len if calling recvfrom with MSG_TRUNC set. It does  	 * not seem to work here :(, but it is supported by this code 	 * anyway.  	 * To be honest the code RELIES on that feature so this is really 	 * broken with 2.2.x kernels. 	 * I spend a day to figure out what's going on and I found out 	 * that the following is happening:  	 * 	 * The packet comes from a random interface and the packet_rcv  	 * hook is called with a clone of the packet. That code inserts 	 * the packet into the receive queue of the packet socket. 	 * If a filter is attached to that socket that filter is run 	 * first - and there lies the problem. The default filter always 	 * cuts the packet at the snaplen: 	 * 	 * # tcpdump -d 	 * (000) ret      #68 	 * 	 * So the packet filter cuts down the packet. The recvfrom call  	 * says "hey, it's only 68 bytes, it fits into the buffer" with 	 * the result that we don't get the real packet length. This  	 * is valid at least until kernel 2.2.17pre6.  	 * 	 * We currently handle this by making a copy of the filter 	 * program, fixing all "ret" instructions with non-zero 	 * operands to have an operand of 65535 so that the filter 	 * doesn't truncate the packet, and supplying that modified 	 * filter to the kernel. 	 */
+comment|/* 	 * XXX: According to the kernel source we should get the real 	 * packet len if calling recvfrom with MSG_TRUNC set. It does 	 * not seem to work here :(, but it is supported by this code 	 * anyway. 	 * To be honest the code RELIES on that feature so this is really 	 * broken with 2.2.x kernels. 	 * I spend a day to figure out what's going on and I found out 	 * that the following is happening: 	 * 	 * The packet comes from a random interface and the packet_rcv 	 * hook is called with a clone of the packet. That code inserts 	 * the packet into the receive queue of the packet socket. 	 * If a filter is attached to that socket that filter is run 	 * first - and there lies the problem. The default filter always 	 * cuts the packet at the snaplen: 	 * 	 * # tcpdump -d 	 * (000) ret      #68 	 * 	 * So the packet filter cuts down the packet. The recvfrom call 	 * says "hey, it's only 68 bytes, it fits into the buffer" with 	 * the result that we don't get the real packet length. This 	 * is valid at least until kernel 2.2.17pre6. 	 * 	 * We currently handle this by making a copy of the filter 	 * program, fixing all "ret" instructions with non-zero 	 * operands to have an operand of 65535 so that the filter 	 * doesn't truncate the packet, and supplying that modified 	 * filter to the kernel. 	 */
 name|caplen
 operator|=
 name|packet_len
@@ -1598,8 +1834,9 @@ comment|/*  *  Get the statistics for the given packet capture handle.  *  Repor
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|pcap_stats
+name|pcap_stats_linux
 parameter_list|(
 name|pcap_t
 modifier|*
@@ -1627,6 +1864,11 @@ expr|struct
 name|tpacket_stats
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_TPACKET_STATS
 comment|/* 	 * Try to get the packet counts from the kernel. 	 */
 if|if
 condition|(
@@ -1728,12 +1970,96 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Attach the given BPF code to the packet capture device.   */
+comment|/*  * Description string for the "any" device.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|any_descr
+index|[]
+init|=
+literal|"Pseudo-device that captures on all interfaces"
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
-name|pcap_setfilter
+name|pcap_platform_finddevs
+parameter_list|(
+name|pcap_if_t
+modifier|*
+modifier|*
+name|alldevsp
+parameter_list|,
+name|char
+modifier|*
+name|errbuf
+parameter_list|)
+block|{
+if|if
+condition|(
+name|pcap_add_if
+argument_list|(
+name|alldevsp
+argument_list|,
+literal|"any"
+argument_list|,
+literal|0
+argument_list|,
+name|any_descr
+argument_list|,
+name|errbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+ifdef|#
+directive|ifdef
+name|HAVE_DAG_API
+if|if
+condition|(
+name|dag_platform_finddevs
+argument_list|(
+name|alldevsp
+argument_list|,
+name|errbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* HAVE_DAG_API */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *  Attach the given BPF code to the packet capture device.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|pcap_setfilter_linux
 parameter_list|(
 name|pcap_t
 modifier|*
@@ -1754,6 +2080,11 @@ name|fcode
 decl_stmt|;
 name|int
 name|can_filter_in_kernel
+decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
 decl_stmt|;
 endif|#
 directive|endif
@@ -1805,34 +2136,12 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|snprintf
-argument_list|(
-name|handle
-operator|->
-name|errbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|handle
-operator|->
-name|errbuf
-argument_list|)
-argument_list|,
-literal|"malloc: %s"
-argument_list|,
-name|pcap_strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* install_bpf_program() filled in errbuf */
 return|return
 operator|-
 literal|1
 return|;
-block|}
-comment|/*  	 * Run user level packet filter by default. Will be overriden if  	 * installing a kernel filter succeeds.  	 */
+comment|/* 	 * Run user level packet filter by default. Will be overriden if 	 * installing a kernel filter succeeds. 	 */
 name|handle
 operator|->
 name|md
@@ -1841,20 +2150,6 @@ name|use_bpf
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * If we're reading from a savefile, don't try to install 	 * a kernel filter. 	 */
-if|if
-condition|(
-name|handle
-operator|->
-name|sf
-operator|.
-name|rfile
-operator|!=
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
 comment|/* Install kernel level filter if possible */
 ifdef|#
 directive|ifdef
@@ -1873,7 +2168,7 @@ operator|>
 name|USHRT_MAX
 condition|)
 block|{
-comment|/* 		 * fcode.len is an unsigned short for current kernel.  		 * I have yet to see BPF-Code with that much 		 * instructions but still it is possible. So for the 		 * sake of correctness I added this check. 		 */
+comment|/* 		 * fcode.len is an unsigned short for current kernel. 		 * I have yet to see BPF-Code with that much 		 * instructions but still it is possible. So for the 		 * sake of correctness I added this check. 		 */
 name|fprintf
 argument_list|(
 name|stderr
@@ -1946,6 +2241,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|err
+operator|=
 name|set_kernel_filter
 argument_list|(
 name|handle
@@ -1953,6 +2251,7 @@ argument_list|,
 operator|&
 name|fcode
 argument_list|)
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1967,9 +2266,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|err
+operator|==
+operator|-
+literal|1
+condition|)
+comment|/* Non-fatal error */
 block|{
-comment|/*  			 * Print a warning if we weren't able to install 			 * the filter for a reason other than "this kernel 			 * isn't configured to support socket filters. 			 */
+comment|/* 			 * Print a warning if we weren't able to install 			 * the filter for a reason other than "this kernel 			 * isn't configured to support socket filters. 			 */
 if|if
 condition|(
 name|errno
@@ -2027,6 +2334,18 @@ operator|.
 name|filter
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+operator|-
+literal|2
+condition|)
+comment|/* Fatal error */
+return|return
+operator|-
+literal|1
+return|;
 endif|#
 directive|endif
 comment|/* SO_ATTACH_FILTER */
@@ -2037,7 +2356,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Linux uses the ARP hardware type to identify the type of an   *  interface. pcap uses the DLT_xxx constants for this. This   *  function takes a pointer to a "pcap_t", and an ARPHRD_xxx  *  constant, as arguments, and sets "handle->linktype" to the  *  appropriate DLT_XXX constant and sets "handle->offset" to  *  the appropriate value (to make "handle->offset" plus link-layer  *  header length be a multiple of 4, so that the link-layer payload  *  will be aligned on a 4-byte boundary when capturing packets).  *  (If the offset isn't set here, it'll be 0; add code as appropriate  *  for cases where it shouldn't be 0.)  *    *  Sets the link type to -1 if unable to map the type.  */
+comment|/*  *  Linux uses the ARP hardware type to identify the type of an  *  interface. pcap uses the DLT_xxx constants for this. This  *  function takes a pointer to a "pcap_t", and an ARPHRD_xxx  *  constant, as arguments, and sets "handle->linktype" to the  *  appropriate DLT_XXX constant and sets "handle->offset" to  *  the appropriate value (to make "handle->offset" plus link-layer  *  header length be a multiple of 4, so that the link-layer payload  *  will be aligned on a 4-byte boundary when capturing packets).  *  (If the offset isn't set here, it'll be 0; add code as appropriate  *  for cases where it shouldn't be 0.)  *  *  If "cooked_ok" is non-zero, we can use DLT_LINUX_SLL and capture  *  in cooked mode; otherwise, we can't use cooked mode, so we have  *  to pick some type that works in raw mode, or fail.  *  *  Sets the link type to -1 if unable to map the type.  */
 end_comment
 
 begin_function
@@ -2051,6 +2370,9 @@ name|handle
 parameter_list|,
 name|int
 name|arptype
+parameter_list|,
+name|int
+name|cooked_ok
 parameter_list|)
 block|{
 switch|switch
@@ -2156,9 +2478,19 @@ name|handle
 operator|->
 name|linktype
 operator|=
-name|DLT_ARCNET
+name|DLT_ARCNET_LINUX
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|ARPHRD_FDDI
+comment|/* From Linux 2.2.13 */
+define|#
+directive|define
+name|ARPHRD_FDDI
+value|774
+endif|#
+directive|endif
 case|case
 name|ARPHRD_FDDI
 case|:
@@ -2188,12 +2520,24 @@ directive|endif
 case|case
 name|ARPHRD_ATM
 case|:
-comment|/* 		 * The Classical IP implementation in ATM for Linux 		 * supports both what RFC 1483 calls "LLC Encapsulation", 		 * in which each packet has an LLC header, possibly 		 * with a SNAP header as well, prepended to it, and 		 * what RFC 1483 calls "VC Based Multiplexing", in which 		 * different virtual circuits carry different network 		 * layer protocols, and no header is prepended to packets. 		 * 		 * They both have an ARPHRD_ type of ARPHRD_ATM, so 		 * you can't use the ARPHRD_ type to find out whether 		 * captured packets will have an LLC header, and, 		 * while there's a socket ioctl to *set* the encapsulation 		 * type, there's no ioctl to *get* the encapsulation type. 		 * 		 * This means that 		 * 		 *	programs that dissect Linux Classical IP frames 		 *	would have to check for an LLC header and, 		 *	depending on whether they see one or not, dissect 		 *	the frame as LLC-encapsulated or as raw IP (I 		 *	don't know whether there's any traffic other than 		 *	IP that would show up on the socket, or whether 		 *	there's any support for IPv6 in the Linux 		 *	Classical IP code); 		 * 		 *	filter expressions would have to compile into 		 *	code that checks for an LLC header and does 		 *	the right thing. 		 * 		 * Both of those are a nuisance - and, at least on systems 		 * that support PF_PACKET sockets, we don't have to put 		 * up with those nuisances; instead, we can just capture 		 * in cooked mode.  That's what we'll do. 		 */
+comment|/* 		 * The Classical IP implementation in ATM for Linux 		 * supports both what RFC 1483 calls "LLC Encapsulation", 		 * in which each packet has an LLC header, possibly 		 * with a SNAP header as well, prepended to it, and 		 * what RFC 1483 calls "VC Based Multiplexing", in which 		 * different virtual circuits carry different network 		 * layer protocols, and no header is prepended to packets. 		 * 		 * They both have an ARPHRD_ type of ARPHRD_ATM, so 		 * you can't use the ARPHRD_ type to find out whether 		 * captured packets will have an LLC header, and, 		 * while there's a socket ioctl to *set* the encapsulation 		 * type, there's no ioctl to *get* the encapsulation type. 		 * 		 * This means that 		 * 		 *	programs that dissect Linux Classical IP frames 		 *	would have to check for an LLC header and, 		 *	depending on whether they see one or not, dissect 		 *	the frame as LLC-encapsulated or as raw IP (I 		 *	don't know whether there's any traffic other than 		 *	IP that would show up on the socket, or whether 		 *	there's any support for IPv6 in the Linux 		 *	Classical IP code); 		 * 		 *	filter expressions would have to compile into 		 *	code that checks for an LLC header and does 		 *	the right thing. 		 * 		 * Both of those are a nuisance - and, at least on systems 		 * that support PF_PACKET sockets, we don't have to put 		 * up with those nuisances; instead, we can just capture 		 * in cooked mode.  That's what we'll do, if we can. 		 * Otherwise, we'll just fail. 		 */
+if|if
+condition|(
+name|cooked_ok
+condition|)
 name|handle
 operator|->
 name|linktype
 operator|=
 name|DLT_LINUX_SLL
+expr_stmt|;
+else|else
+name|handle
+operator|->
+name|linktype
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 break|break;
 ifndef|#
@@ -2216,19 +2560,63 @@ operator|=
 name|DLT_IEEE802_11
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|ARPHRD_IEEE80211_PRISM
+comment|/* From Linux 2.4.18 */
+define|#
+directive|define
+name|ARPHRD_IEEE80211_PRISM
+value|802
+endif|#
+directive|endif
+case|case
+name|ARPHRD_IEEE80211_PRISM
+case|:
+name|handle
+operator|->
+name|linktype
+operator|=
+name|DLT_PRISM_HEADER
+expr_stmt|;
+break|break;
 case|case
 name|ARPHRD_PPP
 case|:
-comment|/* 		 * Some PPP code in the kernel supplies no link-layer 		 * header whatsoever to PF_PACKET sockets; other PPP 		 * code supplies PPP link-layer headers ("syncppp.c"); 		 * some PPP code might supply random link-layer 		 * headers (PPP over ISDN - there's code in Ethereal, 		 * for example, to cope with PPP-over-ISDN captures 		 * with which the Ethereal developers have had to cope, 		 * heuristically trying to determine which of the 		 * oddball link-layer headers particular packets have). 		 * 		 * As such, we just punt, and run all PPP interfaces 		 * in cooked mode. 		 */
+comment|/* 		 * Some PPP code in the kernel supplies no link-layer 		 * header whatsoever to PF_PACKET sockets; other PPP 		 * code supplies PPP link-layer headers ("syncppp.c"); 		 * some PPP code might supply random link-layer 		 * headers (PPP over ISDN - there's code in Ethereal, 		 * for example, to cope with PPP-over-ISDN captures 		 * with which the Ethereal developers have had to cope, 		 * heuristically trying to determine which of the 		 * oddball link-layer headers particular packets have). 		 * 		 * As such, we just punt, and run all PPP interfaces 		 * in cooked mode, if we can; otherwise, we just treat 		 * it as DLT_RAW, for now - if somebody needs to capture, 		 * on a 2.0[.x] kernel, on PPP devices that supply a 		 * link-layer header, they'll have to add code here to 		 * map to the appropriate DLT_ type (possibly adding a 		 * new DLT_ type, if necessary). 		 */
+if|if
+condition|(
+name|cooked_ok
+condition|)
 name|handle
 operator|->
 name|linktype
 operator|=
 name|DLT_LINUX_SLL
 expr_stmt|;
+else|else
+block|{
+comment|/* 			 * XXX - handle ISDN types here?  We can't fall 			 * back on cooked sockets, so we'd have to 			 * figure out from the device name what type of 			 * link-layer encapsulation it's using, and map 			 * that to an appropriate DLT_ value, meaning 			 * we'd map "isdnN" devices to DLT_RAW (they 			 * supply raw IP packets with no link-layer 			 * header) and "isdY" devices to a new DLT_I4L_IP 			 * type that has only an Ethernet packet type as 			 * a link-layer header. 			 * 			 * But sometimes we seem to get random crap 			 * in the link-layer header when capturing on 			 * ISDN devices.... 			 */
+name|handle
+operator|->
+name|linktype
+operator|=
+name|DLT_RAW
+expr_stmt|;
+block|}
 break|break;
+ifndef|#
+directive|ifndef
+name|ARPHRD_CISCO
+define|#
+directive|define
+name|ARPHRD_CISCO
+value|513
+comment|/* previously ARPHRD_HDLC */
+endif|#
+directive|endif
 case|case
-name|ARPHRD_HDLC
+name|ARPHRD_CISCO
 case|:
 name|handle
 operator|->
@@ -2248,7 +2636,7 @@ define|#
 directive|define
 name|ARPHRD_SIT
 value|776
-comment|/* From Linux 2.2.14 */
+comment|/* From Linux 2.2.13 */
 endif|#
 directive|endif
 case|case
@@ -2269,12 +2657,55 @@ case|:
 case|case
 name|ARPHRD_SLIP
 case|:
+ifndef|#
+directive|ifndef
+name|ARPHRD_RAWHDLC
+define|#
+directive|define
+name|ARPHRD_RAWHDLC
+value|518
+endif|#
+directive|endif
+case|case
+name|ARPHRD_RAWHDLC
+case|:
+ifndef|#
+directive|ifndef
+name|ARPHRD_DLCI
+define|#
+directive|define
+name|ARPHRD_DLCI
+value|15
+endif|#
+directive|endif
+case|case
+name|ARPHRD_DLCI
+case|:
 comment|/* 		 * XXX - should some of those be mapped to DLT_LINUX_SLL 		 * instead?  Should we just map all of them to DLT_LINUX_SLL? 		 */
 name|handle
 operator|->
 name|linktype
 operator|=
 name|DLT_RAW
+expr_stmt|;
+break|break;
+ifndef|#
+directive|ifndef
+name|ARPHRD_FRAD
+define|#
+directive|define
+name|ARPHRD_FRAD
+value|770
+endif|#
+directive|endif
+case|case
+name|ARPHRD_FRAD
+case|:
+name|handle
+operator|->
+name|linktype
+operator|=
+name|DLT_FRELAY
 expr_stmt|;
 break|break;
 case|case
@@ -2286,6 +2717,75 @@ name|linktype
 operator|=
 name|DLT_LTALK
 expr_stmt|;
+break|break;
+ifndef|#
+directive|ifndef
+name|ARPHRD_FCPP
+define|#
+directive|define
+name|ARPHRD_FCPP
+value|784
+endif|#
+directive|endif
+case|case
+name|ARPHRD_FCPP
+case|:
+ifndef|#
+directive|ifndef
+name|ARPHRD_FCAL
+define|#
+directive|define
+name|ARPHRD_FCAL
+value|785
+endif|#
+directive|endif
+case|case
+name|ARPHRD_FCAL
+case|:
+ifndef|#
+directive|ifndef
+name|ARPHRD_FCPL
+define|#
+directive|define
+name|ARPHRD_FCPL
+value|786
+endif|#
+directive|endif
+case|case
+name|ARPHRD_FCPL
+case|:
+ifndef|#
+directive|ifndef
+name|ARPHRD_FCFABRIC
+define|#
+directive|define
+name|ARPHRD_FCFABRIC
+value|787
+endif|#
+directive|endif
+case|case
+name|ARPHRD_FCFABRIC
+case|:
+comment|/* 		 * We assume that those all mean RFC 2625 IP-over- 		 * Fibre Channel, with the RFC 2625 header at 		 * the beginning of the packet. 		 */
+name|handle
+operator|->
+name|linktype
+operator|=
+name|DLT_IP_OVER_FC
+expr_stmt|;
+break|break;
+case|case
+name|ARPHRD_IRDA
+case|:
+comment|/* Don't expect IP packet out of this interfaces... */
+name|handle
+operator|->
+name|linktype
+operator|=
+name|DLT_LINUX_IRDA
+expr_stmt|;
+comment|/* We need to save packet direction for IrDA decoding, 		 * so let's use "Linux-cooked" mode. Jean II */
+comment|//handle->md.cooked = 1;
 break|break;
 default|default:
 name|handle
@@ -2317,6 +2817,7 @@ name|pcap_t
 modifier|*
 name|handle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|device
@@ -2345,6 +2846,14 @@ name|device_id
 decl_stmt|,
 name|arptype
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|int
+name|fatal_err
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|packet_mreq
 name|mr
@@ -2352,7 +2861,7 @@ decl_stmt|;
 comment|/* One shot loop used for error handling - bail out with break */
 do|do
 block|{
-comment|/* 		 * Open a socket with protocol family packet. If a device is 		 * given we try to open it in raw mode otherwise we use  		 * the cooked interface.  		 */
+comment|/* 		 * Open a socket with protocol family packet. If a device is 		 * given we try to open it in raw mode otherwise we use 		 * the cooked interface. 		 */
 name|sock_fd
 operator|=
 name|device
@@ -2437,7 +2946,7 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * What kind of frames do we have to deal with? Fall back  		 * to cooked mode if we have an unknown interface type.  		 */
+comment|/* 		 * What kind of frames do we have to deal with? Fall back 		 * to cooked mode if we have an unknown interface type. 		 */
 if|if
 condition|(
 name|device
@@ -2470,12 +2979,20 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|fatal_err
+operator|=
+literal|1
+expr_stmt|;
 break|break;
+block|}
 name|map_arphrd_to_dlt
 argument_list|(
 name|handle
 argument_list|,
 name|arptype
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2492,6 +3009,12 @@ operator|->
 name|linktype
 operator|==
 name|DLT_LINUX_SLL
+operator|||
+name|handle
+operator|->
+name|linktype
+operator|==
+name|DLT_LINUX_IRDA
 operator|||
 operator|(
 name|handle
@@ -2626,6 +3149,15 @@ name|arptype
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* IrDA capture is not a real "cooked" capture, 				 * it's IrLAP frames, not IP packets. */
+if|if
+condition|(
+name|handle
+operator|->
+name|linktype
+operator|!=
+name|DLT_LINUX_IRDA
+condition|)
 name|handle
 operator|->
 name|linktype
@@ -2654,6 +3186,9 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
+name|err
+operator|=
 name|iface_bind
 argument_list|(
 name|sock_fd
@@ -2662,11 +3197,24 @@ name|device_id
 argument_list|,
 name|ebuf
 argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|err
 operator|==
 operator|-
-literal|1
+literal|2
 condition|)
+name|fatal_err
+operator|=
+literal|1
+expr_stmt|;
 break|break;
+block|}
 block|}
 else|else
 block|{
@@ -2692,14 +3240,13 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* Select promiscuous mode on/off */
-ifdef|#
-directive|ifdef
-name|SOL_PACKET
-comment|/*  		 * Hmm, how can we set promiscuous mode on all interfaces? 		 * I am not sure if that is possible at all. 		 */
+comment|/* 		 * Select promiscuous mode on if "promisc" is set. 		 * 		 * Do not turn allmulti mode on if we don't select 		 * promiscuous mode - on some devices (e.g., Orinoco 		 * wireless interfaces), allmulti mode isn't supported 		 * and the driver implements it by turning promiscuous 		 * mode on, and that screws up the operation of the 		 * card as a normal networking interface, and on no 		 * other platform I know of does starting a non- 		 * promiscuous capture affect which multicast packets 		 * are received by the interface. 		 */
+comment|/* 		 * Hmm, how can we set promiscuous mode on all interfaces? 		 * I am not sure if that is possible at all. 		 */
 if|if
 condition|(
 name|device
+operator|&&
+name|promisc
 condition|)
 block|{
 name|memset
@@ -2725,11 +3272,7 @@ name|mr
 operator|.
 name|mr_type
 operator|=
-name|promisc
-condition|?
 name|PACKET_MR_PROMISC
-else|:
-name|PACKET_MR_ALLMULTI
 expr_stmt|;
 if|if
 condition|(
@@ -2771,8 +3314,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* Save the socket FD in the pcap structure */
 name|handle
 operator|->
@@ -2801,6 +3342,15 @@ argument_list|(
 name|sock_fd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fatal_err
+condition|)
+return|return
+operator|-
+literal|2
+return|;
+else|else
 return|return
 literal|0
 return|;
@@ -2831,7 +3381,7 @@ name|HAVE_PF_PACKET_SOCKETS
 end_ifdef
 
 begin_comment
-comment|/*  *  Return the index of the given device name. Fill ebuf and return   *  -1 on failure.  */
+comment|/*  *  Return the index of the given device name. Fill ebuf and return  *  -1 on failure.  */
 end_comment
 
 begin_function
@@ -2929,7 +3479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Bind the socket associated with FD to the given device.   */
+comment|/*  *  Bind the socket associated with FD to the given device.  */
 end_comment
 
 begin_function
@@ -2951,6 +3501,17 @@ block|{
 name|struct
 name|sockaddr_ll
 name|sll
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|socklen_t
+name|errlen
+init|=
+sizeof|sizeof
+argument_list|(
+name|err
+argument_list|)
 decl_stmt|;
 name|memset
 argument_list|(
@@ -3029,6 +3590,73 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* Any pending errors, e.g., network is down? */
+if|if
+condition|(
+name|getsockopt
+argument_list|(
+name|fd
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_ERROR
+argument_list|,
+operator|&
+name|err
+argument_list|,
+operator|&
+name|errlen
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"getsockopt: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|2
+return|;
+block|}
+if|if
+condition|(
+name|err
+operator|>
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"bind: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|2
+return|;
+block|}
 return|return
 literal|0
 return|;
@@ -3045,7 +3673,7 @@ comment|/* ===== Functions to interface to the older kernels ================== 
 end_comment
 
 begin_comment
-comment|/*  * With older kernels promiscuous mode is kind of interesting because we  * have to reset the interface before exiting. The problem can't really  * be solved without some daemon taking care of managing usage counts.   * If we put the interface into promiscuous mode, we set a flag indicating  * that we must take it out of that mode when the interface is closed,  * and, when closing the interface, if that flag is set we take it out  * of promiscuous mode.  */
+comment|/*  * With older kernels promiscuous mode is kind of interesting because we  * have to reset the interface before exiting. The problem can't really  * be solved without some daemon taking care of managing usage counts.  * If we put the interface into promiscuous mode, we set a flag indicating  * that we must take it out of that mode when the interface is closed,  * and, when closing the interface, if that flag is set we take it out  * of promiscuous mode.  */
 end_comment
 
 begin_comment
@@ -3104,6 +3732,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pcap_close_linux
 parameter_list|(
@@ -3346,6 +3975,44 @@ operator|.
 name|device
 argument_list|)
 expr_stmt|;
+name|handle
+operator|->
+name|md
+operator|.
+name|device
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|handle
+operator|->
+name|buffer
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|handle
+operator|->
+name|buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|handle
+operator|->
+name|fd
+operator|>=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|handle
+operator|->
+name|fd
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3362,6 +4029,7 @@ name|pcap_t
 modifier|*
 name|handle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|device
@@ -3378,11 +4046,6 @@ name|ebuf
 parameter_list|)
 block|{
 name|int
-name|sock_fd
-init|=
-operator|-
-literal|1
-decl_stmt|,
 name|arptype
 decl_stmt|;
 name|struct
@@ -3392,7 +4055,9 @@ decl_stmt|;
 do|do
 block|{
 comment|/* Open the socket */
-name|sock_fd
+name|handle
+operator|->
+name|fd
 operator|=
 name|socket
 argument_list|(
@@ -3408,7 +4073,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sock_fd
+name|handle
+operator|->
+name|fd
 operator|==
 operator|-
 literal|1
@@ -3470,7 +4137,9 @@ if|if
 condition|(
 name|iface_bind_old
 argument_list|(
-name|sock_fd
+name|handle
+operator|->
+name|fd
 argument_list|,
 name|device
 argument_list|,
@@ -3481,7 +4150,62 @@ operator|-
 literal|1
 condition|)
 break|break;
-comment|/* Go to promisc mode */
+comment|/* 		 * Try to get the link-layer type. 		 */
+name|arptype
+operator|=
+name|iface_get_arptype
+argument_list|(
+name|handle
+operator|->
+name|fd
+argument_list|,
+name|device
+argument_list|,
+name|ebuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arptype
+operator|==
+operator|-
+literal|1
+condition|)
+break|break;
+comment|/* 		 * Try to find the DLT_ type corresponding to that 		 * link-layer type. 		 */
+name|map_arphrd_to_dlt
+argument_list|(
+name|handle
+argument_list|,
+name|arptype
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|handle
+operator|->
+name|linktype
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"unknown arptype %d"
+argument_list|,
+name|arptype
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* Go to promisc mode if requested */
 if|if
 condition|(
 name|promisc
@@ -3520,7 +4244,9 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|sock_fd
+name|handle
+operator|->
+name|fd
 argument_list|,
 name|SIOCGIFFLAGS
 argument_list|,
@@ -3592,6 +4318,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|did_atexit
+operator|=
+literal|1
+expr_stmt|;
 block|}
 name|ifr
 operator|.
@@ -3603,7 +4333,9 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|sock_fd
+name|handle
+operator|->
+name|fd
 argument_list|,
 name|SIOCSIFFLAGS
 argument_list|,
@@ -3654,33 +4386,6 @@ name|handle
 expr_stmt|;
 block|}
 block|}
-comment|/* All done - fill in the pcap handle */
-name|arptype
-operator|=
-name|iface_get_arptype
-argument_list|(
-name|sock_fd
-argument_list|,
-name|device
-argument_list|,
-name|ebuf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|arptype
-operator|==
-operator|-
-literal|1
-condition|)
-break|break;
-comment|/* Save the socket FD in the pcap structure */
-name|handle
-operator|->
-name|fd
-operator|=
-name|sock_fd
-expr_stmt|;
 comment|/* 		 * Default value for offset to align link-layer payload 		 * on a 4-byte boundary. 		 */
 name|handle
 operator|->
@@ -3688,43 +4393,6 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * XXX - handle ISDN types here?  We can't fall back on 		 * cooked sockets, so we'd have to figure out from the 		 * device name what type of link-layer encapsulation 		 * it's using, and map that to an appropriate DLT_ 		 * value, meaning we'd map "isdnN" devices to DLT_RAW 		 * (they supply raw IP packets with no link-layer 		 * header) and "isdY" devices to a new DLT_I4L_IP 		 * type that has only an Ethernet packet type as 		 * a link-layer header. 		 */
-name|map_arphrd_to_dlt
-argument_list|(
-name|handle
-argument_list|,
-name|arptype
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|handle
-operator|->
-name|linktype
-operator|==
-operator|-
-literal|1
-operator|||
-name|handle
-operator|->
-name|linktype
-operator|==
-name|DLT_LINUX_SLL
-condition|)
-block|{
-name|snprintf
-argument_list|(
-name|ebuf
-argument_list|,
-name|PCAP_ERRBUF_SIZE
-argument_list|,
-literal|"interface type of %s not supported"
-argument_list|,
-name|device
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 return|return
 literal|1
 return|;
@@ -3734,16 +4402,9 @@ condition|(
 literal|0
 condition|)
 do|;
-if|if
-condition|(
-name|sock_fd
-operator|!=
-operator|-
-literal|1
-condition|)
-name|close
+name|pcap_close_linux
 argument_list|(
-name|sock_fd
+name|handle
 argument_list|)
 expr_stmt|;
 return|return
@@ -3753,7 +4414,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Bind the socket associated with FD to the given device using the   *  interface of the old kernels.  */
+comment|/*  *  Bind the socket associated with FD to the given device using the  *  interface of the old kernels.  */
 end_comment
 
 begin_function
@@ -3777,6 +4438,17 @@ block|{
 name|struct
 name|sockaddr
 name|saddr
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+name|socklen_t
+name|errlen
+init|=
+sizeof|sizeof
+argument_list|(
+name|err
+argument_list|)
 decl_stmt|;
 name|memset
 argument_list|(
@@ -3845,6 +4517,73 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* Any pending errors, e.g., network is down? */
+if|if
+condition|(
+name|getsockopt
+argument_list|(
+name|fd
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_ERROR
+argument_list|,
+operator|&
+name|err
+argument_list|,
+operator|&
+name|errlen
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"getsockopt: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|err
+operator|>
+literal|0
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|,
+literal|"bind: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 return|return
 literal|0
 return|;
@@ -3856,7 +4595,7 @@ comment|/* ===== System calls available on all supported kernels ============== 
 end_comment
 
 begin_comment
-comment|/*  *  Query the kernel for the MTU of the given interface.   */
+comment|/*  *  Query the kernel for the MTU of the given interface.  */
 end_comment
 
 begin_function
@@ -4464,7 +5203,7 @@ name|total_filter_on
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * Save the socket's current mode, and put it in 		 * non-blocking mode; we drain it by reading packets 		 * until we get an error (which we assume is a 		 * "nothing more to be read" error). 		 */
+comment|/* 		 * Save the socket's current mode, and put it in 		 * non-blocking mode; we drain it by reading packets 		 * until we get an error (which is normally a 		 * "nothing more to be read" error). 		 */
 name|save_mode
 operator|=
 name|fcntl
@@ -4521,6 +5260,10 @@ operator|>=
 literal|0
 condition|)
 empty_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 name|fcntl
 argument_list|(
 name|handle
@@ -4532,6 +5275,45 @@ argument_list|,
 name|save_mode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|save_errno
+operator|!=
+name|EAGAIN
+condition|)
+block|{
+comment|/* Fatal error */
+name|reset_kernel_filter
+argument_list|(
+name|handle
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|handle
+operator|->
+name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|handle
+operator|->
+name|errbuf
+argument_list|)
+argument_list|,
+literal|"recv: %s"
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|save_errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|2
+return|;
+block|}
 block|}
 block|}
 comment|/* 	 * Now attach the new filter. 	 */

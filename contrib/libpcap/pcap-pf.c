@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.65 2001/12/10 07:14:19 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.79.2.5 2003/11/22 00:32:55 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +199,22 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_comment
+comment|/*  * Make "pcap.h" not include "pcap-bpf.h"; we are going to include the  * native OS version, as we need various BPF ioctls from it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCAP_DONT_INCLUDE_PCAP_BPF_H
+end_define
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -221,6 +238,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|int
+name|pcap_setfilter_pf
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|struct
+name|bpf_program
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * BUFSPACE is the size in bytes of the packet read buffer.  Most tcpdump  * applications aren't going to need more than 200 bytes of packet header  * and the read shouldn't return more packets than packetfilter's internal  * queue limit (bounded at 256).  */
 end_comment
@@ -233,8 +265,9 @@ value|(200 * 256)
 end_define
 
 begin_function
+specifier|static
 name|int
-name|pcap_read
+name|pcap_read_pf
 parameter_list|(
 name|pcap_t
 modifier|*
@@ -495,6 +528,55 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* 		 * Has "pcap_breakloop()" been called? 		 * If so, return immediately - if we haven't read any 		 * packets, clear the flag and return -2 to indicate 		 * that we were told to break out of the loop, otherwise 		 * leave the flag set, so that the *next* call will break 		 * out of the loop without having read any packets, and 		 * return the number of packets we've processed so far. 		 */
+if|if
+condition|(
+name|pc
+operator|->
+name|break_loop
+condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+name|pc
+operator|->
+name|break_loop
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|2
+operator|)
+return|;
+block|}
+else|else
+block|{
+name|pc
+operator|->
+name|cc
+operator|=
+name|cc
+expr_stmt|;
+name|pc
+operator|->
+name|bp
+operator|=
+name|bp
+expr_stmt|;
+return|return
+operator|(
+name|n
+operator|)
+return|;
+block|}
+block|}
 if|if
 condition|(
 name|cc
@@ -864,8 +946,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|pcap_stats
+name|pcap_stats_pf
 parameter_list|(
 name|pcap_t
 modifier|*
@@ -923,10 +1006,54 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|pcap_close_pf
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|)
+block|{
+if|if
+condition|(
+name|p
+operator|->
+name|buffer
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|p
+operator|->
+name|buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|fd
+operator|>=
+literal|0
+condition|)
+name|close
+argument_list|(
+name|p
+operator|->
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|pcap_t
 modifier|*
 name|pcap_open_live
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|device
@@ -1022,6 +1149,7 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX - we assume here that "pfopen()" does not, in fact, modify 	 * its argument, even though it takes a "char *" rather than a 	 * "const char *" as its first argument.  That appears to be 	 * the case, at least on Digital UNIX 4.0. 	 */
 name|p
 operator|->
 name|fd
@@ -1048,7 +1176,7 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"pf open: %s: %s\n\ your system may not be properly configured; see \"man packetfilter(4)\"\n"
+literal|"pf open: %s: %s\n\ your system may not be properly configured; see the packetfilter(4) man page\n"
 argument_list|,
 name|device
 argument_list|,
@@ -1350,7 +1478,7 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"unknown data-link type %lu"
+literal|"unknown data-link type %u"
 argument_list|,
 name|devparams
 operator|.
@@ -1585,6 +1713,83 @@ operator|->
 name|offset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|buffer
+operator|==
+name|NULL
+condition|)
+block|{
+name|strlcpy
+argument_list|(
+name|ebuf
+argument_list|,
+name|pcap_strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|PCAP_ERRBUF_SIZE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* 	 * "select()" and "poll()" work on packetfilter devices. 	 */
+name|p
+operator|->
+name|selectable_fd
+operator|=
+name|p
+operator|->
+name|fd
+expr_stmt|;
+name|p
+operator|->
+name|read_op
+operator|=
+name|pcap_read_pf
+expr_stmt|;
+name|p
+operator|->
+name|setfilter_op
+operator|=
+name|pcap_setfilter_pf
+expr_stmt|;
+name|p
+operator|->
+name|set_datalink_op
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* can't change data link type */
+name|p
+operator|->
+name|getnonblock_op
+operator|=
+name|pcap_getnonblock_fd
+expr_stmt|;
+name|p
+operator|->
+name|setnonblock_op
+operator|=
+name|pcap_setnonblock_fd
+expr_stmt|;
+name|p
+operator|->
+name|stats_op
+operator|=
+name|pcap_stats_pf
+expr_stmt|;
+name|p
+operator|->
+name|close_op
+operator|=
+name|pcap_close_pf
+expr_stmt|;
 return|return
 operator|(
 name|p
@@ -1622,7 +1827,30 @@ end_function
 
 begin_function
 name|int
-name|pcap_setfilter
+name|pcap_platform_finddevs
+parameter_list|(
+name|pcap_if_t
+modifier|*
+modifier|*
+name|alldevsp
+parameter_list|,
+name|char
+modifier|*
+name|errbuf
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|pcap_setfilter_pf
 parameter_list|(
 name|pcap_t
 modifier|*
@@ -1634,44 +1862,11 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
-comment|/* 	 * See if BIOCSETF works.  If it does, the kernel supports 	 * BPF-style filters, and we do not need to do post-filtering. 	 */
-name|p
-operator|->
-name|md
-operator|.
-name|use_bpf
-operator|=
-operator|(
-name|ioctl
-argument_list|(
-name|p
-operator|->
-name|fd
-argument_list|,
-name|BIOCSETF
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|fp
-argument_list|)
-operator|>=
-literal|0
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|md
-operator|.
-name|use_bpf
-condition|)
-block|{
 name|struct
 name|bpf_version
 name|bv
 decl_stmt|;
+comment|/* 	 * See if BIOCVERSION works.  If not, we assume the kernel doesn't 	 * support BPF-style filters (it's not documented in the bpf(7) 	 * or packetfiler(7) man pages, but the code used to fail if 	 * BIOCSETF worked but BIOCVERSION didn't, and I've seen it do 	 * kernel filtering in DU 4.0, so presumably BIOCVERSION works 	 * there, at least). 	 */
 if|if
 condition|(
 name|ioctl
@@ -1687,6 +1882,42 @@ name|caddr_t
 operator|)
 operator|&
 name|bv
+argument_list|)
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* 		 * OK, we have the version of the BPF interpreter; 		 * is it the same major version as us, and the same 		 * or better minor version? 		 */
+if|if
+condition|(
+name|bv
+operator|.
+name|bv_major
+operator|==
+name|BPF_MAJOR_VERSION
+operator|&&
+name|bv
+operator|.
+name|bv_minor
+operator|>=
+name|BPF_MINOR_VERSION
+condition|)
+block|{
+comment|/* 			 * Yes.  Try to install the filter. 			 */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|p
+operator|->
+name|fd
+argument_list|,
+name|BIOCSETF
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|fp
 argument_list|)
 operator|<
 literal|0
@@ -1705,7 +1936,7 @@ operator|->
 name|errbuf
 argument_list|)
 argument_list|,
-literal|"BIOCVERSION: %s"
+literal|"BIOCSETF: %s"
 argument_list|,
 name|pcap_strerror
 argument_list|(
@@ -1720,27 +1951,34 @@ literal|1
 operator|)
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|bv
-operator|.
-name|bv_major
-operator|!=
-name|BPF_MAJOR_VERSION
-operator|||
-name|bv
-operator|.
-name|bv_minor
-operator|<
-name|BPF_MINOR_VERSION
-condition|)
-block|{
+comment|/* 			 * OK, that succeeded.  We're doing filtering in 			 * the kernel.  (We assume we don't have a 			 * userland filter installed - that'd require 			 * a previous version check to have failed but 			 * this one to succeed.) 			 * 			 * XXX - this message should be supplied to the 			 * application as a warning of some sort, 			 * except that if it's a GUI application, it's 			 * not clear that it should be displayed in 			 * a window to annoy the user. 			 */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"requires bpf language %d.%d or higher; kernel is %d.%d"
+literal|"tcpdump: Using kernel BPF filter\n"
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|md
+operator|.
+name|use_bpf
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 		 * We can't use the kernel's BPF interpreter; don't give 		 * up, just log a message and be inefficient. 		 * 		 * XXX - this should really be supplied to the application 		 * as a warning of some sort. 		 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"tcpdump: Requires BPF language %d.%d or higher; kernel is %d.%d\n"
 argument_list|,
 name|BPF_MAJOR_VERSION
 argument_list|,
@@ -1755,19 +1993,8 @@ operator|.
 name|bv_minor
 argument_list|)
 expr_stmt|;
-comment|/* don't give up, just be inefficient */
-name|p
-operator|->
-name|md
-operator|.
-name|use_bpf
-operator|=
-literal|0
-expr_stmt|;
 block|}
-block|}
-else|else
-block|{
+comment|/* 	 * We couldn't do filtering in the kernel; do it in userland. 	 */
 if|if
 condition|(
 name|install_bpf_program
@@ -1785,30 +2012,21 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
-comment|/*XXX this goes in tcpdump*/
-if|if
-condition|(
-name|p
-operator|->
-name|md
-operator|.
-name|use_bpf
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tcpdump: Using kernel BPF filter\n"
-argument_list|)
-expr_stmt|;
-else|else
+comment|/* 	 * XXX - this message should be supplied by the application as 	 * a warning of some sort. 	 */
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"tcpdump: Filtering in user process\n"
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|md
+operator|.
+name|use_bpf
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
