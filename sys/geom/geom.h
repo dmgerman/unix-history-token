@@ -498,6 +498,11 @@ name|g_stat
 modifier|*
 name|stat
 decl_stmt|;
+name|u_int
+name|nstart
+decl_stmt|,
+name|nend
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -575,6 +580,11 @@ name|struct
 name|g_stat
 modifier|*
 name|stat
+decl_stmt|;
+name|u_int
+name|nstart
+decl_stmt|,
+name|nend
 decl_stmt|;
 name|u_int
 name|flags
