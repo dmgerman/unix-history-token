@@ -8338,32 +8338,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-ifdef|#
-directive|ifdef
-name|IPSEC
-ifdef|#
-directive|ifdef
-name|IPSEC_POLICY_IPSEC
-literal|"%s\n%s\n%s%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-else|#
-directive|else
-literal|"%s\n%s\n%s\n%s\n"
+literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-i wait] [-l preload] [-M mask | time]"
 argument_list|,
-endif|#
-directive|endif
-else|#
-directive|else
-literal|"%s\n%s\n%s\n%s\n"
-argument_list|,
-endif|#
-directive|endif
-literal|"usage: ping [-AaDdfnoQqRrv] [-c count] [-i wait] [-l preload]"
-argument_list|,
-literal|"            [-M mask | time] [-m ttl] [-p pattern] [-S src_addr]"
-argument_list|,
-literal|"            [-s packetsize] [-t timeout] [-z tos]"
-argument_list|,
+literal|"            [-m ttl]"
 ifdef|#
 directive|ifdef
 name|IPSEC
@@ -8371,12 +8350,31 @@ ifdef|#
 directive|ifdef
 name|IPSEC_POLICY_IPSEC
 literal|" [-P policy]"
+endif|#
+directive|endif
+endif|#
+directive|endif
+literal|" [-p pattern] [-S src_addr] [-s packetsize]"
 argument_list|,
+literal|"            [-t timeout] [-z tos] host"
+argument_list|,
+literal|"       ping [-AaDdfLnoQqRrv] [-c count] [-I iface] [-i wait] [-l preload]"
+argument_list|,
+literal|"            [-M mask | time] [-m ttl]"
+ifdef|#
+directive|ifdef
+name|IPSEC
+ifdef|#
+directive|ifdef
+name|IPSEC_POLICY_IPSEC
+literal|" [-P policy]"
 endif|#
 directive|endif
 endif|#
 directive|endif
-literal|"            [host | [-L] [-I iface] [-T ttl] mcast-group]"
+literal|" [-p pattern] [-S src_addr]"
+argument_list|,
+literal|"            [-s packetsize] [-T ttl] [-t timeout] [-z tos] mcast-group"
 argument_list|)
 expr_stmt|;
 name|exit
