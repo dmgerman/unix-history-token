@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.19	83/06/30	*/
+comment|/*	raw_pup.c	4.20	83/06/30	*/
 end_comment
 
 begin_include
@@ -653,6 +653,11 @@ condition|)
 operator|*
 name|pc
 operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|pup_cksum
 argument_list|(
 name|m
@@ -662,6 +667,7 @@ operator|-
 sizeof|sizeof
 argument_list|(
 name|short
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
