@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.7 1996/07/02 01:49:47 jmz Exp $ */
+comment|/* $Id: main.c,v 1.8 1996/07/05 00:06:36 jmz Exp $ */
 end_comment
 
 begin_include
@@ -238,6 +238,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|newtime
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|restart
 init|=
 literal|0
@@ -464,6 +472,9 @@ if|if
 condition|(
 operator|!
 name|mirror
+operator|&&
+operator|!
+name|newtime
 condition|)
 block|{
 name|tv
@@ -570,7 +581,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:HINPMV:Lqc:f:h:o:pmr"
+literal|"D:HINPMV:Lqc:f:h:o:pmnr"
 argument_list|)
 operator|)
 operator|!=
@@ -659,6 +670,14 @@ case|case
 literal|'M'
 case|:
 name|mirror
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|newtime
 operator|=
 literal|1
 expr_stmt|;
