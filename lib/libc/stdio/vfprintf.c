@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfprintf.c,v 1.19 1998/05/08 05:10:32 jb Exp $"
+literal|"$Id: vfprintf.c,v 1.20 1998/09/16 04:17:44 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2103,6 +2103,17 @@ goto|;
 case|case
 literal|'l'
 case|:
+if|if
+condition|(
+name|flags
+operator|&
+name|LONGINT
+condition|)
+name|flags
+operator||=
+name|QUADINT
+expr_stmt|;
+else|else
 name|flags
 operator||=
 name|LONGINT
@@ -4057,6 +4068,17 @@ goto|;
 case|case
 literal|'l'
 case|:
+if|if
+condition|(
+name|flags
+operator|&
+name|LONGINT
+condition|)
+name|flags
+operator||=
+name|QUADINT
+expr_stmt|;
+else|else
 name|flags
 operator||=
 name|LONGINT
