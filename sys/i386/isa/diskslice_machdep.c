@@ -865,7 +865,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0
+name|WHOLE_DISK_SLICE
 condition|?
 literal|0
 else|:
