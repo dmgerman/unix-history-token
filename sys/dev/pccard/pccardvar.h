@@ -506,8 +506,10 @@ name|struct
 name|resource_list
 name|resources
 decl_stmt|;
-name|int
-name|slotnum
+name|struct
+name|pccard_function
+modifier|*
+name|fcn
 decl_stmt|;
 block|}
 struct|;
@@ -802,10 +804,6 @@ name|pccard_function_init
 parameter_list|(
 name|struct
 name|pccard_function
-modifier|*
-parameter_list|,
-name|struct
-name|pccard_config_entry
 modifier|*
 parameter_list|)
 function_decl|;

@@ -343,6 +343,11 @@ name|pccard_function
 modifier|*
 name|pf
 decl_stmt|;
+name|struct
+name|pccard_ivar
+modifier|*
+name|ivar
+decl_stmt|;
 name|device_t
 name|child
 decl_stmt|;
@@ -546,13 +551,28 @@ name|cfe_head
 argument_list|)
 condition|)
 continue|continue;
-comment|/* XXX */
 comment|/* 		 * In NetBSD, the drivers are responsible for activating 		 * each function of a card.  I think that in FreeBSD we 		 * want to activate them enough for the usual bus_*_resource 		 * routines will do the right thing.  This many mean a 		 * departure from the current NetBSD model. 		 * 		 * This could get really ugly for multifunction cards.  But 		 * it might also just fall out of the FreeBSD resource model. 		 * 		 */
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
 literal|"Starting to attach....\n"
+argument_list|)
+expr_stmt|;
+comment|/* XXX Need ivars XXXimpXXX */
+name|ivar
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pccard_ivar
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|child
@@ -567,17 +587,16 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|device_set_ivars
+argument_list|(
+name|child
+argument_list|,
+name|ivar
+argument_list|)
+expr_stmt|;
 name|pccard_function_init
 argument_list|(
 name|pf
-argument_list|,
-name|STAILQ_FIRST
-argument_list|(
-operator|&
-name|pf
-operator|->
-name|cfe_head
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|pccard_function_enable
@@ -892,13 +911,13 @@ name|struct
 name|pccard_function
 modifier|*
 name|pf
-parameter_list|,
+parameter_list|)
+block|{
 name|struct
 name|pccard_config_entry
 modifier|*
 name|cfe
-parameter_list|)
-block|{
+decl_stmt|;
 if|if
 condition|(
 name|pf
@@ -913,6 +932,17 @@ literal|"pccard_function_init: function is enabled"
 argument_list|)
 expr_stmt|;
 comment|/* Remember which configuration entry we are using. */
+comment|/* XXX 	 * need to look for one we can allocate the resources 	 * and then set them so the alloc_resources work later. 	 */
+name|cfe
+operator|=
+name|STAILQ_FIRST
+argument_list|(
+operator|&
+name|pf
+operator|->
+name|cfe_head
+argument_list|)
+expr_stmt|;
 name|pf
 operator|->
 name|cfe
@@ -2286,13 +2316,10 @@ name|retval
 operator|+=
 name|printf
 argument_list|(
-literal|" slot %d"
-argument_list|,
-name|devi
-operator|->
-name|slotnum
+literal|" slot ?"
 argument_list|)
 expr_stmt|;
+comment|/* XXX imp */
 block|}
 name|retval
 operator|+=
