@@ -5465,7 +5465,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_load
+name|dmamap_load_mbuf
 operator|==
 name|NULL
 condition|;
@@ -5568,7 +5568,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dmamap_load
+name|dmamap_load_uio
 operator|==
 name|NULL
 condition|;
