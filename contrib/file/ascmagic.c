@@ -75,7 +75,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: ascmagic.c,v 1.28 2000/08/05 17:36:47 christos Exp $"
+literal|"@(#)$Id: ascmagic.c,v 1.29 2000/08/05 19:00:11 christos Exp $"
 argument_list|)
 end_macro
 
@@ -302,11 +302,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|s
-decl_stmt|;
 name|char
 name|nbuf
 index|[
@@ -327,10 +322,6 @@ decl_stmt|;
 comment|/* one extra for terminating '\0' */
 name|int
 name|ulen
-decl_stmt|;
-name|char
-modifier|*
-name|token
 decl_stmt|;
 name|struct
 name|names

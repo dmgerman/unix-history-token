@@ -79,7 +79,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: readelf.c,v 1.16 2000/08/05 18:18:50 christos Exp $"
+literal|"@(#)$Id: readelf.c,v 1.17 2000/08/05 19:00:12 christos Exp $"
 argument_list|)
 end_macro
 
@@ -1536,9 +1536,6 @@ operator|*
 literal|4
 expr_stmt|;
 block|}
-name|out
-label|:
-empty_stmt|;
 block|}
 block|}
 end_function
