@@ -1220,6 +1220,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -1234,17 +1236,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|bzero
-argument_list|(
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ap
 operator|->
 name|ap_timeout

@@ -1209,6 +1209,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -1223,19 +1225,6 @@ expr_stmt|;
 return|return;
 comment|/* we'll get retried the next time a command completes */
 block|}
-name|bzero
-argument_list|(
-name|mc
-operator|->
-name|mc_data
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|union
-name|mly_devinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mc
 operator|->
 name|mc_flags
@@ -2814,6 +2803,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -2828,19 +2819,6 @@ expr_stmt|;
 return|return;
 comment|/* we'll get retried the next time a command completes */
 block|}
-name|bzero
-argument_list|(
-name|mc
-operator|->
-name|mc_data
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mly_event
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mc
 operator|->
 name|mc_length

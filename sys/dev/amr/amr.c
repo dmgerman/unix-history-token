@@ -1772,6 +1772,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -1784,17 +1786,6 @@ name|ENOMEM
 expr_stmt|;
 break|break;
 block|}
-name|bzero
-argument_list|(
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* copy cdb */
 name|ap
 operator|->
