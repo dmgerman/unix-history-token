@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.10	81/03/09	*/
+comment|/*	kern_synch.c	4.11	81/04/13	*/
 end_comment
 
 begin_include
@@ -1525,6 +1525,14 @@ operator|->
 name|p_rssize
 operator|=
 literal|0
+expr_stmt|;
+name|rpp
+operator|->
+name|p_maxrss
+operator|=
+name|rip
+operator|->
+name|p_maxrss
 expr_stmt|;
 name|rpp
 operator|->
