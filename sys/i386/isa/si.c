@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.5 1995/08/22 00:48:17 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.6 1995/09/11 06:28:38 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -417,6 +417,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|siintr
+name|__P
+argument_list|(
+operator|(
+name|int
+name|bdnum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|siparam
 name|__P
@@ -435,17 +448,144 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|siintr
+specifier|extern
+name|void
+name|si_registerdev
 name|__P
 argument_list|(
 operator|(
-name|int
-name|bdnum
+expr|struct
+name|isa_device
+operator|*
+name|id
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|siprobe
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|id
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|siattach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|isa_device
+operator|*
+name|id
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|si_modem_state
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|si_port
+operator|*
+name|pp
+operator|,
+expr|struct
+name|tty
+operator|*
+name|tp
+operator|,
+name|int
+name|hi_ip
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SI_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|void
+name|si_dprintf
+name|__P
+argument_list|(
+operator|(
+comment|/* XXX should be varargs struct si_port *pp, int flags, char *str, int a1, int a2, int a3, int a4, int a5, int a6 */
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|si_mctl2str
+name|__P
+argument_list|(
+operator|(
+expr|enum
+name|si_mctl
+name|cmd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DPRINT
+parameter_list|(
+name|x
+parameter_list|)
+value|si_dprintf x
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINT
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* void */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -7762,6 +7902,7 @@ name|POLL
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|si_poll
 parameter_list|(
@@ -7968,7 +8109,7 @@ comment|/* input staging area */
 end_comment
 
 begin_function
-name|int
+name|void
 name|siintr
 parameter_list|(
 name|int
@@ -8104,11 +8245,7 @@ operator|==
 name|NULL
 condition|)
 comment|/* should never happen */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 name|printf
 argument_list|(
 literal|"SLXOS si%d: Warning interrupt handler re-entered\n"
@@ -8127,11 +8264,7 @@ operator|.
 name|dv_unit
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 name|in_intr
 operator|=
@@ -9018,12 +9151,6 @@ literal|"end of siintr()\n"
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-comment|/* say it was expected */
 block|}
 end_function
 
