@@ -131,6 +131,13 @@ name|MOPT_SUIDDIR
 value|{ "suiddir",	0, MNT_SUIDDIR, 0 }
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOPT_SNAPSHOT
+value|{ "snapshot",	0, MNT_SNAPSHOT, 0 }
+end_define
+
 begin_comment
 comment|/* Control flags. */
 end_comment

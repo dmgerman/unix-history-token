@@ -152,6 +152,8 @@ name|MOPT_SYNC
 block|,
 name|MOPT_UPDATE
 block|,
+name|MOPT_SNAPSHOT
+block|,
 block|{
 name|NULL
 block|}
