@@ -1880,9 +1880,7 @@ name|m
 operator|->
 name|coldp
 argument_list|,
-name|m
-operator|->
-name|endp
+name|stop
 operator|-
 name|m
 operator|->
@@ -4896,9 +4894,7 @@ name|c
 argument_list|,
 name|p
 argument_list|,
-name|m
-operator|->
-name|endp
+name|stop
 operator|-
 name|p
 argument_list|,
@@ -5319,9 +5315,7 @@ name|NULL
 argument_list|,
 name|p
 argument_list|,
-name|m
-operator|->
-name|endp
+name|stop
 operator|-
 name|p
 argument_list|,
@@ -5557,9 +5551,7 @@ name|c
 argument_list|,
 name|p
 argument_list|,
-name|m
-operator|->
-name|endp
+name|stop
 operator|-
 name|p
 argument_list|,
