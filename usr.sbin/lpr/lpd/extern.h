@@ -6,8 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"lp.cdefs.h"
 end_include
+
+begin_comment
+comment|/* A cross-platform version of<sys/cdefs.h> */
+end_comment
 
 begin_decl_stmt
 specifier|extern

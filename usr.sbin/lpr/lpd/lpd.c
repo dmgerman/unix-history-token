@@ -29,17 +29,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)lpd.c	8.7 (Berkeley) 5/10/95";
@@ -47,25 +47,32 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"lp.cdefs.h"
+end_include
+
 begin_comment
-comment|/* not lint */
+comment|/* A cross-platform version of<sys/cdefs.h> */
 end_comment
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * lpd -- line printer daemon.  *  * Listen for a connection and perform the requested operation.  * Operations are:  *	\1printer\n  *		check the queue for jobs and print any found.  *	\2printer\n  *		receive a job from another machine and queue it.  *	\3printer [users ...] [jobs ...]\n  *		return the current state of the queue (short form).  *	\4printer [users ...] [jobs ...]\n  *		return the current state of the queue (long form).  *	\5printer person [users ...] [jobs ...]\n  *		remove jobs from the queue.  *  * Strategy to maintain protected spooling area:  *	1. Spooling area is writable only by daemon and spooling group  *	2. lpr runs setuid root and setgrp spooling group; it uses  *	   root to access any file it wants (verifying things before  *	   with an access call) and group id to know how it should  *	   set up ownership of files in the spooling area.  *	3. Files in spooling area are owned by root, group spooling  *	   group, with mode 660.  *	4. lpd, lpq and lprm run setuid daemon and setgrp spooling group to  *	   access files and printer.  Users can't get to anything  *	   w/o help of lpq and lprm programs.  */
