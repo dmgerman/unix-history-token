@@ -219,6 +219,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/uma.h>
 end_include
 
@@ -854,6 +860,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove_pages
 argument_list|(
 name|vmspace_pmap
@@ -877,6 +886,9 @@ operator|->
 name|vm_map
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
