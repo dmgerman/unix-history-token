@@ -162,71 +162,11 @@ modifier|*
 typedef|));
 end_typedef
 
-begin_comment
-comment|/*  * This structure describes the elements in the cache of recent  * names looked up by namei.  */
-end_comment
-
 begin_struct_decl
 struct_decl|struct
-name|vnode
+name|namecache
 struct_decl|;
 end_struct_decl
-
-begin_struct
-struct|struct
-name|namecache
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_hash
-expr_stmt|;
-comment|/* hash chain */
-name|LIST_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_src
-expr_stmt|;
-comment|/* source vnode list */
-name|TAILQ_ENTRY
-argument_list|(
-argument|namecache
-argument_list|)
-name|nc_dst
-expr_stmt|;
-comment|/* destination vnode list */
-name|struct
-name|vnode
-modifier|*
-name|nc_dvp
-decl_stmt|;
-comment|/* vnode of parent of name */
-name|struct
-name|vnode
-modifier|*
-name|nc_vp
-decl_stmt|;
-comment|/* vnode the name refers to */
-name|u_char
-name|nc_flag
-decl_stmt|;
-comment|/* flag bits */
-name|u_char
-name|nc_nlen
-decl_stmt|;
-comment|/* length of name */
-name|char
-name|nc_name
-index|[
-literal|0
-index|]
-decl_stmt|;
-comment|/* segment name */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  * v_freelist is locked by the global vnode_free_list simple lock.  * v_mntvnodes is locked by the global mntvnodes simple lock.  * v_flag, v_usecount, v_holdcount and v_writecount are  *    locked by the v_interlock simple lock.  * v_pollinfo is locked by the lock contained inside it.  */
@@ -2234,6 +2174,31 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|textvp_fullpath
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+name|char
+operator|*
+operator|*
+name|retbuf
+operator|,
+name|char
+operator|*
+operator|*
+name|retfreebuf
 operator|)
 argument_list|)
 decl_stmt|;

@@ -2086,7 +2086,7 @@ name|freepath
 decl_stmt|;
 name|error
 operator|=
-name|procfs_fullpath
+name|textvp_fullpath
 argument_list|(
 name|procp
 argument_list|,
@@ -3779,7 +3779,7 @@ return|;
 block|}
 name|error
 operator|=
-name|procfs_fullpath
+name|textvp_fullpath
 argument_list|(
 name|procp
 argument_list|,

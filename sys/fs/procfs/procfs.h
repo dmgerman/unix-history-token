@@ -819,31 +819,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|procfs_fullpath
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
-name|char
-operator|*
-operator|*
-name|retbuf
-operator|,
-name|char
-operator|*
-operator|*
-name|retfreebuf
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Return 1 if process has special kernel digging privileges */
 end_comment
