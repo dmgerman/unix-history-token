@@ -1406,7 +1406,7 @@ condition|)
 block|{
 name|warnmsg
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 name|__func__
 argument_list|,
@@ -1442,6 +1442,7 @@ operator|!=
 name|ND_ROUTER_ADVERT
 condition|)
 block|{
+comment|/* 		 * this should not happen because we configured a filter 		 * that only passes RAs on the receiving socket. 		 */
 name|warnmsg
 argument_list|(
 name|LOG_ERR
@@ -1491,7 +1492,7 @@ condition|)
 block|{
 name|warnmsg
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
 name|__func__
 argument_list|,
@@ -1537,7 +1538,7 @@ condition|)
 block|{
 name|warnmsg
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 name|__func__
 argument_list|,
@@ -1588,7 +1589,7 @@ condition|)
 block|{
 name|warnmsg
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 name|__func__
 argument_list|,
@@ -1639,7 +1640,7 @@ condition|)
 block|{
 name|warnmsg
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 name|__func__
 argument_list|,
