@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.2 %G%"
+literal|"@(#)lval.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,6 +634,18 @@ name|o
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|class
+operator|!=
+name|FILET
+operator|||
+name|bn
+operator|==
+literal|0
+condition|)
 name|put
 argument_list|(
 literal|1
@@ -1515,13 +1527,6 @@ operator|->
 name|range
 index|[
 literal|1
-index|]
-operator|-
-name|p
-operator|->
-name|range
-index|[
-literal|0
 index|]
 argument_list|)
 argument_list|)

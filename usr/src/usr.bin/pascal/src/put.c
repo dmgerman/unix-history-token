@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.5 %G%"
+literal|"@(#)put.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,6 +324,18 @@ name|O_RANG42
 case|:
 case|case
 name|O_RSNG42
+case|:
+case|case
+name|O_SUCC2
+case|:
+case|case
+name|O_SUCC24
+case|:
+case|case
+name|O_PRED2
+case|:
+case|case
+name|O_PRED24
 case|:
 if|if
 condition|(
@@ -1157,6 +1169,25 @@ case|:
 case|case
 name|O_LV
 case|:
+comment|/* 			 * positive offsets represent arguments 			 * and must use "ap" display entry rather 			 * than the "fp" entry 			 */
+if|if
+condition|(
+name|p
+index|[
+literal|1
+index|]
+operator|>=
+literal|0
+condition|)
+block|{
+name|subop
+operator|++
+expr_stmt|;
+name|suboppr
+operator|++
+expr_stmt|;
+block|}
+comment|/* 			 * offsets out of range of word addressing 			 * must use long offset opcodes 			 */
 if|if
 condition|(
 name|p
@@ -1191,6 +1222,7 @@ name|op
 index|]
 expr_stmt|;
 block|}
+comment|/* and fall through */
 case|case
 name|O_BEG
 case|:
@@ -1214,6 +1246,12 @@ name|O_RSNG4
 case|:
 case|case
 name|O_RSNG24
+case|:
+case|case
+name|O_SUCC4
+case|:
+case|case
+name|O_PRED4
 case|:
 name|longgen
 label|:

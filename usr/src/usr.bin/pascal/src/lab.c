@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.5 %G%"
+literal|"@(#)lab.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -324,15 +324,16 @@ argument_list|(
 name|l
 argument_list|)
 expr_stmt|;
-name|put2
+comment|/* put(2, O_GOTO | cbn<<8+INDX, p->value[1]); */
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_GOTO
 operator||
 name|cbn
 operator|<<
 literal|8
-operator|+
-name|INDX
 argument_list|,
 name|p
 operator|->

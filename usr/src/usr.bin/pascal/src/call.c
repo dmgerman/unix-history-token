@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.3 %G%"
+literal|"@(#)call.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1587,15 +1587,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|put2
+comment|/* put(2, O_CALL | psbn<< 8+INDX, p->entloc); */
+name|put
 argument_list|(
+literal|2
+argument_list|,
 name|O_CALL
 operator||
 name|psbn
 operator|<<
 literal|8
-operator|+
-name|INDX
 argument_list|,
 name|p
 operator|->

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.8 %G%"
+literal|"@(#)fdec.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4723,6 +4723,7 @@ name|patchfil
 argument_list|(
 name|var
 argument_list|,
+operator|-
 name|sizes
 index|[
 name|cbn
