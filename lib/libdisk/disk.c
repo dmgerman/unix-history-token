@@ -2161,6 +2161,18 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|warn
+argument_list|(
+literal|"DIOCGSLICEINFO %s"
+argument_list|,
+name|disk
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|close
 argument_list|(
 name|fd
@@ -2168,6 +2180,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 name|disks
 index|[
 name|k
