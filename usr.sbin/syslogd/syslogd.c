@@ -2949,7 +2949,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-drsuv] [-a allowed_peer] [-f config_file]"
+literal|"usage: syslogd [-dnsuv] [-a allowed_peer] [-f config_file]"
 argument_list|,
 literal|"               [-m mark_interval] [-p log_socket]"
 argument_list|,
