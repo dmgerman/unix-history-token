@@ -3090,21 +3090,6 @@ literal|100000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* enable interrupt */
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
-name|ATA_IDX_OUTB
-argument_list|(
-name|ch
-argument_list|,
-name|ATA_ALTSTAT
-argument_list|,
-name|ATA_A_4BIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|stat0
@@ -3482,6 +3467,18 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* enable interrupt */
+name|ATA_IDX_OUTB
+argument_list|(
+name|atadev
+operator|->
+name|channel
+argument_list|,
+name|ATA_ALTSTAT
+argument_list|,
+name|ATA_A_4BIT
+argument_list|)
+expr_stmt|;
 comment|/* only use 48bit addressing if needed (avoid bugs and overhead) */
 if|if
 condition|(
