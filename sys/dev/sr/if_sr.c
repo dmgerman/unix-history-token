@@ -1926,7 +1926,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|ng_disconnect_t
-name|ngsngsrsconnect
+name|ngsr_disconnect
 decl_stmt|;
 end_decl_stmt
 
