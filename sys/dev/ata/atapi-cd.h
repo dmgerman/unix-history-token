@@ -1559,11 +1559,6 @@ name|block_size
 decl_stmt|;
 comment|/* blocksize currently used */
 name|struct
-name|disklabel
-name|disklabel
-decl_stmt|;
-comment|/* fake disk label */
-name|struct
 name|devstat
 modifier|*
 name|stats
