@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Structure and function declartaions for the  * SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id$  */
+comment|/*  * Structure and function declartaions for the  * SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_sa.h,v 1.1 1998/09/15 06:36:34 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -596,6 +596,88 @@ define|#
 directive|define
 name|LOAD_UNLOAD
 value|0x1B
+end_define
+
+begin_comment
+comment|/*  * Tape specific density codes- only enough of them here to recognize  * some specific older units so we can choose 2FM@EOD or FIXED blocksize  * quirks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_HALFINCH_800
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_HALFINCH_1600
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_HALFINCH_6250
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_HALFINCH_6250C
+value|0xC3
+end_define
+
+begin_comment
+comment|/* HP Compressed 6250 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_QIC_11_4TRK
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_QIC_11_9TRK
+value|0x84
+end_define
+
+begin_comment
+comment|/* Vendor Unique Emulex */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_QIC_24
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_HALFINCH_PE
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_QIC_120
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_DENSITY_QIC_150
+value|0x10
 end_define
 
 begin_function_decl
