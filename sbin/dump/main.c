@@ -1912,6 +1912,13 @@ name|i
 operator|++
 control|)
 block|{
+name|sblock
+operator|->
+name|fs_fsize
+operator|=
+name|SBLOCKSIZE
+expr_stmt|;
+comment|/* needed in bread */
 name|bread
 argument_list|(
 name|sblock_try
