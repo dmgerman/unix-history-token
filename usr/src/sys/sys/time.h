@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	time.h	4.3	83/06/10	*/
+comment|/*	time.h	4.4	83/07/09	*/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* usa style dst */
+comment|/* USA style dst */
 end_comment
 
 begin_define
@@ -70,6 +70,39 @@ end_define
 
 begin_comment
 comment|/* Australian style dst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_WET
+value|3
+end_define
+
+begin_comment
+comment|/* Western European dst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_MET
+value|4
+end_define
+
+begin_comment
+comment|/* Middle European dst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_EET
+value|5
+end_define
+
+begin_comment
+comment|/* Eastern European dst */
 end_comment
 
 begin_comment
