@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000,2001 by Solar Designer. See LICENSE.  */
+comment|/*  * Copyright (c) 2000-2002 by Solar Designer. See LICENSE.  */
 end_comment
 
 begin_include
@@ -227,6 +227,7 @@ name|passwdqc_params_t
 modifier|*
 name|params
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpass
@@ -728,18 +729,20 @@ name|char
 modifier|*
 name|unify
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|src
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|dst
-decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sptr
+decl_stmt|;
+name|char
+modifier|*
+name|dst
 decl_stmt|,
 modifier|*
 name|dptr
@@ -835,18 +838,20 @@ name|char
 modifier|*
 name|reverse
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|src
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|dst
-decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sptr
+decl_stmt|;
+name|char
+modifier|*
+name|dst
 decl_stmt|,
 modifier|*
 name|dptr
@@ -960,14 +965,17 @@ name|passwdqc_params_t
 modifier|*
 name|params
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|haystack
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|needle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|original
@@ -985,6 +993,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1230,10 +1239,12 @@ name|passwdqc_params_t
 modifier|*
 name|params
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|needle
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|original
@@ -1250,7 +1261,7 @@ modifier|*
 name|unified
 decl_stmt|;
 name|int
-name|index
+name|i
 decl_stmt|;
 name|word
 index|[
@@ -1261,15 +1272,15 @@ literal|'\0'
 expr_stmt|;
 for|for
 control|(
-name|index
+name|i
 operator|=
 literal|0
 init|;
-name|index
+name|i
 operator|<
 literal|0x1000
 condition|;
-name|index
+name|i
 operator|++
 control|)
 block|{
@@ -1279,7 +1290,7 @@ name|word
 argument_list|,
 name|_passwdqc_wordset_4k
 index|[
-name|index
+name|i
 index|]
 argument_list|,
 literal|6
@@ -1287,6 +1298,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|word
@@ -1340,6 +1354,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|_passwdqc_check
@@ -1348,10 +1363,12 @@ name|passwdqc_params_t
 modifier|*
 name|params
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpass
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|oldpass
@@ -1389,6 +1406,7 @@ decl_stmt|,
 modifier|*
 name|u_gecos
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|reason
@@ -1776,6 +1794,9 @@ condition|(
 operator|!
 name|reason
 operator|&&
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|newpass

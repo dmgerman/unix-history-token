@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000,2001 by Solar Designer. See LICENSE.  */
+comment|/*  * Copyright (c) 2000-2002 by Solar Designer. See LICENSE.  */
 end_comment
 
 begin_include
@@ -159,9 +159,11 @@ name|use_separators
 decl_stmt|,
 name|count
 decl_stmt|,
+name|i
+decl_stmt|;
+name|unsigned
+name|int
 name|length
-decl_stmt|,
-name|index
 decl_stmt|;
 name|char
 modifier|*
@@ -241,6 +243,9 @@ argument_list|(
 name|output
 argument_list|)
 operator|||
+operator|(
+name|int
+operator|)
 name|length
 operator|>
 name|params
@@ -303,7 +308,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|index
+name|i
 operator|=
 operator|(
 operator|(
@@ -333,7 +338,7 @@ name|start
 operator|=
 name|_passwdqc_wordset_4k
 index|[
-name|index
+name|i
 index|]
 expr_stmt|;
 name|end
@@ -419,7 +424,7 @@ operator|>
 literal|3
 condition|)
 block|{
-name|index
+name|i
 operator|=
 operator|(
 operator|(
@@ -443,7 +448,7 @@ index|]
 operator|=
 name|SEPARATORS
 index|[
-name|index
+name|i
 index|]
 expr_stmt|;
 name|bits
