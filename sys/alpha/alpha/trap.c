@@ -609,7 +609,9 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK_NOSWITCH
-argument_list|()
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 name|p
 operator|->
