@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 102 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 104 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -147,11 +147,11 @@ argument_list|(
 literal|"HwClearAcpiStatus"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"About to write %04X to %04X\n"
 operator|,
 name|ALL_FIXED_STS_BITS
@@ -590,11 +590,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Bad Sleep object %p type %X\n"
 operator|,
 name|ObjDesc
@@ -1012,11 +1012,11 @@ argument_list|,
 name|PM1_CONTROL
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"PM1 control: Read %X\n"
 operator|,
 name|RegisterValue
@@ -1097,11 +1097,11 @@ argument_list|,
 name|PM2_CONTROL
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"PM2 control: Read %X from %p\n"
 operator|,
 name|RegisterValue
@@ -1144,11 +1144,11 @@ name|RegisterValue
 operator||=
 name|Value
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"About to write %04X to %p\n"
 operator|,
 name|RegisterValue
@@ -1193,11 +1193,11 @@ argument_list|,
 name|PM_TIMER
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"PM_TIMER: Read %X from %p\n"
 operator|,
 name|RegisterValue
@@ -1269,11 +1269,11 @@ argument_list|,
 name|RegisterId
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"GPE Enable bits: Read %X from %X\n"
 operator|,
 name|RegisterValue
@@ -1311,11 +1311,11 @@ name|Value
 expr_stmt|;
 comment|/* This write will put the Action state into the General Purpose */
 comment|/* Enable Register indexed by the value in Mask */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"About to write %04X to %04X\n"
 operator|,
 name|RegisterValue
@@ -1385,11 +1385,11 @@ argument_list|(
 name|Mask
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_IO
-argument_list|,
 operator|(
+name|ACPI_DB_IO
+operator|,
 literal|"Register I/O: returning %X\n"
 operator|,
 name|RegisterValue
@@ -1599,10 +1599,18 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/*      * For the GPE? Blocks, the lower word of RegisterId contains the       * byte offset for which to read, as each part of each block may be       * several bytes long.      */
 case|case
 name|GPE0_STS_BLOCK
 case|:
 comment|/* 8-bit access */
+name|BankOffset
+operator|=
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
+argument_list|)
+expr_stmt|;
 name|Value
 operator|=
 name|AcpiHwLowLevelRead
@@ -1614,7 +1622,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe0Blk
 argument_list|,
-literal|0
+name|BankOffset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1629,6 +1637,11 @@ argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|Gpe0BlkLen
+argument_list|)
+operator|+
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
 argument_list|)
 expr_stmt|;
 name|Value
@@ -1650,6 +1663,13 @@ case|case
 name|GPE1_STS_BLOCK
 case|:
 comment|/* 8-bit access */
+name|BankOffset
+operator|=
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
+argument_list|)
+expr_stmt|;
 name|Value
 operator|=
 name|AcpiHwLowLevelRead
@@ -1661,7 +1681,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe1Blk
 argument_list|,
-literal|0
+name|BankOffset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1676,6 +1696,11 @@ argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|Gpe1BlkLen
+argument_list|)
+operator|+
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
 argument_list|)
 expr_stmt|;
 name|Value
@@ -1970,6 +1995,13 @@ case|case
 name|GPE0_STS_BLOCK
 case|:
 comment|/* 8-bit access */
+name|BankOffset
+operator|=
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
+argument_list|)
+expr_stmt|;
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -1981,7 +2013,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe0Blk
 argument_list|,
-literal|0
+name|BankOffset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1996,6 +2028,11 @@ argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|Gpe0BlkLen
+argument_list|)
+operator|+
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
 argument_list|)
 expr_stmt|;
 name|AcpiHwLowLevelWrite
@@ -2017,6 +2054,13 @@ case|case
 name|GPE1_STS_BLOCK
 case|:
 comment|/* 8-bit access */
+name|BankOffset
+operator|=
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
+argument_list|)
+expr_stmt|;
 name|AcpiHwLowLevelWrite
 argument_list|(
 literal|8
@@ -2028,7 +2072,7 @@ name|AcpiGbl_FADT
 operator|->
 name|XGpe1Blk
 argument_list|,
-literal|0
+name|BankOffset
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2043,6 +2087,11 @@ argument_list|(
 name|AcpiGbl_FADT
 operator|->
 name|Gpe1BlkLen
+argument_list|)
+operator|+
+name|REGISTER_BIT_ID
+argument_list|(
+name|RegisterId
 argument_list|)
 expr_stmt|;
 name|AcpiHwLowLevelWrite

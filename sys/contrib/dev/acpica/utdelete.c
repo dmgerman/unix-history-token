@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 72 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 74 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -109,11 +109,11 @@ block|{
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** String %p, ptr %p\n"
 operator|,
 name|Object
@@ -127,6 +127,20 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Free the actual string buffer */
+if|if
+condition|(
+operator|!
+operator|(
+name|Object
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_STATIC_POINTER
+operator|)
+condition|)
+block|{
 name|ObjPointer
 operator|=
 name|Object
@@ -135,15 +149,16 @@ name|String
 operator|.
 name|Pointer
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Buffer %p, ptr %p\n"
 operator|,
 name|Object
@@ -169,11 +184,11 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|" **** Package of count %X\n"
 operator|,
 name|Object
@@ -198,11 +213,11 @@ break|break;
 case|case
 name|ACPI_TYPE_MUTEX
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"***** Mutex %p, Semaphore %p\n"
 operator|,
 name|Object
@@ -233,11 +248,11 @@ break|break;
 case|case
 name|ACPI_TYPE_EVENT
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"***** Event %p, Semaphore %p\n"
 operator|,
 name|Object
@@ -271,11 +286,11 @@ break|break;
 case|case
 name|ACPI_TYPE_METHOD
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"***** Method %p\n"
 operator|,
 name|Object
@@ -314,11 +329,11 @@ break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"***** Region %p\n"
 operator|,
 name|Object
@@ -388,11 +403,11 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"***** Buffer Field %p\n"
 operator|,
 name|Object
@@ -437,11 +452,11 @@ name|ObjPointer
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Deleting Obj Ptr %p \n"
 operator|,
 name|ObjPointer
@@ -467,11 +482,11 @@ operator|&
 name|AOPOBJ_STATIC_ALLOCATION
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Object %p [%s] static allocation, no delete\n"
 operator|,
 name|Object
@@ -502,11 +517,11 @@ name|AOPOBJ_STATIC_ALLOCATION
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Deleting object %p [%s]\n"
 operator|,
 name|Object
@@ -677,11 +692,11 @@ name|ReferenceCount
 operator|=
 name|NewCount
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Obj %p Refs=%X, [Incremented]\n"
 operator|,
 name|Object
@@ -701,11 +716,11 @@ operator|<
 literal|1
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Obj %p Refs=%X, can't decrement! (Set to 0)\n"
 operator|,
 name|Object
@@ -724,11 +739,11 @@ block|{
 name|NewCount
 operator|--
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Obj %p Refs=%X, [Decremented]\n"
 operator|,
 name|Object
@@ -749,11 +764,11 @@ operator|==
 name|ACPI_TYPE_METHOD
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Method Obj %p Refs=%X, [Decremented]\n"
 operator|,
 name|Object
@@ -788,11 +803,11 @@ break|break;
 case|case
 name|REF_FORCE_DELETE
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Obj %p Refs=%X, Force delete! (Set to 0)\n"
 operator|,
 name|Object
@@ -820,11 +835,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown action (%X)\n"
 operator|,
 name|Action
@@ -841,11 +856,11 @@ operator|>
 name|MAX_REFERENCE_COUNT
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"**** AE_ERROR **** Invalid Reference Count (%X) in object %p\n\n"
 operator|,
 name|Count
@@ -930,11 +945,11 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Object %p is NS handle\n"
 operator|,
 name|Object
@@ -955,11 +970,11 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Object %p is Pcode Ptr\n"
 operator|,
 name|Object
@@ -1481,11 +1496,11 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Obj %p Refs=%X\n"
 operator|,
 name|Object

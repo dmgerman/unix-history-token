@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -232,11 +232,11 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"ACPI Tables successfully loaded\n"
 operator|)
 argument_list|)

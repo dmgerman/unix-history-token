@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -96,11 +96,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"DSDT is not in memory\n"
 operator|)
 argument_list|)
@@ -144,11 +144,11 @@ argument_list|(
 name|ACPI_TABLE_PSDT
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"ACPI Namespace successfully loaded at root %p\n"
 operator|,
 name|AcpiGbl_RootNode
@@ -278,11 +278,11 @@ operator|=
 name|ACPI_ROOT_NAME
 expr_stmt|;
 comment|/* Pass 1:  Parse everything except control method bodies */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"*PARSE* pass %d parse\n"
 operator|,
 name|PassNumber
@@ -445,11 +445,11 @@ operator|->
 name|AmlPointer
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null AML pointer\n"
 operator|)
 argument_list|)
@@ -460,11 +460,11 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"AML block at %p\n"
 operator|,
 name|TableDesc
@@ -481,11 +481,11 @@ operator|->
 name|AmlLength
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Zero-length AML block\n"
 operator|)
 argument_list|)
@@ -497,11 +497,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Parse the table and load the namespace with all named      * objects found within.  Control methods are NOT parsed      * at this time.  In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Loading table into namespace ****\n"
 operator|)
 argument_list|)
@@ -542,11 +542,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Now we can parse the control methods.  We always parse      * them here for a sanity check, and if configured for      * just-in-time parsing, we delete the control method      * parse trees.      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Begin Table Method Parsing and Object Initialization ****\n"
 operator|)
 argument_list|)
@@ -560,11 +560,11 @@ argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Completed Table Method Parsing and Object Initialization ****\n"
 operator|)
 argument_list|)
@@ -620,11 +620,11 @@ block|{
 case|case
 name|ACPI_TABLE_DSDT
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Loading DSDT\n"
 operator|)
 argument_list|)
@@ -684,11 +684,11 @@ break|break;
 case|case
 name|ACPI_TABLE_SSDT
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Loading %d SSDTs\n"
 operator|,
 name|AcpiGbl_AcpiTables
@@ -774,11 +774,11 @@ break|break;
 case|case
 name|ACPI_TABLE_PSDT
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Loading %d PSDTs\n"
 operator|,
 name|AcpiGbl_AcpiTables

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -158,11 +158,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
@@ -174,11 +174,11 @@ name|Cleanup
 goto|;
 block|}
 comment|/* DefFatal    :=  FatalOp FatalType   FatalCode   FatalArg    */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Type %x Code %x Arg %x<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
 operator|,
 name|TypeDesc
@@ -360,11 +360,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
@@ -384,11 +384,11 @@ case|case
 name|AML_FATAL_OP
 case|:
 comment|/* DefFatal    :=  FatalOp  FatalType   FatalCode   FatalArg    */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"FatalOp: Type %x Code %x Arg %x<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
 operator|,
 operator|(
@@ -550,11 +550,11 @@ operator|.
 name|Count
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Index value beyond package end\n"
 operator|)
 argument_list|)
@@ -719,11 +719,11 @@ operator|.
 name|Length
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Index value beyond end of buffer\n"
 operator|)
 argument_list|)
@@ -1015,11 +1015,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
@@ -1062,11 +1062,11 @@ name|MAX_MATCH_OPERATOR
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"operation encoding out of range\n"
 operator|)
 argument_list|)
@@ -1104,11 +1104,11 @@ operator|.
 name|Count
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Start position value out of range\n"
 operator|)
 argument_list|)

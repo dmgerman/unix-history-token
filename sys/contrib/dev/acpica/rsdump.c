@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 20 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 21 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2142,7 +2142,7 @@ if|if
 condition|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_RESOURCES
+name|ACPI_LV_RESOURCES
 operator|&&
 name|_COMPONENT
 operator|&
@@ -2414,7 +2414,7 @@ if|if
 condition|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_RESOURCES
+name|ACPI_LV_RESOURCES
 operator|&&
 name|_COMPONENT
 operator|&

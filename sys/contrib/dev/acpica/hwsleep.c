@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 14 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 18 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -355,6 +355,7 @@ expr_stmt|;
 name|disable
 argument_list|()
 expr_stmt|;
+comment|/* TODO: disable all non-wake GPEs here */
 name|PM1AControl
 operator|=
 operator|(
@@ -367,11 +368,11 @@ argument_list|,
 name|PM1_CONTROL
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"Entering S%d\n"
 operator|,
 name|SleepState
@@ -381,7 +382,12 @@ expr_stmt|;
 comment|/* mask off SLP_EN and SLP_TYP fields */
 name|PM1AControl
 operator|&=
-literal|0xC3FF
+operator|~
+operator|(
+name|SLP_TYPE_X_MASK
+operator||
+name|SLP_EN_MASK
+operator|)
 expr_stmt|;
 name|PM1BControl
 operator|=
@@ -452,6 +458,10 @@ name|SLP_EN_MASK
 argument_list|)
 operator|)
 expr_stmt|;
+comment|/* flush caches */
+name|wbinvd
+argument_list|()
+expr_stmt|;
 comment|/* write #2: SLP_TYP + SLP_EN */
 name|AcpiHwRegisterWrite
 argument_list|(
@@ -471,19 +481,19 @@ argument_list|,
 name|PM1BControl
 argument_list|)
 expr_stmt|;
-comment|/* wait a second, then try again */
+comment|/*       * Wait a second, then try again. This is to get S4/5 to work on all machines.      */
+if|if
+condition|(
+name|SleepState
+operator|>
+name|ACPI_STATE_S3
+condition|)
+block|{
 name|AcpiOsStall
 argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|SleepState
-operator|>
-name|ACPI_STATE_S1
-condition|)
-block|{
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
@@ -501,9 +511,133 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* wait until we enter sleep state */
+while|while
+condition|(
+operator|!
+name|AcpiHwRegisterBitAccess
+argument_list|(
+name|ACPI_READ
+argument_list|,
+name|ACPI_MTX_LOCK
+argument_list|,
+name|WAK_STS
+argument_list|)
+condition|)
+block|{  }
 name|enable
 argument_list|()
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiLeaveSleepState  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiLeaveSleepState
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|)
+block|{
+name|ACPI_OBJECT_LIST
+name|ArgList
+decl_stmt|;
+name|ACPI_OBJECT
+name|Arg
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"AcpiLeaveSleepState"
+argument_list|)
+expr_stmt|;
+name|MEMSET
+argument_list|(
+operator|&
+name|ArgList
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ArgList
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ArgList
+operator|.
+name|Count
+operator|=
+literal|1
+expr_stmt|;
+name|ArgList
+operator|.
+name|Pointer
+operator|=
+operator|&
+name|Arg
+expr_stmt|;
+name|MEMSET
+argument_list|(
+operator|&
+name|Arg
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Arg
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Arg
+operator|.
+name|Type
+operator|=
+name|ACPI_TYPE_INTEGER
+expr_stmt|;
+name|Arg
+operator|.
+name|Integer
+operator|.
+name|Value
+operator|=
+name|SleepState
+expr_stmt|;
+name|AcpiEvaluateObject
+argument_list|(
+name|NULL
+argument_list|,
+literal|"\\_BFS"
+argument_list|,
+operator|&
+name|ArgList
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|AcpiEvaluateObject
+argument_list|(
+name|NULL
+argument_list|,
+literal|"\\_WAK"
+argument_list|,
+operator|&
+name|ArgList
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* _WAK returns stuff - do we want to look at it? */
+comment|/* Re-enable GPEs */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

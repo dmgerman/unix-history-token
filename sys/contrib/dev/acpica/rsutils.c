@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 20 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 21 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -119,11 +119,11 @@ name|RetObj
 condition|)
 block|{
 comment|/* Return object is required */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object was returned from _PRT\n"
 operator|)
 argument_list|)
@@ -264,11 +264,11 @@ name|RetObj
 condition|)
 block|{
 comment|/* Return object is required */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object was returned from _CRS\n"
 operator|)
 argument_list|)
@@ -409,11 +409,11 @@ name|RetObj
 condition|)
 block|{
 comment|/* Return object is required */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object was returned from _PRS\n"
 operator|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -112,11 +112,11 @@ argument_list|,
 name|TableInfo
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%s located at %p\n"
 operator|,
 name|AcpiGbl_AcpiTableData
@@ -265,11 +265,11 @@ index|]
 operator|.
 name|Status
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Found %4.4s\n"
 operator|,
 name|AcpiGbl_AcpiTableData
@@ -326,11 +326,11 @@ operator|==
 name|AE_SUPPORT
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Unsupported table %s (Type %X) was found and discarded\n"
 operator|,
 name|AcpiGbl_AcpiTableData

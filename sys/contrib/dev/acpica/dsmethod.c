@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -125,11 +125,11 @@ name|AE_NULL_ENTRY
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Parsing [%4.4s] **** NamedObj=%p\n"
 operator|,
 operator|&
@@ -336,11 +336,11 @@ name|OwningId
 operator|=
 name|OwnerId
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** [%4.4s] Parsed **** NamedObj=%p Op=%p\n"
 operator|,
 operator|&
@@ -541,11 +541,11 @@ argument_list|,
 name|ThisWalkState
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Execute method %p, currentstate=%p\n"
 operator|,
 name|ThisWalkState
@@ -906,11 +906,11 @@ name|NumOperands
 operator|=
 literal|0
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Starting nested execution, newstate=%p\n"
 operator|,
 name|NextWalkState
@@ -1022,11 +1022,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Method=%p Return=%p ReturnUsed?=%X ResStack=%p State=%p\n"
 operator|,
 name|WalkState

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmonad - ACPI AML execution for monadic (1 operand) operators  *              $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmonad - ACPI AML execution for monadic (1 operand) operators  *              $Revision: 108 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -174,11 +174,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"(Internal) Unknown Ref subtype %02x\n"
 operator|,
 name|ObjDesc
@@ -235,11 +235,11 @@ expr_stmt|;
 block|}
 name|Cleanup
 label|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj=%p Ref=%p\n"
 operator|,
 name|ObjDesc
@@ -340,11 +340,11 @@ name|ResolveStatus
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"[%s]: Could not resolve operands, %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -371,11 +371,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"[%s]: bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -630,11 +630,11 @@ name|ResolveStatus
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"[%s]: Could not resolve operands, %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -661,11 +661,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"[%s]: bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -936,11 +936,11 @@ operator|>
 literal|9
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"BCD digit too large: \n"
 operator|,
 name|Digit
@@ -1008,11 +1008,11 @@ operator|>
 name|ACPI_MAX_BCD_VALUE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"BCD overflow: %d\n"
 operator|,
 name|ObjDesc
@@ -1077,8 +1077,13 @@ operator|++
 control|)
 block|{
 name|Digit
-operator|/=
+operator|=
+name|ACPI_DIVIDE
+argument_list|(
+name|Digit
+argument_list|,
 literal|10
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Create the BCD digit */
@@ -1227,19 +1232,17 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
-else|else
-block|{
-comment|/*              * Normally, we would remove a reference on the ObjDesc parameter;              * But since it is being used as the internal return object              * (meaning we would normally increment it), the two cancel out,              * and we simply don't do anything.              */
+comment|/*          * Normally, we would remove a reference on the ObjDesc parameter;          * But since it is being used as the internal return object          * (meaning we would normally increment it), the two cancel out,          * and we simply don't do anything.          */
 operator|*
 name|ReturnDesc
 operator|=
 name|ObjDesc
-expr_stmt|;
-block|}
-name|ObjDesc
-operator|=
-name|NULL
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -1251,11 +1254,11 @@ case|case
 name|AML_DEBUG_OP
 case|:
 comment|/* Reference, returning an Reference */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"DebugOp should never get here!\n"
 operator|)
 argument_list|)
@@ -1270,27 +1273,22 @@ comment|/*      * ACPI 2.0 Opcodes      */
 case|case
 name|AML_TO_DECSTRING_OP
 case|:
-name|DEBUG_PRINTP
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"%s is not implemented\n"
-operator|,
-name|AcpiPsGetOpcodeName
-argument_list|(
-name|Opcode
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 name|Status
 operator|=
-name|AE_NOT_IMPLEMENTED
+name|AcpiExConvertToString
+argument_list|(
+name|ObjDesc
+argument_list|,
+operator|&
+name|RetDesc
+argument_list|,
+literal|10
+argument_list|,
+name|ACPI_UINT32_MAX
+argument_list|,
+name|WalkState
+argument_list|)
 expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 break|break;
 case|case
 name|AML_TO_HEXSTRING_OP
@@ -1303,6 +1301,8 @@ name|ObjDesc
 argument_list|,
 operator|&
 name|RetDesc
+argument_list|,
+literal|16
 argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
@@ -1351,11 +1351,11 @@ case|:
 case|case
 name|AML_SHIFT_RIGHT_BIT_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%s is unimplemented\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -1557,11 +1557,11 @@ name|ResolveStatus
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"[%s]: Could not resolve operands, %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -1588,11 +1588,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"[%s]: Bad operand(s), %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -1762,11 +1762,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%s: bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -2125,11 +2125,11 @@ literal|4
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Not Buf/Str/Pkg - found type %X\n"
 operator|,
 name|ObjDesc
@@ -2335,11 +2335,11 @@ name|AML_REF_OF_OP
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown opcode in ref(%p) - %X\n"
 operator|,
 name|ObjDesc
@@ -2466,11 +2466,11 @@ name|RetDesc
 condition|)
 block|{
 comment|/*                          * We can't return a NULL dereferenced value.  This is                          * an uninitialized package element and is thus a                          * severe error.                          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"NULL package element obj %p\n"
 operator|,
 name|ObjDesc
@@ -2493,11 +2493,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown TargetType %X in obj %p\n"
 operator|,
 name|ObjDesc

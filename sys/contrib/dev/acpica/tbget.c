@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -441,11 +441,11 @@ argument_list|(
 literal|"TbGetAllTables"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Number of tables: %d\n"
 operator|,
 name|NumberOfTables
@@ -713,11 +713,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Dump the DSDT Header */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"Hex dump of DSDT Header:\n"
 operator|)
 argument_list|)
@@ -737,11 +737,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Dump the entire DSDT */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_TABLES
-argument_list|,
 operator|(
+name|ACPI_DB_TABLES
+operator|,
 literal|"Hex dump of DSDT (After header), size %d (%x)\n"
 operator|,
 name|AcpiGbl_DSDT
@@ -1093,6 +1093,11 @@ block|{
 name|UINT32
 name|NoMatch
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"TbValidateRsdt"
+argument_list|)
+expr_stmt|;
 comment|/*      * For RSDP revision 0 or 1, we use the RSDT.      * For RSDP revision 2 (and above), we use the XSDT      */
 if|if
 condition|(
@@ -1167,11 +1172,11 @@ argument_list|,
 literal|20
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"RSDT/XSDT signature at %X is invalid\n"
 operator|,
 name|AcpiGbl_RSDP
@@ -1309,11 +1314,11 @@ literal|"TbGetTableRsdt"
 argument_list|)
 expr_stmt|;
 comment|/*      * Get the RSDT from the RSDP      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"RSDP located at %p, RSDT physical=%8.8lX%8.8lX \n"
 operator|,
 name|AcpiGbl_RSDP
@@ -1360,11 +1365,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Could not get the RSDT, %s\n"
 operator|,
 name|AcpiFormatException
@@ -1474,11 +1479,11 @@ name|TableInfo
 operator|.
 name|Pointer
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"XSDT located at %p\n"
 operator|,
 name|AcpiGbl_XSDT

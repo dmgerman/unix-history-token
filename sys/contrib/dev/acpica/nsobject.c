@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 56 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachObject  *  * PARAMETERS:  Node            - Parent Node  *              Object              - Object to be attached  *              Type                - Type of object, or ACPI_TYPE_ANY if not  *                                      known  *  * DESCRIPTION: Record the given object as the value associated with the  *              name whose ACPI_HANDLE is passed.  If Object is NULL  *              and Type is ACPI_TYPE_ANY, set the name as having no value.  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachObject  *  * PARAMETERS:  Node                - Parent Node  *              Object              - Object to be attached  *              Type                - Type of object, or ACPI_TYPE_ANY if not  *                                    known  *  * DESCRIPTION: Record the given object as the value associated with the  *              name whose ACPI_HANDLE is passed.  If Object is NULL  *              and Type is ACPI_TYPE_ANY, set the name as having no value.  *  * MUTEX:       Assumes namespace is locked  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -203,11 +203,11 @@ operator|==
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Obj %p already installed in NameObj %p\n"
 operator|,
 name|Object
@@ -390,7 +390,7 @@ block|{
 comment|/*                      * OpPrefix is unrecognized unless part                      * of RevisionOp                      */
 break|break;
 block|}
-comment|/* Else fall through to set type as Number */
+comment|/* Otherwise, fall through and set the type to Integer */
 case|case
 name|AML_ZERO_OP
 case|:
@@ -408,6 +408,9 @@ name|AML_WORD_OP
 case|:
 case|case
 name|AML_DWORD_OP
+case|:
+case|case
+name|AML_QWORD_OP
 case|:
 name|ObjType
 operator|=
@@ -447,11 +450,11 @@ name|ACPI_TYPE_PACKAGE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"AML Opcode/Type [%x] not supported in attach\n"
 operator|,
 operator|(
@@ -486,7 +489,7 @@ name|Node
 argument_list|,
 literal|"NsAttachObject confused: setting bogus type for  "
 argument_list|,
-name|ACPI_INFO
+name|ACPI_LV_INFO
 argument_list|,
 name|_COMPONENT
 argument_list|)
@@ -499,11 +502,11 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"AML-stream code %02x\n"
 operator|,
 operator|*
@@ -533,7 +536,7 @@ name|Object
 argument_list|,
 literal|"name "
 argument_list|,
-name|ACPI_INFO
+name|ACPI_LV_INFO
 argument_list|,
 name|_COMPONENT
 argument_list|)
@@ -547,7 +550,7 @@ name|Object
 argument_list|,
 literal|"object "
 argument_list|,
-name|ACPI_INFO
+name|ACPI_LV_INFO
 argument_list|,
 name|_COMPONENT
 argument_list|)
@@ -565,12 +568,12 @@ name|INTERNAL_TYPE_DEF_ANY
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
-literal|"Installing obj %p into NameObj %p [%4.4s]\n"
+name|ACPI_DB_EXEC
+operator|,
+literal|"Installing %p into Node %p [%4.4s]\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -690,11 +693,11 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Found a valid value */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Object=%p Value=%p Name %4.4s\n"
 operator|,
 name|Node
@@ -758,11 +761,11 @@ name|Node
 condition|)
 block|{
 comment|/* handle invalid */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"Null Node ptr\n"
 operator|)
 argument_list|)

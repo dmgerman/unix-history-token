@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -195,11 +195,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * Perform the first pass parse of the method to enter any      * named objects that it creates into the namespace      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"**** Begin Method Execution **** Entry=%p obj=%p\n"
 operator|,
 name|MethodNode
@@ -381,11 +381,11 @@ operator|*
 name|ReturnObjDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Method returned ObjDesc=%X\n"
 operator|,
 operator|*

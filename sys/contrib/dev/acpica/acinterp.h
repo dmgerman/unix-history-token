@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 105 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -200,6 +200,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|ResultDesc
+parameter_list|,
+name|UINT32
+name|Base
 parameter_list|,
 name|UINT32
 name|MaxLength

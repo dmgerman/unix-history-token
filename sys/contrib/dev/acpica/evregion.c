@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 107 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -444,11 +444,11 @@ operator|!
 name|HandlerDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"no handler for region(%p) [%s]\n"
 operator|,
 name|RegionObj
@@ -501,11 +501,11 @@ name|RegionSetup
 condition|)
 block|{
 comment|/*              *  Bad news, no init routine and not init'd              */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No init routine for region(%p) [%s]\n"
 operator|,
 name|RegionObj
@@ -562,11 +562,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Region Init: %s [%s]\n"
 operator|,
 name|AcpiFormatException
@@ -622,15 +622,11 @@ name|AddrHandler
 operator|.
 name|Handler
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|TRACE_OPREGION
-operator||
-name|VERBOSE_INFO
-operator|)
-argument_list|,
-operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Addrhandler %p (%p), Address %8.8lX%8.8lX\n"
 operator|,
 operator|&
@@ -713,11 +709,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Region handler: %s [%s]\n"
 operator|,
 name|AcpiFormatException
@@ -870,11 +866,11 @@ operator|==
 name|RegionObj
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Removing Region %p from address handler %p\n"
 operator|,
 name|RegionObj
@@ -968,11 +964,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%s from region init, [%s]\n"
 operator|,
 name|AcpiFormatException
@@ -1036,11 +1032,11 @@ name|Next
 expr_stmt|;
 block|}
 comment|/*      *  If we get here, the region was not in the handler's region list      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Cannot remove region %p from address handler %p\n"
 operator|,
 name|RegionObj
@@ -1082,11 +1078,11 @@ argument_list|(
 literal|"EvAssociateRegionAndHandler"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Adding Region %p to address handler %p [%s]\n"
 operator|,
 name|RegionObj
@@ -1358,11 +1354,11 @@ name|SpaceId
 condition|)
 block|{
 comment|/*                  *  It's for the same address space                  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_OPREGION
-argument_list|,
 operator|(
+name|ACPI_DB_OPREGION
+operator|,
 literal|"Found handler for region [%s] in device %p(%p) handler %p\n"
 operator|,
 name|AcpiUtGetRegionName

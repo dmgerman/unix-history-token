@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 62 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 68 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -104,11 +104,11 @@ operator|!
 name|Op
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null Op\n"
 operator|)
 argument_list|)
@@ -156,11 +156,11 @@ operator|!=
 name|ACPI_OP_TYPE_OPCODE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown parent opcode. Op=%X\n"
 operator|,
 name|Op
@@ -200,11 +200,11 @@ case|case
 name|AML_RETURN_OP
 case|:
 comment|/* Never delete the return value associated with a return opcode */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Result used, [RETURN] opcode=%X Op=%X\n"
 operator|,
 name|Op
@@ -255,11 +255,11 @@ name|Op
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Result used as a predicate, [IF/WHILE] opcode=%X Op=%X\n"
 operator|,
 name|Op
@@ -357,11 +357,11 @@ name|AML_CREATE_QWORD_FIELD_OP
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Result used, [Region or CreateField] opcode=%X Op=%X\n"
 operator|,
 name|Op
@@ -378,11 +378,11 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Result not used, Parent opcode=%X Op=%X\n"
 operator|,
 name|Op
@@ -452,11 +452,11 @@ operator|!
 name|Op
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null Op\n"
 operator|)
 argument_list|)
@@ -484,7 +484,7 @@ name|WalkState
 argument_list|)
 condition|)
 block|{
-comment|/*          * Must pop the result stack (ObjDesc should be equal          *  to ResultObj)          */
+comment|/*          * Must pop the result stack (ObjDesc should be equal to ResultObj)          */
 name|Status
 operator|=
 name|AcpiDsResultPop
@@ -594,11 +594,11 @@ name|String
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Getting a name: Arg=%p\n"
 operator|,
 name|Arg
@@ -840,11 +840,11 @@ operator|=
 name|AML_ZERO_OP
 expr_stmt|;
 comment|/* Has no arguments! */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Null namepath: Arg=%p\n"
 operator|,
 name|Arg
@@ -893,11 +893,11 @@ operator|&
 name|OP_HAS_RETURN_VALUE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Argument previously created, already stacked \n"
 operator|)
 argument_list|)
@@ -941,11 +941,11 @@ argument_list|)
 condition|)
 block|{
 comment|/*                  * Only error is underflow, and this indicates                  * a missing or null operand!                  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Missing or null operand, %s\n"
 operator|,
 name|AcpiFormatException
@@ -1133,11 +1133,11 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Arg #%d (%p) done, Arg1=%p\n"
 operator|,
 name|ArgCount
@@ -1174,11 +1174,11 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"While creating Arg %d - %s\n"
 operator|,
 operator|(
@@ -1335,11 +1335,11 @@ name|ACPI_OP_TYPE_OPCODE
 condition|)
 block|{
 comment|/* Unknown opcode */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown AML opcode: %x\n"
 operator|,
 name|Opcode
@@ -1377,6 +1377,9 @@ case|:
 case|case
 name|AML_DWORD_OP
 case|:
+case|case
+name|AML_QWORD_OP
+case|:
 name|DataType
 operator|=
 name|ACPI_TYPE_INTEGER
@@ -1399,11 +1402,11 @@ name|INTERNAL_TYPE_REFERENCE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown (type LITERAL) AML opcode: %x\n"
 operator|,
 name|Opcode
@@ -1441,11 +1444,11 @@ name|ACPI_TYPE_PACKAGE
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown (type DATA_TERM) AML opcode: %x\n"
 operator|,
 name|Opcode
@@ -1537,11 +1540,11 @@ case|:
 comment|/* No mapping needed at this time */
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unimplemented data type opcode: %x\n"
 operator|,
 name|Opcode

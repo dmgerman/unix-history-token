@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -112,27 +112,11 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-name|UINT8
-modifier|*
-name|AmlPointer
-init|=
-name|NULL
-decl_stmt|;
 name|ACPI_OBJECT_TYPE8
 name|EntryType
 decl_stmt|;
 name|ACPI_INTEGER
 name|TempVal
-decl_stmt|;
-name|BOOLEAN
-name|AttachedAmlPointer
-init|=
-name|FALSE
-decl_stmt|;
-name|UINT8
-name|AmlOpcode
-init|=
-literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -162,11 +146,11 @@ operator|)
 name|Node
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"Entry=%p ValDesc=%p Type=%X\n"
 operator|,
 name|Node
@@ -177,59 +161,7 @@ name|EntryType
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * The ValDesc attached to the Node can be either:      * 1) An internal ACPI object      * 2) A pointer into the AML stream (into one of the ACPI system tables)      */
-if|if
-condition|(
-name|AcpiTbSystemTablePointer
-argument_list|(
-name|ValDesc
-argument_list|)
-condition|)
-block|{
-comment|/* CAN THIS EVERY HAPPEN NOW?  TBD!!! */
-name|AttachedAmlPointer
-operator|=
-name|TRUE
-expr_stmt|;
-name|AmlOpcode
-operator|=
-operator|*
-operator|(
-operator|(
-name|UINT8
-operator|*
-operator|)
-name|ValDesc
-operator|)
-expr_stmt|;
-name|AmlPointer
-operator|=
-operator|(
-operator|(
-name|UINT8
-operator|*
-operator|)
-name|ValDesc
-operator|)
-operator|+
-literal|1
-expr_stmt|;
-name|DEBUG_PRINTP
-argument_list|(
-name|TRACE_EXEC
-argument_list|,
-operator|(
-literal|"Unparsed AML: %p Len=%X\n"
-operator|,
-name|AmlOpcode
-operator|,
-name|AmlPointer
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Several EntryTypes do not require further processing, so      *  we will return immediately      */
-comment|/* Devices rarely have an attached object, return the Node      *  and Method locals and arguments have a pseudo-Node      */
+comment|/*      * Several object types require no further processing:      * 1) Devices rarely have an attached object, return the Node      * 2) Method locals and arguments have a pseudo-Node      */
 if|if
 condition|(
 name|EntryType
@@ -261,11 +193,11 @@ operator|!
 name|ValDesc
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"No object attached to node %p\n"
 operator|,
 name|Node
@@ -289,28 +221,6 @@ name|ACPI_TYPE_PACKAGE
 case|:
 if|if
 condition|(
-name|AttachedAmlPointer
-condition|)
-block|{
-comment|/*              * This means that the package initialization is not parsed              * -- should not happen              */
-name|DEBUG_PRINTP
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"Unparsed Packages not supported!\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NOT_IMPLEMENTED
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* ValDesc is an internal object in all cases by the time we get here */
-if|if
-condition|(
 name|ACPI_TYPE_PACKAGE
 operator|!=
 name|ValDesc
@@ -320,11 +230,11 @@ operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Object not a package, type %X\n"
 operator|,
 name|ValDesc
@@ -357,28 +267,6 @@ name|ACPI_TYPE_BUFFER
 case|:
 if|if
 condition|(
-name|AttachedAmlPointer
-condition|)
-block|{
-comment|/*              * This means that the buffer initialization is not parsed              * -- should not happen              */
-name|DEBUG_PRINTP
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"Unparsed Buffers not supported!\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NOT_IMPLEMENTED
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* ValDesc is an internal object in all cases by the time we get here */
-if|if
-condition|(
 name|ACPI_TYPE_BUFFER
 operator|!=
 name|ValDesc
@@ -388,11 +276,11 @@ operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Object not a buffer, type %X\n"
 operator|,
 name|ValDesc
@@ -425,62 +313,6 @@ name|ACPI_TYPE_STRING
 case|:
 if|if
 condition|(
-name|AttachedAmlPointer
-condition|)
-block|{
-comment|/* Allocate a new string object */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|ACPI_TYPE_STRING
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Init the internal object */
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Pointer
-operator|=
-operator|(
-name|NATIVE_CHAR
-operator|*
-operator|)
-name|AmlPointer
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Length
-operator|=
-name|STRLEN
-argument_list|(
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Pointer
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
 name|ACPI_TYPE_STRING
 operator|!=
 name|ValDesc
@@ -490,11 +322,11 @@ operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Object not a string, type %X\n"
 operator|,
 name|ValDesc
@@ -521,21 +353,10 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-name|DEBUG_PRINTP
-argument_list|(
-name|TRACE_EXEC
-argument_list|,
-operator|(
-literal|"case Integer \n"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/*          * The Node has an attached internal object, make sure that it's a          * number          */
 if|if
 condition|(
 name|ACPI_TYPE_INTEGER
@@ -547,11 +368,11 @@ operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Object not a Number, type %X\n"
 operator|,
 name|ValDesc
@@ -591,11 +412,11 @@ case|:
 case|case
 name|INTERNAL_TYPE_INDEX_FIELD
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"FieldRead Node=%p ValDesc=%p Type=%X\n"
 operator|,
 name|Node
@@ -654,11 +475,11 @@ comment|/* TYPE_Any is untyped, and thus there is no object associated with it *
 case|case
 name|ACPI_TYPE_ANY
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Untyped entry %p, no attached object!\n"
 operator|,
 name|Node
@@ -710,11 +531,11 @@ name|ACPI_INTEGER_MAX
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unsupported reference opcode %X\n"
 operator|,
 name|ValDesc
@@ -770,11 +591,11 @@ expr_stmt|;
 break|break;
 comment|/* Default case is for unknown types */
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Node %p - Unknown object type %X\n"
 operator|,
 name|Node

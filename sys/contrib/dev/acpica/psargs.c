@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -660,6 +660,9 @@ expr_stmt|;
 operator|*
 name|ArgCount
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|Count
 operator|->
 name|Value
@@ -865,11 +868,11 @@ name|MethodNode
 operator|=
 name|Node
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"method - %p Path=%p\n"
 operator|,
 name|MethodNode
@@ -1111,6 +1114,38 @@ operator|->
 name|Aml
 operator|+=
 literal|4
+expr_stmt|;
+break|break;
+case|case
+name|ARGP_QWORDDATA
+case|:
+name|AcpiPsInitOp
+argument_list|(
+name|Arg
+argument_list|,
+name|AML_QWORD_OP
+argument_list|)
+expr_stmt|;
+comment|/* Get 8 bytes from the AML stream */
+name|MOVE_UNALIGNED64_TO_64
+argument_list|(
+operator|&
+name|Arg
+operator|->
+name|Value
+operator|.
+name|Integer
+argument_list|,
+name|ParserState
+operator|->
+name|Aml
+argument_list|)
+expr_stmt|;
+name|ParserState
+operator|->
+name|Aml
+operator|+=
+literal|8
 expr_stmt|;
 break|break;
 case|case

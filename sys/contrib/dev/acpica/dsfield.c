@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 43 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -557,7 +557,7 @@ name|Arg
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 comment|/* Next arg is the field flags */
 name|Arg
@@ -568,14 +568,11 @@ name|Next
 expr_stmt|;
 name|FieldFlags
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|Arg
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer8
 expr_stmt|;
 comment|/* Each remaining arg is a Named Field */
 name|Arg
@@ -1097,11 +1094,11 @@ name|Size
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Invalid opcode in field list: %X\n"
 operator|,
 name|Arg

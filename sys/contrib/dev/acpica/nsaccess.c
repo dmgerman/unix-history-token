@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 128 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 130 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -118,11 +118,11 @@ operator|&
 name|AcpiGbl_RootNodeStruct
 expr_stmt|;
 comment|/* Enter the pre-defined names in the name table */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Entering predefined entries into namespace\n"
 operator|)
 argument_list|)
@@ -179,11 +179,11 @@ operator|)
 condition|)
 comment|/* Must be on same line for code converter */
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Could not create predefined name %s, %s\n"
 operator|,
 name|InitVal
@@ -265,6 +265,7 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
+comment|/*                  * Build an object around the static string                  */
 name|ObjDesc
 operator|->
 name|String
@@ -278,61 +279,23 @@ operator|->
 name|Val
 argument_list|)
 expr_stmt|;
-comment|/*                  * Allocate a buffer for the string.  All                  * String.Pointers must be allocated buffers!                  * (makes deletion simpler)                  */
 name|ObjDesc
 operator|->
 name|String
 operator|.
 name|Pointer
 operator|=
-name|ACPI_MEM_ALLOCATE
-argument_list|(
-operator|(
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Length
-operator|+
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Pointer
-condition|)
-block|{
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-name|STRCPY
-argument_list|(
-name|ObjDesc
-operator|->
-name|String
-operator|.
-name|Pointer
-argument_list|,
 name|InitVal
 operator|->
 name|Val
-argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_STATIC_POINTER
 expr_stmt|;
 break|break;
 case|case
@@ -642,11 +605,11 @@ name|Node
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Null scope prefix, using root node (%p)\n"
 operator|,
 name|AcpiGbl_RootNode
@@ -725,11 +688,11 @@ name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Null Pathname (Zero segments),  Flags=%x\n"
 operator|,
 name|Flags
@@ -757,11 +720,11 @@ comment|/* point to segment part */
 name|Pathname
 operator|++
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Searching from root [%p]\n"
 operator|,
 name|CurrentNode
@@ -794,11 +757,11 @@ name|CurrentNode
 operator|=
 name|PrefixNode
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Searching relative to pfx scope [%p]\n"
 operator|,
 name|PrefixNode
@@ -869,11 +832,11 @@ comment|/* point to first segment */
 name|Pathname
 operator|++
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Dual Pathname (2 segments, Flags=%X)\n"
 operator|,
 name|Flags
@@ -907,11 +870,11 @@ comment|/* point to first segment */
 name|Pathname
 operator|++
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Multi Pathname (%d Segments, Flags=%X) \n"
 operator|,
 name|NumSegments
@@ -928,11 +891,11 @@ name|NumSegments
 operator|=
 literal|1
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Simple Pathname (1 segment, Flags=%X)\n"
 operator|,
 name|Flags
@@ -945,11 +908,11 @@ directive|ifdef
 name|ACPI_DEBUG
 comment|/* TBD: [Restructure] Make this a procedure */
 comment|/* Debug only: print the entire name that we are about to lookup */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"["
 operator|)
 argument_list|)
@@ -968,11 +931,11 @@ name|i
 operator|++
 control|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"%4.4s/"
 operator|,
 operator|&
@@ -986,11 +949,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"]\n"
 operator|)
 argument_list|)
@@ -1073,11 +1036,11 @@ name|AE_NOT_FOUND
 condition|)
 block|{
 comment|/* Name not found in ACPI namespace  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Name [%4.4s] not found in scope %X\n"
 operator|,
 operator|&
@@ -1212,11 +1175,11 @@ operator|)
 condition|)
 block|{
 comment|/*              * More segments or the type implies enclosed scope,              * and the next scope has not been allocated.              */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Load mode=%X  ThisNode=%X\n"
 operator|,
 name|InterpreterMode
@@ -1306,11 +1269,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Set global scope to %p\n"
 operator|,
 name|ScopeToPush

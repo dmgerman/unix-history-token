@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 114 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 116 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"actables.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acparser.h"
 end_include
 
 begin_define
@@ -219,11 +225,11 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|""
 operator|)
 argument_list|)
@@ -240,11 +246,11 @@ operator|--
 name|Length
 control|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|" "
 operator|)
 argument_list|)
@@ -256,11 +262,11 @@ name|ByteCount
 operator|--
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"%02x"
 operator|,
 operator|*
@@ -274,11 +280,11 @@ condition|(
 name|ByteCount
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|" "
 operator|)
 argument_list|)
@@ -290,11 +296,11 @@ condition|(
 name|ShowDecimalValue
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|" [%ld]"
 operator|,
 name|Value
@@ -309,21 +315,21 @@ operator|==
 name|LeadSpace
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|" "
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -369,11 +375,11 @@ name|EntryDesc
 condition|)
 block|{
 comment|/*          * This usually indicates that something serious is wrong --          * since most (if not all)          * code that dumps the stack expects something to be there!          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Null stack entry ptr\n"
 operator|)
 argument_list|)
@@ -394,11 +400,11 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Node: \n"
 operator|)
 argument_list|)
@@ -407,7 +413,7 @@ name|DUMP_ENTRY
 argument_list|(
 name|EntryDesc
 argument_list|,
-name|ACPI_INFO
+name|ACPI_LV_INFO
 argument_list|)
 expr_stmt|;
 return|return
@@ -424,11 +430,11 @@ name|EntryDesc
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%p is an AML pointer\n"
 operator|,
 name|EntryDesc
@@ -452,11 +458,11 @@ name|ACPI_DESC_TYPE_INTERNAL
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%p Not a local object \n"
 operator|,
 name|EntryDesc
@@ -480,11 +486,11 @@ operator|)
 return|;
 block|}
 comment|/*  EntryDesc is a valid object  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%p "
 operator|,
 name|EntryDesc
@@ -515,11 +521,11 @@ block|{
 case|case
 name|AML_ZERO_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference: Zero\n"
 operator|)
 argument_list|)
@@ -528,11 +534,11 @@ break|break;
 case|case
 name|AML_ONE_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference: One\n"
 operator|)
 argument_list|)
@@ -541,11 +547,11 @@ break|break;
 case|case
 name|AML_ONES_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference: Ones\n"
 operator|)
 argument_list|)
@@ -554,11 +560,11 @@ break|break;
 case|case
 name|AML_DEBUG_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference: Debug\n"
 operator|)
 argument_list|)
@@ -577,7 +583,7 @@ name|Object
 argument_list|,
 literal|"Reference: Name: "
 argument_list|,
-name|ACPI_INFO
+name|ACPI_LV_INFO
 argument_list|,
 name|_COMPONENT
 argument_list|)
@@ -590,18 +596,18 @@ name|Reference
 operator|.
 name|Object
 argument_list|,
-name|ACPI_INFO
+name|ACPI_LV_INFO
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|AML_INDEX_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference: Index %p\n"
 operator|,
 name|EntryDesc
@@ -616,11 +622,11 @@ break|break;
 case|case
 name|AML_ARG_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference: Arg%d"
 operator|,
 name|EntryDesc
@@ -643,11 +649,11 @@ name|Type
 condition|)
 block|{
 comment|/* Value is a Number */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|" value is [%ld]"
 operator|,
 name|EntryDesc
@@ -659,11 +665,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -672,11 +678,11 @@ break|break;
 case|case
 name|AML_LOCAL_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference: Local%d"
 operator|,
 name|EntryDesc
@@ -699,11 +705,11 @@ name|Type
 condition|)
 block|{
 comment|/* Value is a Number */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|" value is [%ld]"
 operator|,
 name|EntryDesc
@@ -715,11 +721,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -728,11 +734,11 @@ break|break;
 case|case
 name|AML_INT_NAMEPATH_OP
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Reference.Node->Name %x\n"
 operator|,
 name|EntryDesc
@@ -748,11 +754,11 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/*  unknown opcode  */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Unknown opcode=%X\n"
 operator|,
 name|EntryDesc
@@ -769,11 +775,11 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Buffer len %X @ %p \n"
 operator|,
 name|EntryDesc
@@ -820,11 +826,11 @@ operator|.
 name|Pointer
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Buffer Contents: "
 operator|)
 argument_list|)
@@ -846,11 +852,11 @@ operator|++
 name|Buf
 control|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 name|Length
 condition|?
 literal|" %02x"
@@ -863,11 +869,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -877,11 +883,11 @@ break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Number %lX\n"
 operator|,
 name|EntryDesc
@@ -896,11 +902,11 @@ break|break;
 case|case
 name|INTERNAL_TYPE_IF
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"If [Number] %lX\n"
 operator|,
 name|EntryDesc
@@ -915,11 +921,11 @@ break|break;
 case|case
 name|INTERNAL_TYPE_WHILE
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"While [Number] %lX\n"
 operator|,
 name|EntryDesc
@@ -934,11 +940,11 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Package count %X @ %p\n"
 operator|,
 name|EntryDesc
@@ -1021,11 +1027,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -1034,11 +1040,11 @@ break|break;
 case|case
 name|ACPI_TYPE_REGION
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Region %s (%X)"
 operator|,
 name|AcpiUtGetRegionName
@@ -1073,11 +1079,11 @@ name|AOPOBJ_DATA_VALID
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"\n"
 operator|)
 argument_list|)
@@ -1085,11 +1091,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|" base %p Length %X\n"
 operator|,
 name|EntryDesc
@@ -1111,11 +1117,11 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"String length %X @ %p\n\n"
 operator|,
 name|EntryDesc
@@ -1150,11 +1156,11 @@ name|i
 operator|++
 control|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"%c"
 operator|,
 name|EntryDesc
@@ -1169,11 +1175,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"\n\n"
 operator|)
 argument_list|)
@@ -1182,11 +1188,11 @@ break|break;
 case|case
 name|INTERNAL_TYPE_BANK_FIELD
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"BankField\n"
 operator|)
 argument_list|)
@@ -1195,11 +1201,11 @@ break|break;
 case|case
 name|INTERNAL_TYPE_REGION_FIELD
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"RegionField: bits=%X  bitaccwidth=%X lock=%X update=%X at byte=%lX bit=%X of below:\n"
 operator|,
 name|EntryDesc
@@ -1253,11 +1259,11 @@ break|break;
 case|case
 name|INTERNAL_TYPE_INDEX_FIELD
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"IndexField\n"
 operator|)
 argument_list|)
@@ -1266,11 +1272,11 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"BufferField: %X bits at byte %lX bit %X of \n"
 operator|,
 name|EntryDesc
@@ -1303,11 +1309,11 @@ operator|.
 name|BufferObj
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"*NULL* \n"
 operator|)
 argument_list|)
@@ -1329,11 +1335,11 @@ operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"*not a Buffer* \n"
 operator|)
 argument_list|)
@@ -1355,11 +1361,11 @@ break|break;
 case|case
 name|ACPI_TYPE_EVENT
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Event\n"
 operator|)
 argument_list|)
@@ -1368,11 +1374,11 @@ break|break;
 case|case
 name|ACPI_TYPE_METHOD
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Method(%X) @ %p:%lX\n"
 operator|,
 name|EntryDesc
@@ -1399,11 +1405,11 @@ break|break;
 case|case
 name|ACPI_TYPE_MUTEX
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Mutex\n"
 operator|)
 argument_list|)
@@ -1412,11 +1418,11 @@ break|break;
 case|case
 name|ACPI_TYPE_DEVICE
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Device\n"
 operator|)
 argument_list|)
@@ -1425,11 +1431,11 @@ break|break;
 case|case
 name|ACPI_TYPE_POWER
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Power\n"
 operator|)
 argument_list|)
@@ -1438,11 +1444,11 @@ break|break;
 case|case
 name|ACPI_TYPE_PROCESSOR
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Processor\n"
 operator|)
 argument_list|)
@@ -1451,11 +1457,11 @@ break|break;
 case|case
 name|ACPI_TYPE_THERMAL
 case|:
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Thermal\n"
 operator|)
 argument_list|)
@@ -1463,11 +1469,11 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/*  unknown EntryDesc->Common.Type value    */
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Unknown Type %X\n"
 operator|,
 name|EntryDesc
@@ -1569,44 +1575,49 @@ modifier|*
 modifier|*
 name|EntryDesc
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|Ident
-condition|)
-block|{
-name|Ident
-operator|=
-literal|"?"
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|Note
-condition|)
-block|{
-name|Note
-operator|=
-literal|"?"
-expr_stmt|;
-block|}
-name|DEBUG_PRINT
+name|PROC_NAME
 argument_list|(
-name|ACPI_INFO
-argument_list|,
+literal|"AcpiExDumpOperands"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Ident
+condition|)
+block|{
+name|Ident
+operator|=
+literal|"?"
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|Note
+condition|)
+block|{
+name|Note
+operator|=
+literal|"?"
+expr_stmt|;
+block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"************* AcpiExDumpOperands  Mode=%X ******************\n"
 operator|,
 name|InterpreterMode
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"From %12s(%d)  %s: %s\n"
 operator|,
 name|ModuleName
@@ -1703,7 +1714,7 @@ condition|(
 operator|!
 operator|(
 operator|(
-name|TRACE_OBJECTS
+name|ACPI_LV_OBJECTS
 operator|&
 name|AcpiDbgLevel
 operator|)
@@ -1842,6 +1853,10 @@ name|UINT32
 name|Flags
 parameter_list|)
 block|{
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"ExDumpObjectDescriptor"
@@ -1858,7 +1873,7 @@ condition|(
 operator|!
 operator|(
 operator|(
-name|TRACE_OBJECTS
+name|ACPI_DB_OBJECTS
 operator|&
 name|AcpiDbgLevel
 operator|)
@@ -1942,20 +1957,32 @@ literal|"%20s : %s\n"
 argument_list|,
 literal|"Type"
 argument_list|,
-literal|"Number"
+literal|"Integer"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %X\n"
+literal|"%20s : %X%8.8X\n"
 argument_list|,
 literal|"Value"
 argument_list|,
+name|HIDWORD
+argument_list|(
 name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+argument_list|,
+name|LODWORD
+argument_list|(
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2047,6 +2074,19 @@ argument_list|,
 literal|"Type"
 argument_list|,
 literal|"Package"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%20s : %X\n"
+argument_list|,
+literal|"Flags"
+argument_list|,
+name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|Flags
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -2993,6 +3033,17 @@ break|break;
 case|case
 name|INTERNAL_TYPE_REFERENCE
 case|:
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+argument_list|)
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"%20s : %s\n"
@@ -3017,15 +3068,13 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%20s : %X\n"
+literal|"%20s : %s\n"
 argument_list|,
 literal|"Opcode"
 argument_list|,
-name|ObjDesc
+name|OpInfo
 operator|->
-name|Reference
-operator|.
-name|Opcode
+name|Name
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf

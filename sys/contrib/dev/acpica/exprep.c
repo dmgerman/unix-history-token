@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 93 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccessType  *  * PARAMETERS:  Access          - Encoded field access bits  *              Length          - Field length.  *  * RETURN:      Field granularity (8, 16, or 32)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccessType  *  * PARAMETERS:  Access          - Encoded field access bits  *              Length          - Field length.  *  * RETURN:      Field granularity (8, 16, 32 or 64)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -77,6 +77,11 @@ modifier|*
 name|Alignment
 parameter_list|)
 block|{
+name|PROC_NAME
+argument_list|(
+literal|"AcpiExDecodeFieldAccessType"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|Access
@@ -212,12 +217,12 @@ return|;
 break|break;
 default|default:
 comment|/* Invalid field access type */
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
-literal|"ExDecodeFieldAccessType: Unknown field access type %x\n"
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unknown field access type %x\n"
 operator|,
 name|Access
 operator|)
@@ -594,11 +599,11 @@ operator|!
 name|RegionNode
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null RegionNode\n"
 operator|)
 argument_list|)
@@ -623,11 +628,11 @@ operator|!=
 name|ACPI_TYPE_REGION
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Needed Region, found type %X %s\n"
 operator|,
 name|Type
@@ -755,11 +760,11 @@ name|RegionObj
 argument_list|)
 expr_stmt|;
 comment|/* Debug info */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Bitoff=%X Off=%X Gran=%X Region %p\n"
 operator|,
 name|ObjDesc
@@ -788,11 +793,11 @@ name|RegionObj
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"set NamedObj %p (%4.4s) val = %p\n"
 operator|,
 name|Node
@@ -889,11 +894,11 @@ operator|!
 name|RegionNode
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null RegionNode\n"
 operator|)
 argument_list|)
@@ -918,11 +923,11 @@ operator|!=
 name|ACPI_TYPE_REGION
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Needed Region, found type %X %s\n"
 operator|,
 name|Type
@@ -1078,11 +1083,11 @@ name|BankRegisterObj
 argument_list|)
 expr_stmt|;
 comment|/* Debug info */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"BitOff=%X Off=%X Gran=%X Region %p BankReg %p\n"
 operator|,
 name|ObjDesc
@@ -1117,11 +1122,11 @@ name|BankRegisterObj
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Set NamedObj %p (%4.4s) val=%p\n"
 operator|,
 name|Node
@@ -1215,11 +1220,11 @@ operator|!
 name|DataReg
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Null handle\n"
 operator|)
 argument_list|)
@@ -1340,11 +1345,11 @@ name|IndexObj
 argument_list|)
 expr_stmt|;
 comment|/* Debug info */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"bitoff=%X off=%X gran=%X Index %p Data %p\n"
 operator|,
 name|ObjDesc
@@ -1379,11 +1384,11 @@ name|DataObj
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"set NamedObj %p (%4.4s) val = %p\n"
 operator|,
 name|Node

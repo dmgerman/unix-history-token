@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 46 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 47 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -859,13 +859,25 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" %.8X"
+literal|" %.8X%.8X"
 argument_list|,
+name|HIDWORD
+argument_list|(
 name|ObjDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+argument_list|,
+name|LODWORD
+argument_list|(
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1183,7 +1195,7 @@ name|AML_ZERO_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Number %.8X"
+literal|"[Const]     Zero (0) [Null Target]"
 argument_list|,
 literal|0
 argument_list|)
@@ -1194,9 +1206,7 @@ name|AML_ONES_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Number %.8X"
-argument_list|,
-name|ACPI_UINT32_MAX
+literal|"[Const]     Ones (0xFFFFFFFFFFFFFFFF) [No Limit]"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1205,9 +1215,7 @@ name|AML_ONE_OP
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Const]     Number %.8X"
-argument_list|,
-literal|1
+literal|"[Const]     One (1)"
 argument_list|)
 expr_stmt|;
 break|break;

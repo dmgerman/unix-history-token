@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -351,11 +351,11 @@ operator|<=
 literal|'9'
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"leading digit: %c\n"
 operator|,
 name|CharBuf
@@ -371,11 +371,11 @@ name|AE_CTRL_PENDING
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"Bytes from stream:\n"
 operator|)
 argument_list|)
@@ -415,11 +415,11 @@ operator|*
 name|AmlAddress
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"%c\n"
 operator|,
 name|CharBuf
@@ -460,11 +460,11 @@ argument_list|,
 name|CharBuf
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"Appended to - %s \n"
 operator|,
 name|NameString
@@ -474,11 +474,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_NAMES
-argument_list|,
 operator|(
+name|ACPI_DB_NAMES
+operator|,
 literal|"No Name string - %s \n"
 operator|,
 name|CharBuf
@@ -496,11 +496,11 @@ name|Index
 condition|)
 block|{
 comment|/*          * First character was not a valid name character,          * so we are looking at something other than a name.          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Leading character is not alpha: %02Xh (not a name)\n"
 operator|,
 name|CharBuf
@@ -522,11 +522,11 @@ name|Status
 operator|=
 name|AE_AML_BAD_NAME
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Bad character %02x in name, at %p\n"
 operator|,
 operator|*
@@ -685,11 +685,11 @@ operator|*
 name|AmlAddress
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"RootPrefix: %x\n"
 operator|,
 name|Prefix
@@ -722,11 +722,11 @@ operator|*
 name|AmlAddress
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"ParentPrefix: %x\n"
 operator|,
 name|Prefix
@@ -769,11 +769,11 @@ operator|*
 name|AmlAddress
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"DualNamePrefix: %x\n"
 operator|,
 name|Prefix
@@ -845,11 +845,11 @@ operator|*
 name|AmlAddress
 operator|++
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_LOAD
-argument_list|,
 operator|(
+name|ACPI_DB_LOAD
+operator|,
 literal|"MultiNamePrefix: %x\n"
 operator|,
 name|Prefix
@@ -925,11 +925,11 @@ operator|==
 name|PrefixCount
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"NameSeg is \"\\\" followed by NULL\n"
 operator|)
 argument_list|)

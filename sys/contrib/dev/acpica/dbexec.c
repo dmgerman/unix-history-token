@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 27 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 29 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -456,6 +456,78 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetOutstandingAllocations  *  * PARAMETERS:  None  *  * RETURN:      Current global allocation count minus cache entries  *  * DESCRIPTION: Determine the current number of "outstanding" allocations --  *              those allocations that have not been freed and also are not  *              in one of the various object caches.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT32
+name|AcpiDbGetOutstandingAllocations
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|UINT32
+name|Outstanding
+init|=
+literal|0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
+for|for
+control|(
+name|i
+operator|=
+name|ACPI_MEM_LIST_FIRST_CACHE_LIST
+init|;
+name|i
+operator|<
+name|ACPI_NUM_MEM_LISTS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|Outstanding
+operator|+=
+operator|(
+name|AcpiGbl_MemoryLists
+index|[
+name|i
+index|]
+operator|.
+name|TotalAllocated
+operator|-
+name|AcpiGbl_MemoryLists
+index|[
+name|i
+index|]
+operator|.
+name|TotalFreed
+operator|-
+name|AcpiGbl_MemoryLists
+index|[
+name|i
+index|]
+operator|.
+name|CacheDepth
+operator|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+return|return
+operator|(
+name|Outstanding
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbExecute  *  * PARAMETERS:  Name                - Name of method to execute  *              Args                - Parameters to the method  *              Flags               - single step/no single step  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method.  Name is relative to the current  *              scope.  *  ******************************************************************************/
 end_comment
 
@@ -489,22 +561,13 @@ name|UINT32
 name|PreviousAllocations
 decl_stmt|;
 name|UINT32
-name|PreviousSize
-decl_stmt|;
-name|UINT32
 name|Allocations
-decl_stmt|;
-name|UINT32
-name|Size
 decl_stmt|;
 comment|/* Memory allocation tracking */
 name|PreviousAllocations
 operator|=
-name|AcpiGbl_CurrentAllocCount
-expr_stmt|;
-name|PreviousSize
-operator|=
-name|AcpiGbl_CurrentAllocSize
+name|AcpiDbGetOutstandingAllocations
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -543,21 +606,24 @@ operator|&
 name|ReturnObj
 argument_list|)
 expr_stmt|;
+comment|/*      * Allow any handlers in separate threads to complete.      * (Such as Notify handlers invoked from AML executed above).      */
+name|AcpiOsSleep
+argument_list|(
+literal|0
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ACPI_DEBUG
 comment|/* Memory allocation tracking */
 name|Allocations
 operator|=
-name|AcpiGbl_CurrentAllocCount
+name|AcpiDbGetOutstandingAllocations
+argument_list|()
 operator|-
 name|PreviousAllocations
-expr_stmt|;
-name|Size
-operator|=
-name|AcpiGbl_CurrentAllocSize
-operator|-
-name|PreviousSize
 expr_stmt|;
 name|AcpiDbSetOutputDestination
 argument_list|(
@@ -573,11 +639,9 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Outstanding: %ld allocations of total size %ld after execution\n"
+literal|"Outstanding: %ld allocations after execution\n"
 argument_list|,
 name|Allocations
-argument_list|,
-name|Size
 argument_list|)
 expr_stmt|;
 block|}

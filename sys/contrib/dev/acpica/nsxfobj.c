@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 87 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 88 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -361,11 +361,11 @@ operator|!
 name|Pathname
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Both Handle and Pathname are NULL\n"
 operator|)
 argument_list|)
@@ -373,11 +373,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Handle is NULL and Pathname is relative\n"
 operator|)
 argument_list|)
@@ -510,11 +510,11 @@ name|BufferSpaceNeeded
 condition|)
 block|{
 comment|/*                          * Caller's buffer is too small, can't                          * give him partial results fail the call                          * but return the buffer size needed                          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Needed buffer size %X, received %X\n"
 operator|,
 name|BufferSpaceNeeded

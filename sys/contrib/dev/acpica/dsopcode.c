@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -162,11 +162,11 @@ literal|"  [Field]"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[%4.4s] BufferField JIT Init\n"
 operator|,
 operator|&
@@ -502,11 +502,11 @@ literal|"  [Operation Region]"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[%4.4s] OpRegion Init at AML %p[%x]\n"
 operator|,
 operator|&
@@ -675,7 +675,7 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
-comment|/* AcpiEvaluate the address and length arguments for the OpRegion */
+comment|/* Evaluate the address and length arguments for the OpRegion */
 name|Op
 operator|=
 name|AcpiPsAllocOp
@@ -1031,11 +1031,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"(%s) bad operand(s) (%X)\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -1076,11 +1076,11 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"(%s) destination must be a Node\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -1232,11 +1232,11 @@ name|ACCESS_QWORD_ACC
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Internal error - unknown field creation opcode %02x\n"
 operator|,
 name|Op
@@ -1289,11 +1289,11 @@ name|Length
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Field size %d exceeds Buffer size %d (bits)\n"
 operator|,
 name|BitOffset
@@ -1411,11 +1411,11 @@ argument_list|)
 condition|)
 comment|/* TBD: This line MUST be a single line until AcpiSrc can handle it (block deletion) */
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Tried to create field in invalid object type %X\n"
 operator|,
 name|SrcDesc
@@ -1429,11 +1429,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Tried to create field in improper object type - %s\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -1763,11 +1763,11 @@ argument_list|(
 name|OperandDesc
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"RgnObj %p Addr %8.8lX%8.8lX Len %X\n"
 operator|,
 name|ObjDesc
@@ -1846,11 +1846,11 @@ argument_list|(
 literal|"DsExecBeginControlOp"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Op=%p Opcode=%2.2X State=%p\n"
 operator|,
 name|Op
@@ -1998,11 +1998,11 @@ block|{
 case|case
 name|AML_IF_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"[IF_OP] Op=%p\n"
 operator|,
 name|Op
@@ -2049,11 +2049,11 @@ break|break;
 case|case
 name|AML_WHILE_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"[WHILE_OP] Op=%p\n"
 operator|,
 name|Op
@@ -2077,11 +2077,11 @@ operator|=
 name|AE_CTRL_PENDING
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"[WHILE_OP] termination! Op=%p\n"
 operator|,
 name|Op
@@ -2118,11 +2118,11 @@ break|break;
 case|case
 name|AML_RETURN_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"[RETURN_OP] Op=%p Arg=%p\n"
 operator|,
 name|Op
@@ -2393,11 +2393,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"Completed RETURN_OP State=%p, RetVal=%p\n"
 operator|,
 name|WalkState
@@ -2435,11 +2435,11 @@ break|break;
 case|case
 name|AML_BREAK_OP
 case|:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Break to end of current package, Op=%p\n"
 operator|,
 name|Op
@@ -2463,11 +2463,11 @@ name|AE_NOT_IMPLEMENTED
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown control opcode=%X Op=%p\n"
 operator|,
 name|Op

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdyadic - ACPI AML execution for dyadic (2-operand) operators  *              $Revision: 82 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdyadic - ACPI AML execution for dyadic (2-operand) operators  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -696,11 +696,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"(%s) bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -782,11 +782,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unexpected notify object type %X\n"
 operator|,
 name|ObjDesc
@@ -943,6 +943,37 @@ argument_list|,
 literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"(%s) Could not resolve operand(s) (%s)\n"
+operator|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|Opcode
+argument_list|)
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 comment|/* Get all operands */
 if|if
 condition|(
@@ -1004,11 +1035,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"(%s) bad operand(s) (%s)\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -1524,6 +1555,8 @@ argument_list|,
 operator|&
 name|ObjDesc2
 argument_list|,
+literal|16
+argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|,
 name|WalkState
@@ -1605,6 +1638,8 @@ name|ObjDesc
 argument_list|,
 operator|&
 name|RetDesc
+argument_list|,
+literal|16
 argument_list|,
 operator|(
 name|UINT32
@@ -1866,11 +1901,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"(%s) bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
@@ -2152,11 +2187,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"(%s) bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -61,15 +61,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|AOPOBJ_DATA_VALID
+name|AOPOBJ_STATIC_POINTER
 value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|AOPOBJ_INITIALIZED
+name|AOPOBJ_DATA_VALID
 value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AOPOBJ_ZERO_CONST
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AOPOBJ_INITIALIZED
+value|0x8
 end_define
 
 begin_comment

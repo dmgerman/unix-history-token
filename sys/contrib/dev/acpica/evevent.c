@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -71,11 +71,11 @@ operator|!
 name|AcpiGbl_DSDT
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"No ACPI tables present!\n"
 operator|)
 argument_list|)
@@ -95,11 +95,11 @@ name|AcpiHwGetModeCapabilities
 argument_list|()
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"ACPI Mode is not supported!\n"
 operator|)
 argument_list|)
@@ -129,11 +129,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_FATAL
-argument_list|,
 operator|(
+name|ACPI_DB_FATAL
+operator|,
 literal|"Unable to initialize fixed events.\n"
 operator|)
 argument_list|)
@@ -157,11 +157,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_FATAL
-argument_list|,
 operator|(
+name|ACPI_DB_FATAL
+operator|,
 literal|"Unable to initialize general purpose events.\n"
 operator|)
 argument_list|)
@@ -186,11 +186,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_FATAL
-argument_list|,
 operator|(
+name|ACPI_DB_FATAL
+operator|,
 literal|"Unable to install System Control Interrupt Handler\n"
 operator|)
 argument_list|)
@@ -215,11 +215,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_FATAL
-argument_list|,
 operator|(
+name|ACPI_DB_FATAL
+operator|,
 literal|"Unable to initialize Gpe control methods\n"
 operator|)
 argument_list|)
@@ -244,11 +244,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_FATAL
-argument_list|,
 operator|(
+name|ACPI_DB_FATAL
+operator|,
 literal|"Unable to initialize Global Lock handler\n"
 operator|)
 argument_list|)
@@ -402,6 +402,11 @@ decl_stmt|;
 name|UINT32
 name|EnableRegister
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"AcpiEvFixedEventDetect"
+argument_list|)
+expr_stmt|;
 comment|/*      * Read the fixed feature status and enable registers, as all the cases      * depend on their values.      */
 name|StatusRegister
 operator|=
@@ -421,11 +426,11 @@ argument_list|,
 name|PM1_EN
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_INTERRUPTS
-argument_list|,
 operator|(
+name|ACPI_DB_INTERRUPTS
+operator|,
 literal|"Fixed AcpiEvent Block: Enable %08X Status %08X\n"
 operator|,
 name|EnableRegister
@@ -793,11 +798,11 @@ operator|!
 name|AcpiGbl_GpeRegisters
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Could not allocate the GpeRegisters block\n"
 operator|)
 argument_list|)
@@ -835,11 +840,11 @@ argument_list|(
 name|AcpiGbl_GpeRegisters
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Could not allocate the GpeInfo block\n"
 operator|)
 argument_list|)
@@ -1168,11 +1173,11 @@ name|RegisterIndex
 operator|++
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"GPE registers: %X@%p (Blk0) %X@%p (Blk1)\n"
 operator|,
 name|Gpe0RegisterCount
@@ -1304,11 +1309,11 @@ block|}
 else|else
 block|{
 comment|/* Unknown method type, just ignore it! */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unknown GPE method type: %s (name not of form _Lnn or _Enn)\n"
 operator|,
 name|Name
@@ -1345,11 +1350,11 @@ name|ACPI_UINT32_MAX
 condition|)
 block|{
 comment|/* Conversion failed; invalid method, just ignore it */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Could not extract GPE number from name: %s (name not of form _Lnn or _Enn)\n"
 operator|,
 name|Name
@@ -1405,11 +1410,11 @@ argument_list|(
 name|GpeNumber
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Registered GPE method %s as GPE number %X\n"
 operator|,
 name|Name
@@ -1526,6 +1531,11 @@ decl_stmt|;
 name|UINT8
 name|BitMask
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"EvGpeDetect"
+argument_list|)
+expr_stmt|;
 comment|/*      * Read all of the 8-bit GPE status and enable registers      * in both of the register blocks, saving all of it.      * Find all currently active GP events.      */
 for|for
 control|(
@@ -1581,11 +1591,11 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_INTERRUPTS
-argument_list|,
 operator|(
+name|ACPI_DB_INTERRUPTS
+operator|,
 literal|"GPE block at %X - Enable %08X Status %08X\n"
 operator|,
 name|AcpiGbl_GpeRegisters
@@ -1825,11 +1835,11 @@ operator|==
 name|ACPI_GPE_INVALID
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Invalid GPE bit [%X].\n"
 operator|,
 name|GpeNumber

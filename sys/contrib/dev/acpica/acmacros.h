@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 86 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -326,8 +326,14 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_NO_INTEGER64_SUPPORT
+end_ifdef
+
 begin_comment
-comment|/*  * Full 64-bit address on 32-bit and 64-bit platforms  */
+comment|/*  * ACPI_INTEGER is 32-bits, no 64-bit support on this platform  */
 end_comment
 
 begin_ifndef
@@ -343,7 +349,7 @@ name|LODWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|((UINT32)(UINT64)(l))
+value|((UINT32)(l))
 end_define
 
 begin_endif
@@ -364,7 +370,7 @@ name|HIDWORD
 parameter_list|(
 name|l
 parameter_list|)
-value|((UINT32)((((UINT64)(l))>> 32)& 0xFFFFFFFF))
+value|(0)
 end_define
 
 begin_endif
@@ -403,6 +409,94 @@ name|a
 parameter_list|)
 value|(a)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Full 64-bit address/integer on both 32-bit and 64-bit platforms  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LODWORD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LODWORD
+parameter_list|(
+name|l
+parameter_list|)
+value|((UINT32)(UINT64)(l))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HIDWORD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HIDWORD
+parameter_list|(
+name|l
+parameter_list|)
+value|((UINT32)(((*(UINT64_STRUCT *)(&l))).Hi))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ACPI_GET_ADDRESS
+parameter_list|(
+name|a
+parameter_list|)
+value|(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_STORE_ADDRESS
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)=(b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_VALID_ADDRESS
+parameter_list|(
+name|a
+parameter_list|)
+value|(a)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1544,7 +1638,7 @@ name|REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportInfo(_THIS_MODULE,__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportInfo(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1554,7 +1648,7 @@ name|REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportError(_THIS_MODULE,__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportError(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1564,7 +1658,7 @@ name|REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportWarning(_THIS_MODULE,__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_else
@@ -1579,7 +1673,7 @@ name|REPORT_INFO
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportInfo("ACPI",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportInfo("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1589,7 +1683,7 @@ name|REPORT_ERROR
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportError("ACPI",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportError("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1599,7 +1693,7 @@ name|REPORT_WARNING
 parameter_list|(
 name|fp
 parameter_list|)
-value|{_ReportWarning("ACPI",__LINE__,_COMPONENT); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportWarning("ACPI",__LINE__,_COMPONENT); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_endif
@@ -1624,7 +1718,7 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{_ReportInfo(a,b,c); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportInfo(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1640,7 +1734,7 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{_ReportError(a,b,c); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportError(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_define
@@ -1656,7 +1750,7 @@ name|c
 parameter_list|,
 name|fp
 parameter_list|)
-value|{_ReportWarning(a,b,c); \                                             DebugPrintRaw PARAM_LIST(fp);}
+value|{_ReportWarning(a,b,c); \                                             AcpiOsPrintf PARAM_LIST(fp);}
 end_define
 
 begin_comment
@@ -1989,53 +2083,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Master debug print macros  * Print iff:  *    1) Debug print for the current component is enabled  *    2) Debug error level or trace level for the print statement is enabled  *  */
+comment|/*  * Master debug print macros  * Print iff:  *    1) Debug print for the current component is enabled  *    2) Debug error level or trace level for the print statement is enabled  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TEST_DEBUG_SWITCH
+name|ACPI_DEBUG_PRINT
 parameter_list|(
-name|lvl
+name|pl
 parameter_list|)
-value|if (((lvl)& AcpiDbgLevel)&& (_COMPONENT& AcpiDbgLayer))
+value|AcpiUtDebugPrint PARAM_LIST(pl)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT_RAW
 parameter_list|(
-name|lvl
-parameter_list|,
-name|fp
+name|pl
 parameter_list|)
-value|TEST_DEBUG_SWITCH(lvl) {\                                             DebugPrintPrefix (_THIS_MODULE,__LINE__);\                                             DebugPrintRaw PARAM_LIST(fp);\                                             BREAK_ON_ERROR(lvl);}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_PRINTP
-parameter_list|(
-name|lvl
-parameter_list|,
-name|fp
-parameter_list|)
-value|TEST_DEBUG_SWITCH(lvl) {\                                             DebugPrintPrefix (_THIS_MODULE,__LINE__);\                                             DebugPrintRaw ("%s: ",_ProcName);\                                             DebugPrintRaw PARAM_LIST(fp);\                                             BREAK_ON_ERROR(lvl);}
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_PRINT_RAW
-parameter_list|(
-name|lvl
-parameter_list|,
-name|fp
-parameter_list|)
-value|TEST_DEBUG_SWITCH(lvl) {\                                             DebugPrintRaw PARAM_LIST(fp);}
+value|AcpiUtDebugPrintRaw PARAM_LIST(pl)
 end_define
 
 begin_else
@@ -2250,33 +2318,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 parameter_list|(
-name|l
-parameter_list|,
-name|f
+name|pl
 parameter_list|)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT_RAW
 parameter_list|(
-name|l
-parameter_list|,
-name|f
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_PRINT_RAW
-parameter_list|(
-name|l
-parameter_list|,
-name|f
+name|pl
 parameter_list|)
 end_define
 
@@ -2496,41 +2549,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DECREMENT_OBJECT_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_OBJECT_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_ALLOCATION_METRICS
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECREMENT_NAME_TABLE_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_NAME_TABLE_METRICS
+name|ACPI_MEM_TRACKING
 parameter_list|(
 name|a
 parameter_list|)
@@ -2578,54 +2597,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|INITIALIZE_ALLOCATION_METRICS
-parameter_list|()
-define|\
-value|AcpiGbl_CurrentObjectCount = 0; \     AcpiGbl_CurrentObjectSize = 0; \     AcpiGbl_RunningObjectCount = 0; \     AcpiGbl_RunningObjectSize = 0; \     AcpiGbl_MaxConcurrentObjectCount = 0; \     AcpiGbl_MaxConcurrentObjectSize = 0; \     AcpiGbl_CurrentAllocSize = 0; \     AcpiGbl_CurrentAllocCount = 0; \     AcpiGbl_RunningAllocSize = 0; \     AcpiGbl_RunningAllocCount = 0; \     AcpiGbl_MaxConcurrentAllocSize = 0; \     AcpiGbl_MaxConcurrentAllocCount = 0; \     AcpiGbl_CurrentNodeCount = 0; \     AcpiGbl_CurrentNodeSize = 0; \     AcpiGbl_MaxConcurrentNodeCount = 0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECREMENT_OBJECT_METRICS
+name|ACPI_MEM_TRACKING
 parameter_list|(
 name|a
 parameter_list|)
-define|\
-value|AcpiGbl_CurrentObjectCount--; \     AcpiGbl_CurrentObjectSize -= a
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_OBJECT_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|AcpiGbl_CurrentObjectCount++; \     AcpiGbl_RunningObjectCount++; \     if (AcpiGbl_MaxConcurrentObjectCount< AcpiGbl_CurrentObjectCount) \     { \         AcpiGbl_MaxConcurrentObjectCount = AcpiGbl_CurrentObjectCount; \     } \     AcpiGbl_RunningObjectSize += a; \     AcpiGbl_CurrentObjectSize += a; \     if (AcpiGbl_MaxConcurrentObjectSize< AcpiGbl_CurrentObjectSize) \     { \         AcpiGbl_MaxConcurrentObjectSize = AcpiGbl_CurrentObjectSize; \     }
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECREMENT_NAME_TABLE_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|AcpiGbl_CurrentNodeCount--; \     AcpiGbl_CurrentNodeSize -= (a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_NAME_TABLE_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|AcpiGbl_CurrentNodeCount++; \     AcpiGbl_CurrentNodeSize+= (a); \     if (AcpiGbl_MaxConcurrentNodeCount< AcpiGbl_CurrentNodeCount) \     { \         AcpiGbl_MaxConcurrentNodeCount = AcpiGbl_CurrentNodeCount; \     }
+value|a
 end_define
 
 begin_endif

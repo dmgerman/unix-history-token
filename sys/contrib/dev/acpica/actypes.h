@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 184 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 186 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -622,6 +622,21 @@ begin_comment
 comment|/* Actually a ptr to an Node */
 end_comment
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT32
+name|Lo
+decl_stmt|;
+name|UINT32
+name|Hi
+decl_stmt|;
+block|}
+name|UINT64_STRUCT
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Acpi integer width. In ACPI version 1, integers are  * 32 bits.  In ACPI version 2, integers are 64 bits.  * Note that this pertains to the ACPI integer type only, not  * other integers used in the implementation of the ACPI CA  * subsystem.  */
 end_comment
@@ -671,6 +686,13 @@ name|ACPI_MAX_BCD_DIGITS
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_DECIMAL_DIGITS
+value|10
+end_define
+
 begin_else
 else|#
 directive|else
@@ -713,6 +735,13 @@ define|#
 directive|define
 name|ACPI_MAX_BCD_DIGITS
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_DECIMAL_DIGITS
+value|19
 end_define
 
 begin_endif

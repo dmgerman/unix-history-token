@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -193,15 +193,15 @@ operator|!
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_INIT
+name|ACPI_LV_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"."
 operator|)
 argument_list|)
@@ -245,11 +245,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Method %p [%4.4s] parse failed! %s\n"
 operator|,
 name|ObjHandle
@@ -321,20 +321,20 @@ argument_list|(
 literal|"DsInitializeObjects"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"**** Starting initialization of namespace objects ****\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"Parsing Methods:"
 operator|)
 argument_list|)
@@ -390,11 +390,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"WalkNamespace failed! %x\n"
 operator|,
 name|Status
@@ -402,11 +402,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT_RAW
+name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"\n%d Control Methods found and parsed (%d nodes total)\n"
 operator|,
 name|Info
@@ -419,11 +419,11 @@ name|ObjectCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"%d Control Methods found\n"
 operator|,
 name|Info
@@ -432,11 +432,11 @@ name|MethodCount
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_DISPATCH
-argument_list|,
 operator|(
+name|ACPI_DB_DISPATCH
+operator|,
 literal|"%d Op Regions found\n"
 operator|,
 name|Info
@@ -475,7 +475,7 @@ parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
-name|ObjDesc
+name|RetObjDesc
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -497,10 +497,19 @@ name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+decl_stmt|;
 name|PROC_NAME
 argument_list|(
 literal|"DsInitObjectFromOp"
 argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|=
+operator|*
+name|RetObjDesc
 expr_stmt|;
 name|OpInfo
 operator|=
@@ -529,10 +538,7 @@ block|}
 comment|/* Get and prepare the first argument */
 switch|switch
 condition|(
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Common
 operator|.
@@ -618,11 +624,11 @@ operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Expecting number, got obj: %p type %X\n"
 operator|,
 name|ArgDesc
@@ -647,10 +653,7 @@ operator|)
 return|;
 block|}
 comment|/* Get the value, delete the internal object */
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -673,10 +676,7 @@ expr_stmt|;
 comment|/* Allocate the buffer */
 if|if
 condition|(
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -685,10 +685,7 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -707,10 +704,7 @@ break|break;
 block|}
 else|else
 block|{
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -718,10 +712,7 @@ name|Pointer
 operator|=
 name|ACPI_MEM_CALLOCATE
 argument_list|(
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -731,10 +722,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -748,8 +736,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*          * Second arg is the buffer data (optional)          * ByteList can be either individual bytes or a          * string initializer!          */
-comment|/* skip first arg */
+comment|/*          * Second arg is the buffer data (optional) ByteList can be either           * individual bytes or a string initializer.          */
 name|Arg
 operator|=
 name|Op
@@ -758,6 +745,7 @@ name|Value
 operator|.
 name|Arg
 expr_stmt|;
+comment|/* skip first arg */
 name|ByteList
 operator|=
 operator|(
@@ -782,11 +770,11 @@ operator|!=
 name|AML_INT_BYTELIST_OP
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Expecting bytelist, got: %x\n"
 operator|,
 name|ByteList
@@ -801,10 +789,7 @@ return|;
 block|}
 name|MEMCPY
 argument_list|(
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -814,10 +799,7 @@ name|ByteList
 operator|->
 name|Data
 argument_list|,
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Buffer
 operator|.
@@ -829,10 +811,9 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*          * When called, an internal package object has already          *  been built and is pointed to by *ObjDesc.          *  AcpiDsBuildInternalObject build another internal          *  package object, so remove reference to the original          *  so that it is deleted.  Error checking is done          *  within the remove reference function.          */
+comment|/*          * When called, an internal package object has already been built and           * is pointed to by ObjDesc.  AcpiDsBuildInternalObject builds another          * internal package object, so remove reference to the original so           * that it is deleted.  Error checking is done within the remove           * reference function.          */
 name|AcpiUtRemoveReference
 argument_list|(
-operator|*
 name|ObjDesc
 argument_list|)
 expr_stmt|;
@@ -844,17 +825,14 @@ name|WalkState
 argument_list|,
 name|Op
 argument_list|,
-name|ObjDesc
+name|RetObjDesc
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Integer
 operator|.
@@ -870,10 +848,7 @@ break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|String
 operator|.
@@ -885,10 +860,7 @@ name|Value
 operator|.
 name|String
 expr_stmt|;
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|String
 operator|.
@@ -923,10 +895,7 @@ case|case
 name|OPTYPE_LOCAL_VARIABLE
 case|:
 comment|/* Split the opcode into a base opcode + offset */
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Reference
 operator|.
@@ -934,10 +903,7 @@ name|Opcode
 operator|=
 name|AML_LOCAL_OP
 expr_stmt|;
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Reference
 operator|.
@@ -952,10 +918,7 @@ case|case
 name|OPTYPE_METHOD_ARGUMENT
 case|:
 comment|/* Split the opcode into a base opcode + offset */
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Reference
 operator|.
@@ -963,10 +926,7 @@ name|Opcode
 operator|=
 name|AML_ARG_OP
 expr_stmt|;
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Reference
 operator|.
@@ -977,6 +937,133 @@ operator|-
 name|AML_ARG_OP
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INTEGER_CONST__
+case|case
+name|OPTYPE_CONSTANT
+case|:
+comment|/* TBD: Why is the DEBUG object a CONSTANT? */
+if|if
+condition|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_DEBUG_OP
+condition|)
+block|{
+break|break;
+block|}
+comment|/* Reference object no longer needed */
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+comment|/* Create/Init a new Integer object */
+name|ObjDesc
+operator|=
+name|AcpiUtCreateInternalObject
+argument_list|(
+name|ACPI_TYPE_INTEGER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ObjDesc
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*              * Decode constants here.  Turn them into real integer objects               * that are initialized to the value of the constant.              */
+switch|switch
+condition|(
+name|Op
+operator|->
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_ONE_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|AML_ONES_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|ACPI_INTEGER_MAX
+expr_stmt|;
+break|break;
+case|case
+name|AML_REVISION_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|ACPI_CA_VERSION
+expr_stmt|;
+break|break;
+case|case
+name|AML_ZERO_OP
+case|:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_ZERO_CONST
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+operator|*
+name|RetObjDesc
+operator|=
+name|ObjDesc
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 comment|/* Constants, Literals, etc.. */
 if|if
@@ -989,10 +1076,7 @@ name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 comment|/* Node was saved in Op */
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Reference
 operator|.
@@ -1003,10 +1087,7 @@ operator|->
 name|Node
 expr_stmt|;
 block|}
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Reference
 operator|.
@@ -1018,17 +1099,14 @@ break|break;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unimplemented data type: %x\n"
 operator|,
-operator|(
-operator|*
 name|ObjDesc
-operator|)
 operator|->
 name|Common
 operator|.
@@ -1377,6 +1455,11 @@ argument_list|(
 name|ACPI_TYPE_PACKAGE
 argument_list|)
 expr_stmt|;
+operator|*
+name|ObjDescPtr
+operator|=
+name|ObjDesc
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1386,6 +1469,22 @@ block|{
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NO_MEMORY
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_VAR_PACKAGE_OP
+condition|)
+block|{
+comment|/*          * Variable length package parameters are evaluated JIT          */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -1408,7 +1507,7 @@ name|Arg
 operator|->
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 comment|/*      * Allocate the array of pointers (ptrs to the      * individual objects) Add an extra pointer slot so      * that the list is always null terminated.      */
 name|ObjDesc
@@ -1538,10 +1637,13 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
-operator|*
-name|ObjDescPtr
-operator|=
 name|ObjDesc
+operator|->
+name|Package
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_DATA_VALID
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -1576,15 +1678,19 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-if|if
+switch|switch
 condition|(
 name|Op
 operator|->
 name|Opcode
-operator|==
-name|AML_PACKAGE_OP
 condition|)
 block|{
+case|case
+name|AML_PACKAGE_OP
+case|:
+case|case
+name|AML_VAR_PACKAGE_OP
+case|:
 name|Status
 operator|=
 name|AcpiDsBuildInternalPackageObj
@@ -1596,9 +1702,8 @@ argument_list|,
 name|ObjDescPtr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
 name|Status
 operator|=
 name|AcpiDsBuildInternalSimpleObj
@@ -1610,6 +1715,7 @@ argument_list|,
 name|ObjDescPtr
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -89,11 +89,11 @@ operator|!
 name|AcpiGbl_DSDT
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"No ACPI tables present!\n"
 operator|)
 argument_list|)
@@ -113,11 +113,11 @@ name|AcpiHwGetModeCapabilities
 argument_list|()
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"Only legacy mode supported!\n"
 operator|)
 argument_list|)
@@ -144,11 +144,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_FATAL
-argument_list|,
 operator|(
+name|ACPI_DB_FATAL
+operator|,
 literal|"Could not transition to ACPI mode.\n"
 operator|)
 argument_list|)
@@ -159,11 +159,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_OK
-argument_list|,
 operator|(
+name|ACPI_DB_OK
+operator|,
 literal|"Transition to ACPI mode successful\n"
 operator|)
 argument_list|)
@@ -231,11 +231,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Unable to transition to original mode"
 operator|)
 argument_list|)
@@ -398,11 +398,11 @@ name|RegisterId
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Fixed event bit clear when it should be set\n"
 operator|)
 argument_list|)
@@ -600,11 +600,11 @@ name|RegisterId
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Fixed event bit set when it should be clear,\n"
 operator|)
 argument_list|)

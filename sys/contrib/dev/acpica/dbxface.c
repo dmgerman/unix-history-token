@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 37 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 38 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -242,7 +242,7 @@ operator|||
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_PARSE
+name|ACPI_LV_PARSE
 operator|)
 condition|)
 block|{
@@ -255,7 +255,7 @@ operator|||
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|TRACE_PARSE
+name|ACPI_LV_PARSE
 operator|)
 condition|)
 block|{
@@ -274,9 +274,9 @@ name|AcpiDbgLevel
 operator|&=
 operator|~
 operator|(
-name|TRACE_PARSE
+name|ACPI_LV_PARSE
 operator||
-name|TRACE_FUNCTIONS
+name|ACPI_LV_FUNCTIONS
 operator|)
 expr_stmt|;
 name|Next

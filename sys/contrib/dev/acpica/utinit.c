@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 98 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 99 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -510,11 +510,11 @@ condition|(
 name|AcpiGbl_Shutdown
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"ACPI Subsystem is already terminated\n"
 operator|)
 argument_list|)
@@ -530,11 +530,11 @@ name|AcpiGbl_Shutdown
 operator|=
 name|TRUE
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Shutting down ACPI Subsystem...\n"
 operator|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -262,11 +262,11 @@ name|ACPI_NO_ADDRESS_SPACE_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[Init] Installing default address space handlers\n"
 operator|)
 argument_list|)
@@ -302,11 +302,11 @@ name|ACPI_NO_HARDWARE_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[Init] Initializing ACPI hardware\n"
 operator|)
 argument_list|)
@@ -342,11 +342,11 @@ name|ACPI_NO_ACPI_ENABLE
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[Init] Going into ACPI mode\n"
 operator|)
 argument_list|)
@@ -364,11 +364,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_WARN
-argument_list|,
 operator|(
+name|ACPI_DB_WARN
+operator|,
 literal|"AcpiEnable failed.\n"
 operator|)
 argument_list|)
@@ -391,11 +391,11 @@ name|ACPI_NO_EVENT_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[Init] Initializing ACPI events\n"
 operator|)
 argument_list|)
@@ -431,11 +431,11 @@ name|ACPI_NO_DEVICE_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[Init] Initializing ACPI Devices\n"
 operator|)
 argument_list|)
@@ -471,11 +471,11 @@ name|ACPI_NO_OBJECT_INIT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_EXEC
-argument_list|,
 operator|(
+name|ACPI_DB_EXEC
+operator|,
 literal|"[Init] Initializing ACPI Objects\n"
 operator|)
 argument_list|)

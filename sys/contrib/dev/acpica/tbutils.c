@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -69,6 +69,11 @@ name|ACPI_TABLE_DESC
 modifier|*
 name|ListHead
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"TbHandleToObject"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -132,11 +137,11 @@ index|]
 condition|)
 do|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"TableId=%X does not exist\n"
 operator|,
 name|TableId
@@ -371,11 +376,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Cannot read table header at %p\n"
 operator|,
 name|TableHeader
@@ -409,11 +414,11 @@ name|Signature
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Table signature at %p [%X] has invalid characters\n"
 operator|,
 name|TableHeader
@@ -462,11 +467,11 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Invalid length in table header %p name %4.4s\n"
 operator|,
 name|TableHeader
@@ -543,6 +548,11 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"TbMapAcpiTable"
+argument_list|)
+expr_stmt|;
 comment|/* If size is zero, look at the table header to get the actual size */
 if|if
 condition|(
@@ -663,11 +673,11 @@ name|Status
 operator|)
 return|;
 block|}
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Mapped memory for ACPI table, length=%d(%X) at %p\n"
 operator|,
 name|TableSize

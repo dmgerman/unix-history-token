@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1326,11 +1326,11 @@ condition|)
 block|{
 comment|/*          * Package objects contain other objects (which can be objects)          * buildpackage does it all          *          * TBD: Package conversion must be completed and tested          * NOTE: this code converts packages as input parameters to          * control methods only.  This is a very, very rare case.          */
 comment|/*         Status = AcpiUtCopyEpackageToIpackage(InternalObject,                                                   RetBuffer->Pointer,&RetBuffer->Length); */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Packages as parameters not implemented!\n"
 operator|)
 argument_list|)

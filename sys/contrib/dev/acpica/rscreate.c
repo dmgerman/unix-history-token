@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 35 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -92,11 +92,11 @@ argument_list|(
 literal|"RsCreateResourceList"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"ByteStreamBuffer = %p\n"
 operator|,
 name|ByteStreamBuffer
@@ -133,11 +133,11 @@ operator|&
 name|ListSizeNeeded
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Status=%X ListSizeNeeded=%X\n"
 operator|,
 name|Status
@@ -208,11 +208,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"OutputBuffer = %p\n"
 operator|,
 name|OutputBuffer
@@ -352,11 +352,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"BufferSizeNeeded = %X\n"
 operator|,
 name|BufferSizeNeeded
@@ -506,11 +506,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Need Integer, found %s\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -570,11 +570,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Need Integer, found %s\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -630,11 +630,11 @@ operator|!=
 name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Need name, found reference op %X\n"
 operator|,
 operator|(
@@ -748,11 +748,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Need Integer, found %s\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -825,11 +825,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Need Integer, found %s\n"
 operator|,
 name|AcpiUtGetTypeName
@@ -857,11 +857,11 @@ name|TopObjectList
 operator|++
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"OutputBuffer = %p\n"
 operator|,
 name|OutputBuffer
@@ -930,11 +930,11 @@ argument_list|(
 literal|"RsCreateByteStream"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"LinkedListBuffer = %p\n"
 operator|,
 name|LinkedListBuffer
@@ -952,11 +952,11 @@ operator|&
 name|ByteStreamSizeNeeded
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"ByteStreamSizeNeeded=%X, %s\n"
 operator|,
 name|ByteStreamSizeNeeded
@@ -1030,11 +1030,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|VERBOSE_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"OutputBuffer = %p\n"
 operator|,
 name|OutputBuffer

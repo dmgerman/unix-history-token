@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -467,11 +467,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Popped Op %p Args %X\n"
 operator|,
 operator|*
