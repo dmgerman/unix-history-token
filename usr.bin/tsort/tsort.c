@@ -114,7 +114,7 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*  *  Topological sort.  Input is a list of pairs of strings separated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [-dlq] [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatable with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
+comment|/*  *  Topological sort.  Input is a list of pairs of strings separated by  *  white space (spaces, tabs, and/or newlines); strings are written to  *  standard output in sorted order, one per line.  *  *  usage:  *     tsort [-dlq] [inputfile]  *  If no input file is specified, standard input is read.  *  *  Should be compatible with AT&T tsort HOWEVER the output is not identical  *  (i.e. for most graphs there is more than one sorted order, and this tsort  *  usually generates a different one then the AT&T tsort).  Also, cycle  *  reporting seems to be more accurate in this version (the AT&T tsort  *  sometimes says a node is in a cycle when it isn't).  *  *  Michael Rendell, michael@stretch.cs.mun.ca - Feb 26, '90  */
 end_comment
 
 begin_define
