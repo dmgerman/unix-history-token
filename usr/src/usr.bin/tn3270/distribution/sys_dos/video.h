@@ -34,9 +34,9 @@ name|ScrollActivePageDown
 block|,
 name|ReadAttribute_Character
 block|,
-name|ReadAttribute_Character
+name|WriteAttribute_Character
 block|,
-name|ReadCharacterOnly
+name|WriteCharacterOnly
 block|,
 name|SetColorPalette
 block|,
