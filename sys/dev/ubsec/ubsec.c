@@ -10409,7 +10409,7 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"ubsec_dma_malloc: "
-literal|"bus_dmammem_alloc failed; size %u, error %u\n"
+literal|"bus_dmammem_alloc failed; size %zu, error %u\n"
 argument_list|,
 name|size
 argument_list|,
