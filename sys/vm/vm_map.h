@@ -1274,19 +1274,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_freeze_copyopts
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vm_map_stack
 parameter_list|(
