@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -327,7 +327,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc || ((so)->so_state& SS_CANTRCVMORE) || (so)->so_qlen)
+value|((so)->so_rcv.sb_cc || ((so)->so_state& SS_CANTRCVMORE) || \ 	(so)->so_qlen || (so)->so_error)
 end_define
 
 begin_comment
@@ -342,7 +342,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|(sbspace(&(so)->so_snd)> 0&& \ 	(((so)->so_state&SS_ISCONNECTED) || \ 	  ((so)->so_proto->pr_flags&PR_CONNREQUIRED)==0) || \      ((so)->so_state& SS_CANTSENDMORE))
+value|(sbspace(&(so)->so_snd)> 0&& \ 	(((so)->so_state&SS_ISCONNECTED) || \ 	  ((so)->so_proto->pr_flags&PR_CONNREQUIRED)==0) || \      ((so)->so_state& SS_CANTSENDMORE) || \      (so)->so_error)
 end_define
 
 begin_comment
