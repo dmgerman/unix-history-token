@@ -813,5 +813,12 @@ name|HW
 value|gettyflags[23].value
 end_define
 
+begin_define
+define|#
+directive|define
+name|NC
+value|gettyflags[24].value
+end_define
+
 end_unit
 
