@@ -102,7 +102,7 @@ name|htobes
 parameter_list|(
 name|x
 parameter_list|)
-value|(htons(x))
+value|(__htons(x))
 end_define
 
 begin_define
@@ -112,7 +112,7 @@ name|betohs
 parameter_list|(
 name|x
 parameter_list|)
-value|(ntohs(x))
+value|(__ntohs(x))
 end_define
 
 begin_define
@@ -122,7 +122,7 @@ name|htobel
 parameter_list|(
 name|x
 parameter_list|)
-value|(htonl(x))
+value|(__htonl(x))
 end_define
 
 begin_define
@@ -132,7 +132,7 @@ name|betohl
 parameter_list|(
 name|x
 parameter_list|)
-value|(ntohl(x))
+value|(__ntohl(x))
 end_define
 
 begin_function
@@ -149,7 +149,7 @@ return|return
 operator|(
 name|int64_t
 operator|)
-name|htonl
+name|__htonl
 argument_list|(
 call|(
 name|u_int32_t
@@ -164,7 +164,7 @@ operator||
 operator|(
 name|int64_t
 operator|)
-name|htonl
+name|__htonl
 argument_list|(
 call|(
 name|u_int32_t
@@ -195,7 +195,7 @@ return|return
 operator|(
 name|int64_t
 operator|)
-name|ntohl
+name|__ntohl
 argument_list|(
 call|(
 name|u_int32_t
@@ -210,7 +210,7 @@ operator||
 operator|(
 name|int64_t
 operator|)
-name|ntohl
+name|__ntohl
 argument_list|(
 call|(
 name|u_int32_t

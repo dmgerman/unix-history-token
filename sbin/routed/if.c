@@ -1145,7 +1145,9 @@ name|addr
 parameter_list|)
 comment|/* network byte order */
 block|{
-name|NTOHL
+name|addr
+operator|=
+name|ntohl
 argument_list|(
 name|addr
 argument_list|)
@@ -1454,7 +1456,9 @@ name|naddr
 name|addr
 parameter_list|)
 block|{
-name|NTOHL
+name|addr
+operator|=
+name|ntohl
 argument_list|(
 name|addr
 argument_list|)

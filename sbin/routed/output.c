@@ -1696,7 +1696,13 @@ operator|->
 name|ag_metric
 operator|)
 expr_stmt|;
-name|HTONL
+name|wb
+operator|->
+name|n
+operator|->
+name|n_metric
+operator|=
+name|htonl
 argument_list|(
 name|wb
 operator|->

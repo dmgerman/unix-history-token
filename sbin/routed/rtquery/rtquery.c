@@ -4022,7 +4022,9 @@ name|addr
 parameter_list|)
 comment|/* in network order */
 block|{
-name|NTOHL
+name|addr
+operator|=
+name|ntohl
 argument_list|(
 name|addr
 argument_list|)
@@ -4221,7 +4223,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|NTOHL
+name|in
+operator|.
+name|s_addr
+operator|=
+name|ntohl
 argument_list|(
 name|in
 operator|.

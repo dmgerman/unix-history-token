@@ -933,7 +933,9 @@ decl_stmt|;
 name|int
 name|x
 decl_stmt|;
-name|NTOHL
+name|dst
+operator|=
+name|ntohl
 argument_list|(
 name|dst
 argument_list|)

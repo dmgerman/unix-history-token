@@ -1183,7 +1183,9 @@ condition|(
 name|advreachable
 condition|)
 block|{
-name|NTOHL
+name|advreachable
+operator|=
+name|ntohl
 argument_list|(
 name|advreachable
 argument_list|)

@@ -7962,7 +7962,11 @@ name|ending_track
 argument_list|)
 expr_stmt|;
 block|}
-name|NTOHS
+name|th
+operator|->
+name|len
+operator|=
+name|ntohs
 argument_list|(
 name|th
 operator|->

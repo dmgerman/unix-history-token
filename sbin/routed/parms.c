@@ -1076,12 +1076,14 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|HTONL
+comment|/* Turn network # into IP address. */
+name|dst
+operator|=
+name|htonl
 argument_list|(
 name|dst
 argument_list|)
 expr_stmt|;
-comment|/* make network # into IP address */
 block|}
 else|else
 block|{
@@ -2995,7 +2997,11 @@ name|line
 argument_list|)
 return|;
 block|}
-name|HTONL
+name|intnetp
+operator|->
+name|intnet_addr
+operator|=
+name|htonl
 argument_list|(
 name|intnetp
 operator|->
@@ -4944,7 +4950,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|NTOHL
+name|in
+operator|.
+name|s_addr
+operator|=
+name|ntohl
 argument_list|(
 name|in
 operator|.

@@ -70,13 +70,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|<arpa/inet.h>
 end_include
 
 begin_include

@@ -759,7 +759,9 @@ literal|17
 index|]
 decl_stmt|;
 comment|/* strlen(".255.255.255.255") + 1 */
-name|NTOHL
+name|addr
+operator|=
+name|ntohl
 argument_list|(
 name|addr
 argument_list|)

@@ -2629,7 +2629,9 @@ operator|&
 name|header
 argument_list|)
 expr_stmt|;
-name|NTOHS
+name|header
+operator|=
+name|ntohs
 argument_list|(
 name|header
 argument_list|)

@@ -790,7 +790,7 @@ name|IXDR_GET_INT32
 parameter_list|(
 name|buf
 parameter_list|)
-value|((int32_t)ntohl((u_int32_t)*(buf)++))
+value|((int32_t)__ntohl((u_int32_t)*(buf)++))
 end_define
 
 begin_define
@@ -802,7 +802,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|(*(buf)++ =(int32_t)htonl((u_int32_t)v))
+value|(*(buf)++ =(int32_t)__htonl((u_int32_t)v))
 end_define
 
 begin_define
@@ -834,7 +834,7 @@ name|IXDR_GET_LONG
 parameter_list|(
 name|buf
 parameter_list|)
-value|((long)ntohl((u_int32_t)*(buf)++))
+value|((long)__ntohl((u_int32_t)*(buf)++))
 end_define
 
 begin_define
@@ -846,7 +846,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|(*(buf)++ =(int32_t)htonl((u_int32_t)v))
+value|(*(buf)++ =(int32_t)__htonl((u_int32_t)v))
 end_define
 
 begin_define

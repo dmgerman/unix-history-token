@@ -38,6 +38,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/types.h>
 end_include
 
@@ -565,16 +571,6 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
-begin_comment
-comment|/*  * XXX: Deprecated;  * byteorder(3) functions now defined in<arpa/inet.h>.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -645,62 +641,6 @@ undef|#
 directive|undef
 name|_BSD_FFLAGS_T_
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* XXX: Deprecated; now defined in<arpa/inet.h>. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IN_ADDR_T_DECLARED_
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|in_addr_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_IN_ADDR_T_DECLARED_
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* XXX: Deprecated; now defined in<arpa/inet.h>. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IN_PORT_T_DECLARED_
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|__uint16_t
-name|in_port_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_IN_PORT_T_DECLARED_
-end_define
 
 begin_endif
 endif|#
