@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)defs.h	3.4 83/09/01	  */
+comment|/*  *	@(#)defs.h	3.5 83/11/02	  */
 end_comment
 
 begin_include
@@ -15,6 +15,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_4_1A
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -26,6 +32,11 @@ include|#
 directive|include
 file|<sys/resource.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -58,12 +69,23 @@ name|nreadc
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_4_1A
+end_ifndef
+
 begin_decl_stmt
 name|struct
 name|timeval
 name|starttime
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* things for handling input */

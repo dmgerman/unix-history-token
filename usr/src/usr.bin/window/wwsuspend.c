@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwsuspend.c	3.2 83/08/15"
+literal|"@(#)wwsuspend.c	3.3 83/11/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,16 +38,6 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< (s) - 1)
-end_define
-
 begin_macro
 name|wwsuspend
 argument_list|()
@@ -56,16 +46,19 @@ end_macro
 begin_block
 block|{
 name|int
-name|oldmask
-decl_stmt|;
-name|oldmask
+function_decl|(
+modifier|*
+name|oldsig
+function_decl|)
+parameter_list|()
+function_decl|;
+name|oldsig
 operator|=
-name|sigblock
-argument_list|(
-name|mask
+name|signal
 argument_list|(
 name|SIGTSTP
-argument_list|)
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|wwend
@@ -74,18 +67,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigsetmask
-argument_list|(
-name|sigblock
-argument_list|(
-literal|0
-argument_list|)
-operator|&
-operator|~
-name|mask
+name|signal
 argument_list|(
 name|SIGTSTP
-argument_list|)
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -101,12 +87,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigblock
-argument_list|(
-name|mask
+name|signal
 argument_list|(
 name|SIGTSTP
-argument_list|)
+argument_list|,
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 operator|(
@@ -134,9 +119,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sigsetmask
+name|signal
 argument_list|(
-name|oldmask
+name|SIGTSTP
+argument_list|,
+name|oldsig
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.13 83/09/15"
+literal|"@(#)cmd.c	3.14 83/11/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -692,6 +692,9 @@ name|c_stat
 argument_list|()
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|O_4_1A
 case|case
 literal|'t'
 case|:
@@ -710,6 +713,8 @@ name|RUSAGE_CHILDREN
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* debugging stuff */
 case|case
 literal|'&'

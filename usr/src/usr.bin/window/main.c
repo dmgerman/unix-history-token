@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.12 83/09/19"
+literal|"@(#)main.c	3.13 83/11/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,10 +96,15 @@ name|xflag
 init|=
 literal|0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|O_4_1A
 name|struct
 name|timezone
 name|timezone
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|p
@@ -258,6 +263,9 @@ name|shellname
 operator|=
 name|shell
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|O_4_1A
 operator|(
 name|void
 operator|)
@@ -270,6 +278,8 @@ operator|&
 name|timezone
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|wwinit

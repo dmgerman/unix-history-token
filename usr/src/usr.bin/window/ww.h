@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ww.h	3.17 83/10/19	  */
+comment|/*  *	@(#)ww.h	3.18 83/11/02	  */
 end_comment
 
 begin_include
@@ -1195,6 +1195,47 @@ name|c
 parameter_list|)
 value|((c)< ' ' || (c)>= DEL)
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|O_4_1A
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|O_4_1C
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|sigset
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|signal
+parameter_list|(
+name|s
+parameter_list|,
+name|v
+parameter_list|)
+value|sigset((s), (v))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.10 83/09/15"
+literal|"@(#)wwinit.c	3.11 83/11/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,11 +72,25 @@ argument_list|,
 name|_sobuf
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|O_4_1A
 name|wwdtablesize
 operator|=
 name|getdtablesize
 argument_list|()
 expr_stmt|;
+else|#
+directive|else
+include|#
+directive|include
+file|<sys/param.h>
+name|wwdtablesize
+operator|=
+name|NOFILE
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|wwgettty

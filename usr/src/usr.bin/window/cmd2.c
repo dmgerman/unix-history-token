@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.12 83/09/14"
+literal|"@(#)cmd2.c	3.13 83/11/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,6 +379,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_4_1A
+end_ifndef
 
 begin_function_decl
 name|char
@@ -824,6 +830,11 @@ name|buf
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|c_stat
