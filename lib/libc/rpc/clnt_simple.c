@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_simple.c,v 1.4 1996/06/10 20:13:03 jraynard Exp $"
+literal|"$Id: clnt_simple.c,v 1.5 1996/08/12 14:00:20 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ end_endif
 begin_comment
 comment|/*  * clnt_simple.c  * Simplified front end to rpc.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -246,7 +252,7 @@ name|oldhost
 operator|=
 name|malloc
 argument_list|(
-literal|256
+name|MAXHOSTNAMELEN
 argument_list|)
 expr_stmt|;
 name|crp
@@ -305,6 +311,15 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|crp
+operator|->
+name|socket
+operator|!=
+operator|-
+literal|1
+condition|)
 operator|(
 name|void
 operator|)
@@ -388,12 +403,8 @@ name|server_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|hp
-operator|->
-name|h_addr
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -402,6 +413,10 @@ operator|&
 name|server_addr
 operator|.
 name|sin_addr
+argument_list|,
+name|hp
+operator|->
+name|h_addr
 argument_list|,
 name|hp
 operator|->
