@@ -9,7 +9,7 @@ name|char
 name|chkconfig_c_rcsid
 index|[]
 init|=
-literal|"$Id: chkconfig.c,v 1.1 1993/11/11 05:25:28 wollman Exp $"
+literal|"$Id: chkconfig.c,v 1.2 1993/11/11 23:30:34 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1165,10 +1165,7 @@ while|while
 condition|(
 operator|*
 name|headp
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|strcmp
 argument_list|(
 name|q
@@ -1183,11 +1180,10 @@ operator|)
 operator|.
 name|name
 argument_list|)
-operator|>=
+operator|>
 literal|0
 condition|)
-break|break;
-comment|/* found the right spot! */
+block|{
 name|headp
 operator|=
 operator|&
