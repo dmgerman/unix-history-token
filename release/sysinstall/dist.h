@@ -81,15 +81,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86
+name|DIST_COMPAT20
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_COMMERCIAL
+name|DIST_XF86
 value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_COMMERCIAL
+value|0x0800
 end_define
 
 begin_define
@@ -124,7 +131,7 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X)
+value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT2X)
 end_define
 
 begin_define

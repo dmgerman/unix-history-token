@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: lang.c,v 1.2 1995/05/05 23:47:41 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: lang.c,v 1.3 1995/05/18 15:29:44 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -8,6 +8,15 @@ include|#
 directive|include
 file|"sysinstall.h"
 end_include
+
+begin_decl_stmt
+name|u_char
+name|default_scrnmap
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -26,6 +35,11 @@ expr_stmt|;
 name|systemChangeLang
 argument_list|(
 literal|"da_DK.ISO8859-1"
+argument_list|)
+expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
 argument_list|)
 expr_stmt|;
 name|systemChangeTerminal
@@ -61,6 +75,11 @@ argument_list|(
 literal|"nl_NL.ISO8859-1"
 argument_list|)
 expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
+argument_list|)
+expr_stmt|;
 name|systemChangeTerminal
 argument_list|(
 literal|"cons25l1"
@@ -92,6 +111,11 @@ expr_stmt|;
 name|systemChangeLang
 argument_list|(
 literal|"en_US.ISO8859-1"
+argument_list|)
+expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
 argument_list|)
 expr_stmt|;
 name|systemChangeTerminal
@@ -127,6 +151,11 @@ argument_list|(
 literal|"fr_FR.ISO8859-1"
 argument_list|)
 expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
+argument_list|)
+expr_stmt|;
 name|systemChangeTerminal
 argument_list|(
 literal|"cons25l1"
@@ -158,6 +187,11 @@ expr_stmt|;
 name|systemChangeLang
 argument_list|(
 literal|"de_DE.ISO8859-1"
+argument_list|)
+expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
 argument_list|)
 expr_stmt|;
 name|systemChangeTerminal
@@ -193,6 +227,11 @@ argument_list|(
 literal|"it_IT.ISO8859-1"
 argument_list|)
 expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
+argument_list|)
+expr_stmt|;
 name|systemChangeTerminal
 argument_list|(
 literal|"cons25l1"
@@ -208,7 +247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Someday we will have to do a lot better than this */
+comment|/* Someday we will have to do a lot better than this for Kanji text! */
 end_comment
 
 begin_function
@@ -228,6 +267,11 @@ expr_stmt|;
 name|systemChangeLang
 argument_list|(
 literal|"ja_JP.ROMAJI"
+argument_list|)
+expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
 argument_list|)
 expr_stmt|;
 name|systemChangeTerminal
@@ -263,6 +307,11 @@ argument_list|(
 literal|"no_NO.ISO8859-1"
 argument_list|)
 expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
+argument_list|)
+expr_stmt|;
 name|systemChangeTerminal
 argument_list|(
 literal|"cons25l1"
@@ -288,12 +337,17 @@ parameter_list|)
 block|{
 name|systemChangeFont
 argument_list|(
-name|font_koi8_r_8x16
+name|font_cp866_8x16
 argument_list|)
 expr_stmt|;
 name|systemChangeLang
 argument_list|(
 literal|"ru_SU.KOI8-R"
+argument_list|)
+expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|koi8_r2cp866
 argument_list|)
 expr_stmt|;
 name|systemChangeTerminal
@@ -329,6 +383,11 @@ argument_list|(
 literal|"es_ES.ISO8859-1"
 argument_list|)
 expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
+argument_list|)
+expr_stmt|;
 name|systemChangeTerminal
 argument_list|(
 literal|"cons25l1"
@@ -360,6 +419,11 @@ expr_stmt|;
 name|systemChangeLang
 argument_list|(
 literal|"sv_SV.ISO8859-1"
+argument_list|)
+expr_stmt|;
+name|systemChangeScreenmap
+argument_list|(
+name|default_scrnmap
 argument_list|)
 expr_stmt|;
 name|systemChangeTerminal

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.15 1995/05/17 14:39:54 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.16 1995/05/18 09:02:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -70,6 +70,26 @@ operator|*
 operator|)
 operator|&
 name|MenuDocumentation
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Language"
+block|,
+literal|"Set your preferred language."
+block|,
+comment|/* L */
+name|DMENU_SUBMENU
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|MenuOptionsLanguage
 block|,
 literal|0
 block|,
@@ -449,7 +469,7 @@ block|,
 block|{
 literal|"Russian"
 block|,
-literal|"Russian language and character set (cp866-8x14)"
+literal|"Russian language and character set (CP866)"
 block|,
 comment|/* R */
 name|DMENU_CALL
@@ -1230,24 +1250,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Floppy"
-block|,
-literal|"Install from a floppy disk set"
-block|,
-name|DMENU_CALL
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-name|mediaSetFloppy
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|"DOS"
 block|,
 literal|"Install from a DOS partition"
@@ -1266,9 +1268,9 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Tape"
+literal|"File System"
 block|,
-literal|"Install from SCSI or QIC tape"
+literal|"Install from a UFS or NFS mounted distribution"
 block|,
 name|DMENU_CALL
 block|,
@@ -1276,7 +1278,25 @@ operator|(
 name|void
 operator|*
 operator|)
-name|mediaSetTape
+name|mediaSetFS
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Floppy"
+block|,
+literal|"Install from a floppy disk set"
+block|,
+name|DMENU_CALL
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+name|mediaSetFloppy
 block|,
 literal|0
 block|,
@@ -1302,9 +1322,9 @@ literal|0
 block|}
 block|,
 block|{
-literal|"File System"
+literal|"Tape"
 block|,
-literal|"Install from a UFS or NFS mounted distribution"
+literal|"Install from SCSI or QIC tape"
 block|,
 name|DMENU_CALL
 block|,
@@ -1312,7 +1332,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|mediaSetFS
+name|mediaSetTape
 block|,
 literal|0
 block|,
@@ -1352,7 +1372,7 @@ block|{
 block|{
 literal|"Developer"
 block|,
-literal|"Includes full sources, binaries and doc but no games."
+literal|"Full sources, binaries and doc but no games [48MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1370,7 +1390,7 @@ block|,
 block|{
 literal|"X-Developer"
 block|,
-literal|"Same as above, but includes XFree86."
+literal|"Same as above, but includes XFree86 [73MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1388,7 +1408,7 @@ block|,
 block|{
 literal|"User"
 block|,
-literal|"General user.  Binaries and doc but no sources."
+literal|"Average user - binaries and doc but no sources [19MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1406,7 +1426,7 @@ block|,
 block|{
 literal|"X-User"
 block|,
-literal|"Same as above, but includes XFree86."
+literal|"Same as above, but includes XFree86 [45MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1424,7 +1444,7 @@ block|,
 block|{
 literal|"Minimal"
 block|,
-literal|"The smallest configuration possible."
+literal|"The smallest configuration possible [15MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1442,7 +1462,7 @@ block|,
 block|{
 literal|"Everything"
 block|,
-literal|"The entire source and binary distribution."
+literal|"All sources, binaries and XFree86 binaries [80MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1460,7 +1480,7 @@ block|,
 block|{
 literal|"Custom"
 block|,
-literal|"Specify your own distribution set"
+literal|"Specify your own distribution set [?]"
 block|,
 name|DMENU_SUBMENU
 block|,
@@ -1505,7 +1525,7 @@ block|{
 block|{
 literal|"*bin"
 block|,
-literal|"Binary base distribution (required)"
+literal|"Binary base distribution (required) [15MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1524,7 +1544,7 @@ block|,
 block|{
 literal|"commercial"
 block|,
-literal|"Commercial demos and shareware"
+literal|"Commercial demos and shareware [10MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1543,7 +1563,7 @@ block|,
 block|{
 literal|"compat1x"
 block|,
-literal|"FreeBSD 1.x binary compatability package"
+literal|"FreeBSD 1.x binary compatability package [2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1560,9 +1580,28 @@ literal|0
 block|}
 block|,
 block|{
+literal|"compat20"
+block|,
+literal|"FreeBSD 2.0 binary compatability package [2MB]"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|Dists
+block|,
+name|DIST_COMPAT20
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"DES"
 block|,
-literal|"DES encryption code and sources"
+literal|"DES encryption code and sources [.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1581,7 +1620,7 @@ block|,
 block|{
 literal|"dict"
 block|,
-literal|"Spelling checker disctionary files"
+literal|"Spelling checker disctionary files [1.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1600,7 +1639,7 @@ block|,
 block|{
 literal|"games"
 block|,
-literal|"Games and other amusements (non-commercial)"
+literal|"Games and other amusements (non-commercial) [2.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1619,7 +1658,7 @@ block|,
 block|{
 literal|"info"
 block|,
-literal|"GNU info files"
+literal|"GNU info files [1.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1638,7 +1677,7 @@ block|,
 block|{
 literal|"*man"
 block|,
-literal|"System manual pages - strongly recommended"
+literal|"System manual pages - strongly recommended [2.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1657,7 +1696,7 @@ block|,
 block|{
 literal|"proflibs"
 block|,
-literal|"Profiled versions of the libraries"
+literal|"Profiled versions of the libraries [.9MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1676,7 +1715,7 @@ block|,
 block|{
 literal|"src"
 block|,
-literal|"Sources for everything but DES"
+literal|"Sources for everything but DES [25MB]"
 block|,
 name|DMENU_CALL
 block|,
@@ -1692,7 +1731,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.1.1L distribution"
+literal|"The XFree86 3.1.1L distribution [?]"
 block|,
 name|DMENU_SUBMENU
 block|,
@@ -1725,7 +1764,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the sub-components of src you wish to install."
 block|,
-literal|"Please check off those portions of the FreeBSD source tree\n\ you wish to install.  A brief description of each source\n\ hierarchy is contained in parenthesis below."
+literal|"Please check off those portions of the FreeBSD source tree\n\ you wish to install."
 block|,
 literal|"Press F1 for a more complete description of distributions."
 block|,
@@ -1735,7 +1774,7 @@ block|{
 block|{
 literal|"base"
 block|,
-literal|"Base src directory (top-level files in /usr/src)"
+literal|"top-level files in /usr/src [300K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1754,7 +1793,7 @@ block|,
 block|{
 literal|"gnu"
 block|,
-literal|"/usr/src/gnu (user software from the GNU Project)"
+literal|"/usr/src/gnu (software from the GNU Project) [42MB]]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1773,7 +1812,7 @@ block|,
 block|{
 literal|"etc"
 block|,
-literal|"/usr/src/etc (miscellaneous system files)"
+literal|"/usr/src/etc (miscellaneous system files) [460K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1792,7 +1831,7 @@ block|,
 block|{
 literal|"games"
 block|,
-literal|"/usr/src/games (games)"
+literal|"/usr/src/games (diversions) [7.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1811,7 +1850,7 @@ block|,
 block|{
 literal|"include"
 block|,
-literal|"/usr/src/include (header files)"
+literal|"/usr/src/include (header files) [467K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1830,7 +1869,7 @@ block|,
 block|{
 literal|"lib"
 block|,
-literal|"/usr/src/lib (system libraries)"
+literal|"/usr/src/lib (system libraries) [9.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1849,7 +1888,7 @@ block|,
 block|{
 literal|"libexec"
 block|,
-literal|"/usr/src/libexec (various system programs)"
+literal|"/usr/src/libexec (system programs) [1.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1868,7 +1907,7 @@ block|,
 block|{
 literal|"lkm"
 block|,
-literal|"/usr/src/lkm (Loadable Kernel Modules)"
+literal|"/usr/src/lkm (Loadable Kernel Modules) [193K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1887,7 +1926,7 @@ block|,
 block|{
 literal|"release"
 block|,
-literal|"/usr/src/release (release-generation tools)"
+literal|"/usr/src/release (release-generation tools) [533K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1906,7 +1945,7 @@ block|,
 block|{
 literal|"sbin"
 block|,
-literal|"/usr/src/sbin (system binaries)"
+literal|"/usr/src/sbin (system binaries) [1.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1925,7 +1964,7 @@ block|,
 block|{
 literal|"share"
 block|,
-literal|"/usr/src/share (documents and shared files)"
+literal|"/usr/src/share (documents and shared files) [10MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1944,7 +1983,7 @@ block|,
 block|{
 literal|"sys"
 block|,
-literal|"/usr/src/sys (FreeBSD kernel)"
+literal|"/usr/src/sys (FreeBSD kernel) [13MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1963,7 +2002,7 @@ block|,
 block|{
 literal|"ubin"
 block|,
-literal|"/usr/src/usr.bin (user binaries)"
+literal|"/usr/src/usr.bin (user binaries) [13MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -1982,7 +2021,7 @@ block|,
 block|{
 literal|"usbin"
 block|,
-literal|"/usr/src/usr.sbin (aux system binaries)"
+literal|"/usr/src/usr.sbin (aux system binaries) [14MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2001,7 +2040,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"XFree86 3.1.1L source + contrib distribution"
+literal|"XFree86 3.1.1L source + contrib distribution [200MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2201,7 +2240,7 @@ block|,
 block|{
 literal|"*lib"
 block|,
-literal|"Data files needed at runtime [0.6MB]"
+literal|"Data files needed at runtime [600K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2220,7 +2259,7 @@ block|,
 block|{
 literal|"xicf"
 block|,
-literal|"Customizable xinit runtime configuration file [0.1MB]"
+literal|"Customizable xinit runtime configuration file [100K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2239,7 +2278,7 @@ block|,
 block|{
 literal|"xdcf"
 block|,
-literal|"Customizable xdm runtime configuration file [0.1MB]"
+literal|"Customizable xdm runtime configuration file [100K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2258,7 +2297,7 @@ block|,
 block|{
 literal|"doc"
 block|,
-literal|"READMEs and XFree86 specific man pages [0.5MB]"
+literal|"READMEs and XFree86 specific man pages [500K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2334,7 +2373,7 @@ block|,
 block|{
 literal|"pex"
 block|,
-literal|"PEX fonts and libs needed by PEX apps [0.5MB]"
+literal|"PEX fonts and libs needed by PEX apps [500K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2500,7 +2539,7 @@ block|{
 block|{
 literal|"*SVGA"
 block|,
-literal|"Standard VGA or Super VGA display"
+literal|"Standard VGA or Super VGA display [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2519,7 +2558,7 @@ block|,
 block|{
 literal|"VGA16"
 block|,
-literal|"Standard 16 color VGA display"
+literal|"Standard 16 color VGA display [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2538,7 +2577,7 @@ block|,
 block|{
 literal|"Mono"
 block|,
-literal|"Standard Monochrome display"
+literal|"Standard Monochrome display [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2557,7 +2596,7 @@ block|,
 block|{
 literal|"8514"
 block|,
-literal|"8-bit (256 color) IBM 8514 or compatible card."
+literal|"8-bit (256 color) IBM 8514 or compatible card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2576,7 +2615,7 @@ block|,
 block|{
 literal|"AGX"
 block|,
-literal|"8-bit AGX card"
+literal|"8-bit AGX card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2595,7 +2634,7 @@ block|,
 block|{
 literal|"Mch3"
 block|,
-literal|"8 and 16-bit (65K color) for ATI Mach32 card."
+literal|"8 and 16-bit (65K color) for ATI Mach32 card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2614,7 +2653,7 @@ block|,
 block|{
 literal|"Mch8"
 block|,
-literal|"8-bit ATI Mach8 card."
+literal|"8-bit ATI Mach8 card [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2633,7 +2672,7 @@ block|,
 block|{
 literal|"P9K"
 block|,
-literal|"8, 16, and 24-bit color for Weitek P9000 based boards"
+literal|"8, 16, and 24-bit color for Weitek P9000 based boards [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2652,7 +2691,7 @@ block|,
 block|{
 literal|"S3"
 block|,
-literal|"8, 16 and 24-bit color for S3 based boards"
+literal|"8, 16 and 24-bit color for S3 based boards [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2671,7 +2710,7 @@ block|,
 block|{
 literal|"W32"
 block|,
-literal|"8-bit Color for ET4000/W32, /W32i and /W32p cards."
+literal|"8-bit Color for ET4000/W32, /W32i and /W32p cards [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2690,7 +2729,7 @@ block|,
 block|{
 literal|"nest"
 block|,
-literal|"A nested server for testing purposes"
+literal|"A nested server for testing purposes [1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2773,25 +2812,6 @@ operator|*
 operator|)
 operator|&
 name|MenuOptionsFTP
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"Language"
-block|,
-literal|"Select your preferred language"
-block|,
-name|DMENU_SUBMENU
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|MenuOptionsLanguage
 block|,
 literal|0
 block|,
@@ -2897,7 +2917,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"Ftp Retry"
+literal|"FTP Retry"
 block|,
 literal|"On transfer failure, retry same host"
 block|,
@@ -2915,7 +2935,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Ftp Reselect"
+literal|"FTP Reselect"
 block|,
 literal|"On transfer failure, ask for another host"
 block|,
@@ -2933,7 +2953,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Ftp Abort"
+literal|"FTP Abort"
 block|,
 literal|"On transfer failure, abort installation"
 block|,
@@ -2951,9 +2971,9 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Ftp passive"
+literal|"FTP passive"
 block|,
-literal|"Use \"passive mode\" for firewalled ftp"
+literal|"Use \"passive mode\" for firewalled FTP"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
