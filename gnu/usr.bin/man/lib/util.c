@@ -163,12 +163,14 @@ name|downcase
 parameter_list|(
 name|s
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
 specifier|register
+name|unsigned
 name|char
 name|c
 decl_stmt|;
