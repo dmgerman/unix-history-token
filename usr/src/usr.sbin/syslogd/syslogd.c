@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.37 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3548,12 +3548,18 @@ operator|->
 name|f_file
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Check for EBADF on TTY's due to vhangup() XXX 			 */
+comment|/* 			 * Check for errors on TTY's due to loss of tty 			 */
 if|if
 condition|(
+operator|(
+name|e
+operator|==
+name|EIO
+operator|||
 name|e
 operator|==
 name|EBADF
+operator|)
 operator|&&
 name|f
 operator|->
