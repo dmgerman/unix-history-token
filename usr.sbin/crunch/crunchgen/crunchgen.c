@@ -3064,6 +3064,7 @@ argument_list|(
 name|line
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -3082,6 +3083,7 @@ condition|)
 name|out_of_memory
 argument_list|()
 expr_stmt|;
+block|}
 else|else
 name|p
 operator|->
