@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.8 1995/05/30 08:14:11 rgrimes Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.9 1996/01/30 02:56:08 mpp Exp $  */
 end_comment
 
 begin_comment
@@ -51,6 +51,7 @@ struct|;
 name|int
 name|lba
 decl_stmt|;
+comment|/* network byte order */
 name|u_char
 name|addr
 index|[
