@@ -4,11 +4,7 @@ comment|/*-  * Copyright (c) 1998 Berkeley Software Design, Inc. All rights rese
 end_comment
 
 begin_comment
-comment|/*  * Machine independent bits of mutex implementation and implementation of  * `witness' structure& related debugging routines.  */
-end_comment
-
-begin_comment
-comment|/*  *	Main Entry: witness  *	Pronunciation: 'wit-n&s  *	Function: noun  *	Etymology: Middle English witnesse, from Old English witnes knowledge,  *	    testimony, witness, from 2wit  *	Date: before 12th century  *	1 : attestation of a fact or event : TESTIMONY  *	2 : one that gives evidence; specifically : one who testifies in  *	    a cause or before a judicial tribunal  *	3 : one asked to be present at a transaction so as to be able to  *	    testify to its having taken place  *	4 : one who has personal knowledge of something  *	5 a : something serving as evidence or proof : SIGN  *	  b : public affirmation by word or example of usually  *	      religious faith or conviction<the heroic witness to divine  *	      life -- Pilot>  *	6 capitalized : a member of the Jehovah's Witnesses   */
+comment|/*  * Machine independent bits of mutex implementation.  */
 end_comment
 
 begin_include
