@@ -402,7 +402,7 @@ name|ch
 condition|)
 name|inquote
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 else|else
 break|break;
