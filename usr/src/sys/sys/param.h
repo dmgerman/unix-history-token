@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BSD
-value|199006
+value|199103
 end_define
 
 begin_comment
-comment|/* June, 1990 system version (year& month) */
+comment|/* March, 1991 system version (year& month) */
 end_comment
 
 begin_define
@@ -34,8 +34,25 @@ directive|include
 file|<sys/syslimits.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Machine-independent constants  */
+comment|/*  * Machine-independent constants (some used in following include files)  */
 end_comment
 
 begin_define
@@ -144,6 +161,89 @@ end_define
 begin_comment
 comment|/* marker for empty group set member */
 end_comment
+
+begin_comment
+comment|/*  * More types and definitions used throughout the kernel  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/uio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Signals  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
+
+begin_comment
+comment|/*  * Machine type dependent parameters.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
+end_include
 
 begin_comment
 comment|/*  * Priorities.  Note that with 32 run queues,  * differences less than 4 are insignificant.  */
@@ -269,106 +369,6 @@ end_define
 begin_comment
 comment|/* default "nice" */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * More types and definitions used throughout the kernel  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ucred.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Signals  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
-begin_comment
-comment|/*  * Machine type dependent parameters.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/limits.h>
-end_include
 
 begin_define
 define|#
