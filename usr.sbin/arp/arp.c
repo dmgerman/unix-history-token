@@ -35,25 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-specifier|const
-name|sccsid
-index|[]
-init|=
-literal|"@(#)from: arp.c	8.2 (Berkeley) 1/2/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char const sccsid[] = "@(#)from: arp.c	8.2 (Berkeley) 1/2/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
-name|char
 specifier|const
-name|freebsdid
+name|char
+name|rcsid
 index|[]
 init|=
-literal|"$Id: arp.c,v 1.10 1997/03/31 05:09:46 imp Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,7 +164,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -175,7 +176,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -193,19 +206,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<strings.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<unistd.h>
 end_include
 
 begin_function_decl
@@ -320,17 +327,6 @@ name|rtmsg
 parameter_list|(
 name|int
 name|cmd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|quit
-parameter_list|(
-name|char
-modifier|*
-name|msg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -642,22 +638,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"arp: cannot open %s\n"
+literal|"cannot open %s"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|args
 index|[
 literal|0
@@ -787,11 +776,9 @@ operator|<
 literal|2
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"arp: bad line: %s\n"
+literal|"bad line: %s"
 argument_list|,
 name|line
 argument_list|)
@@ -860,18 +847,13 @@ name|s
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"arp: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -1089,22 +1071,16 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"arp: %s: "
+literal|"%s: %s"
 argument_list|,
 name|host
-argument_list|)
-expr_stmt|;
-name|herror
+argument_list|,
+name|hstrerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1339,8 +1315,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
@@ -1618,31 +1596,20 @@ name|host
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arp: %s: "
-argument_list|,
-name|host
-argument_list|)
-expr_stmt|;
-name|herror
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|host
+argument_list|,
+name|hstrerror
+argument_list|(
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 operator|(
@@ -1815,22 +1782,16 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"arp: %s: "
+literal|"%s: %s"
 argument_list|,
 name|host
-argument_list|)
-expr_stmt|;
-name|herror
+argument_list|,
+name|hstrerror
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1877,8 +1838,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
@@ -2205,8 +2168,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|quit
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"route-sysctl-estimate"
 argument_list|)
 expr_stmt|;
@@ -2223,8 +2188,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|quit
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
@@ -2248,8 +2215,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|quit
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"actual retrieval of routing table"
 argument_list|)
 expr_stmt|;
@@ -2640,11 +2609,9 @@ operator|!=
 literal|6
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"arp: invalid Ethernet address '%s'\n"
+literal|"invalid Ethernet address '%s'"
 argument_list|,
 name|a
 argument_list|)
@@ -2693,34 +2660,23 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"usage: arp hostname\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       arp -a [kernel] [kernel_memory]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       arp -d hostname\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       arp -s hostname ether_addr [temp] [pub]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       arp -S hostname ether_addr [temp] [pub]\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"       arp -f filename\n"
+name|stderr
+argument_list|,
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: arp [-n] hostname"
+argument_list|,
+literal|"       arp [-n] -a [kernel] [kernel_memory]"
+argument_list|,
+literal|"       arp -d hostname"
+argument_list|,
+literal|"       arp -s hostname ether_addr [temp] [pub]"
+argument_list|,
+literal|"       arp -S hostname ether_addr [temp] [pub]"
+argument_list|,
+literal|"       arp -f filename"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2816,16 +2772,11 @@ name|cmd
 condition|)
 block|{
 default|default:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arp: internal wrong cmd\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"internal wrong cmd"
 argument_list|)
 expr_stmt|;
 case|case
@@ -3009,7 +2960,7 @@ operator|!=
 name|RTM_DELETE
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"writing to routing socket"
 argument_list|)
@@ -3071,19 +3022,9 @@ name|l
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"arp: read from routing socket: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read from routing socket"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3091,32 +3032,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|quit
-parameter_list|(
-name|char
-modifier|*
-name|msg
-parameter_list|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3199,18 +3114,13 @@ name|s
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|ifc
 operator|.
 name|ifc_len
@@ -3241,11 +3151,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"ioctl(SIOCGIFCONF): \n"
+literal|"ioctl(SIOCGIFCONF)"
 argument_list|)
 expr_stmt|;
 name|close
