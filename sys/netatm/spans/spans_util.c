@@ -1072,6 +1072,9 @@ name|strbuff
 argument_list|,
 literal|"%lx.%lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|u1
@@ -1079,6 +1082,9 @@ operator|.
 name|w
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|u2

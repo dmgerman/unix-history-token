@@ -676,6 +676,9 @@ name|fu_pif
 operator|.
 name|pif_unit
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|CP_READ
 argument_list|(
 name|aap

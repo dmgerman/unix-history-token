@@ -3292,6 +3292,9 @@ name|FORE_DEV_NAME
 argument_list|,
 name|unit
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|CP_READ
 argument_list|(
 name|fup
