@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)su.c	4.9 (Berkeley) %G%"
+literal|"@(#)su.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_include
@@ -606,29 +612,20 @@ operator|==
 literal|0
 condition|)
 block|{
-name|FILE
-modifier|*
-name|console
-init|=
-name|fopen
+name|openlog
 argument_list|(
-literal|"/dev/console"
+literal|"su"
 argument_list|,
-literal|"w"
+literal|0
+argument_list|,
+literal|0
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|console
-operator|!=
-name|NULL
-condition|)
-block|{
-name|fprintf
+expr_stmt|;
+name|syslog
 argument_list|(
-name|console
+name|LOG_SECURITY
 argument_list|,
-literal|"SU: %s %s\r\n"
+literal|"%s on %s"
 argument_list|,
 name|getlogin
 argument_list|()
@@ -639,12 +636,9 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|console
-argument_list|)
+name|closelog
+argument_list|()
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
