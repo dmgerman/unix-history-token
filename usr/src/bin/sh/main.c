@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -690,6 +690,8 @@ name|inter
 decl_stmt|;
 name|int
 name|numeof
+init|=
+literal|0
 decl_stmt|;
 name|TRACE
 argument_list|(
@@ -705,10 +707,6 @@ argument_list|(
 operator|&
 name|smark
 argument_list|)
-expr_stmt|;
-name|numeof
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -824,6 +822,10 @@ operator|)
 condition|?
 literal|1
 else|:
+literal|0
+expr_stmt|;
+name|numeof
+operator|=
 literal|0
 expr_stmt|;
 name|evaltree
