@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.11	%G%	*/
+comment|/*	kern_clock.c	4.12	%G%	*/
 end_comment
 
 begin_include
@@ -824,19 +824,11 @@ for|for
 control|(
 name|pp
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|pp
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|pp
 operator|++

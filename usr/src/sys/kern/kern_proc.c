@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.6	%G%	*/
+comment|/*	kern_proc.c	4.7	%G%	*/
 end_comment
 
 begin_include
@@ -3204,19 +3204,11 @@ for|for
 control|(
 name|q
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|q
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|q
 operator|++
@@ -3497,19 +3489,11 @@ for|for
 control|(
 name|p
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|p
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|p
 operator|++
@@ -3940,19 +3924,11 @@ for|for
 control|(
 name|p1
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|p1
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|p1
 operator|++
@@ -4014,13 +3990,9 @@ operator|&&
 operator|(
 name|p2
 operator|==
-operator|&
-name|proc
-index|[
-name|NPROC
+name|procNPROC
 operator|-
 literal|1
-index|]
 operator|||
 name|a
 operator|>

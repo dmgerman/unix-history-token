@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.7	%G%	*/
+comment|/*	kern_synch.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -1207,19 +1207,11 @@ for|for
 control|(
 name|rpp
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|rpp
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|rpp
 operator|++

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.1	%G%	*/
+comment|/*	vm_meter.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -370,19 +370,11 @@ for|for
 control|(
 name|rp
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|rp
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|rp
 operator|++
@@ -751,19 +743,11 @@ for|for
 control|(
 name|rp
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|rp
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|rp
 operator|++
@@ -1737,19 +1721,11 @@ for|for
 control|(
 name|p
 operator|=
-operator|&
 name|proc
-index|[
-literal|0
-index|]
 init|;
 name|p
 operator|<
-operator|&
-name|proc
-index|[
-name|NPROC
-index|]
+name|procNPROC
 condition|;
 name|p
 operator|++
