@@ -32,15 +32,8 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|strtoarith_t
-parameter_list|(
-name|nptr
-parameter_list|,
-name|endptr
-parameter_list|,
-name|base
-parameter_list|)
-value|strtol(nptr, endptr, base)
+name|ARITH_FORMAT_STR
+value|"%ld"
 end_define
 
 begin_define
@@ -56,8 +49,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARITH_FORMAT_STR
-value|"%ld"
+name|strtoarith_t
+parameter_list|(
+name|nptr
+parameter_list|,
+name|endptr
+parameter_list|,
+name|base
+parameter_list|)
+value|strtol(nptr, endptr, base)
 end_define
 
 begin_typedef
