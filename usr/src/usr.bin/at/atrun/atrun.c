@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	5.7 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1610,9 +1610,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|uid
+name|stderr
+argument_list|,
+literal|"atrun: %d: no such user uid\n"
 argument_list|)
 expr_stmt|;
 name|exit
