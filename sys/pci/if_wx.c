@@ -8498,19 +8498,15 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s: swdpio1 did not clear- check for reversed cable\n"
+literal|"%s: swdpio1 did not clear- check for reversed or "
+literal|"disconnected cable\n"
 argument_list|,
 name|sc
 operator|->
 name|wx_name
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+comment|/* but return okay anyway */
 block|}
 name|sc
 operator|->
