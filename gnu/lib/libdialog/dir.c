@@ -2104,12 +2104,7 @@ name|buf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|dire
-index|[
-name|j
-index|]
-operator|->
-name|d_name
+name|buf
 argument_list|)
 operator|-
 literal|1
