@@ -3088,6 +3088,19 @@ name|slow_msp_audio
 decl_stmt|;
 comment|/* 0 = use fast MSP3410/3415 programming sequence */
 comment|/* 1 = use slow MSP3410/3415 programming sequence */
+comment|/* 2 = use Tuner's Mono audio output via the MSP chip */
+name|int
+name|msp_use_mono_source
+decl_stmt|;
+comment|/* use Tuner's Mono audio output via the MSP chip */
+name|int
+name|audio_mux_present
+decl_stmt|;
+comment|/* 1 = has audio mux on GPIO lines, 0 = no audio mux */
+name|int
+name|msp_source_selected
+decl_stmt|;
+comment|/* 0 = TV source, 1 = Line In source, 2 = FM Radio Source */
 block|}
 struct|;
 end_struct
