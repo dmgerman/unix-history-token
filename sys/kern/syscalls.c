@@ -614,6 +614,23 @@ comment|/* 175 = nosys */
 literal|"#176"
 block|,
 comment|/* 176 = nosys */
+ifdef|#
+directive|ifdef
+name|MACHVMCOMPAT
+literal|"vm_allocate"
+block|,
+comment|/* 177 = vm_allocate */
+literal|"vm_deallocate"
+block|,
+comment|/* 178 = vm_deallocate */
+literal|"vm_inherit"
+block|,
+comment|/* 179 = vm_inherit */
+literal|"vm_protect"
+block|,
+comment|/* 180 = vm_protect */
+else|#
+directive|else
 literal|"#177"
 block|,
 comment|/* 177 = nosys */
@@ -626,6 +643,8 @@ comment|/* 179 = nosys */
 literal|"#180"
 block|,
 comment|/* 180 = nosys */
+endif|#
+directive|endif
 literal|"setgid"
 block|,
 comment|/* 181 = setgid */

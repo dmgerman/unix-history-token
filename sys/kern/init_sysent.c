@@ -1072,6 +1072,50 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MACHVMCOMPAT
+end_ifdef
+
+begin_function_decl
+name|int
+name|svm_allocate
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|svm_deallocate
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|svm_inherit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|svm_protect
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 name|setgid
@@ -1330,6 +1374,22 @@ begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYSVSHM
+end_ifdef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MACHVMCOMPAT
 end_ifdef
 
 begin_else
@@ -2404,6 +2464,31 @@ block|,
 name|nosys
 block|,
 comment|/* 176 = nosys */
+ifdef|#
+directive|ifdef
+name|MACHVMCOMPAT
+literal|4
+block|,
+name|svm_allocate
+block|,
+comment|/* 177 = vm_allocate */
+literal|3
+block|,
+name|svm_deallocate
+block|,
+comment|/* 178 = vm_deallocate */
+literal|4
+block|,
+name|svm_inherit
+block|,
+comment|/* 179 = vm_inherit */
+literal|5
+block|,
+name|svm_protect
+block|,
+comment|/* 180 = vm_protect */
+else|#
+directive|else
 literal|0
 block|,
 name|nosys
@@ -2424,6 +2509,8 @@ block|,
 name|nosys
 block|,
 comment|/* 180 = nosys */
+endif|#
+directive|endif
 literal|1
 block|,
 name|setgid
