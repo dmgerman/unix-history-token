@@ -221,7 +221,7 @@ comment|/* times */
 end_comment
 
 begin_comment
-comment|/*  * implementation dependent constants in secondes  * XXX: should be configurable  */
+comment|/*  * implementation dependent constants in seconds  * XXX: should be configurable  */
 end_comment
 
 begin_define
@@ -456,7 +456,7 @@ name|rtsold_set_dump_file
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -896,31 +896,13 @@ literal|"kernel is configured as a router, not a host"
 argument_list|)
 expr_stmt|;
 comment|/* initialization to dump internal status to a file */
-if|if
-condition|(
 name|signal
 argument_list|(
 name|SIGUSR1
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|rtsold_set_dump_file
 argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"failed to set signal for dump status"
-argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
 comment|/* 	 * Open a socket for sending RS and receiving RA. 	 * This should be done before calling ifinit(), since the function 	 * uses the socket. 	 */
 if|if
 condition|(
@@ -2924,7 +2906,12 @@ begin_function
 specifier|static
 name|void
 name|rtsold_set_dump_file
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|do_dump
 operator|=
