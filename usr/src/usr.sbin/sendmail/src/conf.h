@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.63 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.64 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -333,32 +333,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Due to a "feature" in some operating systems such as Ultrix 4.3 and **  HPUX 8.0, if you receive a "No route to host" message (ICMP message **  ICMP_UNREACH_HOST) on _any_ connection, all connections to that host **  are closed.  Some firewalls return this error if you try to connect **  to the IDENT port (113), so you can't receive email from these hosts **  on these systems.  The firewall really should use a more specific **  message such as ICMP_UNREACH_PROTOCOL or _PORT or _NET_PROHIB.  This **  will get #undefed below as needed. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IDENTPROTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IDENTPROTO
-value|1
-end_define
-
-begin_comment
-comment|/* use IDENT proto (RFC 1413) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* **  Most systems have symbolic links today, so default them on.  You **  can turn them off by #undef'ing this below. */
 end_comment
 
@@ -497,15 +471,27 @@ name|_PATH_UNIX
 value|"/hp-ux"
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1061,15 +1047,27 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -1215,15 +1213,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1920,15 +1930,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
@@ -2183,11 +2205,27 @@ name|LA_TYPE
 value|LA_FLOAT
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2616,15 +2654,27 @@ begin_comment
 comment|/* sigfunc_t already defined */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3322,6 +3372,32 @@ end_undef
 
 begin_comment
 comment|/* doesn't have initgroups(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Due to a "feature" in some operating systems such as Ultrix 4.3 and **  HPUX 8.0, if you receive a "No route to host" message (ICMP message **  ICMP_UNREACH_HOST) on _any_ connection, all connections to that host **  are closed.  Some firewalls return this error if you try to connect **  to the IDENT port (113), so you can't receive email from these hosts **  on these systems.  The firewall really should use a more specific **  message such as ICMP_UNREACH_PROTOCOL or _PORT or _NET_PROHIB.  If **  not explicitly set to zero above, default it on. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|1
+end_define
+
+begin_comment
+comment|/* use IDENT proto (RFC 1413) */
 end_comment
 
 begin_endif
@@ -4109,28 +4185,6 @@ end_define
 
 begin_comment
 comment|/* function to call to fork mailer */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IDENTPROTO
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IDENTPROTO
-value|0
-end_define
-
-begin_comment
-comment|/* don't use RFC 1413 */
 end_comment
 
 begin_endif
