@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.12	82/10/09	*/
+comment|/*	raw_cb.c	4.13	82/10/31	*/
 end_comment
 
 begin_include
@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
+file|"../vax/mtpr.h"
 end_include
 
 begin_include
@@ -260,9 +260,6 @@ argument_list|(
 name|rp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|dtom
@@ -358,11 +355,6 @@ expr|struct
 name|sockaddr
 operator|*
 argument_list|)
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 specifier|register
 name|struct
