@@ -932,7 +932,7 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* DEL to ?, others to a lpha */
+comment|/* DEL to ?, others to alpha */
 block|}
 else|else
 name|putc
