@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.13	82/12/17	*/
+comment|/*	kern_sig.c	5.14	82/12/19	*/
 end_comment
 
 begin_include
@@ -773,12 +773,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_signal
-index|[
-name|a
-index|]
+name|f
 operator|==
 name|SIG_IGN
 condition|)
