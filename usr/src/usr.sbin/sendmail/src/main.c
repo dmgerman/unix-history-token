@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.127 (Berkeley) %G%"
+literal|"@(#)main.c	8.128 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1304,7 +1304,7 @@ directive|ifdef
 name|_PATH_UNIX
 name|printf
 argument_list|(
-literal|"     Unix path:\t%s\n"
+literal|"Kernel symbols:\t%s\n"
 argument_list|,
 name|_PATH_UNIX
 argument_list|)
@@ -1321,7 +1321,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  Proc Id file:\t%s\n"
+literal|"      Pid file:\t%s\n"
 argument_list|,
 name|PidFile
 argument_list|)
