@@ -888,6 +888,20 @@ name|dd_flags
 operator|=
 name|flags
 expr_stmt|;
+name|dirp
+operator|->
+name|dd_loccnt
+operator|=
+literal|0
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|dirp
+operator|->
+name|dd_locq
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set up seek point for rewinddir. 	 */
 name|dirp
 operator|->
