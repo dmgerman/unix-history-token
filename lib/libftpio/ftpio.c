@@ -4072,6 +4072,9 @@ modifier|*
 name|seekto
 parameter_list|)
 block|{
+name|socklen_t
+name|sinlen
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -4661,9 +4664,6 @@ block|{
 name|int
 name|port
 decl_stmt|;
-name|int
-name|sinlen
-decl_stmt|;
 while|while
 condition|(
 operator|*
@@ -5121,7 +5121,7 @@ block|}
 block|}
 endif|#
 directive|endif
-name|i
+name|sinlen
 operator|=
 sizeof|sizeof
 name|sin
@@ -5141,7 +5141,7 @@ operator|&
 name|sin
 argument_list|,
 operator|&
-name|i
+name|sinlen
 argument_list|)
 expr_stmt|;
 name|sin
@@ -5195,7 +5195,7 @@ return|return
 name|FAILURE
 return|;
 block|}
-name|i
+name|sinline
 operator|=
 sizeof|sizeof
 name|sin
@@ -5213,7 +5213,7 @@ operator|&
 name|sin
 argument_list|,
 operator|&
-name|i
+name|sinlen
 argument_list|)
 expr_stmt|;
 if|if
