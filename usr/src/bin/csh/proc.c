@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	4.15 (Berkeley) %G%"
+literal|"@(#)proc.c	4.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2220,28 +2220,14 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|TOR
+case|:
+case|case
+name|TAND
+case|:
+case|case
 name|TFIL
 case|:
-name|padd
-argument_list|(
-name|t
-operator|->
-name|t_dcar
-argument_list|)
-expr_stmt|;
-name|pads
-argument_list|(
-literal|" | "
-argument_list|)
-expr_stmt|;
-name|padd
-argument_list|(
-name|t
-operator|->
-name|t_dcdr
-argument_list|)
-expr_stmt|;
-return|return;
 case|case
 name|TLST
 case|:
@@ -2252,11 +2238,50 @@ operator|->
 name|t_dcar
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|t
+operator|->
+name|t_dtyp
+condition|)
+block|{
+case|case
+name|TOR
+case|:
+name|pads
+argument_list|(
+literal|" || "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TAND
+case|:
+name|pads
+argument_list|(
+literal|"&& "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TFIL
+case|:
+name|pads
+argument_list|(
+literal|" | "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TLST
+case|:
 name|pads
 argument_list|(
 literal|"; "
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|padd
 argument_list|(
 name|t
