@@ -78,7 +78,7 @@ decl_stmt|;
 comment|/* Attempt an s/key challenge. */
 name|sflag
 operator|=
-name|skeychallenge
+name|skeyinfo
 argument_list|(
 operator|&
 name|skey

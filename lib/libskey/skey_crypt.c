@@ -81,7 +81,7 @@ name|pwd
 operator|!=
 literal|0
 operator|&&
-name|skeylookup
+name|skeyinfo
 argument_list|(
 operator|&
 name|skey
@@ -89,6 +89,12 @@ argument_list|,
 name|pwd
 operator|->
 name|pw_name
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 operator|==
 literal|0
