@@ -3148,6 +3148,10 @@ comment|/* PC98 */
 if|if
 condition|(
 name|validslots
+operator|&&
+name|pcic_irq
+operator|<=
+literal|0
 condition|)
 name|pcictimeout_ch
 operator|=
@@ -4337,7 +4341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	PCIC timer, it seems that we lose interrupts sometimes  *	so poll just in case...  */
+comment|/*  *	PCIC timer.  If the controller doesn't have a free IRQ to use  *	or if interrupt steering doesn't work, poll the controller for  *	insertion/removal events.  */
 end_comment
 
 begin_function
