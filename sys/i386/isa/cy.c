@@ -222,37 +222,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|disable_intr
-parameter_list|()
-value|COM_DISABLE_INTR()
-end_define
-
-begin_define
-define|#
-directive|define
-name|enable_intr
-parameter_list|()
-value|COM_ENABLE_INTR()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
-
 begin_comment
 comment|/*  * Dictionary so that I can name everything *sio* or *com* to compare with  * sio.c.  There is also lots of ugly formatting and unnecessary ifdefs to  * simplify the comparision.  These will go away.  */
 end_comment
@@ -1645,7 +1614,7 @@ init|=
 block|{
 name|INTR_TYPE_TTY
 operator||
-name|INTR_TYPE_FAST
+name|INTR_FAST
 block|,
 name|sioprobe
 block|,
@@ -2769,9 +2738,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|enable_intr
-argument_list|()
-expr_stmt|;
 name|free
 argument_list|(
 name|com
@@ -2785,9 +2751,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|enable_intr
-argument_list|()
-expr_stmt|;
 name|termioschars
 argument_list|(
 operator|&
@@ -3076,6 +3039,9 @@ name|tp
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+name|int
+name|intrsave
 decl_stmt|;
 name|mynor
 operator|=
@@ -3427,7 +3393,7 @@ directive|if
 literal|0
 block|if (com->hasfifo) {
 comment|/* 			 * (Re)enable and flush fifos. 			 * 			 * Certain SMC chips cause problems if the fifos 			 * are enabled while input is ready.  Turn off the 			 * fifo if necessary to clear the input.  We test 			 * the input ready bit after enabling the fifos 			 * since we've already enabled them in comparam() 			 * and to handle races between enabling and fresh 			 * input. 			 */
-block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		disable_intr(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		enable_intr();
+block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		intrsave = save_intr(); 		disable_intr(); 		COM_LOCK(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		COM_UNLOCK(); 		restore_intr(intrsave);
 else|#
 directive|else
 comment|/* !0 */
@@ -3450,7 +3416,15 @@ operator|->
 name|channel_control
 argument_list|)
 expr_stmt|;
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|com
@@ -3483,8 +3457,13 @@ operator||
 name|CD1400_SRER_RXDATA
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3890,6 +3869,9 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|intrsave
+decl_stmt|;
 name|unit
 operator|=
 name|com
@@ -3926,7 +3908,15 @@ block|outb(iobase + com_cfcr, com->cfcr_image&= ~CFCR_SBREAK);
 else|#
 directive|else
 comment|/* XXX */
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|com
@@ -3952,8 +3942,13 @@ operator|~
 name|CD1400_COR2_ETC
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 name|cd1400_channel_cmd
 argument_list|(
@@ -3973,7 +3968,15 @@ literal|0
 block|outb(iobase + com_ier, 0);
 else|#
 directive|else
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|cd_setreg
@@ -3989,8 +3992,13 @@ operator|=
 literal|0
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -4317,6 +4325,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This function:  *  a) needs to be called with COM_LOCK() held, and  *  b) needs to return with COM_LOCK() held.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -4347,6 +4359,9 @@ name|struct
 name|tty
 modifier|*
 name|tp
+decl_stmt|;
+name|int
+name|intrsave
 decl_stmt|;
 name|buf
 operator|=
@@ -4406,6 +4421,15 @@ block|{
 comment|/* 		 * Avoid the grotesquely inefficient lineswitch routine 		 * (ttyinput) in "raw" mode.  It usually takes about 450 		 * instructions (that's without canonical processing or echo!). 		 * slinput is reasonably fast (usually 40 instructions plus 		 * call overhead). 		 */
 do|do
 block|{
+comment|/* 			 * This may look odd, but it is using save-and-enable 			 * semantics instead of the save-and-disable semantics 			 * that are used everywhere else. 			 */
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -4556,7 +4580,12 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-name|disable_intr
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -4574,6 +4603,15 @@ else|else
 block|{
 do|do
 block|{
+comment|/* 			 * This may look odd, but it is using save-and-enable 			 * semantics instead of the save-and-disable semantics 			 * that are used everywhere else. 			 */
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
@@ -4665,7 +4703,12 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
-name|disable_intr
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -7725,6 +7768,9 @@ block|{
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|intrsave
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CyDebug
@@ -7797,7 +7843,15 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * XXX forget any events related to closed devices 			 * (actually never opened devices) so that we don't 			 * loop. 			 */
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|incc
@@ -7843,8 +7897,13 @@ name|com_events
 operator|-=
 name|incc
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7876,7 +7935,15 @@ operator|->
 name|ibuf
 condition|)
 block|{
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|sioinput
@@ -7884,8 +7951,13 @@ argument_list|(
 name|com
 argument_list|)
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -7900,8 +7972,21 @@ block|{
 name|u_char
 name|delta_modem_status
 decl_stmt|;
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
 argument_list|()
+expr_stmt|;
+name|COM_LOCK
+argument_list|()
+expr_stmt|;
+name|sioinput
+argument_list|(
+name|com
+argument_list|)
 expr_stmt|;
 name|delta_modem_status
 operator|=
@@ -7932,8 +8017,13 @@ operator|&=
 operator|~
 name|CS_CHECKMSR
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7972,7 +8062,15 @@ operator|&
 name|CSE_ODONE
 condition|)
 block|{
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|com_events
@@ -7986,8 +8084,13 @@ operator|&=
 operator|~
 name|CSE_ODONE
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8058,7 +8161,15 @@ operator|&
 name|CS_ODONE
 condition|)
 block|{
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|com_events
@@ -8072,8 +8183,13 @@ operator|&=
 operator|~
 name|CS_ODONE
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 operator|(
 operator|*
@@ -8174,6 +8290,9 @@ name|s
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+name|int
+name|intrsave
 decl_stmt|;
 comment|/* do historical conversions */
 if|if
@@ -8306,7 +8425,6 @@ argument_list|,
 name|DMBIS
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This returns with interrupts disabled so that we can complete 	 * the speed change atomically. 	 */
 operator|(
 name|void
 operator|)
@@ -8320,9 +8438,6 @@ name|c_ispeed
 argument_list|)
 expr_stmt|;
 comment|/* XXX we don't actually change the speed atomically. */
-name|enable_intr
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|idivisor
@@ -8868,7 +8983,15 @@ name|CD1400_COR2_CCTS_OFLOW
 expr_stmt|;
 endif|#
 directive|endif
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -8904,8 +9027,13 @@ name|opt
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 comment|/* 	 * set channel option register 3 - 	 *	receiver FIFO interrupt threshold 	 *	flow control 	 */
 name|opt
@@ -9209,7 +9337,15 @@ name|opt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX should have done this long ago, but there is too much state 	 * to change all atomically. 	 */
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|com
@@ -9445,8 +9581,13 @@ name|CD1400_SRER_TXMPTY
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -9524,6 +9665,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+name|int
+name|intrsave
+decl_stmt|;
 comment|/* 	 * Make the buffer size large enough to handle a softtty interrupt 	 * latency of about 2 ticks without loss of throughput or data 	 * (about 3 ticks if input flow control is not used or not honoured, 	 * but a bit less for CS5-CS7 modes). 	 */
 name|cp4ticks
 operator|=
@@ -9559,9 +9703,6 @@ operator|->
 name|ibufsize
 condition|)
 block|{
-name|disable_intr
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9589,9 +9730,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|disable_intr
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -9656,7 +9794,15 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Read current input buffer, if any.  Continue with interrupts 	 * disabled. 	 */
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -9711,6 +9857,14 @@ name|ibufsize
 operator|/
 literal|4
 expr_stmt|;
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -9751,6 +9905,9 @@ directive|endif
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|intrsave
+decl_stmt|;
 name|unit
 operator|=
 name|DEV_TO_UNIT
@@ -9786,7 +9943,15 @@ name|FALSE
 expr_stmt|;
 endif|#
 directive|endif
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -9997,8 +10162,13 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10120,7 +10290,15 @@ name|l_queued
 operator|=
 name|TRUE
 expr_stmt|;
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -10258,8 +10436,13 @@ name|CD1400_SRER_TXRDY
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -10344,7 +10527,15 @@ name|l_queued
 operator|=
 name|TRUE
 expr_stmt|;
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -10482,8 +10673,13 @@ name|CD1400_SRER_TXRDY
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 block|}
 name|tp
@@ -10510,9 +10706,9 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|disable_intr(); 	if (com->state>= (CS_BUSY | CS_TTGO)) 		siointr1(com);
+block|intrsave = save_intr(); 	disable_intr(); 	COM_LOCK(); 	if (com->state>= (CS_BUSY | CS_TTGO)) 		siointr1(com);
 comment|/* fake interrupt to start output */
-block|enable_intr();
+block|COM_UNLOCK(); 	restore_intr(intrsave);
 endif|#
 directive|endif
 name|ttwwakeup
@@ -10554,6 +10750,9 @@ decl_stmt|;
 name|bool_t
 name|wakeup_etc
 decl_stmt|;
+name|int
+name|intrsave
+decl_stmt|;
 name|com
 operator|=
 name|com_addr
@@ -10570,7 +10769,15 @@ name|wakeup_etc
 operator|=
 name|FALSE
 expr_stmt|;
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -10713,8 +10920,13 @@ operator|->
 name|ibuf
 expr_stmt|;
 block|}
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10785,6 +10997,9 @@ name|mcr
 decl_stmt|;
 name|int
 name|msr
+decl_stmt|;
+name|int
+name|intrsave
 decl_stmt|;
 if|if
 condition|(
@@ -10921,7 +11136,15 @@ name|com
 operator|->
 name|mcr_rts
 expr_stmt|;
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -11027,8 +11250,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -11230,7 +11458,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Recover from lost output interrupts. 	 * Poll any lines that don't use interrupts. 	 */
-block|for (unit = 0; unit< NSIO; ++unit) { 		com = com_addr(unit); 		if (com != NULL&& (com->state>= (CS_BUSY | CS_TTGO) || com->poll)) { 			disable_intr(); 			siointr1(com); 			enable_intr(); 		} 	}
+block|for (unit = 0; unit< NSIO; ++unit) { 		com = com_addr(unit); 		if (com != NULL&& (com->state>= (CS_BUSY | CS_TTGO) || com->poll)) { 			int	intrsave;  			intrsave = save_intr(); 			disable_intr(); 			COM_LOCK(); 			siointr1(com); 			COM_UNLOCK(); 			restore_intr(intrsave); 		} 	}
 endif|#
 directive|endif
 comment|/* 	 * Check for and log errors, but not too often. 	 */
@@ -11299,7 +11527,18 @@ decl_stmt|;
 name|u_long
 name|total
 decl_stmt|;
+name|int
+name|intrsave
+decl_stmt|;
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 name|delta
@@ -11320,8 +11559,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12036,8 +12280,19 @@ name|int
 name|etc
 decl_stmt|;
 block|{
+name|int
+name|intrsave
+decl_stmt|;
 comment|/* 	 * We can't change the hardware's ETC state while there are any 	 * characters in the tx fifo, since those characters would be 	 * interpreted as commands!  Unputting characters from the fifo 	 * is difficult, so we wait up to 12 character times for the fifo 	 * to drain.  The command will be delayed for up to 2 character 	 * times for the tx to become empty.  Unputting characters from 	 * the tx holding and shift registers is impossible, so we wait 	 * for the tx to become empty so that the command is sure to be 	 * executed soon after we issue it. 	 */
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
+argument_list|()
+expr_stmt|;
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -12048,14 +12303,9 @@ name|etc
 operator|==
 name|etc
 condition|)
-block|{
-name|enable_intr
-argument_list|()
-expr_stmt|;
 goto|goto
 name|wait
 goto|;
-block|}
 if|if
 condition|(
 operator|(
@@ -12105,8 +12355,13 @@ operator|)
 operator|)
 condition|)
 block|{
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
@@ -12138,11 +12393,16 @@ operator||
 name|CD1400_SRER_TXMPTY
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
 name|wait
 label|:
+name|COM_UNLOCK
+argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|com
@@ -12202,8 +12462,8 @@ decl_stmt|;
 name|int
 name|cy_align
 decl_stmt|;
-name|u_long
-name|ef
+name|int
+name|intrsave
 decl_stmt|;
 name|cy_addr
 name|iobase
@@ -12247,18 +12507,21 @@ name|com
 operator|->
 name|iobase
 expr_stmt|;
-name|ef
+name|intrsave
 operator|=
-name|read_eflags
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ef
+name|intrsave
 operator|&
 name|PSL_I
 condition|)
-name|disable_intr
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -12297,12 +12560,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ef
+name|intrsave
 operator|&
 name|PSL_I
 condition|)
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -12346,8 +12614,8 @@ decl_stmt|;
 name|int
 name|cy_align
 decl_stmt|;
-name|u_long
-name|ef
+name|int
+name|intrsave
 decl_stmt|;
 name|cy_addr
 name|iobase
@@ -12388,18 +12656,21 @@ name|com
 operator|->
 name|iobase
 expr_stmt|;
-name|ef
+name|intrsave
 operator|=
-name|read_eflags
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ef
+name|intrsave
 operator|&
 name|PSL_I
 condition|)
-name|disable_intr
+name|COM_LOCK
 argument_list|()
 expr_stmt|;
 if|if
@@ -12438,12 +12709,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ef
+name|intrsave
 operator|&
 name|PSL_I
 condition|)
-name|enable_intr
+name|COM_UNLOCK
 argument_list|()
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
 block|}
 end_function

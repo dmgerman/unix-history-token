@@ -979,25 +979,14 @@ argument_list|(
 literal|"mem:<memory& I/O>\n"
 argument_list|)
 expr_stmt|;
+comment|/* XXX - ??? */
+if|#
+directive|if
+literal|0
 comment|/* Initialise memory range handling */
-if|if
-condition|(
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|!=
-name|NULL
-condition|)
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|->
-name|init
-argument_list|(
-operator|&
-name|mem_range_softc
-argument_list|)
-expr_stmt|;
+block|if (mem_range_softc.mr_op != NULL) 			mem_range_softc.mr_op->init(&mem_range_softc);
+endif|#
+directive|endif
 name|memdev
 operator|=
 name|make_dev

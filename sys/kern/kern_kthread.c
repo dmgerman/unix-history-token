@@ -108,6 +108,8 @@ name|kp
 operator|->
 name|global_procpp
 argument_list|,
+literal|0
+argument_list|,
 name|kp
 operator|->
 name|arg0
@@ -132,7 +134,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a kernel process/thread/whatever.  It shares it's address space  * with proc0 - ie: kernel only.  */
+comment|/*  * Create a kernel process/thread/whatever.  It shares its address space  * with proc0 - ie: kernel only.  *  * func is the function to start.  * arg is the parameter to pass to function on first startup.  * newpp is the return value pointing to the thread's struct proc.  * flags are flags to fork1 (in unistd.h)  * fmt and following will be *printf'd into (*newpp)->p_comm (for ps, etc.).  */
 end_comment
 
 begin_function
@@ -159,6 +161,9 @@ modifier|*
 modifier|*
 name|newpp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -178,6 +183,19 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|proc0
+operator|.
+name|p_stats
+comment|/* || proc0.p_stats->p_start.tv_sec == 0 */
+condition|)
+name|panic
+argument_list|(
+literal|"kthread_create called too soon"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fork1
@@ -190,6 +208,8 @@ operator||
 name|RFFDG
 operator||
 name|RFPROC
+operator||
+name|flags
 argument_list|,
 operator|&
 name|p2

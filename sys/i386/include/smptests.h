@@ -89,7 +89,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * These defines enable critical region locking of areas that were  * protected via cli/sti in the UP kernel.  *  * MPINTRLOCK protects all the generic areas.  * COMLOCK protects the sio/cy drivers.  * CLOCKLOCK protects clock hardware and data  * known to be incomplete:  *	joystick lkm  *	?  */
+comment|/*  * These defines enable critical region locking of areas that were  * protected via cli/sti in the UP kernel.  *  * COMLOCK protects the sio/cy drivers.  * CLOCKLOCK protects clock hardware and data  * known to be incomplete:  *	joystick lkm  *	?  */
 end_comment
 
 begin_ifdef
@@ -97,12 +97,6 @@ ifdef|#
 directive|ifdef
 name|PUSHDOWN_LEVEL_1
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|USE_MPINTRLOCK
-end_define
 
 begin_define
 define|#
@@ -196,8 +190,14 @@ name|GRAB_LOPRIO
 end_define
 
 begin_comment
-comment|/*  * Send CPUSTOP IPI for stop/restart of other CPUs on DDB break.  * #define VERBOSE_CPUSTOP_ON_DDBBREAK  */
+comment|/*  * Send CPUSTOP IPI for stop/restart of other CPUs on DDB break.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VERBOSE_CPUSTOP_ON_DDBBREAK
+end_define
 
 begin_define
 define|#

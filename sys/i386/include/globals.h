@@ -88,6 +88,27 @@ define|\
 value|static __inline void *_global_ptr_##name(void) { \ 		void *val; \ 		__asm __volatile("movl $gd_" #name ",%0;" \ 			"addl %%fs:globaldata,%0" : "=r" (val)); \ 		return (val); \ 	} \ 	static __inline void *_global_ptr_##name##_nv(void) { \ 		void *val; \ 		__asm("movl $gd_" #name ",%0;" \ 			"addl %%fs:globaldata,%0" : "=r" (val)); \ 		return (val); \ 	} \ 	static __inline int _global_##name(void) { \ 		int val; \ 		__asm __volatile("movl %%fs:gd_" #name ",%0" : "=r" (val)); \ 		return (val); \ 	} \ 	static __inline int _global_##name##_nv(void) { \ 		int val; \ 		__asm("movl %%fs:gd_" #name ",%0" : "=r" (val)); \ 		return (val); \ 	} \ 	static __inline void _global_##name##_set(int val) { \ 		__asm __volatile("movl %0,%%fs:gd_" #name : : "r" (val)); \ 	} \ 	static __inline void _global_##name##_set_nv(int val) { \ 		__asm("movl %0,%%fs:gd_" #name : : "r" (val)); \ 	}
 end_define
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|_global_globaldata
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|val
+decl_stmt|;
+asm|__asm("movl %%fs:globaldata,%0" : "=r" (val));
+return|return
+operator|(
+name|val
+operator|)
+return|;
+block|}
+end_function
+
 begin_if
 if|#
 directive|if
@@ -121,6 +142,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|prevproc
+value|GLOBAL_RVALUE_NV(prevproc, struct proc *)
+end_define
+
+begin_define
+define|#
+directive|define
 name|curpcb
 value|GLOBAL_RVALUE_NV(curpcb, struct pcb *)
 end_define
@@ -129,7 +157,14 @@ begin_define
 define|#
 directive|define
 name|npxproc
-value|GLOBAL_LVALUE(npxproc, struct proc *)
+value|GLOBAL_RVALUE_NV(npxproc, struct proc *)
+end_define
+
+begin_define
+define|#
+directive|define
+name|idleproc
+value|GLOBAL_RVALUE_NV(idleproc, struct proc *)
 end_define
 
 begin_define
@@ -156,6 +191,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|intr_nesting_level
+value|GLOBAL_RVALUE(intr_nesting_level, u_char)
+end_define
+
+begin_define
+define|#
+directive|define
 name|common_tssd
 value|GLOBAL_LVALUE(common_tssd, struct segment_descriptor)
 end_define
@@ -171,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|astpending
-value|GLOBAL_LVALUE(astpending, u_int)
+value|GLOBAL_RVALUE(astpending, u_int)
 end_define
 
 begin_ifdef
@@ -184,7 +226,7 @@ begin_define
 define|#
 directive|define
 name|currentldt
-value|GLOBAL_LVALUE(currentldt, int)
+value|GLOBAL_RVALUE(currentldt, int)
 end_define
 
 begin_endif
@@ -280,6 +322,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|witness_spin_check
+value|GLOBAL_RVALUE(witness_spin_check, int)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -293,6 +342,13 @@ begin_macro
 name|GLOBAL_FUNC
 argument_list|(
 argument|curproc
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
+argument|prevproc
 argument_list|)
 end_macro
 
@@ -320,6 +376,13 @@ end_macro
 begin_macro
 name|GLOBAL_FUNC
 argument_list|(
+argument|idleproc
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
 argument|common_tss
 argument_list|)
 end_macro
@@ -341,6 +404,13 @@ end_macro
 begin_macro
 name|GLOBAL_FUNC
 argument_list|(
+argument|intr_nesting_level
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
 argument|common_tssd
 argument_list|)
 end_macro
@@ -351,6 +421,42 @@ argument_list|(
 argument|tss_gdt
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KTR_PERCPU
+end_ifdef
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
+argument|ktr_idx
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
+argument|ktr_buf
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
+argument|ktr_buf_data
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -458,14 +564,60 @@ endif|#
 directive|endif
 end_endif
 
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
+argument|witness_spin_check
+argument_list|)
+end_macro
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|SET_CURPROC
+name|GLOBALDATA
+value|GLOBAL_RVALUE(globaldata, struct globaldata *)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GLOBALDATA
+value|(&globaldata)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CURPROC
+value|curproc
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCPU_SET
 parameter_list|(
-name|x
+name|name
+parameter_list|,
+name|value
 parameter_list|)
-value|(_global_curproc_set_nv((int)x))
+value|(_global_##name##_set((int)value))
 end_define
 
 begin_endif

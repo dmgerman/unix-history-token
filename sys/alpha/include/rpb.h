@@ -667,10 +667,10 @@ begin_struct
 struct|struct
 name|pcs
 block|{
-name|u_int8_t
+name|u_int64_t
 name|pcs_hwpcb
 index|[
-literal|128
+literal|16
 index|]
 decl_stmt|;
 comment|/*   0: PAL dependent */
@@ -752,23 +752,23 @@ comment|/* 24:63 -- must be zero */
 name|u_int64_t
 name|pcs_flags
 decl_stmt|;
-comment|/*  80: */
+comment|/*  128: */
 name|u_int64_t
 name|pcs_pal_memsize
 decl_stmt|;
-comment|/*  88: PAL memory size */
+comment|/* 136: PAL memory size */
 name|u_int64_t
 name|pcs_pal_scrsize
 decl_stmt|;
-comment|/*  90: PAL scratch size */
+comment|/* 144: PAL scratch size */
 name|vm_offset_t
 name|pcs_pal_memaddr
 decl_stmt|;
-comment|/*  98: PAL memory addr */
+comment|/* 152: PAL memory addr */
 name|vm_offset_t
 name|pcs_pal_scraddr
 decl_stmt|;
-comment|/*  A0: PAL scratch addr */
+comment|/* 160: PAL scratch addr */
 struct|struct
 block|{
 name|u_int64_t
@@ -816,7 +816,7 @@ comment|/* Processor count */
 block|}
 name|pcs_pal_rev
 struct|;
-comment|/*  A8: */
+comment|/* 168: */
 define|#
 directive|define
 name|pcs_minorrev
@@ -840,7 +840,7 @@ value|pcs_pal_rev.proc_cnt
 name|u_int64_t
 name|pcs_proc_type
 decl_stmt|;
-comment|/*  B0: processor type */
+comment|/* 176: processor type */
 define|#
 directive|define
 name|PCS_PROC_MAJOR
@@ -906,7 +906,7 @@ comment|/* Minor number interpretation is processor specific.  See cpu.c. */
 name|u_int64_t
 name|pcs_proc_var
 decl_stmt|;
-comment|/* B8: processor variation. */
+comment|/* 184: processor variation. */
 define|#
 directive|define
 name|PCS_VAR_VAXFP
@@ -933,46 +933,46 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/*  C0: only first 4 valid */
+comment|/* 192: only first 4 valid */
 name|char
 name|pcs_proc_sn
 index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/*  C8: only first 10 valid */
+comment|/* 200: only first 10 valid */
 name|vm_offset_t
 name|pcs_machcheck
 decl_stmt|;
-comment|/*  D8: mach chk phys addr. */
+comment|/* 216: mach chk phys addr. */
 name|u_int64_t
 name|pcs_machcheck_len
 decl_stmt|;
-comment|/*  E0: length in bytes */
+comment|/* 224: length in bytes */
 name|vm_offset_t
 name|pcs_halt_pcbb
 decl_stmt|;
-comment|/*  E8: phys addr of halt PCB */
+comment|/* 232: pa of halt PCB */
 name|vm_offset_t
 name|pcs_halt_pc
 decl_stmt|;
-comment|/*  F0: halt PC */
+comment|/* 240: halt PC */
 name|u_int64_t
 name|pcs_halt_ps
 decl_stmt|;
-comment|/*  F8: halt PS */
+comment|/* 248: halt PS */
 name|u_int64_t
 name|pcs_halt_r25
 decl_stmt|;
-comment|/* 100: halt argument list */
+comment|/* 256: halt argument list */
 name|u_int64_t
 name|pcs_halt_r26
 decl_stmt|;
-comment|/* 108: halt return addr list */
+comment|/* 264: halt ra list */
 name|u_int64_t
 name|pcs_halt_r27
 decl_stmt|;
-comment|/* 110: halt procedure value */
+comment|/* 272: halt procedure value */
 define|#
 directive|define
 name|PCS_HALT_RESERVED
@@ -1013,18 +1013,35 @@ comment|/* 9-FF: reserved */
 name|u_int64_t
 name|pcs_halt_reason
 decl_stmt|;
-comment|/* 118: */
+comment|/* 280: */
 name|u_int64_t
 name|pcs_reserved_soft
 decl_stmt|;
-comment|/* 120: preserved software */
-name|u_int64_t
-name|pcs_buffer
+comment|/* 288: preserved software */
+struct|struct
+block|{
+name|u_int32_t
+name|rxlen
+decl_stmt|;
+name|u_int32_t
+name|txlen
+decl_stmt|;
+name|char
+name|rxbuf
 index|[
-literal|21
+literal|80
 index|]
 decl_stmt|;
-comment|/* 128: console buffers */
+name|char
+name|txbuf
+index|[
+literal|80
+index|]
+decl_stmt|;
+block|}
+name|pcs_buffer
+struct|;
+comment|/* 296: console buffers */
 define|#
 directive|define
 name|PALvar_reserved
@@ -1043,14 +1060,14 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* 1D0: PALcode revisions */
+comment|/* 464: PALcode revisions */
 name|u_int64_t
 name|pcs_reserved_arch
 index|[
 literal|6
 index|]
 decl_stmt|;
-comment|/* 250: reserved arch */
+comment|/* 592: reserved arch */
 block|}
 struct|;
 end_struct

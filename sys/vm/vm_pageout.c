@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -131,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_comment
@@ -4829,6 +4841,14 @@ name|void
 name|vm_pageout
 parameter_list|()
 block|{
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize some paging parameters. 	 */
 name|cnt
 operator|.
@@ -5282,6 +5302,14 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|TRUE

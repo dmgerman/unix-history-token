@@ -428,7 +428,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|spltty
+name|read_eflags
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 do|do
@@ -632,7 +635,7 @@ operator|!=
 name|xmitcsum
 condition|)
 do|;
-name|splx
+name|write_eflags
 argument_list|(
 name|s
 argument_list|)
@@ -671,7 +674,10 @@ decl_stmt|;
 comment|/*  $<packet info>#<checksum>. */
 name|s
 operator|=
-name|spltty
+name|read_eflags
+argument_list|()
+expr_stmt|;
+name|disable_intr
 argument_list|()
 expr_stmt|;
 do|do
@@ -781,7 +787,7 @@ operator|!=
 literal|'+'
 condition|)
 do|;
-name|splx
+name|write_eflags
 argument_list|(
 name|s
 argument_list|)

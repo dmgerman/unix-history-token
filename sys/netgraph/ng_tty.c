@@ -116,6 +116,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ipl.h>
 end_include
 
@@ -2790,57 +2796,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-ifdef|#
-directive|ifdef
-name|__i386__
-comment|/* Insure the soft net "engine" can't run during spltty code */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-name|tty_imask
-operator||=
-name|softnet_imask
-expr_stmt|;
-comment|/* spltty() block spl[soft]net() */
-name|net_imask
-operator||=
-name|softtty_imask
-expr_stmt|;
-comment|/* splimp() block splsofttty() */
-name|net_imask
-operator||=
-name|tty_imask
-expr_stmt|;
-comment|/* splimp() block spltty() */
-name|update_intr_masks
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|log
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"new masks: bio %x, tty %x, net %x\n"
-argument_list|,
-name|bio_imask
-argument_list|,
-name|tty_imask
-argument_list|,
-name|net_imask
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Register line discipline */
 name|s
 operator|=

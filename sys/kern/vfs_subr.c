@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -149,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<machine/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -4618,6 +4630,14 @@ name|p
 init|=
 name|updateproc
 decl_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|shutdown_pre_sync

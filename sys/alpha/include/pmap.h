@@ -534,18 +534,30 @@ name|int
 name|pm_flags
 decl_stmt|;
 comment|/* pmap flags */
-name|int
+name|u_int32_t
 name|pm_active
 decl_stmt|;
-comment|/* active flag */
-name|int
-name|pm_asn
+comment|/* active cpus */
+struct|struct
+block|{
+name|u_int32_t
+name|asn
+range|:
+literal|8
 decl_stmt|;
 comment|/* address space number */
-name|u_int
-name|pm_asngen
+name|u_int32_t
+name|gen
+range|:
+literal|24
 decl_stmt|;
-comment|/* generation number of pm_asn */
+comment|/* generation number */
+block|}
+name|pm_asn
+index|[
+name|NCPUS
+index|]
+struct|;
 name|struct
 name|pmap_statistics
 name|pm_stats

@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -37,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_comment
@@ -448,6 +460,14 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_priority
@@ -470,6 +490,14 @@ operator|++
 expr_stmt|;
 name|mi_switch
 argument_list|()
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(

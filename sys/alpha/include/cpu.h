@@ -88,7 +88,7 @@ name|CLKF_INTR
 parameter_list|(
 name|framep
 parameter_list|)
-value|(intr_nesting_level>= 2)
+value|(PCPU_GET(intr_nesting_level)>= 2)
 end_define
 
 begin_comment
@@ -145,7 +145,7 @@ define|#
 directive|define
 name|aston
 parameter_list|()
-value|(astpending = 1)
+value|PCPU_SET(astpending, 1)
 end_define
 
 begin_ifdef
@@ -153,6 +153,13 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|astpending
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -337,15 +344,6 @@ struct_decl|struct
 name|trapframe
 struct_decl|;
 end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proc
-modifier|*
-name|fpcurproc
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

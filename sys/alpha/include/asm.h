@@ -288,6 +288,28 @@ comment|/* 		wired zero		*/
 end_comment
 
 begin_comment
+comment|/* In the kernel, we use t7 to point at the per-cpu globals. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|globalp
+value|$8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Floating point registers  (XXXX VERIFY THIS) */
 end_comment
 

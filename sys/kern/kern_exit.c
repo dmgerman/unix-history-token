@@ -1218,11 +1218,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Clear curproc after we've done all operations 	 * that could block, and before tearing down the rest 	 * of the process state that might be used from clock, etc. 	 * Also, can't clear curproc while we're still runnable, 	 * as we're not on a run queue (we are current, just not 	 * a proper proc any longer!). 	 * 	 * Other substructures are freed from wait(). 	 */
-name|SET_CURPROC
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|--

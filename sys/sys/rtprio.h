@@ -20,29 +20,52 @@ comment|/*  * Process realtime-priority specifications to rtprio.  */
 end_comment
 
 begin_comment
-comment|/* priority types */
+comment|/* priority types.  Start at 1 to catch uninitialized fields. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTP_PRIO_ITHREAD
+value|1
+end_define
+
+begin_comment
+comment|/* interrupt thread */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RTP_PRIO_REALTIME
-value|0
+value|2
 end_define
+
+begin_comment
+comment|/* real time process */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|RTP_PRIO_NORMAL
-value|1
+value|3
 end_define
+
+begin_comment
+comment|/* time sharing process */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|RTP_PRIO_IDLE
-value|2
+value|4
 end_define
+
+begin_comment
+comment|/* idle process */
+end_comment
 
 begin_comment
 comment|/* RTP_PRIO_FIFO is POSIX.1B SCHED_FIFO.  */
@@ -142,6 +165,10 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_comment
+comment|/*  * Scheduling class information.  This is strictly speaking not only  * for real-time processes.  We should replace it with two variables:  * class and priority.  At the moment we use prio here for real-time  * and interrupt processes, and for others we use proc.p_pri.  FIXME.  */
+end_comment
+
 begin_struct
 struct|struct
 name|rtprio
@@ -149,6 +176,7 @@ block|{
 name|u_short
 name|type
 decl_stmt|;
+comment|/* scheduling class */
 name|u_short
 name|prio
 decl_stmt|;
@@ -160,6 +188,124 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Interrupt thread priorities, after BSD/OS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_REALTIME
+value|1
+end_define
+
+begin_comment
+comment|/* very high priority (clock) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_AV
+value|2
+end_define
+
+begin_comment
+comment|/* Audio/video devices */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_TTYHIGH
+value|3
+end_define
+
+begin_comment
+comment|/* High priority tty's (small FIFOs) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_TAPE
+value|4
+end_define
+
+begin_comment
+comment|/* Tape devices (high for streaming) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_NET
+value|5
+end_define
+
+begin_comment
+comment|/* Network interfaces */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_DISK
+value|6
+end_define
+
+begin_comment
+comment|/* Disks and SCSI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_TTYLOW
+value|7
+end_define
+
+begin_comment
+comment|/* Ttys with big buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_DISKLOW
+value|8
+end_define
+
+begin_comment
+comment|/* Disks that do programmed I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_DULL
+value|9
+end_define
+
+begin_comment
+comment|/* We don't know or care */
+end_comment
+
+begin_comment
+comment|/* Soft interrupt threads */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PI_SOFT
+value|15
+end_define
+
+begin_comment
+comment|/* All soft interrupts */
+end_comment
 
 begin_ifndef
 ifndef|#

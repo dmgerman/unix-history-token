@@ -57,6 +57,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -215,6 +221,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -898,6 +910,17 @@ value|0x19
 end_define
 
 begin_comment
+comment|/* used to hold the AP's until we are ready to release them */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|simplelock
+name|ap_boot_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/** XXX FIXME: where does this really belong, isa.h/isa.c perhaps? */
 end_comment
 
@@ -1520,6 +1543,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|release_aps
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Calculate usable address in base memory for AP trampoline code.  */
 end_comment
@@ -1763,7 +1798,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Startup the SMP processors.  */
+comment|/*  * Initialize the SMP hardware and the APIC and start up the AP's.  */
 end_comment
 
 begin_function
@@ -2678,6 +2713,13 @@ comment|/* APIC_IO */
 comment|/* initialize all SMP locks */
 name|init_locks
 argument_list|()
+expr_stmt|;
+comment|/* obtain the ap_boot_lock */
+name|s_lock
+argument_list|(
+operator|&
+name|ap_boot_lock
+argument_list|)
 expr_stmt|;
 comment|/* start each Application Processor */
 name|start_all_aps
@@ -7970,11 +8012,6 @@ name|struct
 name|simplelock
 name|intr_lock
 decl_stmt|;
-comment|/* lock regions protected in UP kernel via cli/sti */
-name|struct
-name|simplelock
-name|mpintr_lock
-decl_stmt|;
 comment|/* lock region used by kernel profiling */
 name|struct
 name|simplelock
@@ -8008,6 +8045,11 @@ name|struct
 name|simplelock
 name|smp_rv_lock
 decl_stmt|;
+comment|/* only 1 CPU can panic at a time :) */
+name|struct
+name|simplelock
+name|panic_lock
+decl_stmt|;
 specifier|static
 name|void
 name|init_locks
@@ -8015,18 +8057,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * Get the initial mp_lock with a count of 1 for the BSP. 	 * This uses a LOGICAL cpu ID, ie BSP == 0. 	 */
-name|mp_lock
-operator|=
-literal|0x00000001
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* ISR uses its own "giant lock" */
-block|isr_lock = FREE_LOCK;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -8051,17 +8081,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|s_lock_init
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-operator|&
-name|mpintr_lock
-argument_list|)
-expr_stmt|;
 name|s_lock_init
 argument_list|(
 operator|(
@@ -8123,6 +8142,12 @@ operator|&
 name|smp_rv_lock
 argument_list|)
 expr_stmt|;
+name|s_lock_init
+argument_list|(
+operator|&
+name|panic_lock
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_COMLOCK
@@ -8157,16 +8182,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_CLOCKLOCK */
-block|}
-comment|/* Wait for all APs to be fully initialized */
-specifier|extern
-name|int
-name|wait_ap
+name|s_lock_init
 argument_list|(
-name|unsigned
-name|int
+operator|&
+name|ap_boot_lock
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+block|}
 comment|/*  * start each AP in our list  */
 specifier|static
 name|int
@@ -8443,6 +8465,16 @@ literal|0
 expr_stmt|;
 comment|/* *prv_PMAP1 */
 comment|/* prime data page for it to use */
+name|SLIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|cpuhead
+argument_list|,
+name|gd
+argument_list|,
+name|gd_allcpu
+argument_list|)
+expr_stmt|;
 name|gd
 operator|->
 name|gd_cpuid
@@ -9696,11 +9728,20 @@ argument_list|)
 decl_stmt|;
 name|void
 name|ap_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int
 name|apic_id
 decl_stmt|;
+comment|/* lock against other AP's that are waking up */
+name|s_lock
+argument_list|(
+operator|&
+name|ap_boot_lock
+argument_list|)
+expr_stmt|;
 comment|/* BSP may have changed PTD while we're waiting for the lock */
 name|cpu_invltlb
 argument_list|()
@@ -9847,6 +9888,68 @@ literal|1
 expr_stmt|;
 comment|/* historic */
 block|}
+comment|/* let other AP's wake up now */
+name|s_unlock
+argument_list|(
+operator|&
+name|ap_boot_lock
+argument_list|)
+expr_stmt|;
+comment|/* wait until all the AP's are up */
+while|while
+condition|(
+name|smp_started
+operator|==
+literal|0
+condition|)
+empty_stmt|;
+comment|/* nothing */
+comment|/* 	 * Set curproc to our per-cpu idleproc so that mutexes have 	 * something unique to lock with. 	 */
+name|PCPU_SET
+argument_list|(
+name|curproc
+argument_list|,
+name|idleproc
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|prevproc
+argument_list|,
+name|idleproc
+argument_list|)
+expr_stmt|;
+name|microuptime
+argument_list|(
+operator|&
+name|switchtime
+argument_list|)
+expr_stmt|;
+name|switchticks
+operator|=
+name|ticks
+expr_stmt|;
+comment|/* ok, now grab sched_lock and enter the scheduler */
+name|enable_intr
+argument_list|()
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|cpu_throw
+argument_list|()
+expr_stmt|;
+comment|/* doesn't return */
+name|panic
+argument_list|(
+literal|"scheduler returned us to ap_init"
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -10081,6 +10184,28 @@ index|[
 name|id
 index|]
 expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|p
+operator|->
+name|p_ithd
+condition|)
+name|cpustate
+operator|=
+name|CHECKSTATE_INTR
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|==
+name|idleproc
+condition|)
+name|cpustate
+operator|=
+name|CHECKSTATE_SYS
+expr_stmt|;
 switch|switch
 condition|(
 name|cpustate
@@ -10214,15 +10339,23 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
 name|p
+operator|==
+name|idleproc
 condition|)
+block|{
+name|p
+operator|->
+name|p_sticks
+operator|++
+expr_stmt|;
 name|cp_time
 index|[
 name|CP_IDLE
 index|]
 operator|++
 expr_stmt|;
+block|}
 else|else
 block|{
 name|p
@@ -10331,7 +10464,7 @@ if|if
 condition|(
 name|p
 operator|!=
-name|NULL
+name|idleproc
 condition|)
 block|{
 name|schedclock
@@ -11576,6 +11709,35 @@ name|smp_rv_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|void
+name|release_aps
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
+block|{
+name|s_unlock
+argument_list|(
+operator|&
+name|ap_boot_lock
+argument_list|)
+expr_stmt|;
+block|}
+name|SYSINIT
+argument_list|(
+name|start_aps
+argument_list|,
+name|SI_SUB_SMP
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|release_aps
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 end_function
 
 end_unit

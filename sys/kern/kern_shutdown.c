@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1959,6 +1965,18 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* Only 1 CPU can panic at a time */
+name|s_lock
+argument_list|(
+operator|&
+name|panic_lock
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bootopt
 operator|=
 name|RB_AUTOBOOT
@@ -2027,14 +2045,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/* three seperate prints in case of an unmapped page and trap */
-name|printf
-argument_list|(
-literal|"mp_lock = %08x; "
-argument_list|,
-name|mp_lock
-argument_list|)
-expr_stmt|;
+comment|/* two seperate prints in case of an unmapped page and trap */
 name|printf
 argument_list|(
 literal|"cpuid = %d; "

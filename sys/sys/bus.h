@@ -82,7 +82,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * We define this in terms of bits because some devices may belong  * to multiple classes (and therefore need to be included in  * multiple interrupt masks, which is what this really serves to  * indicate.  Buses which do interrupt remapping will want to  * change their type to reflect what sort of devices are underneath.  */
+comment|/*  * Interrupt type bits.  These flags are used both by newbus interrupt  * registration (nexus.c) and also in struct intrec, which defines  * interrupt properties.  *  * XXX We should probably revisit this and remove the vestiges of the  * spls implicit in names like INTR_TYPE_TTY.  In the meantime, don't  * confuse things by renaming them (Grog, 18 July 2000).  *  * We define this in terms of bits because some devices may belong  * to multiple classes (and therefore need to be included in  * multiple interrupt masks, which is what this really serves to  * indicate.  Buses which do interrupt remapping will want to  * change their type to reflect what sort of devices are underneath.  */
 end_comment
 
 begin_enum
@@ -109,9 +109,36 @@ name|INTR_TYPE_MISC
 init|=
 literal|16
 block|,
-name|INTR_TYPE_FAST
+name|INTR_HEAVY
+init|=
+literal|32
+block|,
+comment|/* heavyweight interrupt process */
+name|INTR_LIGHT
+init|=
+literal|64
+block|,
+comment|/* light weight interrupt thread */
+name|INTR_THREADED
+init|=
+name|INTR_LIGHT
+operator||
+name|INTR_HEAVY
+block|,
+comment|/* any kind of interrupt thread */
+name|INTR_FAST
 init|=
 literal|128
+block|,
+name|INTR_EXCL
+init|=
+literal|256
+block|,
+comment|/* exclusive interrupt */
+name|INTR_MPSAFE
+init|=
+literal|512
+comment|/* this interrupt is SMP safe */
 block|}
 enum|;
 end_enum

@@ -3043,7 +3043,7 @@ init|=
 block|{
 name|INTR_TYPE_TTY
 operator||
-name|INTR_TYPE_FAST
+name|INTR_FAST
 block|,
 name|loranprobe
 block|,

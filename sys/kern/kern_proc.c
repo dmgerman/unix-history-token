@@ -255,6 +255,12 @@ name|proc_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vm_zone_t
+name|ithread_zone
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Initialize global process hashing structures.  */
 end_comment

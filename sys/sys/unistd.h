@@ -837,7 +837,7 @@ name|_POSIX_SOURCE
 end_ifndef
 
 begin_comment
-comment|/*  * rfork() options.  *  * XXX currently, operations without RFPROC set are not supported.  */
+comment|/*  * rfork() options.  *  * XXX currently, some operations without RFPROC set are not supported.  */
 end_comment
 
 begin_define
@@ -914,7 +914,7 @@ value|(1<<6)
 end_define
 
 begin_comment
-comment|/* parent need not wait() on child */
+comment|/* give child to init */
 end_comment
 
 begin_define
@@ -947,7 +947,7 @@ value|(1<<12)
 end_define
 
 begin_comment
-comment|/* zero fd table */
+comment|/* close all fds, zero fd table */
 end_comment
 
 begin_define
@@ -986,6 +986,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RFSTOPPED
+value|(1<<17)
+end_define
+
+begin_comment
+comment|/* leave child in a stopped state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFHIGHPID
+value|(1<<18)
+end_define
+
+begin_comment
+comment|/* use a pid higher then 10 (idleproc) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RFPPWAIT
 value|(1<<31)
 end_define
@@ -993,6 +1015,13 @@ end_define
 begin_comment
 comment|/* parent sleeps until child exits (vfork) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RFKERNELONLY
+value|RFSTOPPED
+end_define
 
 begin_endif
 endif|#

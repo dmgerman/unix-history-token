@@ -856,7 +856,7 @@ name|flag
 operator|&
 name|P_SINTR
 condition|)
-comment|/* interuptable (long) */
+comment|/* interruptable (long) */
 operator|*
 name|cp
 operator|=
@@ -887,6 +887,24 @@ operator|*
 name|cp
 operator|=
 literal|'R'
+expr_stmt|;
+break|break;
+case|case
+name|SWAIT
+case|:
+operator|*
+name|cp
+operator|=
+literal|'W'
+expr_stmt|;
+break|break;
+case|case
+name|SMTX
+case|:
+operator|*
+name|cp
+operator|=
+literal|'M'
 expr_stmt|;
 break|break;
 case|case

@@ -217,6 +217,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/icu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/intr_machdep.h>
 end_include
 

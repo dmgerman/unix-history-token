@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -149,6 +155,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_expr_stmt
@@ -1931,7 +1943,7 @@ if|if
 condition|(
 name|curproc
 operator|!=
-name|NULL
+name|idleproc
 condition|)
 name|curproc
 operator|->
@@ -2136,7 +2148,7 @@ if|if
 condition|(
 name|curproc
 operator|!=
-name|NULL
+name|idleproc
 condition|)
 name|curproc
 operator|->
@@ -2277,7 +2289,7 @@ if|if
 condition|(
 name|curproc
 operator|!=
-name|NULL
+name|idleproc
 condition|)
 name|curproc
 operator|->
@@ -2746,7 +2758,7 @@ if|if
 condition|(
 name|curproc
 operator|!=
-name|NULL
+name|idleproc
 condition|)
 name|curproc
 operator|->
@@ -5640,6 +5652,8 @@ decl_stmt|;
 if|if
 condition|(
 name|curproc
+operator|!=
+name|idleproc
 operator|&&
 operator|(
 name|curproc
@@ -6675,6 +6689,14 @@ block|{
 name|int
 name|s
 decl_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* 	 * This process needs to be suspended prior to shutdown sync. 	 */
 name|EVENTHANDLER_REGISTER
 argument_list|(
@@ -7784,8 +7806,9 @@ label|:
 comment|/* 	 * Block if we are low on buffers.   Certain processes are allowed 	 * to completely exhaust the buffer cache.          *          * If this check ever becomes a bottleneck it may be better to          * move it into the else, when gbincore() fails.  At the moment          * it isn't a problem.          */
 if|if
 condition|(
-operator|!
 name|curproc
+operator|==
+name|idleproc
 operator|||
 operator|(
 name|curproc
@@ -7805,8 +7828,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|curproc
+operator|==
+name|idleproc
 condition|)
 return|return
 name|NULL

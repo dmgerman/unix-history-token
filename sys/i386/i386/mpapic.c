@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -41,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<machine/mpapic.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/globaldata.h>
 end_include
 
 begin_include

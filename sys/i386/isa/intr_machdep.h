@@ -373,15 +373,12 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|u_int
-name|intr_mask
+name|ithd
+modifier|*
+name|ithds
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* sets of intrs masked during handling of 1 */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -394,6 +391,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* cookies to pass to intr handlers */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|ithd
+name|softinterrupt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* soft interrupt thread */
 end_comment
 
 begin_decl_stmt
@@ -733,6 +741,87 @@ begin_comment
 comment|/* SMP || APIC_IO */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ICU_IMR_OFFSET
+value|2
+end_define
+
+begin_comment
+comment|/* IO_ICU{1,2} + 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_SLAVEID
+value|7
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ICU_IMR_OFFSET
+value|1
+end_define
+
+begin_comment
+comment|/* IO_ICU{1,2} + 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICU_SLAVEID
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|APIC_IO
+end_ifdef
+
+begin_comment
+comment|/*  * This is to accommodate "mixed-mode" programming for   * motherboards that don't connect the 8254 to the IO APIC.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTO_EOI_1
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|NR_INTRNAMES
+value|(1 + ICU_LEN + 2 * ICU_LEN)
+end_define
+
 begin_decl_stmt
 name|void
 name|isa_defaultirq
@@ -775,10 +864,6 @@ name|void
 operator|*
 name|arg
 operator|,
-name|u_int
-operator|*
-name|maskptr
-operator|,
 name|int
 name|flags
 operator|)
@@ -804,18 +889,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|update_intr_masks
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|intrmask_t
 name|splq
 name|__P
@@ -828,27 +901,50 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|INTR_FAST
-value|0x00000001
-end_define
-
 begin_comment
-comment|/* fast interrupt handler */
+comment|/*  * Describe a hardware interrupt handler.  These structures are  * accessed via the array intreclist, which contains one pointer per  * hardware interrupt.  *  * Multiple interrupt handlers for a specific IRQ can be chained  * together via the 'next' pointer.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INTR_EXCL
-value|0x00010000
-end_define
-
-begin_comment
-comment|/* excl. intr, default is shared */
-end_comment
+begin_typedef
+typedef|typedef
+struct|struct
+name|intrec
+block|{
+name|inthand2_t
+modifier|*
+name|handler
+decl_stmt|;
+comment|/* code address of handler */
+name|void
+modifier|*
+name|argument
+decl_stmt|;
+comment|/* argument to pass to handler */
+name|enum
+name|intr_type
+name|flags
+decl_stmt|;
+comment|/* flag bits (sys/bus.h) */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of handler */
+name|ithd
+modifier|*
+name|ithd
+decl_stmt|;
+comment|/* handler we're connected to */
+name|struct
+name|intrec
+modifier|*
+name|next
+decl_stmt|;
+comment|/* next handler for this irq */
+block|}
+name|intrec
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * WARNING: These are internal functions and not to be used by device drivers!  * They are subject to change without notice.   */
@@ -875,9 +971,8 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
-name|intrmask_t
-modifier|*
-name|maskptr
+name|int
+name|pri
 parameter_list|,
 name|int
 name|flags
@@ -893,6 +988,46 @@ name|struct
 name|intrec
 modifier|*
 name|idesc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sched_ithd
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ithd_loop
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|start_softintr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|intr_soft
+parameter_list|(
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

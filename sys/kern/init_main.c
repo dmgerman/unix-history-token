@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -121,6 +127,18 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/globals.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -919,6 +937,13 @@ operator|=
 operator|&
 name|proc0
 expr_stmt|;
+comment|/* 	 * Initialize magic number. 	 */
+name|p
+operator|->
+name|p_magic
+operator|=
+name|P_MAGIC
+expr_stmt|;
 comment|/* 	 * Initialize process and pgrp structures. 	 */
 name|procinit
 argument_list|()
@@ -1459,10 +1484,37 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the current process pointer (curproc) before 	 * any possible traps/probes to simplify trap processing. 	 */
-name|SET_CURPROC
+name|LIST_INIT
 argument_list|(
+operator|&
 name|p
+operator|->
+name|p_heldmtx
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_contested
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize the current process pointer (curproc) before 	 * any possible traps/probes to simplify trap processing. 	 */
+name|PCPU_SET
+argument_list|(
+name|curproc
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Enter the Giant mutex. 	 * XXX This should be done BEFORE cpu_startup(). 	 */
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -1540,9 +1592,12 @@ operator|&
 name|switchtime
 argument_list|)
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
 name|switchticks
-operator|=
+argument_list|,
 name|ticks
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Give the ``random'' number generator a thump. 	 */
 name|nanotime
@@ -1703,6 +1758,14 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|curproc
@@ -2308,14 +2371,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
 name|error
 operator|=
 name|fork1
@@ -2326,6 +2381,8 @@ argument_list|,
 name|RFFDG
 operator||
 name|RFPROC
+operator||
+name|RFSTOPPED
 argument_list|,
 operator|&
 name|initproc
@@ -2357,16 +2414,6 @@ argument_list|,
 name|start_init
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-name|remrunqueue
-argument_list|(
-name|initproc
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2403,9 +2450,31 @@ name|udata
 name|__unused
 parameter_list|)
 block|{
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|initproc
+operator|->
+name|p_stat
+operator|=
+name|SRUN
+expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|initproc
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

@@ -490,13 +490,6 @@ define|\
 value|((unsigned)(type)< D_LAST ? memtype[type]->ks_shortdesc : "???")
 end_define
 
-begin_define
-define|#
-directive|define
-name|CURPROC
-value|curproc
-end_define
-
 begin_comment
 comment|/*  * End system adaptaion definitions.  */
 end_comment

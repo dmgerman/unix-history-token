@@ -487,7 +487,11 @@ block|,
 literal|"STOP"
 block|,
 literal|"ZOMB"
-block|, }
+block|,
+literal|"WAIT"
+block|,
+literal|"MUTEX"
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -621,7 +625,7 @@ begin_decl_stmt
 name|int
 name|process_states
 index|[
-literal|6
+literal|8
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -644,6 +648,10 @@ block|,
 literal|" stopped, "
 block|,
 literal|" zombie, "
+block|,
+literal|" waiting, "
+block|,
+literal|" mutex, "
 block|,
 name|NULL
 block|}

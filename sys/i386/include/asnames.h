@@ -581,6 +581,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_Xtintr0
+value|Xtintr0
+end_define
+
+begin_define
+define|#
+directive|define
 name|_Xinvltlb
 value|Xinvltlb
 end_define
@@ -744,6 +751,13 @@ define|#
 directive|define
 name|_arith_underflow
 value|arith_underflow
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ast
+value|ast
 end_define
 
 begin_define
@@ -947,13 +961,6 @@ define|#
 directive|define
 name|_copyout_vector
 value|copyout_vector
-end_define
-
-begin_define
-define|#
-directive|define
-name|_cpl
-value|cpl
 end_define
 
 begin_define
@@ -1218,6 +1225,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_Giant
+value|Giant
+end_define
+
+begin_define
+define|#
+directive|define
 name|_idle
 value|idle
 end_define
@@ -1288,13 +1302,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_intr_nesting_level
-value|intr_nesting_level
-end_define
-
-begin_define
-define|#
-directive|define
 name|_intr_unit
 value|intr_unit
 end_define
@@ -1325,13 +1332,6 @@ define|#
 directive|define
 name|_ioapic
 value|ioapic
-end_define
-
-begin_define
-define|#
-directive|define
-name|_ipending
-value|ipending
 end_define
 
 begin_define
@@ -1402,6 +1402,20 @@ define|#
 directive|define
 name|_mp_ncpus
 value|mp_ncpus
+end_define
+
+begin_define
+define|#
+directive|define
+name|__mtx_enter_giant_def
+value|_mtx_enter_giant_def
+end_define
+
+begin_define
+define|#
+directive|define
+name|__mtx_exit_giant_def
+value|_mtx_exit_giant_def
 end_define
 
 begin_define
@@ -1631,6 +1645,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_sched_ithd
+value|sched_ithd
+end_define
+
+begin_define
+define|#
+directive|define
+name|_sched_lock
+value|sched_lock
+end_define
+
+begin_define
+define|#
+directive|define
 name|_set_precision_flag_down
 value|set_precision_flag_down
 end_define
@@ -1710,6 +1738,13 @@ define|#
 directive|define
 name|_softtty_imask
 value|softtty_imask
+end_define
+
+begin_define
+define|#
+directive|define
+name|_spending
+value|spending
 end_define
 
 begin_define
@@ -2012,6 +2047,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|_prevproc
+value|FS(prevproc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_idleproc
+value|FS(idleproc)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_astpending
 value|FS(astpending)
 end_define
@@ -2124,6 +2173,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_intr_nesting_level
+value|FS(intr_nesting_level)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_tss_gdt
 value|FS(tss_gdt)
 end_define
@@ -2141,6 +2197,17 @@ directive|define
 name|_idlestack_top
 value|FS(idlestack_top)
 end_define
+
+begin_define
+define|#
+directive|define
+name|_witness_spin_check
+value|FS(witness_spin_check)
+end_define
+
+begin_comment
+comment|/* #define	_ktr_idx			FS(ktr_idx) #define	_ktr_buf			FS(ktr_buf) #define	_ktr_buf_data			FS(ktr_buf_data) */
+end_comment
 
 begin_endif
 endif|#

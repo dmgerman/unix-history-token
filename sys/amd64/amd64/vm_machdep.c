@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -120,6 +126,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_ifdef
@@ -659,17 +671,12 @@ operator|)
 name|fork_trampoline
 expr_stmt|;
 comment|/* 	 * pcb2->pcb_ldt:	duplicated below, if necessary. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above (always 0 here?). 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 */
-ifdef|#
-directive|ifdef
-name|SMP
 name|pcb2
 operator|->
-name|pcb_mpnest
+name|pcb_schednest
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * XXX don't copy the i/o pages.  this should probably be fixed. 	 */
 name|pcb2
 operator|->
@@ -912,15 +919,39 @@ operator|~
 name|PCB_DBREGS
 expr_stmt|;
 block|}
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_NOSWITCH
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_NOTOWNED
+argument_list|)
+expr_stmt|;
 name|cnt
 operator|.
 name|v_swtch
 operator|++
 expr_stmt|;
 name|cpu_switch
-argument_list|(
-name|p
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|panic
 argument_list|(
@@ -1528,9 +1559,6 @@ name|void
 name|cpu_reset_proxy
 parameter_list|()
 block|{
-name|u_int
-name|saved_mp_lock
-decl_stmt|;
 name|cpu_reset_proxy_active
 operator|=
 literal|1
@@ -1542,32 +1570,7 @@ operator|==
 literal|1
 condition|)
 empty_stmt|;
-comment|/* Wait for other cpu to disable interupts */
-name|saved_mp_lock
-operator|=
-name|mp_lock
-expr_stmt|;
-name|mp_lock
-operator|=
-literal|1
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"cpu_reset_proxy: Grabbed mp lock for BSP\n"
-argument_list|)
-expr_stmt|;
-name|cpu_reset_proxy_active
-operator|=
-literal|3
-expr_stmt|;
-while|while
-condition|(
-name|cpu_reset_proxy_active
-operator|==
-literal|3
-condition|)
-empty_stmt|;
-comment|/* Wait for other cpu to enable interrupts */
+comment|/* Wait for other cpu to see that we've started */
 name|stop_cpus
 argument_list|(
 operator|(
@@ -1689,6 +1692,10 @@ name|cpustop_restartfunc
 operator|=
 name|cpu_reset_proxy
 expr_stmt|;
+name|cpu_reset_proxy_active
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"cpu_reset: Restarting BSP\n"
@@ -1732,51 +1739,13 @@ argument_list|(
 literal|"cpu_reset: Failed to restart BSP\n"
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("cli" : : : "memory");
-name|cpu_reset_proxy_active
-operator|=
-literal|2
-expr_stmt|;
-name|cnt
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-name|cpu_reset_proxy_active
-operator|==
-literal|2
-operator|&&
-name|cnt
-operator|<
-literal|10000000
-condition|)
-name|cnt
-operator|++
-expr_stmt|;
-comment|/* Do nothing */
-if|if
-condition|(
-name|cpu_reset_proxy_active
-operator|==
-literal|2
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"cpu_reset: BSP did not grab mp lock\n"
-argument_list|)
-expr_stmt|;
-name|cpu_reset_real
+name|enable_intr
 argument_list|()
 expr_stmt|;
-comment|/* XXX: Bogus ? */
-block|}
 name|cpu_reset_proxy_active
 operator|=
-literal|4
+literal|2
 expr_stmt|;
-asm|__asm __volatile("sti" : : : "memory");
 while|while
 condition|(
 literal|1
@@ -2038,6 +2007,8 @@ name|m
 decl_stmt|;
 name|int
 name|s
+decl_stmt|,
+name|intrsave
 decl_stmt|;
 comment|/* 	 * Attempt to maintain approximately 1/2 of our free pages in a 	 * PG_ZERO'd state.   Add some hysteresis to (attempt to) avoid 	 * generally zeroing a page when the system is near steady-state. 	 * Otherwise we might get 'flutter' during disk I/O / IPC or  	 * fast sleeps.  We also do not want to be continuously zeroing 	 * pages because doing so may flush our L1 and L2 caches too much. 	 */
 if|if
@@ -2074,23 +2045,30 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|SMP
 if|if
 condition|(
-name|try_mplock
-argument_list|()
+name|mtx_try_enter
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
 condition|)
 block|{
-endif|#
-directive|endif
 name|s
 operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-asm|__asm __volatile("sti" : : : "memory");
+name|intrsave
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|enable_intr
+argument_list|()
+expr_stmt|;
 name|zero_state
 operator|=
 literal|0
@@ -2256,26 +2234,25 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("cli" : : : "memory");
-ifdef|#
-directive|ifdef
-name|SMP
-name|rel_mplock
-argument_list|()
+name|restore_intr
+argument_list|(
+name|intrsave
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|SMP
 block|}
-endif|#
-directive|endif
 comment|/* 	 * We have to enable interrupts for a moment if the try_mplock fails 	 * in order to potentially take an IPI.   XXX this should be in  	 * swtch.s 	 */
 asm|__asm __volatile("sti; nop; cli" : : : "memory");
 return|return

@@ -62,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -242,6 +254,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/globaldata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpuconf.h>
 end_include
 
@@ -312,30 +336,6 @@ file|<machine/sigframe.h>
 end_include
 
 begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|curproc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|fpcurproc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|pcb
-modifier|*
-name|curpcb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int64_t
 name|cycles_per_usec
 decl_stmt|;
@@ -344,16 +344,6 @@ end_decl_stmt
 begin_decl_stmt
 name|u_int32_t
 name|cycles_per_sec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|whichqs
-decl_stmt|,
-name|whichrtqs
-decl_stmt|,
-name|whichidqs
 decl_stmt|;
 end_decl_stmt
 
@@ -387,14 +377,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|timeval
-name|switchtime
+name|cpuhead
+name|cpuhead
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|switchticks
+name|mtx_t
+name|sched_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|mtx_t
+name|Giant
 decl_stmt|;
 end_decl_stmt
 
@@ -1711,6 +1707,20 @@ argument_list|,
 name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+comment|/* 	 * OK, enough kmem_alloc/malloc state should be up, lets get on with it! 	 */
+name|mp_start
+argument_list|()
+expr_stmt|;
+comment|/* fire up the secondaries */
+name|mp_announce
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SMP */
 block|}
 end_function
 
@@ -3975,6 +3985,57 @@ operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Setup the global data for the bootstrap cpu. 	 */
+block|{
+name|size_t
+name|sz
+init|=
+name|round_page
+argument_list|(
+name|UPAGES
+operator|*
+name|PAGE_SIZE
+argument_list|)
+decl_stmt|;
+name|globalp
+operator|=
+operator|(
+expr|struct
+name|globaldata
+operator|*
+operator|)
+name|pmap_steal_memory
+argument_list|(
+name|sz
+argument_list|)
+expr_stmt|;
+name|globaldata_init
+argument_list|(
+name|globalp
+argument_list|,
+name|alpha_pal_whami
+argument_list|()
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
+name|alpha_pal_wrval
+argument_list|(
+operator|(
+name|u_int64_t
+operator|)
+name|globalp
+argument_list|)
+expr_stmt|;
+name|PCPU_GET
+argument_list|(
+name|next_asn
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+comment|/* 0 used for proc0 pmap */
+block|}
 comment|/* 	 * Initialize the virtual memory system, and set the 	 * page table base register in proc 0's PCB. 	 */
 name|pmap_bootstrap
 argument_list|(
@@ -3990,6 +4051,19 @@ name|hwrpb
 operator|->
 name|rpb_max_asn
 argument_list|)
+expr_stmt|;
+name|hwrpb
+operator|->
+name|rpb_vptb
+operator|=
+name|VPTBASE
+expr_stmt|;
+name|hwrpb
+operator|->
+name|rpb_checksum
+operator|=
+name|hwrpb_checksum
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize the rest of proc 0's PCB, and cache its physical 	 * address. 	 */
 name|proc0
@@ -4054,6 +4128,76 @@ operator|.
 name|pcb_hw
 operator|.
 name|apcb_ksp
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|curproc
+argument_list|,
+operator|&
+name|proc0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Get the right value for the boot cpu's idle ptbr. 	 */
+name|globalp
+operator|->
+name|gd_idlepcb
+operator|.
+name|apcb_ptbr
+operator|=
+name|proc0
+operator|.
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_hw
+operator|.
+name|apcb_ptbr
+expr_stmt|;
+comment|/* 	 * Record all cpus in a list. 	 */
+name|SLIST_INIT
+argument_list|(
+operator|&
+name|cpuhead
+argument_list|)
+expr_stmt|;
+name|SLIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|cpuhead
+argument_list|,
+name|GLOBALP
+argument_list|,
+name|gd_allcpu
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialise the kernel lock. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+literal|"Giant"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+literal|"sched lock"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Enable interrupts on first release (in switch_trampoline). 	 */
+name|sched_lock
+operator|.
+name|mtx_saveipl
+operator|=
+name|ALPHA_PSL_IPL_0
 expr_stmt|;
 comment|/* 	 * Look at arguments passed to us and compute boothowto. 	 */
 ifdef|#
@@ -4405,6 +4549,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|hwrpb_restart_setup
+argument_list|()
+expr_stmt|;
 name|alpha_pal_wrfen
 argument_list|(
 literal|0
@@ -9126,6 +9273,10 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+comment|/* 	 * For SMP, we should check the fpcurproc of each cpu. 	 */
+ifndef|#
+directive|ifndef
+name|SMP
 if|if
 condition|(
 name|p
@@ -9151,6 +9302,8 @@ argument_list|(
 literal|"alpha_check_fpcurproc: bogus"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

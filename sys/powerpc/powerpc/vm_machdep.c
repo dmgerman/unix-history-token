@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -714,15 +720,29 @@ operator|)
 name|splhigh
 argument_list|()
 expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|cnt
 operator|.
 name|v_swtch
 operator|++
 expr_stmt|;
 name|cpu_switch
-argument_list|(
-name|p
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|panic
 argument_list|(
@@ -1166,7 +1186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Force reset the processor by invalidating the entire address space!  */
+comment|/*  * Reset back to firmware.  */
 end_comment
 
 begin_function
@@ -1341,8 +1361,10 @@ directive|ifdef
 name|SMP
 if|if
 condition|(
-name|try_mplock
-argument_list|()
+name|KLOCK_ENTER
+argument_list|(
+name|M_TRY
+argument_list|)
 condition|)
 block|{
 endif|#
@@ -1532,8 +1554,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-name|rel_mplock
-argument_list|()
+name|KLOCK_EXIT
 expr_stmt|;
 endif|#
 directive|endif

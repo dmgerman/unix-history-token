@@ -376,6 +376,10 @@ condition|(
 name|p
 operator|&&
 name|p
+operator|!=
+name|idleproc
+operator|&&
+name|p
 operator|->
 name|p_flag
 operator|&

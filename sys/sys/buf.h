@@ -1234,7 +1234,7 @@ if|if
 condition|(
 name|p
 operator|!=
-name|NULL
+name|idleproc
 operator|&&
 name|bp
 operator|->

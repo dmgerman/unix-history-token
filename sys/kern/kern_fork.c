@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ktrace.h>
 end_include
 
@@ -133,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_expr_stmt
@@ -433,6 +445,7 @@ name|proc
 modifier|*
 name|p2
 decl_stmt|;
+comment|/* mask kernel only flags out of the user flags */
 name|error
 operator|=
 name|fork1
@@ -442,6 +455,9 @@ argument_list|,
 name|uap
 operator|->
 name|flags
+operator|&
+operator|~
+name|RFKERNELONLY
 argument_list|,
 operator|&
 name|p2
@@ -660,6 +676,7 @@ name|proc
 modifier|*
 name|p1
 decl_stmt|;
+comment|/* parent proc */
 name|int
 name|flags
 decl_stmt|;
@@ -669,6 +686,7 @@ modifier|*
 modifier|*
 name|procp
 decl_stmt|;
+comment|/* child proc */
 block|{
 name|struct
 name|proc
@@ -687,6 +705,9 @@ modifier|*
 name|newproc
 decl_stmt|;
 name|int
+name|trypid
+decl_stmt|;
+name|int
 name|ok
 decl_stmt|;
 specifier|static
@@ -700,6 +721,7 @@ name|forklist
 modifier|*
 name|ep
 decl_stmt|;
+comment|/* Can't copy and clear */
 if|if
 condition|(
 operator|(
@@ -987,44 +1009,70 @@ name|p_vmspace
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from nextpid+1 through pidchecked-1). 	 */
+comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from nextpid+1 through pidchecked-1). 	 * 	 * If RFHIGHPID is set (used during system boot), do not allocate 	 * low-numbered pids. 	 */
+name|trypid
+operator|=
 name|nextpid
-operator|++
+operator|+
+literal|1
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|RFHIGHPID
+condition|)
+block|{
+if|if
+condition|(
+name|trypid
+operator|<
+literal|10
+condition|)
+block|{
+name|trypid
+operator|=
+literal|10
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|randompid
 condition|)
-name|nextpid
+name|trypid
 operator|+=
 name|arc4random
 argument_list|()
 operator|%
 name|randompid
 expr_stmt|;
+block|}
 name|retry
 label|:
 comment|/* 	 * If the process ID prototype has wrapped around, 	 * restart somewhat above 0, as the low-numbered procs 	 * tend to include daemons that don't exit. 	 */
 if|if
 condition|(
-name|nextpid
+name|trypid
 operator|>=
 name|PID_MAX
 condition|)
 block|{
-name|nextpid
+name|trypid
 operator|=
-name|nextpid
+name|trypid
 operator|%
 name|PID_MAX
 expr_stmt|;
 if|if
 condition|(
-name|nextpid
+name|trypid
 operator|<
 literal|100
 condition|)
-name|nextpid
+name|trypid
 operator|+=
 literal|100
 expr_stmt|;
@@ -1035,7 +1083,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nextpid
+name|trypid
 operator|>=
 name|pidchecked
 condition|)
@@ -1049,7 +1097,7 @@ name|pidchecked
 operator|=
 name|PID_MAX
 expr_stmt|;
-comment|/* 		 * Scan the active and zombie procs to check whether this pid 		 * is in use.  Remember the lowest pid that's greater 		 * than nextpid, so we can avoid checking for a while. 		 */
+comment|/* 		 * Scan the active and zombie procs to check whether this pid 		 * is in use.  Remember the lowest pid that's greater 		 * than trypid, so we can avoid checking for a while. 		 */
 name|p2
 operator|=
 name|LIST_FIRST
@@ -1083,7 +1131,7 @@ name|p2
 operator|->
 name|p_pid
 operator|==
-name|nextpid
+name|trypid
 operator|||
 name|p2
 operator|->
@@ -1091,7 +1139,7 @@ name|p_pgrp
 operator|->
 name|pg_id
 operator|==
-name|nextpid
+name|trypid
 operator|||
 name|p2
 operator|->
@@ -1099,15 +1147,15 @@ name|p_session
 operator|->
 name|s_sid
 operator|==
-name|nextpid
+name|trypid
 condition|)
 block|{
-name|nextpid
+name|trypid
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|nextpid
+name|trypid
 operator|>=
 name|pidchecked
 condition|)
@@ -1121,7 +1169,7 @@ name|p2
 operator|->
 name|p_pid
 operator|>
-name|nextpid
+name|trypid
 operator|&&
 name|pidchecked
 operator|>
@@ -1143,7 +1191,7 @@ name|p_pgrp
 operator|->
 name|pg_id
 operator|>
-name|nextpid
+name|trypid
 operator|&&
 name|pidchecked
 operator|>
@@ -1169,7 +1217,7 @@ name|p_session
 operator|->
 name|s_sid
 operator|>
-name|nextpid
+name|trypid
 operator|&&
 name|pidchecked
 operator|>
@@ -1226,7 +1274,7 @@ name|p2
 operator|->
 name|p_pid
 operator|=
-name|nextpid
+name|trypid
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -1251,6 +1299,22 @@ name|p2
 argument_list|,
 name|p_hash
 argument_list|)
+expr_stmt|;
+comment|/* 	 * RFHIGHPID does not mess with the nextpid counter during boot. 	 */
+if|if
+condition|(
+name|flags
+operator|&
+name|RFHIGHPID
+condition|)
+name|pidchecked
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|nextpid
+operator|=
+name|trypid
 expr_stmt|;
 comment|/* 	 * Make a proc table entry for the new process. 	 * Start by zeroing the section of proc that is zero-initialized, 	 * then copy the section that is copied directly from the parent. 	 */
 name|bzero
@@ -1832,6 +1896,22 @@ operator|->
 name|p_children
 argument_list|)
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|p2
+operator|->
+name|p_heldmtx
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|p2
+operator|->
+name|p_contested
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -1927,7 +2007,7 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make child runnable and add to run queue. 	 */
+comment|/* 	 * If RFSTOPPED not requested, make child runnable and add to 	 * run queue. 	 */
 name|microtime
 argument_list|(
 operator|&
@@ -1946,11 +2026,27 @@ name|p_acflag
 operator|=
 name|AFORK
 expr_stmt|;
+if|if
+condition|(
 operator|(
-name|void
+name|flags
+operator|&
+name|RFSTOPPED
 operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|splhigh
 argument_list|()
+expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
 expr_stmt|;
 name|p2
 operator|->
@@ -1963,12 +2059,18 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|spl0
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* 	 * Now can be swapped. 	 */
 name|PRELE
 argument_list|(

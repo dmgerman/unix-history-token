@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|NTIMECOUNTER
-value|5
+value|45
 end_define
 
 begin_endif
@@ -690,6 +690,33 @@ name|tc
 operator|=
 name|timecounter
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+if|if
+condition|(
+name|tc
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* called before initialization */
+name|ts
+operator|->
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|ts
+operator|->
+name|tv_nsec
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|ts
 operator|->
 name|tv_sec

@@ -37,6 +37,12 @@ directive|include
 file|<machine/segments.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/globals.h>
+end_include
+
 begin_comment
 comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
 end_comment
@@ -169,7 +175,7 @@ define|#
 directive|define
 name|need_resched
 parameter_list|()
-value|do { astpending = AST_RESCHED|AST_PENDING; } while (0)
+value|do {						\ 	PCPU_SET(astpending, AST_RESCHED|AST_PENDING);			\ } while (0)
 end_define
 
 begin_define
@@ -214,7 +220,7 @@ define|#
 directive|define
 name|aston
 parameter_list|()
-value|do { astpending |= AST_PENDING; } while (0)
+value|do {							\ 	PCPU_SET(astpending, astpending | AST_PENDING);			\ } while (0)
 end_define
 
 begin_define
@@ -323,12 +329,23 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|intr_nesting_level
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|u_char
 name|intr_nesting_level
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void

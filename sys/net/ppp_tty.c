@@ -102,6 +102,18 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/icu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/intr_machdep.h>
 end_include
 
@@ -567,58 +579,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|__i386__
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-comment|/*      * Make sure that the soft net "engine" cannot run while spltty code is      * active.  The if_ppp.c code can walk down into b_to_q etc, and it is      * bad if the tty system was in the middle of another b_to_q...      */
-name|tty_imask
-operator||=
-name|softnet_imask
-expr_stmt|;
-comment|/* spltty() block spl[soft]net() */
-name|net_imask
-operator||=
-name|softtty_imask
-expr_stmt|;
-comment|/* splimp() block splsofttty() */
-name|net_imask
-operator||=
-name|tty_imask
-expr_stmt|;
-comment|/* splimp() block spltty() */
-name|update_intr_masks
-argument_list|()
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"new masks: bio %x, tty %x, net %x\n"
-argument_list|,
-name|bio_imask
-argument_list|,
-name|tty_imask
-argument_list|,
-name|net_imask
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* register line discipline */
 name|linesw
 index|[

@@ -467,11 +467,6 @@ comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is s
 name|spl0
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Allow lowering of the ipl to the lowest kernel level if we 	 * panic (or call tsleep() before clearing `cold').  No level is 	 * completely safe (since a panic may occur in a critical region 	 * at splhigh()), but we want at least bio interrupts to work. 	 */
-name|safepri
-operator|=
-name|cpl
-expr_stmt|;
 block|}
 end_function
 

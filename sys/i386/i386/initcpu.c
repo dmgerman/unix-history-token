@@ -2061,6 +2061,9 @@ block|{
 name|u_int64_t
 name|msr
 decl_stmt|;
+name|int
+name|intrstate
+decl_stmt|;
 comment|/* 	 * Write allocate is supported only on models 1, 2, and 3, with 	 * a stepping of 4 or greater. 	 */
 if|if
 condition|(
@@ -2085,6 +2088,11 @@ literal|3
 operator|)
 condition|)
 block|{
+name|intrstate
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -2200,8 +2208,10 @@ literal|0x10
 argument_list|)
 expr_stmt|;
 comment|/* enable write allocate */
-name|enable_intr
-argument_list|()
+name|restore_intr
+argument_list|(
+name|intrstate
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2382,9 +2392,6 @@ name|write_eflags
 argument_list|(
 name|eflags
 argument_list|)
-expr_stmt|;
-name|enable_intr
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2574,9 +2581,6 @@ name|write_eflags
 argument_list|(
 name|eflags
 argument_list|)
-expr_stmt|;
-name|enable_intr
-argument_list|()
 expr_stmt|;
 block|}
 end_function

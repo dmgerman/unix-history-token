@@ -668,6 +668,9 @@ literal|0
 case|:
 continue|continue;
 case|case
+name|SMTX
+case|:
+case|case
 name|SSLEEP
 case|:
 case|case
@@ -734,6 +737,15 @@ name|maxslp
 condition|)
 continue|continue;
 break|break;
+case|case
+name|SWAIT
+case|:
+name|totalp
+operator|->
+name|t_sl
+operator|++
+expr_stmt|;
+continue|continue;
 case|case
 name|SRUN
 case|:

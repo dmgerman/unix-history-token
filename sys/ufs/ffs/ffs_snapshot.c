@@ -127,13 +127,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CURPROC
-value|curproc
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEBUG
 end_define
 

@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/globaldata.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/alpha_cpu.h>
 end_include
 
@@ -69,6 +75,10 @@ name|long
 name|pcb_accessaddr
 decl_stmt|;
 comment|/* for [fs]uswintr	[SW] */
+name|u_int32_t
+name|pcb_schednest
+decl_stmt|;
+comment|/* state of sched_lock  [SW] */
 block|}
 struct|;
 end_struct
@@ -92,6 +102,41 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|curpcb
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcb
+modifier|*
+name|curpcb
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* our current running pcb */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

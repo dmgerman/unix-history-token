@@ -35,39 +35,6 @@ value|lock ;
 end_define
 
 begin_comment
-comment|/*  * Some handy macros to allow logical organization.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MP_LOCK
-value|call	_get_mplock
-end_define
-
-begin_define
-define|#
-directive|define
-name|MP_TRYLOCK
-define|\
-value|pushl	$_mp_lock ;
-comment|/* GIANT_LOCK */
-value|\ 	call	_MPtrylock ;
-comment|/* try to get lock */
-value|\ 	add	$4, %esp
-end_define
-
-begin_define
-define|#
-directive|define
-name|MP_RELLOCK
-define|\
-value|movl	$_mp_lock,%edx ;
-comment|/* GIANT_LOCK */
-value|\ 	call	_MPrellock_edx
-end_define
-
-begin_comment
 comment|/*  * Protects the IO APIC and apic_imen as a critical region.  */
 end_comment
 
@@ -113,7 +80,17 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MP_LOCK
+name|IMASK_LOCK
+end_define
+
+begin_comment
+comment|/* NOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IMASK_UNLOCK
 end_define
 
 begin_comment
@@ -155,60 +132,6 @@ comment|/** xxx_LOCK */
 end_comment
 
 begin_comment
-comment|/*  * Locks regions protected in UP kernel via cli/sti.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_MPINTRLOCK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MPINTR_LOCK
-parameter_list|()
-value|s_lock(&mpintr_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPINTR_UNLOCK
-parameter_list|()
-value|s_unlock(&mpintr_lock)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MPINTR_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPINTR_UNLOCK
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_MPINTRLOCK */
-end_comment
-
-begin_comment
 comment|/*  * sio/cy lock.  * XXX should rc (RISCom/8) use this?  */
 end_comment
 
@@ -234,24 +157,6 @@ parameter_list|()
 value|s_unlock(&com_lock)
 end_define
 
-begin_define
-define|#
-directive|define
-name|COM_DISABLE_INTR
-parameter_list|()
-define|\
-value|{ __asm __volatile("cli" : : : "memory"); COM_LOCK(); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_ENABLE_INTR
-parameter_list|()
-define|\
-value|{ COM_UNLOCK(); __asm __volatile("sti"); }
-end_define
-
 begin_else
 else|#
 directive|else
@@ -269,22 +174,6 @@ define|#
 directive|define
 name|COM_UNLOCK
 parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_DISABLE_INTR
-parameter_list|()
-value|disable_intr()
-end_define
-
-begin_define
-define|#
-directive|define
-name|COM_ENABLE_INTR
-parameter_list|()
-value|enable_intr()
 end_define
 
 begin_endif
@@ -322,24 +211,6 @@ parameter_list|()
 value|s_unlock(&clock_lock)
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLOCK_DISABLE_INTR
-parameter_list|()
-define|\
-value|{ __asm __volatile("cli" : : : "memory"); CLOCK_LOCK(); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOCK_ENABLE_INTR
-parameter_list|()
-define|\
-value|{ CLOCK_UNLOCK(); __asm __volatile("sti"); }
-end_define
-
 begin_else
 else|#
 directive|else
@@ -359,22 +230,6 @@ name|CLOCK_UNLOCK
 parameter_list|()
 end_define
 
-begin_define
-define|#
-directive|define
-name|CLOCK_DISABLE_INTR
-parameter_list|()
-value|disable_intr()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOCK_ENABLE_INTR
-parameter_list|()
-value|enable_intr()
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -392,20 +247,6 @@ end_else
 begin_comment
 comment|/* SMP */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MPINTR_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPINTR_UNLOCK
-parameter_list|()
-end_define
 
 begin_define
 define|#
@@ -652,6 +493,14 @@ specifier|extern
 name|struct
 name|simplelock
 name|mcount_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|simplelock
+name|panic_lock
 decl_stmt|;
 end_decl_stmt
 

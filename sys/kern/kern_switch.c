@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -39,8 +45,42 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
+end_include
+
 begin_comment
-comment|/*  * We have NQS (32) run queues per scheduling class.  For the normal  * class, there are 128 priorities scaled onto these 32 queues.  New  * processes are added to the last entry in each queue, and processes  * are selected for running by taking them from the head and maintaining  * a simple FIFO arrangement.  Realtime and Idle priority processes have  * and explicit 0-31 priority which maps directly onto their class queue  * index.  When a queue has something in it, the corresponding bit is  * set in the queuebits variable, allowing a single read to determine  * the state of all 32 queues and then a ffs() to find the first busy  * queue.  */
+comment|/*  * We have NQS (32) run queues per scheduling class.  For the normal  * class, there are 128 priorities scaled onto these 32 queues.  New  * processes are added to the last entry in each queue, and processes  * are selected for running by taking them from the head and maintaining  * a simple FIFO arrangement.  *  * Interrupt, real time and idle priority processes have and explicit  * 0-31 priority which maps directly onto their class queue index.  * When a queue has something in it, the corresponding bit is set in  * the queuebits variable, allowing a single read to determine the  * state of all 32 queues and then a ffs() to find the first busy  * queue.  *  * XXX This needs fixing.  First, we only have one idle process, so we  * hardly need 32 queues for it.  Secondly, the number of classes  * makes things unwieldy.  We should be able to merge them into a  * single 96 or 128 entry queue.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|rq
+name|itqueues
+index|[
+name|NQS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interrupt threads */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|rq
+name|rtqueues
+index|[
+name|NQS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* real time processes */
 end_comment
 
 begin_decl_stmt
@@ -53,15 +93,9 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|rq
-name|rtqueues
-index|[
-name|NQS
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* time sharing processes */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -73,15 +107,25 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* idle process */
+end_comment
+
 begin_decl_stmt
 name|u_int32_t
-name|queuebits
+name|itqueuebits
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_int32_t
 name|rtqueuebits
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int32_t
+name|queuebits
 decl_stmt|;
 end_decl_stmt
 
@@ -125,7 +169,7 @@ block|{
 name|TAILQ_INIT
 argument_list|(
 operator|&
-name|queues
+name|itqueues
 index|[
 name|i
 index|]
@@ -135,6 +179,15 @@ name|TAILQ_INIT
 argument_list|(
 operator|&
 name|rtqueues
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|queues
 index|[
 name|i
 index|]
@@ -190,6 +243,14 @@ decl_stmt|;
 name|u_int8_t
 name|pri
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|p
@@ -199,8 +260,37 @@ operator|==
 name|SRUN
 argument_list|,
 operator|(
-literal|"setrunqueue: proc not SRUN"
+literal|"setrunqueue: proc %p (%s) not SRUN"
+operator|,
+name|p
+operator|,
+expr|\
+name|p
+operator|->
+name|p_comm
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Decide which class we want to run.  We now have four 	 * queues, and this is becoming ugly.  We should be able to 	 * collapse the first three classes into a single contiguous 	 * queue.  XXX FIXME. 	 */
+name|CTR4
+argument_list|(
+name|KTR_PROC
+argument_list|,
+literal|"setrunqueue: proc %p (pid %d, %s), schedlock %x"
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|sched_lock
+operator|.
+name|mtx_lock
 argument_list|)
 expr_stmt|;
 if|if
@@ -211,26 +301,27 @@ name|p_rtprio
 operator|.
 name|type
 operator|==
-name|RTP_PRIO_NORMAL
+name|RTP_PRIO_ITHREAD
 condition|)
 block|{
+comment|/* interrupt thread */
 name|pri
 operator|=
 name|p
 operator|->
-name|p_priority
-operator|>>
-literal|2
+name|p_rtprio
+operator|.
+name|prio
 expr_stmt|;
 name|q
 operator|=
 operator|&
-name|queues
+name|itqueues
 index|[
 name|pri
 index|]
 expr_stmt|;
-name|queuebits
+name|itqueuebits
 operator||=
 literal|1
 operator|<<
@@ -248,6 +339,7 @@ name|type
 operator|==
 name|RTP_PRIO_REALTIME
 operator|||
+comment|/* real time */
 name|p
 operator|->
 name|p_rtprio
@@ -289,9 +381,46 @@ name|p_rtprio
 operator|.
 name|type
 operator|==
+name|RTP_PRIO_NORMAL
+condition|)
+block|{
+comment|/* time sharing */
+name|pri
+operator|=
+name|p
+operator|->
+name|p_priority
+operator|>>
+literal|2
+expr_stmt|;
+name|q
+operator|=
+operator|&
+name|queues
+index|[
+name|pri
+index|]
+expr_stmt|;
+name|queuebits
+operator||=
+literal|1
+operator|<<
+name|pri
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|p_rtprio
+operator|.
+name|type
+operator|==
 name|RTP_PRIO_IDLE
 condition|)
 block|{
+comment|/* idle proc */
 name|pri
 operator|=
 name|p
@@ -319,7 +448,13 @@ else|else
 block|{
 name|panic
 argument_list|(
-literal|"setrunqueue: invalid rtprio type"
+literal|"setrunqueue: invalid rtprio type %d"
+argument_list|,
+name|p
+operator|->
+name|p_rtprio
+operator|.
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -368,6 +503,35 @@ decl_stmt|;
 name|u_int8_t
 name|pri
 decl_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_PROC
+argument_list|,
+literal|"remrunqueue: proc %p (pid %d, %s), schedlock %x"
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|sched_lock
+operator|.
+name|mtx_lock
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|pri
 operator|=
 name|p
@@ -382,13 +546,13 @@ name|p_rtprio
 operator|.
 name|type
 operator|==
-name|RTP_PRIO_NORMAL
+name|RTP_PRIO_ITHREAD
 condition|)
 block|{
 name|q
 operator|=
 operator|&
-name|queues
+name|itqueues
 index|[
 name|pri
 index|]
@@ -396,7 +560,7 @@ expr_stmt|;
 name|which
 operator|=
 operator|&
-name|queuebits
+name|itqueuebits
 expr_stmt|;
 block|}
 elseif|else
@@ -431,6 +595,32 @@ name|which
 operator|=
 operator|&
 name|rtqueuebits
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|p
+operator|->
+name|p_rtprio
+operator|.
+name|type
+operator|==
+name|RTP_PRIO_NORMAL
+condition|)
+block|{
+name|q
+operator|=
+operator|&
+name|queues
+index|[
+name|pri
+index|]
+expr_stmt|;
+name|which
+operator|=
+operator|&
+name|queuebits
 expr_stmt|;
 block|}
 elseif|else
@@ -519,7 +709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * procrunnable() returns a boolean true (non-zero) value if there are  * any runnable processes.  This is intended to be called from the idle  * loop to avoid the more expensive (and destructive) chooseproc().  *  * MP SAFE.  CALLED WITHOUT THE MP LOCK  */
+comment|/*  * procrunnable() returns a boolean true (non-zero) value if there are  * any runnable processes.  This is intended to be called from the idle  * loop to avoid the more expensive (and destructive) chooseproc().  *  * MP SAFE.  CALLED WITHOUT THE MP LOCK  *  * XXX I doubt this.  It's possibly fail-safe, but there's obviously  * the case here where one of the bits words gets loaded, the  * processor gets preempted, and by the time it returns from this  * function, some other processor has picked the runnable process.  * What am I missing?  (grog, 23 July 2000).  */
 end_comment
 
 begin_function
@@ -531,6 +721,8 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|itqueuebits
+operator|||
 name|rtqueuebits
 operator|||
 name|queuebits
@@ -579,6 +771,43 @@ name|id
 decl_stmt|;
 endif|#
 directive|endif
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|itqueuebits
+condition|)
+block|{
+name|pri
+operator|=
+name|ffs
+argument_list|(
+name|itqueuebits
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|q
+operator|=
+operator|&
+name|itqueues
+index|[
+name|pri
+index|]
+expr_stmt|;
+name|which
+operator|=
+operator|&
+name|itqueuebits
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|rtqueuebits
@@ -667,8 +896,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|CTR1
+argument_list|(
+name|KTR_PROC
+argument_list|,
+literal|"chooseproc: idleproc, schedlock %x"
+argument_list|,
+name|sched_lock
+operator|.
+name|mtx_lock
+argument_list|)
+expr_stmt|;
+name|idleproc
+operator|->
+name|p_stat
+operator|=
+name|SRUN
+expr_stmt|;
 return|return
-name|NULL
+name|idleproc
 return|;
 block|}
 name|p
@@ -676,15 +922,6 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 name|q
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|p
-argument_list|,
-operator|(
-literal|"chooseproc: no proc on busy queue"
-operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -732,6 +969,36 @@ block|}
 block|}
 endif|#
 directive|endif
+name|CTR4
+argument_list|(
+name|KTR_PROC
+argument_list|,
+literal|"chooseproc: proc %p (pid %d, %s), schedlock %x"
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|,
+name|sched_lock
+operator|.
+name|mtx_lock
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|p
+argument_list|,
+operator|(
+literal|"chooseproc: no proc on busy queue"
+operator|)
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 name|q

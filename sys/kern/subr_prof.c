@@ -253,6 +253,9 @@ name|tmp_addr
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|intrstate
+decl_stmt|;
 comment|/* 	 * Round lowpc and highpc to multiples of the density we're using 	 * so the rest of the scaling (here and in gprof) stays in ints. 	 */
 name|p
 operator|->
@@ -557,6 +560,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable interrupts to avoid interference while we calibrate 	 * things. 	 */
+name|intrstate
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -806,8 +814,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|enable_intr
-argument_list|()
+name|restore_intr
+argument_list|(
+name|intrstate
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 

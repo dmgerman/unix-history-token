@@ -918,27 +918,6 @@ name|dma_init_flag
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_error
-error|#
-directive|error
-error|XXX see comments in i386/isa/bs/bsif.h for details
-end_error
-
-begin_comment
-comment|/*  * ipending is 'opaque' in SMP, and can't be accessed this way.  * Since its my belief that this is PC98 code, and that PC98 and SMP  * are mutually exclusive, the above compile-time error is the "fix".  * Please inform smp@freebsd.org if this is NOT the case.  */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -955,7 +934,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SMP */
+comment|/* IPENDING */
 end_comment
 
 begin_function

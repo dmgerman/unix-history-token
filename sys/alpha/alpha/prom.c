@@ -170,15 +170,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|pcb
-modifier|*
-name|curpcb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|pt_entry_t
 modifier|*
 name|Lev1map

@@ -201,14 +201,6 @@ name|void
 parameter_list|)
 block|{
 asm|__asm __volatile("cli" : : : "memory");
-ifdef|#
-directive|ifdef
-name|SMP
-name|MPINTR_LOCK
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -221,15 +213,42 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SMP
-name|MPINTR_UNLOCK
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 asm|__asm __volatile("sti");
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|u_int
+name|save_intr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|ef
+decl_stmt|;
+asm|__asm __volatile("pushfl; popl %0" : "=r" (ef));
+return|return
+operator|(
+name|ef
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|restore_intr
+parameter_list|(
+name|u_int
+name|ef
+parameter_list|)
+block|{
+asm|__asm __volatile("pushl %0; popfl" : : "r" (ef) : "memory" );
 block|}
 end_function
 

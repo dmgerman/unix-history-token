@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ktrace.h>
 end_include
 
@@ -6607,6 +6613,23 @@ modifier|*
 name|why
 decl_stmt|;
 block|{
+name|CTR3
+argument_list|(
+name|KTR_PROC
+argument_list|,
+literal|"killproc: proc %p (pid %d, %s)"
+argument_list|,
+name|p
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_comm
+argument_list|)
+expr_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR

@@ -11460,6 +11460,12 @@ name|pick
 operator|->
 name|p_stat
 operator|==
+name|SWAIT
+operator|||
+name|pick
+operator|->
+name|p_stat
+operator|==
 name|SZOMB
 condition|?
 literal|0

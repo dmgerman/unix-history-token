@@ -305,6 +305,16 @@ init|=
 literal|0x2500000
 block|,
 comment|/* create init process*/
+name|SI_SUB_SCHED_IDLE
+init|=
+literal|0x2600000
+block|,
+comment|/* required idle procs */
+name|SI_SUB_SOFTINTR
+init|=
+literal|0x2700000
+block|,
+comment|/* start soft interrupt thread */
 name|SI_SUB_DRIVERS
 init|=
 literal|0x3100000
@@ -464,7 +474,7 @@ name|SI_SUB_SMP
 init|=
 literal|0xf000000
 block|,
-comment|/* idle procs*/
+comment|/* start the APs*/
 name|SI_SUB_RUN_SCHEDULER
 init|=
 literal|0xfffffff

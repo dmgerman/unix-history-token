@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -73,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<machine/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mutex.h>
 end_include
 
 begin_include
@@ -1066,11 +1078,29 @@ name|p_stat
 operator|==
 name|SRUN
 condition|)
+block|{
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+block|}
 name|p
 operator|->
 name|p_flag
@@ -1093,7 +1123,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  */
+comment|/*  * This swapin algorithm attempts to swap-in processes only if there  * is enough space for them.  Of course, if a process waits for a long  * time, it will be swapped in anyway.  *  * Giant is still held at this point, to be released in tsleep.  */
 end_comment
 
 begin_comment
@@ -1130,6 +1160,14 @@ decl_stmt|;
 name|int
 name|ppri
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|loop
 label|:
 if|if

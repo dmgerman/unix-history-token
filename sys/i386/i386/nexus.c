@@ -151,7 +151,25 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/icu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rtprio.h>
 end_include
 
 begin_decl_stmt
@@ -1677,10 +1695,6 @@ modifier|*
 name|cookiep
 parameter_list|)
 block|{
-name|intrmask_t
-modifier|*
-name|mask
-decl_stmt|;
 name|driver_t
 modifier|*
 name|driver
@@ -1690,6 +1704,10 @@ name|error
 decl_stmt|,
 name|icflags
 decl_stmt|;
+name|int
+name|pri
+decl_stmt|;
+comment|/* interrupt thread priority */
 comment|/* somebody tried to setup an irq that failed to allocate! */
 if|if
 condition|(
@@ -1739,23 +1757,23 @@ block|{
 case|case
 name|INTR_TYPE_TTY
 case|:
-name|mask
+comment|/* keyboard or parallel port */
+name|pri
 operator|=
-operator|&
-name|tty_imask
+name|PI_TTYLOW
 expr_stmt|;
 break|break;
 case|case
 operator|(
 name|INTR_TYPE_TTY
 operator||
-name|INTR_TYPE_FAST
+name|INTR_FAST
 operator|)
 case|:
-name|mask
+comment|/* sio */
+name|pri
 operator|=
-operator|&
-name|tty_imask
+name|PI_TTYHIGH
 expr_stmt|;
 name|icflags
 operator||=
@@ -1765,42 +1783,43 @@ break|break;
 case|case
 name|INTR_TYPE_BIO
 case|:
-name|mask
+comment|/* 		 * XXX We need to refine this.  BSD/OS distinguishes 		 * between tape and disk priorities. 		 */
+name|pri
 operator|=
-operator|&
-name|bio_imask
+name|PI_DISK
 expr_stmt|;
 break|break;
 case|case
 name|INTR_TYPE_NET
 case|:
-name|mask
+name|pri
 operator|=
-operator|&
-name|net_imask
+name|PI_NET
 expr_stmt|;
 break|break;
 case|case
 name|INTR_TYPE_CAM
 case|:
-name|mask
+name|pri
 operator|=
-operator|&
-name|cam_imask
+name|PI_DISK
 expr_stmt|;
+comment|/* XXX or PI_CAM? */
 break|break;
 case|case
 name|INTR_TYPE_MISC
 case|:
-name|mask
+name|pri
 operator|=
-literal|0
+name|PI_DULL
 expr_stmt|;
+comment|/* don't care */
 break|break;
+comment|/* We didn't specify an interrupt level. */
 default|default:
 name|panic
 argument_list|(
-literal|"still using grody create_intr interface"
+literal|"nexus_setup_intr: no interrupt type in flags"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1839,7 +1858,7 @@ name|ihand
 argument_list|,
 name|arg
 argument_list|,
-name|mask
+name|pri
 argument_list|,
 name|icflags
 argument_list|)

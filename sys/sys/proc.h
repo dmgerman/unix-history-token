@@ -305,6 +305,18 @@ name|jail
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|mtx
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ithd
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|proc
@@ -624,6 +636,28 @@ name|klist
 name|p_klist
 decl_stmt|;
 comment|/* knotes attached to this process */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|mtx
+argument_list|)
+name|p_heldmtx
+expr_stmt|;
+comment|/* for debugging code */
+name|struct
+name|mtx
+modifier|*
+name|p_blocked
+decl_stmt|;
+comment|/* Mutex process is blocked on */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|mtx
+argument_list|)
+name|p_contested
+expr_stmt|;
+comment|/* contested locks */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -642,6 +676,10 @@ name|stack_t
 name|p_sigstk
 decl_stmt|;
 comment|/* sp& on stack state variable */
+name|int
+name|p_magic
+decl_stmt|;
+comment|/* Magic number. */
 name|u_char
 name|p_priority
 decl_stmt|;
@@ -650,6 +688,10 @@ name|u_char
 name|p_usrpri
 decl_stmt|;
 comment|/* User-priority based on p_cpu and p_nice. */
+name|u_char
+name|p_nativepri
+decl_stmt|;
+comment|/* Priority before propogation. */
 name|char
 name|p_nice
 decl_stmt|;
@@ -752,6 +794,12 @@ modifier|*
 name|p_emuldata
 decl_stmt|;
 comment|/* process-specific emulator state data */
+name|struct
+name|ithd
+modifier|*
+name|p_ithd
+decl_stmt|;
+comment|/* for interrupt threads only */
 block|}
 struct|;
 end_struct
@@ -771,7 +819,7 @@ value|p_pgrp->pg_id
 end_define
 
 begin_comment
-comment|/* Status values. */
+comment|/* Status values (p_stat) */
 end_comment
 
 begin_define
@@ -827,6 +875,28 @@ end_define
 
 begin_comment
 comment|/* Awaiting collection by parent. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAIT
+value|6
+end_define
+
+begin_comment
+comment|/* Waiting for interrupt or CPU. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMTX
+value|7
+end_define
+
+begin_comment
+comment|/* Blocked on a mutex. */
 end_comment
 
 begin_comment
@@ -1120,6 +1190,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_MAGIC
+value|0xbeefface
+end_define
+
+begin_define
+define|#
+directive|define
 name|P_CAN_SEE
 value|1
 end_define
@@ -1188,6 +1265,146 @@ comment|/* Per uid resource consumption */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Describe an interrupt thread.  There is one of these per irq.  BSD/OS makes  * this a superset of struct proc, i.e. it_proc is the struct itself and not a  * pointer.  We point in both directions, because it feels good that way.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ithd
+block|{
+name|struct
+name|proc
+modifier|*
+name|it_proc
+decl_stmt|;
+comment|/* interrupt process */
+name|LIST_HEAD
+argument_list|(
+argument|ihhead
+argument_list|,
+argument|intrhand
+argument_list|)
+name|it_ihhead
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument|srchead
+argument_list|,
+argument|isrc
+argument_list|)
+name|it_isrchead
+expr_stmt|;
+comment|/* Fields used by all interrupt threads */
+name|LIST_ENTRY
+argument_list|(
+argument|ithd
+argument_list|)
+name|it_list
+expr_stmt|;
+comment|/* All interrupt threads */
+name|int
+name|it_need
+decl_stmt|;
+comment|/* Needs service */
+name|int
+name|irq
+decl_stmt|;
+comment|/* irq */
+name|struct
+name|intrec
+modifier|*
+name|it_ih
+decl_stmt|;
+comment|/* head of handler queue */
+name|struct
+name|ithd
+modifier|*
+name|it_interrupted
+decl_stmt|;
+comment|/* Who we interrupted */
+comment|/* Fields used only for hard interrupt threads */
+name|int
+name|it_stray
+decl_stmt|;
+comment|/* Stray interrupts */
+ifdef|#
+directive|ifdef
+name|APIC_IO
+comment|/* Used by APIC interrupt sources */
+name|int
+name|it_needeoi
+decl_stmt|;
+comment|/* An EOI is needed */
+name|int
+name|it_blocked
+decl_stmt|;
+comment|/* at least 1 blocked apic src */
+endif|#
+directive|endif
+comment|/* stats */
+ifdef|#
+directive|ifdef
+name|SMP_DEBUG
+name|int
+name|it_busy
+decl_stmt|;
+comment|/* failed attempts on runlock */
+name|int
+name|it_lostneeded
+decl_stmt|;
+comment|/* Number of it_need races lost */
+name|int
+name|it_invprio
+decl_stmt|;
+comment|/* Startup priority inversions */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NEEDED
+comment|/* 	 * These are in the BSD/OS i386 sources only, not in SPARC. 	 * I'm not yet sure we need them. 	 */
+name|LIST_HEAD
+argument_list|(
+argument|ihhead
+argument_list|,
+argument|intrhand
+argument_list|)
+name|it_ihhead
+expr_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument|srchead
+argument_list|,
+argument|isrc
+argument_list|)
+name|it_isrchead
+expr_stmt|;
+comment|/* Fields used by all interrupt threads */
+name|LIST_ENTRY
+argument_list|(
+argument|ithd
+argument_list|)
+name|it_list
+expr_stmt|;
+comment|/* All interrupt threads */
+comment|/* Fields user only for soft interrupt threads */
+name|sifunc_t
+name|it_service
+decl_stmt|;
+comment|/* service routine */
+name|int
+name|it_cnt
+decl_stmt|;
+comment|/* number of schedule events */
+endif|#
+directive|endif
+block|}
+name|ithd
+typedef|;
+end_typedef
 
 begin_ifdef
 ifdef|#
@@ -1348,7 +1565,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|do {					\ 		if ((p)->p_stops& (e)) {	\ 			get_mplock();		\ 			stopevent(p,e,v);	\ 			rel_mplock(); 		\ 		}				\ 	} while (0)
+value|do {						\ 		if ((p)->p_stops& (e)) {		\ 			mtx_enter(&Giant, MTX_DEF);	\ 			stopevent(p,e,v);		\ 			mtx_exit(&Giant, MTX_DEF);	\ 		}					\ 	} while (0)
 end_define
 
 begin_comment
@@ -1473,6 +1690,32 @@ end_decl_stmt
 
 begin_comment
 comment|/* Current running proc. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|prevproc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Previously running proc. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|idleproc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current idle proc. */
 end_comment
 
 begin_decl_stmt
@@ -1650,7 +1893,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|rq
-name|queues
+name|itqueues
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1668,43 +1911,19 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|rq
-name|idqueues
+name|queues
 index|[]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|whichqs
+name|struct
+name|rq
+name|idqueues
+index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Bit mask summary of non-empty Q's. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|whichrtqs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Bit mask summary of non-empty Q's. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|whichidqs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Bit mask summary of non-empty Q's. */
-end_comment
 
 begin_comment
 comment|/*  * XXX macros for scheduler.  Shouldn't be here, but currently needed for  * bounding the dubious p_estcpu inheritance in wait1().  * INVERSE_ESTCPU_WEIGHT is only suitable for statclock() frequencies in  * the range 100-256 Hz (approximately).  */
@@ -2093,11 +2312,22 @@ name|cpu_switch
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|proc
-operator|*
+name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|cpu_throw
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+name|__dead2
 decl_stmt|;
 end_decl_stmt
 

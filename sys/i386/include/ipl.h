@@ -44,7 +44,18 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Software interrupt bit numbers in priority order.  The priority only  * determines which swi will be dispatched next; a higher priority swi  * may be dispatched when a nested h/w interrupt handler returns.  */
+comment|/*  * Software interrupt level.  We treat the software interrupt as a  * single interrupt at a fictive hardware interrupt level.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOFTINTR
+value|(NHWI + 0)
+end_define
+
+begin_comment
+comment|/*  * Software interrupt bit numbers in priority order.  The priority only  * determines which swi will be dispatched next; a higher priority swi  * may be dispatched when a nested h/w interrupt handler returns.  *  * XXX FIXME: There's no longer a relation between the SWIs and the  * HWIs, so it makes more sense for these values to start at 0, but  * there's lots of code which expects them to start at NHWI.  */
 end_comment
 
 begin_define
@@ -279,39 +290,6 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|cpl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current priority level mask */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|cil
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current INTerrupt level mask */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|extern
 specifier|volatile
 name|unsigned
 name|idelayed
@@ -326,12 +304,12 @@ begin_decl_stmt
 specifier|extern
 specifier|volatile
 name|unsigned
-name|ipending
+name|spending
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* active interrupts masked by cpl */
+comment|/* pending software interrupts */
 end_comment
 
 begin_ifdef

@@ -114,19 +114,9 @@ name|caddr_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* copyin/out fault recovery */
-ifdef|#
-directive|ifdef
-name|SMP
-name|u_long
-name|pcb_mpnest
+name|int
+name|pcb_schednest
 decl_stmt|;
-else|#
-directive|else
-name|u_long
-name|pcb_mpnest_dontuse
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|pcb_gs
 decl_stmt|;
