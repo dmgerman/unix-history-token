@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms is permitted  * provided that all copyright information, including this notice,  * is retained in all such forms, and that any documentation,  * advertising or other materials related to such distribution and  * use acknowledge that the software was  * developed by the University of California, Berkeley.  The name  * of the University may not be used to endorse or promote products  * derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1989 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1990 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	1.8 (Berkeley) 2/16/90"
+literal|"@(#)ps.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -110,12 +110,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
 end_include
 
 begin_include
@@ -900,29 +894,6 @@ block|,
 name|LONG
 block|,
 literal|"x"
-block|}
-block|,
-block|{
-block|{
-literal|"cursig"
-block|}
-block|,
-literal|"CURSIG"
-block|,
-literal|0
-block|,
-name|pvar
-block|,
-literal|2
-block|,
-name|POFF
-argument_list|(
-name|p_cursig
-argument_list|)
-block|,
-name|CHAR
-block|,
-literal|"d"
 block|}
 block|,
 block|{
@@ -1971,7 +1942,7 @@ begin_define
 define|#
 directive|define
 name|SFMT
-value|"user pid cursig sig sigmask sigignore sigcatch tname comm"
+value|"uid pid sig sigmask sigignore sigcatch stat tname comm"
 end_define
 
 begin_define
@@ -2378,7 +2349,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"o:O:wlvujnsaxt:p:SCLmchTg"
+literal|"o:O:wlvujnsaxt:p:SCLmrhTg"
 argument_list|)
 operator|)
 operator|!=
@@ -2704,6 +2675,9 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+name|xflg
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'S'
@@ -2875,7 +2849,7 @@ name|SORTMEM
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
+literal|'r'
 case|:
 name|sortby
 operator|=
@@ -3039,6 +3013,9 @@ comment|/* 	 * scan requested variables, noting what structures are needed, 	 * 
 name|scanvars
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|sortby
@@ -3049,6 +3026,8 @@ name|neednlist
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|neednlist
@@ -4403,6 +4382,22 @@ literal|'L'
 expr_stmt|;
 if|if
 condition|(
+name|k
+operator|->
+name|ki_e
+operator|->
+name|e_flag
+operator|&
+name|EPROC_SLEADER
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'s'
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|flag
 operator|&
@@ -4419,7 +4414,7 @@ name|k
 operator|->
 name|ki_e
 operator|->
-name|e_pgid
+name|e_tpgid
 condition|)
 operator|*
 name|cp
@@ -4804,11 +4799,11 @@ name|tname
 argument_list|,
 name|k
 operator|->
-name|ki_p
+name|ki_e
 operator|->
-name|p_flag
+name|e_flag
 operator|&
-name|SCTTY
+name|EPROC_CTTY
 condition|?
 literal|' '
 else|:
@@ -5612,6 +5607,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+comment|/* XXX - I don't like this */
 return|return
 operator|(
 literal|0.0
@@ -7038,6 +7034,31 @@ name|k1
 argument_list|)
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|notyet
+if|if
+condition|(
+name|sortby
+operator|==
+name|SORTRUN
+condition|)
+return|return
+operator|(
+name|proc_compare
+argument_list|(
+name|k1
+operator|->
+name|ki_p
+argument_list|,
+name|k2
+operator|->
+name|ki_p
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sortby
