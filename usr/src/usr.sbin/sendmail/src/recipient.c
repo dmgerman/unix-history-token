@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.96 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.97 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3005,16 +3005,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SUID_ROOT_FILES_OK
-comment|/* really ought to be passed down -- and not a good idea */
-name|flags
-operator||=
-name|SFF_ROOTOK
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	**  File does exist -- check that it is writable. 	*/
 if|if
 condition|(
@@ -3077,6 +3067,14 @@ condition|(
 name|FileMailer
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|SFF_ROOTOK
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 block|{
 name|euid
@@ -3111,6 +3109,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|bitset
+argument_list|(
+name|SFF_ROOTOK
+argument_list|,
+name|flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 name|euid
 operator|==
 literal|0
@@ -3135,6 +3144,7 @@ name|egid
 operator|=
 name|DefGid
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|geteuid
