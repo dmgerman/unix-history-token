@@ -12,11 +12,45 @@ directive|ifdef
 name|HAVE_CONFIG_H
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|emacs
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_BROKETS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -29,26 +63,32 @@ directive|include
 file|"getopt.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__STDC__
-operator|&&
-operator|!
-name|defined
-argument_list|(
-specifier|const
-argument_list|)
-operator|&&
-name|IN_GCC
-end_if
+end_ifndef
+
+begin_comment
+comment|/* This is a separate conditional since some stdc systems    reject `defined (const)'.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|const
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|const
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
