@@ -304,6 +304,11 @@ name|pw
 operator|->
 name|pw_passwd
 operator|&&
+operator|*
+name|pw
+operator|->
+name|pw_passwd
+operator|&&
 name|strcmp
 argument_list|(
 name|crypt
