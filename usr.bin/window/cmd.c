@@ -48,9 +48,8 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|char
 name|c
-decl_stmt|;
+expr_stmt|;
 specifier|register
 name|struct
 name|ww

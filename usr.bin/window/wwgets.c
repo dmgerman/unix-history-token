@@ -83,9 +83,8 @@ init|=
 name|buf
 decl_stmt|;
 specifier|register
-name|char
 name|c
-decl_stmt|;
+expr_stmt|;
 name|char
 name|uc
 init|=
