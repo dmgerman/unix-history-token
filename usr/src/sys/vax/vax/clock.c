@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)clock.c	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)clock.c	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -33,6 +33,12 @@ directive|include
 file|"clock.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cpu.h"
+end_include
+
 begin_comment
 comment|/*  * Machine-dependent clock routines.  *  * Startrtclock restarts the real-time clock, which provides  * hardclock interrupts to kern_clock.c.  *  * Inittodr initializes the time of day hardware which provides  * date functions.  Its primary function is to use some file  * system information in case the hardare clock lost state.  *  * Resettodr restores the time of day hardware after a time change.  */
 end_comment
@@ -48,6 +54,28 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|VAX630
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+block|{
+name|mtpr
+argument_list|(
+name|ICCS
+argument_list|,
+name|ICCS_IE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+endif|#
+directive|endif
 name|mtpr
 argument_list|(
 name|NICR
@@ -73,6 +101,12 @@ operator|+
 name|ICCS_ERR
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VAX630
+block|}
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -112,6 +146,26 @@ name|year
 init|=
 name|YRREF
 decl_stmt|;
+if|#
+directive|if
+name|VAX630
+comment|/* 	 * If this is a Ka630, call ka630tod to handle the funny tod clock. 	 */
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+block|{
+name|ka630tod
+argument_list|(
+name|base
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|base
@@ -309,6 +363,24 @@ name|time
 operator|.
 name|tv_sec
 decl_stmt|;
+if|#
+directive|if
+name|VAX630
+comment|/* 	 * If this is a ka630, call ka630stod to set the funny tod clock. 	 */
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+block|{
+name|ka630stod
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Whittle the time down to an offset in the current year, 	 * by subtracting off whole years as long as possible. 	 */
 for|for
 control|(

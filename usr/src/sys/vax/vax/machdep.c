@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	6.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ka630.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vaxuba/ubavar.h"
 end_include
 
@@ -320,6 +326,22 @@ name|base
 decl_stmt|,
 name|residual
 decl_stmt|;
+if|#
+directive|if
+name|VAX630
+comment|/*  	 * Leave last 5k of phys. memory as console work area. 	 */
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+name|maxmem
+operator|-=
+literal|10
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 name|maxmem
 operator|-=
@@ -2576,6 +2598,18 @@ specifier|register
 name|int
 name|m
 decl_stmt|;
+if|#
+directive|if
+name|VAX630
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+return|return;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|VAX8600
@@ -2737,6 +2771,18 @@ specifier|register
 name|int
 name|m
 decl_stmt|;
+if|#
+directive|if
+name|VAX630
+if|if
+condition|(
+name|cpu
+operator|==
+name|VAX_630
+condition|)
+return|return;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|VAX8600
@@ -3992,6 +4038,11 @@ name|defined
 argument_list|(
 name|VAX730
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX630
+argument_list|)
 if|if
 condition|(
 name|cpu
@@ -4001,6 +4052,10 @@ operator|||
 name|cpu
 operator|==
 name|VAX_730
+operator|||
+name|cpu
+operator|==
+name|VAX_630
 condition|)
 block|{
 asm|asm("movl r11,r5");
@@ -4060,6 +4115,8 @@ operator|||
 name|VAX750
 operator|||
 name|VAX730
+operator|||
+name|VAX630
 case|case
 name|VAX_780
 case|:
@@ -4068,6 +4125,9 @@ name|VAX_750
 case|:
 case|case
 name|VAX_730
+case|:
+case|case
+name|VAX_630
 case|:
 name|c
 operator||=
@@ -4594,6 +4654,62 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|VAX630
+end_if
+
+begin_define
+define|#
+directive|define
+name|NMC630
+value|10
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ka630cpu
+name|ka630cpu
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mc630
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|"immcr (fsd)"
+block|,
+literal|"immcr (ssd)"
+block|,
+literal|"fpu err 0"
+block|,
+literal|"fpu err 7"
+block|,
+literal|"mmu st(tb)"
+block|,
+literal|"mmu st(m=0)"
+block|,
+literal|"pte in p0"
+block|,
+literal|"pte in p1"
+block|,
+literal|"un intr id"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Frame for each cpu  */
 end_comment
@@ -4742,6 +4858,38 @@ decl_stmt|;
 comment|/* trapped pc */
 name|int
 name|mc3_psl
+decl_stmt|;
+comment|/* trapped psl */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|mc630frame
+block|{
+name|int
+name|mc63_bcnt
+decl_stmt|;
+comment|/* byte count == 0xc */
+name|int
+name|mc63_summary
+decl_stmt|;
+comment|/* summary parameter */
+name|int
+name|mc63_mrvaddr
+decl_stmt|;
+comment|/* most recent vad */
+name|int
+name|mc63_istate
+decl_stmt|;
+comment|/* internal state */
+name|int
+name|mc63_pc
+decl_stmt|;
+comment|/* trapped pc */
+name|int
+name|mc63_psl
 decl_stmt|;
 comment|/* trapped psl */
 block|}
@@ -5537,6 +5685,118 @@ argument_list|,
 literal|0xf
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX630
+case|case
+name|VAX_630
+case|:
+block|{
+specifier|register
+name|struct
+name|ka630cpu
+modifier|*
+name|ka630addr
+init|=
+operator|&
+name|ka630cpu
+decl_stmt|;
+specifier|register
+name|struct
+name|mc630frame
+modifier|*
+name|mcf
+init|=
+operator|(
+expr|struct
+name|mc630frame
+operator|*
+operator|)
+name|cmcf
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"vap %x istate %x pc %x psl %x\n"
+argument_list|,
+name|mcf
+operator|->
+name|mc63_mrvaddr
+argument_list|,
+name|mcf
+operator|->
+name|mc63_istate
+argument_list|,
+name|mcf
+operator|->
+name|mc63_pc
+argument_list|,
+name|mcf
+operator|->
+name|mc63_psl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ka630addr
+operator|->
+name|ka630_mser
+operator|&
+name|KA630MSER_MERR
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mser=0x%x "
+argument_list|,
+name|ka630addr
+operator|->
+name|ka630_mser
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ka630addr
+operator|->
+name|ka630_mser
+operator|&
+name|KA630MSER_CPUER
+condition|)
+name|printf
+argument_list|(
+literal|"page=%d"
+argument_list|,
+name|ka630addr
+operator|->
+name|ka630_cear
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ka630addr
+operator|->
+name|ka630_mser
+operator|&
+name|KA630MSER_DQPE
+condition|)
+name|printf
+argument_list|(
+literal|"page=%d"
+argument_list|,
+name|ka630addr
+operator|->
+name|ka630_dear
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 endif|#
