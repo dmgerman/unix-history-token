@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  |	new_curse.h  |  |	A subset of curses developed for use with ae.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	Copyright (c) 1986, 1987, 1988, 1991, 1995 Hugh Mahon  |	All are rights reserved.  |  */
+comment|/*  |	new_curse.h  |  |	A subset of curses developed for use with ae.  |  |	written by Hugh Mahon  |  |	THIS MATERIAL IS PROVIDED "AS IS".  THERE ARE  |	NO WARRANTIES OF ANY KIND WITH REGARD TO THIS  |	MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE  |	IMPLIED WARRANTIES OF MERCHANTABILITY AND  |	FITNESS FOR A PARTICULAR PURPOSE.  Neither  |	Hewlett-Packard nor Hugh Mahon shall be liable  |	for errors contained herein, nor for  |	incidental or consequential damages in  |	connection with the furnishing, performance or  |	use of this material.  Neither Hewlett-Packard  |	nor Hugh Mahon assumes any responsibility for  |	the use or reliability of this software or  |	documentation.  This software and  |	documentation is totally UNSUPPORTED.  There  |	is no support contract available.  Hewlett-  |	Packard has done NO Quality Assurance on ANY  |	of the program or documentation.  You may find  |	the quality of the materials inferior to  |	supported materials.  |  |	This software is not a product of Hewlett-Packard, Co., or any   |	other company.  No support is implied or offered with this software.  |	You've got the source, and you're on your own.  |  |	This software may be distributed under the terms of Larry Wall's   |	Artistic license, a copy of which is included in this distribution.   |  |	This notice must be included with this software and any derivatives.  |  |	Copyright (c) 1986, 1987, 1988, 1991, 1995 Hugh Mahon  |	All are rights reserved.  |  | $FreeBSD$  |  */
 end_comment
 
 begin_include
@@ -698,7 +698,18 @@ value|0001
 end_define
 
 begin_comment
-comment|/* standout mode			*/
+comment|/* standout mode		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|A_NC_BIG5
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Handle Chinese Big5 characters	*/
 end_comment
 
 begin_define
@@ -1010,6 +1021,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|Key_Get
+name|P_
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|keys_vt100
 name|P_
 argument_list|(
 operator|(
@@ -1970,6 +1994,32 @@ name|attrib
 operator|,
 name|int
 name|offset
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|nc_setattrib
+name|P_
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|nc_clearattrib
+name|P_
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
