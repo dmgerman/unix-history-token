@@ -1697,13 +1697,14 @@ name|kg
 operator|->
 name|kg_user_pri
 expr_stmt|;
+name|sched_prio
+argument_list|(
 name|curthread
-operator|->
-name|td_priority
-operator|=
+argument_list|,
 name|kg
 operator|->
 name|kg_user_pri
+argument_list|)
 expr_stmt|;
 comment|/* XXX dubious */
 block|}
