@@ -510,6 +510,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|minor_val
+parameter_list|(
+name|n
+parameter_list|)
+value|((((n)& ~0xff)<< 8) | ((n)& 0xff))
+end_define
+
+begin_define
+define|#
+directive|define
+name|dev_val
+parameter_list|(
+name|n
+parameter_list|)
+value|(((n)>> 8) | ((n)& 0xff))
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -590,7 +610,10 @@ argument_list|(
 operator|&
 name|tun_cdevsw
 argument_list|,
+name|minor_val
+argument_list|(
 name|i
+argument_list|)
 argument_list|,
 name|DV_CHR
 argument_list|,
@@ -775,9 +798,12 @@ condition|(
 operator|(
 name|unit
 operator|=
+name|dev_val
+argument_list|(
 name|minor
 argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 operator|)
 operator|>=
@@ -877,9 +903,12 @@ specifier|register
 name|int
 name|unit
 init|=
+name|dev_val
+argument_list|(
 name|minor
 argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 decl_stmt|,
 name|s
@@ -1870,9 +1899,12 @@ block|{
 name|int
 name|unit
 init|=
+name|dev_val
+argument_list|(
 name|minor
 argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 decl_stmt|,
 name|s
@@ -2197,9 +2229,12 @@ block|{
 name|int
 name|unit
 init|=
+name|dev_val
+argument_list|(
 name|minor
 argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 decl_stmt|;
 name|struct
@@ -2503,9 +2538,12 @@ block|{
 name|int
 name|unit
 init|=
+name|dev_val
+argument_list|(
 name|minor
 argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 decl_stmt|;
 name|struct
@@ -2923,9 +2961,12 @@ block|{
 name|int
 name|unit
 init|=
+name|dev_val
+argument_list|(
 name|minor
 argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 decl_stmt|,
 name|s
