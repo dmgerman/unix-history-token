@@ -460,7 +460,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"bge"
 block|,
-literal|"Broadcom BCM570x gigabit ethernet card"
+literal|"Broadcom BCM570x PCI gigabit ethernet card"
 block|}
 block|,
 block|{
@@ -620,7 +620,7 @@ name|DEVICE_TYPE_NETWORK
 block|,
 literal|"nge"
 block|,
-literal|"NatSemi DP83820/21 gigabit ethernet card"
+literal|"NatSemi PCI gigabit ethernet card"
 block|}
 block|,
 block|{
