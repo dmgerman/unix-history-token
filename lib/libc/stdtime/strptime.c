@@ -1171,6 +1171,13 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'A'
+condition|)
+block|{
 name|len
 operator|=
 name|strlen
@@ -1202,6 +1209,9 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
+else|else
+block|{
 name|len
 operator|=
 name|strlen
@@ -1233,6 +1243,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
 block|}
 if|if
 condition|(
