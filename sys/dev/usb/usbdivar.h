@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.66 2001/11/20 13:48:04 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.67 2001/11/21 13:44:47 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -765,6 +765,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USB_DEBUG
+end_ifdef
+
 begin_function_decl
 name|void
 name|usbd_dump_iface
@@ -820,6 +826,11 @@ name|pipe
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Routines from usb_subr.c */
