@@ -6373,7 +6373,7 @@ name|buf
 operator|=
 name|Buf_Init
 argument_list|(
-name|MAKE_BSIZE
+literal|0
 argument_list|)
 expr_stmt|;
 name|errorReported
