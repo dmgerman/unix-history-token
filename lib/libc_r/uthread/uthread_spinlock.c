@@ -51,6 +51,24 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_function
+name|void
+name|_spinunlock
+parameter_list|(
+name|spinlock_t
+modifier|*
+name|lck
+parameter_list|)
+block|{
+name|lck
+operator|->
+name|access_lock
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Lock a location for the running thread. Yield to allow other  * threads to run if this thread is blocked because the lock is  * not available. Note that this function does not sleep. It  * assumes that the lock will be available very soon.  */
 end_comment

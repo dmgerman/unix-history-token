@@ -56,6 +56,16 @@ end_expr_stmt
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
+name|_spinlock_stub
+argument_list|,
+name|_spinunlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_spinlock_debug_stub
 argument_list|,
 name|_spinlock_debug
@@ -92,6 +102,21 @@ end_comment
 begin_function
 name|void
 name|_spinlock_stub
+parameter_list|(
+name|spinlock_t
+modifier|*
+name|lck
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/*  * This function is a stub for the spinunlock function in libpthread.  */
+end_comment
+
+begin_function
+name|void
+name|_spinunlock_stub
 parameter_list|(
 name|spinlock_t
 modifier|*

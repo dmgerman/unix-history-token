@@ -71,7 +71,7 @@ name|_SPINUNLOCK
 parameter_list|(
 name|_lck
 parameter_list|)
-value|(_lck)->access_lock = 0
+value|_spinunlock(_lck);
 end_define
 
 begin_ifdef
@@ -129,6 +129,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|_spinlock
+parameter_list|(
+name|spinlock_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_spinunlock
 parameter_list|(
 name|spinlock_t
 modifier|*
