@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1979 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ey.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1979 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ey.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1007,34 +1007,6 @@ end_decl_stmt
 begin_comment
 comment|/* number of defined symbols output */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|machine
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|UNIX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|GCOS
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IBM
-value|3
-end_define
 
 begin_function_decl
 name|struct

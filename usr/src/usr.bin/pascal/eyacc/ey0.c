@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ey0.c	5.1 (Berkeley) %G%"
+literal|"@(#)ey0.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1023,16 +1023,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* if on, error is fatal */
-end_comment
-
-begin_decl_stmt
-name|int
-name|machine
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* has a number describing the machine */
 end_comment
 
 end_unit

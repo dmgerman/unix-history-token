@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ey5.c	5.1 (Berkeley) %G%"
+literal|"@(#)ey5.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,21 +160,6 @@ expr_stmt|;
 name|cout
 operator|=
 name|x
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|system
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|error
-argument_list|(
-literal|"The function \"system\" is called"
-argument_list|)
 expr_stmt|;
 block|}
 end_block
