@@ -486,25 +486,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|g_destroy_event
-parameter_list|(
-name|struct
-name|g_event
-modifier|*
-name|ep
-parameter_list|)
-block|{
-name|g_free
-argument_list|(
-name|ep
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|one_event
 parameter_list|(
@@ -683,7 +664,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|g_destroy_event
+name|g_free
 argument_list|(
 name|ep
 argument_list|)
@@ -910,7 +891,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|g_destroy_event
+name|g_free
 argument_list|(
 name|ep
 argument_list|)
@@ -1320,7 +1301,7 @@ name|error
 operator|=
 name|EAGAIN
 expr_stmt|;
-name|g_destroy_event
+name|g_free
 argument_list|(
 name|ep
 argument_list|)
