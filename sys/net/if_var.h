@@ -312,10 +312,6 @@ name|int
 name|if_capenable
 decl_stmt|;
 comment|/* enabled features */
-name|int
-name|if_ipending
-decl_stmt|;
-comment|/* interrupts pending */
 name|void
 modifier|*
 name|if_linkmib
@@ -688,32 +684,6 @@ directive|define
 name|if_list
 value|if_link
 end_define
-
-begin_comment
-comment|/*  * Bit values in if_ipending  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFI_RECV
-value|1
-end_define
-
-begin_comment
-comment|/* I want to receive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFI_XMIT
-value|2
-end_define
-
-begin_comment
-comment|/* I want to transmit */
-end_comment
 
 begin_comment
 comment|/*  * Output queues (ifp->if_snd) and slow device input queues (*ifp->if_slowq)  * are queues of messages stored on ifqueue structures  * (defined above).  Entries are added to and deleted from these structures  * by these macros, which should be called with ipl raised to splimp().  */
