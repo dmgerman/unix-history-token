@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.4	(Berkeley) 83/08/23  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.5	(Berkeley) 83/09/19  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -485,6 +485,21 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|savelasty
+init|=
+name|lasty
+decl_stmt|;
+comment|/* vertical motion for text is to be */
+comment|/*   ignored.  save current y here */
+name|printf
+argument_list|(
+literal|".nr g8 \\n(.d\n"
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+comment|/* save current vertical position. */
 name|printf
 argument_list|(
 literal|".ds g9 \"%s"
@@ -506,6 +521,8 @@ name|justify
 condition|)
 block|{
 comment|/* local vertical motions */
+comment|/* (the numbers here are used to be */
+comment|/* somewhat compatible with gprint) */
 case|case
 name|CENTLEFT
 case|:
@@ -578,10 +595,22 @@ comment|/* back whole */
 block|}
 name|printf
 argument_list|(
-literal|"\\*(g9"
+literal|"\\*(g9\n"
 argument_list|)
 expr_stmt|;
 comment|/* now print the text. */
+name|printf
+argument_list|(
+literal|".sp |\\n(g8u"
+argument_list|)
+expr_stmt|;
+comment|/* restore vertical position */
+name|lasty
+operator|=
+name|savelasty
+expr_stmt|;
+comment|/* vertical position is restored to */
+comment|/*   what it was before text was printed */
 block|}
 end_block
 
@@ -1118,6 +1147,7 @@ name|lasty
 operator|=
 name|iy
 expr_stmt|;
+comment|/* lasty is always set to current */
 if|if
 condition|(
 name|dx
