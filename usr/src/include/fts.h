@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fts.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -33,7 +33,7 @@ name|fts_array
 decl_stmt|;
 comment|/* sort array */
 name|dev_t
-name|sdev
+name|rdev
 decl_stmt|;
 comment|/* starting device # */
 name|char
@@ -42,7 +42,11 @@ name|fts_path
 decl_stmt|;
 comment|/* path for this descent */
 name|int
-name|fts_sd
+name|fts_dfd
+decl_stmt|;
+comment|/* fd for directories */
+name|int
+name|fts_rfd
 decl_stmt|;
 comment|/* fd for root */
 name|int
@@ -63,39 +67,39 @@ function_decl|;
 comment|/* compare function */
 define|#
 directive|define
-name|FTS__STOP
-value|0x001
-comment|/* private: unrecoverable error */
-define|#
-directive|define
 name|FTS_LOGICAL
-value|0x002
-comment|/* user: use stat(2) */
+value|0x001
+comment|/* logical walk */
 define|#
 directive|define
 name|FTS_NOCHDIR
-value|0x004
-comment|/* user: don't use chdir(2) */
+value|0x002
+comment|/* don't change directories */
 define|#
 directive|define
 name|FTS_NOSTAT
-value|0x008
-comment|/* user: don't require stat info */
+value|0x004
+comment|/* don't get stat info */
 define|#
 directive|define
 name|FTS_PHYSICAL
-value|0x010
-comment|/* user: use lstat(2) */
+value|0x008
+comment|/* physical walk */
 define|#
 directive|define
 name|FTS_SEEDOT
+value|0x010
+comment|/* return dot and dot-dot */
+define|#
+directive|define
+name|FTS_STOP
 value|0x020
-comment|/* user: return dot and dot-dot */
+comment|/* (private) unrecoverable error */
 define|#
 directive|define
 name|FTS_XDEV
 value|0x040
-comment|/* user: don't cross devices */
+comment|/* don't cross devices */
 name|int
 name|fts_options
 decl_stmt|;
@@ -154,6 +158,10 @@ modifier|*
 name|fts_path
 decl_stmt|;
 comment|/* root path */
+name|int
+name|fts_cderr
+decl_stmt|;
+comment|/* chdir failed -- errno */
 name|short
 name|fts_pathlen
 decl_stmt|;
@@ -178,14 +186,14 @@ value|2
 comment|/* directory that causes cycles */
 define|#
 directive|define
-name|FTS_DNR
+name|FTS_DEFAULT
 value|3
-comment|/* unreadable directory */
+comment|/* none of the above */
 define|#
 directive|define
-name|FTS_DNX
+name|FTS_DNR
 value|4
-comment|/* unsearchable directory */
+comment|/* unreadable directory */
 define|#
 directive|define
 name|FTS_DP
@@ -205,50 +213,50 @@ define|#
 directive|define
 name|FTS_NS
 value|8
-comment|/* no stat(2) information */
+comment|/* stat(2) failed */
+define|#
+directive|define
+name|FTS_NSOK
+value|9
+comment|/* no stat(2) requested */
 define|#
 directive|define
 name|FTS_SL
-value|9
+value|10
 comment|/* symbolic link */
 define|#
 directive|define
 name|FTS_SLNONE
-value|10
-comment|/* symbolic link without target */
-define|#
-directive|define
-name|FTS_DEFAULT
 value|11
-comment|/* none of the above */
+comment|/* symbolic link without target */
 name|u_short
 name|fts_info
 decl_stmt|;
-comment|/* flags for FTSENT structure */
-define|#
-directive|define
-name|FTS__NOINSTR
-value|0
-comment|/* private: no instructions */
+comment|/* user flags for FTSENT structure */
 define|#
 directive|define
 name|FTS_AGAIN
 value|1
-comment|/* user: read node again */
-define|#
-directive|define
-name|FTS_SKIP
-value|2
-comment|/* user: discard node */
+comment|/* read node again */
 define|#
 directive|define
 name|FTS_FOLLOW
+value|2
+comment|/* follow symbolic link */
+define|#
+directive|define
+name|FTS_NOINSTR
 value|3
-comment|/* user: follow symbolic link */
-name|short
+comment|/* no instructions */
+define|#
+directive|define
+name|FTS_SKIP
+value|4
+comment|/* discard node */
+name|u_short
 name|fts_instr
 decl_stmt|;
-comment|/* private: fts_set() instructions */
+comment|/* fts_set() instructions */
 name|struct
 name|stat
 name|fts_statb
