@@ -2273,9 +2273,6 @@ if|if
 condition|(
 name|start
 condition|)
-ifdef|#
-directive|ifdef
-name|COOKIE_FOR_IMP
 name|end
 operator|=
 name|start
@@ -2291,13 +2288,6 @@ name|length
 operator|-
 literal|1
 expr_stmt|;
-else|#
-directive|else
-goto|goto
-name|not_this_one
-goto|;
-endif|#
-directive|endif
 else|else
 name|end
 operator|=
@@ -3270,6 +3260,9 @@ name|reg
 operator||=
 name|PCCARD_CCR_OPTION_LEVIREQ
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COOKIE_FOR_WARNER
 if|if
 condition|(
 name|pccard_mfc
@@ -3290,6 +3283,8 @@ operator|)
 expr_stmt|;
 comment|/* PCCARD_CCR_OPTION_IRQ_ENABLE set elsewhere as needed */
 block|}
+endif|#
+directive|endif
 name|pccard_ccr_write
 argument_list|(
 name|pf
@@ -3856,8 +3851,21 @@ unit|if (pf->pf_mfc_iobase> pcihp->addr + offset) 				pf->pf_mfc_iobase = pcihp-
 comment|/* round up to nearest (2^n)-1 */
 end_comment
 
+begin_ifdef
+unit|for (iosize = 1; iosize>= tmp; iosize<<= 1) 			; 		iosize--;  		pccard_ccr_write(pf, PCCARD_CCR_IOBASE0, 		    pf->pf_mfc_iobase& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE1, 		    (pf->pf_mfc_iobase>> 8)& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE2, 0); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE3, 0);  		pccard_ccr_write(pf, PCCARD_CCR_IOSIZE, iosize);
+ifdef|#
+directive|ifdef
+name|COOKIE_FOR_WARNER
+end_ifdef
+
+begin_endif
+unit|reg = pccard_ccr_read(pf, PCCARD_CCR_OPTION); 		reg |= PCCARD_CCR_OPTION_ADDR_DECODE; 		pccard_ccr_write(pf, PCCARD_CCR_OPTION, reg);
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-unit|for (iosize = 1; iosize>= tmp; iosize<<= 1) 			; 		iosize--;  		pccard_ccr_write(pf, PCCARD_CCR_IOBASE0, 		    pf->pf_mfc_iobase& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE1, 		    (pf->pf_mfc_iobase>> 8)& 0xff); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE2, 0); 		pccard_ccr_write(pf, PCCARD_CCR_IOBASE3, 0);  		pccard_ccr_write(pf, PCCARD_CCR_IOSIZE, iosize);  		reg = pccard_ccr_read(pf, PCCARD_CCR_OPTION); 		reg |= PCCARD_CCR_OPTION_ADDR_DECODE; 		pccard_ccr_write(pf, PCCARD_CCR_OPTION, reg); 	} 	return (0); }  void pccard_io_unmap(struct pccard_function *pf, int window) {  	pccard_chip_io_unmap(pf->sc->pct, pf->sc->pch, window);
+unit|} 	return (0); }  void pccard_io_unmap(struct pccard_function *pf, int window) {  	pccard_chip_io_unmap(pf->sc->pct, pf->sc->pch, window);
 comment|/* XXX Anything for multi-function cards? */
 end_comment
 
@@ -6092,6 +6100,9 @@ operator|=
 operator|*
 name|cookiep
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COOKIE_FOR_WARNER
 comment|/* XXX Not sure this is right to write to ccr */
 name|pccard_ccr_write
 argument_list|(
@@ -6109,6 +6120,8 @@ operator||
 name|PCCARD_CCR_OPTION_IREQ_ENABLE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -6160,6 +6173,9 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|COOKIE_FOR_WARNER
 comment|/* XXX Not sure this is right to write to ccr */
 name|pccard_ccr_write
 argument_list|(
@@ -6178,6 +6194,8 @@ operator|~
 name|PCCARD_CCR_OPTION_IREQ_ENABLE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 name|bus_generic_teardown_intr
