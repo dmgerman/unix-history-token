@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)device_pager.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -669,6 +669,7 @@ name|dpagerdebug
 operator|&
 name|DDB_ALLOC
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"dev_pager_alloc: pages %d@%x\n"
@@ -682,6 +683,25 @@ operator|->
 name|devp_pages
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"dev_pager_alloc: pager %x devp %x object %x\n"
+argument_list|,
+name|pager
+argument_list|,
+name|devp
+argument_list|,
+name|object
+argument_list|)
+expr_stmt|;
+name|vm_object_print
+argument_list|(
+name|object
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -714,37 +734,6 @@ literal|"dev_pager_setup: bad object"
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|dpagerdebug
-operator|&
-name|DDB_ALLOC
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"dev_pager_alloc: pager %x devp %x object %x\n"
-argument_list|,
-name|pager
-argument_list|,
-name|devp
-argument_list|,
-name|object
-argument_list|)
-expr_stmt|;
-name|vm_object_print
-argument_list|(
-name|object
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 return|return
 operator|(
 name|pager
