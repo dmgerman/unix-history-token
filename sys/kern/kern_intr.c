@@ -1821,7 +1821,6 @@ name|ctd
 operator|->
 name|td_proc
 expr_stmt|;
-empty_stmt|;
 name|random_harvest
 argument_list|(
 operator|&
