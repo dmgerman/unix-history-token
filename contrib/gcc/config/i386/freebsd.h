@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running FreeBSD with either a.out or ELF format    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Added support for generating "old a.out gas" on the fly by Peter Wemm.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running FreeBSD with either a.out or ELF format    Copyright (C) 1996 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Added support for generating "old a.out gas" on the fly by Peter Wemm.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -88,7 +88,7 @@ define|#
 directive|define
 name|SUBTARGET_SWITCHES
 define|\
-value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE},	\      { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE},	\      { "aout",			 MASK_AOUT},			\      { "no-aout",		-MASK_AOUT},			\      { "underscores",		 MASK_UNDERSCORES},		\      { "no-underscores",	-MASK_UNDERSCORES},
+value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE},		\      { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE},		\      { "aout",			 MASK_AOUT},				\      { "no-aout",		-MASK_AOUT},				\      { "underscores",		 MASK_UNDERSCORES},			\      { "no-underscores",	-MASK_UNDERSCORES},
 end_define
 
 begin_comment
@@ -151,6 +151,12 @@ name|ASM_APP_OFF
 value|"#NO_APP\n"
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|SET_ASM_OP
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -180,7 +186,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {									\         output_file_directive (FILE, main_input_filename);		\ 	if (TARGET_ELF)							\           fprintf (FILE, "\t.version\t\"01.01\"\n");			\   } while (0)
+value|do {									\         output_file_directive ((FILE), main_input_filename);		\ 	if (TARGET_ELF)							\           fprintf ((FILE), "\t.version\t\"01.01\"\n");			\   } while (0)
 end_define
 
 begin_comment
@@ -251,7 +257,7 @@ parameter_list|,
 name|NUM
 parameter_list|)
 define|\
-value|fprintf (FILE, "%s%s%d:\n", (TARGET_UNDERSCORES) ? "" : ".",		\ 	   PREFIX, NUM)
+value|fprintf ((FILE), "%s%s%d:\n", (TARGET_UNDERSCORES) ? "" : ".",	\ 	   (PREFIX), (NUM))
 end_define
 
 begin_comment
@@ -274,7 +280,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|fprintf (FILE, "%s%s", (TARGET_UNDERSCORES) ? "_" : "", NAME)
+value|fprintf ((FILE), "%s%s", (TARGET_UNDERSCORES) ? "_" : "", (NAME))
 end_define
 
 begin_comment
@@ -301,7 +307,7 @@ parameter_list|,
 name|REL
 parameter_list|)
 define|\
-value|fprintf (FILE, "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, VALUE)
+value|fprintf ((FILE), "\t.long _GLOBAL_OFFSET_TABLE_+[.-%s%d]\n", LPREFIX, (VALUE))
 end_define
 
 begin_undef
@@ -344,6 +350,12 @@ begin_comment
 comment|/* The a.out tools do not support "linkonce" sections. */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|SUPPORTS_ONE_ONLY
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -354,6 +366,12 @@ end_define
 begin_comment
 comment|/* The a.out tools do not support "Lscope" .stabs symbols. */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_DBX_FUNCTION_END
+end_undef
 
 begin_define
 define|#
@@ -382,7 +400,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     if (TARGET_ELF) {							\       ctors_section ();							\       fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, "\n");						\     } else {								\       fprintf (asm_out_file, "%s \"%s__CTOR_LIST__\",22,0,0,", ASM_STABS_OP, \ 	       (TARGET_UNDERSCORES) ? "_" : "");			\       assemble_name (asm_out_file, name);				\       fputc ('\n', asm_out_file);					\     }									\   } while (0)
+value|do {									\     if (TARGET_ELF) {							\       ctors_section ();							\       fprintf ((FILE), "\t%s\t ", INT_ASM_OP);				\       assemble_name ((FILE), (NAME));					\       fprintf ((FILE), "\n");						\     } else {								\       fprintf (asm_out_file, "%s \"%s__CTOR_LIST__\",22,0,0,", ASM_STABS_OP, \ 	       (TARGET_UNDERSCORES) ? "_" : "");			\       assemble_name (asm_out_file, name);				\       fputc ('\n', asm_out_file);					\     }									\   } while (0)
 end_define
 
 begin_comment
@@ -405,7 +423,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|do {									\     if (TARGET_ELF) {							\       dtors_section ();							\       fprintf (FILE, "\t%s\t ", INT_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, "\n");						\     } else {								\       fprintf (asm_out_file, "%s \"%s__DTOR_LIST__\",22,0,0,", ASM_STABS_OP, \ 	       (TARGET_UNDERSCORES) ? "_" : "");			\       assemble_name (asm_out_file, name);				\       fputc ('\n', asm_out_file);					\     }									\   } while (0)
+value|do {									\     if (TARGET_ELF) {							\       dtors_section ();							\       fprintf ((FILE), "\t%s\t ", INT_ASM_OP);				\       assemble_name ((FILE), (NAME));					\       fprintf ((FILE), "\n");						\     } else {								\       fprintf (asm_out_file, "%s \"%s__DTOR_LIST__\",22,0,0,", ASM_STABS_OP, \ 	       (TARGET_UNDERSCORES) ? "_" : "");			\       assemble_name (asm_out_file, name);				\       fputc ('\n', asm_out_file);					\     }									\   } while (0)
 end_define
 
 begin_comment
@@ -432,7 +450,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   if (TARGET_ELF) {							\     fprintf ((FILE), "\t%s\t", LOCAL_ASM_OP);				\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), "\n");						\     ASM_OUTPUT_ALIGNED_COMMON (FILE, NAME, SIZE, ALIGN);		\   } else {								\     int rounded = (SIZE);						\     if (rounded == 0) rounded = 1;					\     rounded += (BIGGEST_ALIGNMENT / BITS_PER_UNIT) - 1;			\     rounded = (rounded / (BIGGEST_ALIGNMENT / BITS_PER_UNIT)		\ 			   * (BIGGEST_ALIGNMENT / BITS_PER_UNIT));	\     fputs (".lcomm ", (FILE));						\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), ",%u\n", (rounded));				\   }									\ } while (0)
+value|do {									\   if (TARGET_ELF) {							\     fprintf ((FILE), "\t%s\t", LOCAL_ASM_OP);				\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), "\n");						\     ASM_OUTPUT_ALIGNED_COMMON ((FILE), (NAME), (SIZE), (ALIGN));	\   } else {								\     int rounded = (SIZE);						\     if (rounded == 0) rounded = 1;					\     rounded += (BIGGEST_ALIGNMENT / BITS_PER_UNIT) - 1;			\     rounded = (rounded / (BIGGEST_ALIGNMENT / BITS_PER_UNIT)		\ 			   * (BIGGEST_ALIGNMENT / BITS_PER_UNIT));	\     fputs (".lcomm ", (FILE));						\     assemble_name ((FILE), (NAME));					\     fprintf ((FILE), ",%u\n", (rounded));				\   }									\ } while (0)
 end_define
 
 begin_undef
@@ -488,7 +506,7 @@ parameter_list|,
 name|SIZE
 parameter_list|)
 define|\
-value|do {									\   if (TARGET_ELF) {							\     fprintf (FILE, "\t%s\t%u\n", SKIP_ASM_OP, (SIZE));			\   } else {								\     fprintf (FILE, "\t.space %u\n", (SIZE));				\   }									\ } while (0)
+value|do {									\   if (TARGET_ELF) {							\     fprintf ((FILE), "\t%s\t%u\n", SKIP_ASM_OP, (SIZE));		\   } else {								\     fprintf ((FILE), "\t.space %u\n", (SIZE));				\   }									\ } while (0)
 end_define
 
 begin_undef
@@ -502,12 +520,12 @@ define|#
 directive|define
 name|ASM_OUTPUT_SOURCE_LINE
 parameter_list|(
-name|file
+name|FILE
 parameter_list|,
-name|line
+name|LINE
 parameter_list|)
 define|\
-value|do {									\   static int sym_lineno = 1;						\   if (TARGET_ELF) {							\     fprintf (file, ".stabn 68,0,%d,.LM%d-", line, sym_lineno);		\     assemble_name (file, XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));\     fprintf (file, "\n.LM%d:\n", sym_lineno);				\     sym_lineno += 1;							\   } else {								\     fprintf (file, "\t%s %d,0,%d\n", ASM_STABD_OP, N_SLINE, lineno);	\   }									\ } while (0)
+value|do {									\   static int sym_lineno = 1;						\   if (TARGET_ELF) {							\     fprintf ((FILE), ".stabn 68,0,%d,.LM%d-", (LINE), sym_lineno);	\     assemble_name ((FILE), XSTR (XEXP (DECL_RTL (current_function_decl),\                    0), 0));						\     fprintf ((FILE), "\n.LM%d:\n", sym_lineno);				\     sym_lineno += 1;							\   } else {								\     fprintf ((FILE), "\t%s %d,0,%d\n", ASM_STABD_OP, N_SLINE, lineno);	\   }									\ } while (0)
 end_define
 
 begin_comment
@@ -547,7 +565,7 @@ parameter_list|,
 name|FILENAME
 parameter_list|)
 define|\
-value|do {									\   if (TARGET_ELF) {							\     fprintf (FILE, "\t.text\n\t.stabs \"\",%d,0,0,.Letext\n.Letext:\n", N_SO); \   }									\ } while (0)
+value|do {									\   if (TARGET_ELF) {							\     fprintf ((FILE), "\t.text\n\t.stabs \"\",%d,0,0,.Letext\n.Letext:\n", \              N_SO);							\   }									\ } while (0)
 end_define
 
 begin_comment
@@ -565,12 +583,12 @@ define|#
 directive|define
 name|DBX_OUTPUT_LBRAC
 parameter_list|(
-name|file
+name|FILE
 parameter_list|,
-name|name
+name|NAME
 parameter_list|)
 define|\
-value|do {									\   fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);		\   assemble_name (asmfile, buf);						\   if (TARGET_ELF) {							\     fputc ('-', asmfile);						\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0)); \   }									\   fprintf (asmfile, "\n");						\ } while (0)
+value|do {									\   fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_LBRAC);		\   assemble_name (asmfile, buf);						\   if (TARGET_ELF) {							\     fputc ('-', asmfile);						\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (current_function_decl),\                    0), 0));						\   }									\   fprintf (asmfile, "\n");						\ } while (0)
 end_define
 
 begin_undef
@@ -584,12 +602,12 @@ define|#
 directive|define
 name|DBX_OUTPUT_RBRAC
 parameter_list|(
-name|file
+name|FILE
 parameter_list|,
-name|name
+name|NAME
 parameter_list|)
 define|\
-value|do {									\   fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_RBRAC);		\   assemble_name (asmfile, buf);						\   if (TARGET_ELF) {							\     fputc ('-', asmfile);						\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0)); \   }									\   fprintf (asmfile, "\n");						\ } while (0)
+value|do {									\   fprintf (asmfile, "%s %d,0,0,", ASM_STABN_OP, N_RBRAC);		\   assemble_name (asmfile, buf);						\   if (TARGET_ELF) {							\     fputc ('-', asmfile);						\     assemble_name (asmfile, XSTR (XEXP (DECL_RTL (current_function_decl),\                    0), 0));						\   }									\   fprintf (asmfile, "\n");						\ } while (0)
 end_define
 
 begin_comment
@@ -622,6 +640,12 @@ begin_comment
 comment|/* Indicate that jump tables go in the text section.  This is    necessary when compiling PIC code.  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|JUMP_TABLES_IN_TEXT_SECTION
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -632,6 +656,12 @@ end_define
 begin_comment
 comment|/* override the exception table positioning */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|EXCEPTION_SECTION
+end_undef
 
 begin_define
 define|#
@@ -645,6 +675,12 @@ end_define
 begin_comment
 comment|/* supply our own hook for calling __main() from main() */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|GEN_CALL__MAIN
+end_undef
 
 begin_define
 define|#
@@ -682,6 +718,12 @@ end_define
 begin_comment
 comment|/* Now what stabs expects in the register.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|STABS_DBX_REGISTER_NUMBER
+end_undef
 
 begin_define
 define|#
@@ -744,8 +786,14 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tcall *%s@GOT(%%ebx)\n",				\       TARGET_AOUT ? "mcount" : ".mcount");				\     }									\   else									\     {									\       fprintf (FILE, "\tcall %s\n", TARGET_AOUT ? "mcount" : ".mcount");	\     }									\ }
+value|{									\   if (flag_pic)								\     {									\       fprintf ((FILE), "\tcall *%s@GOT(%%ebx)\n",			\       TARGET_AOUT ? "mcount" : ".mcount");				\     }									\   else									\     {									\       fprintf ((FILE), "\tcall %s\n", TARGET_AOUT ? "mcount" : ".mcount"); \     }									\ }
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|FUNCTION_PROFILER_EPILOGUE
+end_undef
 
 begin_define
 define|#
@@ -755,7 +803,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf (FILE, "\tcall *%s@GOT(%%ebx)\n",			\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\       else								\ 	fprintf (FILE, "\tcall %s\n",					\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\     }									\ }
+value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf ((FILE), "\tcall *%s@GOT(%%ebx)\n",			\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\       else								\ 	fprintf ((FILE), "\tcall %s\n",					\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\     }									\ }
 end_define
 
 begin_undef
@@ -796,6 +844,12 @@ directive|define
 name|WCHAR_TYPE
 value|"int"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WCHAR_UNSIGNED
+end_undef
 
 begin_define
 define|#
@@ -939,7 +993,7 @@ parameter_list|,
 name|MAX_SKIP
 parameter_list|)
 define|\
-value|if ((LOG)!=0) \     if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG)); \     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
+value|if ((LOG)!=0)								\     if ((MAX_SKIP)==0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\     else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP))
 end_define
 
 begin_endif
