@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.4 %G%"
+literal|"@(#)tree.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1639,6 +1639,18 @@ begin_comment
 comment|/*  * Print out a trace/stop command name.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|fprintI
+parameter_list|(
+name|f
+parameter_list|,
+name|b
+parameter_list|)
+value|{ if (b) fprintf(f, "i"); }
+end_define
+
 begin_function
 name|private
 name|print_tracestop
@@ -1737,7 +1749,12 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s if "
+literal|"stop"
+argument_list|)
+expr_stmt|;
+name|fprintI
+argument_list|(
+name|f
 argument_list|,
 name|cmd
 operator|->
@@ -1746,10 +1763,13 @@ operator|.
 name|trace
 operator|.
 name|inst
-condition|?
-literal|"stopi"
-else|:
-literal|"stop"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|" if "
 argument_list|)
 expr_stmt|;
 name|prtree
@@ -1770,6 +1790,62 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|ifcmd
+operator|->
+name|op
+operator|==
+name|O_STOPIFCHANGED
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"stop"
+argument_list|)
+expr_stmt|;
+name|fprintI
+argument_list|(
+name|f
+argument_list|,
+name|cmd
+operator|->
+name|value
+operator|.
+name|trace
+operator|.
+name|inst
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+name|prtree
+argument_list|(
+name|f
+argument_list|,
+name|ifcmd
+operator|->
+name|value
+operator|.
+name|arg
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|done
+operator|=
+name|true
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1832,7 +1908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print a tree back out in Pascal form.  */
+comment|/*  * Print out a tree.  */
 end_comment
 
 begin_function
