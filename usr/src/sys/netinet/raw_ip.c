@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.18	83/05/12	*/
+comment|/*	raw_ip.c	4.19	83/06/30	*/
 end_comment
 
 begin_include
@@ -48,13 +48,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../net/raw_cb.h"
+file|"../net/route.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|"../net/raw_cb.h"
 end_include
 
 begin_include
@@ -86,7 +86,6 @@ comment|/*  * Raw interface to IP protocol.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|sockaddr_in
 name|ripdst
@@ -98,7 +97,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|sockaddr_in
 name|ripsrc
@@ -110,7 +108,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|sockproto
 name|ripproto
@@ -477,12 +474,10 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
-literal|0
+operator|&
+name|rp
+operator|->
+name|rcb_route
 argument_list|,
 name|IP_ROUTETOIF
 operator||
