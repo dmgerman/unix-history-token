@@ -472,17 +472,17 @@ name|SA_QUIRK_NOCOMP
 init|=
 literal|0x01
 block|,
-comment|/* can't deal with compression at all */
+comment|/* Can't deal with compression at all */
 name|SA_QUIRK_FIXED
 init|=
 literal|0x02
 block|,
-comment|/* force fixed mode */
+comment|/* Force fixed mode */
 name|SA_QUIRK_VARIABLE
 init|=
 literal|0x04
 block|,
-comment|/* force variable mode */
+comment|/* Force variable mode */
 name|SA_QUIRK_2FM
 init|=
 literal|0x08
@@ -496,7 +496,12 @@ comment|/* No more than 1 File Mark at EOD */
 name|SA_QUIRK_NODREAD
 init|=
 literal|0x20
+block|,
 comment|/* Don't try and dummy read density */
+name|SA_QUIRK_NO_MODESEL
+init|=
+literal|0x40
+comment|/* Don't do mode select at all */
 block|}
 name|sa_quirks
 typedef|;
@@ -831,6 +836,30 @@ name|sa_quirk_table
 index|[]
 init|=
 block|{
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"OnStream"
+block|,
+literal|"ADR*"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_FIXED
+operator||
+name|SA_QUIRK_NODREAD
+operator||
+name|SA_QUIRK_1FM
+operator||
+name|SA_QUIRK_NO_MODESEL
+block|,
+literal|32768
+block|}
+block|,
 block|{
 block|{
 name|T_SEQUENTIAL
@@ -8575,6 +8604,16 @@ operator|&&
 operator|(
 name|softc
 operator|->
+name|quirks
+operator|&
+name|SA_QUIRK_NO_MODESEL
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|softc
+operator|->
 name|media_blksize
 operator|!=
 name|softc
@@ -8963,11 +9002,23 @@ name|SA_FLAG_COMP_UNSUPP
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|softc
 operator|->
 name|buffer_mode
 operator|==
 name|SMH_SA_BUF_MODE_NOBUF
+operator|)
+operator|&&
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|SA_QUIRK_NO_MODESEL
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|error
@@ -8999,6 +9050,25 @@ name|buffer_mode
 operator|=
 name|SMH_SA_BUF_MODE_SIBUF
 expr_stmt|;
+name|xpt_print_path
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"unable to set buffered mode\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* not an error */
 block|}
 if|if
 condition|(
