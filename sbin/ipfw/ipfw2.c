@@ -12857,7 +12857,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse arguments and assemble the microinstructions which make up a rule.  * Rules are added into the 'rulebuf' and then copied in the correct order  * into the actual rule.  *  * The syntax for a rule starts with the action, followed by an  * optional log action, and the various match patterns.  * In the assembled microcode, the first opcode must be a O_PROBE_STATE  * (generated if the rule includes a keep-state option), then the  * various match patterns, the "log" action, and the actual action.  *   */
+comment|/*  * Parse arguments and assemble the microinstructions which make up a rule.  * Rules are added into the 'rulebuf' and then copied in the correct order  * into the actual rule.  *  * The syntax for a rule starts with the action, followed by an  * optional log action, and the various match patterns.  * In the assembled microcode, the first opcode must be a O_PROBE_STATE  * (generated if the rule includes a keep-state option), then the  * various match patterns, the "log" action, and the actual action.  *  */
 end_comment
 
 begin_function
