@@ -54,6 +54,22 @@ modifier|*
 name|names_from_file
 decl_stmt|;
 comment|/* -T file */
+name|time_t
+name|newer_ctime_sec
+decl_stmt|;
+comment|/* --newer/--newer-than */
+name|long
+name|newer_ctime_nsec
+decl_stmt|;
+comment|/* --newer/--newer-than */
+name|time_t
+name|newer_mtime_sec
+decl_stmt|;
+comment|/* --newer-mtime */
+name|long
+name|newer_mtime_nsec
+decl_stmt|;
+comment|/* --newer-mtime-than */
 name|int
 name|bytes_per_block
 decl_stmt|;
