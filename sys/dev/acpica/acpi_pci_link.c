@@ -1801,7 +1801,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Try to disable this link.  If successful, set the current IRQ to 	 * zero and flags to indicate this link is not routed.  If we can't 	 * run _DIS (i.e., the method doesn't exist), assume the initial 	 * IRQ was routed by the BIOS. 	 */
+comment|/* 	 * Try to disable this link.  If successful, set the current IRQ to 	 * zero and flags to indicate this link is not routed.  If we can't 	 * run _DIS (i.e., the method doesn't exist), assume the initial 	 * IRQ was routed by the BIOS. 	 * 	 * XXX Since we detect link devices via _PRT entries but run long 	 * after APIC mode has been enabled, we don't get a chance to 	 * disable links that will be unused (especially in APIC mode). 	 * Leaving them enabled can cause duplicate interrupts for some 	 * devices.  The right fix is to probe links via their PNPID, so we 	 * see them no matter what the _PRT says. 	 */
 if|if
 condition|(
 name|ACPI_SUCCESS
