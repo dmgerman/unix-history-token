@@ -97,47 +97,6 @@ directive|include
 file|<dev/mlx/mlxreg.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|debug
-parameter_list|(
-name|fmt
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-value|printf("%s: " fmt "\n", __FUNCTION__ , ##args)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|debug
-parameter_list|(
-name|fmt
-parameter_list|,
-name|args
-modifier|...
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* prototypes */
 end_comment
@@ -406,9 +365,9 @@ name|disklabel
 modifier|*
 name|label
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -574,9 +533,9 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -645,9 +604,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -691,6 +650,8 @@ condition|)
 block|{
 name|debug
 argument_list|(
+literal|0
+argument_list|,
 literal|"mlx_submit_ioctl returned %d\n"
 argument_list|,
 name|error
@@ -741,9 +702,9 @@ name|b_dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* bogus disk? */
@@ -881,9 +842,9 @@ name|b_dev
 operator|->
 name|si_drv1
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -934,9 +895,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 name|device_set_desc
@@ -988,9 +949,9 @@ decl_stmt|;
 name|dev_t
 name|dsk
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 name|parent
@@ -1216,9 +1177,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|debug
+name|debug_called
 argument_list|(
-literal|"called"
+literal|1
 argument_list|)
 expr_stmt|;
 name|devstat_remove_entry
