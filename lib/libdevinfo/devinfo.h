@@ -29,6 +29,35 @@ name|DEVINFO_ROOT_DEVICE
 value|((devinfo_handle_t)0)
 end_define
 
+begin_comment
+comment|/*  * State of the device.  */
+end_comment
+
+begin_comment
+comment|/* XXX not sure if I want a copy here, or expose sys/bus.h */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+name|devinfo_state
+block|{
+name|DIS_NOTPRESENT
+block|,
+comment|/* not probed or probe failed */
+name|DIS_ALIVE
+block|,
+comment|/* probe succeeded */
+name|DIS_ATTACHED
+block|,
+comment|/* attach method called */
+name|DIS_BUSY
+comment|/* device is open */
+block|}
+name|devinfo_state_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|devinfo_dev
@@ -56,6 +85,28 @@ modifier|*
 name|dd_drivername
 decl_stmt|;
 comment|/* name of attached driver*/
+name|char
+modifier|*
+name|dd_pnpinfo
+decl_stmt|;
+comment|/* pnp info from parent bus */
+name|char
+modifier|*
+name|dd_location
+decl_stmt|;
+comment|/* Where bus thinks dev at */
+name|uint32_t
+name|dd_devflags
+decl_stmt|;
+comment|/* API flags */
+name|uint16_t
+name|dd_flags
+decl_stmt|;
+comment|/* internal dev flags */
+name|devinfo_state_t
+name|dd_state
+decl_stmt|;
+comment|/* attacement state of dev */
 block|}
 struct|;
 end_struct
