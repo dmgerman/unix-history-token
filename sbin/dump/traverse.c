@@ -2874,7 +2874,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"More than %d block read errors from %d\n"
+literal|"More than %d block read errors from %s\n"
 argument_list|,
 name|BREADEMAX
 argument_list|,
