@@ -121,6 +121,8 @@ block|,
 comment|/* FORE Systems, Inc. */
 name|VENDOR_ENI
 comment|/* Efficient Networks, Inc. */
+name|VENDOR_IDT
+comment|/* Integrated Device Technology, Inc. */
 block|}
 enum|;
 end_enum
@@ -149,6 +151,8 @@ block|,
 comment|/* FORE - 200 Series */
 name|VENDAPI_ENI_1
 comment|/* ENI - Midway */
+name|VENDAPI_IDT_1
+comment|/* IDT - NICStAR */
 block|}
 enum|;
 end_enum
@@ -186,6 +190,8 @@ block|,
 comment|/* FORE ESA-200E */
 name|DEV_ENI_155P
 comment|/* ENI-155p */
+name|DEV_IDT_155
+comment|/* IDT NICStAR */
 block|}
 enum|;
 end_enum
@@ -254,6 +260,8 @@ block|,
 comment|/* SBus: 32 byte (8 word) max burst */
 name|BUS_PCI
 comment|/* PCI */
+name|BUS_EISA
+comment|/* EISA */
 block|}
 enum|;
 end_enum
