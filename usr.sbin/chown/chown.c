@@ -575,7 +575,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"seperation of user and group with a period is deprecated"
+literal|"separation of user and group with a period is deprecated"
 argument_list|)
 expr_stmt|;
 operator|*
