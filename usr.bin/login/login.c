@@ -1918,6 +1918,10 @@ comment|/* SKEY */
 else|#
 directive|else
 comment|/* !KERBEROS */
+if|if
+condition|(
+name|pwd
+condition|)
 name|rval
 operator|=
 name|strcmp
