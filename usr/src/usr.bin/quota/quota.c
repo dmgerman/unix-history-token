@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quota.c	5.1 (Berkeley) %G%"
+literal|"@(#)quota.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,7 +702,7 @@ argument_list|,
 name|L_SET
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|read
 argument_list|(
@@ -714,13 +714,46 @@ argument_list|,
 sizeof|sizeof
 name|dqblk
 argument_list|)
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|dqblk
-argument_list|)
 condition|)
 block|{
+case|case
+literal|0
+case|:
+comment|/* EOF */
+comment|/* 				 * Convert implicit 0 quota (EOF) 				 * into an explicit one (zero'ed dqblk). 				 */
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|dqblk
+argument_list|,
+sizeof|sizeof
+name|dqblk
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+sizeof|sizeof
+name|dqblk
+case|:
+comment|/* OK */
+break|break;
+default|default:
+comment|/* ERROR */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"quota: read error in "
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|qfilename
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -735,6 +768,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|vflag
+operator|&&
 name|dqblk
 operator|.
 name|dqb_isoftlimit
@@ -1127,6 +1163,10 @@ expr_stmt|;
 block|}
 name|xprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1165,6 +1205,10 @@ condition|)
 return|return;
 name|xprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1190,6 +1234,10 @@ argument_list|)
 expr_stmt|;
 name|xprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1211,6 +1259,10 @@ argument_list|)
 expr_stmt|;
 name|xprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1239,6 +1291,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*VARARGS1*/
+end_comment
 
 begin_macro
 name|xprintf
