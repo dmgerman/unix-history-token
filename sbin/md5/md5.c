@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5.c,v 1.5 1995/05/30 06:09:19 rgrimes Exp $  *  * Derived from:  */
+comment|/*  * $Id: md5.c,v 1.6 1995/07/12 09:14:46 phk Exp $  *  * Derived from:  */
 end_comment
 
 begin_comment
@@ -14,13 +14,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -32,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"global.h"
+file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<md5.h>
+file|"global.h"
 end_include
 
 begin_comment
