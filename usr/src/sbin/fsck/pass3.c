@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass3.c	5.8 (Berkeley) %G%"
+literal|"@(#)pass3.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,18 @@ index|]
 operator|==
 name|DSTATE
 operator|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|statemap
+index|[
+name|inp
+operator|->
+name|i_number
+index|]
+operator|==
+name|DCLEAR
 condition|)
 continue|continue;
 for|for
