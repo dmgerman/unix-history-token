@@ -1110,6 +1110,16 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
+literal|"stg"
+block|,
+literal|"TMC 18C30/18C50 based SCSI cards"
+block|,
+literal|0
+block|,
+name|CLS_STORAGE
+block|}
+block|,
+block|{
 literal|"wdc"
 block|,
 literal|"IDE/ESDI/MFM disk controller"
