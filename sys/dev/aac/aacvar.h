@@ -1181,6 +1181,11 @@ directive|define
 name|AAC_FLAGS_256FIBS
 value|(1<< 7)
 comment|/* Can only do 256 commands */
+define|#
+directive|define
+name|AAC_FLAGS_BROKEN_MEMMAP
+value|(1<< 8)
+comment|/* Broken HostPhysMemPages */
 name|u_int32_t
 name|supported_options
 decl_stmt|;
