@@ -1843,7 +1843,7 @@ end_function
 
 begin_function
 name|void
-name|db_stack_trace_cmd
+name|db_print_backtrace
 parameter_list|(
 name|void
 parameter_list|)
