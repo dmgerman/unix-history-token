@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_inode.c	4.35	83/05/21	*/
+comment|/*	ffs_inode.c	4.36	83/06/11	*/
 end_comment
 
 begin_include
@@ -1646,7 +1646,30 @@ name|i_size
 operator|<=
 name|length
 condition|)
+block|{
+name|oip
+operator|->
+name|i_flag
+operator||=
+name|ICHG
+operator||
+name|IUPD
+expr_stmt|;
+name|iupdat
+argument_list|(
+name|oip
+argument_list|,
+operator|&
+name|time
+argument_list|,
+operator|&
+name|time
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * Calculate index into inode's block list of 	 * last direct and indirect blocks (if any) 	 * which we want to keep.  Lastblock is -1 when 	 * the file is truncated to 0. 	 */
 name|fs
 operator|=
