@@ -73,6 +73,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|pmap_page_is_mapped
+parameter_list|(
+name|m
+parameter_list|)
+value|(!STAILQ_EMPTY(&(m)->md.tte_list))
+end_define
+
+begin_define
+define|#
+directive|define
 name|pmap_resident_count
 parameter_list|(
 name|pm
