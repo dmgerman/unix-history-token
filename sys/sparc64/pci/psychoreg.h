@@ -1291,11 +1291,11 @@ begin_define
 define|#
 directive|define
 name|UEAFSR_BLK
-value|(1UL<< 22)
+value|(1UL<< 23)
 end_define
 
 begin_comment
-comment|/* pri. error caused by read */
+comment|/* Error caused by block transaction. */
 end_comment
 
 begin_define
@@ -1306,7 +1306,7 @@ value|(1UL<< 56)
 end_define
 
 begin_comment
-comment|/* pri. DMA translation error */
+comment|/* Pri. DVMA translation error. */
 end_comment
 
 begin_define
@@ -1317,7 +1317,7 @@ value|(1UL<< 57)
 end_define
 
 begin_comment
-comment|/* sec. DMA translation error */
+comment|/* Sec. DVMA translation error. */
 end_comment
 
 begin_define
@@ -1328,7 +1328,7 @@ value|(1UL<< 58)
 end_define
 
 begin_comment
-comment|/* sec. error during write */
+comment|/* Sec. error during DVMA write. */
 end_comment
 
 begin_define
@@ -1339,7 +1339,18 @@ value|(1UL<< 59)
 end_define
 
 begin_comment
-comment|/* sec. error during read */
+comment|/* Sec. error during DVMA read. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_S_PIO
+value|(1UL<< 60)
+end_define
+
+begin_comment
+comment|/* Sec. error during PIO access. */
 end_comment
 
 begin_define
@@ -1350,7 +1361,7 @@ value|(1UL<< 61)
 end_define
 
 begin_comment
-comment|/* pri. error during write */
+comment|/* Pri. error during DVMA write. */
 end_comment
 
 begin_define
@@ -1361,8 +1372,108 @@ value|(1UL<< 62)
 end_define
 
 begin_comment
-comment|/* pri. error during read */
+comment|/* Pri. error during DVMA read. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UEAFSR_P_PIO
+value|(1UL<< 63)
+end_define
+
+begin_comment
+comment|/* Pri. error during PIO access. */
+end_comment
+
+begin_comment
+comment|/* Correctable error asynchronous fault status registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_BLK
+value|(1UL<< 23)
+end_define
+
+begin_comment
+comment|/* Error caused by block transaction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_S_DWR
+value|(1UL<< 58)
+end_define
+
+begin_comment
+comment|/* Sec. error caused by DVMA write. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_S_DRD
+value|(1UL<< 59)
+end_define
+
+begin_comment
+comment|/* Sec. error caused by DVMA read. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_S_PIO
+value|(1UL<< 60)
+end_define
+
+begin_comment
+comment|/* Sec. error caused by PIO access. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_P_DWR
+value|(1UL<< 61)
+end_define
+
+begin_comment
+comment|/* Pri. error caused by DVMA write. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_P_DRD
+value|(1UL<< 62)
+end_define
+
+begin_comment
+comment|/* Pri. error caused by DVMA read. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_P_PIO
+value|(1UL<< 63)
+end_define
+
+begin_comment
+comment|/* Pri. error caused by PIO access. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CEAFSR_ERRMASK
+define|\
+value|(CEAFSR_P_PIO | CEAFSR_P_DRD | CEAFSR_P_DWR |			\ 	 CEAFSR_S_PIO | CEAFSR_S_DRD | CEAFSR_S_DWR)
+end_define
 
 begin_comment
 comment|/* Definitions for the target address space register. */
