@@ -591,7 +591,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true if comments beginning with 					 * `/*\n' are to be reformatted */
+comment|/* true if comments beginning with 					 * `/ * \n' are to be reformatted */
 end_comment
 
 begin_decl_stmt
@@ -783,7 +783,7 @@ comment|/* used to store case stmt indentation levels */
 name|int
 name|box_com
 decl_stmt|;
-comment|/* set to true when we are in a "boxed" 				 * comment. In that case, the first non-blank 				 * char should be lined up with the / in /* */
+comment|/* set to true when we are in a "boxed" 				 * comment. In that case, the first non-blank 				 * char should be lined up with the / in / followed by * */
 name|int
 name|comment_delta
 decl_stmt|,
