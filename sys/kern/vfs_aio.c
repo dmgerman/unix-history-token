@@ -4688,7 +4688,6 @@ comment|/* 		 * If daemon is inactive for a long time, allow it to exit, 		 * th
 if|if
 condition|(
 operator|(
-operator|(
 name|aiop
 operator|->
 name|aiothreadflags
@@ -4697,11 +4696,12 @@ name|AIOP_SCHED
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 name|tsleep
 argument_list|(
-name|mycp
+name|aiop
+operator|->
+name|aiothread
 argument_list|,
 name|PRIBIO
 argument_list|,
