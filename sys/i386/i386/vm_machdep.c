@@ -20,6 +20,18 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_kstack_pages.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_npx.h"
 end_include
 
@@ -49,18 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_isa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_kstack_pages.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -68,24 +68,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kse.h>
 end_include
 
 begin_include
@@ -103,13 +85,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
+file|<sys/kse.h>
 end_include
 
 begin_include
@@ -127,6 +103,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -139,13 +127,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/smp.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/sf_buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
 end_include
 
 begin_include
@@ -158,6 +152,24 @@ begin_include
 include|#
 directive|include
 file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
 end_include
 
 begin_include
@@ -199,13 +211,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
@@ -229,13 +235,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_ifdef
