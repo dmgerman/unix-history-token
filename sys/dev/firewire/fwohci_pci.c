@@ -1353,6 +1353,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|int
+name|err
+decl_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -1360,9 +1363,6 @@ argument_list|,
 literal|"fwohci_pci_suspend\n"
 argument_list|)
 expr_stmt|;
-name|int
-name|err
-decl_stmt|;
 name|err
 operator|=
 name|bus_generic_suspend
