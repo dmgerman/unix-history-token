@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.14	82/04/19	*/
-end_comment
-
-begin_comment
-comment|/*	buf.h	2.1	3/25/82	*/
+comment|/*	buf.h	4.15	82/05/31	*/
 end_comment
 
 begin_comment
@@ -210,6 +206,33 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|BUFHSZ
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|RND
+value|(MAXBSIZE/DEV_BSIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUFHASH
+parameter_list|(
+name|dev
+parameter_list|,
+name|dblkno
+parameter_list|)
+define|\
+value|((struct buf *)&bufhash[((int)(dev)+(((int)(dblkno))/RND)) % BUFHSZ])
+end_define
+
 begin_decl_stmt
 name|struct
 name|buf
@@ -266,6 +289,20 @@ modifier|*
 name|swpf
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|bufhd
+name|bufhash
+index|[
+name|BUFHSZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* heads of hash lists */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -613,6 +650,20 @@ end_define
 begin_comment
 comment|/* bad block revectoring in progress */
 end_comment
+
+begin_comment
+comment|/*  * Take a buffer off the free list it's on and  * mark it as being use (B_BUSY) by a device.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|notavail
+parameter_list|(
+name|bp
+parameter_list|)
+value|{ \ 	int x = spl6(); \ 	(bp)->av_back->av_forw = (bp)->av_forw; \ 	(bp)->av_forw->av_back = (bp)->av_back; \ 	(bp)->b_flags |= B_BUSY; \ 	splx(x); \ }
+end_define
 
 end_unit
 
