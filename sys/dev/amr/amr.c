@@ -3154,7 +3154,7 @@ name|ac_flags
 operator||=
 name|AMR_CMD_PRIORITY
 operator||
-name|AMR_CMD_DATAOUT
+name|AMR_CMD_DATAIN
 expr_stmt|;
 comment|/* point the command at our data */
 name|ac
