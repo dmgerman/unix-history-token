@@ -185,9 +185,9 @@ name|sq_wchan
 decl_stmt|;
 comment|/* (c) Wait channel. */
 name|int
-name|sq_flags
+name|sq_type
 decl_stmt|;
-comment|/* (c) Flags. */
+comment|/* (c) Queue type. */
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -1018,9 +1018,11 @@ endif|#
 directive|endif
 name|sq
 operator|->
-name|sq_flags
+name|sq_type
 operator|=
 name|flags
+operator|&
+name|SLEEPQ_TYPE
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -1140,6 +1142,18 @@ operator|->
 name|td_wmesg
 operator|=
 name|wmesg
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|SLEEPQ_INTERRUPTIBLE
+condition|)
+name|td
+operator|->
+name|td_flags
+operator||=
+name|TDF_SINTR
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -1349,10 +1363,13 @@ name|p_comm
 argument_list|)
 expr_stmt|;
 comment|/* Mark thread as being in an interruptible sleep. */
-name|mtx_lock_spin
+name|MPASS
 argument_list|(
+name|td
+operator|->
+name|td_flags
 operator|&
-name|sched_lock
+name|TDF_SINTR
 argument_list|)
 expr_stmt|;
 name|MPASS
@@ -1361,18 +1378,6 @@ name|TD_ON_SLEEPQ
 argument_list|(
 name|td
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_flags
-operator||=
-name|TDF_SINTR
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 name|sleepq_release
@@ -1441,7 +1446,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there were pending signals and this thread is still on 	 * the sleep queue, remove it from the sleep queue. 	 */
+comment|/* 	 * If there were pending signals and this thread is still on 	 * the sleep queue, remove it from the sleep queue.  If the 	 * thread was removed from the sleep queue while we were blocked 	 * above, then clear TDF_SINTR before returning. 	 */
 name|sq
 operator|=
 name|sleepq_lookup
@@ -1488,12 +1493,33 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|!
+name|TD_ON_SLEEPQ
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+name|sig
+operator|==
+literal|0
+condition|)
+name|td
+operator|->
+name|td_flags
+operator|&=
+operator|~
+name|TDF_SINTR
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|sig
@@ -1800,6 +1826,23 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
+comment|/* 	 * If TDF_SINTR is clear, then we were awakened while executing 	 * sleepq_catch_signals(). 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|td
+operator|->
+name|td_flags
+operator|&
+name|TDF_SINTR
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* We are no longer in an interruptible sleep. */
 name|td
 operator|->
@@ -1966,6 +2009,18 @@ modifier|*
 name|wchan
 parameter_list|)
 block|{
+name|MPASS
+argument_list|(
+operator|!
+operator|(
+name|curthread
+operator|->
+name|td_flags
+operator|&
+name|TDF_SINTR
+operator|)
+argument_list|)
+expr_stmt|;
 name|sleepq_switch
 argument_list|(
 name|wchan
@@ -2036,6 +2091,18 @@ block|{
 name|int
 name|rval
 decl_stmt|;
+name|MPASS
+argument_list|(
+operator|!
+operator|(
+name|curthread
+operator|->
+name|td_flags
+operator|&
+name|TDF_SINTR
+operator|)
+argument_list|)
+expr_stmt|;
 name|sleepq_switch
 argument_list|(
 name|wchan
@@ -2485,9 +2552,13 @@ name|KASSERT
 argument_list|(
 name|sq
 operator|->
-name|sq_flags
+name|sq_type
 operator|==
+operator|(
 name|flags
+operator|&
+name|SLEEPQ_TYPE
+operator|)
 argument_list|,
 operator|(
 literal|"%s: mismatch between sleep/wakeup and cv_*"
@@ -2630,9 +2701,13 @@ name|KASSERT
 argument_list|(
 name|sq
 operator|->
-name|sq_flags
+name|sq_type
 operator|==
+operator|(
 name|flags
+operator|&
+name|SLEEPQ_TYPE
+operator|)
 argument_list|,
 operator|(
 literal|"%s: mismatch between sleep/wakeup and cv_*"
