@@ -943,7 +943,9 @@ operator|,
 operator|&
 name|sf
 operator|->
-name|sf_sc
+name|sf_siginfo
+operator|.
+name|si_sc
 operator|)
 expr_stmt|;
 comment|/* 				 * STEP 4: Just turn SIGIO off.  No check. 				_BlockIO(); 				 */
