@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arc.c	4.2 (Berkeley) %G%"
+literal|"@(#)arc.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,10 +125,16 @@ name|r
 expr_stmt|;
 name|pc
 operator|=
+name|pc
+operator|>
+literal|0
+condition|?
 name|sqrt
 argument_list|(
 name|pc
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|flg
 operator|=
@@ -338,10 +344,18 @@ name|xc
 operator|=
 name|m
 operator|*
+operator|(
+name|pc
+operator|>
+literal|0
+condition|?
 name|sqrt
 argument_list|(
 name|pc
 argument_list|)
+else|:
+literal|0
+operator|)
 operator|+
 name|x
 expr_stmt|;
@@ -519,10 +533,18 @@ name|yc
 operator|=
 name|m
 operator|*
+operator|(
+name|pc
+operator|>
+literal|0
+condition|?
 name|sqrt
 argument_list|(
 name|pc
 argument_list|)
+else|:
+literal|0
+operator|)
 operator|+
 name|y
 expr_stmt|;
