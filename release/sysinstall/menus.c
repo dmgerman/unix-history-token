@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.153 1998/02/10 18:31:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.154 1998/02/12 17:53:19 yokota Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1866,218 +1866,202 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|int
-name|whichMouse
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|file_readable
-argument_list|(
-literal|"/dev/mouse"
-argument_list|)
-condition|)
-return|return
-name|FALSE
-return|;
-if|if
-condition|(
-operator|(
-name|i
-operator|=
-name|readlink
-argument_list|(
-literal|"/dev/mouse"
-argument_list|,
-name|buf
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-return|return
-name|FALSE
-return|;
-name|buf
-index|[
-name|i
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"COM1"
-argument_list|)
-condition|)
-return|return
-operator|!
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
-literal|"/dev/cuaa0"
-argument_list|)
-return|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"COM2"
-argument_list|)
-condition|)
-return|return
-operator|!
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
-literal|"/dev/cuaa1"
-argument_list|)
-return|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"COM3"
-argument_list|)
-condition|)
-return|return
-operator|!
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
-literal|"/dev/cuaa2"
-argument_list|)
-return|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"COM4"
-argument_list|)
-condition|)
-return|return
-operator|!
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
-literal|"/dev/cuaa3"
-argument_list|)
-return|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"BusMouse"
-argument_list|)
-condition|)
-return|return
-operator|!
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
-literal|"/dev/mse0"
-argument_list|)
-return|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|self
-operator|->
-name|prompt
-argument_list|,
-literal|"PS/2"
-argument_list|)
-condition|)
-return|return
-operator|!
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
-literal|"/dev/psm0"
-argument_list|)
-return|;
-return|return
-name|FALSE
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 name|DMenu
-name|MenuMouse
+name|MenuMouseType
 init|=
 block|{
 name|DMENU_RADIO_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"Please select your mouse type from the following menu"
+literal|"Select a protocol type for your mouse"
 block|,
-literal|"There are many different types of mice currently on the market,\n"
-literal|"but this configuration menu should at least narrow down the choices\n"
-literal|"somewhat.  Once you've selected one of the below, you can specify\n"
-literal|"/dev/mouse as your mouse device when running the X configuration\n"
-literal|"utility (see Configuration menu).  Please note that for PS/2 mice,\n"
-literal|"you need to enable the psm driver in the kernel configuration menu\n"
-literal|"when installing for the first time."
+literal|"If you are not sure, choose \"Auto\".  It should always work for bus\n"
+literal|"and PS/2 style mice.  It may not work for the serial mouse if the mouse\n"
+literal|"does not support the PnP standard.  But, it won't hurt.  Many 2-button\n"
+literal|"serial mice are compatible with \"Microsoft\" or \"MouseMan\".  3-button\n"
+literal|"serial mice may be compatible with \"MouseSystems\" or \"MouseMan\".  If\n"
+literal|"the mouse has a wheel, it may be compatible with \"IntelliMouse\"."
 block|,
-literal|"For more information, visit the Documentation menu"
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"Auto"
+block|,
+literal|"Bus mouse, PS/2 style mouse or PnP serial mouse"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=auto"
+block|}
+block|,
+block|{
+literal|"GlidePoint"
+block|,
+literal|"ALPS GlidePoint pad (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=glidepoint"
+block|}
+block|,
+block|{
+literal|"Hitachi"
+block|,
+literal|"Hitachi tablet (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=mmhittab"
+block|}
+block|,
+block|{
+literal|"IntelliMouse"
+block|,
+literal|"Microsoft IntelliMouse (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=intellimouse"
+block|}
+block|,
+block|{
+literal|"Logitech"
+block|,
+literal|"Logitech protocol (old models) (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=logitech"
+block|}
+block|,
+block|{
+literal|"Microsoft"
+block|,
+literal|"Microsoft protocol (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=microsoft"
+block|}
+block|,
+block|{
+literal|"MM Series"
+block|,
+literal|"MM Series protocol (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=mmseries"
+block|}
+block|,
+block|{
+literal|"MouseMan"
+block|,
+literal|"Logitech MouseMan/TrackMan models (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=mouseman"
+block|}
+block|,
+block|{
+literal|"MouseSystems"
+block|,
+literal|"MouseSystems protocol (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=mousesystems"
+block|}
+block|,
+block|{
+literal|"ThinkingMouse"
+block|,
+literal|"Kensington ThinkingMouse (serial)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_TYPE
+literal|"=thinkingmouse"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuMousePort
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Select your mouse port from the following menu"
+block|,
+literal|"Please note that for PS/2 mice, you need to enable the psm driver\n"
+literal|"in the kernel configuration menu when installing for the first time."
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2085,133 +2069,193 @@ block|{
 block|{
 literal|"COM1"
 block|,
-literal|"Serial mouse on COM1"
+literal|"Serial mouse on COM1 (/dev/cuaa0)"
 block|,
-name|whichMouse
+name|dmenuVarCheck
 block|,
-name|dmenuSystemCommand
+name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ln -fs /dev/cuaa0 /dev/mouse"
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|1
+name|VAR_MOUSED_PORT
+literal|"=/dev/cuaa0"
 block|}
 block|,
 block|{
 literal|"COM2"
 block|,
-literal|"Serial mouse on COM2"
+literal|"Serial mouse on COM2 (/dev/cuaa1)"
 block|,
-name|whichMouse
+name|dmenuVarCheck
 block|,
-name|dmenuSystemCommand
+name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ln -fs /dev/cuaa1 /dev/mouse"
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|1
+name|VAR_MOUSED_PORT
+literal|"=/dev/cuaa1"
 block|}
 block|,
 block|{
 literal|"COM3"
 block|,
-literal|"Serial mouse on COM3"
+literal|"Serial mouse on COM3 (/dev/cuaa2)"
 block|,
-name|whichMouse
+name|dmenuVarCheck
 block|,
-name|dmenuSystemCommand
+name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ln -fs /dev/cuaa2 /dev/mouse"
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|1
+name|VAR_MOUSED_PORT
+literal|"=/dev/cuaa2"
 block|}
 block|,
 block|{
 literal|"COM4"
 block|,
-literal|"Serial mouse on COM4"
+literal|"Serial mouse on COM4 (/dev/cuaa3)"
 block|,
-name|whichMouse
+name|dmenuVarCheck
 block|,
-name|dmenuSystemCommand
+name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ln -fs /dev/cuaa3 /dev/mouse"
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|1
+name|VAR_MOUSED_PORT
+literal|"=/dev/cuaa3"
 block|}
 block|,
 block|{
 literal|"BusMouse"
 block|,
-literal|"Logitech or ATI bus mouse"
+literal|"Logitech, ATI or MS bus mouse (/dev/mse0)"
 block|,
-name|whichMouse
+name|dmenuVarCheck
 block|,
-name|dmenuSystemCommand
+name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ln -fs /dev/mse0 /dev/mouse"
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|1
+name|VAR_MOUSED_PORT
+literal|"=/dev/mse0"
 block|}
 block|,
 block|{
 literal|"PS/2"
 block|,
-literal|"PS/2 style mouse (must enable psm0 device)"
+literal|"PS/2 style mouse (must enable /dev/psm0)"
 block|,
-name|whichMouse
+name|dmenuVarCheck
 block|,
-name|dmenuSystemCommand
+name|dmenuSetVariable
 block|,
 name|NULL
 block|,
-literal|"ln -fs /dev/psm0 /dev/mouse"
+name|VAR_MOUSED_PORT
+literal|"=/dev/psm0"
+block|}
 block|,
-literal|'('
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuMouse
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
 block|,
-literal|'*'
+literal|"Please configure your mouse"
 block|,
-literal|')'
+literal|"There are many different types of mice currently on the market,\n"
+literal|"but this configuration menu should at least narrow down the choices\n"
+literal|"somewhat.  Once you've done with the following menus, you can specify\n"
+literal|"\"/dev/sysmouse\" as your mouse device and \"SysMouse\" or \"MouseSystems\"\n"
+literal|"as mouse protocol when running the X configuration utility (see \n"
+literal|"Configuration menu)."
 block|,
-literal|1
+literal|"Choose 3 after selecting a protocol and a port."
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"1 Type"
+block|,
+literal|"Select mouse protocol"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuMouseType
+block|}
+block|,
+block|{
+literal|"2 Port"
+block|,
+literal|"Select mouse port"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuMousePort
+block|}
+block|,
+block|{
+literal|"3 Daemon"
+block|,
+literal|"Test and run the mouse daemon"
+block|,
+name|NULL
+block|,
+name|mousedTest
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"4 No mouse"
+block|,
+literal|"Clear mouse configuration"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED
+literal|"=NO, "
+name|VAR_MOUSED_TYPE
+literal|"=NO, "
+name|VAR_MOUSED_PORT
+literal|"="
+block|}
+block|,
+block|{
+literal|"0 Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
 block|}
 block|,
 block|{
@@ -6832,7 +6876,7 @@ block|,
 block|{
 literal|"5 Mouse"
 block|,
-literal|"Select the type of mouse you have"
+literal|"Configure your mouse"
 block|,
 name|NULL
 block|,
