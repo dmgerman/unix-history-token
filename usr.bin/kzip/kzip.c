@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Copyright (C) 1993  Hannu Savolainen  * Ported to 386bsd by Serge Vakulenko  * based on tools/build.c by Linus Torvalds  * $Id$  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Copyright (C) 1993  Hannu Savolainen  * Ported to 386bsd by Serge Vakulenko  * based on tools/build.c by Linus Torvalds  * $Id: kzip.c,v 1.1 1995/04/15 08:18:20 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -50,6 +50,17 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|MAXIMAGE
+value|(2*1024*1024)
+end_define
+
+begin_comment
+comment|/* This is the limit because a kzip'ed kernel loads at 3Mb and 	 * ends up at 1Mb 	 */
+end_comment
 
 begin_function
 name|int
@@ -1153,9 +1164,7 @@ comment|/* object header */
 name|char
 name|image
 index|[
-literal|1024
-operator|*
-literal|1024
+name|MAXIMAGE
 index|]
 decl_stmt|;
 comment|/* kernel image buffer */
