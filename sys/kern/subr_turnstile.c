@@ -911,7 +911,7 @@ name|rval
 decl_stmt|;
 name|MPASS
 argument_list|(
-name|CURPROC
+name|curproc
 operator|!=
 name|NULL
 argument_list|)
@@ -940,7 +940,7 @@ name|_obtain_lock
 argument_list|(
 name|m
 argument_list|,
-name|CURTHD
+name|curproc
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1057,7 +1057,7 @@ name|proc
 modifier|*
 name|p
 init|=
-name|CURPROC
+name|curproc
 decl_stmt|;
 if|if
 condition|(
@@ -1653,7 +1653,7 @@ name|_obtain_lock
 argument_list|(
 name|m
 argument_list|,
-name|CURPROC
+name|curproc
 argument_list|)
 condition|)
 break|break;
@@ -1791,7 +1791,7 @@ name|pri
 decl_stmt|;
 name|p
 operator|=
-name|CURPROC
+name|curproc
 expr_stmt|;
 name|MPASS4
 argument_list|(
@@ -4090,7 +4090,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|CURPROC
+name|curproc
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -4459,7 +4459,7 @@ name|mtx_witness
 expr_stmt|;
 name|p
 operator|=
-name|CURPROC
+name|curproc
 expr_stmt|;
 if|if
 condition|(
@@ -5447,7 +5447,7 @@ name|file
 expr_stmt|;
 name|p
 operator|=
-name|CURPROC
+name|curproc
 expr_stmt|;
 name|MPASS
 argument_list|(
@@ -5791,7 +5791,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|CURPROC
+name|curproc
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -7616,7 +7616,7 @@ begin_block
 block|{
 name|witness_list
 argument_list|(
-name|CURPROC
+name|curproc
 argument_list|)
 expr_stmt|;
 block|}
