@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.30	%G%	*/
+comment|/*	machdep.c	3.31	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.30) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.31) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,6 +379,35 @@ name|year
 init|=
 name|YRREF
 decl_stmt|;
+if|if
+condition|(
+name|base
+operator|<
+literal|5
+operator|*
+name|SECYR
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: the date is silly; reset it!\n"
+argument_list|)
+expr_stmt|;
+name|base
+operator|=
+literal|6
+operator|*
+name|SECYR
+operator|+
+literal|212
+operator|*
+name|SECDAY
+operator|+
+name|SECDAY
+operator|/
+literal|2
+expr_stmt|;
+block|}
 comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 */
 if|if
 condition|(
