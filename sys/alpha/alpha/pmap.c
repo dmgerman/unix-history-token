@@ -134,7 +134,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -661,7 +661,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|vm_zone_t
+name|uma_zone_t
 name|pvzone
 decl_stmt|;
 end_decl_stmt
@@ -1994,15 +1994,9 @@ name|initial_pvs
 operator|=
 name|MINPV
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|pvzone =&pvzone_store; 	pvinit = (struct pv_entry *) kmem_alloc(kernel_map, 		initial_pvs * sizeof (struct pv_entry)); 	zbootinit(pvzone, "PV ENTRY", sizeof (struct pv_entry), pvinit, 	    vm_page_array_size);
-endif|#
-directive|endif
 name|pvzone
 operator|=
-name|zinit
+name|uma_zcreate
 argument_list|(
 literal|"PV ENTRY"
 argument_list|,
@@ -2012,9 +2006,15 @@ expr|struct
 name|pv_entry
 argument_list|)
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
 argument_list|,
 literal|0
 argument_list|)
@@ -2093,12 +2093,6 @@ operator|/
 literal|10
 operator|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|zinitna(pvzone,&pvzone_obj, NULL, 0, pv_entry_max, ZONE_INTERRUPT, 1);
-endif|#
-directive|endif
 name|uma_zone_set_obj
 argument_list|(
 name|pvzone
@@ -6715,7 +6709,7 @@ block|{
 name|pv_entry_count
 operator|--
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|pvzone
 argument_list|,
@@ -6769,9 +6763,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|pvzone
+argument_list|,
+name|M_NOWAIT
 argument_list|)
 return|;
 block|}

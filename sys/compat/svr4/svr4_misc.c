@@ -299,7 +299,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_endif
@@ -6682,7 +6682,7 @@ operator|->
 name|p_mtx
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|proc_zone
 argument_list|,
