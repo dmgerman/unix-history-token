@@ -43,6 +43,12 @@ directive|include
 file|<dev/ath/if_athioctl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/ath/if_athrate.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -83,46 +89,30 @@ begin_comment
 comment|/* number of descriptors per buffer */
 end_comment
 
-begin_struct
-struct|struct
-name|ath_recv_hist
-block|{
-name|int
-name|arh_ticks
-decl_stmt|;
-comment|/* sample time by system clock */
-name|u_int8_t
-name|arh_rssi
-decl_stmt|;
-comment|/* rssi */
-name|u_int8_t
-name|arh_antenna
-decl_stmt|;
-comment|/* antenna */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
-name|ATH_RHIST_SIZE
-value|16
+name|ATH_TXMAXTRY
+value|11
 end_define
 
 begin_comment
-comment|/* number of samples */
+comment|/* max number of transmit attempts */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATH_RHIST_NOTIME
-value|(~0)
+name|ATH_TXINTR_PERIOD
+value|5
 end_define
 
 begin_comment
-comment|/* driver-specific node */
+comment|/* max number of batched tx descriptors */
+end_comment
+
+begin_comment
+comment|/* driver-specific node state */
 end_comment
 
 begin_struct
@@ -134,41 +124,23 @@ name|ieee80211_node
 name|an_node
 decl_stmt|;
 comment|/* base class */
-name|u_int
-name|an_tx_ok
+name|u_int8_t
+name|an_tx_mgtrate
 decl_stmt|;
-comment|/* tx ok pkt */
-name|u_int
-name|an_tx_err
+comment|/* h/w rate for management/ctl frames */
+name|u_int8_t
+name|an_tx_mgtratesp
 decl_stmt|;
-comment|/* tx !ok pkt */
-name|u_int
-name|an_tx_retr
+comment|/* short preamble h/w rate for " " */
+name|u_int32_t
+name|an_avgrssi
 decl_stmt|;
-comment|/* tx retry count */
-name|int
-name|an_tx_upper
+comment|/* average rssi over all rx frames */
+name|HAL_NODE_STATS
+name|an_halstats
 decl_stmt|;
-comment|/* tx upper rate req cnt */
-name|u_int
-name|an_tx_antenna
-decl_stmt|;
-comment|/* antenna for last good frame */
-name|u_int
-name|an_rx_antenna
-decl_stmt|;
-comment|/* antenna for last rcvd frame */
-name|struct
-name|ath_recv_hist
-name|an_rx_hist
-index|[
-name|ATH_RHIST_SIZE
-index|]
-decl_stmt|;
-name|u_int
-name|an_rx_hist_next
-decl_stmt|;
-comment|/* index of next ``free entry'' */
+comment|/* rssi statistics used by hal */
+comment|/* variable-length rate control state follows */
 block|}
 struct|;
 end_struct
@@ -178,16 +150,89 @@ define|#
 directive|define
 name|ATH_NODE
 parameter_list|(
-name|_n
+name|ni
 parameter_list|)
-value|((struct ath_node *)(_n))
+value|((struct ath_node *)(ni))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_NODE_CONST
+parameter_list|(
+name|ni
+parameter_list|)
+value|((const struct ath_node *)(ni))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RSSI_LPF_LEN
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RSSI_DUMMY_MARKER
+value|0x127
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_EP_MUL
+parameter_list|(
+name|x
+parameter_list|,
+name|mul
+parameter_list|)
+value|((x) * (mul))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RSSI_IN
+parameter_list|(
+name|x
+parameter_list|)
+value|(ATH_EP_MUL((x), HAL_RSSI_EP_MULTIPLIER))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_LPF_RSSI
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|((x != ATH_RSSI_DUMMY_MARKER) ? (((x) * ((len) - 1) + (y)) / (len)) : (y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RSSI_LPF
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|do {						\     if ((y)>= -20)							\     	x = ATH_LPF_RSSI((x), ATH_RSSI_IN((y)), ATH_RSSI_LPF_LEN);	\ } while (0)
 end_define
 
 begin_struct
 struct|struct
 name|ath_buf
 block|{
-name|TAILQ_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|ath_buf
 argument_list|)
@@ -196,10 +241,6 @@ expr_stmt|;
 name|int
 name|bf_nseg
 decl_stmt|;
-name|bus_dmamap_t
-name|bf_dmamap
-decl_stmt|;
-comment|/* DMA map of the buffer */
 name|struct
 name|ath_desc
 modifier|*
@@ -210,6 +251,10 @@ name|bus_addr_t
 name|bf_daddr
 decl_stmt|;
 comment|/* physical addr of desc */
+name|bus_dmamap_t
+name|bf_dmamap
+decl_stmt|;
+comment|/* DMA map for mbuf chain */
 name|struct
 name|mbuf
 modifier|*
@@ -239,15 +284,239 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|ath_bufhead
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/*  * DMA state for tx/rx descriptors.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_descdma
+block|{
+specifier|const
+name|char
+modifier|*
+name|dd_name
+decl_stmt|;
+name|struct
+name|ath_desc
+modifier|*
+name|dd_desc
+decl_stmt|;
+comment|/* descriptors */
+name|bus_addr_t
+name|dd_desc_paddr
+decl_stmt|;
+comment|/* physical addr of dd_desc */
+name|bus_addr_t
+name|dd_desc_len
+decl_stmt|;
+comment|/* size of dd_desc */
+name|bus_dma_segment_t
+name|dd_dseg
+decl_stmt|;
+name|bus_dma_tag_t
+name|dd_dmat
+decl_stmt|;
+comment|/* bus DMA tag */
+name|bus_dmamap_t
+name|dd_dmamap
+decl_stmt|;
+comment|/* DMA map for descriptors */
+name|struct
+name|ath_buf
+modifier|*
+name|dd_bufptr
+decl_stmt|;
+comment|/* associated buffers */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Data transmit queue state.  One of these exists for each  * hardware transmit queue.  Packets sent to us from above  * are assigned to queues based on their priority.  Not all  * devices support a complete set of hardware transmit queues.  * For those devices the array sc_ac2q will map multiple  * priorities to fewer hardware queues (typically all to one  * hardware queue).  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_txq
+block|{
+name|u_int
+name|axq_qnum
+decl_stmt|;
+comment|/* hardware q number */
+name|u_int
+name|axq_depth
+decl_stmt|;
+comment|/* queue depth (stat only) */
+name|u_int
+name|axq_intrcnt
+decl_stmt|;
+comment|/* interrupt count */
+name|u_int32_t
+modifier|*
+name|axq_link
+decl_stmt|;
+comment|/* link ptr in last TX desc */
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|axq_q
+expr_stmt|;
+comment|/* transmit queue */
+name|struct
+name|mtx
+name|axq_lock
+decl_stmt|;
+comment|/* lock on q and link */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|,
+name|_tq
+parameter_list|)
+define|\
+value|mtx_init(&(_tq)->axq_lock, \ 		device_get_nameunit((_sc)->sc_dev), "xmit q", MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_DESTROY
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_destroy(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_lock(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_UNLOCK
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_unlock(&(_tq)->axq_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_LOCK_ASSERT
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_INSERT_TAIL
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_REMOVE_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	STAILQ_REMOVE_HEAD(&(_tq)->axq_q, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+end_define
+
 begin_struct
 struct|struct
 name|ath_softc
 block|{
 name|struct
+name|arpcom
+name|sc_arp
+decl_stmt|;
+comment|/* interface common */
+name|struct
+name|ath_stats
+name|sc_stats
+decl_stmt|;
+comment|/* interface statistics */
+name|struct
 name|ieee80211com
 name|sc_ic
 decl_stmt|;
 comment|/* IEEE 802.11 common */
+name|int
+name|sc_regdomain
+decl_stmt|;
+name|int
+name|sc_countrycode
+decl_stmt|;
+name|int
+name|sc_debug
+decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|sc_recv_mgmt
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|u_int32_t
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -270,30 +539,6 @@ modifier|*
 name|sc_node_free
 function_decl|)
 parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_node_copy
-function_decl|)
-parameter_list|(
-name|struct
-name|ieee80211com
-modifier|*
-parameter_list|,
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|,
-specifier|const
 name|struct
 name|ieee80211_node
 modifier|*
@@ -325,6 +570,25 @@ modifier|*
 name|sc_ah
 decl_stmt|;
 comment|/* Atheros HAL */
+name|struct
+name|ath_ratectrl
+modifier|*
+name|sc_rc
+decl_stmt|;
+comment|/* tx rate control support */
+name|void
+function_decl|(
+modifier|*
+name|sc_setdefantenna
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
 name|unsigned
 name|int
 name|sc_invalid
@@ -332,16 +596,46 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* disable hardware accesses */
-name|sc_doani
+name|sc_mrretry
 range|:
 literal|1
 decl_stmt|,
-comment|/* dynamic noise immunity */
-name|sc_probing
+comment|/* multi-rate retry support */
+name|sc_softled
+range|:
+literal|1
+decl_stmt|,
+comment|/* enable LED gpio status */
+name|sc_splitmic
+range|:
+literal|1
+decl_stmt|,
+comment|/* split TKIP MIC keys */
+name|sc_needmib
+range|:
+literal|1
+decl_stmt|,
+comment|/* enable MIB stats intr */
+name|sc_hasdiversity
+range|:
+literal|1
+decl_stmt|,
+comment|/* rx diversity available */
+name|sc_diversity
+range|:
+literal|1
+decl_stmt|,
+comment|/* enable rx diversity */
+name|sc_hasveol
+range|:
+literal|1
+decl_stmt|,
+comment|/* tx VEOL support */
+name|sc_hastpc
 range|:
 literal|1
 decl_stmt|;
-comment|/* probing AP on beacon miss */
+comment|/* per-packet TPC support */
 comment|/* rate tables */
 specifier|const
 name|HAL_RATE_TABLE
@@ -362,6 +656,14 @@ name|ieee80211_phymode
 name|sc_curmode
 decl_stmt|;
 comment|/* current phy mode */
+name|u_int16_t
+name|sc_curtxpow
+decl_stmt|;
+comment|/* current tx power limit */
+name|HAL_CHANNEL
+name|sc_curchan
+decl_stmt|;
+comment|/* current h/w channel */
 name|u_int8_t
 name|sc_rixmap
 index|[
@@ -376,10 +678,41 @@ literal|32
 index|]
 decl_stmt|;
 comment|/* h/w rate ix to IEEE table */
+name|u_int8_t
+name|sc_protrix
+decl_stmt|;
+comment|/* protection rate index */
+name|u_int
+name|sc_txantenna
+decl_stmt|;
+comment|/* tx antenna (fixed or auto) */
 name|HAL_INT
 name|sc_imask
 decl_stmt|;
 comment|/* interrupt mask copy */
+name|u_int
+name|sc_keymax
+decl_stmt|;
+comment|/* size of key cache */
+name|u_int8_t
+name|sc_keymap
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* bit map of key cache use */
+name|u_int32_t
+name|sc_beacons
+decl_stmt|;
+comment|/* beacon count for LED mgmt */
+name|u_int16_t
+name|sc_ledstate
+decl_stmt|;
+comment|/* LED on/off state */
+name|u_int16_t
+name|sc_ledpin
+decl_stmt|;
+comment|/* GPIO pin for driving LED */
 name|struct
 name|bpf_if
 modifier|*
@@ -422,43 +755,18 @@ name|int
 name|sc_rx_th_len
 decl_stmt|;
 name|struct
-name|ath_desc
-modifier|*
-name|sc_desc
-decl_stmt|;
-comment|/* TX/RX descriptors */
-name|bus_dma_segment_t
-name|sc_dseg
-decl_stmt|;
-name|bus_dmamap_t
-name|sc_ddmamap
-decl_stmt|;
-comment|/* DMA map for descriptors */
-name|bus_addr_t
-name|sc_desc_paddr
-decl_stmt|;
-comment|/* physical addr of sc_desc */
-name|bus_addr_t
-name|sc_desc_len
-decl_stmt|;
-comment|/* size of sc_desc */
-name|struct
 name|task
 name|sc_fataltask
 decl_stmt|;
 comment|/* fatal int processing */
 name|struct
-name|task
-name|sc_rxorntask
+name|ath_descdma
+name|sc_rxdma
 decl_stmt|;
-comment|/* rxorn int processing */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ath_buf
-argument_list|)
+comment|/* RX descriptos */
+name|ath_bufhead
 name|sc_rxbuf
-expr_stmt|;
+decl_stmt|;
 comment|/* receive buffer */
 name|u_int32_t
 modifier|*
@@ -470,71 +778,125 @@ name|task
 name|sc_rxtask
 decl_stmt|;
 comment|/* rx int processing */
-name|u_int
-name|sc_txhalq
+name|struct
+name|task
+name|sc_rxorntask
 decl_stmt|;
-comment|/* HAL q for outgoing frames */
-name|u_int32_t
-modifier|*
-name|sc_txlink
+comment|/* rxorn int processing */
+name|u_int8_t
+name|sc_defant
 decl_stmt|;
-comment|/* link ptr in last TX desc */
-name|int
-name|sc_tx_timer
+comment|/* current default antenna */
+name|u_int8_t
+name|sc_rxotherant
 decl_stmt|;
-comment|/* transmit timeout */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ath_buf
-argument_list|)
+comment|/* rx's on non-default antenna*/
+name|struct
+name|ath_descdma
+name|sc_txdma
+decl_stmt|;
+comment|/* TX descriptors */
+name|ath_bufhead
 name|sc_txbuf
-expr_stmt|;
+decl_stmt|;
 comment|/* transmit buffer */
 name|struct
 name|mtx
 name|sc_txbuflock
 decl_stmt|;
 comment|/* txbuf lock */
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|ath_buf
-argument_list|)
-name|sc_txq
-expr_stmt|;
-comment|/* transmitting queue */
-name|struct
-name|mtx
-name|sc_txqlock
+name|int
+name|sc_tx_timer
 decl_stmt|;
-comment|/* lock on txq and txlink */
+comment|/* transmit timeout */
+name|u_int
+name|sc_txqsetup
+decl_stmt|;
+comment|/* h/w queues setup */
+name|u_int
+name|sc_txintrperiod
+decl_stmt|;
+comment|/* tx interrupt batching */
+name|struct
+name|ath_txq
+name|sc_txq
+index|[
+name|HAL_NUM_TX_QUEUES
+index|]
+decl_stmt|;
+name|struct
+name|ath_txq
+modifier|*
+name|sc_ac2q
+index|[
+literal|5
+index|]
+decl_stmt|;
+comment|/* WME AC -> h/w q map */
 name|struct
 name|task
 name|sc_txtask
 decl_stmt|;
 comment|/* tx int processing */
+name|struct
+name|ath_descdma
+name|sc_bdma
+decl_stmt|;
+comment|/* beacon descriptors */
+name|ath_bufhead
+name|sc_bbuf
+decl_stmt|;
+comment|/* beacon buffers */
 name|u_int
 name|sc_bhalq
 decl_stmt|;
 comment|/* HAL q for outgoing beacons */
-name|struct
-name|ath_buf
-modifier|*
-name|sc_bcbuf
+name|u_int
+name|sc_bmisscount
 decl_stmt|;
-comment|/* beacon buffer */
-name|struct
-name|ath_buf
-modifier|*
-name|sc_bufptr
+comment|/* missed beacon transmits */
+name|u_int32_t
+name|sc_ant_tx
+index|[
+literal|8
+index|]
 decl_stmt|;
-comment|/* allocated buffer ptr */
+comment|/* recent tx frames/antenna */
+name|struct
+name|ath_txq
+modifier|*
+name|sc_cabq
+decl_stmt|;
+comment|/* tx q for cab frames */
+name|struct
+name|ieee80211_beacon_offsets
+name|sc_boff
+decl_stmt|;
+comment|/* dynamic update state */
 name|struct
 name|task
 name|sc_bmisstask
 decl_stmt|;
 comment|/* bmiss int processing */
+name|struct
+name|task
+name|sc_bstucktask
+decl_stmt|;
+comment|/* stuck beacon processing */
+enum|enum
+block|{
+name|OK
+block|,
+comment|/* no change needed */
+name|UPDATE
+block|,
+comment|/* update pending */
+name|COMMIT
+comment|/* beacon sent, commit change */
+block|}
+name|sc_updateslot
+enum|;
+comment|/* slot time update fsm */
 name|struct
 name|callout
 name|sc_cal_ch
@@ -545,14 +907,16 @@ name|callout
 name|sc_scan_ch
 decl_stmt|;
 comment|/* callout handle for scan */
-name|struct
-name|ath_stats
-name|sc_stats
-decl_stmt|;
-comment|/* interface statistics */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|sc_if
+value|sc_arp.ac_if
+end_define
 
 begin_define
 define|#
@@ -622,6 +986,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_TXQ_SETUP
+parameter_list|(
+name|sc
+parameter_list|,
+name|i
+parameter_list|)
+value|((sc)->sc_txqsetup& (1<<i))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_TXBUF_LOCK_INIT
 parameter_list|(
 name|_sc
@@ -669,57 +1045,6 @@ name|_sc
 parameter_list|)
 define|\
 value|mtx_assert(&(_sc)->sc_txbuflock, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_INIT
-parameter_list|(
-name|_sc
-parameter_list|)
-define|\
-value|mtx_init(&(_sc)->sc_txqlock, \ 		device_get_nameunit((_sc)->sc_dev), "xmit q", MTX_DEF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_DESTROY
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_destroy(&(_sc)->sc_txqlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sc_txqlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sc_txqlock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATH_TXQ_LOCK_ASSERT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_assert(&(_sc)->sc_txqlock, MA_OWNED)
 end_define
 
 begin_function_decl
@@ -796,6 +1121,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ath_hal_detach
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_detach)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_reset
 parameter_list|(
 name|_ah
@@ -828,27 +1164,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_getregdomain
-parameter_list|(
-name|_ah
-parameter_list|)
-define|\
-value|((*(_ah)->ah_getRegDomain)((_ah)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_getcountrycode
-parameter_list|(
-name|_ah
-parameter_list|)
-value|(_ah)->ah_countryCode
-end_define
-
-begin_define
-define|#
-directive|define
 name|ath_hal_getmac
 parameter_list|(
 name|_ah
@@ -862,12 +1177,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_detach
+name|ath_hal_setmac
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_mac
 parameter_list|)
 define|\
-value|((*(_ah)->ah_detach)((_ah)))
+value|((*(_ah)->ah_setMacAddress)((_ah), (_mac)))
 end_define
 
 begin_define
@@ -949,6 +1266,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_keycachesize
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getKeyCacheSize)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_keyreset
 parameter_list|(
 name|_ah
@@ -969,9 +1297,11 @@ parameter_list|,
 name|_ix
 parameter_list|,
 name|_pk
+parameter_list|,
+name|_mac
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setKeyCacheEntry)((_ah), (_ix), (_pk), NULL, AH_FALSE))
+value|((*(_ah)->ah_setKeyCacheEntry)((_ah), (_ix), (_pk), (_mac), AH_FALSE))
 end_define
 
 begin_define
@@ -1142,6 +1472,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_numtxpending
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_q
+parameter_list|)
+define|\
+value|((*(_ah)->ah_numTxPending)((_ah), (_q)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_getrxbuf
 parameter_list|(
 name|_ah
@@ -1209,14 +1552,12 @@ name|ath_hal_beaconinit
 parameter_list|(
 name|_ah
 parameter_list|,
-name|_opmode
-parameter_list|,
 name|_nextb
 parameter_list|,
 name|_bperiod
 parameter_list|)
 define|\
-value|((*(_ah)->ah_beaconInit)((_ah), (_opmode), (_nextb), (_bperiod)))
+value|((*(_ah)->ah_beaconInit)((_ah), (_nextb), (_bperiod)))
 end_define
 
 begin_define
@@ -1238,15 +1579,9 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_bs
-parameter_list|,
-name|_tsf
-parameter_list|,
-name|_dc
-parameter_list|,
-name|_cc
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setStationBeaconTimers)((_ah), (_bs), (_tsf), \ 		(_dc), (_cc)))
+value|((*(_ah)->ah_setStationBeaconTimers)((_ah), (_bs)))
 end_define
 
 begin_define
@@ -1261,7 +1596,18 @@ parameter_list|,
 name|_associd
 parameter_list|)
 define|\
-value|((*(_ah)->ah_writeAssocid)((_ah), (_bss), (_associd), 0))
+value|((*(_ah)->ah_writeAssocid)((_ah), (_bss), (_associd)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_phydisable
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_phyDisable)((_ah)))
 end_define
 
 begin_define
@@ -1270,11 +1616,9 @@ directive|define
 name|ath_hal_setopmode
 parameter_list|(
 name|_ah
-parameter_list|,
-name|_opmode
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setPCUConfig)((_ah), (_opmode)))
+value|((*(_ah)->ah_setPCUConfig)((_ah)))
 end_define
 
 begin_define
@@ -1326,29 +1670,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_dumpstate
-parameter_list|(
-name|_ah
-parameter_list|)
-define|\
-value|((*(_ah)->ah_dumpState)((_ah)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|ath_hal_getdiagstate
 parameter_list|(
 name|_ah
 parameter_list|,
 name|_id
 parameter_list|,
-name|_data
+name|_indata
 parameter_list|,
-name|_size
+name|_insize
+parameter_list|,
+name|_outdata
+parameter_list|,
+name|_outsize
 parameter_list|)
 define|\
-value|((*(_ah)->ah_getDiagState)((_ah), (_id), (_data), (_size)))
+value|((*(_ah)->ah_getDiagState)((_ah), (_id), \ 		(_indata), (_insize), (_outdata), (_outsize)))
 end_define
 
 begin_define
@@ -1395,12 +1732,31 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_hasveol
+name|ath_hal_gettxqueueprops
 parameter_list|(
 name|_ah
+parameter_list|,
+name|_q
+parameter_list|,
+name|_qi
 parameter_list|)
 define|\
-value|((*(_ah)->ah_hasVEOL)((_ah)))
+value|((*(_ah)->ah_getTxQueueProps)((_ah), (_q), (_qi)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settxqueueprops
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_q
+parameter_list|,
+name|_qi
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setTxQueueProps)((_ah), (_q), (_qi)))
 end_define
 
 begin_define
@@ -1417,35 +1773,427 @@ end_define
 begin_define
 define|#
 directive|define
-name|ath_hal_rxmonitor
+name|ath_hal_getdefantenna
 parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|((*(_ah)->ah_rxMonitor)((_ah)))
+value|((*(_ah)->ah_getDefAntenna)((_ah)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ath_hal_setupbeacondesc
+name|ath_hal_setdefantenna
 parameter_list|(
 name|_ah
 parameter_list|,
-name|_ds
-parameter_list|,
-name|_opmode
-parameter_list|,
-name|_flen
-parameter_list|,
-name|_hlen
-parameter_list|, \
-name|_rate
-parameter_list|,
-name|_antmode
+name|_ant
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setupBeaconDesc)((_ah), (_ds), (_opmode), \ 		(_flen), (_hlen), (_rate), (_antmode)))
+value|((*(_ah)->ah_setDefAntenna)((_ah), (_ant)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_rxmonitor
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_arg
+parameter_list|)
+define|\
+value|((*(_ah)->ah_rxMonitor)((_ah), (_arg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_mibevent
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_stats
+parameter_list|)
+define|\
+value|((*(_ah)->ah_procMibEvent)((_ah), (_stats)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setslottime
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_us
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setSlotTime)((_ah), (_us)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getslottime
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getSlotTime)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setacktimeout
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_us
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setAckTimeout)((_ah), (_us)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getacktimeout
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getAckTimeout)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setctstimeout
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_us
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setCTSTimeout)((_ah), (_us)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getctstimeout
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getCTSTimeout)((_ah)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getcapability
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_cap
+parameter_list|,
+name|_param
+parameter_list|,
+name|_result
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getCapability)((_ah), (_cap), (_param), (_result)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setcapability
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_cap
+parameter_list|,
+name|_param
+parameter_list|,
+name|_v
+parameter_list|,
+name|_status
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setCapability)((_ah), (_cap), (_param), (_v), (_status)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_ciphersupported
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_cipher
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_CIPHER, _cipher, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getregdomain
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_prd
+parameter_list|)
+define|\
+value|ath_hal_getcapability(_ah, HAL_CAP_REG_DMN, 0, (_prd))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getcountrycode
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_pcc
+parameter_list|)
+define|\
+value|(*(_pcc) = (_ah)->ah_countryCode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_tkipsplit
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TKIP_SPLIT, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hwphycounters
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_PHYCOUNTERS, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasdiversity
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_DIVERSITY, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdiversity
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_DIVERSITY, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setdiversity
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_DIVERSITY, 1, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdiag
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_pv
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_DIAG, 0, _pv) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_setdiag
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_DIAG, 0, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getnumtxqueues
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_pv
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_NUM_TXQUEUES, 0, _pv) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasveol
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_VEOL, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hastxpowlimit
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXPOW, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settxpowlimit
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_pow
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setTxPowerLimit)((_ah), (_pow)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxpowlimit
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ppow
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXPOW, 1, _ppow) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getmaxtxpow
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ppow
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXPOW, 2, _ppow) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettpscale
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_scale
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TXPOW, 3, _scale) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settpscale
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_TXPOW, 3, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hastpc
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TPC, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettpc
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TPC, 1, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settpc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|ath_hal_setcapability(_ah, HAL_CAP_TPC, 1, _v, NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_hasbursting
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_BURST, 0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -1525,8 +2273,6 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|_ds
-parameter_list|,
-name|_short
 parameter_list|, \
 name|_txr1
 parameter_list|,
@@ -1541,7 +2287,7 @@ parameter_list|,
 name|_txtr3
 parameter_list|)
 define|\
-value|((*(_ah)->ah_setupXTxDesc)((_ah), (_ds), (_short), \ 		(_txr1), (_txtr1), (_txr2), (_txtr2), (_txr3), (_txtr3)))
+value|((*(_ah)->ah_setupXTxDesc)((_ah), (_ds), \ 		(_txr1), (_txtr1), (_txr2), (_txtr2), (_txr3), (_txtr3)))
 end_define
 
 begin_define
@@ -1558,9 +2304,11 @@ parameter_list|,
 name|_first
 parameter_list|,
 name|_last
+parameter_list|,
+name|_ds0
 parameter_list|)
 define|\
-value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_l), (_first), (_last)))
+value|((*(_ah)->ah_fillTxDesc)((_ah), (_ds), (_l), (_first), (_last), (_ds0)))
 end_define
 
 begin_define
@@ -1574,6 +2322,57 @@ name|_ds
 parameter_list|)
 define|\
 value|((*(_ah)->ah_procTxDesc)((_ah), (_ds)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_updateCTSForBursting
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_prevds
+parameter_list|,
+name|_prevdsWithCTS
+parameter_list|, \
+name|_gatingds
+parameter_list|,
+name|_txOpLimit
+parameter_list|,
+name|_ctsDuration
+parameter_list|)
+define|\
+value|((*(_ah)->ah_updateCTSForBursting)((_ah), (_ds), (_prevds), \ 		(_prevdsWithCTS), (_gatingds), (_txOpLimit), (_ctsDuration)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gpioCfgOutput
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_gpio
+parameter_list|)
+define|\
+value|((*(_ah)->ah_gpioCfgOutput)((_ah), (_gpio)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gpioset
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_gpio
+parameter_list|,
+name|_b
+parameter_list|)
+define|\
+value|((*(_ah)->ah_gpioSet)((_ah), (_gpio), (_b)))
 end_define
 
 begin_endif

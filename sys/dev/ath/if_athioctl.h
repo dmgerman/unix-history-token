@@ -36,6 +36,10 @@ name|ast_bmiss
 decl_stmt|;
 comment|/* beacon miss interrupts */
 name|u_int32_t
+name|ast_bstuck
+decl_stmt|;
+comment|/* beacon stuck interrupts */
+name|u_int32_t
 name|ast_rxorn
 decl_stmt|;
 comment|/* rx overrun interrupts */
@@ -48,9 +52,17 @@ name|ast_txurn
 decl_stmt|;
 comment|/* tx underrun interrupts */
 name|u_int32_t
+name|ast_mib
+decl_stmt|;
+comment|/* mib interrupts */
+name|u_int32_t
 name|ast_intrcoal
 decl_stmt|;
 comment|/* interrupts coalesced */
+name|u_int32_t
+name|ast_tx_packets
+decl_stmt|;
+comment|/* packet sent on the interface */
 name|u_int32_t
 name|ast_tx_mgmt
 decl_stmt|;
@@ -164,6 +176,10 @@ name|ast_rx_badcrypt
 decl_stmt|;
 comment|/* rx failed 'cuz decryption */
 name|u_int32_t
+name|ast_rx_badmic
+decl_stmt|;
+comment|/* rx failed 'cuz MIC failure */
+name|u_int32_t
 name|ast_rx_phyerr
 decl_stmt|;
 comment|/* rx failed 'cuz of PHY err */
@@ -183,9 +199,29 @@ name|ast_rx_toobig
 decl_stmt|;
 comment|/* rx discarded 'cuz frame too large */
 name|u_int32_t
+name|ast_rx_packets
+decl_stmt|;
+comment|/* packet recv on the interface */
+name|u_int32_t
+name|ast_rx_mgt
+decl_stmt|;
+comment|/* management frames received */
+name|u_int32_t
 name|ast_rx_ctl
 decl_stmt|;
 comment|/* rx discarded 'cuz ctl frame */
+name|int8_t
+name|ast_tx_rssi
+decl_stmt|;
+comment|/* tx rssi of last ack */
+name|int8_t
+name|ast_rx_rssi
+decl_stmt|;
+comment|/* rx rssi from histogram */
+name|u_int32_t
+name|ast_be_xmit
+decl_stmt|;
+comment|/* beacons transmitted */
 name|u_int32_t
 name|ast_be_nombuf
 decl_stmt|;
@@ -214,6 +250,28 @@ name|u_int32_t
 name|ast_rate_drop
 decl_stmt|;
 comment|/* rate control dropped xmit rate */
+name|u_int32_t
+name|ast_ant_defswitch
+decl_stmt|;
+comment|/* rx/default antenna switches */
+name|u_int32_t
+name|ast_ant_txswitch
+decl_stmt|;
+comment|/* tx antenna switches */
+name|u_int32_t
+name|ast_ant_rx
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* rx frames with antenna */
+name|u_int32_t
+name|ast_ant_tx
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* tx frames with antenna */
 block|}
 struct|;
 end_struct
@@ -236,14 +294,40 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* if name, e.g. "ath0" */
-name|u_int
+name|u_int16_t
 name|ad_id
 decl_stmt|;
+define|#
+directive|define
+name|ATH_DIAG_DYN
+value|0x8000
+comment|/* allocate buffer in caller */
+define|#
+directive|define
+name|ATH_DIAG_IN
+value|0x4000
+comment|/* copy in parameters */
+define|#
+directive|define
+name|ATH_DIAG_OUT
+value|0x0000
+comment|/* copy out results (always) */
+define|#
+directive|define
+name|ATH_DIAG_ID
+value|0x0fff
+name|u_int16_t
+name|ad_in_size
+decl_stmt|;
+comment|/* pack to fit, yech */
 name|caddr_t
-name|ad_data
+name|ad_in_data
+decl_stmt|;
+name|caddr_t
+name|ad_out_data
 decl_stmt|;
 name|u_int
-name|ad_size
+name|ad_out_size
 decl_stmt|;
 block|}
 struct|;

@@ -24,12 +24,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -37,18 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -73,18 +55,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sockio.h>
 end_include
 
 begin_include
@@ -120,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_dl.h>
+file|<net/if.h>
 end_include
 
 begin_include
@@ -138,43 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_llc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_arp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net80211/ieee80211.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net80211/ieee80211_crypto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net80211/ieee80211_node.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net80211/ieee80211_proto.h>
 end_include
 
 begin_include
@@ -182,29 +116,6 @@ include|#
 directive|include
 file|<net80211/ieee80211_var.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -258,7 +169,7 @@ name|void
 modifier|*
 name|sc_ih
 decl_stmt|;
-comment|/* intererupt handler */
+comment|/* interrupt handler */
 name|u_int8_t
 name|sc_saved_intline
 decl_stmt|;
@@ -311,6 +222,8 @@ expr_stmt|;
 if|if
 condition|(
 name|devname
+operator|!=
+name|NULL
 condition|)
 block|{
 name|device_set_desc
@@ -649,9 +562,9 @@ comment|/* maxsize XXX */
 name|ATH_MAX_SCATTER
 argument_list|,
 comment|/* nsegments */
-literal|0xffff
+name|BUS_SPACE_MAXADDR
 argument_list|,
-comment|/* maxsegsize XXX */
+comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
 argument_list|,
 comment|/* flags */
@@ -1265,6 +1178,26 @@ end_expr_stmt
 
 begin_comment
 comment|/* 802.11 media layer */
+end_comment
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|if_ath
+argument_list|,
+name|ath_rate
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* rate control algorithm */
 end_comment
 
 end_unit
