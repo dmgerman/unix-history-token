@@ -1061,6 +1061,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|basename
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -1705,6 +1716,34 @@ begin_comment
 comment|/* Locking */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+end_ifdef
+
+begin_function_decl
+name|int
+name|lockdrive
+parameter_list|(
+name|struct
+name|drive
+modifier|*
+name|drive
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 name|int
 name|lockdrive
@@ -1716,6 +1755,11 @@ name|drive
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
