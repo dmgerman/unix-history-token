@@ -945,6 +945,17 @@ directive|if
 name|GNUC_VERSION
 operator|>
 literal|1
+ifdef|#
+directive|ifdef
+name|__printf0like
+name|__printf0like
+argument_list|(
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+else|#
+directive|else
 name|__attribute__
 argument_list|(
 operator|(
@@ -958,6 +969,8 @@ literal|3
 argument_list|)
 operator|)
 argument_list|)
+endif|#
+directive|endif
 endif|#
 directive|endif
 decl_stmt|;
