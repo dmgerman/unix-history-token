@@ -3717,9 +3717,16 @@ name|flags
 operator|&
 name|PG_BUSY
 condition|)
+block|{
+name|bqrelse
+argument_list|(
+name|tbp
+argument_list|)
+expr_stmt|;
 goto|goto
 name|finishcluster
 goto|;
+block|}
 block|}
 block|}
 for|for
