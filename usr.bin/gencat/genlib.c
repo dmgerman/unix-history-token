@@ -29,12 +29,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSV
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -46,6 +40,12 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSV
+end_ifdef
 
 begin_define
 define|#
