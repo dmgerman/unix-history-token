@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.6	81/04/28	*/
+comment|/*	ufs_lookup.c	4.7	81/05/18	*/
 end_comment
 
 begin_include
@@ -110,15 +110,6 @@ decl_stmt|;
 name|off_t
 name|eo
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CHAOS
-specifier|extern
-name|long
-name|cdevpath
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * If name starts with '/' start from 	 * root; otherwise start from current dir. 	 */
 name|dp
 operator|=
@@ -226,6 +217,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|CHAOS
+comment|/* 	 *      If the current node is a character 	 *      special file with the SUID bit set, return anyway. 	 *	This lets the Chaos open decode the rest of the name in its own 	 *      peculiar way.  jrl 3/81 	 */
 if|if
 condition|(
 operator|(
@@ -233,26 +225,17 @@ name|dp
 operator|->
 name|i_mode
 operator|&
+operator|(
 name|IFMT
+operator||
+name|ISUID
+operator|)
 operator|)
 operator|==
+operator|(
 name|IFCHR
-operator|&&
-operator|(
-name|cdevpath
-operator|&
-operator|(
-literal|1
-operator|<<
-name|major
-argument_list|(
-name|dp
-operator|->
-name|i_un
-operator|.
-name|i_rdev
-argument_list|)
-operator|)
+operator||
+name|ISUID
 operator|)
 condition|)
 block|{
@@ -261,6 +244,7 @@ operator|.
 name|u_dirp
 operator|--
 expr_stmt|;
+comment|/* back up to the slash or null */
 return|return
 operator|(
 name|dp
@@ -495,9 +479,7 @@ name|u_rdir
 operator|&&
 name|u
 operator|.
-name|u_dent
-operator|.
-name|d_name
+name|u_dbuf
 index|[
 literal|0
 index|]
@@ -506,9 +488,7 @@ literal|'.'
 operator|&&
 name|u
 operator|.
-name|u_dent
-operator|.
-name|d_name
+name|u_dbuf
 index|[
 literal|1
 index|]
@@ -517,9 +497,7 @@ literal|'.'
 operator|&&
 name|u
 operator|.
-name|u_dent
-operator|.
-name|d_name
+name|u_dbuf
 index|[
 literal|2
 index|]
