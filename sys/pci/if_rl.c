@@ -4225,6 +4225,9 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|int
+name|attached
+decl_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -4256,6 +4259,23 @@ literal|"rl mutex not initialized"
 operator|)
 argument_list|)
 expr_stmt|;
+name|attached
+operator|=
+name|device_is_attached
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+comment|/* These should only be active if attach succeeded */
+if|if
+condition|(
+name|attached
+condition|)
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|RL_LOCK
 argument_list|(
 name|sc
@@ -4267,26 +4287,15 @@ literal|0
 block|sc->suspended = 1;
 endif|#
 directive|endif
-comment|/* These should only be active if attach succeeded */
 if|if
 condition|(
-name|device_is_attached
-argument_list|(
-name|dev
-argument_list|)
+name|attached
 condition|)
-block|{
 name|rl_stop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|sc
