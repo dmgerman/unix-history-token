@@ -523,6 +523,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSIFGENERIC
+value|_IOW('i', 57, struct ifreq)
+end_define
+
+begin_comment
+comment|/* generic IF set op */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFGENERIC
+value|_IOWR('i', 58, struct ifreq)
+end_define
+
+begin_comment
+comment|/* generic IF get op */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFSTATUS
+value|_IOWR('i', 59, struct ifstat)
+end_define
+
+begin_comment
+comment|/* get IF status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFLLADDR
+value|_IOW('i', 60, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set linklevel addr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSIFPHYADDR
 value|_IOW('i', 70, struct ifaliasreq)
 end_define
@@ -589,45 +633,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCSIFGENERIC
-value|_IOW('i', 57, struct ifreq)
+name|SIOCGPRIVATE_0
+value|_IOWR('i', 80, struct ifreq)
 end_define
 
 begin_comment
-comment|/* generic IF set op */
+comment|/* device private 0 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SIOCGIFGENERIC
-value|_IOWR('i', 58, struct ifreq)
+name|SIOCGPRIVATE_1
+value|_IOWR('i', 81, struct ifreq)
 end_define
 
 begin_comment
-comment|/* generic IF get op */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCGIFSTATUS
-value|_IOWR('i', 59, struct ifstat)
-end_define
-
-begin_comment
-comment|/* get IF status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIOCSIFLLADDR
-value|_IOW('i', 60, struct ifreq)
-end_define
-
-begin_comment
-comment|/* set linklevel addr */
+comment|/* device private 1 */
 end_comment
 
 begin_define
