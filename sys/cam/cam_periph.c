@@ -2314,13 +2314,13 @@ name|PAGE_MASK
 operator|)
 operator|)
 operator|>
-name|MAXPHYS
+name|DFLTPHYS
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"cam_periph_mapmem: attempt to map %u bytes, "
-literal|"which is greater than MAXPHYS(%d)\n"
+literal|"which is greater than DFLTPHYS(%d)\n"
 argument_list|,
 name|lengths
 index|[
@@ -2344,7 +2344,7 @@ operator|&
 name|PAGE_MASK
 operator|)
 argument_list|,
-name|MAXPHYS
+name|DFLTPHYS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2563,7 +2563,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* set the transfer length, we know it's< MAXPHYS */
+comment|/* set the transfer length, we know it's< DFLTPHYS */
 name|mapinfo
 operator|->
 name|bp
