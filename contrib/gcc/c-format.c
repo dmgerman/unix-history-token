@@ -207,10 +207,6 @@ name|HOST_WIDE_INT
 name|first_arg_num
 decl_stmt|;
 comment|/* number of first arg (zero for varargs) */
-name|int
-name|null_format_ok
-decl_stmt|;
-comment|/* TRUE if the format string may be NULL */
 block|}
 name|function_format_info
 typedef|;
@@ -5135,33 +5131,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|inline
-specifier|static
-name|int
-name|get_null_fmt_ok
-parameter_list|(
-name|fmttype
-parameter_list|)
-name|enum
-name|format_type
-name|fmttype
-decl_stmt|;
-block|{
-return|return
-name|format_types
-index|[
-operator|(
-name|int
-operator|)
-name|fmttype
-index|]
-operator|.
-name|null_format_ok
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/* Decode a format type from a string, returning the type, or    format_type_error if not valid, in which case the caller should print an    error message.  */
 end_comment
@@ -7366,8 +7335,13 @@ comment|/* FIXME: this warning should go away once Marc Espie's 	 __attribute__(
 if|if
 condition|(
 operator|!
+name|format_types
+index|[
 name|info
 operator|->
+name|format_type
+index|]
+operator|.
 name|null_format_ok
 condition|)
 name|status_warning
