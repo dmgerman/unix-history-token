@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_param.h	7.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_param.h	7.5 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -101,6 +101,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PAGE_MASK
+value|page_mask
+end_define
+
+begin_comment
+comment|/* size of page - 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PAGE_SHIFT
 value|page_shift
 end_define
@@ -108,6 +119,31 @@ end_define
 begin_comment
 comment|/* bits to shift for pages */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|vm_size_t
+name|page_mask
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|page_shift
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*   *	Return values from the VM routines.  */
@@ -205,7 +241,7 @@ name|atop
 parameter_list|(
 name|x
 parameter_list|)
-value|(((unsigned)(x))>> page_shift)
+value|(((unsigned)(x))>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -215,7 +251,7 @@ name|ptoa
 parameter_list|(
 name|x
 parameter_list|)
-value|((vm_offset_t)((x)<< page_shift))
+value|((vm_offset_t)((x)<< PAGE_SHIFT))
 end_define
 
 begin_endif
@@ -241,7 +277,8 @@ name|round_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((vm_offset_t)((((vm_offset_t)(x)) + page_mask)& ~page_mask))
+define|\
+value|((vm_offset_t)((((vm_offset_t)(x)) + PAGE_MASK)& ~PAGE_MASK))
 end_define
 
 begin_define
@@ -251,7 +288,19 @@ name|trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((vm_offset_t)(((vm_offset_t)(x))& ~page_mask))
+define|\
+value|((vm_offset_t)(((vm_offset_t)(x))& ~PAGE_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|num_pages
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((vm_offset_t)((((vm_offset_t)(x)) + PAGE_MASK)>> PAGE_SHIFT))
 end_define
 
 begin_else
@@ -267,6 +316,7 @@ name|round_page
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|((((vm_offset_t)(x) + (vm_page_size - 1)) / vm_page_size) * vm_page_size)
 end_define
 
@@ -277,6 +327,7 @@ name|trunc_page
 parameter_list|(
 name|x
 parameter_list|)
+define|\
 value|((((vm_offset_t)(x)) / vm_page_size) * vm_page_size)
 end_define
 
@@ -291,28 +342,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|vm_size_t
-name|page_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cnt.v_page_size - 1; mask for 						   offset within page */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|page_shift
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* shift to use for page size */
-end_comment
 
 begin_decl_stmt
 specifier|extern
