@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.8 1995/06/11 19:30:46 rgrimes Exp $"
+literal|"$Id: mountd.c,v 1.9 1995/06/27 11:06:19 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4185,9 +4185,9 @@ argument|, cp); 					getexp_err(ep, tgrp); 					endnetgrent(); 					goto nextlin
 literal|"Adding a default entry\n"
 argument|);
 comment|/* add a default group and make the grp list NULL */
-argument|hpe = (struct hostent *)malloc(sizeof(struct hostent)); 			if (hpe == (struct hostent *)NULL) 				out_of_mem(); 			hpe->h_name =
+argument|hpe = (struct hostent *)malloc(sizeof(struct hostent)); 			if (hpe == (struct hostent *)NULL) 				out_of_mem(); 			hpe->h_name = strdup(
 literal|"Default"
-argument|; 			hpe->h_addrtype = AF_INET; 			hpe->h_length = sizeof (u_long); 			hpe->h_addr_list = (char **)NULL; 			grp->gr_ptr.gt_hostent = hpe;
+argument|); 			hpe->h_addrtype = AF_INET; 			hpe->h_length = sizeof (u_long); 			hpe->h_addr_list = (char **)NULL; 			grp->gr_ptr.gt_hostent = hpe;
 comment|/* 		 * Don't allow a network export coincide with a list of 		 * host(s) on the same line. 		 */
 argument|} else if ((opt_flags& OP_NET)&& tgrp->gr_next) { 			getexp_err(ep, tgrp); 			goto nextline; 		}
 comment|/* 		 * Loop through hosts, pushing the exports into the kernel. 		 * After loop, tgrp points to the start of the list and 		 * grp points to the last entry in the list. 		 */
