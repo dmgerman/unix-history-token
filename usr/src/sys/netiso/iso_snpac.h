@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.h	7.3 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.h	7.4 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -142,6 +142,43 @@ comment|/* SNPA_ES or SNPA_IS */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* ISO arp IOCTL data structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSISOMAP
+value|_IOW('a',30, struct snpa_req)
+end_define
+
+begin_comment
+comment|/* set arp entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGISOMAP
+value|_IOWR('a',38, struct snpa_req)
+end_define
+
+begin_comment
+comment|/* get arp entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCDISOMAP
+value|_IOW('a',31, struct snpa_req)
+end_define
+
+begin_comment
+comment|/* delete arp entry */
+end_comment
 
 begin_define
 define|#
