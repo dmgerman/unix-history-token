@@ -227,6 +227,13 @@ directive|ifdef
 name|LINUX
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_FILE_OFFSET_BITS
+value|64
+end_define
+
 begin_include
 include|#
 directive|include
