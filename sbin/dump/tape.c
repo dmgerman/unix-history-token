@@ -934,7 +934,7 @@ comment|/* NOTREACHED */
 block|}
 name|msg
 argument_list|(
-literal|"write error %d blocks into volume %d\n"
+literal|"write error %ld blocks into volume %d\n"
 argument_list|,
 name|blocksthisvol
 argument_list|,

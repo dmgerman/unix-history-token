@@ -3612,7 +3612,7 @@ literal|1
 condition|)
 name|msg
 argument_list|(
-literal|"read error from %s: %s: [block %d]: count=%d\n"
+literal|"read error from %s: %s: [block %qd]: count=%d\n"
 argument_list|,
 name|disk
 argument_list|,
@@ -3629,7 +3629,7 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"short read error from %s: [block %d]: count=%d, got=%d\n"
+literal|"short read error from %s: [block %qd]: count=%d, got=%d\n"
 argument_list|,
 name|disk
 argument_list|,
@@ -3650,7 +3650,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"More than %d block read errors from %d\n"
+literal|"More than %d block read errors from %s\n"
 argument_list|,
 name|BREADEMAX
 argument_list|,
@@ -3761,7 +3761,7 @@ condition|)
 block|{
 name|msg
 argument_list|(
-literal|"read error from %s: %s: [sector %d]: count=%d\n"
+literal|"read error from %s: %s: [sector %qd]: count=%d\n"
 argument_list|,
 name|disk
 argument_list|,
@@ -3779,7 +3779,7 @@ continue|continue;
 block|}
 name|msg
 argument_list|(
-literal|"short read error from %s: [sector %d]: count=%d, got=%d\n"
+literal|"short read error from %s: [sector %qd]: count=%d, got=%d\n"
 argument_list|,
 name|disk
 argument_list|,
