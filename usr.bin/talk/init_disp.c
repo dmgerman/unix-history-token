@@ -163,17 +163,11 @@ begin_comment
 comment|/*  * Set up curses, catch the appropriate signals,  * and build the various windows.  */
 end_comment
 
-begin_macro
-name|init_display
-argument_list|()
-end_macro
-
-begin_block
-block|{
+begin_function
 name|void
-name|sig_sent
+name|init_display
 parameter_list|()
-function_decl|;
+block|{
 name|struct
 name|sigvec
 name|sigv
@@ -407,18 +401,16 @@ operator|=
 literal|"No connection yet"
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Trade edit characters with the other talk. By agreement  * the first three characters each talk transmits after  * connection are the three edit characters.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|set_edit_chars
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 name|buf
@@ -617,12 +609,21 @@ literal|2
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 name|void
 name|sig_sent
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|message
 argument_list|(
@@ -639,12 +640,10 @@ begin_comment
 comment|/*  * All done talking...hang up the phone and reset terminal thingy's  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|quit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -697,7 +696,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

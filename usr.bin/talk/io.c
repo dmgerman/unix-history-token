@@ -75,38 +75,22 @@ name|A_LONG_TIME
 value|10000000
 end_define
 
-begin_define
-define|#
-directive|define
-name|STDIN_MASK
-value|(1<<fileno(stdin))
-end_define
-
-begin_comment
-comment|/* the bit mask for standard 					   input */
-end_comment
-
 begin_comment
 comment|/*  * The routine to do the actual talking  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|talk
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
 name|int
-name|read_template
-decl_stmt|,
-name|sockt_mask
+name|nb
 decl_stmt|;
-name|int
+name|fd_set
 name|read_set
 decl_stmt|,
-name|nb
+name|read_template
 decl_stmt|;
 name|char
 name|buf
@@ -127,20 +111,31 @@ name|current_line
 operator|=
 literal|0
 expr_stmt|;
-name|sockt_mask
-operator|=
-operator|(
-literal|1
-operator|<<
-name|sockt
-operator|)
-expr_stmt|;
 comment|/* 	 * Wait on both the other process (sockt_mask) and 	 * standard input ( STDIN_MASK ) 	 */
+name|FD_ZERO
+argument_list|(
+operator|&
 name|read_template
-operator|=
-name|sockt_mask
-operator||
-name|STDIN_MASK
+argument_list|)
+expr_stmt|;
+name|FD_SET
+argument_list|(
+name|sockt
+argument_list|,
+operator|&
+name|read_template
+argument_list|)
+expr_stmt|;
+name|FD_SET
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|,
+operator|&
+name|read_template
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -213,9 +208,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|read_set
+name|FD_ISSET
+argument_list|(
+name|sockt
+argument_list|,
 operator|&
-name|sockt_mask
+name|read_set
+argument_list|)
 condition|)
 block|{
 comment|/* There is data on sockt */
@@ -260,9 +259,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|read_set
+name|FD_ISSET
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|,
 operator|&
-name|STDIN_MASK
+name|read_set
+argument_list|)
 condition|)
 block|{
 comment|/* 			 * We can't make the tty non_blocking, because 			 * curses's output routines would screw up 			 */
@@ -315,7 +321,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|extern
@@ -335,21 +341,16 @@ begin_comment
 comment|/*  * p_error prints the system error message on the standard location  * on the screen and then exits. (i.e. a curses version of perror)  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|p_error
-argument_list|(
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|string
+parameter_list|)
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|wmove
 argument_list|(
@@ -403,27 +404,22 @@ name|quit
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Display string in the standard location  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|message
-argument_list|(
-argument|string
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|string
+parameter_list|)
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|wmove
 argument_list|(
@@ -468,7 +464,7 @@ name|x_win
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

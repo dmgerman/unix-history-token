@@ -170,12 +170,10 @@ name|msg
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|open_sockt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|length
@@ -275,18 +273,16 @@ literal|"Bad address for socket"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* open the ctl socket */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|open_ctl
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|length
@@ -386,38 +382,35 @@ literal|"Bad address for ctl socket"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* print_addr is a debug print routine */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|print_addr
-argument_list|(
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|)
 name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"addr = %x, port = %o, family = %o zero = "
+literal|"addr = %lx, port = %o, family = %o zero = "
 argument_list|,
 name|addr
 operator|.
 name|sin_addr
+operator|.
+name|s_addr
 argument_list|,
 name|addr
 operator|.
@@ -462,7 +455,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

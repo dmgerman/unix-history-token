@@ -75,24 +75,19 @@ begin_comment
 comment|/*  * max HAS to be a function, it is called with  * a argument of the form --foo at least once.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|max
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|int
 name|a
 decl_stmt|,
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -106,44 +101,35 @@ name|b
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Display some text on somebody's window, processing some control  * characters while we are at it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|display
-argument_list|(
+parameter_list|(
 name|win
-argument_list|,
+parameter_list|,
 name|text
-argument_list|,
+parameter_list|,
 name|size
-argument_list|)
+parameter_list|)
 specifier|register
 name|xwin_t
-operator|*
+modifier|*
 name|win
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
-name|unsigned
 name|char
 modifier|*
 name|text
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -657,6 +643,9 @@ name|win
 operator|->
 name|x_win
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 operator|*
 name|text
 argument_list|)
@@ -688,31 +677,32 @@ name|x_win
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Read the character at the indicated position in win  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|readwin
-argument_list|(
-argument|win
-argument_list|,
-argument|line
-argument_list|,
-argument|col
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|win
+parameter_list|,
+name|line
+parameter_list|,
+name|col
+parameter_list|)
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|line
+decl_stmt|;
+name|int
+name|col
+decl_stmt|;
 block|{
 name|int
 name|oldline
@@ -763,7 +753,7 @@ name|c
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
