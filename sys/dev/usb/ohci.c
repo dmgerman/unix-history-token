@@ -6360,10 +6360,13 @@ decl_stmt|;
 block|{
 if|#
 directive|if
-literal|0
-block|usbd_request_handle *reqh = addr;
-endif|#
-directive|endif
+name|OHCI_DEBUG
+name|usbd_request_handle
+modifier|*
+name|reqh
+init|=
+name|addr
+decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
@@ -6373,6 +6376,8 @@ name|reqh
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0

@@ -1409,6 +1409,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|UREAD1
+parameter_list|(
+name|sc
+parameter_list|,
+name|r
+parameter_list|)
+value|inb((sc)->sc_iobase + (r))
+end_define
+
+begin_define
+define|#
+directive|define
 name|UREAD2
 parameter_list|(
 name|sc
