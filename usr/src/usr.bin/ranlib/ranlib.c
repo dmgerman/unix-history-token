@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ranlib.c 4.1 %G%"
+literal|"@(#)ranlib.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|TABSZ
-value|2000
+value|5000
 end_define
 
 begin_decl_stmt
@@ -131,7 +131,7 @@ begin_define
 define|#
 directive|define
 name|STRTABSZ
-value|25000
+value|75000
 end_define
 
 begin_decl_stmt
