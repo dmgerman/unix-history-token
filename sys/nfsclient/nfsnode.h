@@ -78,7 +78,7 @@ decl_stmt|;
 name|char
 name|s_name
 index|[
-literal|20
+literal|32
 index|]
 decl_stmt|;
 block|}
