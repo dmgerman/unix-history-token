@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	bcd.c	4.1	82/10/24	"
+literal|"	bcd.c	4.2	88/06/11	"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,8 +464,7 @@ literal|1
 condition|)
 name|puts
 argument_list|(
-literal|"[
-literal|]"
+literal|"[\010\01\01\01\01\01]"
 argument_list|)
 expr_stmt|;
 else|else
