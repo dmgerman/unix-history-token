@@ -1733,15 +1733,9 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|oldcred
-operator|=
-name|NULL
-expr_stmt|;
 goto|goto
 name|done1
 goto|;
-block|}
 comment|/* 		 * Set the new credentials. 		 */
 name|crcopy
 argument_list|(
