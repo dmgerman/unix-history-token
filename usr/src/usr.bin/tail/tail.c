@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.9 (Berkeley) %G%"
+literal|"@(#)tail.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,9 +197,9 @@ name|forward
 parameter_list|,
 name|backward
 parameter_list|)
-value|{ \ 	if (style) \ 		usage(); \ 	off = strtol(optarg,&p, 10) * (units); \ 	if (*p) \ 		err(1, "illegal offset -- %s", optarg); \ 	switch(optarg[0]) { \ 	case '+': \ 		if (off) \ 			off -= (units); \ 			style = (forward); \ 		break; \ 	case '-': \ 		off = -off; \
+value|{					\ 	if (style)							\ 		usage();						\ 	off = strtol(optarg,&p, 10) * (units);				\ 	if (*p)								\ 		err(1, "illegal offset -- %s", optarg);			\ 	switch(optarg[0]) {						\ 	case '+':							\ 		if (off)						\ 			off -= (units);					\ 			style = (forward);				\ 		break;							\ 	case '-':							\ 		off = -off;						\
 comment|/* FALLTHROUGH */
-value|\ 	default: \ 		style = (backward); \ 		break; \ 	} \ }
+value|\ 	default:							\ 		style = (backward);					\ 		break;							\ 	}								\ }
 name|obsolete
 argument_list|(
 name|argv
@@ -461,6 +461,14 @@ expr_stmt|;
 name|first
 operator|=
 literal|0
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
 expr_stmt|;
 block|}
 if|if
