@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.21 82/06/06 */
+comment|/*	tcp_timer.c	4.21	82/06/08	*/
 end_comment
 
 begin_include
@@ -762,26 +762,6 @@ operator|->
 name|t_force
 operator|=
 literal|0
-expr_stmt|;
-name|TCPT_RANGESET
-argument_list|(
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_PERSIST
-index|]
-argument_list|,
-name|tcp_beta
-operator|*
-name|tp
-operator|->
-name|t_srtt
-argument_list|,
-name|TCPTV_PERSMIN
-argument_list|,
-name|TCPTV_MAX
-argument_list|)
 expr_stmt|;
 return|return;
 comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection if idle for too long. 	 */
