@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.12 %G%"
+literal|"@(#)write.c	4.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,7 +428,7 @@ name|stbuf
 operator|.
 name|st_mode
 operator|&
-literal|02
+literal|020
 operator|)
 operator|==
 literal|0
@@ -756,7 +756,7 @@ name|stbuf
 operator|.
 name|st_mode
 operator|&
-literal|02
+literal|020
 operator|)
 operator|==
 literal|0
@@ -1280,6 +1280,19 @@ operator|==
 literal|0
 condition|)
 block|{
+name|fclose
+argument_list|(
+name|tf
+argument_list|)
+expr_stmt|;
+comment|/* Close his terminal */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* Give up effective group privs */
 name|sigs
 argument_list|(
 operator|(
