@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_snpac.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.c	7.11 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.c	7.12 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -596,6 +596,11 @@ name|recursing
 init|=
 literal|0
 decl_stmt|;
+define|#
+directive|define
+name|LLC_SIZE
+value|3
+comment|/* XXXXXX do this right later */
 name|IFDEBUG
 argument_list|(
 argument|D_SNPA
@@ -675,6 +680,61 @@ name|recursing
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|==
+literal|0
+condition|)
+block|{
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|=
+operator|(
+operator|(
+name|rt2
+operator|=
+operator|(
+expr|struct
+name|rtentry
+operator|*
+operator|)
+name|rt
+operator|->
+name|rt_llinfo
+operator|)
+operator|&&
+operator|(
+name|rt2
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|)
+operator|)
+condition|?
+name|rt2
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+else|:
+name|rt
+operator|->
+name|rt_ifp
+operator|->
+name|if_mtu
+operator|-
+name|LLC_SIZE
+expr_stmt|;
+block|}
 return|return;
 case|case
 name|RTM_DELETE
@@ -804,7 +864,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -819,7 +879,7 @@ argument_list|,
 literal|"llc_rtrequest: can't find LL ifaddr for iface\n"
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 comment|/* FALLTHROUGH */
 case|case
@@ -844,7 +904,7 @@ argument_list|,
 literal|"llc_rtrequest: got non-link non-gateway route\n"
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -897,7 +957,7 @@ argument_list|,
 literal|"llc_rtrequest: malloc failed\n"
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 name|Bzero
 argument_list|(
@@ -1054,6 +1114,32 @@ operator|~
 name|RTF_LLINFO
 expr_stmt|;
 break|break;
+block|}
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|==
+literal|0
+condition|)
+block|{
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_mtu
+operator|=
+name|rt
+operator|->
+name|rt_ifp
+operator|->
+name|if_mtu
+operator|-
+name|LLC_SIZE
+expr_stmt|;
 block|}
 block|}
 end_block
