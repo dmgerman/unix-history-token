@@ -2320,16 +2320,6 @@ parameter_list|)
 value|((win)->_bkgd = ch)
 end_define
 
-begin_define
-define|#
-directive|define
-name|getbkgd
-parameter_list|(
-name|win
-parameter_list|)
-value|((win)->_bkgd)
-end_define
-
 begin_comment
 comment|/* It seems older SYSV curses define these */
 end_comment
@@ -3296,6 +3286,48 @@ parameter_list|,
 name|n
 parameter_list|)
 value|mvwinsnstr(stdscr,y,x,s,n)
+end_define
+
+begin_comment
+comment|/*  * XSI curses macros for XPG4 conformance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|attr_get
+parameter_list|()
+value|wattr_get(stdscr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|getbkgd
+parameter_list|(
+name|win
+parameter_list|)
+value|((win)->_bkgd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vid_attr
+parameter_list|(
+name|a
+parameter_list|)
+value|vidattr(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wattr_get
+parameter_list|(
+name|win
+parameter_list|)
+value|((win)->_attrs)
 end_define
 
 begin_comment
