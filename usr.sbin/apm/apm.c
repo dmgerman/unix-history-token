@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * apm / zzz	APM BIOS utility for FreeBSD  *  * Copyright (C) 1994-1996 by HOSOKAWA Tatasumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, distributed, and sold,  * in both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  */
+comment|/*  * apm / zzz	APM BIOS utility for FreeBSD  *  * Copyright (C) 1994-1996 by Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>  *  * This software may be used, modified, copied, distributed, and sold,  * in both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: apm.c,v 1.11 1997/11/06 23:55:38 imp Exp $"
+literal|"$Id: apm.c,v 1.12 1997/11/12 04:16:23 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
