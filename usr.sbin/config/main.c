@@ -185,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|CDIR
-value|"../../compile/"
+value|"../compile/"
 end_define
 
 begin_decl_stmt
@@ -624,9 +624,7 @@ argument_list|(
 name|xxx
 argument_list|)
 argument_list|,
-literal|"../../%s/include"
-argument_list|,
-name|machinename
+literal|"../../include"
 argument_list|)
 expr_stmt|;
 else|else
