@@ -702,6 +702,25 @@ begin_function_decl
 specifier|static
 name|__inline
 name|void
+name|ahc_swap_with_next_hscb
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|struct
+name|scb
+modifier|*
+name|scb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
 name|ahc_queue_scb
 parameter_list|(
 name|struct
@@ -1046,15 +1065,11 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/*  * Tell the sequencer about a new transaction to execute.  */
-end_comment
-
 begin_function
 specifier|static
 name|__inline
 name|void
-name|ahc_queue_scb
+name|ahc_swap_with_next_hscb
 parameter_list|(
 name|struct
 name|ahc_softc
@@ -1075,7 +1090,7 @@ decl_stmt|;
 name|u_int
 name|saved_tag
 decl_stmt|;
-comment|/* 	 * Our queuing method is a bit tricky.  The card 	 * knows in advance which HSCB to download, and we 	 * can't disappoint it.  To achieve this, the next 	 * SCB to download is saved off in ahc->next_queued_scb. 	 * When we are called to queue "an arbitrary scb", 	 * we copy the contents of the incoming HSCB to the one 	 * the sequencer knows about, swap HSCB pointers and 	 * finally assigne the SCB to the tag indexed location 	 * in the scb_array.  This makes sure that we can still 	 * locate the correct SCB by SCB_TAG. 	 * 	 * Start by copying the payload without perterbing 	 * the tag number.  Also set the hscb id for the next 	 * SCB to download. 	 */
+comment|/* 	 * Our queuing method is a bit tricky.  The card 	 * knows in advance which HSCB to download, and we 	 * can't disappoint it.  To achieve this, the next 	 * SCB to download is saved off in ahc->next_queued_scb. 	 * When we are called to queue "an arbitrary scb", 	 * we copy the contents of the incoming HSCB to the one 	 * the sequencer knows about, swap HSCB pointers and 	 * finally assign the SCB to the tag indexed location 	 * in the scb_array.  This makes sure that we can still 	 * locate the correct SCB by SCB_TAG. 	 */
 name|q_hscb
 operator|=
 name|ahc
@@ -1192,6 +1207,37 @@ name|tag
 index|]
 operator|=
 name|scb
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Tell the sequencer about a new transaction to execute.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ahc_queue_scb
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|struct
+name|scb
+modifier|*
+name|scb
+parameter_list|)
+block|{
+name|ahc_swap_with_next_hscb
+argument_list|(
+name|ahc
+argument_list|,
+name|scb
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
