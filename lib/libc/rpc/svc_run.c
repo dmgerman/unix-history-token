@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_run.c,v 1.1 1994/08/07 18:36:09 wollman Exp $"
+literal|"$Id: svc_run.c,v 1.2 1995/05/30 05:41:35 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,8 +54,41 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_function_decl
+name|int
+name|_rpc_dtablesize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void
@@ -76,10 +109,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* def FD_SETSIZE */
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -112,17 +141,9 @@ argument_list|,
 operator|&
 name|readfds
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 operator|(
 expr|struct

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_tcp.c,v 1.4 1995/10/27 16:56:50 adam Exp $"
+literal|"$Id: clnt_tcp.c,v 1.5 1995/12/07 12:50:53 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,12 +106,42 @@ name|MCALL_MSG_SIZE
 value|24
 end_define
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
 name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+name|bindresvport
+parameter_list|(
+name|int
+name|sd
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_rpc_dtablesize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool_t
+name|xdr_opaque_auth
+parameter_list|(
+name|XDR
+modifier|*
+parameter_list|,
+name|struct
+name|opaque_auth
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -297,6 +327,8 @@ name|struct
 name|ct_data
 modifier|*
 name|ct
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|timeval
@@ -827,6 +859,10 @@ return|;
 name|fooy
 label|:
 comment|/* 	 * Something goofed, free stuff and barf 	 */
+if|if
+condition|(
+name|ct
+condition|)
 name|mem_free
 argument_list|(
 operator|(
@@ -841,6 +877,10 @@ name|ct_data
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|h
+condition|)
 name|mem_free
 argument_list|(
 operator|(

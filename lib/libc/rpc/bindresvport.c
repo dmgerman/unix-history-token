@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: bindresvport.c,v 1.2 1995/05/30 05:41:13 rgrimes Exp $"
+literal|"$Id: bindresvport.c,v 1.3 1995/10/22 14:51:11 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,30 +85,22 @@ begin_comment
 comment|/*  * Bind a socket to a privileged IP port  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|bindresvport
-argument_list|(
-argument|sd
-argument_list|,
-argument|sin
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sd
+parameter_list|,
+name|sin
+parameter_list|)
 name|int
 name|sd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|res
@@ -120,10 +112,6 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 name|myaddr
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|int
 name|i
@@ -295,7 +283,7 @@ name|res
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

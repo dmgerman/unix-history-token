@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc.c,v 1.2 1995/05/30 05:41:31 rgrimes Exp $"
+literal|"$Id: svc.c,v 1.3 1995/10/22 14:51:34 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,13 +74,6 @@ include|#
 directive|include
 file|<rpc/pmap_clnt.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -146,6 +139,15 @@ end_define
 begin_comment
 comment|/* this size is excessive */
 end_comment
+
+begin_function_decl
+name|int
+name|_rpc_dtablesize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The services list  * Each entry represents a set of procedures (an rpc program).  * The dispatch routine takes request structs and runs the  * apropriate procedure.  */

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pmap_getmaps.c,v 1.2 1995/05/30 05:41:23 rgrimes Exp $"
+literal|"$Id: pmap_getmaps.c,v 1.3 1995/10/22 14:51:29 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,13 +118,6 @@ directive|define
 name|MAX_BROADCAST_SIZE
 value|1400
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Get a copy of the current port maps.  * Calls the pmap service remotely to do get the maps.  */

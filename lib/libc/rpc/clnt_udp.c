@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_udp.c,v 1.5 1995/10/22 14:51:21 phk Exp $"
+literal|"$Id: clnt_udp.c,v 1.6 1995/12/07 12:50:54 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,12 +105,42 @@ directive|include
 file|<rpc/pmap_clnt.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
+begin_function_decl
 name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+name|bindresvport
+parameter_list|(
+name|int
+name|sd
+parameter_list|,
+name|struct
+name|sockaddr_in
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_rpc_dtablesize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool_t
+name|xdr_opaque_auth
+parameter_list|(
+name|XDR
+modifier|*
+parameter_list|,
+name|struct
+name|opaque_auth
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * UDP bases client side rpc operations  */
@@ -305,6 +335,8 @@ name|struct
 name|cu_data
 modifier|*
 name|cu
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|timeval
