@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1660,11 +1666,16 @@ if|if
 condition|(
 name|error
 condition|)
-name|senderr
+block|{
+name|m_freem
 argument_list|(
-name|error
+name|m
 argument_list|)
 expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * gif may cause infinite recursion calls when misconfigured. 	 * We'll prevent this by introducing upper limit. 	 * XXX: this mechanism may introduce another problem about 	 *      mutual exclusion of the variable CALLED, especially if we 	 *      use kernel thread. 	 */
