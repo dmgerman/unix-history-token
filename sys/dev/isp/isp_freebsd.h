@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.9.2.2 1999/07/03 01:47:14 mjacob Exp $ */
-end_comment
-
-begin_comment
-comment|/* release_6_5_99 */
+comment|/* $Id: isp_freebsd.h,v 1.9.2.3 1999/07/05 20:43:13 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -323,6 +319,13 @@ define|#
 directive|define
 name|SIMQFRZ_LOOPDOWN
 value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIMQFRZ_TIMED
+value|0x4
 end_define
 
 begin_define
@@ -842,6 +845,13 @@ define|#
 directive|define
 name|CMD_QUEUED
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMD_RQLATER
+value|3
 end_define
 
 begin_define
