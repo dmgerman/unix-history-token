@@ -321,13 +321,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|char
-modifier|*
-name|_PathLocale
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|char
 modifier|*
