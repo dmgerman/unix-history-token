@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.4 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -850,9 +850,6 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|FIX_FOR_LATER
 if|if
 condition|(
 name|argc
@@ -863,8 +860,6 @@ name|argc
 operator|<
 literal|2
 condition|)
-endif|#
-directive|endif
 name|usage
 argument_list|()
 expr_stmt|;
