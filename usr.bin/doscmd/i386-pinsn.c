@@ -10,16 +10,26 @@ comment|/* Print i386 instructions for GDB, the GNU debugger.    Copyright (C) 1
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*  * 80386 instruction printer by Pace Willisson (pace@prep.ai.mit.edu)  * July 1988  */
 end_comment
 
 begin_comment
 comment|/*  * The main tables describing the instructions is essentially a copy  * of the "Opcode Map" chapter (Appendix A) of the Intel 80386  * Programmers Manual.  Usually, there is a capital letter, followed  * by a small letter.  The capital letter tell the addressing mode,  * and the small letter tells about the operand size.  Refer to   * the Intel manual for details.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
