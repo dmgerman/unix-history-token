@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.29 2002/03/13 03:56:46 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.29.2.32 2002/04/10 04:57:14 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -284,14 +284,14 @@ begin_define
 define|#
 directive|define
 name|SIOCAUTHW
-value|_IOWR('r', 76, struct frauth_t *)
+value|_IOWR('r', 76, struct frauth *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHR
-value|_IOWR('r', 77, struct frauth_t *)
+value|_IOWR('r', 77, struct frauth *)
 end_define
 
 begin_define
@@ -457,14 +457,14 @@ begin_define
 define|#
 directive|define
 name|SIOCAUTHW
-value|_IOWR(r, 76, struct frauth_t *)
+value|_IOWR(r, 76, struct frauth *)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIOCAUTHR
-value|_IOWR(r, 77, struct frauth_t *)
+value|_IOWR(r, 77, struct frauth *)
 end_define
 
 begin_define
@@ -751,24 +751,23 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* TCP/UDP ports, ICMP code/type */
-name|u_char
+name|u_int
 name|fin_out
 decl_stmt|;
 comment|/* in or out ? 1 == out, 0 == in */
-name|u_char
-name|fin_rev
-decl_stmt|;
-comment|/* state only: 1 = reverse */
 name|u_short
 name|fin_hlen
 decl_stmt|;
 comment|/* length of IP header in bytes */
 name|u_char
+name|fin_rev
+decl_stmt|;
+comment|/* state only: 1 = reverse */
+name|u_char
 name|fin_tcpf
 decl_stmt|;
 comment|/* TCP header flags (SYN, ACK, etc) */
-comment|/* From here on is packet specific */
-name|u_char
+name|u_int
 name|fin_icode
 decl_stmt|;
 comment|/* ICMP error to return */
@@ -805,6 +804,9 @@ name|u_short
 name|fin_id
 decl_stmt|;
 comment|/* IP packet id field */
+name|u_int
+name|fin_misc
+decl_stmt|;
 name|void
 modifier|*
 name|fin_mp
@@ -894,6 +896,17 @@ define|#
 directive|define
 name|FI_LCSIZE
 value|offsetof(fr_info_t, fin_dp)
+end_define
+
+begin_comment
+comment|/*  * For fin_misc  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FM_BADSTATE
+value|0x00000001
 end_define
 
 begin_comment
@@ -2175,7 +2188,7 @@ operator|>=
 literal|199603
 operator|)
 operator|)
-name|u_char
+name|char
 name|fl_ifname
 index|[
 name|LIFNAMSIZ
@@ -2186,7 +2199,7 @@ directive|else
 name|u_int
 name|fl_unit
 decl_stmt|;
-name|u_char
+name|char
 name|fl_ifname
 index|[
 name|LIFNAMSIZ

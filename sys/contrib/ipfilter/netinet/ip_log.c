@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.17 2002/03/13 03:57:05 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.18 2002/03/26 15:54:40 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -522,6 +522,12 @@ ifdef|#
 directive|ifdef
 name|__sgi
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_KMEMUSER
+end_define
 
 begin_include
 include|#

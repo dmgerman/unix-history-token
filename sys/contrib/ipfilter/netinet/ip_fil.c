@@ -187,6 +187,12 @@ directive|ifdef
 name|__sgi
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_KMEMUSER
+end_define
+
 begin_include
 include|#
 directive|include
@@ -830,7 +836,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 2.42.2.53 2002/03/13 02:29:08 darrenr Exp $"
+literal|"@(#)$Id: ip_fil.c,v 2.42.2.55 2002/03/26 15:54:39 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2279,9 +2285,17 @@ end_ifdef
 begin_if
 if|#
 directive|if
+operator|(
 name|__NetBSD_Version__
 operator|>=
 literal|104200000
+operator|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500011
+operator|)
 end_if
 
 begin_if
@@ -3136,9 +3150,19 @@ directive|ifdef
 name|NETBSD_PF
 if|#
 directive|if
+operator|(
+operator|(
 name|__NetBSD_Version__
 operator|>=
 literal|104200000
+operator|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500011
+operator|)
+operator|)
 if|#
 directive|if
 name|__NetBSD_Version__
@@ -12389,6 +12413,10 @@ name|left
 expr_stmt|;
 name|start
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|io
 operator|->
 name|iov_base
@@ -12399,6 +12427,10 @@ if|if
 condition|(
 name|start
 operator|>
+operator|(
+name|char
+operator|*
+operator|)
 name|io
 operator|->
 name|iov_base

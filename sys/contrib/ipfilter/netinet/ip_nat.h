@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.25 2002/01/01 15:10:49 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.26 2002/04/20 16:42:05 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1231,6 +1231,20 @@ comment|/* Do it twice */
 value|\ 			    (s1) = ((s1)& 0xffff) + ((s1)>> 16); \ 			    (s2) = ((s2)& 0xffff) + ((s2)>> 16); \
 comment|/* Because ~1 == -2, We really need ~1 == -1 */
 value|\ 			    if ((s1)> (s2)) (s2)--; \ 			    (sd) = (s2) - (s1); \ 			    (sd) = ((sd)& 0xffff) + ((sd)>> 16); }
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAT_SYSSPACE
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAT_LOCKHELD
+value|0x40000000
 end_define
 
 begin_decl_stmt
