@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sio.c,v 1.248 1999/06/19 08:14:56 grog Exp $  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	from: i386/isa sio.c,v 1.234  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: sio.c,v 1.249 1999/06/20 13:10:09 peter Exp $  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	from: i386/isa sio.c,v 1.234  */
 end_comment
 
 begin_include
@@ -12531,6 +12531,8 @@ name|siocnprobe
 argument_list|,
 name|siocninit
 argument_list|,
+name|NULL
+argument_list|,
 name|siocngetc
 argument_list|,
 name|siocncheckc
@@ -13334,13 +13336,6 @@ name|CN_REMOTE
 else|:
 name|CN_NORMAL
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"sio%d: system console\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 name|siocniobase
 operator|=
 name|iobase
@@ -13489,30 +13484,25 @@ directive|ifdef
 name|__alpha__
 end_ifdef
 
-begin_decl_stmt
-name|struct
-name|consdev
-name|siocons
-init|=
-block|{
+begin_expr_stmt
+name|CONS_DRIVER
+argument_list|(
+name|sio
+argument_list|,
 name|NULL
-block|,
+argument_list|,
 name|NULL
-block|,
+argument_list|,
+name|NULL
+argument_list|,
 name|siocngetc
-block|,
+argument_list|,
 name|siocncheckc
-block|,
+argument_list|,
 name|siocnputc
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-name|CN_NORMAL
-block|, }
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -13555,6 +13545,23 @@ expr_stmt|;
 name|comdefaultrate
 operator|=
 name|speed
+expr_stmt|;
+name|sio_consdev
+operator|.
+name|cn_pri
+operator|=
+name|CN_NORMAL
+expr_stmt|;
+name|sio_consdev
+operator|.
+name|cn_dev
+operator|=
+name|makedev
+argument_list|(
+name|CDEV_MAJOR
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -13637,21 +13644,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|siocons
-operator|.
-name|cn_dev
-operator|=
-name|makedev
-argument_list|(
-name|CDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cn_tab
 operator|=
 operator|&
-name|siocons
+name|sio_consdev
 expr_stmt|;
 return|return
 literal|0

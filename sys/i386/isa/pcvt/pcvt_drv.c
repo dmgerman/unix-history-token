@@ -112,6 +112,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -293,6 +299,8 @@ argument_list|,
 name|pccnprobe
 argument_list|,
 name|pccninit
+argument_list|,
+name|NULL
 argument_list|,
 name|pccngetc
 argument_list|,
@@ -4370,6 +4378,34 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* See if this driver is disabled in probe hint. */
+if|if
+condition|(
+name|resource_int_value
+argument_list|(
+literal|"vt"
+argument_list|,
+literal|0
+argument_list|,
+literal|"disabled"
+argument_list|,
+operator|&
+name|i
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|i
+condition|)
+block|{
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_DEAD
+expr_stmt|;
+return|return;
+block|}
 ifdef|#
 directive|ifdef
 name|_DEV_KBD_KBDREG_H_

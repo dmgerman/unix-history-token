@@ -50,7 +50,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/console.h>
+file|<sys/fbio.h>
 end_include
 
 begin_include
@@ -125,9 +125,20 @@ name|splash_callback
 function_decl|)
 parameter_list|(
 name|int
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|splash_arg
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -352,6 +363,8 @@ name|splash_callback
 call|)
 argument_list|(
 name|SPLASH_INIT
+argument_list|,
+name|splash_arg
 argument_list|)
 expr_stmt|;
 block|}
@@ -615,7 +628,14 @@ name|callback
 function_decl|)
 parameter_list|(
 name|int
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|int
@@ -628,6 +648,10 @@ expr_stmt|;
 name|splash_callback
 operator|=
 name|callback
+expr_stmt|;
+name|splash_arg
+operator|=
+name|arg
 expr_stmt|;
 name|splash_decoder
 operator|=
@@ -731,6 +755,15 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|splash_adp
+operator|!=
+name|adp
+condition|)
+return|return
+name|EINVAL
+return|;
+if|if
+condition|(
 name|splash_decoder
 operator|!=
 name|NULL
@@ -750,6 +783,8 @@ name|splash_callback
 call|)
 argument_list|(
 name|SPLASH_TERM
+argument_list|,
+name|splash_arg
 argument_list|)
 expr_stmt|;
 if|if
