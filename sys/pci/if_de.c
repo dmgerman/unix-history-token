@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.54 1996/10/15 19:22:39 bde Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995, 1996 Matt Thomas (matt@3am-software.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.55 1996/11/10 13:36:46 davidg Exp $  *  */
 end_comment
 
 begin_comment
-comment|/*  * DEC DC21040 PCI Ethernet Controller  *  * Written by Matt Thomas  * BPF support code stolen directly from if_ec.c  *  *   This driver supports the DEC DE435 or any other PCI  *   board which support DC21040, DC21041, or DC21140 (mostly).  */
+comment|/*  * DEC 21040 PCI Ethernet Controller  *  * Written by Matt Thomas  * BPF support code stolen directly from if_ec.c  *  *   This driver supports the DEC DE435 or any other PCI  *   board which support 21040, 21041, or 21140 (mostly).  */
 end_comment
 
 begin_include
@@ -559,7 +559,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This module supports  *	the DEC DC21040 PCI Ethernet Controller.  *	the DEC DC21041 PCI Ethernet Controller.  *	the DEC DC21140 PCI Fast Ethernet Controller.  */
+comment|/*  * This module supports  *	the DEC 21040 PCI Ethernet Controller.  *	the DEC 21041 PCI Ethernet Controller.  *	the DEC 21140 PCI Fast Ethernet Controller.  */
 end_comment
 
 begin_ifdef
@@ -675,7 +675,7 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|tulip_uint16_t
+name|u_int16_t
 name|tulip_csrptr_t
 typedef|;
 end_typedef
@@ -816,7 +816,7 @@ end_else
 begin_typedef
 typedef|typedef
 specifier|volatile
-name|tulip_uint32_t
+name|u_int32_t
 modifier|*
 name|tulip_csrptr_t
 typedef|;
@@ -914,7 +914,7 @@ name|tulip_csrptr_t
 name|csr_missed_frames
 decl_stmt|;
 comment|/* CSR8 */
-comment|/* DC21040 specific registers */
+comment|/* 21040 specific registers */
 name|tulip_csrptr_t
 name|csr_enetrom
 decl_stmt|;
@@ -927,7 +927,7 @@ name|tulip_csrptr_t
 name|csr_full_duplex
 decl_stmt|;
 comment|/* CSR11 */
-comment|/* DC21040/DC21041 common registers */
+comment|/* 21040/21041 common registers */
 name|tulip_csrptr_t
 name|csr_sia_status
 decl_stmt|;
@@ -944,7 +944,7 @@ name|tulip_csrptr_t
 name|csr_sia_general
 decl_stmt|;
 comment|/* CSR15 */
-comment|/* DC21140/DC21041 common registers */
+comment|/* 21140/21041 common registers */
 name|tulip_csrptr_t
 name|csr_srom_mii
 decl_stmt|;
@@ -953,7 +953,7 @@ name|tulip_csrptr_t
 name|csr_gp_timer
 decl_stmt|;
 comment|/* CSR11 */
-comment|/* DC21140 specific registers */
+comment|/* 21140 specific registers */
 name|tulip_csrptr_t
 name|csr_gp
 decl_stmt|;
@@ -962,7 +962,7 @@ name|tulip_csrptr_t
 name|csr_watchdog
 decl_stmt|;
 comment|/* CSR15 */
-comment|/* DC21041 specific registers */
+comment|/* 21041 specific registers */
 name|tulip_csrptr_t
 name|csr_bootrom
 decl_stmt|;
@@ -1012,7 +1012,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The DC21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can   * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs (unless it's on an   * architecture which can't handle unaligned accesses) because with  * 100Mb/s cards the copying is just too much of a hit.  */
+comment|/*  * The 21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can   * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs (unless it's on an   * architecture which can't handle unaligned accesses) because with  * 100Mb/s cards the copying is just too much of a hit.  */
 end_comment
 
 begin_if
@@ -1103,6 +1103,70 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * The various controllers support.  Technically the DE425 is just  * a 21040 on EISA.  But since it remarkably difference from normal  * 21040s, we give it its own chip id.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|TULIP_21040
+block|,
+name|TULIP_DE425
+block|,
+name|TULIP_21041
+block|,
+name|TULIP_21140
+block|,
+name|TULIP_21140A
+block|,
+name|TULIP_21142
+block|,
+name|TULIP_21143
+block|,
+name|TULIP_CHIPID_UNKNOWN
+block|}
+name|tulip_chipid_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Various physical media types supported.  * BNCAUI is BNC or AUI since on the 21040 you can't really tell  * which is in use.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|TULIP_MEDIA_UNKNOWN
+block|,
+name|TULIP_MEDIA_10BASET
+block|,
+name|TULIP_MEDIA_BNC
+block|,
+name|TULIP_MEDIA_AUI
+block|,
+name|TULIP_MEDIA_BNCAUI
+block|,
+name|TULIP_MEDIA_10BASET_FD
+block|,
+name|TULIP_MEDIA_100BASETX
+block|,
+name|TULIP_MEDIA_100BASETX_FD
+block|,
+name|TULIP_MEDIA_100BASET4
+block|,
+name|TULIP_MEDIA_100BASEFX
+block|,
+name|TULIP_MEDIA_100BASEFX_FD
+block|,
+name|TULIP_MEDIA_MAX
+block|}
+name|tulip_media_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Some boards need to treated specially.  The following enumeration  * identifies the cards with quirks (or those we just want to single  * out for special merit or scorn).  */
 end_comment
 
@@ -1110,34 +1174,34 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|TULIP_DC21040_GENERIC
+name|TULIP_21040_GENERIC
 block|,
-comment|/* Generic DC21040 (works with most any board) */
-name|TULIP_DC21040_ZX314_MASTER
+comment|/* Generic 21040 (works with most any board) */
+name|TULIP_21040_ZX314_MASTER
 block|,
 comment|/* ZNYX ZX314 Master 21040 (it has the interrupt line) */
-name|TULIP_DC21040_ZX314_SLAVE
+name|TULIP_21040_ZX314_SLAVE
 block|,
 comment|/* ZNYX ZX314 Slave 21040 (its interrupt is tied to the master's */
-name|TULIP_DC21140_DEC_EB
+name|TULIP_21140_DEC_EB
 block|,
 comment|/* Digital Semicondutor 21140 Evaluation Board */
-name|TULIP_DC21140_DEC_DE500
+name|TULIP_21140_DEC_DE500
 block|,
 comment|/* Digital DE500-?? 10/100 */
-name|TULIP_DC21140_SMC_9332
+name|TULIP_21140_SMC_9332
 block|,
 comment|/* SMC 9332 */
-name|TULIP_DC21140_COGENT_EM100
+name|TULIP_21140_COGENT_EM100
 block|,
 comment|/* Cogent EM100 100 only */
-name|TULIP_DC21140_ZNYX_ZX34X
+name|TULIP_21140_ZNYX_ZX34X
 block|,
 comment|/* ZNYX ZX342 10/100 */
-name|TULIP_DC21041_GENERIC
+name|TULIP_21041_GENERIC
 block|,
-comment|/* Generic DC21041 card */
-name|TULIP_DC21041_DEC_DE450
+comment|/* Generic 21041 card */
+name|TULIP_21041_DEC_DE450
 comment|/* Digital DE450 */
 block|}
 name|tulip_board_t
@@ -1347,45 +1411,45 @@ typedef|typedef
 struct|struct
 block|{
 comment|/*      * Transmit Statistics      */
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsSingleCollisionFrames
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsMultipleCollisionFrames
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsSQETestErrors
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsDeferredTransmissions
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsLateCollisions
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsExcessiveCollisions
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsInternalMacTransmitErrors
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsCarrierSenseErrors
 decl_stmt|;
 comment|/*      * Receive Statistics      */
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsMissedFrames
 decl_stmt|;
 comment|/* not in rfc1650! */
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsAlignmentErrors
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsFCSErrors
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsFrameTooLongs
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dot3StatsInternalMacReceiveErrors
 decl_stmt|;
 block|}
@@ -1600,69 +1664,69 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_setupbuf
 index|[
 literal|192
 operator|/
 sizeof|sizeof
 argument_list|(
-name|tulip_uint32_t
+name|u_int32_t
 argument_list|)
 index|]
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_setupdata
 index|[
 literal|192
 operator|/
 sizeof|sizeof
 argument_list|(
-name|tulip_uint32_t
+name|u_int32_t
 argument_list|)
 index|]
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_intrmask
 decl_stmt|;
 comment|/* our copy of csr_intr */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_cmdmode
 decl_stmt|;
 comment|/* our copy of csr_cmdmode */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_revinfo
 decl_stmt|;
 comment|/* revision of chip */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_gpticks
 decl_stmt|;
 comment|/* number of gpticks unless timeout */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_last_system_error
 range|:
 literal|3
 decl_stmt|;
 comment|/* last system error (only value is TULIP_SYSTEMERROR is also set) */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_txtimer
 range|:
 literal|2
 decl_stmt|;
 comment|/* transmission timer */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_system_errors
 decl_stmt|;
 comment|/* number of system errors encountered */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_statusbits
 decl_stmt|;
 comment|/* status bits from CSR5 that may need to be printed */
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_abilities
 decl_stmt|;
 comment|/* remote system's abiltities (as defined in IEEE 802.3u) */
-comment|/* tulip_uint32_t tulip_bus; XXX */
+comment|/* u_int32_t tulip_bus; XXX */
 name|tulip_media_t
 name|tulip_media
 decl_stmt|;
@@ -1713,13 +1777,13 @@ argument_list|)
 comment|/*      * Debugging/Statistical information      */
 struct|struct
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_intrs
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_msdelay
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_gpticks
 decl_stmt|;
 enum|enum
@@ -1732,16 +1796,16 @@ name|TULIP_GPTMR_100MB_MII
 block|}
 name|dbg_gprate
 enum|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_gpintrs
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_gpintrs_hz
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_link_downed
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_link_suspected
 decl_stmt|;
 name|u_int16_t
@@ -1753,19 +1817,19 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_rxlowbufs
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_rxintrs
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_last_rxintrs
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_high_rxintrs_hz
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|dbg_rxpktsperintr
 index|[
 name|TULIP_RXDESCS
@@ -1820,7 +1884,7 @@ name|tulip_chipdescs
 index|[]
 init|=
 block|{
-literal|"DC21040 [10Mb/s]"
+literal|"21040 [10Mb/s]"
 block|,
 if|#
 directive|if
@@ -1836,13 +1900,13 @@ name|NULL
 block|,
 endif|#
 directive|endif
-literal|"DC21041 [10Mb/s]"
+literal|"21041 [10Mb/s]"
 block|,
-literal|"DC21140 [10-100Mb/s]"
+literal|"21140 [10-100Mb/s]"
 block|,
-literal|"DC21140A [10-100Mb/s]"
+literal|"21140A [10-100Mb/s]"
 block|,
-literal|"DC21142 [10-100Mb/s]"
+literal|"21142 [10-100Mb/s]"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -2168,7 +2232,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
-name|tulip_uint32_t
+name|u_int32_t
 name|tulip_softintr_mask
 decl_stmt|;
 end_decl_stmt
@@ -3199,7 +3263,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-name|tulip_dc21040_media_probe
+name|tulip_21040_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -3292,7 +3356,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21040_media_select
+name|tulip_21040_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -3462,7 +3526,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|tulip_dc21040_10baset_only_media_probe
+name|tulip_21040_10baset_only_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -3505,7 +3569,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21040_10baset_only_media_select
+name|tulip_21040_10baset_only_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -3629,7 +3693,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|tulip_dc21040_auibnc_only_media_probe
+name|tulip_21040_auibnc_only_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -3680,7 +3744,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21040_auibnc_only_media_select
+name|tulip_21040_auibnc_only_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -3782,16 +3846,16 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21040_boardsw
+name|tulip_21040_boardsw
 init|=
 block|{
-name|TULIP_DC21040_GENERIC
+name|TULIP_21040_GENERIC
 block|,
 literal|""
 block|,
-name|tulip_dc21040_media_probe
+name|tulip_21040_media_probe
 block|,
-name|tulip_dc21040_media_select
+name|tulip_21040_media_select
 block|,
 name|NULL
 block|,
@@ -3804,16 +3868,16 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21040_10baset_only_boardsw
+name|tulip_21040_10baset_only_boardsw
 init|=
 block|{
-name|TULIP_DC21040_GENERIC
+name|TULIP_21040_GENERIC
 block|,
 literal|""
 block|,
-name|tulip_dc21040_10baset_only_media_probe
+name|tulip_21040_10baset_only_media_probe
 block|,
-name|tulip_dc21040_10baset_only_media_select
+name|tulip_21040_10baset_only_media_select
 block|,
 name|NULL
 block|,
@@ -3826,16 +3890,16 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21040_auibnc_only_boardsw
+name|tulip_21040_auibnc_only_boardsw
 init|=
 block|{
-name|TULIP_DC21040_GENERIC
+name|TULIP_21040_GENERIC
 block|,
 literal|""
 block|,
-name|tulip_dc21040_auibnc_only_media_probe
+name|tulip_21040_auibnc_only_media_probe
 block|,
-name|tulip_dc21040_auibnc_only_media_select
+name|tulip_21040_auibnc_only_media_select
 block|,
 name|NULL
 block|,
@@ -3848,16 +3912,16 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21040_zx314_master_boardsw
+name|tulip_21040_zx314_master_boardsw
 init|=
 block|{
-name|TULIP_DC21040_ZX314_MASTER
+name|TULIP_21040_ZX314_MASTER
 block|,
 literal|"ZNYX ZX314 "
 block|,
-name|tulip_dc21040_10baset_only_media_probe
+name|tulip_21040_10baset_only_media_probe
 block|,
-name|tulip_dc21040_10baset_only_media_select
+name|tulip_21040_10baset_only_media_select
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3866,16 +3930,16 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21040_zx314_slave_boardsw
+name|tulip_21040_zx314_slave_boardsw
 init|=
 block|{
-name|TULIP_DC21040_ZX314_SLAVE
+name|TULIP_21040_ZX314_SLAVE
 block|,
 literal|"ZNYX ZX314 "
 block|,
-name|tulip_dc21040_10baset_only_media_probe
+name|tulip_21040_10baset_only_media_probe
 block|,
-name|tulip_dc21040_10baset_only_media_select
+name|tulip_21040_10baset_only_media_select
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3973,7 +4037,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_mii_probe
+name|tulip_21140_mii_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -4324,13 +4388,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * The general purpose timer of the 21140/21140a/21142 is kind  * of strange.  It can run on one of 3 speeds depending on the mode  * of the chip.  *  *	10Mb/s port	204.8  microseconds (also speed of DC21041 timer)  *	100Mb/s MII	 81.92 microseconds  *	10Mb/s MII	819.2  microseconds  *  * So we use a tick of a 819.2 microseconds and bias the number of ticks  * required based on the mode in which we are running.  2560/3125 = .8192  * so we use the reciprocal to scale the ms delay to 21140 ticks.  */
+comment|/*  * The general purpose timer of the 21140/21140a/21142 is kind  * of strange.  It can run on one of 3 speeds depending on the mode  * of the chip.  *  *	10Mb/s port	204.8  microseconds (also speed of 21041 timer)  *	100Mb/s MII	 81.92 microseconds  *	10Mb/s MII	819.2  microseconds  *  * So we use a tick of a 819.2 microseconds and bias the number of ticks  * required based on the mode in which we are running.  2560/3125 = .8192  * so we use the reciprocal to scale the ms delay to 21140 ticks.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_gp_timer_set
+name|tulip_21140_gp_timer_set
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -4341,7 +4405,7 @@ name|unsigned
 name|msdelay
 parameter_list|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|cmdmode
 init|=
 name|TULIP_CSR_READ
@@ -4437,7 +4501,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (sc->tulip_chipid == TULIP_DC21140A) 	msdelay *= 10;
+block|if (sc->tulip_chipid == TULIP_21140A) 	msdelay *= 10;
 endif|#
 directive|endif
 name|TULIP_CSR_WRITE
@@ -4530,7 +4594,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|tulip_dc21140_map_abilities
+name|tulip_21140_map_abilities
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -4682,7 +4746,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_autonegotiate
+name|tulip_21140_autonegotiate
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -4696,7 +4760,7 @@ specifier|const
 name|phy
 parameter_list|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|data
 decl_stmt|;
 if|if
@@ -4865,7 +4929,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|tulip_dc21140_gp_timer_set
+name|tulip_21140_gp_timer_set
 argument_list|(
 name|sc
 argument_list|,
@@ -5143,7 +5207,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|tulip_dc21140_gp_timer_set
+name|tulip_21140_gp_timer_set
 argument_list|(
 name|sc
 argument_list|,
@@ -5234,7 +5298,7 @@ name|phy
 operator|->
 name|phy_status
 expr_stmt|;
-name|tulip_dc21140_map_abilities
+name|tulip_21140_map_abilities
 argument_list|(
 name|sc
 argument_list|,
@@ -5276,7 +5340,7 @@ end_escape
 begin_function
 specifier|static
 name|tulip_media_t
-name|tulip_dc21140_phy_readspecific
+name|tulip_21140_phy_readspecific
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -5628,7 +5692,7 @@ end_escape
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_mii_link_monitor
+name|tulip_21140_mii_link_monitor
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -5642,10 +5706,10 @@ specifier|const
 name|phy
 parameter_list|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|data
 decl_stmt|;
-name|tulip_dc21140_gp_timer_set
+name|tulip_21140_gp_timer_set
 argument_list|(
 name|sc
 argument_list|,
@@ -5785,7 +5849,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|tulip_dc21140_map_abilities
+name|tulip_21140_map_abilities
 argument_list|(
 name|sc
 argument_list|,
@@ -5831,7 +5895,7 @@ block|{
 name|tulip_media_t
 name|media
 init|=
-name|tulip_dc21140_phy_readspecific
+name|tulip_21140_phy_readspecific
 argument_list|(
 name|sc
 argument_list|,
@@ -6069,7 +6133,7 @@ name|tulip_probe_state
 operator|=
 name|TULIP_PROBE_INACTIVE
 expr_stmt|;
-name|tulip_dc21140_autonegotiate
+name|tulip_21140_autonegotiate
 argument_list|(
 name|sc
 argument_list|,
@@ -6085,7 +6149,7 @@ end_escape
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_nomii_media_preset
+name|tulip_21140_nomii_media_preset
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -6189,7 +6253,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_mii_media_preset
+name|tulip_21140_mii_media_preset
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -6355,7 +6419,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_nomii_100only_media_preset
+name|tulip_21140_nomii_100only_media_preset
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -6393,7 +6457,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-name|tulip_dc21140_evalboard_media_probe
+name|tulip_21140_evalboard_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -6483,7 +6547,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_evalboard_media_select
+name|tulip_21140_evalboard_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -6649,18 +6713,18 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21140_eb_boardsw
+name|tulip_21140_eb_boardsw
 init|=
 block|{
-name|TULIP_DC21140_DEC_EB
+name|TULIP_21140_DEC_EB
 block|,
 literal|""
 block|,
-name|tulip_dc21140_evalboard_media_probe
+name|tulip_21140_evalboard_media_probe
 block|,
-name|tulip_dc21140_evalboard_media_select
+name|tulip_21140_evalboard_media_select
 block|,
-name|tulip_dc21140_nomii_media_preset
+name|tulip_21140_nomii_media_preset
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -6671,7 +6735,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-name|tulip_dc21140_smc9332_media_probe
+name|tulip_21140_smc9332_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -6764,7 +6828,7 @@ name|idx
 operator|--
 control|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|csr
 init|=
 name|TULIP_CSR_READ
@@ -6840,7 +6904,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_smc9332_media_select
+name|tulip_21140_smc9332_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7006,18 +7070,18 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21140_smc9332_boardsw
+name|tulip_21140_smc9332_boardsw
 init|=
 block|{
-name|TULIP_DC21140_SMC_9332
+name|TULIP_21140_SMC_9332
 block|,
 literal|"SMC 9332 "
 block|,
-name|tulip_dc21140_smc9332_media_probe
+name|tulip_21140_smc9332_media_probe
 block|,
-name|tulip_dc21140_smc9332_media_select
+name|tulip_21140_smc9332_media_select
 block|,
-name|tulip_dc21140_nomii_media_preset
+name|tulip_21140_nomii_media_preset
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -7028,7 +7092,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-name|tulip_dc21140_cogent_em100_media_probe
+name|tulip_21140_cogent_em100_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7102,7 +7166,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_cogent_em100_media_select
+name|tulip_21140_cogent_em100_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7212,18 +7276,18 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21140_cogent_em100_boardsw
+name|tulip_21140_cogent_em100_boardsw
 init|=
 block|{
-name|TULIP_DC21140_COGENT_EM100
+name|TULIP_21140_COGENT_EM100
 block|,
 literal|"Cogent EM100 "
 block|,
-name|tulip_dc21140_cogent_em100_media_probe
+name|tulip_21140_cogent_em100_media_probe
 block|,
-name|tulip_dc21140_cogent_em100_media_select
+name|tulip_21140_cogent_em100_media_select
 block|,
-name|tulip_dc21140_nomii_100only_media_preset
+name|tulip_21140_nomii_100only_media_preset
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -7234,7 +7298,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-name|tulip_dc21140_znyx_zx34x_media_probe
+name|tulip_21140_znyx_zx34x_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7322,7 +7386,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_znyx_zx34x_media_select
+name|tulip_21140_znyx_zx34x_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7475,18 +7539,18 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21140_znyx_zx34x_boardsw
+name|tulip_21140_znyx_zx34x_boardsw
 init|=
 block|{
-name|TULIP_DC21140_ZNYX_ZX34X
+name|TULIP_21140_ZNYX_ZX34X
 block|,
 literal|"ZNYX ZX34X "
 block|,
-name|tulip_dc21140_znyx_zx34x_media_probe
+name|tulip_21140_znyx_zx34x_media_probe
 block|,
-name|tulip_dc21140_znyx_zx34x_media_select
+name|tulip_21140_znyx_zx34x_media_select
 block|,
-name|tulip_dc21140_nomii_media_preset
+name|tulip_21140_nomii_media_preset
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -7508,7 +7572,7 @@ name|short
 name|value_phyctl
 decl_stmt|;
 block|}
-name|tulip_dc21140_de500_csrvalues
+name|tulip_21140_de500_csrvalues
 index|[]
 init|=
 block|{
@@ -7584,7 +7648,7 @@ end_escape
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_de500_media_select
+name|tulip_21140_de500_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7729,7 +7793,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|tulip_dc21140_de500xa_media_probe
+name|tulip_21140_de500xa_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7823,7 +7887,7 @@ name|idx
 operator|--
 control|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|data
 decl_stmt|;
 name|DELAY
@@ -7872,7 +7936,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_de500xa_media_select
+name|tulip_21140_de500xa_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -7905,7 +7969,7 @@ argument_list|,
 name|TULIP_GP_DE500_PINS
 argument_list|)
 expr_stmt|;
-name|tulip_dc21140_de500_media_select
+name|tulip_21140_de500_media_select
 argument_list|(
 name|sc
 argument_list|)
@@ -7916,7 +7980,7 @@ name|sc
 argument_list|,
 name|csr_gp
 argument_list|,
-name|tulip_dc21140_de500_csrvalues
+name|tulip_21140_de500_csrvalues
 index|[
 name|sc
 operator|->
@@ -7961,18 +8025,18 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21140_de500xa_boardsw
+name|tulip_21140_de500xa_boardsw
 init|=
 block|{
-name|TULIP_DC21140_DEC_DE500
+name|TULIP_21140_DEC_DE500
 block|,
 literal|"Digital DE500-XA "
 block|,
-name|tulip_dc21140_de500xa_media_probe
+name|tulip_21140_de500xa_media_probe
 block|,
-name|tulip_dc21140_de500xa_media_select
+name|tulip_21140_de500xa_media_select
 block|,
-name|tulip_dc21140_nomii_media_preset
+name|tulip_21140_nomii_media_preset
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -7983,7 +8047,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-name|tulip_dc21140_de500aa_media_probe
+name|tulip_21140_de500aa_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -8041,7 +8105,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|tulip_dc21140_de500aa_media_select
+name|tulip_21140_de500aa_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -8058,7 +8122,7 @@ name|sc
 operator|->
 name|tulip_phys
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|data
 decl_stmt|;
 if|if
@@ -8089,7 +8153,7 @@ name|tulip_probe_state
 operator|!=
 name|TULIP_PROBE_MEDIATEST
 condition|)
-name|tulip_dc21140_autonegotiate
+name|tulip_21140_autonegotiate
 argument_list|(
 name|sc
 argument_list|,
@@ -8122,7 +8186,7 @@ operator|&
 name|IFF_NOAUTONEG
 condition|)
 block|{
-name|tulip_dc21140_de500_media_select
+name|tulip_21140_de500_media_select
 argument_list|(
 name|sc
 argument_list|)
@@ -8134,7 +8198,7 @@ name|sc
 operator|->
 name|tulip_media
 operator|=
-name|tulip_dc21140_phy_readspecific
+name|tulip_21140_phy_readspecific
 argument_list|(
 name|sc
 argument_list|,
@@ -8156,7 +8220,7 @@ name|tulip_probe_state
 operator|=
 name|TULIP_PROBE_INACTIVE
 expr_stmt|;
-name|tulip_dc21140_autonegotiate
+name|tulip_21140_autonegotiate
 argument_list|(
 name|sc
 argument_list|,
@@ -8232,7 +8296,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|tulip_dc21140_mii_link_monitor
+name|tulip_21140_mii_link_monitor
 argument_list|(
 name|sc
 argument_list|,
@@ -8287,7 +8351,7 @@ name|TULIP_STS_GPTIMEOUT
 operator||
 name|TULIP_STS_NORMALINTR
 expr_stmt|;
-name|tulip_dc21140_gp_timer_set
+name|tulip_21140_gp_timer_set
 argument_list|(
 name|sc
 argument_list|,
@@ -8329,7 +8393,7 @@ operator|)
 expr_stmt|;
 name|data
 operator||=
-name|tulip_dc21140_de500_csrvalues
+name|tulip_21140_de500_csrvalues
 index|[
 name|sc
 operator|->
@@ -8359,20 +8423,20 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21140_de500aa_boardsw
+name|tulip_21140_de500aa_boardsw
 init|=
 block|{
-name|TULIP_DC21140_DEC_DE500
+name|TULIP_21140_DEC_DE500
 block|,
 literal|"Digital DE500-AA "
 block|,
-name|tulip_dc21140_de500aa_media_probe
+name|tulip_21140_de500aa_media_probe
 block|,
-name|tulip_dc21140_de500aa_media_select
+name|tulip_21140_de500aa_media_select
 block|,
-name|tulip_dc21140_mii_media_preset
+name|tulip_21140_mii_media_preset
 block|,
-name|tulip_dc21140_mii_probe
+name|tulip_21140_mii_probe
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -8383,7 +8447,7 @@ end_escape
 begin_function
 specifier|static
 name|int
-name|tulip_dc21041_media_probe
+name|tulip_21041_media_probe
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -8414,7 +8478,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 value|(sc->tulip_if.if_mtu> ETHERMTU ? TULIP_WATCHDOG_RXDISABLE|TULIP_WATCHDOG_TXDISABLE : 0)
 end_define
 
@@ -8426,7 +8490,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 value|0
 end_define
 
@@ -8438,7 +8502,7 @@ end_endif
 begin_function
 specifier|static
 name|void
-name|tulip_dc21041_media_select
+name|tulip_21041_media_select
 parameter_list|(
 name|tulip_softc_t
 modifier|*
@@ -8618,7 +8682,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_BNC
+name|TULIP_21041_SIACONN_BNC
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8627,7 +8691,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_BNC
+name|TULIP_21041_SIATXRX_BNC
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8636,9 +8700,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_BNC
+name|TULIP_21041_SIAGEN_BNC
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8675,7 +8739,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_AUI
+name|TULIP_21041_SIACONN_AUI
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8684,7 +8748,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_AUI
+name|TULIP_21041_SIATXRX_AUI
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8693,9 +8757,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_AUI
+name|TULIP_21041_SIAGEN_AUI
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8781,7 +8845,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_10BASET
+name|TULIP_21041_SIACONN_10BASET
 argument_list|)
 expr_stmt|;
 if|if
@@ -8798,7 +8862,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_10BASET_FD
+name|TULIP_21041_SIATXRX_10BASET_FD
 argument_list|)
 expr_stmt|;
 else|else
@@ -8808,7 +8872,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_10BASET
+name|TULIP_21041_SIATXRX_10BASET
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8817,9 +8881,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_10BASET
+name|TULIP_21041_SIAGEN_10BASET
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8929,7 +8993,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_BNC
+name|TULIP_21041_SIACONN_BNC
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8938,7 +9002,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_BNC
+name|TULIP_21041_SIATXRX_BNC
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8947,9 +9011,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_BNC
+name|TULIP_21041_SIAGEN_BNC
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -8997,7 +9061,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_AUI
+name|TULIP_21041_SIACONN_AUI
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9006,7 +9070,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_AUI
+name|TULIP_21041_SIATXRX_AUI
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9015,9 +9079,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_AUI
+name|TULIP_21041_SIAGEN_AUI
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9498,7 +9562,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_BNC
+name|TULIP_21041_SIACONN_BNC
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9507,7 +9571,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_BNC
+name|TULIP_21041_SIATXRX_BNC
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9516,9 +9580,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_BNC
+name|TULIP_21041_SIAGEN_BNC
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9557,7 +9621,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_AUI
+name|TULIP_21041_SIACONN_AUI
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9566,7 +9630,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_AUI
+name|TULIP_21041_SIATXRX_AUI
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9575,9 +9639,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_AUI
+name|TULIP_21041_SIAGEN_AUI
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9700,7 +9764,7 @@ name|sc
 argument_list|,
 name|csr_sia_connectivity
 argument_list|,
-name|TULIP_DC21041_SIACONN_10BASET
+name|TULIP_21041_SIACONN_10BASET
 argument_list|)
 expr_stmt|;
 if|if
@@ -9717,7 +9781,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_10BASET_FD
+name|TULIP_21041_SIATXRX_10BASET_FD
 argument_list|)
 expr_stmt|;
 else|else
@@ -9727,7 +9791,7 @@ name|sc
 argument_list|,
 name|csr_sia_tx_rx
 argument_list|,
-name|TULIP_DC21041_SIATXRX_10BASET
+name|TULIP_21041_SIATXRX_10BASET
 argument_list|)
 expr_stmt|;
 name|TULIP_CSR_WRITE
@@ -9736,9 +9800,9 @@ name|sc
 argument_list|,
 name|csr_sia_general
 argument_list|,
-name|TULIP_DC21041_SIAGEN_10BASET
+name|TULIP_21041_SIAGEN_10BASET
 operator||
-name|TULIP_DC21041_SIAGEN_WATCHDOG
+name|TULIP_21041_SIAGEN_WATCHDOG
 argument_list|)
 expr_stmt|;
 block|}
@@ -9853,16 +9917,16 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|tulip_boardsw_t
-name|tulip_dc21041_boardsw
+name|tulip_21041_boardsw
 init|=
 block|{
-name|TULIP_DC21041_GENERIC
+name|TULIP_21041_GENERIC
 block|,
 literal|""
 block|,
-name|tulip_dc21041_media_probe
+name|tulip_21041_media_probe
 block|,
-name|tulip_dc21041_media_select
+name|tulip_21041_media_select
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -9889,7 +9953,7 @@ name|tulip_desc_t
 modifier|*
 name|di
 decl_stmt|;
-comment|/*      * Brilliant.  Simply brilliant.  When switching modes/speeds      * on a DC2114*, you need to set the appriopriate MII/PCS/SCL/PS      * bits in CSR6 and then do a software reset to get the DC21140      * to properly reset its internal pathways to the right places.      *   Grrrr.      */
+comment|/*      * Brilliant.  Simply brilliant.  When switching modes/speeds      * on a 2114*, you need to set the appriopriate MII/PCS/SCL/PS      * bits in CSR6 and then do a software reset to get the 21140      * to properly reset its internal pathways to the right places.      *   Grrrr.      */
 if|if
 condition|(
 name|sc
@@ -10349,7 +10413,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 condition|)
 name|TULIP_CSR_WRITE
 argument_list|(
@@ -12032,7 +12096,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 condition|)
 name|TULIP_CSR_WRITE
 argument_list|(
@@ -12138,7 +12202,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|collisions
 init|=
 operator|(
@@ -12325,7 +12389,7 @@ modifier|*
 specifier|const
 name|sc
 parameter_list|,
-name|tulip_uint32_t
+name|u_int32_t
 name|csr
 parameter_list|)
 block|{
@@ -12445,7 +12509,7 @@ modifier|*
 name|progress_p
 parameter_list|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|csr
 decl_stmt|;
 while|while
@@ -12580,7 +12644,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 condition|)
 block|{
 call|(
@@ -12632,13 +12696,13 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140
+name|TULIP_21140
 operator|||
 name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140A
+name|TULIP_21140A
 condition|)
 block|{
 call|(
@@ -12715,7 +12779,7 @@ operator|&
 name|TULIP_STS_ABNRMLINTR
 condition|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|tmp
 init|=
 name|csr
@@ -12961,7 +13025,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|softintr_mask
 decl_stmt|,
 name|mask
@@ -14542,7 +14606,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|id1
 decl_stmt|,
 name|id2
@@ -14568,7 +14632,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 condition|)
 return|return;
 if|if
@@ -14577,7 +14641,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140
+name|TULIP_21140
 condition|)
 block|{
 name|sc
@@ -14585,7 +14649,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21140_smc9332_boardsw
+name|tulip_21140_smc9332_boardsw
 expr_stmt|;
 return|return;
 block|}
@@ -14798,7 +14862,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21040_10baset_only_boardsw
+name|tulip_21040_10baset_only_boardsw
 expr_stmt|;
 elseif|else
 if|if
@@ -14813,7 +14877,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21040_auibnc_only_boardsw
+name|tulip_21040_auibnc_only_boardsw
 expr_stmt|;
 block|}
 end_function
@@ -14842,7 +14906,7 @@ name|rom_cksum
 decl_stmt|,
 name|idx
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|csr
 decl_stmt|;
 name|unsigned
@@ -14882,7 +14946,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21040
+name|TULIP_21040
 condition|)
 block|{
 name|TULIP_CSR_WRITE
@@ -14959,7 +15023,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21040_boardsw
+name|tulip_21040_boardsw
 expr_stmt|;
 if|#
 directive|if
@@ -15071,7 +15135,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21040_boardsw
+name|tulip_21040_boardsw
 expr_stmt|;
 endif|#
 directive|endif
@@ -15084,21 +15148,21 @@ name|new_srom_fmt
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Thankfully all DC21041's act the same. 	 * Assume all DC21140 board are compatible with the 	 * DEC 10/100 evaluation board.  Not really valid but 	 * it's the best we can do until every one switches to 	 * the new SROM format. 	 */
+comment|/* 	 * Thankfully all 21041's act the same. 	 * Assume all 21140 board are compatible with the 	 * DEC 10/100 evaluation board.  Not really valid but 	 * it's the best we can do until every one switches to 	 * the new SROM format. 	 */
 if|if
 condition|(
 name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 condition|)
 name|sc
 operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21041_boardsw
+name|tulip_21041_boardsw
 expr_stmt|;
 else|else
 name|sc
@@ -15106,7 +15170,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21140_eb_boardsw
+name|tulip_21140_eb_boardsw
 expr_stmt|;
 name|tulip_srom_read
 argument_list|(
@@ -15257,7 +15321,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21140_de500xa_boardsw
+name|tulip_21140_de500xa_boardsw
 expr_stmt|;
 name|copy_name
 operator|=
@@ -15288,7 +15352,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21140_de500aa_boardsw
+name|tulip_21140_de500aa_boardsw
 expr_stmt|;
 name|copy_name
 operator|=
@@ -15509,14 +15573,14 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 	 * A number of makers of multiport boards (ZNYX and Cogent) 	 * only put on one address ROM on their DC21040 boards.  So 	 * if the ROM is all zeros and this is a DC21040, look at the 	 * previous configured boards (as long as they are on the same 	 * PCI bus and the bus number is non-zero) until we find the 	 * master board with address ROM.  We then use its address ROM 	 * as the base for this board.  (we add our relative board 	 * to the last byte of its address). 	 */
+comment|/* 	 * A number of makers of multiport boards (ZNYX and Cogent) 	 * only put on one address ROM on their 21040 boards.  So 	 * if the ROM is all zeros and this is a 21040, look at the 	 * previous configured boards (as long as they are on the same 	 * PCI bus and the bus number is non-zero) until we find the 	 * master board with address ROM.  We then use its address ROM 	 * as the base for this board.  (we add our relative board 	 * to the last byte of its address). 	 */
 if|if
 condition|(
 name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21040
+name|TULIP_21040
 comment|/*&& sc->tulip_bus != 0 XXX */
 condition|)
 block|{
@@ -15664,7 +15728,7 @@ name|tulip_boardsw
 operator|->
 name|bd_type
 operator|==
-name|TULIP_DC21040_ZX314_MASTER
+name|TULIP_21040_ZX314_MASTER
 condition|)
 block|{
 name|sc
@@ -15672,9 +15736,9 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21040_zx314_slave_boardsw
+name|tulip_21040_zx314_slave_boardsw
 expr_stmt|;
-comment|/* 			 * Now for a truly disgusting kludge: all 4 DC21040s on 			 * the ZX314 share the same INTA line so the mapping 			 * setup by the BIOS on the PCI bridge is worthless. 			 * Rather than reprogramming the value in the config 			 * register, we will handle this internally. 			 */
+comment|/* 			 * Now for a truly disgusting kludge: all 4 21040s on 			 * the ZX314 share the same INTA line so the mapping 			 * setup by the BIOS on the PCI bridge is worthless. 			 * Rather than reprogramming the value in the config 			 * register, we will handle this internally. 			 */
 name|sc
 operator|->
 name|tulip_slaves
@@ -16016,13 +16080,13 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140
+name|TULIP_21140
 operator|||
 name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140A
+name|TULIP_21140A
 condition|)
 block|{
 if|if
@@ -16041,7 +16105,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21140_cogent_em100_boardsw
+name|tulip_21140_cogent_em100_boardsw
 expr_stmt|;
 block|}
 block|}
@@ -16082,13 +16146,13 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140
+name|TULIP_21140
 operator|||
 name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140A
+name|TULIP_21140A
 condition|)
 block|{
 comment|/* this at least works for the zx342 from Znyx */
@@ -16097,7 +16161,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21140_znyx_zx34x_boardsw
+name|tulip_21140_znyx_zx34x_boardsw
 expr_stmt|;
 block|}
 elseif|else
@@ -16107,7 +16171,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21040
+name|TULIP_21040
 operator|&&
 operator|(
 name|sc
@@ -16142,7 +16206,7 @@ operator|->
 name|tulip_boardsw
 operator|=
 operator|&
-name|tulip_dc21040_zx314_master_boardsw
+name|tulip_21040_zx314_master_boardsw
 expr_stmt|;
 name|sc
 operator|->
@@ -16245,7 +16309,7 @@ specifier|const
 name|sc
 parameter_list|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 modifier|*
 name|sp
 init|=
@@ -16943,19 +17007,19 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|!=
-name|TULIP_DC21140
+name|TULIP_21140
 operator|&&
 name|sc
 operator|->
 name|tulip_chipid
 operator|!=
-name|TULIP_DC21140A
+name|TULIP_21140A
 operator|&&
 name|sc
 operator|->
 name|tulip_chipid
 operator|!=
-name|TULIP_DC21041
+name|TULIP_21041
 endif|#
 directive|endif
 condition|)
@@ -17117,7 +17181,7 @@ name|free
 decl_stmt|,
 name|recopy
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|d_status
 decl_stmt|;
 if|if
@@ -17987,7 +18051,7 @@ name|defined
 argument_list|(
 name|TULIP_DEBUG
 argument_list|)
-name|tulip_uint32_t
+name|u_int32_t
 name|rxintrs
 init|=
 name|sc
@@ -18910,7 +18974,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21040
+name|TULIP_21040
 condition|)
 block|{
 name|sc
@@ -19107,13 +19171,13 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140
+name|TULIP_21140
 operator|||
 name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21140A
+name|TULIP_21140A
 condition|)
 block|{
 name|sc
@@ -19172,7 +19236,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 condition|)
 block|{
 name|sc
@@ -19356,7 +19420,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * This is the PCI configuration support.  Since the DC21040 is available  * on both EISA and PCI boards, one must be careful in how defines the  * DC21040 in the config file.  */
+comment|/*  * This is the PCI configuration support.  Since the 21040 is available  * on both EISA and PCI boards, one must be careful in how defines the  * 21040 in the config file.  */
 end_comment
 
 begin_define
@@ -19565,10 +19629,10 @@ argument_list|(
 name|device_id
 argument_list|)
 operator|==
-name|DC21040_CHIPID
+name|CHIPID_21040
 condition|)
 return|return
-literal|"Digital DC21040 Ethernet"
+literal|"Digital 21040 Ethernet"
 return|;
 if|if
 condition|(
@@ -19577,10 +19641,10 @@ argument_list|(
 name|device_id
 argument_list|)
 operator|==
-name|DC21041_CHIPID
+name|CHIPID_21041
 condition|)
 return|return
-literal|"Digital DC21041 Ethernet"
+literal|"Digital 21041 Ethernet"
 return|;
 if|if
 condition|(
@@ -19589,10 +19653,10 @@ argument_list|(
 name|device_id
 argument_list|)
 operator|==
-name|DC21140_CHIPID
+name|CHIPID_21140
 condition|)
 block|{
-name|tulip_uint32_t
+name|u_int32_t
 name|revinfo
 init|=
 name|pci_conf_read
@@ -19611,11 +19675,11 @@ operator|>=
 literal|0x20
 condition|)
 return|return
-literal|"Digital DC21140A Fast Ethernet"
+literal|"Digital 21140A Fast Ethernet"
 return|;
 else|else
 return|return
-literal|"Digital DC21140 Fast Ethernet"
+literal|"Digital 21140 Fast Ethernet"
 return|;
 block|}
 return|return
@@ -19786,15 +19850,15 @@ if|if
 condition|(
 name|id
 operator|!=
-name|DC21040_CHIPID
+name|CHIPID_21040
 operator|&&
 name|id
 operator|!=
-name|DC21041_CHIPID
+name|CHIPID_21041
 operator|&&
 name|id
 operator|!=
-name|DC21140_CHIPID
+name|CHIPID_21140
 condition|)
 return|return
 literal|0
@@ -20571,7 +20635,7 @@ operator|->
 name|pa_id
 argument_list|)
 operator|==
-name|DC21040_CHIPID
+name|CHIPID_21040
 operator|||
 name|PCI_CHIPID
 argument_list|(
@@ -20580,7 +20644,7 @@ operator|->
 name|pa_id
 argument_list|)
 operator|==
-name|DC21041_CHIPID
+name|CHIPID_21041
 operator|||
 name|PCI_CHIPID
 argument_list|(
@@ -20589,7 +20653,7 @@ operator|->
 name|pa_id
 argument_list|)
 operator|==
-name|DC21140_CHIPID
+name|CHIPID_21140
 condition|)
 return|return
 literal|1
@@ -20847,7 +20911,7 @@ name|retval
 decl_stmt|,
 name|idx
 decl_stmt|;
-name|tulip_uint32_t
+name|u_int32_t
 name|revinfo
 decl_stmt|,
 name|cfdainfo
@@ -21045,11 +21109,11 @@ argument_list|(
 name|id
 argument_list|)
 operator|==
-name|DC21040_CHIPID
+name|CHIPID_21040
 condition|)
 name|chipid
 operator|=
-name|TULIP_DC21040
+name|TULIP_21040
 expr_stmt|;
 elseif|else
 if|if
@@ -21059,7 +21123,7 @@ argument_list|(
 name|id
 argument_list|)
 operator|==
-name|DC21140_CHIPID
+name|CHIPID_21140
 condition|)
 block|{
 name|chipid
@@ -21070,9 +21134,9 @@ operator|>=
 literal|0x20
 operator|)
 condition|?
-name|TULIP_DC21140A
+name|TULIP_21140A
 else|:
-name|TULIP_DC21140
+name|TULIP_21140
 expr_stmt|;
 block|}
 elseif|else
@@ -21083,11 +21147,11 @@ argument_list|(
 name|id
 argument_list|)
 operator|==
-name|DC21041_CHIPID
+name|CHIPID_21041
 condition|)
 name|chipid
 operator|=
-name|TULIP_DC21041
+name|TULIP_21041
 expr_stmt|;
 block|}
 if|if
@@ -21102,7 +21166,7 @@ condition|(
 operator|(
 name|chipid
 operator|==
-name|TULIP_DC21040
+name|TULIP_21040
 operator|||
 name|chipid
 operator|==
@@ -21128,7 +21192,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|": not configured; DC21040 pass 2.0 required (%d.%d found)\n"
+literal|": not configured; 21040 pass 2.0 required (%d.%d found)\n"
 argument_list|,
 name|revinfo
 operator|>>
@@ -21146,7 +21210,7 @@ if|if
 condition|(
 name|chipid
 operator|==
-name|TULIP_DC21140
+name|TULIP_21140
 operator|&&
 name|revinfo
 operator|<
@@ -21165,7 +21229,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"de%d: not configured; DC21140 pass 1.1 required (%d.%d found)\n"
+literal|"de%d: not configured; 21140 pass 1.1 required (%d.%d found)\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -21185,11 +21249,11 @@ condition|(
 operator|(
 name|chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 operator|||
 name|chipid
 operator|==
-name|TULIP_DC21140A
+name|TULIP_21140A
 operator|)
 operator|&&
 operator|(
@@ -22149,7 +22213,7 @@ name|sc
 operator|->
 name|tulip_chipid
 operator|==
-name|TULIP_DC21041
+name|TULIP_21041
 condition|)
 block|{
 name|TULIP_CSR_WRITE
