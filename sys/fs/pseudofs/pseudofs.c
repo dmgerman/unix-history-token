@@ -450,6 +450,10 @@ argument_list|(
 name|pi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s registered\n"
@@ -499,6 +503,10 @@ operator|->
 name|pi_mutex
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"%s unregistered\n"
