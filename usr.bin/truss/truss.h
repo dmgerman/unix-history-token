@@ -6,6 +6,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FOLLOWFORKS
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|NOSIGS
 value|0x00000008
 end_define
@@ -19,6 +26,9 @@ name|pid
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|in_fork
 decl_stmt|;
 name|FILE
 modifier|*

@@ -136,9 +136,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: truss [-S] [-o file] -p pid"
+literal|"usage: truss [-fS] [-o file] -p pid"
 argument_list|,
-literal|"       truss [-S] [-o file] command [args]"
+literal|"       truss [-fS] [-o file] command [args]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -524,7 +524,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"p:o:S"
+literal|"p:o:fS"
 argument_list|)
 operator|)
 operator|!=
@@ -549,6 +549,17 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* Follow fork()'s */
+name|trussinfo
+operator|->
+name|flags
+operator||=
+name|FOLLOWFORKS
 expr_stmt|;
 break|break;
 case|case
@@ -720,6 +731,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*    * At this point, if we started the process, it is stopped waiting to    * be woken up, either in exit() or in execve().    */
+name|START_TRACE
+label|:
 name|Procfd
 operator|=
 name|start_tracing
@@ -750,6 +763,20 @@ condition|?
 literal|0
 else|:
 name|S_SIG
+operator|)
+argument_list|,
+operator|(
+operator|(
+name|trussinfo
+operator|->
+name|flags
+operator|&
+name|FOLLOWFORKS
+operator|)
+condition|?
+name|PF_FORK
+else|:
+literal|0
 operator|)
 argument_list|)
 expr_stmt|;
@@ -843,6 +870,64 @@ name|in_exec
 operator|=
 literal|0
 expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|trussinfo
+operator|->
+name|in_fork
+operator|&&
+operator|(
+name|trussinfo
+operator|->
+name|flags
+operator|&
+name|FOLLOWFORKS
+operator|)
+condition|)
+block|{
+name|int
+name|childpid
+decl_stmt|;
+name|trussinfo
+operator|->
+name|in_fork
+operator|=
+literal|0
+expr_stmt|;
+name|childpid
+operator|=
+name|funcs
+operator|->
+name|exit_syscall
+argument_list|(
+name|trussinfo
+argument_list|,
+name|pfs
+operator|.
+name|val
+argument_list|)
+expr_stmt|;
+comment|/* 	   * Fork a new copy of ourself to trace the child of the 	   * original traced process. 	   */
+if|if
+condition|(
+name|fork
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
+name|trussinfo
+operator|->
+name|pid
+operator|=
+name|childpid
+expr_stmt|;
+goto|goto
+name|START_TRACE
+goto|;
+block|}
 break|break;
 block|}
 name|funcs

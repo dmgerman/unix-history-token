@@ -447,6 +447,9 @@ name|int
 name|pid
 parameter_list|,
 name|int
+name|eventflags
+parameter_list|,
+name|int
 name|flags
 parameter_list|)
 block|{
@@ -554,7 +557,7 @@ name|fd
 argument_list|,
 name|PIOCBIS
 argument_list|,
-name|flags
+name|eventflags
 argument_list|)
 operator|==
 operator|-
@@ -576,7 +579,7 @@ name|fd
 argument_list|,
 name|PIOCSFL
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 operator|==
 operator|-
