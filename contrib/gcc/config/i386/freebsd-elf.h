@@ -274,7 +274,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{!shared: %{mieee-fp:-lieee} %{p:-lgmon} %{pg:-lgmon} \      %{!ggdb:-lc} %{ggdb:-lg}}"
+value|"%{!shared: %{mieee-fp:-lieee} %{p:-lgmon} %{pg:-lgmon} \      %{!ggdb:%{{!pthread:-lc}%{pthread:-lc_r}}} %{ggdb:-lg}}"
 end_define
 
 begin_else
