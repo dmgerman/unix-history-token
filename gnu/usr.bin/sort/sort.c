@@ -742,11 +742,8 @@ parameter_list|)
 value|(collates[UCHAR (A)] - collates[UCHAR (B)])
 end_define
 
-begin_comment
-comment|/* static */
-end_comment
-
 begin_function
+specifier|static
 name|int
 name|collate_range_cmp
 parameter_list|(
