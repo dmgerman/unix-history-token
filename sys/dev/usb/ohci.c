@@ -11146,6 +11146,17 @@ argument_list|,
 name|head
 argument_list|)
 expr_stmt|;
+comment|/* Make sure the host controller is not touching this ED */
+name|usb_delay_ms
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
