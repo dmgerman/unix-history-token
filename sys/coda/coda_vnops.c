@@ -536,11 +536,6 @@ name|vop_stdputpages
 block|,
 comment|/* pager intf.*/
 operator|.
-name|vop_destroyvobject
-operator|=
-name|vop_stddestroyvobject
-block|,
-operator|.
 name|vop_getwritemount
 operator|=
 name|vop_stdgetwritemount
