@@ -615,7 +615,7 @@ name|PRINTF
 argument_list|(
 literal|10
 argument_list|,
-literal|"ips test: command id: %d segments: %d blkno: %lld "
+literal|"ips test: command id: %d segments: %d "
 literal|"pblkno: %lld length: %d, ds_len: %d\n"
 argument_list|,
 name|command
@@ -623,10 +623,6 @@ operator|->
 name|id
 argument_list|,
 name|segnum
-argument_list|,
-name|iobuf
-operator|->
-name|bio_blkno
 argument_list|,
 name|iobuf
 operator|->
