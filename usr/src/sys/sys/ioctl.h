@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.29	83/03/19	*/
+comment|/*	ioctl.h	4.30	83/03/19	*/
 end_comment
 
 begin_comment
@@ -1610,62 +1610,62 @@ begin_define
 define|#
 directive|define
 name|SIOCSHIWAT
-value|_IOW(s, 0, int)
+value|_IOW(s,  0, int)
 end_define
 
 begin_comment
-comment|/* set high water mark */
+comment|/* set high watermark */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCGHIWAT
-value|_IOR(s, 1, int)
+value|_IOR(s,  1, int)
 end_define
 
 begin_comment
-comment|/* get high water mark */
+comment|/* get high watermark */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCSLOWAT
-value|_IOW(s, 2, int)
+value|_IOW(s,  2, int)
 end_define
 
 begin_comment
-comment|/* set low water mark */
+comment|/* set low watermark */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCGLOWAT
-value|_IOR(s, 3, int)
+value|_IOR(s,  3, int)
 end_define
 
 begin_comment
-comment|/* get low water mark */
+comment|/* get low watermark */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCATMARK
-value|_IOR(s, 7, int)
+value|_IOR(s,  7, int)
 end_define
 
 begin_comment
-comment|/* at out of band mark? */
+comment|/* at oob mark? */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCSPGRP
-value|_IOW(s, 8, int)
+value|_IOW(s,  8, int)
 end_define
 
 begin_comment
@@ -1676,7 +1676,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGPGRP
-value|_IOR(s, 9, int)
+value|_IOR(s,  9, int)
 end_define
 
 begin_comment
@@ -1687,7 +1687,7 @@ begin_define
 define|#
 directive|define
 name|SIOCADDRT
-value|_IOW(s,10, struct rtentry)
+value|_IOW(s, 10, struct rtentry)
 end_define
 
 begin_comment
@@ -1698,7 +1698,7 @@ begin_define
 define|#
 directive|define
 name|SIOCDELRT
-value|_IOW(s,11, struct rtentry)
+value|_IOW(s, 11, struct rtentry)
 end_define
 
 begin_comment
@@ -1709,77 +1709,77 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFADDR
-value|_IOW(s,12, struct ifreq)
+value|_IOW(s, 12, struct ifreq)
 end_define
 
 begin_comment
-comment|/* set interface address */
+comment|/* set ifnet address */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCGIFADDR
-value|_IOR(s,13, struct ifreq)
+value|_IOWR(s,13, struct ifreq)
 end_define
 
 begin_comment
-comment|/* get interface address */
+comment|/* get ifnet address */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCSIFDSTADDR
-value|_IOW(s,14, struct ifreq)
+value|_IOW(s, 14, struct ifreq)
 end_define
 
 begin_comment
-comment|/* set point-point address */
+comment|/* set p-p address */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCGIFDSTADDR
-value|_IOR(s,15, struct ifreq)
+value|_IOWR(s,15, struct ifreq)
 end_define
 
 begin_comment
-comment|/* get point-point address */
+comment|/* get p-p address */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCSIFFLAGS
-value|_IOW(s,16, struct ifreq)
+value|_IOW(s, 16, struct ifreq)
 end_define
 
 begin_comment
-comment|/* set interface flags */
+comment|/* set ifnet flags */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCGIFFLAGS
-value|_IOR(s,17, struct ifreq)
+value|_IOWR(s,17, struct ifreq)
 end_define
 
 begin_comment
-comment|/* get interface flags */
+comment|/* get ifnet flags */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SIOCGIFCONF
-value|_IOWR(s,20,struct ifconf)
+value|_IOWR(s,20, struct ifconf)
 end_define
 
 begin_comment
-comment|/* get interface list */
+comment|/* get ifnet list */
 end_comment
 
 begin_endif
