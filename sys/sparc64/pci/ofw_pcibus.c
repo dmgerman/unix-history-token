@@ -285,7 +285,7 @@ name|DEVMETHOD
 argument_list|(
 name|bus_driver_added
 argument_list|,
-name|bus_generic_driver_added
+name|pci_driver_added
 argument_list|)
 block|,
 name|DEVMETHOD
