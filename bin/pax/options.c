@@ -851,7 +851,7 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|unsigned
@@ -3409,7 +3409,8 @@ parameter_list|)
 block|{
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 name|char

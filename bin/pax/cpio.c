@@ -520,6 +520,9 @@ operator|||
 operator|(
 name|nsz
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|arcn
@@ -818,6 +821,9 @@ condition|(
 operator|(
 name|size
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|HD_CPIO
@@ -2101,6 +2107,9 @@ condition|(
 operator|(
 name|size
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|HD_VCPIO
@@ -2154,6 +2163,9 @@ condition|(
 operator|(
 name|size
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|HD_VCPIO
@@ -2167,6 +2179,9 @@ name|blk
 argument_list|,
 name|AVCMAGIC
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|AVCMAGIC
@@ -3844,6 +3859,9 @@ if|if
 condition|(
 name|size
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|HD_BCPIO

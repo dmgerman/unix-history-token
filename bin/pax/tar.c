@@ -1830,6 +1830,9 @@ name|arcn
 operator|->
 name|ln_nlen
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|hd
@@ -1887,6 +1890,9 @@ if|if
 condition|(
 name|len
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|hd
@@ -3649,6 +3655,9 @@ name|arcn
 operator|->
 name|ln_nlen
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|hd
