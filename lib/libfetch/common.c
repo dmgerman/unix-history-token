@@ -1569,7 +1569,7 @@ name|tmp
 operator|->
 name|name
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|,
 literal|"%s"
 argument_list|,

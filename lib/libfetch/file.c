@@ -434,7 +434,7 @@ decl_stmt|;
 name|char
 name|fn
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|,
 modifier|*
