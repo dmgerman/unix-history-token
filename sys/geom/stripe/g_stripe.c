@@ -5967,7 +5967,22 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* Nothing here. */
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%s<Number>%u</Number>\n"
+argument_list|,
+name|indent
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|cp
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
