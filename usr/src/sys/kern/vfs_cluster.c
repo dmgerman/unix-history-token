@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cluster.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cluster.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2699,9 +2699,9 @@ condition|(
 operator|(
 name|mountp
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
-name|M_MPBUSY
+name|MNT_MPBUSY
 operator|)
 operator|==
 literal|0
@@ -2719,7 +2719,7 @@ name|vp
 operator|=
 name|mountp
 operator|->
-name|m_mounth
+name|mnt_mounth
 init|;
 name|vp
 condition|;
@@ -3038,9 +3038,9 @@ condition|(
 operator|(
 name|mountp
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
-name|M_MPBUSY
+name|MNT_MPBUSY
 operator|)
 operator|==
 literal|0
@@ -3058,7 +3058,7 @@ name|vp
 operator|=
 name|mountp
 operator|->
-name|m_mounth
+name|mnt_mounth
 init|;
 name|vp
 condition|;

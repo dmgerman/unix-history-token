@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_serv.c	7.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_serv.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1046,7 +1046,7 @@ name|vp
 operator|->
 name|v_mount
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
@@ -3193,12 +3193,7 @@ name|ndp
 operator|->
 name|ni_vp
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULLVP
 expr_stmt|;
 name|VOP_ABORTOP
 argument_list|(
@@ -3251,7 +3246,7 @@ name|vp
 operator|->
 name|v_mount
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
@@ -5113,7 +5108,7 @@ name|vp
 operator|->
 name|v_mount
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_fsid
 expr_stmt|;
@@ -6914,7 +6909,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Perform access checking for vnodes obtained from file handles that would  * refer to files already opened by a Unix client. You cannot just use  * vn_writechk() and VOP_ACCESS() for two reasons.  * 1 - You must check for M_EXRDONLY as well as M_RDONLY for the write case  * 2 - The owner is to be given access irrespective of mode bits so that  *     processes that chmod after opening a file don't break. I don't like  *     this because it opens a security hole, but since the nfs server opens  *     a security hole the size of a barn door anyhow, what the heck.  */
+comment|/*  * Perform access checking for vnodes obtained from file handles that would  * refer to files already opened by a Unix client. You cannot just use  * vn_writechk() and VOP_ACCESS() for two reasons.  * 1 - You must check for MNT_EXRDONLY as well as MNT_RDONLY for the write case  * 2 - The owner is to be given access irrespective of mode bits so that  *     processes that chmod after opening a file don't break. I don't like  *     this because it opens a security hole, but since the nfs server opens  *     a security hole the size of a barn door anyhow, what the heck.  */
 end_comment
 
 begin_expr_stmt
@@ -6965,7 +6960,7 @@ operator|&
 name|VWRITE
 condition|)
 block|{
-comment|/* Just vn_writechk() changed to check M_EXRDONLY */
+comment|/* Just vn_writechk() changed to check MNT_EXRDONLY */
 comment|/* 		 * Disallow write attempts on read-only file systems; 		 * unless the file is a socket or a block or character 		 * device resident on the file system. 		 */
 if|if
 condition|(
@@ -6974,12 +6969,12 @@ name|vp
 operator|->
 name|v_mount
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
 operator|(
-name|M_RDONLY
+name|MNT_RDONLY
 operator||
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 operator|)
 operator|)
 operator|&&

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_lookup.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_lookup.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -227,7 +227,7 @@ literal|0
 expr_stmt|;
 name|rdonly
 operator|=
-name|M_RDONLY
+name|MNT_RDONLY
 expr_stmt|;
 if|if
 condition|(
@@ -239,7 +239,7 @@ name|REMOTE
 condition|)
 name|rdonly
 operator||=
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 expr_stmt|;
 comment|/* 	 * Get a buffer for the name to be translated, and copy the 	 * name into the buffer. 	 */
 if|if
@@ -849,7 +849,7 @@ name|dp
 operator|->
 name|v_mount
 operator|->
-name|m_vnodecovered
+name|mnt_vnodecovered
 expr_stmt|;
 name|vput
 argument_list|(
@@ -935,7 +935,7 @@ name|ni_dvp
 operator|->
 name|v_mount
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
 name|rdonly
 condition|)
@@ -1335,16 +1335,16 @@ while|while
 condition|(
 name|mp
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
-name|M_MLOCK
+name|MNT_MLOCK
 condition|)
 block|{
 name|mp
 operator|->
-name|m_flag
+name|mnt_flag
 operator||=
-name|M_MWAIT
+name|MNT_MWAIT
 expr_stmt|;
 name|sleep
 argument_list|(
@@ -1466,7 +1466,7 @@ name|dp
 operator|->
 name|v_mount
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
 name|rdonly
 operator|)
@@ -1481,7 +1481,7 @@ name|ni_dvp
 operator|->
 name|v_mount
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
 name|rdonly
 operator|)

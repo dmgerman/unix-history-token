@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -189,48 +189,48 @@ block|{
 name|struct
 name|mount
 modifier|*
-name|m_next
+name|mnt_next
 decl_stmt|;
 comment|/* next in mount list */
 name|struct
 name|mount
 modifier|*
-name|m_prev
+name|mnt_prev
 decl_stmt|;
 comment|/* prev in mount list */
 name|struct
 name|vfsops
 modifier|*
-name|m_op
+name|mnt_op
 decl_stmt|;
 comment|/* operations on fs */
 name|struct
 name|vnode
 modifier|*
-name|m_vnodecovered
+name|mnt_vnodecovered
 decl_stmt|;
 comment|/* vnode we mounted on */
 name|struct
 name|vnode
 modifier|*
-name|m_mounth
+name|mnt_mounth
 decl_stmt|;
 comment|/* list of vnodes this mount */
 name|int
-name|m_flag
+name|mnt_flag
 decl_stmt|;
 comment|/* flags */
 name|uid_t
-name|m_exroot
+name|mnt_exroot
 decl_stmt|;
 comment|/* exported mapping for uid 0 */
 name|struct
 name|statfs
-name|m_stat
+name|mnt_stat
 decl_stmt|;
 comment|/* cache of filesystem stats */
 name|qaddr_t
-name|m_data
+name|mnt_data
 decl_stmt|;
 comment|/* private data */
 block|}
@@ -244,7 +244,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_RDONLY
+name|MNT_RDONLY
 value|0x00000001
 end_define
 
@@ -255,7 +255,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_SYNCHRONOUS
+name|MNT_SYNCHRONOUS
 value|0x00000002
 end_define
 
@@ -266,7 +266,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_NOEXEC
+name|MNT_NOEXEC
 value|0x00000004
 end_define
 
@@ -277,7 +277,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_NOSUID
+name|MNT_NOSUID
 value|0x00000008
 end_define
 
@@ -288,7 +288,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_NODEV
+name|MNT_NODEV
 value|0x00000010
 end_define
 
@@ -303,7 +303,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_EXPORTED
+name|MNT_EXPORTED
 value|0x00000100
 end_define
 
@@ -314,7 +314,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 value|0x00000200
 end_define
 
@@ -329,7 +329,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LOCAL
+name|MNT_LOCAL
 value|0x00001000
 end_define
 
@@ -340,7 +340,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_QUOTA
+name|MNT_QUOTA
 value|0x00002000
 end_define
 
@@ -355,18 +355,18 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_VISFLAGMASK
+name|MNT_VISFLAGMASK
 value|0x0000ffff
 end_define
 
 begin_comment
-comment|/*  * filesystem control flags.  *  * M_MLOCK lock the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
+comment|/*  * filesystem control flags.  *  * MNT_MLOCK lock the mount entry so that name lookup cannot proceed  * past the mount point.  This keeps the subtree stable during mounts  * and unmounts.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M_UPDATE
+name|MNT_UPDATE
 value|0x00010000
 end_define
 
@@ -377,7 +377,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_MLOCK
+name|MNT_MLOCK
 value|0x00100000
 end_define
 
@@ -388,7 +388,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_MWAIT
+name|MNT_MWAIT
 value|0x00200000
 end_define
 
@@ -399,7 +399,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_MPBUSY
+name|MNT_MPBUSY
 value|0x00400000
 end_define
 
@@ -410,7 +410,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_MPWANT
+name|MNT_MPWANT
 value|0x00800000
 end_define
 
@@ -421,7 +421,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_UNMOUNT
+name|MNT_UNMOUNT
 value|0x01000000
 end_define
 
@@ -545,7 +545,7 @@ parameter_list|,
 name|NDP
 parameter_list|)
 define|\
-value|(*(MP)->m_op->vfs_mount)(MP, PATH, DATA, NDP)
+value|(*(MP)->mnt_op->vfs_mount)(MP, PATH, DATA, NDP)
 end_define
 
 begin_define
@@ -557,7 +557,7 @@ name|MP
 parameter_list|,
 name|FLAGS
 parameter_list|)
-value|(*(MP)->m_op->vfs_start)(MP, FLAGS)
+value|(*(MP)->mnt_op->vfs_start)(MP, FLAGS)
 end_define
 
 begin_define
@@ -569,7 +569,7 @@ name|MP
 parameter_list|,
 name|FORCIBLY
 parameter_list|)
-value|(*(MP)->m_op->vfs_unmount)(MP, FORCIBLY)
+value|(*(MP)->mnt_op->vfs_unmount)(MP, FORCIBLY)
 end_define
 
 begin_define
@@ -581,7 +581,7 @@ name|MP
 parameter_list|,
 name|VPP
 parameter_list|)
-value|(*(MP)->m_op->vfs_root)(MP, VPP)
+value|(*(MP)->mnt_op->vfs_root)(MP, VPP)
 end_define
 
 begin_define
@@ -597,7 +597,7 @@ name|U
 parameter_list|,
 name|A
 parameter_list|)
-value|(*(MP)->m_op->vfs_quotactl)(MP, C, U, A)
+value|(*(MP)->mnt_op->vfs_quotactl)(MP, C, U, A)
 end_define
 
 begin_define
@@ -609,7 +609,7 @@ name|MP
 parameter_list|,
 name|SBP
 parameter_list|)
-value|(*(MP)->m_op->vfs_statfs)(MP, SBP)
+value|(*(MP)->mnt_op->vfs_statfs)(MP, SBP)
 end_define
 
 begin_define
@@ -621,7 +621,7 @@ name|MP
 parameter_list|,
 name|WAITFOR
 parameter_list|)
-value|(*(MP)->m_op->vfs_sync)(MP, WAITFOR)
+value|(*(MP)->mnt_op->vfs_sync)(MP, WAITFOR)
 end_define
 
 begin_define
@@ -635,7 +635,7 @@ name|FIDP
 parameter_list|,
 name|VPP
 parameter_list|)
-value|(*(MP)->m_op->vfs_fhtovp)(MP, FIDP, VPP)
+value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
 end_define
 
 begin_define
@@ -647,7 +647,7 @@ name|VP
 parameter_list|,
 name|FIDP
 parameter_list|)
-value|(*(VP)->v_mount->m_op->vfs_vptofh)(VP, FIDP)
+value|(*(VP)->v_mount->mnt_op->vfs_vptofh)(VP, FIDP)
 end_define
 
 begin_comment

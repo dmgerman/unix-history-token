@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vfsops.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -56,12 +56,6 @@ include|#
 directive|include
 file|"mbuf.h"
 end_include
-
-begin_undef
-undef|#
-directive|undef
-name|m_data
-end_undef
 
 begin_include
 include|#
@@ -313,9 +307,9 @@ if|if
 condition|(
 name|mp
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
-name|M_UPDATE
+name|MNT_UPDATE
 condition|)
 return|return
 operator|(
@@ -617,7 +611,7 @@ argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|m_data
+name|mnt_data
 operator|=
 operator|(
 name|qaddr_t
@@ -627,7 +621,7 @@ expr_stmt|;
 comment|/* 	 * Generate a unique nfs mount id. The problem is that a dev number 	 * is not unique across multiple systems. The techique is as follows: 	 * 1) Set to nblkdev,0 which will never be used otherwise 	 * 2) Generate a first guess as nblkdev,nfs_mntid where nfs_mntid is 	 *	NOT 0 	 * 3) Loop searching the mount list for another one with same id 	 *	If a match, increment val[0] and try again 	 * NB: I increment val[0] { a long } instead of nfs_mntid { a u_char } 	 *	so that nfs is not limited to 255 mount points 	 *     Incrementing the high order bits does no real harm, since it 	 *     simply makes the major dev number tick up. The upper bound is 	 *     set to major dev 127 to avoid any sign extention problems 	 */
 name|mp
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_fsid
 operator|.
@@ -645,7 +639,7 @@ argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_fsid
 operator|.
@@ -740,7 +734,7 @@ goto|;
 block|}
 name|mp
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_fsid
 operator|.
@@ -834,13 +828,21 @@ name|nfsv2fh_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_type
+operator|=
+name|MOUNT_NFS
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|hst
 argument_list|,
 name|mp
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_mntfromname
 argument_list|,
@@ -853,7 +855,7 @@ name|pth
 argument_list|,
 name|mp
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_mntonname
 argument_list|,
@@ -1139,7 +1141,7 @@ argument_list|,
 operator|&
 name|mp
 operator|->
-name|m_stat
+name|mnt_stat
 argument_list|)
 condition|)
 goto|goto
@@ -1292,7 +1294,7 @@ name|FORCECLOSE
 expr_stmt|;
 name|nmp
 operator|=
-name|vfs_to_nfs
+name|VFSTONFS
 argument_list|(
 name|mp
 argument_list|)
@@ -1480,7 +1482,7 @@ name|error
 decl_stmt|;
 name|nmp
 operator|=
-name|vfs_to_nfs
+name|VFSTONFS
 argument_list|(
 name|mp
 argument_list|)

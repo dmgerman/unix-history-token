@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3625,7 +3625,7 @@ name|vp
 operator|->
 name|v_mount
 operator|->
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_fsid
 operator|.
@@ -4037,12 +4037,7 @@ name|vnode
 modifier|*
 name|dp
 init|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULLVP
 decl_stmt|;
 name|int
 name|flag
@@ -4069,12 +4064,7 @@ name|ndp
 operator|->
 name|ni_dvp
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULLVP
 expr_stmt|;
 name|flag
 operator|=
@@ -4505,12 +4495,7 @@ name|ndp
 operator|->
 name|ni_rdir
 operator|=
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-literal|0
+name|NULLVP
 expr_stmt|;
 comment|/* 	 * Handle "..": 	 * If this vnode is the root of the mounted 	 *    file system, then ignore it so can't get out 	 */
 if|if
@@ -4584,12 +4569,12 @@ name|ni_dvp
 operator|->
 name|v_mount
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
 operator|(
-name|M_RDONLY
+name|MNT_RDONLY
 operator||
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 operator|)
 condition|)
 name|error
@@ -4657,12 +4642,12 @@ name|dp
 operator|->
 name|v_mount
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
 operator|(
-name|M_RDONLY
+name|MNT_RDONLY
 operator||
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 operator|)
 operator|)
 operator|||
@@ -4676,12 +4661,12 @@ name|ni_dvp
 operator|->
 name|v_mount
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
 operator|(
-name|M_RDONLY
+name|MNT_RDONLY
 operator||
-name|M_EXRDONLY
+name|MNT_EXRDONLY
 operator|)
 operator|)
 operator|)
@@ -5041,7 +5026,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * nfsrv_fhtovp() - convert a fh to a vnode ptr (optionally locked)  * 	- look up fsid in mount list (if not found ret error)  *	- check that it is exported  *	- get vp by calling VFS_FHTOVP() macro  *	- if not lockflag unlock it with VOP_UNLOCK()  *	- if cred->cr_uid == 0 set it to m_exroot  */
+comment|/*  * nfsrv_fhtovp() - convert a fh to a vnode ptr (optionally locked)  * 	- look up fsid in mount list (if not found ret error)  *	- check that it is exported  *	- get vp by calling VFS_FHTOVP() macro  *	- if not lockflag unlock it with VOP_UNLOCK()  *	- if cred->cr_uid == 0 set it to mnt_exroot  */
 end_comment
 
 begin_macro
@@ -5121,9 +5106,9 @@ condition|(
 operator|(
 name|mp
 operator|->
-name|m_flag
+name|mnt_flag
 operator|&
-name|M_EXPORTED
+name|MNT_EXPORTED
 operator|)
 operator|==
 literal|0
@@ -5166,7 +5151,7 @@ name|cr_uid
 operator|=
 name|mp
 operator|->
-name|m_exroot
+name|mnt_exroot
 expr_stmt|;
 if|if
 condition|(
