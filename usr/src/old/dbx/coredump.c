@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)coredump.c 1.2 %G%"
+literal|"@(#)coredump.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,13 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/psl.h>
+file|<machine/psl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/pte.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reg.h>
+file|<machine/reg.h>
 end_include
 
 begin_include
