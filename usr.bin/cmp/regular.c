@@ -464,7 +464,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%08x %02x %02x\n"
+literal|"%08qx %02x %02x\n"
 argument_list|,
 name|byte
 operator|-
