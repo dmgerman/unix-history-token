@@ -263,6 +263,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_ph_data_req
 parameter_list|(
@@ -420,6 +421,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_ph_activate_req
 parameter_list|(
@@ -498,6 +500,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_T3_expired
 parameter_list|(
@@ -568,6 +571,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_mph_command_req
 parameter_list|(
@@ -1357,6 +1361,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_B_start
 parameter_list|(
@@ -1431,6 +1436,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_B_stat
 parameter_list|(
@@ -1507,6 +1513,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|isdn_link_t
 modifier|*
 name|ihfc_B_ret_linktab
@@ -1557,6 +1564,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_B_set_linktab
 parameter_list|(

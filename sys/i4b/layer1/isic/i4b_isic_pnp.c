@@ -464,6 +464,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|isic_pnp_probe
 parameter_list|(
@@ -560,6 +561,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|isic_pnp_attach
 parameter_list|(

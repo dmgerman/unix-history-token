@@ -1157,6 +1157,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|i4b_mdl_command_req
 parameter_list|(

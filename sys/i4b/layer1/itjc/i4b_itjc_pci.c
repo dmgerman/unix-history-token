@@ -1869,6 +1869,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|itjc_dma_stop
 parameter_list|(
@@ -4949,6 +4950,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|itjc_attach
 parameter_list|(

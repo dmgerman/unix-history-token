@@ -1522,6 +1522,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|i4b_l1_ph_data_req
 parameter_list|(
@@ -1621,6 +1622,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|i4b_l1_ph_activate_req
 parameter_list|(

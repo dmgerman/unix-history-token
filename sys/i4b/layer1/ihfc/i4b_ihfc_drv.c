@@ -3201,6 +3201,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_hdlc_Dwrite
 parameter_list|(
@@ -3395,6 +3396,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_hdlc_Dread
 parameter_list|(
@@ -3810,6 +3812,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_isac_Dwrite
 parameter_list|(
@@ -3977,6 +3980,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_isac_Dread
 parameter_list|(
@@ -4263,6 +4267,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_trans_Bwrite
 parameter_list|(
@@ -4416,6 +4421,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_trans_Bread
 parameter_list|(
@@ -4617,6 +4623,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_hdlc_Bwrite
 parameter_list|(
@@ -4847,6 +4854,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_hdlc_Bread
 parameter_list|(
@@ -5059,6 +5067,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_test_Bwrite
 parameter_list|(
@@ -5265,6 +5274,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ihfc_test_Bread
 parameter_list|(

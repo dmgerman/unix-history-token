@@ -388,6 +388,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_pnp_probe
 parameter_list|(
@@ -758,6 +759,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_isa_probe
 parameter_list|(
@@ -1094,6 +1096,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_pnp_attach
 parameter_list|(
@@ -1199,6 +1202,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_pnp_shutdown
 parameter_list|(
@@ -1278,6 +1282,7 @@ comment|/*----------------------------------------------------------------------
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ihfc_pnp_detach
 parameter_list|(
