@@ -585,6 +585,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *	The object must be locked.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -605,8 +609,6 @@ name|object
 operator|->
 name|handle
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -618,9 +620,11 @@ argument_list|(
 literal|"vnode_pager_dealloc: pager already dealloced"
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|vm_object_pip_wait
@@ -628,11 +632,6 @@ argument_list|(
 name|object
 argument_list|,
 literal|"vnpdea"
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 name|object

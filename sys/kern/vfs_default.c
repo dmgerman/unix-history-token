@@ -2090,13 +2090,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|VM_OBJECT_UNLOCK
+comment|/* 		 * Woe to the process that tries to page now :-). 		 */
+name|vm_pager_deallocate
 argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Woe to the process that tries to page now :-). 		 */
-name|vm_pager_deallocate
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|obj
 argument_list|)

@@ -829,6 +829,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *	The object must be locked.  */
+end_comment
+
 begin_function
 name|void
 name|vm_pager_deallocate
@@ -839,6 +843,13 @@ name|vm_object_t
 name|object
 decl_stmt|;
 block|{
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|pagertab

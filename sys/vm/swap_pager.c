@@ -1384,9 +1384,11 @@ operator|&
 name|sw_alloc_mtx
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|vm_object_pip_wait
@@ -1394,11 +1396,6 @@ argument_list|(
 name|object
 argument_list|,
 literal|"swpdea"
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free all remaining metadata.  We only bother to free it from  	 * the swap meta data.  We do not attempt to free swapblk's still 	 * associated with vm_page_t's for this object.  We do not care 	 * if paging is still in progress on some objects. 	 */

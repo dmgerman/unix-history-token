@@ -2126,13 +2126,13 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
+comment|/* 	 * Let the pager know object is dead. 	 */
+name|vm_pager_deallocate
 argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Let the pager know object is dead. 	 */
-name|vm_pager_deallocate
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
