@@ -1,6 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	3.6	%G%	*/
+comment|/*	va.c	3.7	%G%	*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"../conf/va.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NVA
+operator|>
+literal|0
+end_if
+
+begin_comment
+comment|/*  * Benson-Varian matrix printer/plotter  * dma interface driver  */
 end_comment
 
 begin_include
@@ -56,10 +74,6 @@ include|#
 directive|include
 file|"../h/vcmd.h"
 end_include
-
-begin_comment
-comment|/*  * Benson-Varian matrix printer/plotter  * dma interface driver  */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -145,13 +159,6 @@ define|#
 directive|define
 name|vacsl
 value|vacs.vacsr.Vacsl
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAADDR
-value|((struct varegs *)(UBA0_DEV + 0164000))
 end_define
 
 begin_comment
@@ -1296,6 +1303,11 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

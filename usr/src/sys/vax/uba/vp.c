@@ -1,6 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	3.4	%G%	*/
+comment|/*	vp.c	3.5	%G%	*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"../conf/vp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NVP
+operator|>
+literal|0
+end_if
+
+begin_comment
+comment|/*  * Versatec matrix printer/plotter  * dma interface driver  */
 end_comment
 
 begin_include
@@ -50,10 +68,6 @@ include|#
 directive|include
 file|"../h/uba.h"
 end_include
-
-begin_comment
-comment|/*  * Versatec matrix printer/plotter  * dma interface driver  */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -110,13 +124,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|VPADDR
-value|((struct vpregs *)(UBA0_DEV + 0177500))
-end_define
 
 begin_define
 define|#
@@ -1223,6 +1230,11 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	3.5	%G%	*/
+comment|/*	ht.c	3.6	%G%	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../conf/ht.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NHT
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * TJU16 tape driver  */
@@ -129,15 +143,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|NUNIT
+name|NHT
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|BUNIT
-value|2
 end_define
 
 begin_define
@@ -151,7 +158,7 @@ begin_decl_stmt
 name|char
 name|h_openf
 index|[
-name|NUNIT
+name|NHT
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -160,7 +167,7 @@ begin_decl_stmt
 name|daddr_t
 name|h_blkno
 index|[
-name|NUNIT
+name|NHT
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -169,7 +176,7 @@ begin_decl_stmt
 name|char
 name|h_flags
 index|[
-name|NUNIT
+name|NHT
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -178,24 +185,10 @@ begin_decl_stmt
 name|daddr_t
 name|h_nxrec
 index|[
-name|NUNIT
+name|NHT
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|HTMBA
-value|MBA1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HTMBANUM
-value|1
-end_define
 
 begin_define
 define|#
@@ -494,7 +487,7 @@ if|if
 condition|(
 name|unit
 operator|>=
-name|NUNIT
+name|NHT
 operator|||
 name|h_openf
 index|[
@@ -2060,7 +2053,7 @@ if|if
 condition|(
 name|unit
 operator|<
-name|NUNIT
+name|NHT
 condition|)
 block|{
 name|a
@@ -2096,6 +2089,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

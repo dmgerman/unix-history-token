@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	3.25	%G%	*/
+comment|/*	up.c	3.26	%G%	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../conf/up.h"
+end_include
 
 begin_comment
 comment|/*  * UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * This driver works marginally on an Emulex SC-11B controller with rev  * level J microcode, defining:  *	int	olducode = 1;  * to force CPU stalling delays.  *  * It has worked with no delays and no problems on a prototype  * SC-21 controller.  Emulex intends to upgrade all SC-11s on VAXes to SC-21s.  * You should get a SC-21 to replace any SC-11 on a VAX.  *  * SC-11B Controller switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(on=closed, enable)  *	SW2-4	unused		(off=open)  */
@@ -84,24 +90,6 @@ include|#
 directive|include
 file|"../h/vm.h"
 end_include
-
-begin_comment
-comment|/*  * Drive stats are gathered in dk_*[DK_N].. dk_*[DK_NMAX]  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DK_N
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DK_NMAX
-value|3
-end_define
 
 begin_define
 define|#
@@ -217,24 +205,6 @@ name|int
 name|upseek
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|UPADDR
-value|((struct device *)(UBA0_DEV + 0176700))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NUP
-value|2
-end_define
-
-begin_comment
-comment|/* Number of drives this installation */
-end_comment
 
 begin_define
 define|#

@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.16	%G%	*/
+comment|/*	dz.c	3.17	%G%	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../conf/dz.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NDZ11
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  *  DZ-11 Driver  */
@@ -89,43 +103,6 @@ directive|define
 name|spl5
 value|spl6
 end_define
-
-begin_define
-define|#
-directive|define
-name|DZADDR
-value|(UBA0_DEV + 0160100)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DISTRIB
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NDZ11
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NDZ11
-value|4
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -3388,6 +3365,11 @@ argument_list|()
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

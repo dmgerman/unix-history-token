@@ -1,10 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	3.16	%G%	*/
+comment|/*	dh.c	3.17	%G%	*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"../conf/dh.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NDH11
+operator|>
+literal|0
+end_if
+
 begin_comment
-comment|/*  *	DH-11 driver  *	This driver calls on the DHDM driver.  *	If the DH has no DM11-BB, then the latter will  *	be fake. To insure loading of the correct DM code,  *	lib2 should have dhdm.o, dh.o and dhfdm.o in that order.  */
+comment|/*  * DH-11 driver  *  * Loaded with dhdm if there are DM-11's otherwise with dhfdm.  *  * NB: WE HAVEN'T TESTED dhdm CODE ON VAX.  */
 end_comment
 
 begin_include
@@ -61,6 +75,12 @@ directive|include
 file|"../h/bk.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/clist.h"
+end_include
+
 begin_comment
 comment|/*  * When running dz's using only SAE (silo alarm) on input  * it is necessary to call dzrint() at clock interrupt time.  * This is unsafe unless spl5()s in tty code are changed to  * spl6()s to block clock interrupts.  Note that the dh driver  * currently in use works the same way as the dz, even though  * we could try to more intelligently manage its silo.  * Thus don't take this out if you have no dz's unless you  * change clock.c and dhtimer().  */
 end_comment
@@ -75,49 +95,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|DHADDR
-value|((struct device *)(UBA0_DEV + 0160020))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NDH11
-value|32
-end_define
-
-begin_comment
-comment|/* number of lines */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UBACVT
 parameter_list|(
 name|x
 parameter_list|)
 value|(cbase + (short)((x)-(char *)cfree))
 end_define
-
-begin_struct
-struct|struct
-name|cblock
-block|{
-name|struct
-name|cblock
-modifier|*
-name|c_next
-decl_stmt|;
-name|char
-name|c_info
-index|[
-name|CBSIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_decl_stmt
 name|struct
@@ -178,15 +161,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|getcbase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cblock
-name|cfree
-index|[]
 decl_stmt|;
 end_decl_stmt
 

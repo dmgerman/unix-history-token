@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.16	%G%	*/
+comment|/*	hp.c	3.17	%G%	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../conf/hp.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NHP
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * RP06/RM03/RM05 disk driver  */
@@ -79,20 +93,6 @@ directive|include
 file|"../h/vm.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DK_N
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DK_NMAX
-value|1
-end_define
-
 begin_struct
 struct|struct
 name|device
@@ -164,27 +164,6 @@ comment|/* Burst error bit pattern */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|HPMBA
-value|MBA0
-end_define
-
-begin_define
-define|#
-directive|define
-name|HPMBANUM
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NHP
-value|2
-end_define
 
 begin_define
 define|#
@@ -2918,6 +2897,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
