@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.63
+literal|3.64
 operator|%
 name|G
 operator|%
@@ -1332,6 +1332,24 @@ condition|)
 name|ExitStat
 operator|=
 name|EX_USAGE
+expr_stmt|;
+comment|/* 	**  Hack attack! 	**	If the sender is local, we will default to old style 	**	headers.  Ugh ugh ugh.  But oh-so-necessary under the 	**	circumstances. 	*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|M_LOCAL
+argument_list|,
+name|From
+operator|.
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|OldStyle
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* 	**  Read the input mail. 	*/
 name|DontSend
