@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)byteorder.c	2.2 (Berkeley) %G%"
+literal|"@(#)byteorder.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,15 +72,22 @@ operator|->
 name|tsp_seq
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|ptr
 operator|->
 name|tsp_type
-operator|!=
-name|TSP_LOOP
 condition|)
 block|{
+case|case
+name|TSP_ADJTIME
+case|:
+case|case
+name|TSP_SETDATE
+case|:
+case|case
+name|TSP_SETDATEREQ
+case|:
 name|ptr
 operator|->
 name|tsp_time
@@ -117,6 +124,10 @@ operator|.
 name|tv_usec
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+comment|/* nothing more needed */
 block|}
 block|}
 end_block
@@ -152,15 +163,22 @@ operator|->
 name|tsp_seq
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|ptr
 operator|->
 name|tsp_type
-operator|!=
-name|TSP_LOOP
 condition|)
 block|{
+case|case
+name|TSP_ADJTIME
+case|:
+case|case
+name|TSP_SETDATE
+case|:
+case|case
+name|TSP_SETDATEREQ
+case|:
 name|ptr
 operator|->
 name|tsp_time
@@ -197,6 +215,10 @@ operator|.
 name|tv_usec
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+break|break;
+comment|/* nothing more needed */
 block|}
 block|}
 end_block
