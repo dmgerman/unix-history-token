@@ -3630,6 +3630,13 @@ argument_list|,
 literal|"select failed: %m"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|nfsd_exit
 argument_list|(
 literal|1
@@ -3712,6 +3719,17 @@ argument_list|,
 literal|"accept failed: %m"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNABORTED
+operator|||
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|nfsd_exit
 argument_list|(
 literal|1
@@ -3856,6 +3874,17 @@ argument_list|,
 literal|"accept failed: %m"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNABORTED
+operator|||
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|nfsd_exit
 argument_list|(
 literal|1
