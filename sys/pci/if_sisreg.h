@@ -1850,9 +1850,33 @@ name|struct
 name|callout_handle
 name|sis_stat_ch
 decl_stmt|;
+name|struct
+name|mtx
+name|sis_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SIS_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->sis_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->sis_mtx, MTX_DEF)
+end_define
 
 begin_comment
 comment|/*  * register space access macros  */

@@ -4524,9 +4524,33 @@ decl_stmt|;
 name|int
 name|ti_txcnt
 decl_stmt|;
+name|struct
+name|mtx
+name|ti_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TI_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->ti_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->ti_mtx, MTX_DEF)
+end_define
 
 begin_comment
 comment|/*  * Microchip Technology 24Cxx EEPROM control bytes  */

@@ -314,9 +314,33 @@ name|struct
 name|callout_handle
 name|tl_stat_ch
 decl_stmt|;
+name|struct
+name|mtx
+name|tl_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|TL_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->tl_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TL_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->tl_mtx, MTX_DEF)
+end_define
 
 begin_comment
 comment|/*  * Transmit interrupt threshold.  */

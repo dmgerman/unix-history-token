@@ -1851,9 +1851,33 @@ name|struct
 name|callout_handle
 name|wb_stat_ch
 decl_stmt|;
+name|struct
+name|mtx
+name|wb_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|WB_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->wb_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WB_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->wb_mtx, MTX_DEF)
+end_define
 
 begin_comment
 comment|/*  * register space access macros  */

@@ -2943,9 +2943,33 @@ decl_stmt|;
 name|bus_space_tag_t
 name|xl_ftag
 decl_stmt|;
+name|struct
+name|mtx
+name|xl_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|XL_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->xl_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XL_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->xl_mtx, MTX_DEF)
+end_define
 
 begin_define
 define|#

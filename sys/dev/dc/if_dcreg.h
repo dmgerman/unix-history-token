@@ -3543,9 +3543,33 @@ name|dc_srm_media
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|mtx
+name|dc_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DC_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->dc_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->dc_mtx, MTX_DEF)
+end_define
 
 begin_define
 define|#

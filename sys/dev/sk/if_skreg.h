@@ -6185,9 +6185,53 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|mtx
+name|sk_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SK_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->sk_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->sk_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_IF_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->sk_softc->sk_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SK_IF_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->sk_softc->sk_mtx, MTX_DEF)
+end_define
 
 begin_comment
 comment|/* Softc for each logical interface */

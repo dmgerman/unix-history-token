@@ -2171,9 +2171,33 @@ name|struct
 name|callout_handle
 name|vr_stat_ch
 decl_stmt|;
+name|struct
+name|mtx
+name|vr_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|VR_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->vr_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->vr_mtx, MTX_DEF)
+end_define
 
 begin_comment
 comment|/*  * register space access macros  */
