@@ -37,7 +37,7 @@ begin_define
 define|#
 directive|define
 name|ESS_BUFFSIZE
-value|(4096)
+value|(16384)
 end_define
 
 begin_define
@@ -51,7 +51,7 @@ value|(((x)< 0)? -(x) : (x))
 end_define
 
 begin_comment
-comment|/* audio2 never generates irqs and sounds very noisy */
+comment|/* if defined, playback always uses the 2nd channel and full duplex works */
 end_comment
 
 begin_undef
@@ -225,6 +225,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Recording output is byte-swapped  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|pcmchan_caps
@@ -241,13 +245,13 @@ name|AFMT_U8
 operator||
 name|AFMT_S8
 operator||
-name|AFMT_U16_LE
+name|AFMT_U16_BE
 operator||
-name|AFMT_S16_LE
+name|AFMT_S16_BE
 block|,
 name|AFMT_STEREO
 operator||
-name|AFMT_S16_LE
+name|AFMT_S16_BE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -347,6 +351,8 @@ name|bus_dma_tag_t
 name|parent_dmat
 decl_stmt|;
 name|int
+name|simplex_dir
+decl_stmt|,
 name|type
 decl_stmt|,
 name|duplex
@@ -1589,8 +1595,12 @@ name|int
 name|src
 decl_stmt|,
 name|pirq
+init|=
+literal|0
 decl_stmt|,
 name|rirq
+init|=
+literal|0
 decl_stmt|;
 name|src
 operator|=
@@ -1626,6 +1636,13 @@ name|src
 operator||=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|duplex
+condition|)
+block|{
 name|pirq
 operator|=
 operator|(
@@ -1658,6 +1675,47 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|simplex_dir
+operator|==
+name|PCMDIR_PLAY
+condition|)
+name|pirq
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|simplex_dir
+operator|==
+name|PCMDIR_REC
+condition|)
+name|rirq
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pirq
+operator|&&
+operator|!
+name|rirq
+condition|)
+name|printf
+argument_list|(
+literal|"solo: IRQ neither playback nor rec!\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|DEB
 argument_list|(
 name|printf
@@ -2207,6 +2265,10 @@ operator|||
 name|fmt
 operator|==
 name|AFMT_U16_LE
+operator|||
+name|fmt
+operator|==
+name|AFMT_U16_BE
 operator|)
 condition|?
 literal|1
@@ -2245,6 +2307,16 @@ argument_list|(
 operator|&
 name|spd
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|simplex_dir
+operator|=
+name|play
+condition|?
+name|PCMDIR_PLAY
+else|:
+name|PCMDIR_REC
 expr_stmt|;
 if|if
 condition|(
@@ -4918,18 +4990,44 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* enable irqs */
+ifdef|#
+directive|ifdef
+name|ESS18XX_DUPLEX
 name|sc
 operator|->
 name|duplex
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|sc
+operator|->
+name|duplex
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ESS18XX_NEWSPEED
 name|sc
 operator|->
 name|newspeed
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|sc
+operator|->
+name|newspeed
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
