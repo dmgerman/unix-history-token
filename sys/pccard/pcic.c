@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pccard/i82365.h>
 end_include
 

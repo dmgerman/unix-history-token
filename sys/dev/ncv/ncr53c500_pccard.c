@@ -305,11 +305,30 @@ directive|include
 file|<sys/module.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|__FreeBSD_version
+operator|<
+literal|500014
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/select.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

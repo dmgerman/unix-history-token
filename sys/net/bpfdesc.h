@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
+file|<sys/selinfo.h>
 end_include
 
 begin_comment
