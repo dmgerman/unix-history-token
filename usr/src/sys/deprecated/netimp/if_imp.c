@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.11	82/03/05	*/
+comment|/*	if_imp.c	4.12	82/03/10	*/
 end_comment
 
 begin_include
@@ -871,12 +871,7 @@ operator|->
 name|imp_state
 operator|!=
 name|IMPS_INIT
-condition|)
-goto|goto
-name|rawlinkin
-goto|;
-if|if
-condition|(
+operator|||
 operator|--
 name|sc
 operator|->
@@ -1788,6 +1783,11 @@ operator|*
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do RFNM counting for data messages 	 * (no more than 8 outstanding to any host) 	 */
+name|x
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -1838,11 +1838,6 @@ name|ip
 operator|->
 name|il_imp
 expr_stmt|;
-name|x
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1883,11 +1878,6 @@ operator|->
 name|h_rfnm
 operator|++
 expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 goto|goto
 name|enque
 goto|;
@@ -1897,13 +1887,11 @@ condition|(
 name|hp
 operator|->
 name|h_qcnt
-operator|>=
+operator|<
 literal|8
 condition|)
+block|{
 comment|/* high water mark */
-goto|goto
-name|drop
-goto|;
 name|HOST_ENQUE
 argument_list|(
 name|hp
@@ -1911,14 +1899,10 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 goto|goto
 name|start
 goto|;
+block|}
 block|}
 name|drop
 label|:
@@ -1940,11 +1924,6 @@ return|;
 block|}
 name|enque
 label|:
-name|x
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|IF_ENQUEUE
 argument_list|(
 operator|&
@@ -1955,13 +1934,13 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|start
+label|:
 name|splx
 argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-name|start
-label|:
 name|icp
 operator|=
 operator|&
