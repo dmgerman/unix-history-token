@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1080,17 +1080,6 @@ include|#
 directive|include
 file|"../net/if_arp.h"
 end_include
-
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|rawintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* raw packet input queue */
-end_comment
 
 begin_decl_stmt
 name|struct
