@@ -1114,6 +1114,34 @@ literal|"NULL bio_from->geom in g_io_deliver"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|bio_completed
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"bio_completed can't be less than 0"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|bio_completed
+operator|<=
+name|bp
+operator|->
+name|bio_length
+argument_list|,
+operator|(
+literal|"bio_completed can't be greater than bio_length"
+operator|)
+argument_list|)
+expr_stmt|;
 name|g_trace
 argument_list|(
 name|G_T_BIO
