@@ -3535,6 +3535,12 @@ argument_list|(
 literal|"msp3400: thread started\n"
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4571,6 +4577,12 @@ operator|->
 name|kthread
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kthread_exit
 argument_list|(
 literal|0
@@ -4967,6 +4979,12 @@ decl_stmt|;
 name|dprintk
 argument_list|(
 literal|"msp3410: thread started\n"
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 for|for
@@ -5853,6 +5871,12 @@ operator|->
 name|kthread
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kthread_exit
 argument_list|(
 literal|0
@@ -6400,6 +6424,12 @@ name|kthread
 condition|)
 block|{
 comment|/* XXX mutex lock required */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|msp
 operator|->
 name|rmmod
@@ -6439,6 +6469,12 @@ argument_list|,
 name|hz
 operator|/
 literal|10
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 block|}
