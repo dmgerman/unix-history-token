@@ -1274,6 +1274,8 @@ name|unsigned
 name|long
 name|junk
 decl_stmt|,
+name|oldpri
+decl_stmt|,
 name|sirq
 decl_stmt|;
 name|int
@@ -1350,6 +1352,11 @@ parameter_list|,
 name|hacr
 parameter_list|)
 value|outw((base), (hacr))
+name|oldpri
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|PCMD
 argument_list|(
 name|base
@@ -1378,6 +1385,11 @@ name|DELAYCONST
 argument_list|)
 expr_stmt|;
 comment|/*>> 4 clocks at 6MHz */
+name|splx
+argument_list|(
+name|oldpri
+argument_list|)
+expr_stmt|;
 comment|/* clear reset command and set PIO#1 in autoincrement mode */
 name|PCMD
 argument_list|(
@@ -3376,6 +3388,9 @@ decl_stmt|;
 name|int
 name|stat
 decl_stmt|;
+name|u_long
+name|oldpri
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -3418,6 +3433,11 @@ operator|)
 literal|0
 condition|)
 return|return;
+name|oldpri
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3493,6 +3513,11 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|oldpri
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5302,6 +5327,8 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|opri
+decl_stmt|,
 name|error
 init|=
 literal|0
@@ -5365,6 +5392,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|opri
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -6275,6 +6307,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|splx
+argument_list|(
+name|opri
+argument_list|)
+expr_stmt|;
 name|WL_UNLOCK
 argument_list|(
 name|sc
@@ -11221,6 +11258,8 @@ name|base
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|oldpri
 decl_stmt|;
 name|u_short
 name|crc
@@ -11271,6 +11310,12 @@ operator|=
 literal|0x55
 expr_stmt|;
 comment|/* default to 'bad' until programming complete */
+name|oldpri
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+comment|/* ick, long pause */
 name|PCMD
 argument_list|(
 name|base
@@ -11401,6 +11446,11 @@ argument_list|(
 name|base
 argument_list|,
 name|HACR_DEFAULT
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|oldpri
 argument_list|)
 expr_stmt|;
 block|}
