@@ -2178,6 +2178,10 @@ expr_stmt|;
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
 break|break;
 case|case
+literal|0x01bc10de
+case|:
+comment|/* nVIDIA nForce */
+case|case
 literal|0x74411022
 case|:
 comment|/* AMD 768 */
@@ -2185,156 +2189,10 @@ case|case
 literal|0x74111022
 case|:
 comment|/* AMD 766 */
-if|if
-condition|(
-name|udmamode
-operator|>=
-literal|5
-condition|)
-block|{
-name|error
-operator|=
-name|ata_command
-argument_list|(
-name|atadev
-argument_list|,
-name|ATA_C_SETFEATURES
-argument_list|,
-literal|0
-argument_list|,
-name|ATA_UDMA5
-argument_list|,
-name|ATA_C_F_SETXFER
-argument_list|,
-name|ATA_WAIT_READY
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|ata_prtdev
-argument_list|(
-name|atadev
-argument_list|,
-literal|"%s setting UDMA5 on AMD chip\n"
-argument_list|,
-operator|(
-name|error
-operator|)
-condition|?
-literal|"failed"
-else|:
-literal|"success"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-block|{
-name|pci_write_config
-argument_list|(
-name|parent
-argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-literal|0xc6
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|atadev
-operator|->
-name|mode
-operator|=
-name|ATA_UDMA5
-expr_stmt|;
-return|return;
-block|}
-block|}
-comment|/* FALLTHROUGH */
 case|case
 literal|0x74091022
 case|:
 comment|/* AMD 756 */
-if|if
-condition|(
-name|udmamode
-operator|>=
-literal|4
-condition|)
-block|{
-name|error
-operator|=
-name|ata_command
-argument_list|(
-name|atadev
-argument_list|,
-name|ATA_C_SETFEATURES
-argument_list|,
-literal|0
-argument_list|,
-name|ATA_UDMA4
-argument_list|,
-name|ATA_C_F_SETXFER
-argument_list|,
-name|ATA_WAIT_READY
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|ata_prtdev
-argument_list|(
-name|atadev
-argument_list|,
-literal|"%s setting UDMA4 on AMD chip\n"
-argument_list|,
-operator|(
-name|error
-operator|)
-condition|?
-literal|"failed"
-else|:
-literal|"success"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-block|{
-name|pci_write_config
-argument_list|(
-name|parent
-argument_list|,
-literal|0x53
-operator|-
-name|devno
-argument_list|,
-literal|0xc5
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|atadev
-operator|->
-name|mode
-operator|=
-name|ATA_UDMA4
-expr_stmt|;
-return|return;
-block|}
-block|}
-goto|goto
-name|via_82c586
-goto|;
 case|case
 literal|0x05711106
 case|:
@@ -2343,7 +2201,7 @@ block|{
 name|int
 name|via_modes
 index|[
-literal|4
+literal|5
 index|]
 index|[
 literal|7
@@ -2416,14 +2274,37 @@ literal|0xf1
 block|,
 literal|0xf0
 block|}
+block|,
+comment|/* VIA ATA133 */
+block|{
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0xc0
+block|,
+literal|0x00
+block|,
+literal|0xc5
+block|,
+literal|0xc6
+block|,
+literal|0x00
+block|}
 block|}
 decl_stmt|;
-comment|/* ATA133 */
+comment|/* AMD/nVIDIA */
 name|int
 modifier|*
 name|reg_val
 init|=
 name|NULL
+decl_stmt|;
+name|char
+modifier|*
+name|chip
+init|=
+literal|"VIA"
 decl_stmt|;
 if|if
 condition|(
@@ -2612,8 +2493,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* 82C586b */
-name|via_82c586
-label|:
 name|udmamode
 operator|=
 name|imin
@@ -2629,6 +2508,109 @@ name|via_modes
 index|[
 literal|0
 index|]
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ch
+operator|->
+name|chiptype
+operator|==
+literal|0x74411022
+operator|||
+comment|/* AMD 768 */
+name|ch
+operator|->
+name|chiptype
+operator|==
+literal|0x74111022
+condition|)
+block|{
+comment|/* AMD 766 */
+name|udmamode
+operator|=
+name|imin
+argument_list|(
+name|udmamode
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+name|reg_val
+operator|=
+name|via_modes
+index|[
+literal|4
+index|]
+expr_stmt|;
+name|chip
+operator|=
+literal|"AMD"
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ch
+operator|->
+name|chiptype
+operator|==
+literal|0x74091022
+condition|)
+block|{
+comment|/* AMD 756 */
+name|udmamode
+operator|=
+name|imin
+argument_list|(
+name|udmamode
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|reg_val
+operator|=
+name|via_modes
+index|[
+literal|4
+index|]
+expr_stmt|;
+name|chip
+operator|=
+literal|"AMD"
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ch
+operator|->
+name|chiptype
+operator|==
+literal|0x01bc10de
+condition|)
+block|{
+comment|/* nVIDIA */
+name|udmamode
+operator|=
+name|imin
+argument_list|(
+name|udmamode
+argument_list|,
+literal|5
+argument_list|)
+expr_stmt|;
+name|reg_val
+operator|=
+name|via_modes
+index|[
+literal|4
+index|]
+expr_stmt|;
+name|chip
+operator|=
+literal|"nVIDIA"
 expr_stmt|;
 block|}
 else|else
@@ -2668,7 +2650,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA6 on VIA chip\n"
+literal|"%s setting UDMA6 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2677,6 +2659,8 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+name|chip
 argument_list|)
 expr_stmt|;
 if|if
@@ -2742,7 +2726,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA5 on VIA chip\n"
+literal|"%s setting UDMA5 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2751,6 +2735,8 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+name|chip
 argument_list|)
 expr_stmt|;
 if|if
@@ -2816,7 +2802,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA4 on VIA chip\n"
+literal|"%s setting UDMA4 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2825,6 +2811,8 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+name|chip
 argument_list|)
 expr_stmt|;
 if|if
@@ -2890,7 +2878,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"%s setting UDMA2 on VIA chip\n"
+literal|"%s setting UDMA2 on %s chip\n"
 argument_list|,
 operator|(
 name|error
@@ -2899,6 +2887,8 @@ condition|?
 literal|"failed"
 else|:
 literal|"success"
+argument_list|,
+name|chip
 argument_list|)
 expr_stmt|;
 if|if
@@ -2930,7 +2920,6 @@ operator|=
 name|ATA_UDMA2
 expr_stmt|;
 return|return;
-block|}
 block|}
 block|}
 if|if
@@ -2979,17 +2968,7 @@ literal|"failed"
 else|:
 literal|"success"
 argument_list|,
-operator|(
-name|ch
-operator|->
-name|chiptype
-operator|==
-literal|0x74091022
-operator|)
-condition|?
-literal|"AMD"
-else|:
-literal|"VIA"
+name|chip
 argument_list|)
 expr_stmt|;
 if|if
@@ -3031,6 +3010,7 @@ operator|=
 name|ATA_WDMA2
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
@@ -5156,6 +5136,10 @@ case|:
 comment|/* Promise TX2 ATA133 controllers */
 case|case
 literal|0x5275105a
+case|:
+comment|/* Promise TX2 ATA133 controllers */
+case|case
+literal|0x6269105a
 case|:
 comment|/* Promise TX2 ATA133 controllers */
 name|ATA_OUTB
