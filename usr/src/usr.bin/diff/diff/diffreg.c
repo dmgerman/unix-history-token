@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.5 %G%"
+literal|"@(#)diffreg.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,9 +497,9 @@ name|fread
 argument_list|(
 name|buf1
 argument_list|,
-name|BUFSIZ
-argument_list|,
 literal|1
+argument_list|,
+name|BUFSIZ
 argument_list|,
 name|f1
 argument_list|)
@@ -510,9 +510,9 @@ name|fread
 argument_list|(
 name|buf2
 argument_list|,
-name|BUFSIZ
-argument_list|,
 literal|1
+argument_list|,
+name|BUFSIZ
 argument_list|,
 name|f2
 argument_list|)
@@ -4854,9 +4854,9 @@ name|fread
 argument_list|(
 name|buf
 argument_list|,
-name|BUFSIZ
-argument_list|,
 literal|1
+argument_list|,
+name|BUFSIZ
 argument_list|,
 name|f
 argument_list|)
