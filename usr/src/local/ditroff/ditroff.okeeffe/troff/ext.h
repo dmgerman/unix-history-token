@@ -762,6 +762,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|physfonts
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|quiet
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)tdef.h	2.3 (Berkeley) %G%  */
+comment|/*  * @(#)tdef.h	2.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -656,7 +656,7 @@ value|99
 end_define
 
 begin_comment
-comment|/* Maximum number of fonts (in fontab) */
+comment|/* Max number of mounted fonts (in fontab) */
 end_comment
 
 begin_define
@@ -2950,12 +2950,35 @@ begin_comment
 comment|/* current maximum of characters in a font */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CWI
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|EXTRAFONT
 value|(3*MAXCHARS * sizeof(char) + dev.nchtab + (128-32) \ 	* sizeof(char) + sizeof(struct Font) + 255 * sizeof(short))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|EXTRAFONT
+value|(3*MAXCHARS * sizeof(char) + dev.nchtab + (128-32) \ 	* sizeof(char) + sizeof(struct Font))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

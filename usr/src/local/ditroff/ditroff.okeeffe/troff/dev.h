@@ -69,9 +69,9 @@ decl_stmt|;
 comment|/* length of chname table */
 name|unsigned
 name|short
-name|spare1
+name|nstip
 decl_stmt|;
-comment|/* #chars in largest ever font */
+comment|/* number of stipples */
 name|unsigned
 name|short
 name|spare2
@@ -100,7 +100,7 @@ name|unsigned
 name|char
 name|ligfont
 decl_stmt|;
-comment|/* 1 == ligatures exist on this font */
+comment|/* mask of ligatures on this font */
 name|unsigned
 name|char
 name|spare1
@@ -108,7 +108,7 @@ decl_stmt|;
 comment|/* unused for now */
 ifdef|#
 directive|ifdef
-name|0
+name|CWI
 name|unsigned
 name|char
 name|fonttab
@@ -180,9 +180,20 @@ name|LFFL
 value|020
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CWI
+end_ifdef
+
 begin_comment
-comment|/*  * Notes by jaap:  *  * spare1 int struct dev is also known as biggestfont  *  * in Font structure is added:  *	fonttab: if set to 1, the Font.out has an extra  *		  table of shorts which gives the physical font  *		  on which the chracter lives. Allows mapping of  *		  "logial fonts" into variuos physical fonts on the  *		  device. Needed since the Harris f.i. has a weird font  *		  lay-out. Also makes fonts consisting of weird  *		  character combinations easier.  *	slant:	The font can must be slanted to force italics (function  *		of back-end, necessary for f.i. the Harris, which  *		doesn't has italics for the sans-serif fonts; these  *		italics have to be made by slanting)  */
+comment|/*  * Notes by jaap:  *  * in Font structure is added:  *	fonttab: if set to 1, the Font.out has an extra  *		  table of shorts which gives the physical font  *		  on which the chracter lives. Allows mapping of  *		  "logial fonts" into variuos physical fonts on the  *		  device. Needed since the Harris f.i. has a weird font  *		  lay-out. Also makes fonts consisting of weird  *		  character combinations easier.  *	slant:	The font can must be slanted to force italics (function  *		of back-end, necessary for f.i. the Harris, which  *		doesn't has italics for the sans-serif fonts; these  *		italics have to be made by slanting)  */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1371,7 +1371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * I (jaap) expand fontlab to the maximum of fonts troff can  * handle. The maximum number i, due to the two chars  * fontname limit, is 99.  * If we don't use the (named) font in one of the  * standard position, we install the name in the next  * free slot. Whenever we need info about the font, we  * read in the data at position zero, and secretly use  * the data (actually only necessary for the width  * and ligature info). The ptfont() (t10.c) routine will tell  * the device filter to put the font always at position  * zero if xfont> nfonts, so no need to change these filters.  * Yes, this is a bit kludgy.  *  * This gives the new specs of findft:  *  * find the font name i, where i also can be a number.  *  * Installs the font(name) i when not present  *  * returns -1 on error  */
+comment|/*  * I (jaap) expand fontlab to the maximum of fonts troff can  * handle. The maximum number i, due to the two chars  * fontname limit, is 99.  * If we don't use the (named) font in one of the  * standard position, we install the name in the next  * free slot. Whenever we need info about the font, we  * read in the data at position zero, and secretly use  * the data (actually only necessary for the width  * and ligature info). The ptfont() (t10.c) routine will tell  * the device filter to put the font always at position  * zero if xfont> physfonts, so no need to change these filters.  * Yes, this is a bit kludgy.  *  * This gives the new specs of findft:  *  * find the font name i, where i also can be a number.  *  * Installs the font(name) i when not present  *  * returns -1 on error  */
 end_comment
 
 begin_expr_stmt
@@ -1408,6 +1408,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+comment|/* first look for numbers */
 if|if
 condition|(
 name|isdigit
@@ -1416,10 +1417,26 @@ name|p
 index|[
 literal|0
 index|]
+operator|&&
+operator|(
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+operator|||
+name|isdigit
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+operator|)
 argument_list|)
 condition|)
 block|{
-comment|/* first look for numbers */
 name|k
 operator|=
 name|p
@@ -1472,9 +1489,14 @@ name|k
 operator|<=
 name|nfonts
 operator|&&
+name|fontbase
+index|[
 name|k
-operator|<
-name|smnt
+index|]
+operator|->
+name|specfont
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 			fprintf(ptid, "x xxx it's a mounted font\n"); 			*/
@@ -1572,6 +1594,38 @@ block|{
 comment|/* passed all existing names */
 if|if
 condition|(
+name|k
+operator|<=
+name|NFONT
+condition|)
+block|{
+if|if
+condition|(
+name|setfp
+argument_list|(
+name|k
+argument_list|,
+name|i
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|nfonts
+operator|=
+name|k
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|setfp
 argument_list|(
 literal|0
@@ -1589,9 +1643,7 @@ operator|-
 literal|1
 operator|)
 return|;
-else|else
-block|{
-comment|/* 				fprintf(ptid, "x xxx installed %s on %d\n", name ,k); 				*/
+comment|/* 			fprintf(ptid, "x xxx installed %s on %d\n", name ,k); 			*/
 comment|/* now install the name */
 name|fontlab
 index|[
@@ -1600,13 +1652,12 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|/* 					 * and remember accociated with 					 * this font, ligature info etc. 					*/
+comment|/* 				 * and remember accociated with 				 * this font, ligature info etc. 				*/
 return|return
 operator|(
 name|k
 operator|)
 return|;
-block|}
 block|}
 block|}
 return|return
@@ -3188,6 +3239,7 @@ decl_stmt|;
 name|skip
 argument_list|()
 expr_stmt|;
+comment|/* allow .fp for fonts>nfonts,<NFONTS? */
 if|if
 condition|(
 operator|(
@@ -3267,25 +3319,23 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|setfp
 argument_list|(
-argument|pos
+name|pos
 argument_list|,
-argument|f
+name|f
 argument_list|,
-argument|truename
+name|truename
 argument_list|)
-end_macro
-
-begin_comment
-comment|/* mount font f at position pos[0...nfonts] */
-end_comment
+comment|/* mount font f at position pos[0...NFONTS] */
+specifier|register
+name|pos
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|pos
-decl_stmt|,
 name|f
 decl_stmt|;
 end_decl_stmt
@@ -3302,6 +3352,12 @@ block|{
 specifier|register
 name|k
 expr_stmt|;
+specifier|register
+name|struct
+name|Font
+modifier|*
+name|ft
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -3319,6 +3375,11 @@ decl_stmt|;
 specifier|extern
 name|int
 name|nchtab
+decl_stmt|;
+specifier|extern
+name|struct
+name|dev
+name|dev
 decl_stmt|;
 if|if
 condition|(
@@ -3423,16 +3484,64 @@ literal|1
 operator|)
 return|;
 block|}
-name|n
+if|if
+condition|(
+operator|(
+name|ft
 operator|=
 name|fontbase
 index|[
 name|pos
 index|]
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ft
+operator|=
+name|fontbase
+index|[
+name|pos
+index|]
+operator|=
+operator|(
+expr|struct
+name|Font
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|EXTRAFONT
+argument_list|)
+expr_stmt|;
+name|ft
 operator|->
 name|nwfont
-operator|&
-name|BYTEMASK
+operator|=
+name|MAXCHARS
+expr_stmt|;
+name|fontab
+index|[
+name|pos
+index|]
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|ft
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+block|}
+name|n
+operator|=
+name|ft
+operator|->
+name|nwfont
 expr_stmt|;
 name|read
 argument_list|(
@@ -3442,10 +3551,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|fontbase
-index|[
-name|pos
-index|]
+name|ft
 argument_list|,
 literal|3
 operator|*
@@ -3464,6 +3570,17 @@ name|Font
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|k
+argument_list|)
+expr_stmt|;
+name|k
+operator|=
+name|ft
+operator|->
+name|nwfont
+expr_stmt|;
 name|kerntab
 index|[
 name|pos
@@ -3478,16 +3595,25 @@ index|[
 name|pos
 index|]
 operator|+
-operator|(
-name|fontbase
+name|k
+expr_stmt|;
+name|codetab
 index|[
 name|pos
 index|]
-operator|->
-name|nwfont
-operator|&
-name|BYTEMASK
+operator|=
+operator|(
+name|char
+operator|*
 operator|)
+name|fontab
+index|[
+name|pos
+index|]
+operator|+
+literal|2
+operator|*
+name|k
 expr_stmt|;
 comment|/* have to reset the fitab pointer because the width may be different */
 name|fitab
@@ -3506,29 +3632,18 @@ index|]
 operator|+
 literal|3
 operator|*
-operator|(
-name|fontbase
-index|[
-name|pos
-index|]
+name|k
+expr_stmt|;
+name|ft
 operator|->
 name|nwfont
-operator|&
-name|BYTEMASK
-operator|)
+operator|=
+name|n
 expr_stmt|;
+comment|/* so can load a larger one again later */
 if|if
 condition|(
-operator|(
-name|fontbase
-index|[
-name|pos
-index|]
-operator|->
-name|nwfont
-operator|&
-name|BYTEMASK
-operator|)
+name|k
 operator|>
 name|n
 condition|)
@@ -3549,21 +3664,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|fontbase
-index|[
-name|pos
-index|]
-operator|->
-name|nwfont
-operator|=
-name|n
-expr_stmt|;
-comment|/* so can load a larger one again later */
-name|close
-argument_list|(
-name|k
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pos
@@ -3632,7 +3732,7 @@ literal|0
 operator|&&
 name|pos
 operator|<=
-name|nfonts
+name|physfonts
 condition|)
 name|ptfpcmd
 argument_list|(

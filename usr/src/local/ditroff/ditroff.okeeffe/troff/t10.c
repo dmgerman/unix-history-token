@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t10.c	2.5 (Berkeley) %G%"
+literal|"@(#)t10.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,30 @@ name|int
 name|nfonts
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* highest font num. in fontab */
+end_comment
+
+begin_decl_stmt
+name|int
+name|physfonts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* highest font num. known to printer */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zfont
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* internal font num. mapped to 0 on printer */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -393,6 +417,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|read
 argument_list|(
 name|fin
@@ -410,7 +436,27 @@ expr|struct
 name|dev
 argument_list|)
 argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dev
+argument_list|)
+condition|)
+block|{
+name|errprint
+argument_list|(
+literal|"short read on %s"
+argument_list|,
+name|termtab
+argument_list|)
 expr_stmt|;
+name|done3
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|Inch
 operator|=
 name|dev
@@ -435,6 +481,8 @@ name|dev
 operator|.
 name|unitwidth
 expr_stmt|;
+name|physfonts
+operator|=
 name|nfonts
 operator|=
 name|dev
@@ -457,7 +505,7 @@ name|nstips
 operator|=
 name|dev
 operator|.
-name|spare1
+name|nstip
 expr_stmt|;
 name|stiplab
 operator|=
@@ -487,11 +535,11 @@ name|dev
 operator|.
 name|filesize
 operator|+
-literal|2
-operator|*
 name|EXTRAFONT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|read
 argument_list|(
 name|fin
@@ -502,8 +550,25 @@ name|dev
 operator|.
 name|filesize
 argument_list|)
+operator|<
+name|dev
+operator|.
+name|filesize
+condition|)
+block|{
+name|errprint
+argument_list|(
+literal|"short read on %s"
+argument_list|,
+name|termtab
+argument_list|)
 expr_stmt|;
-comment|/* all at once */
+name|done3
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|pstab
 operator|=
 operator|(
@@ -2794,7 +2859,14 @@ if|if
 condition|(
 name|xfont
 operator|>
-name|nfonts
+name|physfonts
+condition|)
+block|{
+if|if
+condition|(
+name|xfont
+operator|!=
+name|zfont
 condition|)
 block|{
 specifier|register
@@ -2817,7 +2889,8 @@ argument_list|,
 name|temp
 argument_list|)
 expr_stmt|;
-comment|/* Put the desired font in the 					 * fontcache of the filter */
+comment|/* Put the desired font in the 						 * fontcache of the filter */
+block|}
 name|fdprintf
 argument_list|(
 name|ptid
@@ -2826,6 +2899,10 @@ literal|"f0\n"
 argument_list|)
 expr_stmt|;
 comment|/* make sure that it gets noticed */
+name|zfont
+operator|=
+name|xfont
+expr_stmt|;
 block|}
 else|else
 name|fdprintf
@@ -3034,15 +3111,48 @@ name|n
 argument_list|)
 expr_stmt|;
 comment|/* new page */
+if|if
+condition|(
+name|fontbase
+index|[
+name|zfont
+index|]
+operator|->
+name|namefont
+operator|&&
+name|fontbase
+index|[
+name|zfont
+index|]
+operator|->
+name|namefont
+index|[
+literal|0
+index|]
+condition|)
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"x font 0 %s\n"
+argument_list|,
+name|fontbase
+index|[
+name|zfont
+index|]
+operator|->
+name|namefont
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<=
-name|nfonts
+name|physfonts
 condition|;
 name|i
 operator|++
