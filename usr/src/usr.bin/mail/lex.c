@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.3 %G%"
+literal|"@(#)lex.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,10 @@ argument_list|(
 operator|!
 name|edit
 argument_list|)
+expr_stmt|;
+name|sawcom
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
