@@ -1330,6 +1330,56 @@ literal|0x03000F
 block|}
 block|,
 comment|/* GPIO mask */
+block|{
+name|CARD_PIXELVIEW_PLAYTV_PAK
+block|,
+comment|/* the card id */
+literal|"PixelView PlayTV Pak"
+block|,
+comment|/* the 'name' */
+name|NULL
+block|,
+comment|/* the tuner */
+literal|0
+block|,
+comment|/* the tuner i2c address */
+literal|0
+block|,
+comment|/* dbx is optional */
+literal|0
+block|,
+literal|0
+block|,
+name|PFC8582_WADDR
+block|,
+comment|/* EEProm type */
+call|(
+name|u_char
+call|)
+argument_list|(
+literal|256
+operator|/
+name|EEPROMBLOCKSIZE
+argument_list|)
+block|,
+comment|/* 256 bytes */
+block|{
+literal|0x20000
+block|,
+literal|0x80000
+block|,
+literal|0
+block|,
+literal|0xa8000
+block|,
+literal|1
+block|}
+block|,
+comment|/* audio MUX values */
+literal|0xAA0000
+block|}
+block|,
+comment|/* GPIO mask */
 block|}
 decl_stmt|;
 end_decl_stmt
