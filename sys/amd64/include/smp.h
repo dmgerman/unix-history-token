@@ -94,6 +94,12 @@ name|defined
 argument_list|(
 name|CPU_DISABLE_CMPXCHG
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|COMPILING_LINT
+argument_list|)
 end_if
 
 begin_error
