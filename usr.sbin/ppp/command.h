@@ -174,15 +174,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-name|VersionDate
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|void
