@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.36 2003/04/28 02:54:07 grog Exp $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.37 2003/05/04 05:23:42 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1781,46 +1781,6 @@ name|s
 operator|++
 expr_stmt|;
 comment|/* find the end */
-if|if
-condition|(
-name|vol
-operator|->
-name|preferred_plex
-operator|>=
-literal|0
-condition|)
-comment|/* preferences, */
-name|snprintf
-argument_list|(
-name|s
-argument_list|,
-name|configend
-operator|-
-name|s
-argument_list|,
-literal|" readpol prefer %s"
-argument_list|,
-name|vinum_conf
-operator|.
-name|plex
-index|[
-name|vol
-operator|->
-name|preferred_plex
-index|]
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|s
-condition|)
-name|s
-operator|++
-expr_stmt|;
-comment|/* find the end */
 name|s
 operator|=
 name|sappend
@@ -1853,6 +1813,11 @@ name|struct
 name|plex
 modifier|*
 name|plex
+decl_stmt|;
+name|struct
+name|volume
+modifier|*
+name|vol
 decl_stmt|;
 name|plex
 operator|=
@@ -1969,7 +1934,18 @@ name|volno
 operator|>=
 literal|0
 condition|)
+block|{
 comment|/* we have a volume */
+name|vol
+operator|=
+operator|&
+name|VOL
+index|[
+name|plex
+operator|->
+name|volno
+index|]
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|s
@@ -1980,15 +1956,8 @@ name|s
 argument_list|,
 literal|"vol %s "
 argument_list|,
-name|vinum_conf
-operator|.
-name|volume
-index|[
-name|plex
+name|vol
 operator|->
-name|volno
-index|]
-operator|.
 name|name
 argument_list|)
 expr_stmt|;
@@ -2001,6 +1970,50 @@ name|s
 operator|++
 expr_stmt|;
 comment|/* find the end */
+if|if
+condition|(
+operator|(
+name|vol
+operator|->
+name|preferred_plex
+operator|>=
+literal|0
+operator|)
+comment|/* has a preferred plex */
+operator|&&
+name|vol
+operator|->
+name|plex
+index|[
+name|vol
+operator|->
+name|preferred_plex
+index|]
+operator|==
+name|i
+condition|)
+comment|/* and it's us */
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
+name|s
+argument_list|,
+literal|"preferred "
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|s
+condition|)
+name|s
+operator|++
+expr_stmt|;
+comment|/* find the end */
+block|}
 for|for
 control|(
 name|j
@@ -3597,7 +3610,7 @@ name|malloced
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Now det the list of disks */
+comment|/* Now get the list of disks */
 name|kernel_sysctlbyname
 argument_list|(
 operator|&
@@ -3618,14 +3631,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"vinum_scandisk: devicename is %s\n"
-argument_list|,
-name|devicename
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|status
 operator|=
 literal|0
@@ -3712,6 +3717,35 @@ argument_list|,
 literal|"Can't allocate memory"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|lock_config
+argument_list|()
+expr_stmt|;
+comment|/* make sure we're alone here */
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
+name|error
+operator|=
+name|setjmp
+argument_list|(
+name|command_fail
+argument_list|)
+expr_stmt|;
+comment|/* come back here on error */
+if|if
+condition|(
+name|error
+condition|)
+comment|/* longjmped out */
+return|return
+name|error
+return|;
 comment|/* Open all drives and find which was modified most recently */
 for|for
 control|(
@@ -4179,6 +4213,9 @@ argument_list|(
 name|devicename
 argument_list|)
 expr_stmt|;
+name|unlock_config
+argument_list|()
+expr_stmt|;
 return|return
 name|ENOENT
 return|;
@@ -4565,6 +4602,9 @@ name|Free
 argument_list|(
 name|devicename
 argument_list|)
+expr_stmt|;
+name|unlock_config
+argument_list|()
 expr_stmt|;
 return|return
 name|status
