@@ -124,6 +124,17 @@ modifier|*
 name|errstr
 decl_stmt|;
 comment|/* Error-Message */
+ifndef|#
+directive|ifndef
+name|NOINET6
+name|struct
+name|sticky_route
+modifier|*
+name|ipv6routes
+decl_stmt|;
+comment|/* FRAMED IPv6 Routes */
+endif|#
+directive|endif
 struct|struct
 block|{
 name|int
