@@ -58,26 +58,6 @@ directive|include
 file|<machine/resource.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|500000
-end_if
-
-begin_typedef
-typedef|typedef
-name|vm_offset_t
-name|vm_paddr_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct
 struct|struct
 name|acpi_softc
@@ -293,6 +273,69 @@ parameter_list|)
 value|init_timecounter(a)
 end_define
 
+begin_elif
+elif|#
+directive|elif
+literal|0
+end_elif
+
+begin_comment
+comment|/*  * The ACPI subsystem lives under a single mutex.  You *must*  * acquire this mutex before calling any of the acpi_ or Acpi* functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|acpi_mutex
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOCK
+value|mtx_lock(&acpi_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_UNLOCK
+value|mtx_unlock(&acpi_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ASSERTLOCK
+value|mtx_assert(&acpi_mutex, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSLEEP
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|msleep(a, b, c, d, e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOCK_DECL
+end_define
+
 begin_else
 else|#
 directive|else
@@ -314,6 +357,24 @@ begin_define
 define|#
 directive|define
 name|ACPI_ASSERTLOCK
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MSLEEP
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|)
+value|tsleep(a, c, d, e)
 end_define
 
 begin_define
@@ -425,6 +486,37 @@ directive|define
 name|ACPI_INTR_SAPIC
 value|2
 end_define
+
+begin_comment
+comment|/* XXX this is no longer referenced anywhere, remove? */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  * This is a cheap and nasty way to get around the horrid counted list  * argument format that AcpiEvalateObject uses.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_OBJECTLIST_MAX
+value|16
+end_define
+
+begin_endif
+unit|struct acpi_object_list {     UINT32	count;     ACPI_OBJECT	*pointer[ACPI_OBJECTLIST_MAX];     ACPI_OBJECT	object[ACPI_OBJECTLIST_MAX]; };  static __inline struct acpi_object_list * acpi_AllocObjectList(int nobj) {     struct acpi_object_list	*l;     int				i;      if (nobj> ACPI_OBJECTLIST_MAX) 	return(NULL);     if ((l = AcpiOsAllocate(sizeof(*l))) == NULL) 	return(NULL);     bzero(l, sizeof(*l));     for (i = 0; i< ACPI_OBJECTLIST_MAX; i++) 	l->pointer[i] =&l->object[i];     l->count = nobj;     return(l); }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* unused */
+end_comment
 
 begin_comment
 comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */
@@ -1750,20 +1842,6 @@ parameter_list|,
 name|struct
 name|acpi_battinfo
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Embedded controller.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|acpi_ec_ecdt_probe
-parameter_list|(
-name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

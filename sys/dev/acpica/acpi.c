@@ -1135,12 +1135,24 @@ expr_stmt|;
 comment|/*      * Check that we haven't been disabled with a hint.      */
 if|if
 condition|(
-name|resource_disabled
+operator|!
+name|resource_int_value
 argument_list|(
 literal|"acpi"
 argument_list|,
 literal|0
+argument_list|,
+literal|"disabled"
+argument_list|,
+operator|&
+name|error
 argument_list|)
+operator|&&
+operator|(
+name|error
+operator|!=
+literal|0
+operator|)
 condition|)
 name|return_VOID
 expr_stmt|;
@@ -1790,12 +1802,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/*      * Call the ECDT probe function to provide EC functionality before      * the namespace has been evaluated.      */
-name|acpi_ec_ecdt_probe
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -2205,18 +2211,17 @@ argument_list|,
 literal|"ACPI subsystem disable on poweroff"
 argument_list|)
 expr_stmt|;
-comment|/*      * Default to 5 seconds before sleeping to give some machines time to      * stabilize.      */
-name|sc
-operator|->
-name|acpi_sleep_delay
-operator|=
-literal|5
-expr_stmt|;
 name|sc
 operator|->
 name|acpi_disable_on_poweroff
 operator|=
 literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|acpi_sleep_delay
+operator|=
+literal|0
 expr_stmt|;
 name|sc
 operator|->
@@ -3392,19 +3397,6 @@ decl_stmt|;
 name|ACPI_DEVICE_INFO
 name|devinfo
 decl_stmt|;
-name|ACPI_BUFFER
-name|buf
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|devinfo
-argument_list|)
-block|,
-operator|&
-name|devinfo
-block|}
-decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
@@ -3431,7 +3423,7 @@ literal|0
 expr_stmt|;
 name|ACPI_LOCK
 expr_stmt|;
-comment|/* Fetch and validate the HID. */
+comment|/* fetch and validate the HID */
 if|if
 condition|(
 operator|(
@@ -3448,6 +3440,10 @@ condition|)
 goto|goto
 name|out
 goto|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|error
 operator|=
 name|AcpiGetObjectInfo
@@ -3455,14 +3451,8 @@ argument_list|(
 name|h
 argument_list|,
 operator|&
-name|buf
+name|devinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|error
 argument_list|)
 condition|)
 goto|goto
@@ -3470,6 +3460,7 @@ name|out
 goto|;
 if|if
 condition|(
+operator|!
 operator|(
 name|devinfo
 operator|.
@@ -3477,8 +3468,6 @@ name|Valid
 operator|&
 name|ACPI_VALID_HID
 operator|)
-operator|==
-literal|0
 condition|)
 goto|goto
 name|out
@@ -3490,8 +3479,6 @@ argument_list|(
 name|devinfo
 operator|.
 name|HardwareId
-operator|.
-name|Value
 argument_list|)
 expr_stmt|;
 name|out
@@ -3517,6 +3504,9 @@ parameter_list|)
 block|{
 name|ACPI_HANDLE
 name|h
+decl_stmt|;
+name|ACPI_DEVICE_INFO
+name|devinfo
 decl_stmt|;
 name|ACPI_STATUS
 name|error
@@ -3557,6 +3547,24 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|error
+operator|=
+name|AcpiGetObjectInfo
+argument_list|(
+name|h
+argument_list|,
+operator|&
+name|devinfo
+argument_list|)
+argument_list|)
 condition|)
 goto|goto
 name|out
@@ -4132,7 +4140,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Powering system off using ACPI\n"
+literal|"Power system off using ACPI...\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4202,7 +4210,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Shutting down ACPI\n"
+literal|"Terminate ACPI\n"
 argument_list|)
 expr_stmt|;
 name|AcpiTerminate
@@ -4257,12 +4265,16 @@ name|AcpiEnableEvent
 argument_list|(
 name|ACPI_EVENT_POWER_BUTTON
 argument_list|,
+name|ACPI_EVENT_FIXED
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiClearEvent
 argument_list|(
 name|ACPI_EVENT_POWER_BUTTON
+argument_list|,
+name|ACPI_EVENT_FIXED
 argument_list|)
 expr_stmt|;
 name|AcpiInstallFixedEventHandler
@@ -4313,12 +4325,16 @@ name|AcpiEnableEvent
 argument_list|(
 name|ACPI_EVENT_SLEEP_BUTTON
 argument_list|,
+name|ACPI_EVENT_FIXED
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiClearEvent
 argument_list|(
 name|ACPI_EVENT_SLEEP_BUTTON
+argument_list|,
+name|ACPI_EVENT_FIXED
 argument_list|)
 expr_stmt|;
 name|AcpiInstallFixedEventHandler
@@ -4373,19 +4389,6 @@ decl_stmt|;
 name|ACPI_DEVICE_INFO
 name|devinfo
 decl_stmt|;
-name|ACPI_BUFFER
-name|buf
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|devinfo
-argument_list|)
-block|,
-operator|&
-name|devinfo
-block|}
-decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
@@ -4409,6 +4412,10 @@ operator|(
 name|FALSE
 operator|)
 return|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|error
 operator|=
 name|AcpiGetObjectInfo
@@ -4416,14 +4423,8 @@ argument_list|(
 name|h
 argument_list|,
 operator|&
-name|buf
+name|devinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|error
 argument_list|)
 condition|)
 return|return
@@ -4434,6 +4435,7 @@ return|;
 comment|/* if no _STA method, must be present */
 if|if
 condition|(
+operator|!
 operator|(
 name|devinfo
 operator|.
@@ -4441,8 +4443,6 @@ name|Valid
 operator|&
 name|ACPI_VALID_STA
 operator|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -4493,19 +4493,6 @@ decl_stmt|;
 name|ACPI_DEVICE_INFO
 name|devinfo
 decl_stmt|;
-name|ACPI_BUFFER
-name|buf
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|devinfo
-argument_list|)
-block|,
-operator|&
-name|devinfo
-block|}
-decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
@@ -4529,6 +4516,10 @@ operator|(
 name|FALSE
 operator|)
 return|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|error
 operator|=
 name|AcpiGetObjectInfo
@@ -4536,14 +4527,8 @@ argument_list|(
 name|h
 argument_list|,
 operator|&
-name|buf
+name|devinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|error
 argument_list|)
 condition|)
 return|return
@@ -4554,6 +4539,7 @@ return|;
 comment|/* if no _STA method, must be present */
 if|if
 condition|(
+operator|!
 operator|(
 name|devinfo
 operator|.
@@ -4561,8 +4547,6 @@ name|Valid
 operator|&
 name|ACPI_VALID_STA
 operator|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -4617,19 +4601,6 @@ decl_stmt|;
 name|ACPI_DEVICE_INFO
 name|devinfo
 decl_stmt|;
-name|ACPI_BUFFER
-name|buf
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|devinfo
-argument_list|)
-block|,
-operator|&
-name|devinfo
-block|}
-decl_stmt|;
 name|ACPI_STATUS
 name|error
 decl_stmt|;
@@ -4667,6 +4638,10 @@ operator|(
 name|FALSE
 operator|)
 return|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|error
 operator|=
 name|AcpiGetObjectInfo
@@ -4674,14 +4649,8 @@ argument_list|(
 name|h
 argument_list|,
 operator|&
-name|buf
+name|devinfo
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|error
 argument_list|)
 condition|)
 return|return
@@ -4698,9 +4667,8 @@ name|Valid
 operator|&
 name|ACPI_VALID_HID
 operator|)
-operator|!=
-literal|0
 operator|&&
+operator|!
 name|strcmp
 argument_list|(
 name|hid
@@ -4708,11 +4676,7 @@ argument_list|,
 name|devinfo
 operator|.
 name|HardwareId
-operator|.
-name|Value
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
@@ -6190,7 +6154,7 @@ expr_stmt|;
 comment|/* AcpiEnterSleepState() maybe incompleted, unlock here if locked. */
 if|if
 condition|(
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|ACPI_MTX_HARDWARE
 index|]
@@ -7479,10 +7443,8 @@ case|:
 comment|/*  	 * If the data type of this package element is numeric, then this 	 * _PRW package element is the bit index in the GPEx_EN, in the 	 * GPE blocks described in the FADT, of the enable bit that is 	 * enabled for the wake event. 	 */
 name|status
 operator|=
-name|AcpiEnableGpe
+name|AcpiEnableEvent
 argument_list|(
-name|NULL
-argument_list|,
 name|res
 operator|->
 name|Package
@@ -7495,6 +7457,8 @@ operator|.
 name|Integer
 operator|.
 name|Value
+argument_list|,
+name|ACPI_EVENT_GPE
 argument_list|,
 name|ACPI_EVENT_WAKE_ENABLE
 argument_list|)
@@ -9328,6 +9292,9 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -9336,12 +9303,24 @@ condition|)
 return|return;
 if|if
 condition|(
-name|resource_disabled
+operator|!
+name|resource_int_value
 argument_list|(
 literal|"acpi"
 argument_list|,
 literal|0
+argument_list|,
+literal|"disabled"
+argument_list|,
+operator|&
+name|error
 argument_list|)
+operator|&&
+operator|(
+name|error
+operator|!=
+literal|0
+operator|)
 condition|)
 return|return;
 name|power_pm_register

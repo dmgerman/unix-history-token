@@ -147,7 +147,7 @@ parameter_list|(
 name|ACPI_IO_ADDRESS
 name|InPort
 parameter_list|,
-name|UINT32
+name|void
 modifier|*
 name|Value
 parameter_list|,
@@ -239,7 +239,7 @@ parameter_list|(
 name|ACPI_IO_ADDRESS
 name|OutPort
 parameter_list|,
-name|UINT32
+name|ACPI_INTEGER
 name|Value
 parameter_list|,
 name|UINT32

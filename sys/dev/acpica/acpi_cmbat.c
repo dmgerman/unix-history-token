@@ -36,7 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
 end_include
 
 begin_include
@@ -81,21 +93,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* Number of times to retry initialization before giving up. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_CMBAT_RETRY_MAX
-value|6
-end_define
-
-begin_comment
-comment|/* Check the battery once a minute. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -104,7 +101,7 @@ value|(60 * hz)
 end_define
 
 begin_comment
-comment|/* Hooks for the ACPI CA debugging infrastructure */
+comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
 end_comment
 
 begin_define
@@ -150,7 +147,7 @@ name|dest
 parameter_list|,
 name|label
 parameter_list|)
-value|do {		\     tmp =&res->Package.Elements[idx];				\     if (tmp == NULL) {						\ 	ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    "%s: PKG_GETINT error, idx = %d\n.", __func__, idx); \ 	goto label;						\     }								\     if (tmp->Type != ACPI_TYPE_INTEGER)				\ 	goto label;						\     dest = tmp->Integer.Value;					\ } while (0)
+value|do {			\ 	tmp =&res->Package.Elements[idx];				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    "%s: PKG_GETINT error, idx = %d\n.", __func__, idx); \ 		goto label;						\ 	}								\ 	if (tmp->Type != ACPI_TYPE_INTEGER)				\ 		goto label;						\ 	dest = tmp->Integer.Value;					\ } while (0)
 end_define
 
 begin_define
@@ -170,7 +167,7 @@ name|size
 parameter_list|,
 name|label
 parameter_list|)
-value|do {	\     size_t length;						\     length = size;						\     tmp =&res->Package.Elements[idx]; 				\     if (tmp == NULL) {						\ 	ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    "%s: PKG_GETSTR error, idx = %d\n.", __func__, idx); \ 	goto label;						\     }								\     bzero(dest, sizeof(dest));					\     switch (tmp->Type) {					\     case ACPI_TYPE_STRING:					\     if (tmp->String.Length< length)				\ 	length = tmp->String.Length;				\     strncpy(dest, tmp->String.Pointer, length);			\     break;							\     case ACPI_TYPE_BUFFER:					\ 	if (tmp->Buffer.Length< length)			\ 	    length = tmp->Buffer.Length;			\ 	strncpy(dest, tmp->Buffer.Pointer, length);		\ 	break;							\     default:							\ 	goto label;						\     }								\     dest[sizeof(dest)-1] = '\0';				\ } while (0)
+value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	if (tmp == NULL) {						\ 		ACPI_VPRINT(dev, acpi_device_get_parent_softc(dev),	\ 		    "%s: PKG_GETSTR error, idx = %d\n.", __func__, idx); \ 		goto label;						\ 	}								\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->Buffer.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[sizeof(dest)-1] = '\0';					\ } while (0)
 end_define
 
 begin_struct
@@ -230,7 +227,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XXX: devclass_get_maxunit() don't give us the current allocated units. */
+comment|/* XXX: devclass_get_maxunit() don't give us the current allocated units... */
 end_comment
 
 begin_decl_stmt
@@ -395,90 +392,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|device_method_t
-name|acpi_cmbat_methods
-index|[]
-init|=
-block|{
-comment|/* Device interface */
-name|DEVMETHOD
-argument_list|(
-name|device_probe
-argument_list|,
-name|acpi_cmbat_probe
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_attach
-argument_list|,
-name|acpi_cmbat_attach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_resume
-argument_list|,
-name|acpi_cmbat_resume
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|driver_t
-name|acpi_cmbat_driver
-init|=
-block|{
-literal|"acpi_cmbat"
-block|,
-name|acpi_cmbat_methods
-block|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|acpi_cmbat_softc
-argument_list|)
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|acpi_cmbat_devclass
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|DRIVER_MODULE
-argument_list|(
-name|acpi_cmbat
-argument_list|,
-name|acpi
-argument_list|,
-name|acpi_cmbat_driver
-argument_list|,
-name|acpi_cmbat_devclass
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
+name|__inline
 name|int
 name|acpi_cmbat_info_expired
 parameter_list|(
@@ -498,11 +414,13 @@ name|lastupdated
 operator|==
 name|NULL
 condition|)
+block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -511,11 +429,13 @@ argument_list|(
 name|lastupdated
 argument_list|)
 condition|)
+block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 name|getnanotime
 argument_list|(
 operator|&
@@ -532,6 +452,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|curtime
 operator|.
 name|tv_sec
@@ -545,12 +466,14 @@ operator|>
 name|acpi_battery_get_info_expire
 argument_list|()
 operator|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
+name|__inline
 name|void
 name|acpi_cmbat_info_updated
 parameter_list|(
@@ -566,11 +489,13 @@ name|lastupdated
 operator|!=
 name|NULL
 condition|)
+block|{
 name|getnanotime
 argument_list|(
 name|lastupdated
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -643,14 +568,18 @@ operator|->
 name|bst_lastupdated
 argument_list|)
 condition|)
+block|{
 return|return;
+block|}
 if|if
 condition|(
 name|sc
 operator|->
 name|bst_updating
 condition|)
+block|{
 return|return;
+block|}
 name|sc
 operator|->
 name|bst_updating
@@ -663,6 +592,10 @@ name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|as
 operator|=
 name|AcpiEvaluateObject
@@ -676,12 +609,6 @@ argument_list|,
 operator|&
 name|bst_buffer
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|as
 argument_list|)
 condition|)
 block|{
@@ -718,16 +645,21 @@ name|Pointer
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|res
 operator|==
 name|NULL
+operator|)
 operator|||
+operator|(
 name|res
 operator|->
 name|Type
 operator|!=
 name|ACPI_TYPE_PACKAGE
+operator|)
 operator|||
+operator|(
 name|res
 operator|->
 name|Package
@@ -735,6 +667,7 @@ operator|.
 name|Count
 operator|!=
 literal|4
+operator|)
 condition|)
 block|{
 name|ACPI_VPRINT
@@ -924,14 +857,18 @@ operator|->
 name|bif_lastupdated
 argument_list|)
 condition|)
+block|{
 return|return;
+block|}
 if|if
 condition|(
 name|sc
 operator|->
 name|bif_updating
 condition|)
+block|{
 return|return;
+block|}
 name|sc
 operator|->
 name|bif_updating
@@ -944,6 +881,10 @@ name|Length
 operator|=
 name|ACPI_ALLOCATE_BUFFER
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|as
 operator|=
 name|AcpiEvaluateObject
@@ -957,12 +898,6 @@ argument_list|,
 operator|&
 name|bif_buffer
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|as
 argument_list|)
 condition|)
 block|{
@@ -999,16 +934,21 @@ name|Pointer
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|res
 operator|==
 name|NULL
+operator|)
 operator|||
+operator|(
 name|res
 operator|->
 name|Type
 operator|!=
 name|ACPI_TYPE_PACKAGE
+operator|)
 operator|||
+operator|(
 name|res
 operator|->
 name|Package
@@ -1016,6 +956,7 @@ operator|.
 name|Count
 operator|!=
 literal|13
+operator|)
 condition|)
 block|{
 name|ACPI_VPRINT
@@ -1341,7 +1282,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 return|return;
+block|}
 switch|switch
 condition|(
 name|notify
@@ -1397,12 +1340,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|acpi_get_type
 argument_list|(
 name|dev
 argument_list|)
 operator|==
 name|ACPI_TYPE_DEVICE
+operator|)
 operator|&&
 operator|!
 name|acpi_disabled
@@ -1418,6 +1363,7 @@ literal|"PNP0C0A"
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * Set device description. 		 */
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1472,11 +1418,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 name|handle
 operator|=
 name|acpi_get_handle
@@ -1534,6 +1482,9 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|acpi_register_ioctl
@@ -1544,18 +1495,20 @@ name|acpi_cmbat_ioctl
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|acpi_register_ioctl
@@ -1566,19 +1519,21 @@ name|acpi_cmbat_ioctl
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
 block|}
+block|}
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|acpi_battery_register
@@ -1587,18 +1542,17 @@ name|ACPI_BATT_TYPE_CMBAT
 argument_list|,
 name|acpi_cmbat_units
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|acpi_cmbat_units
 operator|++
 expr_stmt|;
@@ -1657,6 +1611,88 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|device_method_t
+name|acpi_cmbat_methods
+index|[]
+init|=
+block|{
+comment|/* Device interface */
+name|DEVMETHOD
+argument_list|(
+name|device_probe
+argument_list|,
+name|acpi_cmbat_probe
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_attach
+argument_list|,
+name|acpi_cmbat_attach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|device_resume
+argument_list|,
+name|acpi_cmbat_resume
+argument_list|)
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|acpi_cmbat_driver
+init|=
+block|{
+literal|"acpi_cmbat"
+block|,
+name|acpi_cmbat_methods
+block|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|acpi_cmbat_softc
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|acpi_cmbat_devclass
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|acpi_cmbat
+argument_list|,
+name|acpi
+argument_list|,
+name|acpi_cmbat_driver
+argument_list|,
+name|acpi_cmbat_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1705,6 +1741,9 @@ operator|*
 operator|)
 name|addr
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|dev
 operator|=
 name|devclass_get_device
@@ -1715,37 +1754,38 @@ name|ioctl_arg
 operator|->
 name|unit
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dev
+operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
+if|if
+condition|(
+operator|(
 name|sc
 operator|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
+operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/*      * No security check required: information retrieval only.  If      * new functions are added here, a check might be required.      */
+block|}
+comment|/*          * No security check required: information retrieval only.  If          * new functions are added here, a check might be required.          */
 switch|switch
 condition|(
 name|cmd
@@ -2010,16 +2050,12 @@ name|volt
 expr_stmt|;
 block|}
 else|else
-block|{
 name|bstp
 operator|->
 name|state
 operator|=
 name|ACPI_BATT_STAT_NOT_PRESENT
 expr_stmt|;
-block|}
-break|break;
-default|default:
 break|break;
 block|}
 return|return
@@ -2032,6 +2068,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|int
 name|acpi_cmbat_is_bst_valid
 parameter_list|(
@@ -2061,12 +2098,13 @@ name|volt
 operator|==
 literal|0xffffffff
 condition|)
+block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|else
+block|}
 return|return
 operator|(
 literal|1
@@ -2077,6 +2115,7 @@ end_function
 
 begin_function
 specifier|static
+name|__inline
 name|int
 name|acpi_cmbat_is_bif_valid
 parameter_list|(
@@ -2094,12 +2133,13 @@ name|lfcap
 operator|==
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|else
+block|}
 return|return
 operator|(
 literal|1
@@ -2390,7 +2430,7 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* If battery not installed, we get strange values */
+comment|/* If battey not installed, we get strange values */
 if|if
 condition|(
 operator|!
@@ -2488,7 +2528,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 	     * XXX Hack to calculate total battery time. 	     * Systems with 2 or more battries, they may get used 	     * one by one, thus bst.rate is set only to the one 	     * in use. For remaining batteries bst.rate = 0, which 	     * makes it impossible to calculate remaining time. 	     * Some other systems may need sum of bst.rate in 	     * dis-charging state. 	     * There for we sum up the bst.rate that is valid 	     * (in dis-charging state), and use the sum to 	     * calcutate remaining batteries' time. 	     */
+comment|/* 			 * XXX Hack to calculate total battery time. 			 * Systems with 2 or more battries, they may get used 			 * one by one, thus bst.rate is set only to the one 			 * in use. For remaining batteries bst.rate = 0, which 			 * makes it impossible to calculate remaining time. 			 * Some other systems may need sum of bst.rate in 			 * dis-charging state. 			 * There for we sum up the bst.rate that is valid 			 * (in dis-charging state), and use the sum to 			 * calcutate remaining batteries' time. 			 */
 if|if
 condition|(
 name|bat
@@ -2502,6 +2542,7 @@ name|state
 operator|&
 name|ACPI_BATT_STAT_DISCHARG
 condition|)
+block|{
 name|valid_rate
 operator|+=
 name|bat
@@ -2513,6 +2554,7 @@ name|bst
 operator|.
 name|rate
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Calculate total battery capacity and time */
@@ -2548,7 +2590,9 @@ index|]
 operator|->
 name|present
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 name|valid_rate
@@ -2719,12 +2763,15 @@ name|total_full
 operator|==
 literal|0
 condition|)
+block|{
 name|min
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 else|else
+block|{
 name|min
 operator|=
 operator|(
@@ -2735,6 +2782,7 @@ operator|)
 operator|/
 literal|100
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2808,13 +2856,19 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+define|#
+directive|define
+name|ACPI_CMBAT_RETRY_MAX
+value|6
 if|if
 condition|(
 name|sc
 operator|->
 name|initializing
 condition|)
+block|{
 return|return;
+block|}
 name|sc
 operator|->
 name|initializing
@@ -2870,7 +2924,9 @@ name|sc
 operator|->
 name|present
 condition|)
+block|{
 continue|continue;
+block|}
 name|timespecclear
 argument_list|(
 operator|&
@@ -2903,7 +2959,9 @@ operator|->
 name|bst
 argument_list|)
 condition|)
+block|{
 continue|continue;
+block|}
 name|acpi_cmbat_get_bif
 argument_list|(
 name|dev
@@ -2920,22 +2978,17 @@ operator|->
 name|bif
 argument_list|)
 condition|)
+block|{
 continue|continue;
+block|}
 break|break;
 block|}
-name|sc
-operator|->
-name|initializing
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|retry
 operator|==
 name|ACPI_CMBAT_RETRY_MAX
 condition|)
-block|{
 name|ACPI_VPRINT
 argument_list|(
 name|dev
@@ -2948,9 +3001,7 @@ argument_list|,
 literal|"battery initialization failed, giving up\n"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ACPI_VPRINT
 argument_list|(
 name|dev
@@ -2967,7 +3018,12 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
+name|sc
+operator|->
+name|initializing
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -3006,6 +3062,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 return|return
 operator|(
 name|acpi_cmbat_get_total_battinfo
@@ -3014,6 +3071,7 @@ name|battinfo
 argument_list|)
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|acpi_cmbat_info_expired
@@ -3034,9 +3092,11 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 goto|goto
 name|out
 goto|;
+block|}
 block|}
 name|error
 operator|=
