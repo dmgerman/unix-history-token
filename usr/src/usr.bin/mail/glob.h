@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	2.8 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	2.9 %G%;  */
 end_comment
 
 begin_decl_stmt
@@ -545,6 +545,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* List of alternate names for user */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|localnames
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* List of aliases for our local host */
 end_comment
 
 begin_decl_stmt
