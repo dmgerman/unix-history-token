@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* install-info -- create Info directory entry(ies) for an Info file.    Copyright (C) 1996 Free Software Foundation, Inc.  $Id: install-info.c,v 1.1.1.1 1997/01/11 02:12:38 jmacd Exp $  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* install-info -- create Info directory entry(ies) for an Info file.    Copyright (C) 1996 Free Software Foundation, Inc.  $Id: install-info.c 1.1 Sun, 12 Jan 1997 00:21:13 -0800 jmacd $  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -1090,7 +1090,7 @@ parameter_list|()
 block|{
 name|printf
 argument_list|(
-literal|"%s [OPTION]... [INFO-FILE [DIR-FILE]]\n\   Install INFO-FILE in the Info directory file DIR-FILE.\n\ \n\ Options:\n\ --delete          Delete existing entries in INFO-FILE;\n\                     don't insert any new entries.\n\ --dir-file=NAME   Specify file name of Info directory file.\n\                     This is equivalent to using the DIR-FILE argument.\n\ --entry=TEXT      Insert TEXT as an Info directory entry.\n\                     TEXT should have the form of an Info menu item line\n\                     plus zero or more extra lines starting with whitespace.\n\                     If you specify more than one entry, they are all added.\n\                     If you don't specify any entries, they are determined\n\                     from information in the Info file itself.\n\ --help            Display this help and exit.\n\ --info-file=FILE  Specify Info file to install in the directory.\n\                     This is equivalent to using the INFO-FILE argument.\n\ --info-dir=DIR    Same as --dir-file=DIR/dir.\n\ --item=TEXT       Same as --entry TEXT.\n\                     An Info directory entry is actually a menu item.\n\ --quiet           Suppress warnings.\n\ --remove          Same as --delete.\n\ --section=SEC     Put this file's entries in section SEC of the directory.\n\                     If you specify more than one section, all the entries\n\                     are added in each of the sections.\n\                     If you don't specify any sections, they are determined\n\                     from information in the Info file itself.\n\ --version         Display version information and exit.\n\ \n\ Email bug reports to bug-texinfo@prep.ai.mit.edu.\n\ "
+literal|"%s [OPTION]... [INFO-FILE [DIR-FILE]]\n\   Install INFO-FILE in the Info directory file DIR-FILE.\n\ \n\ Options:\n\ --delete          Delete existing entries in INFO-FILE;\n\                     don't insert any new entries.\n\ --defentry=TEXT   Like --entry, but only use TEXT if an entry\n\                     is not present in INFO-FILE.\n\ --defsection=TEXT Like --section, but only use TEXT if a section\n\                     is not present in INFO-FILE.\n\ --dir-file=NAME   Specify file name of Info directory file.\n\                     This is equivalent to using the DIR-FILE argument.\n\ --entry=TEXT      Insert TEXT as an Info directory entry.\n\                     TEXT should have the form of an Info menu item line\n\                     plus zero or more extra lines starting with whitespace.\n\                     If you specify more than one entry, they are all added.\n\                     If you don't specify any entries, they are determined\n\                     from information in the Info file itself.\n\ --forceentry=TEXT Like --entry, but ignore any entry in INFO-FILE.\n\ --help            Display this help and exit.\n\ --info-file=FILE  Specify Info file to install in the directory.\n\                     This is equivalent to using the INFO-FILE argument.\n\ --info-dir=DIR    Same as --dir-file=DIR/dir.\n\ --item=TEXT       Same as --entry TEXT.\n\                     An Info directory entry is actually a menu item.\n\ --quiet           Suppress warnings.\n\ --remove          Same as --delete.\n\ --section=SEC     Put this file's entries in section SEC of the directory.\n\                     If you specify more than one section, all the entries\n\                     are added in each of the sections.\n\                     If you don't specify any sections, they are determined\n\                     from information in the Info file itself.\n\ --version         Display version information and exit.\n\ \n\ Email bug reports to bug-texinfo@prep.ai.mit.edu.\n\ "
 argument_list|,
 name|progname
 argument_list|)
@@ -1160,6 +1160,16 @@ block|,
 name|NULL
 block|,
 literal|'e'
+block|}
+block|,
+block|{
+literal|"forceentry"
+block|,
+name|required_argument
+block|,
+name|NULL
+block|,
+literal|'f'
 block|}
 block|,
 block|{
@@ -1380,6 +1390,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|entry_force
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|section_default
 init|=
 literal|0
@@ -1494,6 +1509,35 @@ literal|"/dir"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'f'
+case|:
+name|entry_force
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Must provide entry name.\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
+name|suggest_asking_for_help
+argument_list|()
+expr_stmt|;
+block|}
 case|case
 literal|'E'
 case|:
@@ -1730,6 +1774,14 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|entry_force
+condition|)
+name|entry_default
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Interpret the non-option arguments as file names.  */
 for|for
 control|(
@@ -1997,11 +2049,16 @@ block|}
 comment|/* Now find the directory entries specified in the file      and put them on entries_to_add.  But not if entries      were specified explicitly with command options.  */
 if|if
 condition|(
+operator|!
+name|entry_force
+operator|&&
+operator|(
 name|entries_to_add
 operator|==
 literal|0
 operator|||
 name|entry_default
+operator|)
 condition|)
 block|{
 name|char
@@ -2913,12 +2970,27 @@ argument_list|,
 name|infilelen_sans_info
 argument_list|)
 operator|&&
+operator|(
 name|p
 index|[
 name|infilelen_sans_info
 index|]
 operator|==
 literal|')'
+operator|||
+name|strncmp
+argument_list|(
+name|p
+operator|+
+name|infilelen_sans_info
+argument_list|,
+literal|".info)"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 name|dir_lines
 index|[
