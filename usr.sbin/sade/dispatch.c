@@ -172,12 +172,17 @@ block|,
 name|configXDesktop
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|WITH_SLICES
 block|{
 literal|"diskPartitionEditor"
 block|,
 name|diskPartitionEditor
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"diskPartitionWrite"
 block|,
