@@ -160,11 +160,11 @@ expr|struct
 name|sockaddr
 operator|*
 operator|)
-operator|&
 name|sin
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|sin
 argument_list|)
 argument_list|)
@@ -292,8 +292,12 @@ name|sin
 operator|.
 name|sin_port
 operator|=
-literal|0
+name|htons
+argument_list|(
+literal|8080
+argument_list|)
 expr_stmt|;
+comment|/* Arbitrary */
 comment|/* 	 * First run the system call test outside of a jail. 	 */
 name|test
 argument_list|(
