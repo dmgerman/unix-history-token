@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -203,23 +197,6 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
-if|if
-condition|(
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|""
-argument_list|)
-operator|!=
-operator|-
-literal|1
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 operator|(
 name|void
 operator|)
