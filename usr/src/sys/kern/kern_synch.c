@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.21	82/09/08	*/
+comment|/*	kern_synch.c	4.22	82/10/10	*/
 end_comment
 
 begin_include
@@ -57,18 +57,6 @@ directive|include
 file|"../h/pte.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../h/inline.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -103,6 +91,16 @@ include|#
 directive|include
 file|"../h/buf.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
+end_include
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_comment
 comment|/*  * Force switch among equal priority processes every 100ms.  */

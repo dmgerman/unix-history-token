@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.39	82/09/12	*/
+comment|/*	kern_proc.c	4.40	82/10/10	*/
 end_comment
 
 begin_include
@@ -19,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mtpr.h"
 end_include
 
 begin_include
@@ -2395,6 +2389,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* THIS SHOULD BE DONE AT A LOWER LEVEL, IF AT ALL */
+include|#
+directive|include
+file|"../vax/mtpr.h"
+comment|/* XXX */
 name|mtpr
 argument_list|(
 name|TBIA

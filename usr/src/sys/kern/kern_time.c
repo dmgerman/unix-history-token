@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_time.c	5.7	82/09/11	*/
+comment|/*	kern_time.c	5.8	82/10/10	*/
 end_comment
 
 begin_include
@@ -1546,7 +1546,7 @@ name|tp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|t
+name|tb
 argument_list|)
 argument_list|)
 operator|<

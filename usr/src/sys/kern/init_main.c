@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.38	82/09/12	*/
+comment|/*	init_main.c	4.39	82/10/10	*/
 end_comment
 
 begin_include
@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/pte.h"
 end_include
 
@@ -140,6 +134,18 @@ directive|include
 file|"../h/quota.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|user
+name|u
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* have to declare it somewhere! */
+end_comment
+
 begin_comment
 comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 2 to page out  *	     - process 1 execute bootstrap  *  * loop at loc 13 (0xd) in user mode -- /etc/init  *	cannot be executed.  */
 end_comment
@@ -189,15 +195,11 @@ name|p
 operator|->
 name|p_p0br
 operator|=
-operator|(
-expr|struct
-name|pte
-operator|*
-operator|)
-name|mfpr
-argument_list|(
-name|P0BR
-argument_list|)
+name|u
+operator|.
+name|u_pcb
+operator|.
+name|pcb_p0br
 expr_stmt|;
 name|p
 operator|->
@@ -712,7 +714,7 @@ name|szicode
 argument_list|)
 argument_list|)
 argument_list|,
-name|P0BR
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -786,7 +788,7 @@ name|szmcode
 argument_list|)
 argument_list|)
 argument_list|,
-name|P0BR
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
