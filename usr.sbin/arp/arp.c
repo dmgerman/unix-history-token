@@ -134,13 +134,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/iso88025.h>
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<net/iso88025.h>
 end_include
 
 begin_include
@@ -3058,12 +3058,15 @@ literal|":%x"
 argument_list|,
 name|ntohs
 argument_list|(
+operator|*
+operator|(
 name|trld
 operator|->
 name|trld_route
 index|[
 name|seg
 index|]
+operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
