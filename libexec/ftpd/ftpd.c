@@ -9492,6 +9492,8 @@ block|{
 name|int
 name|c
 decl_stmt|,
+name|cp
+decl_stmt|,
 name|filefd
 decl_stmt|,
 name|netfd
@@ -9514,6 +9516,10 @@ block|{
 case|case
 name|TYPE_A
 case|:
+name|cp
+operator|=
+literal|'\0'
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -9543,6 +9549,10 @@ condition|(
 name|c
 operator|==
 literal|'\n'
+operator|&&
+name|cp
+operator|!=
+literal|'\r'
 condition|)
 block|{
 if|if
@@ -9575,6 +9585,10 @@ name|c
 argument_list|,
 name|outstr
 argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|c
 expr_stmt|;
 block|}
 if|if
