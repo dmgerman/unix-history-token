@@ -814,6 +814,9 @@ case|:
 case|case
 name|E1000_DEV_ID_82546EB_FIBER
 case|:
+case|case
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
+case|:
 name|hw
 operator|->
 name|mac_type
@@ -999,7 +1002,7 @@ name|em_82547
 operator|)
 condition|)
 block|{
-name|E1000_WRITE_REG
+name|E1000_WRITE_REG_IO
 argument_list|(
 name|hw
 argument_list|,
@@ -1018,24 +1021,29 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-if|if
+switch|switch
 condition|(
-operator|(
 name|hw
 operator|->
 name|mac_type
-operator|>
-name|em_82543
-operator|)
-operator|&&
-operator|(
-name|hw
-operator|->
-name|mac_type
-operator|!=
-name|em_82547
-operator|)
 condition|)
+block|{
+case|case
+name|em_82544
+case|:
+case|case
+name|em_82540
+case|:
+case|case
+name|em_82545
+case|:
+case|case
+name|em_82546
+case|:
+case|case
+name|em_82541
+case|:
+comment|/* These controllers can't ack the 64-bit write when issuing the              * reset, so use IO-mapping as a workaround to issue the reset */
 name|E1000_WRITE_REG_IO
 argument_list|(
 name|hw
@@ -1049,7 +1057,8 @@ name|E1000_CTRL_RST
 operator|)
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+default|default:
 name|E1000_WRITE_REG
 argument_list|(
 name|hw
@@ -1063,6 +1072,8 @@ name|E1000_CTRL_RST
 operator|)
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 comment|/* Force a reload from the EEPROM if necessary */
 if|if
 condition|(
@@ -1188,19 +1199,11 @@ name|IGP_ACTIVITY_LED_MASK
 expr_stmt|;
 name|led_ctrl
 operator||=
+operator|(
 name|IGP_ACTIVITY_LED_ENABLE
-expr_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac_type
-operator|==
-name|em_82547
-condition|)
-name|led_ctrl
-operator||=
+operator||
 name|IGP_LED3_MODE
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -2450,7 +2453,8 @@ parameter_list|)
 block|{
 name|uint32_t
 name|ctrl
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|led_ctrl
 decl_stmt|;
 name|int32_t
@@ -2647,19 +2651,11 @@ name|IGP_ACTIVITY_LED_MASK
 expr_stmt|;
 name|led_ctrl
 operator||=
+operator|(
 name|IGP_ACTIVITY_LED_ENABLE
-expr_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac_type
-operator|==
-name|em_82547
-condition|)
-name|led_ctrl
-operator||=
+operator||
 name|IGP_LED3_MODE
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -2888,7 +2884,7 @@ name|phy_data
 operator||=
 name|M88E1000_PSCR_ASSERT_CRS_ON_TX
 expr_stmt|;
-comment|/* Options:      *   MDI/MDI-X = 0 (default)      *   0 - Auto for all speeds      *   1 - MDI mode      *   2 - MDI-X mode      *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes)      */
+comment|/* Options:          *   MDI/MDI-X = 0 (default)          *   0 - Auto for all speeds          *   1 - MDI mode          *   2 - MDI-X mode          *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes)          */
 name|phy_data
 operator|&=
 operator|~
@@ -2935,7 +2931,7 @@ name|M88E1000_PSCR_AUTO_X_MODE
 expr_stmt|;
 break|break;
 block|}
-comment|/* Options:      *   disable_polarity_correction = 0 (default)      *       Automatic Correction for Reversed Cable Polarity      *   0 - Disabled      *   1 - Enabled      */
+comment|/* Options:          *   disable_polarity_correction = 0 (default)          *       Automatic Correction for Reversed Cable Polarity          *   0 - Disabled          *   1 - Enabled          */
 name|phy_data
 operator|&=
 operator|~
@@ -2977,7 +2973,7 @@ operator|-
 name|E1000_ERR_PHY
 return|;
 block|}
-comment|/* Force TX_CLK in the Extended PHY Specific Control Register      * to 25MHz clock.      */
+comment|/* Force TX_CLK in the Extended PHY Specific Control Register          * to 25MHz clock.          */
 if|if
 condition|(
 name|em_read_phy_reg
@@ -4080,7 +4076,7 @@ operator|-
 name|E1000_ERR_PHY
 return|;
 block|}
-comment|/* Clear Auto-Crossover to force MDI manually. M88E1000 requires MDI      * forced whenever speed are duplex are forced.      */
+comment|/* Clear Auto-Crossover to force MDI manually. M88E1000 requires MDI          * forced whenever speed are duplex are forced.          */
 name|phy_data
 operator|&=
 operator|~
@@ -4125,7 +4121,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Clear Auto-Crossover to force MDI manually.  IGP requires MDI      * forced whenever speed or duplex are forced.      */
+comment|/* Clear Auto-Crossover to force MDI manually.  IGP requires MDI          * forced whenever speed or duplex are forced.          */
 if|if
 condition|(
 name|em_read_phy_reg
@@ -4435,7 +4431,7 @@ operator|==
 name|em_phy_m88
 condition|)
 block|{
-comment|/* Because we reset the PHY above, we need to re-force TX_CLK in the      * Extended PHY Specific Control Register to 25MHz clock.  This value      * defaults back to a 2.5MHz clock when the PHY is reset.      */
+comment|/* Because we reset the PHY above, we need to re-force TX_CLK in the          * Extended PHY Specific Control Register to 25MHz clock.  This value          * defaults back to a 2.5MHz clock when the PHY is reset.          */
 if|if
 condition|(
 name|em_read_phy_reg
@@ -4489,7 +4485,7 @@ operator|-
 name|E1000_ERR_PHY
 return|;
 block|}
-comment|/* In addition, because of the s/w reset above, we need to enable CRS on      * TX.  This must be set for both full and half duplex operation.      */
+comment|/* In addition, because of the s/w reset above, we need to enable CRS on          * TX.  This must be set for both full and half duplex operation.          */
 if|if
 condition|(
 name|em_read_phy_reg
@@ -4718,7 +4714,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Set up speed in the Device Control register depending on      * negotiated values.      */
+comment|/* Set up speed in the Device Control register depending on          * negotiated values.          */
 if|if
 condition|(
 operator|(
@@ -4797,7 +4793,7 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* Set up speed in the Device Control register depending on      * negotiated values.      */
+comment|/* Set up speed in the Device Control register depending on          * negotiated values.          */
 if|if
 condition|(
 operator|(
@@ -7187,7 +7183,8 @@ name|uint32_t
 name|ctrl
 decl_stmt|,
 name|ctrl_ext
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|led_ctrl
 decl_stmt|;
 name|DEBUGFUNC
@@ -7375,19 +7372,11 @@ name|IGP_ACTIVITY_LED_MASK
 expr_stmt|;
 name|led_ctrl
 operator||=
+operator|(
 name|IGP_ACTIVITY_LED_ENABLE
-expr_stmt|;
-if|if
-condition|(
-name|hw
-operator|->
-name|mac_type
-operator|==
-name|em_82547
-condition|)
-name|led_ctrl
-operator||=
+operator||
 name|IGP_LED3_MODE
+operator|)
 expr_stmt|;
 name|E1000_WRITE_REG
 argument_list|(
@@ -7574,12 +7563,6 @@ operator|<<
 literal|16
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MPW3
-comment|/* Tabor/Mpw - changed from 2 to 20 since it did not read the low word in      * the mpw, might be fixed in A0 */
-endif|#
-directive|endif
 name|usec_delay
 argument_list|(
 literal|20
@@ -7635,27 +7618,6 @@ operator|&
 operator|~
 name|PHY_REVISION_MASK
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MPW3
-comment|/* Tabor MPW3 workaround, expect to be removed in Tabor A0 */
-comment|/* workaround for MPW - IGP PHYID is incorrect! */
-if|if
-condition|(
-name|hw
-operator|->
-name|phy_id
-operator|==
-literal|0x02A80400
-condition|)
-name|hw
-operator|->
-name|phy_id
-operator|=
-literal|0x02A80380
-expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|hw
@@ -7694,25 +7656,6 @@ name|match
 operator|=
 name|TRUE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|MPW3
-comment|/* MPW3 only, expected to be removed in Tabor A0 */
-comment|/* MPW driver only - IGP should work with Cordova */
-if|if
-condition|(
-name|hw
-operator|->
-name|phy_id
-operator|==
-name|IGP01E1000_I_PHY_ID
-condition|)
-name|match
-operator|=
-name|TRUE
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|em_82540
@@ -13194,6 +13137,9 @@ case|case
 name|E1000_DEV_ID_82546EB_COPPER
 case|:
 case|case
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
+case|:
+case|case
 name|E1000_DEV_ID_82541EI
 case|:
 case|case
@@ -13306,6 +13252,9 @@ name|E1000_DEV_ID_82546EB_COPPER
 case|:
 case|case
 name|E1000_DEV_ID_82546EB_FIBER
+case|:
+case|case
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
 case|:
 case|case
 name|E1000_DEV_ID_82541EI
@@ -13481,6 +13430,9 @@ case|case
 name|E1000_DEV_ID_82546EB_COPPER
 case|:
 case|case
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
+case|:
+case|case
 name|E1000_DEV_ID_82541EI
 case|:
 case|case
@@ -13651,6 +13603,9 @@ name|E1000_DEV_ID_82545EM_COPPER
 case|:
 case|case
 name|E1000_DEV_ID_82546EB_COPPER
+case|:
+case|case
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
 case|:
 case|case
 name|E1000_DEV_ID_82541EI
@@ -14842,6 +14797,33 @@ name|em_bus_type_pcix
 else|:
 name|em_bus_type_pci
 expr_stmt|;
+if|if
+condition|(
+name|hw
+operator|->
+name|device_id
+operator|==
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
+condition|)
+block|{
+name|hw
+operator|->
+name|bus_speed
+operator|=
+operator|(
+name|hw
+operator|->
+name|bus_type
+operator|==
+name|em_bus_type_pci
+operator|)
+condition|?
+name|em_bus_speed_66
+else|:
+name|em_bus_speed_120
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|hw

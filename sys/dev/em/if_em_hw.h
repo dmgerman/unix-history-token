@@ -219,6 +219,8 @@ name|em_bus_speed_66
 block|,
 name|em_bus_speed_100
 block|,
+name|em_bus_speed_120
+block|,
 name|em_bus_speed_133
 block|,
 name|em_bus_speed_reserved
@@ -1579,6 +1581,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_82546EB_QUAD_COPPER
+value|0x101D
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_DEV_ID_82541EI
 value|0x1013
 end_define
@@ -1601,7 +1610,7 @@ begin_define
 define|#
 directive|define
 name|NUM_DEV_IDS
-value|19
+value|20
 end_define
 
 begin_define
@@ -2878,7 +2887,7 @@ value|0x0001C
 end_define
 
 begin_comment
-comment|/* Flash Access Register - RW */
+comment|/* Flash Access - RW */
 end_comment
 
 begin_define
@@ -4210,6 +4219,13 @@ define|#
 directive|define
 name|E1000_82542_CTRL
 value|E1000_CTRL
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82542_CTRL_DUP
+value|E1000_CTRL_DUP
 end_define
 
 begin_define
@@ -9660,13 +9676,6 @@ define|#
 directive|define
 name|E1000_HDX_COLLISION_DISTANCE
 value|E1000_COLLISION_DISTANCE
-end_define
-
-begin_define
-define|#
-directive|define
-name|E1000_GB_HDX_COLLISION_DISTANCE
-value|512
 end_define
 
 begin_define

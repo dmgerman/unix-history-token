@@ -208,6 +208,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_bdg.h"
 end_include
 
@@ -222,7 +234,7 @@ comment|/* Tunables */
 end_comment
 
 begin_comment
-comment|/*  * TxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  */
+comment|/*  * TxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of transmit descriptors allocated by the driver.  *   Increasing this value allows the driver to queue more transmits. Each  *   descriptor is 16 bytes.  */
 end_comment
 
 begin_define
@@ -233,7 +245,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*  * RxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *            80-4096 for 82540, 82544, 82545, and 82546-based adapters  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *  */
+comment|/*  * RxDescriptors  * Valid Range: 80-256 for 82542 and 82543-based adapters  *              80-4096 for others  * Default Value: 256  *   This value is the number of receive descriptors allocated by the driver.  *   Increasing this value allows the driver to buffer more incoming packets.  *   Each descriptor is 16 bytes.  A receive buffer is also allocated for each  *   descriptor. The maximum MTU size is 16110.  *  */
 end_comment
 
 begin_define
@@ -255,7 +267,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * TxAbsIntDelay (82540, 82545, and 82546-based adapters only)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if TxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with TxIntDelay, may improve traffic throughput in specific  *   network conditions.  */
+comment|/*  * TxAbsIntDelay (Not valid for 82542 and 82543)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   transmit interrupt is generated. Useful only if TxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is sent on the wire within the set amount of time.  Proper tuning,  *   along with TxIntDelay, may improve traffic throughput in specific  *   network conditions.  */
 end_comment
 
 begin_define
@@ -277,7 +289,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * RxAbsIntDelay (82540, 82545, and 82546-based adapters only)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if RxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with RxIntDelay, may improve traffic throughput in specific network  *   conditions.  */
+comment|/*  * RxAbsIntDelay (Not valid for 82542 and 82543)  * Valid Range: 0-65535 (0=off)  * Default Value: 64  *   This value, in units of 1.024 microseconds, limits the delay in which a  *   receive interrupt is generated. Useful only if RxIntDelay is non-zero,  *   this value ensures that an interrupt is generated after the initial  *   packet is received within the set amount of time.  Proper tuning,  *   along with RxIntDelay, may improve traffic throughput in specific network  *   conditions.  */
 end_comment
 
 begin_define
@@ -354,7 +366,7 @@ begin_define
 define|#
 directive|define
 name|WAIT_FOR_AUTO_NEG_DEFAULT
-value|1
+value|0
 end_define
 
 begin_comment
@@ -952,6 +964,15 @@ name|lmp
 decl_stmt|;
 name|u_int16_t
 name|tx_fifo_head
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|sysctl_ctx
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|sysctl_tree
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
