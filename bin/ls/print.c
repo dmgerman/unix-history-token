@@ -85,6 +85,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<langinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -1534,6 +1540,31 @@ name|char
 modifier|*
 name|format
 decl_stmt|;
+specifier|static
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|d_first
+operator|<
+literal|0
+condition|)
+name|d_first
+operator|=
+operator|(
+operator|*
+name|nl_langinfo
+argument_list|(
+name|D_MD_ORDER
+argument_list|)
+operator|==
+literal|'d'
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|now
@@ -1551,7 +1582,6 @@ define|#
 directive|define
 name|SIXMONTHS
 value|((365 / 2) * 86400)
-comment|/* "%Ef" is a FreeBSD strftime definition for "%e %b" or "%b %e". 	 * Actually format is locale sensitive. 	 */
 if|if
 condition|(
 name|f_sectime
@@ -1559,7 +1589,11 @@ condition|)
 comment|/* mmm dd hh:mm:ss yyyy || dd mmm hh:mm:ss yyyy */
 name|format
 operator|=
-literal|"%Ef %T %Y "
+name|d_first
+condition|?
+literal|"%e %b %T %Y "
+else|:
+literal|"%b %e %T %Y "
 expr_stmt|;
 elseif|else
 if|if
@@ -1579,13 +1613,21 @@ condition|)
 comment|/* mmm dd hh:mm || dd mmm hh:mm */
 name|format
 operator|=
-literal|"%Ef %R "
+name|d_first
+condition|?
+literal|"%e %b %R "
+else|:
+literal|"%b %e %R "
 expr_stmt|;
 else|else
 comment|/* mmm dd  yyyy || dd mmm  yyyy */
 name|format
 operator|=
-literal|"%Ef  %Y "
+name|d_first
+condition|?
+literal|"%e %b  %Y "
+else|:
+literal|"%b %e  %Y "
 expr_stmt|;
 name|strftime
 argument_list|(
