@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.84	82/12/30	*/
+comment|/*	tcp_input.c	1.85	83/01/04	*/
 end_comment
 
 begin_include
@@ -958,13 +958,6 @@ name|struct
 name|mbuf
 modifier|*
 name|am
-init|=
-name|m_get
-argument_list|(
-name|M_DONTWAIT
-argument_list|,
-name|MT_SONAME
-argument_list|)
 decl_stmt|;
 specifier|register
 name|struct
@@ -972,25 +965,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-if|if
-condition|(
-name|am
-operator|==
-literal|0
-condition|)
-goto|goto
-name|drop
-goto|;
-name|am
-operator|->
-name|m_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tiflags
@@ -1022,6 +996,34 @@ condition|)
 goto|goto
 name|drop
 goto|;
+name|am
+operator|=
+name|m_get
+argument_list|(
+name|M_DONTWAIT
+argument_list|,
+name|MT_SONAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|am
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|drop
+goto|;
+name|am
+operator|->
+name|m_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+expr_stmt|;
 name|sin
 operator|=
 name|mtod
@@ -1069,7 +1071,7 @@ name|inp_laddr
 operator|.
 name|s_addr
 operator|==
-literal|0
+name|INADDR_ANY
 condition|)
 name|inp
 operator|->
@@ -2114,7 +2116,6 @@ name|tp
 operator|->
 name|t_rtt
 expr_stmt|;
-comment|/* printf("rtt %d srtt*100 now %d\n", tp->t_rtt, (int)(tp->t_srtt*100)); */
 name|tp
 operator|->
 name|t_rtt
@@ -3820,17 +3821,6 @@ name|m
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|SBCHECK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|,
-literal|"tcp_input before"
-argument_list|)
-expr_stmt|;
 name|sbappend
 argument_list|(
 operator|&
@@ -3841,17 +3831,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|SBCHECK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|,
-literal|"tcp_input after"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 do|while
 condition|(
