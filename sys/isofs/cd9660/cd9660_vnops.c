@@ -96,13 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/vnode_pager.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vnode_pager.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -3175,9 +3175,11 @@ expr_stmt|;
 else|else
 name|symname
 operator|=
-name|zalloc
+name|uma_zalloc
 argument_list|(
 name|namei_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Ok, we just gathering a symbolic name in SL record. 	 */
@@ -3206,7 +3208,7 @@ name|uio_segflg
 operator|!=
 name|UIO_SYSSPACE
 condition|)
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
@@ -3251,7 +3253,7 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|namei_zone
 argument_list|,
