@@ -274,6 +274,8 @@ name|dev_pager_dealloc
 block|,
 name|dev_pager_getpage
 block|,
+literal|0
+block|,
 name|dev_pager_putpage
 block|,
 name|dev_pager_haspage
@@ -458,7 +460,7 @@ condition|(
 name|foff
 operator|&
 operator|(
-name|NBPG
+name|PAGE_SIZE
 operator|-
 literal|1
 operator|)
@@ -978,6 +980,9 @@ name|dev_t
 name|dev
 decl_stmt|;
 name|int
+name|s
+decl_stmt|;
+name|int
 argument_list|(
 operator|*
 name|mapfunc
@@ -1155,6 +1160,11 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|vm_page_insert
 argument_list|(
 name|page
@@ -1162,6 +1172,11 @@ argument_list|,
 name|object
 argument_list|,
 name|offset
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|PAGE_WAKEUP

@@ -438,7 +438,7 @@ begin_if
 if|#
 directive|if
 name|__GNUC__
-operator|>
+operator|>=
 literal|2
 end_if
 
@@ -472,7 +472,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|thread_sleep_((a), (b), "vmsleep")
+value|thread_sleep_((a), (b), "vmslp")
 end_define
 
 begin_endif
