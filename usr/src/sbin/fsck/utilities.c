@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.9 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -806,7 +806,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dev_bsize
+name|havesb
 operator|&&
 name|sblk
 operator|.
@@ -1092,6 +1092,10 @@ condition|(
 name|secsize
 operator|!=
 name|dev_bsize
+operator|&&
+name|dev_bsize
+operator|!=
+literal|1
 condition|)
 name|printf
 argument_list|(
