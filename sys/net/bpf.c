@@ -1614,7 +1614,7 @@ name|si_drv1
 operator|=
 literal|0
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|d
 argument_list|,
