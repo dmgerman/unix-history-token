@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.14 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2754,13 +2754,52 @@ name|ss_datasum
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Now, write rest of segments containing superblocks */
+comment|/* Now write the summary block for the next partial so it's invalid */
 name|lfsp
 operator|->
 name|lfs_tstamp
 operator|=
 literal|0
 expr_stmt|;
+name|off
+operator|+=
+name|lfsp
+operator|->
+name|lfs_bsize
+expr_stmt|;
+name|sp
+operator|->
+name|ss_sumsum
+operator|=
+name|cksum
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|ss_datasum
+argument_list|,
+name|LFS_SUMMARY_SIZE
+operator|-
+sizeof|sizeof
+argument_list|(
+name|sp
+operator|->
+name|ss_sumsum
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|put
+argument_list|(
+name|fd
+argument_list|,
+name|off
+argument_list|,
+name|sp
+argument_list|,
+name|LFS_SUMMARY_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* Now, write rest of segments containing superblocks */
 name|lfsp
 operator|->
 name|lfs_cksum
@@ -3160,15 +3199,12 @@ name|lfsp
 operator|->
 name|lfs_fsbtodb
 expr_stmt|;
-comment|/* If we ever need something longer than 32 bits, this changes */
 name|dip
 operator|->
 name|di_size
 operator|=
 operator|(
-name|dip
-operator|->
-name|di_blocks
+name|nblocks
 operator|<<
 name|lfsp
 operator|->
