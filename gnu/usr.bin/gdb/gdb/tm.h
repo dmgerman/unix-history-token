@@ -98,39 +98,6 @@ value|STREQ (name, "_DYNAMIC")
 end_define
 
 begin_comment
-comment|/* FRAME_CHAIN takes a frame's nominal address and produces the frame's    chain-pointer.    In the case of the i386, the frame's nominal address    is the address of a 4-byte word containing the calling frame's address.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|CORE_ADDR
-name|fbsd_kern_frame_chain
-parameter_list|(
-name|struct
-name|frame_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_undef
-undef|#
-directive|undef
-name|FRAME_CHAIN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FRAME_CHAIN
-parameter_list|(
-name|thisframe
-parameter_list|)
-define|\
-value|(kernel_debugging ? fbsd_kern_frame_chain(thisframe) : \   ((thisframe)->signal_handler_caller \    ? (thisframe)->frame \    : (!inside_entry_file ((thisframe)->pc) \       ? read_memory_integer ((thisframe)->frame, 4) \       : 0)))
-end_define
-
-begin_comment
 comment|/* Saved Pc.  Get it from sigcontext if within sigtramp.  */
 end_comment
 
