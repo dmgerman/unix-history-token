@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.7 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,6 +616,19 @@ operator|->
 name|e_errorqueue
 operator|==
 name|NULL
+operator|&&
+name|strcmp
+argument_list|(
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+argument_list|,
+literal|"<>"
+argument_list|)
+operator|!=
+literal|0
 condition|)
 operator|(
 name|void
@@ -676,6 +689,20 @@ name|e
 operator|->
 name|e_errorqueue
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* this is an error-error */
+name|state
+operator|=
+name|ESM_USRTMP
+expr_stmt|;
+break|break;
+block|}
 block|}
 else|else
 block|{
@@ -1571,11 +1598,16 @@ end_expr_stmt
 begin_expr_stmt
 name|ee
 operator|->
-name|e_sender
+name|e_returnpath
 operator|=
+literal|"<>"
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ee
 operator|->
-name|e_returnpath
+name|e_sender
 operator|=
 name|newstr
 argument_list|(
