@@ -391,7 +391,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|rmskey
+name|rmopie
 parameter_list|(
 name|char
 specifier|const
@@ -2286,8 +2286,8 @@ name|PWALTDIR
 argument_list|()
 condition|)
 block|{
-comment|/* 				 * Remove skey record from /etc/skeykeys 		        	 */
-name|rmskey
+comment|/* 				 * Remove opie record from /etc/opiekeys 		        	 */
+name|rmopie
 argument_list|(
 name|pwd
 operator|->
@@ -7525,7 +7525,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|rmskey
+name|rmopie
 parameter_list|(
 name|char
 specifier|const
@@ -7536,10 +7536,10 @@ block|{
 specifier|static
 specifier|const
 name|char
-name|etcskey
+name|etcopie
 index|[]
 init|=
-literal|"/etc/skeykeys"
+literal|"/etc/opiekeys"
 decl_stmt|;
 name|FILE
 modifier|*
@@ -7547,7 +7547,7 @@ name|fp
 init|=
 name|fopen
 argument_list|(
-name|etcskey
+name|etcopie
 argument_list|,
 literal|"r+"
 argument_list|)
