@@ -354,7 +354,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* no link-layer encapsulation */
+comment|/* BSD loopback encapsulation */
 end_comment
 
 begin_define
