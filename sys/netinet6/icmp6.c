@@ -2212,6 +2212,9 @@ operator|*
 name|nicmp6
 argument_list|)
 decl_stmt|;
+name|int
+name|n0len
+decl_stmt|;
 comment|/* 			 * Prepare an internal mbuf. m_pullup() doesn't 			 * always copy the length we specified. 			 */
 if|if
 condition|(
@@ -2294,6 +2297,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|n0len
+operator|=
+name|n0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+comment|/* save for use below */
 name|M_MOVE_PKTHDR
 argument_list|(
 name|n
@@ -2360,12 +2372,7 @@ expr|struct
 name|ip6_hdr
 argument_list|)
 expr_stmt|;
-name|n
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
+comment|/* new mbuf contains only ipv6+icmpv6 headers */
 name|n
 operator|->
 name|m_len
@@ -2392,17 +2399,20 @@ name|icmp6_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* recalculate complete packet size */
 name|n
 operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|+=
-name|n0
-operator|->
-name|m_pkthdr
-operator|.
-name|len
+operator|=
+name|n0len
+operator|+
+operator|(
+name|noff
+operator|-
+name|off
+operator|)
 expr_stmt|;
 name|n
 operator|->
