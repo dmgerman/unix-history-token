@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cb.c	4.1 (Berkeley) %G%"
+literal|"@(#)cb.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,6 +340,13 @@ name|int
 name|c
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|getstr
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function
 name|main
@@ -1286,7 +1293,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gets
+name|getstr
 argument_list|()
 operator|)
 operator|!=
@@ -1304,7 +1311,7 @@ condition|(
 operator|(
 name|c
 operator|=
-name|gets
+name|getstr
 argument_list|()
 operator|)
 operator|!=
@@ -1781,7 +1788,7 @@ block|}
 end_block
 
 begin_macro
-name|gets
+name|getstr
 argument_list|()
 end_macro
 
