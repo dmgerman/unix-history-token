@@ -3986,9 +3986,20 @@ name|nintr
 decl_stmt|,
 name|inamlen
 decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|istrnamlen
+decl_stmt|;
+name|size_t
+name|clen
+decl_stmt|;
 name|char
 modifier|*
 name|intrname
+decl_stmt|,
+modifier|*
+name|tintrname
 decl_stmt|;
 name|uptime
 operator|=
@@ -4088,12 +4099,60 @@ operator|)
 name|inamlen
 argument_list|)
 expr_stmt|;
+name|tintrname
+operator|=
+name|intrname
+expr_stmt|;
+name|istrnamlen
+operator|=
+literal|14
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nintr
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|clen
+operator|=
+name|strlen
+argument_list|(
+name|tintrname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|clen
+operator|>
+name|istrnamlen
+condition|)
+name|istrnamlen
+operator|=
+name|clen
+expr_stmt|;
+name|tintrname
+operator|+=
+name|clen
+operator|+
+literal|1
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-14s %20s %10s\n"
+literal|"%-*s %20s %10s\n"
+argument_list|,
+name|istrnamlen
 argument_list|,
 literal|"interrupt"
 argument_list|,
@@ -4131,7 +4190,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-14s %20lu %10lu\n"
+literal|"%-*s %20lu %10lu\n"
+argument_list|,
+name|istrnamlen
 argument_list|,
 name|intrname
 argument_list|,
@@ -4165,7 +4226,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-14s %20llu %10llu\n"
+literal|"%-*s %20llu %10llu\n"
+argument_list|,
+name|istrnamlen
 argument_list|,
 literal|"Total"
 argument_list|,
