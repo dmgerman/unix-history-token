@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.88 2000/04/25 14:28:13 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.90 2000/05/08 18:28:46 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -9566,6 +9566,14 @@ name|sc_addr
 operator|)
 argument_list|)
 expr_stmt|;
+name|std
+operator|=
+name|NULL
+expr_stmt|;
+name|sed
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|addr
@@ -9984,6 +9992,12 @@ operator|)
 return|;
 name|bad
 label|:
+if|if
+condition|(
+name|std
+operator|!=
+name|NULL
+condition|)
 name|ohci_free_std
 argument_list|(
 name|sc
@@ -9993,6 +10007,12 @@ argument_list|)
 expr_stmt|;
 name|bad1
 label|:
+if|if
+condition|(
+name|sed
+operator|!=
+name|NULL
+condition|)
 name|ohci_free_sed
 argument_list|(
 name|sc
