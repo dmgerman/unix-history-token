@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|INTRCNT_OTHER_LEN
-value|48
+value|240
 end_define
 
 begin_define
