@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.32 1998/04/05 13:10:11 ache Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.33 1998/04/15 11:04:53 dt Exp $ */
 end_comment
 
 begin_comment
@@ -2764,9 +2764,17 @@ name|pm_HugeSectors
 operator|>
 literal|0xffffffff
 operator|/
+operator|(
 name|pmp
 operator|->
 name|pm_BytesPerSec
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|direntry
+argument_list|)
+operator|)
 operator|+
 literal|1
 condition|)
@@ -3418,7 +3426,7 @@ name|pmp
 operator|->
 name|pm_fatblocksize
 operator|=
-name|MAXBSIZE
+name|DFLTBSIZE
 expr_stmt|;
 name|pmp
 operator|->
@@ -4611,7 +4619,7 @@ operator|=
 name|nvp
 control|)
 block|{
-comment|/* 		 * If the vnode that we are about to sync is no longer 		 * assoicated with this mount point, start over. 		 */
+comment|/* 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */
 if|if
 condition|(
 name|vp
@@ -4655,15 +4663,6 @@ operator|==
 name|VNON
 operator|||
 operator|(
-name|waitfor
-operator|==
-name|MNT_LAZY
-operator|)
-comment|/* can this happen with msdosfs? */
-operator|||
-operator|(
-operator|(
-operator|(
 name|dep
 operator|->
 name|de_flag
@@ -4680,7 +4679,6 @@ operator|)
 operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 operator|(
 name|vp
@@ -4690,7 +4688,10 @@ operator|.
 name|lh_first
 operator|==
 name|NULL
-operator|)
+operator|||
+name|waitfor
+operator|==
+name|MNT_LAZY
 operator|)
 condition|)
 block|{
@@ -4782,7 +4783,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* done with this one	 */
 name|simple_lock
 argument_list|(
 operator|&
@@ -4797,6 +4797,26 @@ name|mntvnode_slock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Flush filesystem control info. 	 */
+if|if
+condition|(
+name|waitfor
+operator|!=
+name|MNT_LAZY
+condition|)
+block|{
+name|vn_lock
+argument_list|(
+name|pmp
+operator|->
+name|pm_devvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|VOP_FSYNC
@@ -4820,6 +4840,18 @@ name|allerror
 operator|=
 name|error
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|pmp
+operator|->
+name|pm_devvp
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|allerror
