@@ -784,15 +784,5 @@ name|sc_if
 value|arpcom.ac_if
 end_define
 
-begin_define
-define|#
-directive|define
-name|FXP_UNIT
-parameter_list|(
-name|_sc
-parameter_list|)
-value|(_sc)->arpcom.ac_if.if_unit
-end_define
-
 end_unit
 
