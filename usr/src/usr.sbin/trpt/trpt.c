@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	4.7 %G%"
+literal|"@(#)trpt.c	4.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,7 +1544,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\trcv_nxt %x rcv_wnd %d snd_una %x snd_nxt %x snd_max %x\n"
+literal|"\trcv_nxt %x rcv_wnd %x snd_una %x snd_nxt %x snd_max %x\n"
 argument_list|,
 name|tp
 operator|->
