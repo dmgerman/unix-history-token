@@ -245,6 +245,12 @@ comment|/* this cmd refers to a pipe */
 name|do_sort
 decl_stmt|,
 comment|/* field to sort results (0 = no) */
+name|do_dynamic
+decl_stmt|,
+comment|/* display dynamic rules */
+name|do_expired
+decl_stmt|,
+comment|/* display expired dynamic rules */
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -4353,6 +4359,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|do_dynamic
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|seen
@@ -4455,6 +4465,8 @@ block|}
 comment|/* 	 * show dynamic rules 	*/
 if|if
 condition|(
+name|do_dynamic
+operator|&&
 name|num
 operator|*
 sizeof|sizeof
@@ -4506,6 +4518,29 @@ name|d
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|d
+operator|->
+name|expire
+operator|==
+literal|0
+operator|&&
+operator|!
+name|do_expired
+condition|)
+block|{
+if|if
+condition|(
+name|d
+operator|->
+name|next
+operator|==
+name|NULL
+condition|)
+break|break;
+continue|continue;
+block|}
 name|printf
 argument_list|(
 literal|"%05d %qu %qu (T %d, # %d) ty %d"
@@ -13320,7 +13355,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"s:afqtvN"
+literal|"s:adefqtvN"
 argument_list|)
 operator|)
 operator|!=
@@ -13348,6 +13383,22 @@ case|case
 literal|'a'
 case|:
 name|do_acct
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|do_dynamic
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|do_expired
 operator|=
 literal|1
 expr_stmt|;
