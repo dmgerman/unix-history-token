@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -132,6 +132,43 @@ directive|define
 name|i_fs
 value|i_un.ui_fs
 end_define
+
+begin_comment
+comment|/* codes for sector header word 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDR1_FMT22
+value|0x1000
+end_define
+
+begin_comment
+comment|/* standard 16 bit format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDR1_OKSCT
+value|0xc000
+end_define
+
+begin_comment
+comment|/* sector ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDR1_SSF
+value|0x2000
+end_define
+
+begin_comment
+comment|/* skip sector flag */
+end_comment
 
 begin_define
 define|#
