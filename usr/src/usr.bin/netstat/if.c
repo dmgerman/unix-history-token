@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	5.1 (Berkeley) %G%"
+literal|"@(#)if.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netns/ns.h>
 end_include
 
 begin_include
@@ -611,6 +617,54 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|AF_NS
+case|:
+block|{
+name|struct
+name|sockaddr_ns
+modifier|*
+name|sns
+init|=
+operator|(
+expr|struct
+name|sockaddr_ns
+operator|*
+operator|)
+operator|&
+name|ifaddr
+operator|.
+name|in
+operator|.
+name|ia_addr
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"ns:%-8d "
+argument_list|,
+name|ntohl
+argument_list|(
+name|ns_netof
+argument_list|(
+name|sns
+operator|->
+name|sns_addr
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-12s "
+argument_list|,
+name|ns_phost
+argument_list|(
+name|sns
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|printf
