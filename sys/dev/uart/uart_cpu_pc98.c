@@ -266,7 +266,9 @@ name|bst
 operator|=
 name|I386_BUS_SPACE_IO
 expr_stmt|;
-name|i386_bus_space_handle_alloc
+if|if
+condition|(
+name|bus_space_map
 argument_list|(
 name|di
 operator|->
@@ -278,6 +280,8 @@ name|ivar
 argument_list|,
 literal|8
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|di
 operator|->
@@ -285,7 +289,14 @@ name|bas
 operator|.
 name|bsh
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|di
 operator|->
 name|bas
