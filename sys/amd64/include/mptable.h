@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.49 1997/08/31 03:17:47 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.38 1997/09/05 20:23:34 smp Exp smp $  */
 end_comment
 
 begin_include
@@ -670,21 +670,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|MP_START_POST
+name|MPTABLE_PASS1_POST
 value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
-name|MP_ANNOUNCE_POST
+name|MP_START_POST
 value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPTABLE_PASS1_POST
+name|MP_ENABLE_POST
 value|0x14
 end_define
 
@@ -698,28 +698,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|MP_ENABLE_POST
+name|START_ALL_APS_POST
 value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
-name|START_ALL_APS_POST
+name|INSTALL_AP_TRAMP_POST
 value|0x17
 end_define
 
 begin_define
 define|#
 directive|define
-name|INSTALL_AP_TRAMP_POST
+name|START_AP_POST
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|START_AP_POST
+name|MP_ANNOUNCE_POST
 value|0x19
 end_define
 
@@ -5708,7 +5708,7 @@ name|struct
 name|simplelock
 name|imen_lock
 decl_stmt|;
-comment|/* critical region around splxx(), cpl, cil, ipending */
+comment|/* critical region around splxx(), cpl, cml, cil, ipending */
 name|struct
 name|simplelock
 name|cpl_lock
