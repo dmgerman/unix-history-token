@@ -5765,6 +5765,56 @@ block|}
 block|, 	}
 block|,
 block|{
+literal|"Sunix SUN1889"
+block|,
+block|{
+literal|0x0009
+block|,
+literal|0x7168
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x08
+block|,
+name|COM_FREQ
+operator|*
+literal|8
+block|}
+block|, 	    }
+block|, 	}
+block|,
+block|{
 literal|0
 block|}
 block|}
