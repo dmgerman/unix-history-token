@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.24.2.1 1996/12/23 18:13:37 jkh Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.34 1997/04/21 01:01:53 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -860,6 +866,9 @@ name|LcpDown
 argument_list|()
 expr_stmt|;
 block|}
+name|lostCarrier
+operator|++
+expr_stmt|;
 name|connect_time
 operator|=
 literal|0
@@ -1608,6 +1617,7 @@ argument_list|(
 literal|0
 argument_list|)
 condition|)
+block|{
 name|modem
 operator|=
 name|open
@@ -1622,12 +1632,50 @@ operator||
 name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|modem
+operator|<
+literal|0
+condition|)
+block|{
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Open Failed %s\n"
+argument_list|,
+name|ctermid
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|modem
+operator|)
+return|;
+block|}
 block|}
 elseif|else
 if|if
 condition|(
 name|modem
-operator|==
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|modem
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|modem
+operator|<
 literal|0
 condition|)
 block|{
@@ -2208,6 +2256,8 @@ name|MODE_DIRECT
 operator|)
 operator|&&
 name|modem
+operator|>=
+literal|0
 operator|&&
 operator|!
 name|Online
@@ -2467,7 +2517,8 @@ argument_list|)
 expr_stmt|;
 name|modem
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 comment|/* Mark as modem has closed */
 return|return;
@@ -2475,6 +2526,8 @@ block|}
 if|if
 condition|(
 name|modem
+operator|>=
+literal|0
 operator|&&
 name|Online
 condition|)
@@ -2548,6 +2601,8 @@ comment|/*    * If we are working as dedicated mode, never close it    * until w
 if|if
 condition|(
 name|modem
+operator|>=
+literal|0
 operator|&&
 operator|(
 name|flag
@@ -2576,6 +2631,8 @@ comment|/* ModemTimeout() may call DownConection() to close the modem      * res
 if|if
 condition|(
 name|modem
+operator|>=
+literal|0
 condition|)
 block|{
 name|tcflush
@@ -2596,6 +2653,12 @@ name|modem
 argument_list|)
 expr_stmt|;
 block|}
+name|modem
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Mark as modem has closed */
 operator|(
 name|void
 operator|)
@@ -2604,16 +2667,13 @@ argument_list|(
 name|uucplock
 argument_list|)
 expr_stmt|;
-name|modem
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Mark as modem has closed */
 block|}
 elseif|else
 if|if
 condition|(
 name|modem
+operator|>=
+literal|0
 condition|)
 block|{
 name|mbits
@@ -2679,7 +2739,7 @@ if|if
 condition|(
 name|modem
 operator|>=
-literal|3
+literal|0
 condition|)
 block|{
 name|close
@@ -2689,7 +2749,8 @@ argument_list|)
 expr_stmt|;
 name|modem
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 block|}
 operator|(
@@ -3365,27 +3426,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mode
-operator|&
-name|MODE_BACKGROUND
-condition|)
-block|{
-specifier|extern
-name|void
-name|Cleanup
-parameter_list|()
-function_decl|;
-name|CloseModem
-argument_list|()
-expr_stmt|;
-name|Cleanup
-argument_list|(
-name|excode
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0

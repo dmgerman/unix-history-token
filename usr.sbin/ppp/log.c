@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	            PPP logging facility  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: log.c,v 1.4.2.1 1997/01/12 21:52:48 joerg Exp $  *  */
+comment|/*  *	            PPP logging facility  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: log.c,v 1.10 1997/05/07 23:30:48 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -109,13 +109,26 @@ specifier|static
 name|char
 name|logbuff
 index|[
-literal|2000
+name|MAX_MRU
+operator|*
+literal|3
+operator|+
+operator|(
+name|MAX_MRU
+operator|/
+literal|16
+operator|+
+literal|1
+operator|)
+operator|*
+literal|22
+operator|+
+literal|80
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|logptr
@@ -217,16 +230,36 @@ end_function
 begin_function
 name|int
 name|LogOpen
-parameter_list|()
+parameter_list|(
+name|tunno
+parameter_list|)
+name|int
+name|tunno
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
 name|USELOGFILE
+name|char
+name|buf
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+name|LOGFILE
+argument_list|,
+name|tunno
+argument_list|)
+expr_stmt|;
 name|logfile
 operator|=
 name|fopen
 argument_list|(
-name|LOGFILE
+name|buf
 argument_list|,
 literal|"a"
 argument_list|)
@@ -242,9 +275,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't open %s.\r\n"
+literal|"can't open	%s.\r\n"
 argument_list|,
-name|LOGFILE
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -454,6 +487,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|logptr
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -1239,18 +1276,33 @@ name|int
 name|sig
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|USELOGFILE
 name|FILE
 modifier|*
 name|nlogfile
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USELOGFILE
+name|char
+name|buf
+index|[
+literal|80
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+name|LOGFILE
+argument_list|,
+name|tunno
+argument_list|)
+expr_stmt|;
 name|nlogfile
 operator|=
 name|fopen
 argument_list|(
-name|LOGFILE
+name|buf
 argument_list|,
 literal|"a"
 argument_list|)
@@ -1267,9 +1319,9 @@ argument_list|(
 operator|~
 literal|0
 argument_list|,
-literal|"can't re-open %s.\r\n"
+literal|"can't	re-open	%s.\r\n"
 argument_list|,
-name|LOGFILE
+name|buf
 argument_list|)
 expr_stmt|;
 block|}

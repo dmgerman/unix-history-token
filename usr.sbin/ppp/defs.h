@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.8 1996/12/22 17:29:31 jkh Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: defs.h,v 1.13 1997/05/04 02:39:03 ache Exp $  *  *	TODO:  */
 end_comment
 
 begin_ifndef
@@ -77,11 +77,11 @@ begin_define
 define|#
 directive|define
 name|LOGFILE
-value|"/var/log/ppp.log"
+value|"/var/log/ppp.tun%d.log"
 end_define
 
 begin_comment
-comment|/* Name of log file */
+comment|/* Name of log	file */
 end_comment
 
 begin_ifdef
@@ -158,12 +158,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RECONNECT_TIMER
+value|3
+end_define
+
+begin_comment
+comment|/* Default timer for carrier loss */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RECONNECT_TRIES
+value|0
+end_define
+
+begin_comment
+comment|/* Default retries on carrier loss */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REDIAL_PERIOD
 value|30
 end_define
 
 begin_comment
 comment|/* Default Hold time to redial */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEXT_REDIAL_PERIOD
+value|3
+end_define
+
+begin_comment
+comment|/* Default Hold time to next number redial */
 end_comment
 
 begin_define
