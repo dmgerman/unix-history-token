@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cdefs.h	8.8 (Berkeley) 1/9/95  * $Id: cdefs.h,v 1.19 1998/07/13 06:45:13 bde Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cdefs.h	8.8 (Berkeley) 1/9/95  * $Id: cdefs.h,v 1.20 1998/07/25 14:37:37 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -375,7 +375,7 @@ comment|/* !(__STDC__ || __cplusplus) */
 end_comment
 
 begin_comment
-comment|/*  * GCC1 and some versions of GCC2 declare dead (non-returning) and  * pure (no side effects) functions using "volatile" and "const";  * unfortunately, these then cause warnings under "-ansi -pedantic".  * GCC2.5 uses a new, peculiar __attribute__((attrs)) style.  All of  * these work for GNU C++ (modulo a slight glitch in the C++ grammar  * in the distribution version of 2.5.5).  */
+comment|/*  * Compiler-dependent macros to help declare dead (non-returning) and  * pure (no side effects) functions, and unused variables.  They are  * null except for versions of gcc that are known to support the features  * properly (old versions of gcc-2 supported the dead and pure features  * in a different (wrong) way).  */
 end_comment
 
 begin_if
@@ -384,46 +384,7 @@ directive|if
 name|__GNUC__
 operator|<
 literal|2
-end_if
-
-begin_define
-define|#
-directive|define
-name|__dead
-end_define
-
-begin_define
-define|#
-directive|define
-name|__dead2
-end_define
-
-begin_define
-define|#
-directive|define
-name|__pure
-end_define
-
-begin_define
-define|#
-directive|define
-name|__pure2
-end_define
-
-begin_define
-define|#
-directive|define
-name|__unused
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
+operator|||
 name|__GNUC__
 operator|==
 literal|2
@@ -436,21 +397,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__dead
-value|__volatile
-end_define
-
-begin_define
-define|#
-directive|define
 name|__dead2
-end_define
-
-begin_define
-define|#
-directive|define
-name|__pure
-value|__const
 end_define
 
 begin_define
@@ -489,20 +436,8 @@ end_if
 begin_define
 define|#
 directive|define
-name|__dead
-end_define
-
-begin_define
-define|#
-directive|define
 name|__dead2
 value|__attribute__((__noreturn__))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__pure
 end_define
 
 begin_define
@@ -533,29 +468,13 @@ operator|&&
 name|__GNUC_MINOR__
 operator|>=
 literal|7
-operator|||
-name|__GNUC__
-operator|>=
-literal|3
 end_if
-
-begin_define
-define|#
-directive|define
-name|__dead
-end_define
 
 begin_define
 define|#
 directive|define
 name|__dead2
 value|__attribute__((__noreturn__))
-end_define
-
-begin_define
-define|#
-directive|define
-name|__pure
 end_define
 
 begin_define
@@ -577,6 +496,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Compiler-dependent macros to declare that functions take printf-like  * or scanf-like arguments.  They are null except for versions of gcc  * that are known to support the features properly (old versions of gcc-2  * didn't permit keeping the keywords out of the application namespace).  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -597,6 +520,17 @@ begin_define
 define|#
 directive|define
 name|__printflike
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__printf0like
 parameter_list|(
 name|fmtarg
 parameter_list|,
@@ -631,6 +565,19 @@ name|firstvararg
 parameter_list|)
 define|\
 value|__attribute__((__format__ (__printf__, fmtarg, firstvararg)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__printf0like
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+define|\
+value|__attribute__((__format__ (__printf0__, fmtarg, firstvararg)))
 end_define
 
 begin_define
