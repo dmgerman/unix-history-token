@@ -2205,8 +2205,10 @@ comment|/* 128k */
 else|else
 name|dma_pagesize
 operator|=
-literal|65536
+comment|/* 65536; */
+literal|4096
 expr_stmt|;
+comment|/* Be conservative for now! */
 comment|/* More sanity checks */
 if|if
 condition|(
