@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997,1998  Junichi Satoh<junichi@astec.co.jp>  *   All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Junichi Satoh ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL Junichi Satoh BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: wfd.c,v 1.14 1998/07/30 15:16:05 bde Exp $  */
+comment|/*  * Copyright (c) 1997,1998  Junichi Satoh<junichi@astec.co.jp>  *   All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY Junichi Satoh ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL Junichi Satoh BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *      $Id: wfd.c,v 1.15 1998/08/23 20:16:34 phk Exp $  */
 end_comment
 
 begin_comment
@@ -82,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/devicestat.h>
 end_include
 
 begin_include
@@ -555,6 +561,10 @@ modifier|*
 name|dk_slices
 decl_stmt|;
 comment|/* virtual drives */
+name|struct
+name|devstat
+name|device_stats
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1365,6 +1375,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEVFS */
+comment|/* 	 * Export the drive to the devstat interface. 	 */
+name|devstat_add_entry
+argument_list|(
+operator|&
+name|t
+operator|->
+name|device_stats
+argument_list|,
+literal|"wfd"
+argument_list|,
+name|wfdnlun
+argument_list|,
+name|t
+operator|->
+name|cap
+operator|.
+name|sector_size
+argument_list|,
+name|DEVSTAT_NO_ORDERED_TAGS
+argument_list|,
+name|DEVSTAT_TYPE_FLOPPY
+operator||
+name|DEVSTAT_TYPE_IF_IDE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2412,6 +2447,15 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* Tell devstat we are starting on the transaction */
+name|devstat_start_transaction
+argument_list|(
+operator|&
+name|t
+operator|->
+name|device_stats
+argument_list|)
+expr_stmt|;
 comment|/* We have a buf, now we should make a command 	 * First, translate the block to absolute and put it in terms of the 	 * logical blocksize of the device. */
 name|blkno
 operator|=
@@ -2883,6 +2927,37 @@ operator|)
 name|bp
 operator|->
 name|b_driver2
+expr_stmt|;
+comment|/* Tell devstat we have finished with the transaction */
+name|devstat_end_transaction
+argument_list|(
+operator|&
+name|t
+operator|->
+name|device_stats
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+operator|-
+name|bp
+operator|->
+name|b_resid
+argument_list|,
+name|DEVSTAT_TAG_NONE
+argument_list|,
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+condition|?
+name|DEVSTAT_READ
+else|:
+name|DEVSTAT_WRITE
+argument_list|)
 expr_stmt|;
 name|biodone
 argument_list|(

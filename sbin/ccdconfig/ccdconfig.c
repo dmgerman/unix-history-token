@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ccdconfig.c,v 1.9 1998/06/04 06:41:26 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/devicestat.h>
 end_include
 
 begin_include

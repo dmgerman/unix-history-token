@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.57 1998/07/04 22:30:18 julian Exp $  */
+comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.58 1998/09/08 20:57:47 sos Exp $  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/devicestat.h>
 end_include
 
 begin_include
@@ -1053,6 +1059,11 @@ name|int
 name|slot
 decl_stmt|;
 comment|/* this lun's slot number */
+name|struct
+name|devstat
+name|device_stats
+decl_stmt|;
+comment|/* devstat parameters */
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -1633,6 +1644,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Export the unit to the devstat interface. 	 */
+name|devstat_add_entry
+argument_list|(
+operator|&
+name|ptr
+operator|->
+name|device_stats
+argument_list|,
+literal|"wcd"
+argument_list|,
+name|lun
+argument_list|,
+name|SECSIZE
+argument_list|,
+name|DEVSTAT_NO_ORDERED_TAGS
+argument_list|,
+name|DEVSTAT_TYPE_CDROM
+operator||
+name|DEVSTAT_TYPE_IF_IDE
+argument_list|)
+expr_stmt|;
 return|return
 name|ptr
 return|;
@@ -3370,6 +3402,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Tell devstat we are starting on the transaction */
+name|devstat_start_transaction
+argument_list|(
+operator|&
+name|t
+operator|->
+name|device_stats
+argument_list|)
+expr_stmt|;
 name|wcd_select_slot
 argument_list|(
 name|t
@@ -3532,6 +3573,37 @@ operator|->
 name|b_resid
 operator|=
 name|resid
+expr_stmt|;
+comment|/* Tell devstat we have finished with the transaction */
+name|devstat_end_transaction
+argument_list|(
+operator|&
+name|t
+operator|->
+name|device_stats
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+operator|-
+name|bp
+operator|->
+name|b_resid
+argument_list|,
+name|DEVSTAT_TAG_NONE
+argument_list|,
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+condition|?
+name|DEVSTAT_READ
+else|:
+name|DEVSTAT_WRITE
+argument_list|)
 expr_stmt|;
 name|biodone
 argument_list|(
