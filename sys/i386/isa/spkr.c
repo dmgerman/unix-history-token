@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker on 80386  *  * v1.1 by Eric S. Raymond (esr@snark.thyrsus.com) Feb 1990  *      modified for 386bsd by Andrew A. Chernov<ache@astral.msk.su>  *      386bsd only clean version, all SYSV stuff removed  *      use hz value from param.c  *  *	$Id$  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.3 1993/10/16 13:46:21 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -21,12 +21,6 @@ begin_include
 include|#
 directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"systm.h"
 end_include
 
 begin_include
@@ -56,8 +50,32 @@ end_include
 begin_include
 include|#
 directive|include
-file|"spkr.h"
+file|"machine/speaker.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HZ
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|HZ
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|HZ
+value|hz
+end_define
 
 begin_comment
 comment|/**************** MACHINE DEPENDENT PART STARTS HERE *************************  *  * This section defines a function tone() which causes a tone of given  * frequency and duration from the 80x86's console speaker.  * Another function endtone() is defined to force sound off, and there is  * also a rest() entry point to do pauses.  *  * Audible sound is generated using the Programmable Interval Timer (PIT) and  * Programmable Peripheral Interface (PPI) attached to the 80x86's speaker. The  * PPI controls whether sound is passed through at all; the PIT's channel 2 is  * used to generate clicks (a square wave) of whatever frequency is desired.  */
@@ -199,6 +217,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"tone: hz=%d ticks=%d\n"
@@ -230,10 +251,10 @@ argument_list|(
 name|PIT_COUNT
 argument_list|,
 operator|(
-name|unsigned
-name|char
-operator|)
 name|divisor
+operator|&
+literal|0xff
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* send lo byte */
@@ -283,6 +304,9 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 operator|(
@@ -332,6 +356,9 @@ comment|/*      * Set timeout to endrest function, then give up the timeslice.  
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"rest: %d\n"
@@ -357,6 +384,9 @@ argument_list|,
 name|ticks
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 operator|(
@@ -373,7 +403,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************** PLAY STRING INTERPRETER BEGINS HERE **********************  *  * Play string interpretation is modelled on IBM BASIC 2.0's PLAY statement;  * M[LNS] are missing and the ~ synonym and octave-tracking facility is added.  * Requires tone(), rest(), and endtone(). String play is not interruptible  * except possibly at physical block boundaries.  */
+comment|/**************** PLAY STRING INTERPRETER BEGINS HERE **********************  *  * Play string interpretation is modelled on IBM BASIC 2.0's PLAY statement;  * M[LNS] are missing; the ~ synonym and the _ slur mark and the octave-  * tracking facility are added.  * Requires tone(), rest(), and endtone(). String play is not interruptible  * except possibly at physical block boundaries.  */
 end_comment
 
 begin_typedef
@@ -895,7 +925,7 @@ expr_stmt|;
 name|whole
 operator|=
 operator|(
-name|hz
+name|HZ
 operator|*
 name|SECS_PER_MIN
 operator|*
@@ -968,6 +998,7 @@ name|sustain
 operator|--
 control|)
 block|{
+comment|/* See the BUGS section in the man page for discussion */
 name|snum
 operator|*=
 name|NUM_MULT
@@ -1052,6 +1083,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"playtone: pitch %d for %d ticks, rest for %d ticks\n"
@@ -1144,6 +1178,8 @@ block|{
 name|int
 name|pitch
 decl_stmt|,
+name|oldfill
+decl_stmt|,
 name|lastpitch
 init|=
 name|OCTAVE_NOTES
@@ -1189,6 +1225,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"playstring: %c (%x)\n"
@@ -1411,6 +1450,32 @@ name|sustain
 operator|++
 expr_stmt|;
 block|}
+comment|/* ...and/or a slur mark */
+name|oldfill
+operator|=
+name|fill
+expr_stmt|;
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'_'
+condition|)
+block|{
+name|fill
+operator|=
+name|LEGATO
+expr_stmt|;
+operator|++
+name|cp
+expr_stmt|;
+name|slen
+operator|--
+expr_stmt|;
+block|}
 comment|/* time to emit the actual tone */
 name|playtone
 argument_list|(
@@ -1420,6 +1485,10 @@ name|timeval
 argument_list|,
 name|sustain
 argument_list|)
+expr_stmt|;
+name|fill
+operator|=
+name|oldfill
 expr_stmt|;
 break|break;
 case|case
@@ -1589,6 +1658,31 @@ name|sustain
 operator|++
 expr_stmt|;
 block|}
+name|oldfill
+operator|=
+name|fill
+expr_stmt|;
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'_'
+condition|)
+block|{
+name|fill
+operator|=
+name|LEGATO
+expr_stmt|;
+operator|++
+name|cp
+expr_stmt|;
+name|slen
+operator|--
+expr_stmt|;
+block|}
 name|playtone
 argument_list|(
 name|pitch
@@ -1599,6 +1693,10 @@ name|value
 argument_list|,
 name|sustain
 argument_list|)
+expr_stmt|;
+name|fill
+operator|=
+name|oldfill
 expr_stmt|;
 break|break;
 case|case
@@ -1716,7 +1814,7 @@ expr_stmt|;
 name|whole
 operator|=
 operator|(
-name|hz
+name|HZ
 operator|*
 name|SECS_PER_MIN
 operator|*
@@ -1829,6 +1927,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|spkr_active
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -1862,6 +1962,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"spkropen: entering with dev = %x\n"
@@ -1898,6 +2001,20 @@ operator|)
 return|;
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"spkropen: about to perform play initialization\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 name|playinit
 argument_list|()
 expr_stmt|;
@@ -1910,14 +2027,14 @@ argument_list|)
 expr_stmt|;
 name|spkr_active
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -1938,17 +2055,6 @@ modifier|*
 name|uio
 decl_stmt|;
 block|{
-specifier|register
-name|unsigned
-name|n
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1980,18 +2086,38 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-else|else
-block|{
-name|n
-operator|=
-name|MIN
-argument_list|(
-name|DEV_BSIZE
-argument_list|,
+elseif|else
+if|if
+condition|(
 name|uio
 operator|->
 name|uio_resid
-argument_list|)
+operator|>
+name|DEV_BSIZE
+condition|)
+comment|/* prevent system crashes */
+return|return
+operator|(
+name|E2BIG
+operator|)
+return|;
+else|else
+block|{
+name|unsigned
+name|n
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|n
+operator|=
+name|uio
+operator|->
+name|uio_resid
 expr_stmt|;
 name|cp
 operator|=
@@ -2001,6 +2127,10 @@ name|b_un
 operator|.
 name|b_addr
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|error
 operator|=
 name|uiomove
@@ -2011,11 +2141,7 @@ name|n
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
+operator|)
 condition|)
 name|playstring
 argument_list|(
@@ -2046,6 +2172,9 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"spkrclose: entering with dev = %x\n"
@@ -2082,14 +2211,14 @@ argument_list|)
 expr_stmt|;
 name|spkr_active
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -2116,13 +2245,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"spkrioctl: entering with dev = %x, cmd = %x\n"
-argument_list|,
-name|dev
-argument_list|,
-name|cmd
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2187,6 +2315,11 @@ operator|->
 name|duration
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -2288,16 +2421,15 @@ name|duration
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 block|}
