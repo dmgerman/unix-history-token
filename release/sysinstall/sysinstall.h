@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.42.2.46 1995/11/09 02:32:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: sysinstall.h,v 1.54 1996/04/28 01:07:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -80,65 +80,6 @@ comment|/*** Defines ***/
 end_comment
 
 begin_comment
-comment|/* Bitfields for menu options */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMENU_NORMAL_TYPE
-value|0x1
-end_define
-
-begin_comment
-comment|/* Normal dialog menu		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMENU_RADIO_TYPE
-value|0x2
-end_define
-
-begin_comment
-comment|/* Radio dialog menu		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMENU_MULTIPLE_TYPE
-value|0x4
-end_define
-
-begin_comment
-comment|/* Multiple choice menu		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMENU_SELECTION_RETURNS
-value|0x8
-end_define
-
-begin_comment
-comment|/* Select item then exit	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMENU_CALL_FIRST
-value|0x10
-end_define
-
-begin_comment
-comment|/* In multiple, use one handler */
-end_comment
-
-begin_comment
 comment|/* variable limits */
 end_comment
 
@@ -203,27 +144,6 @@ end_define
 begin_comment
 comment|/* How many times to beat our heads against the wall */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RET_FAIL
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|RET_SUCCESS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RET_DONE
-value|1
-end_define
 
 begin_comment
 comment|/*  * I make some pretty gross assumptions about having a max of 50 chunks  * total - 8 slices and 42 partitions.  I can't easily display many more  * than that on the screen at once!  *  * For 2.1 I'll revisit this and try to make it more dynamic, but since  * this will catch 99.99% of all possible cases, I'm not too worried.  */
@@ -354,6 +274,13 @@ define|#
 directive|define
 name|VAR_DOMAINNAME
 value|"domainname"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_EDITOR
+value|"editor"
 end_define
 
 begin_define
@@ -606,17 +533,6 @@ value|2048
 end_define
 
 begin_comment
-comment|/* The help file for the TCP/IP setup screen */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCP_HELPFILE
-value|"tcp"
-end_define
-
-begin_comment
 comment|/*** Types ***/
 end_comment
 
@@ -644,103 +560,61 @@ name|Chunk
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|DMENU_DISPLAY_FILE
-block|,
-comment|/* Display a file's contents	*/
-name|DMENU_SUBMENU
-block|,
-comment|/* Recurse into another menu	*/
-name|DMENU_SYSTEM_COMMAND
-block|,
-comment|/* Run shell commmand		*/
-name|DMENU_SYSTEM_COMMAND_BOX
-block|,
-comment|/* Same as above, but in prgbox	*/
-name|DMENU_SET_VARIABLE
-block|,
-comment|/* Set an environment/system var */
-name|DMENU_SET_FLAG
-block|,
-comment|/* Set flag in an unsigned int	*/
-name|DMENU_SET_VALUE
-block|,
-comment|/* Set unsigned int to value	*/
-name|DMENU_CALL
-block|,
-comment|/* Call back a C function	*/
-name|DMENU_CANCEL
-block|,
-comment|/* Cancel out of this menu	*/
-name|DMENU_NOP
-block|,
-comment|/* Do nothing special for item	*/
-block|}
-name|DMenuItemType
-typedef|;
-end_typedef
+begin_comment
+comment|/* Bitfields for menu options */
+end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
-name|_dmenuItem
-block|{
-name|char
-modifier|*
-name|title
-decl_stmt|;
-comment|/* Our title			*/
-name|char
-modifier|*
-name|prompt
-decl_stmt|;
-comment|/* Our prompt			*/
-name|DMenuItemType
-name|type
-decl_stmt|;
-comment|/* What type of item we are	*/
-name|void
-modifier|*
-name|ptr
-decl_stmt|;
-comment|/* Generic data ptr		*/
-name|int
-name|parm
-decl_stmt|;
-comment|/* Parameter for above		*/
-name|Boolean
-name|disabled
-decl_stmt|;
-comment|/* Are we temporarily disabled?	*/
-name|char
-modifier|*
-function_decl|(
-modifier|*
-name|check
-function_decl|)
-parameter_list|(
-name|struct
-name|_dmenuItem
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* Our state                  */
-block|}
-name|DMenuItem
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|DMENU_NORMAL_TYPE
+value|0x1
+end_define
+
+begin_comment
+comment|/* Normal dialog menu           */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMENU_RADIO_TYPE
+value|0x2
+end_define
+
+begin_comment
+comment|/* Radio dialog menu            */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMENU_CHECKLIST_TYPE
+value|0x4
+end_define
+
+begin_comment
+comment|/* Multiple choice menu         */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMENU_SELECTION_RETURNS
+value|0x8
+end_define
+
+begin_comment
+comment|/* Immediate return on item selection */
+end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|_dmenu
 block|{
-name|unsigned
 name|int
-name|options
+name|type
 decl_stmt|;
 comment|/* What sort of menu we are	*/
 name|char
@@ -763,7 +637,7 @@ modifier|*
 name|helpfile
 decl_stmt|;
 comment|/* Help file for "F1"		*/
-name|DMenuItem
+name|dialogMenuItem
 name|items
 index|[
 literal|0
@@ -940,7 +814,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 name|Boolean
@@ -1198,6 +1072,11 @@ decl_stmt|;
 comment|/* path to description file	*/
 name|char
 modifier|*
+name|deps
+decl_stmt|;
+comment|/* packages this depends on	*/
+name|char
+modifier|*
 name|maintainer
 decl_stmt|;
 comment|/* maintainer			*/
@@ -1252,17 +1131,6 @@ define|#
 directive|define
 name|EXTRAS_FIELD_LEN
 value|128
-end_define
-
-begin_comment
-comment|/* Verbosity levels for CPIO as expressed by cpio arguments - yuck */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPIO_VERBOSITY
-value|(!strcmp(variable_get(CPIO_VERBOSITY_LEVEL), "low") ? "" : \ 				 !strcmp(variable_get(CPIO_VERBOSITY_LEVEL), "medium") ? "-V" : "-v")
 end_define
 
 begin_comment
@@ -1483,6 +1351,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Initial installation menu			*/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|DMenu
+name|MenuFixit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Fixit repair menu				*/
 end_comment
 
 begin_decl_stmt
@@ -1850,9 +1729,9 @@ specifier|extern
 name|int
 name|configApache
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1866,9 +1745,9 @@ specifier|extern
 name|int
 name|configAnonFTP
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1955,7 +1834,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2082,9 +1961,9 @@ specifier|extern
 name|int
 name|configPorts
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2094,9 +1973,9 @@ specifier|extern
 name|int
 name|configPackages
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2106,9 +1985,9 @@ specifier|extern
 name|int
 name|configSaverTimeout
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2118,9 +1997,21 @@ specifier|extern
 name|int
 name|configNTP
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|configXFree86
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2130,9 +2021,9 @@ specifier|extern
 name|int
 name|configRoutedFlags
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2160,59 +2051,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* decode.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|DMenuItem
-modifier|*
-name|decode
-parameter_list|(
-name|DMenu
-modifier|*
-name|menu
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|dispatch
-parameter_list|(
-name|DMenuItem
-modifier|*
-name|tmp
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|decode_and_dispatch_multiple
-parameter_list|(
-name|DMenu
-modifier|*
-name|menu
-parameter_list|,
-name|char
-modifier|*
-name|names
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* devices.c */
 end_comment
 
@@ -2234,7 +2072,22 @@ function_decl|(
 modifier|*
 name|hook
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|d
+parameter_list|)
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|check
+function_decl|)
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|d
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2342,7 +2195,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 parameter_list|,
 name|Boolean
@@ -2403,7 +2256,7 @@ modifier|*
 name|dist
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2444,9 +2297,9 @@ specifier|extern
 name|int
 name|diskPartitionEditor
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2456,9 +2309,25 @@ specifier|extern
 name|int
 name|diskPartitionWrite
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|diskPartition
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|,
+name|Disk
+modifier|*
+name|d
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2472,9 +2341,9 @@ specifier|extern
 name|int
 name|distReset
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2496,9 +2365,9 @@ specifier|extern
 name|int
 name|distSetDeveloper
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2508,9 +2377,9 @@ specifier|extern
 name|int
 name|distSetXDeveloper
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2520,9 +2389,9 @@ specifier|extern
 name|int
 name|distSetKernDeveloper
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2532,9 +2401,9 @@ specifier|extern
 name|int
 name|distSetUser
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2544,9 +2413,9 @@ specifier|extern
 name|int
 name|distSetXUser
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2556,9 +2425,9 @@ specifier|extern
 name|int
 name|distSetMinimum
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2568,9 +2437,9 @@ specifier|extern
 name|int
 name|distSetEverything
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2580,9 +2449,9 @@ specifier|extern
 name|int
 name|distSetDES
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2592,9 +2461,9 @@ specifier|extern
 name|int
 name|distSetSrc
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2604,9 +2473,9 @@ specifier|extern
 name|int
 name|distSetXF86
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2616,9 +2485,9 @@ specifier|extern
 name|int
 name|distExtractAll
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2626,6 +2495,102 @@ end_function_decl
 begin_comment
 comment|/* dmenu.c */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuDisplayFile
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuSubmenu
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuSystemCommand
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuSystemCommandBox
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuExit
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuSetVariable
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuSetFlag
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dmenuSetValue
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -2669,11 +2634,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|int
 name|dmenuVarCheck
 parameter_list|(
-name|DMenuItem
+name|dialogMenuItem
 modifier|*
 name|item
 parameter_list|)
@@ -2682,11 +2646,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|int
 name|dmenuFlagCheck
 parameter_list|(
-name|DMenuItem
+name|dialogMenuItem
 modifier|*
 name|item
 parameter_list|)
@@ -2695,11 +2658,10 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|int
 name|dmenuRadioCheck
 parameter_list|(
-name|DMenuItem
+name|dialogMenuItem
 modifier|*
 name|item
 parameter_list|)
@@ -2715,9 +2677,9 @@ specifier|extern
 name|int
 name|docBrowser
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|junk
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2727,9 +2689,9 @@ specifier|extern
 name|int
 name|docShowDocument
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2764,7 +2726,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2821,7 +2783,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2883,7 +2845,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3024,6 +2986,9 @@ modifier|*
 name|dev
 parameter_list|,
 name|PkgNodePtr
+name|top
+parameter_list|,
+name|PkgNodePtr
 name|plist
 parameter_list|)
 function_decl|;
@@ -3038,9 +3003,9 @@ specifier|extern
 name|int
 name|installCommit
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3050,9 +3015,9 @@ specifier|extern
 name|int
 name|installExpress
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3062,9 +3027,9 @@ specifier|extern
 name|int
 name|installNovice
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3072,11 +3037,23 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|installFixit
+name|installFixitCDROM
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|installFixitFloppy
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3086,9 +3063,9 @@ specifier|extern
 name|int
 name|installFixup
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3098,21 +3075,9 @@ specifier|extern
 name|int
 name|installUpgrade
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|installPreconfig
-parameter_list|(
-name|char
-modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3122,9 +3087,9 @@ specifier|extern
 name|int
 name|installFilesystems
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3134,9 +3099,9 @@ specifier|extern
 name|int
 name|installVarDefaults
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3170,9 +3135,9 @@ specifier|extern
 name|int
 name|configGated
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3182,9 +3147,9 @@ specifier|extern
 name|int
 name|configSamba
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3194,9 +3159,9 @@ specifier|extern
 name|int
 name|configPCNFSD
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3206,9 +3171,9 @@ specifier|extern
 name|int
 name|configNFSServer
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3222,9 +3187,9 @@ specifier|extern
 name|int
 name|diskLabelEditor
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3234,9 +3199,9 @@ specifier|extern
 name|int
 name|diskLabelCommit
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3392,9 +3357,9 @@ specifier|extern
 name|int
 name|mediaSetCDROM
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3404,9 +3369,9 @@ specifier|extern
 name|int
 name|mediaSetFloppy
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3416,9 +3381,9 @@ specifier|extern
 name|int
 name|mediaSetDOS
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3428,9 +3393,9 @@ specifier|extern
 name|int
 name|mediaSetTape
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3440,9 +3405,9 @@ specifier|extern
 name|int
 name|mediaSetFTP
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3452,9 +3417,9 @@ specifier|extern
 name|int
 name|mediaSetFTPActive
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3464,9 +3429,9 @@ specifier|extern
 name|int
 name|mediaSetFTPPassive
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3476,9 +3441,9 @@ specifier|extern
 name|int
 name|mediaSetUFS
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3488,9 +3453,9 @@ specifier|extern
 name|int
 name|mediaSetNFS
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3500,9 +3465,9 @@ specifier|extern
 name|int
 name|mediaSetFtpOnError
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3512,9 +3477,9 @@ specifier|extern
 name|int
 name|mediaSetFtpUserPass
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3524,9 +3489,9 @@ specifier|extern
 name|int
 name|mediaSetCPIOVerbosity
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3536,9 +3501,9 @@ specifier|extern
 name|int
 name|mediaGetType
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3637,7 +3602,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|Boolean
-name|directoryExists
+name|directory_exists
 parameter_list|(
 specifier|const
 name|char
@@ -3784,50 +3749,64 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|dialogMenuItem
 modifier|*
 name|item_add
 parameter_list|(
-name|char
-modifier|*
+name|dialogMenuItem
 modifier|*
 name|list
 parameter_list|,
 name|char
 modifier|*
-name|item
+name|prompt
 parameter_list|,
-name|int
-modifier|*
-name|curr
-parameter_list|,
-name|int
-modifier|*
-name|max
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|char
 modifier|*
+name|title
+parameter_list|,
+name|int
+function_decl|(
 modifier|*
-name|item_add_pair
+name|checked
+function_decl|)
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-modifier|*
-name|list
+name|self
+parameter_list|)
 parameter_list|,
-name|char
+name|int
+function_decl|(
 modifier|*
-name|item1
+name|fire
+function_decl|)
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
 parameter_list|,
-name|char
+name|void
+function_decl|(
 modifier|*
-name|item2
+name|selected
+function_decl|)
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|,
+name|int
+name|is_selected
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|aux
 parameter_list|,
 name|int
 modifier|*
@@ -3845,8 +3824,7 @@ specifier|extern
 name|void
 name|items_free
 parameter_list|(
-name|char
-modifier|*
+name|dialogMenuItem
 modifier|*
 name|list
 parameter_list|,
@@ -3887,6 +3865,29 @@ parameter_list|,
 name|void
 modifier|*
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|WINDOW
+modifier|*
+name|savescr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|restorescr
+parameter_list|(
+name|WINDOW
+modifier|*
+name|w
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4144,7 +4145,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4170,9 +4171,9 @@ specifier|extern
 name|int
 name|optionsEditor
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4205,6 +4206,9 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|Boolean
+name|depended
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4384,30 +4388,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|int
-name|docBrowser
-parameter_list|(
-name|char
-modifier|*
-name|junk
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|docShowDocument
-parameter_list|(
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* tape.c */
 end_comment
@@ -4449,7 +4429,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4487,9 +4467,9 @@ specifier|extern
 name|int
 name|tcpMenuSelect
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4572,7 +4552,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 function_decl|;
 end_function_decl

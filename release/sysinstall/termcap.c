@@ -79,8 +79,6 @@ name|stat
 decl_stmt|;
 name|OnVTY
 operator|=
-name|RunningAsInit
-operator|=
 name|FALSE
 expr_stmt|;
 name|term
@@ -123,11 +121,6 @@ name|O_TRUNC
 argument_list|,
 literal|0644
 argument_list|)
-expr_stmt|;
-else|else
-name|RunningAsInit
-operator|=
-name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -199,6 +192,14 @@ name|i
 decl_stmt|,
 name|on
 decl_stmt|;
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|==
+literal|1
+condition|)
+block|{
 name|DebugFD
 operator|=
 name|open
@@ -251,6 +252,7 @@ name|OnVTY
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ColorDisplay

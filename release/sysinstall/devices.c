@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.36.2.11 1995/11/15 06:57:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.45 1996/04/23 01:29:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -69,54 +69,6 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|NSIP
-end_define
-
-begin_include
-include|#
-directive|include
-file|<netns/ns.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netns/ns_if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|EON
-end_define
-
-begin_include
-include|#
-directive|include
-file|<netiso/iso.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netiso/iso_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/protosw.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -172,25 +124,9 @@ block|,
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"cd1a"
-block|,
-literal|"SCSI CDROM drive (2nd unit)"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_CDROM
-block|,
 literal|"mcd0a"
 block|,
 literal|"Mitsumi (old model) CDROM drive"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_CDROM
-block|,
-literal|"mcd1a"
-block|,
-literal|"Mitsumi (old model) CDROM drive (2nd unit)"
 block|}
 block|,
 block|{
@@ -204,25 +140,9 @@ block|,
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"scd1a"
-block|,
-literal|"Sony CDROM drive - CDU31/33A type (2nd unit)"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_CDROM
-block|,
 literal|"matcd0a"
 block|,
 literal|"Matsushita CDROM ('sound blaster' type)"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_CDROM
-block|,
-literal|"matcd1a"
-block|,
-literal|"Matsushita CDROM (2nd unit)"
 block|}
 block|,
 block|{
@@ -234,27 +154,11 @@ literal|"ATAPI IDE CDROM"
 block|}
 block|,
 block|{
-name|DEVICE_TYPE_CDROM
-block|,
-literal|"wcd1c"
-block|,
-literal|"ATAPI IDE CDROM (2nd unit)"
-block|}
-block|,
-block|{
 name|DEVICE_TYPE_TAPE
 block|,
 literal|"rst0"
 block|,
 literal|"SCSI tape drive"
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_TAPE
-block|,
-literal|"rst1"
-block|,
-literal|"SCSI tape drive (2nd unit)"
 block|}
 block|,
 block|{
@@ -375,6 +279,14 @@ block|,
 literal|"de"
 block|,
 literal|"DEC DE435 PCI NIC or other DC21040-AA based card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"fxp"
+block|,
+literal|"Intel EtherExpress Pro/100B PCI Fast Ethernet card"
 block|}
 block|,
 block|{
@@ -530,15 +442,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|msgDebug
-argument_list|(
-literal|"Dummy init called for %s\n"
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -558,18 +461,9 @@ modifier|*
 name|dist
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 block|{
-name|msgDebug
-argument_list|(
-literal|"Dummy get called for %s\n"
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -589,17 +483,6 @@ name|int
 name|fd
 parameter_list|)
 block|{
-name|msgDebug
-argument_list|(
-literal|"Dummy [default] close called for %s with fd of %d.\n"
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|,
-name|fd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -626,15 +509,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-name|msgDebug
-argument_list|(
-literal|"Dummy shutdown called for %s\n"
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
@@ -1098,6 +972,12 @@ operator|->
 name|type
 operator|==
 name|fat
+operator|||
+name|c1
+operator|->
+name|type
+operator|==
+name|extended
 condition|)
 block|{
 name|Device
@@ -1238,11 +1118,18 @@ condition|(
 name|fd
 operator|>=
 literal|0
+operator|||
+name|errno
+operator|==
+name|EBUSY
 condition|)
 block|{
+comment|/* EBUSY if already mounted */
 if|if
 condition|(
 name|fd
+operator|>=
+literal|0
 condition|)
 name|close
 argument_list|(
@@ -1590,9 +1477,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"ifconfig: socket"
@@ -1619,9 +1503,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"ifconfig (SIOCGIFCONF)"
@@ -1773,9 +1654,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"ifconfig: socket"
@@ -1998,7 +1876,22 @@ function_decl|(
 modifier|*
 name|hook
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|d
+parameter_list|)
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|check
+function_decl|)
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|d
+parameter_list|)
 parameter_list|)
 block|{
 name|Device
@@ -2068,7 +1961,7 @@ operator|+
 operator|(
 sizeof|sizeof
 argument_list|(
-name|DMenuItem
+name|dialogMenuItem
 argument_list|)
 operator|*
 operator|(
@@ -2113,7 +2006,7 @@ index|[
 name|i
 index|]
 operator|.
-name|title
+name|prompt
 operator|=
 name|devs
 index|[
@@ -2177,7 +2070,7 @@ index|[
 name|i
 index|]
 operator|.
-name|prompt
+name|title
 operator|=
 name|device_names
 index|[
@@ -2206,7 +2099,7 @@ index|[
 name|i
 index|]
 operator|.
-name|prompt
+name|title
 operator|=
 literal|"<unknown device type>"
 expr_stmt|;
@@ -2217,18 +2110,7 @@ index|[
 name|i
 index|]
 operator|.
-name|type
-operator|=
-name|DMENU_CALL
-expr_stmt|;
-name|tmp
-operator|->
-name|items
-index|[
-name|i
-index|]
-operator|.
-name|ptr
+name|fire
 operator|=
 name|hook
 expr_stmt|;
@@ -2239,33 +2121,11 @@ index|[
 name|i
 index|]
 operator|.
-name|disabled
+name|checked
 operator|=
-name|FALSE
-expr_stmt|;
-name|tmp
-operator|->
-name|items
-index|[
-name|i
-index|]
-operator|.
 name|check
-operator|=
-name|NULL
 expr_stmt|;
 block|}
-name|tmp
-operator|->
-name|items
-index|[
-name|i
-index|]
-operator|.
-name|type
-operator|=
-name|DMENU_NOP
-expr_stmt|;
 name|tmp
 operator|->
 name|items

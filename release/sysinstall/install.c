@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.84 1996/01/14 11:45:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.89 1996/04/28 03:27:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -329,9 +329,6 @@ condition|(
 name|rootdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  You have more than one root device set?!\n"
@@ -386,9 +383,6 @@ condition|(
 name|usrdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  You have more than one /usr filesystem.\n"
@@ -588,9 +582,6 @@ operator|!
 name|rootdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No root device found - you must label a partition as /\n"
@@ -613,9 +604,6 @@ operator|!
 name|swapdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No swap devices found - you must create at least one\n"
@@ -638,9 +626,6 @@ operator|!
 name|usrdev
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"WARNING:  No /usr filesystem found.  This is not technically\n"
@@ -675,7 +660,7 @@ condition|(
 name|alreadyDone
 condition|)
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 if|if
 condition|(
@@ -686,16 +671,13 @@ name|DISK_LABELLED
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"You need to assign disk labels before you can proceed with\nthe installation."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* If it's labelled, assume it's also partitioned */
@@ -715,9 +697,6 @@ literal|"yes"
 argument_list|)
 expr_stmt|;
 comment|/* If we refuse to proceed, bail. */
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -730,28 +709,28 @@ literal|"We can take no responsibility for lost disk contents!"
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|diskLabelCommit
 argument_list|(
 name|NULL
 argument_list|)
+argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't make filesystems properly.  Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -761,9 +740,6 @@ name|copySelf
 argument_list|()
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't clone the boot floppy onto the root file system.\n"
@@ -771,12 +747,9 @@ literal|"Aborting."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|chroot
@@ -788,16 +761,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to chroot to /mnt - this is bad!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|chdir
@@ -821,18 +791,40 @@ operator|=
 name|TRUE
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
 
 begin_function
 name|int
-name|installFixit
+name|installFixitCDROM
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
+parameter_list|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Sorry, this feature is currently unimplemented but will,\n"
+literal|"at some point in the future, support the use of the live\n"
+literal|"filesystem CD (CD 2) in fixing your system."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|installFixitFloppy
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
 parameter_list|)
 block|{
 name|struct
@@ -845,6 +837,13 @@ decl_stmt|;
 name|int
 name|waitstatus
 decl_stmt|;
+name|variable_set2
+argument_list|(
+name|SYSTEM_STATE
+argument_list|,
+literal|"fixit"
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -876,9 +875,6 @@ condition|(
 literal|1
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Please insert a writable fixit floppy and press return"
@@ -905,9 +901,6 @@ operator|-
 literal|1
 condition|)
 break|break;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -916,7 +909,7 @@ literal|"Unable to mount the fixit floppy - do you want to try again?"
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|dialog_clear
@@ -935,7 +928,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|directoryExists
+name|directory_exists
 argument_list|(
 literal|"/tmp"
 argument_list|)
@@ -953,7 +946,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|directoryExists
+name|directory_exists
 argument_list|(
 literal|"/var/tmp/vi.recover"
 argument_list|)
@@ -961,19 +954,19 @@ condition|)
 block|{
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|Mkdir
 argument_list|(
 literal|"/var/tmp/vi.recover"
 argument_list|,
 name|NULL
 argument_list|)
+argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning:  Was unable to create a /var/tmp/vi.recover directory.\n"
@@ -986,27 +979,24 @@ block|}
 comment|/* Link the spwd.db file */
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|Mkdir
 argument_list|(
 literal|"/etc"
 argument_list|,
 name|NULL
 argument_list|)
+argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to create an /etc directory!  Things are weird on this floppy.."
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|symlink
@@ -1019,17 +1009,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't symlink the /etc/spwd.db file!  I'm not sure I like this.."
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 operator|!
@@ -1185,16 +1169,13 @@ argument_list|,
 name|MNT_FORCE
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Please remove the fixit floppy now."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -1203,34 +1184,47 @@ begin_function
 name|int
 name|installExpress
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
-if|if
-condition|(
-name|diskPartitionEditor
+name|variable_set2
 argument_list|(
+name|SYSTEM_STATE
+argument_list|,
 literal|"express"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|diskPartitionEditor
+argument_list|(
+name|self
+argument_list|)
+argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|diskLabelEditor
 argument_list|(
-literal|"express"
+name|self
+argument_list|)
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1246,9 +1240,16 @@ argument_list|(
 operator|&
 name|MenuDistributions
 argument_list|)
+operator|&&
+operator|!
+name|Dists
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 if|if
@@ -1270,23 +1271,38 @@ operator|!
 name|mediaDevice
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|installCommit
 argument_list|(
-literal|"express"
+name|self
+argument_list|)
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 return|return
-name|RET_DONE
+name|DITEM_LEAVE_MENU
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 end_function
@@ -1299,11 +1315,18 @@ begin_function
 name|int
 name|installNovice
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
+name|variable_set2
+argument_list|(
+name|SYSTEM_STATE
+argument_list|,
+literal|"novice"
+argument_list|)
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
@@ -1319,15 +1342,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|diskPartitionEditor
 argument_list|(
-literal|"novice"
+name|self
+argument_list|)
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|dialog_clear
 argument_list|()
@@ -1344,15 +1370,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|diskLabelEditor
 argument_list|(
-literal|"novice"
+name|self
+argument_list|)
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|dialog_clear
 argument_list|()
@@ -1378,9 +1407,16 @@ argument_list|(
 operator|&
 name|MenuDistributions
 argument_list|)
+operator|&&
+operator|!
+name|Dists
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 if|if
 condition|(
@@ -1421,23 +1457,38 @@ operator|!
 name|mediaDevice
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|installCommit
 argument_list|(
-literal|"novice"
+name|self
+argument_list|)
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 return|return
-name|RET_DONE
+name|DITEM_LEAVE_MENU
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 end_function
@@ -1450,17 +1501,21 @@ begin_function
 name|int
 name|installCommit
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 name|int
 name|i
 decl_stmt|;
 specifier|extern
-name|Boolean
+name|int
 name|cdromMounted
+decl_stmt|;
+name|char
+modifier|*
+name|str
 decl_stmt|;
 if|if
 condition|(
@@ -1469,11 +1524,18 @@ name|mediaVerify
 argument_list|()
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
+name|str
+operator|=
+name|variable_get
+argument_list|(
+name|SYSTEM_STATE
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
-name|RET_DONE
+name|DITEM_LEAVE_MENU
 expr_stmt|;
 if|if
 condition|(
@@ -1482,23 +1544,29 @@ condition|)
 block|{
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|installInitial
 argument_list|()
+argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|configFstab
 argument_list|()
+argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1507,9 +1575,6 @@ name|rootExtract
 argument_list|()
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Failed to load the ROOT distribution.  Please correct\n"
@@ -1517,54 +1582,50 @@ literal|"this problem and try again."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|distExtractAll
 argument_list|(
-name|NULL
+name|self
+argument_list|)
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 name|i
 operator|=
-name|RET_FAIL
+name|DITEM_FAILURE
 expr_stmt|;
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|installFixup
 argument_list|(
-name|NULL
+name|self
+argument_list|)
 argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 name|i
 operator|=
-name|RET_FAIL
+name|DITEM_FAILURE
 expr_stmt|;
 if|if
 condition|(
-name|i
-operator|!=
-name|RET_FAIL
-condition|)
-name|variable_set2
+name|DITEM_STATUS
 argument_list|(
-name|SYSTEM_STATE
-argument_list|,
-literal|"base-install"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|i
+argument_list|)
 operator|!=
-name|RET_FAIL
+name|DITEM_FAILURE
 operator|&&
 operator|!
 name|strcmp
@@ -1575,9 +1636,6 @@ literal|"novice"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Since you're running the novice installation, a few post-configuration\n"
@@ -1600,9 +1658,6 @@ operator|!=
 name|DEVICE_TYPE_NFS
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1628,9 +1683,6 @@ name|save
 expr_stmt|;
 block|}
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1643,11 +1695,8 @@ argument_list|)
 condition|)
 name|configSamba
 argument_list|(
-name|NULL
+name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1665,9 +1714,6 @@ argument_list|,
 literal|"YES"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1678,11 +1724,8 @@ argument_list|)
 condition|)
 name|configAnonFTP
 argument_list|(
-name|NULL
+name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1694,11 +1737,8 @@ argument_list|)
 condition|)
 name|configNFSServer
 argument_list|(
-name|NULL
+name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1715,9 +1755,6 @@ argument_list|,
 literal|"YES"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1728,11 +1765,8 @@ argument_list|)
 condition|)
 name|configApache
 argument_list|(
-name|NULL
+name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1748,9 +1782,6 @@ operator|&
 name|MenuSyscons
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1759,14 +1790,28 @@ argument_list|(
 literal|"Would you like to set this machine's time zone now?"
 argument_list|)
 condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 name|systemExecute
 argument_list|(
 literal|"rm -f /etc/wall_cmos_clock /etc/localtime; tzsetup"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1783,15 +1828,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|directoryExists
+name|directory_exists
 argument_list|(
 literal|"/usr/X11R6"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1800,9 +1842,9 @@ argument_list|(
 literal|"Would you like to configure your X server at this time?"
 argument_list|)
 condition|)
-name|systemExecute
+name|configXFree86
 argument_list|(
-literal|"/usr/X11R6/bin/xf86config"
+name|self
 argument_list|)
 expr_stmt|;
 block|}
@@ -1811,9 +1853,6 @@ condition|(
 name|cdromMounted
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1828,13 +1867,10 @@ argument_list|)
 condition|)
 name|configPorts
 argument_list|(
-name|NULL
+name|self
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1847,22 +1883,19 @@ argument_list|)
 condition|)
 name|configPackages
 argument_list|(
-name|NULL
+name|self
 argument_list|)
 expr_stmt|;
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 block|}
 comment|/* Final menu of last resort */
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|msgYesNo
 argument_list|(
 literal|"Would you like to go to the general configuration menu for a chance to set\n"
-literal|"any last configuration options?"
+literal|"any last options?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
@@ -1877,19 +1910,6 @@ argument_list|()
 expr_stmt|;
 name|configSysconfig
 argument_list|()
-expr_stmt|;
-name|variable_set2
-argument_list|(
-name|SYSTEM_STATE
-argument_list|,
-name|i
-operator|==
-name|RET_FAIL
-condition|?
-literal|"error-install"
-else|:
-literal|"full-install"
-argument_list|)
 expr_stmt|;
 comment|/* Don't print this if we're express or novice installing */
 if|if
@@ -1913,14 +1933,13 @@ if|if
 condition|(
 name|Dists
 operator|||
+name|DITEM_STATUS
+argument_list|(
 name|i
+argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
@@ -1928,12 +1947,7 @@ literal|"scroll through the debugging messages on VTY1 with the\n"
 literal|"scroll-lock feature."
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed successfully.\n\n"
@@ -1941,7 +1955,6 @@ literal|"If you have any network devices you have not yet configured,\n"
 literal|"see the Interfaces configuration item on the Configuration menu."
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -1959,14 +1972,14 @@ if|if
 condition|(
 name|Dists
 operator|||
+name|DITEM_STATUS
+argument_list|(
 name|i
+argument_list|)
 operator|==
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
@@ -1979,9 +1992,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Congradulations!  You now have FreeBSD installed on your system.\n"
@@ -1994,8 +2004,28 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|variable_set2
+argument_list|(
+name|SYSTEM_STATE
+argument_list|,
+name|DITEM_STATUS
+argument_list|(
+name|i
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|?
+literal|"error-install"
+else|:
+literal|"full-install"
+argument_list|)
+expr_stmt|;
 return|return
 name|i
+operator||
+name|DITEM_RESTORE
+operator||
+name|DITEM_RECREATE
 return|;
 block|}
 end_function
@@ -2004,9 +2034,9 @@ begin_function
 name|int
 name|installFixup
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 name|Device
@@ -2036,30 +2066,24 @@ condition|)
 block|{
 if|if
 condition|(
-name|vsystem
+name|system
 argument_list|(
 literal|"cp -p /kernel.GENERIC /kernel"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to link /kernel into place!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Can't find a kernel image to link to on the root file system!\n"
@@ -2068,7 +2092,7 @@ literal|"boot from the hard disk, I'm afraid!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -2091,16 +2115,13 @@ literal|"cd /dev; sh MAKEDEV all"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"MAKEDEV returned non-zero status"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|msgNotify
@@ -2238,9 +2259,6 @@ name|name
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make slice entries for %s!"
@@ -2251,7 +2269,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -2266,7 +2284,7 @@ expr_stmt|;
 comment|/* BOGON #1:  XFree86 extracting /usr/X11R6 with root-only perms */
 if|if
 condition|(
-name|directoryExists
+name|directory_exists
 argument_list|(
 literal|"/usr/X11R6"
 argument_list|)
@@ -2324,7 +2342,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -2337,9 +2355,9 @@ begin_function
 name|int
 name|installFilesystems
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 name|int
@@ -2379,6 +2397,9 @@ name|dname
 index|[
 literal|80
 index|]
+decl_stmt|,
+modifier|*
+name|str
 decl_stmt|;
 specifier|extern
 name|int
@@ -2398,21 +2419,15 @@ name|upgrade
 init|=
 name|FALSE
 decl_stmt|;
+name|str
+operator|=
+name|variable_get
+argument_list|(
+name|SYSTEM_STATE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
-name|str
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|str
-argument_list|,
-literal|"script"
-argument_list|)
-operator|)
-operator|&&
 operator|!
 name|checkLabels
 argument_list|(
@@ -2427,7 +2442,7 @@ name|usrdev
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|root
 operator|=
@@ -2483,9 +2498,6 @@ name|dname
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make device node for %s in /dev!\n"
@@ -2495,7 +2507,7 @@ name|dname
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -2559,9 +2571,6 @@ name|dname
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make device node for %s in /dev!\n"
@@ -2571,7 +2580,7 @@ name|dname
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -2585,10 +2594,6 @@ argument_list|,
 literal|"/"
 argument_list|)
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning: %s is marked as a root partition but is mounted on %s"
@@ -2602,7 +2607,6 @@ operator|->
 name|mountpoint
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|root
@@ -2638,9 +2642,6 @@ condition|(
 name|i
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make new root filesystem on %s!\n"
@@ -2652,7 +2653,7 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 block|}
@@ -2664,9 +2665,6 @@ operator|!
 name|upgrade
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning:  Root device is selected read-only.  It will be assumed\n"
@@ -2694,10 +2692,6 @@ if|if
 condition|(
 name|i
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning: fsck returned status of %d for %s.\n"
@@ -2708,7 +2702,6 @@ argument_list|,
 name|dname
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Switch to block device */
 name|sprintf
@@ -2734,9 +2727,6 @@ name|dname
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to mount the root file system on %s!  Giving up."
@@ -2745,7 +2735,7 @@ name|dname
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Now buzz through the rest of the partitions and mount them too */
@@ -2805,9 +2795,6 @@ operator|->
 name|chunks
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No chunk list found for %s!"
@@ -2818,7 +2805,7 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 if|if
@@ -3043,10 +3030,6 @@ name|fname
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to add %s as a swap device: %s"
@@ -3059,7 +3042,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -3138,20 +3120,20 @@ operator|)
 operator|&&
 name|vsystem
 argument_list|(
-literal|"find -x /dev | cpio -pdmv /mnt"
+literal|"find -x /dev | cpio %s -pdum /mnt"
+argument_list|,
+name|cpioVerbosity
+argument_list|()
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't clone the /dev files!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|command_sort
@@ -3161,7 +3143,7 @@ name|command_execute
 argument_list|()
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -3170,9 +3152,9 @@ begin_function
 name|int
 name|installVarDefaults
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|unused
+name|self
 parameter_list|)
 block|{
 comment|/* Set default startup options */
@@ -3206,6 +3188,17 @@ argument_list|)
 expr_stmt|;
 name|variable_set2
 argument_list|(
+name|VAR_EDITOR
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/stand/ee"
+else|:
+literal|"/usr/bin/ee"
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
 name|VAR_FTP_USER
 argument_list|,
 literal|"ftp"
@@ -3215,7 +3208,7 @@ name|variable_set2
 argument_list|(
 name|VAR_BROWSER_PACKAGE
 argument_list|,
-literal|"lynx-2.4.2"
+literal|"lynx-2.4fm"
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -3276,7 +3269,7 @@ literal|"init"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -3304,7 +3297,10 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"find -x /stand | cpio -pdmv /mnt"
+literal|"find -x /stand | cpio %s -pdum /mnt"
+argument_list|,
+name|cpioVerbosity
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -3312,9 +3308,6 @@ condition|(
 name|i
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Copy returned error status of %d!"
@@ -3331,13 +3324,13 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"cd /mnt/stand; find etc | cpio -pdmv /mnt"
+literal|"cd /mnt/stand; find etc | cpio %s -pdum /mnt"
+argument_list|,
+name|cpioVerbosity
+argument_list|()
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't copy up the /etc files!"
@@ -3453,9 +3446,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't get root image from %s!\n"
@@ -3659,9 +3649,6 @@ operator|!
 name|fp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to initialize termcap file. Some screen-oriented\nutilities may not work."

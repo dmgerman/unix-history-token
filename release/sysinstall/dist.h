@@ -60,13 +60,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_HELP
+name|DIST_DOC
 value|0x0040
 end_define
-
-begin_comment
-comment|/* Not yet used; reserved */
-end_comment
 
 begin_define
 define|#
@@ -92,36 +88,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86
+name|DIST_COMPAT21
 value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_COMMERCIAL
+name|DIST_XF86
 value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_DES
+name|DIST_COMMERCIAL
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|DIST_EXPERIMENTAL
+name|DIST_DES
 value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
+name|DIST_EXPERIMENTAL
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_ALL
-value|0x0FFF
+value|0xFFFF
 end_define
 
 begin_comment
@@ -133,7 +136,7 @@ define|#
 directive|define
 name|_DIST_DEVELOPER
 define|\
-value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC)
 end_define
 
 begin_define
@@ -141,7 +144,15 @@ define|#
 directive|define
 name|_DIST_USER
 define|\
-value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
+value|(DIST_BIN | DIST_DOC | DIST_MANPAGES | DIST_DICT | DIST_COMPAT1X | DIST_COMPAT20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_DIST_XDEV
+define|\
+value|(DIST_XF86_BIN | DIST_XF86_LIB | DIST_XF86_PROG | DIST_XF86_MAN | DIST_XF86_SERVER | DIST_XF86_FONTS)
 end_define
 
 begin_comment
@@ -403,6 +414,13 @@ define|#
 directive|define
 name|DIST_XF86_SRC
 value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_MISC_ALL
+value|0x3FFF
 end_define
 
 begin_define

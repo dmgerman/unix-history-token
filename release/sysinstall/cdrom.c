@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.7.2.12 1995/11/03 12:02:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: cdrom.c,v 1.13 1996/04/23 01:29:10 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -74,11 +74,11 @@ name|CD9660
 end_undef
 
 begin_comment
-comment|/* This isn't static, like the others, since it's often useful to know whether or not we have a CDROM    available in some of the other installation screens. */
+comment|/*  * This isn't static, like the others, since it's often useful to know whether  * or not we have a CDROM available in some of the other installation screens.  * This also isn't a boolean like the others since we have 3 states for it:  * 0 = cdrom isn't mounted, 1 = cdrom is mounted and we mounted it, 2 = cdrom  * was already mounted when we came in and we should leave it that way when  * we leave.  */
 end_comment
 
 begin_decl_stmt
-name|Boolean
+name|int
 name|cdromMounted
 decl_stmt|;
 end_decl_stmt
@@ -155,6 +155,18 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|directory_exists
+argument_list|(
+literal|"/cdrom/dists"
+argument_list|)
+condition|)
+name|cdromMounted
+operator|=
+literal|2
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|mount
 argument_list|(
 name|MOUNT_CD9660
@@ -174,9 +186,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Error mounting %s on /cdrom: %s (%u)"
@@ -238,9 +247,6 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Couldn't locate the directory `dists' anywhere on the CD.\n"
@@ -254,9 +260,6 @@ return|;
 block|}
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Error trying to stat the CDROM's dists directory: %s"
@@ -274,7 +277,7 @@ block|}
 block|}
 name|cdromMounted
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 name|msgDebug
 argument_list|(
@@ -304,7 +307,7 @@ modifier|*
 name|file
 parameter_list|,
 name|Boolean
-name|tentative
+name|probe
 parameter_list|)
 block|{
 name|char
@@ -446,6 +449,10 @@ name|RunningAsInit
 operator|||
 operator|!
 name|cdromMounted
+operator|||
+name|cdromMounted
+operator|==
+literal|2
 condition|)
 return|return;
 name|msgDebug
@@ -468,10 +475,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Could not unmount the CDROM from /cdrom: %s"
@@ -482,7 +485,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|msgDebug
 argument_list|(
 literal|"Unmount successful\n"
@@ -490,7 +492,7 @@ argument_list|)
 expr_stmt|;
 name|cdromMounted
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 return|return;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.42 1995/11/12 10:35:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.27 1996/04/28 03:26:46 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -19,6 +19,48 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_decl_stmt
@@ -580,13 +622,10 @@ literal|"/etc/fstab"
 argument_list|)
 condition|)
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Attempting to rebuild your /etc/fstab file.  Warning: If you had\n"
@@ -611,16 +650,13 @@ operator|!
 name|devs
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No disks found!"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Record all the chunks */
@@ -806,9 +842,6 @@ operator|!
 name|fstab
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to create a new /etc/fstab file!  Manual intervention\n"
@@ -816,7 +849,7 @@ literal|"will be required."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 comment|/* Go for the burn */
@@ -940,9 +973,6 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make mount point for: /cdrom"
@@ -1005,9 +1035,6 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to make mount point for: %s"
@@ -1050,7 +1077,7 @@ literal|"Wrote out /etc/fstab file\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -1121,9 +1148,6 @@ operator|!
 name|fp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to open /etc/sysconfig file!  Things may work\n"
@@ -1533,9 +1557,9 @@ begin_function
 name|int
 name|configSaverTimeout
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 return|return
@@ -1546,9 +1570,9 @@ argument_list|,
 literal|"Enter time-out period in seconds for screen saver"
 argument_list|)
 condition|?
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -1557,9 +1581,9 @@ begin_function
 name|int
 name|configNTP
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 return|return
@@ -1570,10 +1594,56 @@ argument_list|,
 literal|"Enter the name of an NTP server"
 argument_list|)
 condition|?
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|configXFree86
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+if|if
+condition|(
+name|file_executable
+argument_list|(
+literal|"/usr/X11R6/bin/xf86config"
+argument_list|)
+condition|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemExecute
+argument_list|(
+literal|"/usr/X11R6/bin/xf86config"
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+else|else
+block|{
+name|msgConfirm
+argument_list|(
+literal|"XFree86 does not appear to be installed!  Please install\n"
+literal|"The XFree86 distribution before attempting to configure it."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
 block|}
 end_function
 
@@ -1636,17 +1706,12 @@ operator|==
 name|DEVICE_TYPE_FTP
 operator|)
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Warning:  Missing name server value - network operations\n"
 literal|"may fail as a result!"
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|skip
 goto|;
@@ -1661,9 +1726,6 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to create /etc directory.  Network configuration\n"
@@ -1687,9 +1749,6 @@ operator|!
 name|fp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to open /etc/resolv.conf!  You will need to do this manually."
@@ -1785,16 +1844,6 @@ index|[
 literal|255
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|vsystem
-argument_list|(
-literal|"hostname %s"
-argument_list|,
-name|hp
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -1894,9 +1943,9 @@ begin_function
 name|int
 name|configRoutedFlags
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 return|return
@@ -1908,9 +1957,9 @@ literal|"Specify the flags for routed; -q is the default, -s is\n"
 literal|"a good choice for gateway machines."
 argument_list|)
 condition|?
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -1919,15 +1968,25 @@ begin_function
 name|int
 name|configPackages
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
+specifier|static
 name|PkgNode
 name|top
 decl_stmt|,
 name|plist
+decl_stmt|;
+specifier|static
+name|Boolean
+name|index_initted
+init|=
+name|FALSE
+decl_stmt|;
+name|PkgNodePtr
+name|tmp
 decl_stmt|;
 name|int
 name|fd
@@ -1939,7 +1998,7 @@ name|mediaVerify
 argument_list|()
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -1952,8 +2011,14 @@ name|mediaDevice
 argument_list|)
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
+if|if
+condition|(
+operator|!
+name|index_initted
+condition|)
+block|{
 name|msgNotify
 argument_list|(
 literal|"Attempting to fetch packages/INDEX file from selected media."
@@ -1979,9 +2044,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to get packages/INDEX file from selected media.\n"
@@ -1994,7 +2056,7 @@ literal|"distribution or the master distribution on ftp.freebsd.org."
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|msgNotify
@@ -2022,9 +2084,6 @@ name|top
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"I/O or format error on packages/INDEX file.\n"
@@ -2041,7 +2100,7 @@ name|fd
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 name|mediaDevice
@@ -2059,6 +2118,11 @@ operator|&
 name|top
 argument_list|)
 expr_stmt|;
+name|index_initted
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 while|while
 condition|(
 literal|1
@@ -2126,21 +2190,27 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|==
-name|RET_DONE
+operator|&
+name|DITEM_LEAVE_MENU
 condition|)
 break|break;
 elseif|else
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|ret
+argument_list|)
 operator|!=
-name|RET_FAIL
+name|DITEM_FAILURE
 condition|)
 block|{
 name|index_extract
 argument_list|(
 name|mediaDevice
+argument_list|,
+operator|&
+name|top
 argument_list|,
 operator|&
 name|plist
@@ -2151,9 +2221,6 @@ block|}
 block|}
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"No packages were selected for extraction."
@@ -2162,10 +2229,36 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|index_node_free
-argument_list|(
+name|tmp
+operator|=
 operator|&
-name|top
+name|plist
+expr_stmt|;
+while|while
+condition|(
+name|tmp
+condition|)
+block|{
+name|PkgNodePtr
+name|tmp2
+init|=
+name|tmp
+operator|->
+name|next
+decl_stmt|;
+name|safe_free
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|tmp2
+expr_stmt|;
+block|}
+name|index_init
+argument_list|(
+name|NULL
 argument_list|,
 operator|&
 name|plist
@@ -2179,7 +2272,7 @@ name|mediaDevice
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function
@@ -2188,9 +2281,9 @@ begin_function
 name|int
 name|configPorts
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 name|char
@@ -2223,7 +2316,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|directoryExists
+name|directory_exists
 argument_list|(
 name|dist
 argument_list|)
@@ -2274,7 +2367,7 @@ operator|*
 name|cp
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 if|if
 condition|(
@@ -2285,21 +2378,9 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-name|msgConfirm
-argument_list|(
-literal|"Unable to make the %s directory!"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
-block|}
 else|else
 block|{
 if|if
@@ -2339,7 +2420,7 @@ name|cp
 argument_list|)
 expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 else|else
@@ -2368,19 +2449,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DITEM_STATUS
+argument_list|(
 name|lndir
 argument_list|(
 name|dist
 argument_list|,
 name|cp
 argument_list|)
+argument_list|)
 operator|!=
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"The lndir function returned an error status and may not have.\n"
@@ -2405,10 +2486,224 @@ block|}
 block|}
 else|else
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Load gated package */
+end_comment
+
+begin_function
+name|int
+name|configGated
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|package_add
+argument_list|(
+literal|"gated-3.5a11"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|ret
+argument_list|)
+operator|==
+name|DITEM_SUCCESS
+condition|)
+name|variable_set2
+argument_list|(
+literal|"gated"
+argument_list|,
+literal|"YES"
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Load pcnfsd package */
+end_comment
+
+begin_function
+name|int
+name|configPCNFSD
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|package_add
+argument_list|(
+literal|"pcnfsd-93.02.16"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|ret
+argument_list|)
+operator|==
+name|DITEM_SUCCESS
+condition|)
+name|variable_set2
+argument_list|(
+literal|"pcnfsd"
+argument_list|,
+literal|"YES"
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|configNFSServer
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|char
+name|cmd
+index|[
+literal|256
+index|]
+decl_stmt|;
+comment|/* If we're an NFS server, we need an exports file */
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/etc/exports"
+argument_list|)
+condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|msgConfirm
+argument_list|(
+literal|"Operating as an NFS server means that you must first configure\n"
+literal|"an /etc/exports file to indicate which hosts are allowed certain\n"
+literal|"kinds of access to your local file systems.\n"
+literal|"Press [ENTER] now to invoke an editor on /etc/exports\n"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '#The following examples export /usr to 3 machines named after ducks,'> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '#/home and all directories under it to machines named after dead rock stars'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '#and, finally, /a to 2 privileged machines allowed to write on it as root.'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '#/usr                huey louie dewie'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '#/home   -alldirs    janice jimmy frank'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '#/a      -maproot=0  bill albert'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '#'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo '# You should replace these lines with your actual exported filesystems.'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"echo>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
+literal|"%s /etc/exports"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_EDITOR
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemExecute
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
+name|variable_set2
+argument_list|(
+literal|"nfs_server"
+argument_list|,
+literal|"YES"
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
 return|;
 block|}
 end_function

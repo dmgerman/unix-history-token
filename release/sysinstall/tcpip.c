@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.30.2.16 1995/11/06 07:27:31 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Gary J Palmer  *	for the FreeBSD Project.  * 4. The name of Gary J Palmer or the FreeBSD Project may  *    not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY GARY J PALMER ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL GARY J PALMER BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.37 1996/04/28 00:37:38 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY GARY J PALMER ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL GARY J PALMER BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -72,6 +72,17 @@ include|#
 directive|include
 file|"sysinstall.h"
 end_include
+
+begin_comment
+comment|/* The help file for the TCP/IP setup screen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_HELPFILE
+value|"tcp"
+end_define
 
 begin_comment
 comment|/* These are nasty, but they make the layout structure a lot easier ... */
@@ -742,7 +753,7 @@ operator|*
 name|str
 condition|)
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 name|devs
 operator|=
@@ -1044,9 +1055,9 @@ block|}
 return|return
 name|dp
 condition|?
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -1067,6 +1078,9 @@ block|{
 name|WINDOW
 modifier|*
 name|ds_win
+decl_stmt|,
+modifier|*
+name|save
 decl_stmt|;
 name|ComposeObj
 modifier|*
@@ -1115,6 +1129,11 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|save
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
 comment|/* We need a curses window */
 name|ds_win
 operator|=
@@ -2530,12 +2549,22 @@ argument_list|,
 name|ipaddr
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|save
+argument_list|)
+expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
 return|;
 block|}
+name|restorescr
+argument_list|(
+name|save
+argument_list|)
+expr_stmt|;
 return|return
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -2545,9 +2574,9 @@ specifier|static
 name|int
 name|netHook
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 name|Device
@@ -2555,33 +2584,13 @@ modifier|*
 modifier|*
 name|devs
 decl_stmt|;
-comment|/* Clip garbage off the ends */
-name|string_prune
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-name|str
-operator|=
-name|string_skipwhite
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|*
-name|str
-condition|)
-return|return
-name|RET_FAIL
-return|;
 name|devs
 operator|=
 name|deviceFind
 argument_list|(
-name|str
+name|self
+operator|->
+name|prompt
 argument_list|,
 name|DEVICE_TYPE_NETWORK
 argument_list|)
@@ -2610,9 +2619,9 @@ block|}
 return|return
 name|devs
 condition|?
-name|RET_DONE
+name|DITEM_LEAVE_MENU
 else|:
-name|RET_FAIL
+name|DITEM_FAILURE
 return|;
 block|}
 end_function
@@ -2699,6 +2708,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+else|else
+name|msgConfirm
+argument_list|(
+literal|"Since you're running multi-user, we'll assume\n"
+literal|"that the network is already up."
+argument_list|)
+expr_stmt|;
 name|mediaDevice
 operator|=
 name|devs
@@ -2723,6 +2739,8 @@ argument_list|,
 name|DEVICE_TYPE_NETWORK
 argument_list|,
 name|netHook
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2762,9 +2780,9 @@ begin_function
 name|int
 name|tcpMenuSelect
 parameter_list|(
-name|char
+name|dialogMenuItem
 modifier|*
-name|str
+name|self
 parameter_list|)
 block|{
 operator|(
@@ -2777,7 +2795,11 @@ name|configResolv
 argument_list|()
 expr_stmt|;
 return|return
-name|RET_SUCCESS
+name|DITEM_SUCCESS
+operator||
+name|DITEM_RECREATE
+operator||
+name|DITEM_RESTORE
 return|;
 block|}
 end_function
