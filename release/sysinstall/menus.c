@@ -172,75 +172,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|setX11All
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|XF86Dists
-operator|=
-name|DIST_XF86_ALL
-expr_stmt|;
-name|XF86ServerDists
-operator|=
-name|DIST_XF86_SERVER_ALL
-expr_stmt|;
-name|XF86FontDists
-operator|=
-name|DIST_XF86_FONTS_ALL
-expr_stmt|;
-name|Dists
-operator||=
-name|DIST_XF86
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|clearX11All
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|XF86Dists
-operator|=
-literal|0
-expr_stmt|;
-name|XF86ServerDists
-operator|=
-literal|0
-expr_stmt|;
-name|XF86FontDists
-operator|=
-literal|0
-expr_stmt|;
-name|Dists
-operator|&=
-operator|~
-name|DIST_XF86
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|setX11Misc
 parameter_list|(
 name|dialogMenuItem
@@ -1883,7 +1814,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 README"
+literal|"2 README"
 block|,
 literal|"A general description of FreeBSD.  Read this!"
 block|,
@@ -1897,7 +1828,7 @@ literal|"README"
 block|}
 block|,
 block|{
-literal|"2 Hardware"
+literal|"3 Hardware"
 block|,
 literal|"The FreeBSD survival guide for PC hardware."
 block|,
@@ -1911,7 +1842,7 @@ literal|"HARDWARE"
 block|}
 block|,
 block|{
-literal|"3 Install"
+literal|"4 Install"
 block|,
 literal|"A step-by-step guide to installing FreeBSD."
 block|,
@@ -1925,7 +1856,7 @@ literal|"INSTALL"
 block|}
 block|,
 block|{
-literal|"4 Copyright"
+literal|"5 Copyright"
 block|,
 literal|"The FreeBSD Copyright notices."
 block|,
@@ -1939,7 +1870,7 @@ literal|"COPYRIGHT"
 block|}
 block|,
 block|{
-literal|"5 Release"
+literal|"6 Release"
 block|,
 literal|"The release notes for this version of FreeBSD."
 block|,
@@ -1953,7 +1884,7 @@ literal|"RELNOTES"
 block|}
 block|,
 block|{
-literal|"6 Shortcuts"
+literal|"7 Shortcuts"
 block|,
 literal|"Creating shortcuts to sysinstall."
 block|,
@@ -1967,7 +1898,7 @@ literal|"shortcuts"
 block|}
 block|,
 block|{
-literal|"7 HTML Docs"
+literal|"8 HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)."
 block|,
@@ -2316,7 +2247,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 Enable"
+literal|"2 Enable"
 block|,
 literal|"Test and run the mouse daemon"
 block|,
@@ -2330,7 +2261,7 @@ name|NULL
 block|}
 block|,
 block|{
-literal|"2 Type"
+literal|"3 Type"
 block|,
 literal|"Select mouse protocol type"
 block|,
@@ -2345,7 +2276,7 @@ name|MenuMouseType
 block|}
 block|,
 block|{
-literal|"3 Port"
+literal|"4 Port"
 block|,
 literal|"Select mouse port"
 block|,
@@ -2360,7 +2291,7 @@ name|MenuMousePort
 block|}
 block|,
 block|{
-literal|"4 Disable"
+literal|"5 Disable"
 block|,
 literal|"Disable the mouse daemon"
 block|,
@@ -2429,7 +2360,7 @@ ifdef|#
 directive|ifdef
 name|__alpha__
 block|{
-literal|"xf86config"
+literal|"2 xf86config"
 block|,
 literal|"Shell-script based XFree86 configuration tool."
 block|,
@@ -2446,7 +2377,7 @@ block|,
 else|#
 directive|else
 block|{
-literal|"XF86Setup"
+literal|"2 XF86Setup"
 block|,
 literal|"Fully graphical XFree86 configuration tool."
 block|,
@@ -2461,7 +2392,7 @@ literal|"=XF86Setup"
 block|}
 block|,
 block|{
-literal|"xf86config"
+literal|"3 xf86config"
 block|,
 literal|"Shell-script based XFree86 configuration tool."
 block|,
@@ -2476,7 +2407,7 @@ literal|"=xf86config"
 block|}
 block|,
 block|{
-literal|"XF98Setup"
+literal|"4 XF98Setup"
 block|,
 literal|"Fully graphical XFree86 configuration tool (PC98)."
 block|,
@@ -2493,7 +2424,7 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|"XDesktop"
+literal|"D XDesktop"
 block|,
 literal|"X already set up, just do desktop configuration."
 block|,
@@ -2550,7 +2481,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 KDE"
+literal|"2 KDE"
 block|,
 literal|"The K Desktop Environment."
 block|,
@@ -2565,7 +2496,7 @@ literal|"=kde"
 block|}
 block|,
 block|{
-literal|"2 GNOME + Afterstep"
+literal|"3 GNOME + Afterstep"
 block|,
 literal|"GNOME + Afterstep window manager."
 block|,
@@ -2580,7 +2511,7 @@ literal|"=gnome"
 block|}
 block|,
 block|{
-literal|"3 GNOME + Enlightenment"
+literal|"4 GNOME + Enlightenment"
 block|,
 literal|"GNOME + The E window manager"
 block|,
@@ -2595,7 +2526,7 @@ literal|"=enlightenment"
 block|}
 block|,
 block|{
-literal|"4 Afterstep"
+literal|"5 Afterstep"
 block|,
 literal|"The Afterstep window manager"
 block|,
@@ -2610,7 +2541,7 @@ literal|"=afterstep"
 block|}
 block|,
 block|{
-literal|"5 Windowmaker"
+literal|"6 Windowmaker"
 block|,
 literal|"The Windowmaker window manager"
 block|,
@@ -2625,7 +2556,7 @@ literal|"=windowmaker"
 block|}
 block|,
 block|{
-literal|"6 fvwm2"
+literal|"7 fvwm2"
 block|,
 literal|"The fvwm2 window manager"
 block|,
@@ -4437,7 +4368,7 @@ name|mediaSetTape
 block|}
 block|,
 block|{
-literal|"Options"
+literal|"9 Options"
 block|,
 literal|"Go to the Options screen"
 block|,
@@ -4510,6 +4441,16 @@ block|,
 name|checkDistEverything
 block|,
 name|distSetEverything
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -4533,7 +4474,7 @@ literal|' '
 block|}
 block|,
 block|{
-literal|"1 Developer"
+literal|"4 Developer"
 block|,
 literal|"Full sources, binaries and doc but no games"
 block|,
@@ -4543,7 +4484,7 @@ name|distSetDeveloper
 block|}
 block|,
 block|{
-literal|"2 X-Developer"
+literal|"5 X-Developer"
 block|,
 literal|"Same as above + X Window System"
 block|,
@@ -4553,7 +4494,7 @@ name|distSetXDeveloper
 block|}
 block|,
 block|{
-literal|"3 Kern-Developer"
+literal|"6 Kern-Developer"
 block|,
 literal|"Full binaries and doc, kernel sources only"
 block|,
@@ -4563,7 +4504,7 @@ name|distSetKernDeveloper
 block|}
 block|,
 block|{
-literal|"4 X-Kern-Developer"
+literal|"7 X-Kern-Developer"
 block|,
 literal|"Same as above + X Window System"
 block|,
@@ -4573,7 +4514,7 @@ name|distSetXKernDeveloper
 block|}
 block|,
 block|{
-literal|"5 User"
+literal|"8 User"
 block|,
 literal|"Average user - binaries and doc only"
 block|,
@@ -4583,7 +4524,7 @@ name|distSetUser
 block|}
 block|,
 block|{
-literal|"6 X-User"
+literal|"9 X-User"
 block|,
 literal|"Same as above + X Window System"
 block|,
@@ -4593,7 +4534,7 @@ name|distSetXUser
 block|}
 block|,
 block|{
-literal|"7 Minimal"
+literal|"A Minimal"
 block|,
 literal|"The smallest configuration possible"
 block|,
@@ -4603,7 +4544,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"8 Custom"
+literal|"B Custom"
 block|,
 literal|"Specify your own distribution set"
 block|,
@@ -4679,6 +4620,16 @@ block|,
 name|NULL
 block|,
 name|distSetEverything
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -5170,6 +5121,16 @@ block|,
 name|NULL
 block|,
 name|setDES
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -5394,6 +5355,16 @@ block|,
 name|NULL
 block|,
 name|setSrc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -5820,26 +5791,6 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"All"
-block|,
-literal|"Select all XFree86 distribution sets"
-block|,
-name|NULL
-block|,
-name|setX11All
-block|}
-block|,
-block|{
-literal|"Reset"
-block|,
-literal|"Reset XFree86 distribution sets"
-block|,
-name|NULL
-block|,
-name|clearX11All
-block|}
-block|,
-block|{
 literal|"Basic"
 block|,
 literal|"Basic component menu (required)"
@@ -5939,6 +5890,16 @@ block|,
 name|NULL
 block|,
 name|setX11Misc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -6273,6 +6234,16 @@ block|,
 name|NULL
 block|,
 name|setX11Fonts
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -6490,6 +6461,16 @@ block|,
 name|NULL
 block|,
 name|setX11Servers
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -7316,7 +7297,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 Handbook"
+literal|"2 Handbook"
 block|,
 literal|"The FreeBSD Handbook."
 block|,
@@ -7326,7 +7307,7 @@ name|docShowDocument
 block|}
 block|,
 block|{
-literal|"2 FAQ"
+literal|"3 FAQ"
 block|,
 literal|"The Frequently Asked Questions guide."
 block|,
@@ -7336,7 +7317,7 @@ name|docShowDocument
 block|}
 block|,
 block|{
-literal|"3 Home"
+literal|"4 Home"
 block|,
 literal|"The Home Pages for the FreeBSD Project (requires net)"
 block|,
@@ -7346,7 +7327,7 @@ name|docShowDocument
 block|}
 block|,
 block|{
-literal|"4 Other"
+literal|"5 Other"
 block|,
 literal|"Enter a URL."
 block|,
@@ -7396,7 +7377,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 Options"
+literal|"2 Options"
 block|,
 literal|"View/Set various installation options"
 block|,
@@ -7409,71 +7390,9 @@ ifdef|#
 directive|ifdef
 name|__alpha__
 block|{
-literal|"2 Label"
-block|,
-literal|"Label disk partitions"
-block|,
-name|NULL
-block|,
-name|diskLabelEditor
-block|}
-block|,
-block|{
-literal|"3 Distributions"
-block|,
-literal|"Select distribution(s) to extract"
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuDistributions
-block|}
-block|,
-block|{
-literal|"4 Media"
-block|,
-literal|"Choose the installation media type"
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuMedia
-block|}
-block|,
-block|{
-literal|"5 Commit"
-block|,
-literal|"Perform any pending Partition/Label/Extract actions"
-block|,
-name|NULL
-block|,
-name|installCustomCommit
-block|}
-block|,
-else|#
-directive|else
-block|{
-literal|"2 Partition"
-block|,
-literal|"Allocate disk space for FreeBSD"
-block|,
-name|NULL
-block|,
-name|diskPartitionEditor
-block|}
-block|,
-block|{
 literal|"3 Label"
 block|,
-literal|"Label allocated disk partitions"
+literal|"Label disk partitions"
 block|,
 name|NULL
 block|,
@@ -7512,6 +7431,68 @@ block|}
 block|,
 block|{
 literal|"6 Commit"
+block|,
+literal|"Perform any pending Partition/Label/Extract actions"
+block|,
+name|NULL
+block|,
+name|installCustomCommit
+block|}
+block|,
+else|#
+directive|else
+block|{
+literal|"3 Partition"
+block|,
+literal|"Allocate disk space for FreeBSD"
+block|,
+name|NULL
+block|,
+name|diskPartitionEditor
+block|}
+block|,
+block|{
+literal|"4 Label"
+block|,
+literal|"Label allocated disk partitions"
+block|,
+name|NULL
+block|,
+name|diskLabelEditor
+block|}
+block|,
+block|{
+literal|"5 Distributions"
+block|,
+literal|"Select distribution(s) to extract"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuDistributions
+block|}
+block|,
+block|{
+literal|"6 Media"
+block|,
+literal|"Choose the installation media type"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuMedia
+block|}
+block|,
+block|{
+literal|"7 Commit"
 block|,
 literal|"Perform any pending Partition/Label/Extract actions"
 block|,
@@ -8744,7 +8725,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 Font"
+literal|"2 Font"
 block|,
 literal|"Choose an alternate screen font"
 block|,
@@ -8759,7 +8740,7 @@ name|MenuSysconsFont
 block|}
 block|,
 block|{
-literal|"2 Keymap"
+literal|"3 Keymap"
 block|,
 literal|"Choose an alternate keyboard map"
 block|,
@@ -8774,7 +8755,7 @@ name|MenuSysconsKeymap
 block|}
 block|,
 block|{
-literal|"3 Repeat"
+literal|"4 Repeat"
 block|,
 literal|"Set the rate at which keys repeat"
 block|,
@@ -8789,7 +8770,7 @@ name|MenuSysconsKeyrate
 block|}
 block|,
 block|{
-literal|"4 Saver"
+literal|"5 Saver"
 block|,
 literal|"Configure the screen saver"
 block|,
@@ -8804,7 +8785,7 @@ name|MenuSysconsSaver
 block|}
 block|,
 block|{
-literal|"5 Screenmap"
+literal|"6 Screenmap"
 block|,
 literal|"Choose an alternate screenmap"
 block|,
@@ -10057,7 +10038,7 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 CDROM"
+literal|"2 CDROM"
 block|,
 literal|"Use the 2nd \"live\" CDROM from the distribution"
 block|,
@@ -10067,7 +10048,7 @@ name|installFixitCDROM
 block|}
 block|,
 block|{
-literal|"2 Floppy"
+literal|"3 Floppy"
 block|,
 literal|"Use a floppy generated from the fixit image"
 block|,
@@ -10077,7 +10058,7 @@ name|installFixitFloppy
 block|}
 block|,
 block|{
-literal|"3 Shell"
+literal|"4 Shell"
 block|,
 literal|"Start an Emergency Holographic Shell"
 block|,
