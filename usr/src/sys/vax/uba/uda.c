@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.24	83/05/27	*/
+comment|/*	uda.c	4.25	83/07/09	*/
 end_comment
 
 begin_include
@@ -329,9 +329,6 @@ literal|8
 index|]
 init|=
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 literal|15884
 block|,
 literal|0
@@ -375,58 +372,6 @@ block|,
 literal|131404
 block|,
 comment|/* H=blk 131404 thru end */
-block|}
-name|ra81_sizes
-index|[
-literal|8
-index|]
-operator|=
-block|{
-endif|#
-directive|endif
-literal|15884
-block|,
-literal|0
-block|,
-comment|/* A=cyl 0 thru 22 */
-literal|66880
-block|,
-literal|16422
-block|,
-comment|/* B=cyl 23 thru 116 */
-operator|-
-literal|1
-block|,
-literal|0
-block|,
-comment|/* C=cyl 0 thru end */
-literal|15884
-block|,
-literal|375564
-block|,
-comment|/* D=cyl 526 thru 548 */
-literal|307200
-block|,
-literal|391986
-block|,
-comment|/* E=cyl 549 thru 979 */
-operator|-
-literal|1
-block|,
-literal|699720
-block|,
-comment|/* F=cyl 980 thru end */
-operator|-
-literal|1
-block|,
-literal|375564
-block|,
-comment|/* G=cyl 526 thru end */
-literal|291346
-block|,
-literal|83538
-block|,
-comment|/* H=cyl 117 thru 525 */
 block|}
 struct|;
 end_struct
@@ -3500,12 +3445,13 @@ operator|->
 name|mscp_unit
 argument_list|)
 expr_stmt|;
-comment|/*** New for ***/
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"uda%d: online, size=%d\n"
 argument_list|,
-comment|/*** debugging **/
 name|mp
 operator|->
 name|mscp_unit
@@ -3518,6 +3464,8 @@ operator|->
 name|mscp_untsize
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
