@@ -1895,7 +1895,6 @@ parameter_list|,
 name|void
 function_decl|(
 modifier|*
-name|free
 function_decl|)
 parameter_list|(
 name|void
@@ -2019,7 +2018,6 @@ parameter_list|,
 name|void
 function_decl|(
 modifier|*
-name|copy
 function_decl|)
 parameter_list|(
 name|char
