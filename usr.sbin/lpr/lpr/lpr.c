@@ -2508,6 +2508,13 @@ operator|++
 operator|)
 operator|!=
 literal|'\0'
+operator|&&
+name|len
+operator|<
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 condition|)
 block|{
 operator|*
