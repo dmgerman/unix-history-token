@@ -37,24 +37,22 @@ decl_stmt|;
 comment|/* command name */
 comment|/* command handler */
 name|int
-argument_list|(
-argument|*cc_handler
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|cc_handler
+function_decl|)
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
