@@ -1200,7 +1200,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.11.2.1-20021024-FreeBSD"
+value|"1.11.2.1-20021201-FreeBSD"
 end_define
 
 begin_comment
