@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.17 (Berkeley) %G%"
+literal|"@(#)headers.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1619,6 +1619,22 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|name
+operator|=
+literal|"[RESPONSE]"
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|RealHostName
