@@ -2038,6 +2038,7 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+comment|/* XXX Until free(9) becomes Giant-free */
 name|mtx_lock
 argument_list|(
 operator|&
