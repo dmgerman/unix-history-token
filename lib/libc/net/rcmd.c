@@ -1272,12 +1272,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|char
-name|num
-index|[
-literal|8
-index|]
-decl_stmt|;
 name|int
 name|s2
 init|=
@@ -1293,7 +1287,7 @@ argument_list|)
 decl_stmt|,
 name|s3
 decl_stmt|;
-name|int
+name|socklen_t
 name|len
 init|=
 name|ai
