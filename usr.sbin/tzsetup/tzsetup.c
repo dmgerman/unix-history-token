@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tzsetup.c,v 1.10 1998/01/10 15:55:11 steve Exp $"
+literal|"$Id: tzsetup.c,v 1.11 1998/12/16 05:34:49 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3346,9 +3346,11 @@ block|}
 block|}
 if|if
 condition|(
-name|optind
-operator|!=
 name|argc
+operator|-
+name|optind
+operator|>
+literal|1
 condition|)
 name|usage
 argument_list|()
@@ -3441,6 +3443,74 @@ block|}
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|optind
+operator|==
+name|argc
+operator|-
+literal|1
+condition|)
+block|{
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+literal|"\nUse the default `%s' zone?"
+argument_list|,
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dialog_yesno
+argument_list|(
+literal|"Default timezone provided"
+argument_list|,
+name|msg
+argument_list|,
+literal|7
+argument_list|,
+literal|72
+argument_list|)
+condition|)
+block|{
+name|install_zone_file
+argument_list|(
+name|argv
+index|[
+name|optind
+index|]
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|free
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+block|}
 name|dialog_menu
 argument_list|(
 literal|"Time Zone Selector"
