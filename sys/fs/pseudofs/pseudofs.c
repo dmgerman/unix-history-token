@@ -1053,13 +1053,6 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
 name|struct
 name|nameidata
 modifier|*
