@@ -137,6 +137,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|usage
@@ -1146,7 +1155,8 @@ name|p3
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|dll
 decl_stmt|;
 name|struct
@@ -1173,7 +1183,7 @@ name|dll
 argument_list|,
 name|NULL
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|==
 operator|-
@@ -1629,6 +1639,7 @@ name|fileid
 decl_stmt|,
 name|modid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
