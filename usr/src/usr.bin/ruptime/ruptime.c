@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.11 (Berkeley) 83/05/25"
+literal|"@(#)ruptime.c	4.12 (Berkeley) 83/05/25"
 decl_stmt|;
 end_decl_stmt
 
