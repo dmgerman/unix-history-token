@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.30.1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.33 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.30.1.2		%G%"
+literal|"@(#)sendmail.h	5.33		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1685,6 +1685,21 @@ name|short
 name|mci_state
 decl_stmt|;
 comment|/* SMTP state */
+name|char
+modifier|*
+name|mci_phase
+decl_stmt|;
+comment|/* SMTP phase string */
+name|struct
+name|mailer
+modifier|*
+name|mci_mailer
+decl_stmt|;
+comment|/* ptr to the mailer for this conn */
+name|time_t
+name|mci_lastuse
+decl_stmt|;
+comment|/* last usage time */
 block|}
 end_block
 
@@ -1736,23 +1751,67 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCIS_OPEN
+name|MCIS_OPENING
 value|1
 end_define
 
 begin_comment
-comment|/* open, no protocol sent */
+comment|/* sending initial protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_OPEN
+value|2
+end_define
+
+begin_comment
+comment|/* open, initial protocol sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_ACTIVE
+value|3
+end_define
+
+begin_comment
+comment|/* message being sent */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MCIS_SSD
-value|2
+value|4
 end_define
 
 begin_comment
 comment|/* service shutting down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_ERROR
+value|5
+end_define
+
+begin_comment
+comment|/* error state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_TEMPFAIL
+value|6
+end_define
+
+begin_comment
+comment|/* temporary failure */
 end_comment
 
 begin_escape
@@ -1992,8 +2051,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ST_MCONINFO
+name|ST_MAPCLASS
 value|5
+end_define
+
+begin_comment
+comment|/* mapping function class */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_MAP
+value|6
+end_define
+
+begin_comment
+comment|/* mapping function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_MCONINFO
+value|16
 end_define
 
 begin_comment
