@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)db.c	8.3 (Berkeley) %G%"
+literal|"@(#)db.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,12 +66,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|__DBINTERFACE_PRIVATE
-end_define
 
 begin_include
 include|#
