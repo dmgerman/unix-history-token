@@ -4364,7 +4364,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|fr_makefrip
 name|__P
 argument_list|(
