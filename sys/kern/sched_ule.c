@@ -712,6 +712,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCHED_SLICE_INTERACTIVE
+value|(slice_min * 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCHED_SLICE_NTHRESH
 value|(SCHED_PRI_NHALF - 1)
 end_define
@@ -4613,7 +4620,7 @@ name|ke
 operator|->
 name|ke_slice
 operator|=
-name|SCHED_SLICE_MIN
+name|SCHED_SLICE_INTERACTIVE
 expr_stmt|;
 name|CTR6
 argument_list|(
