@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.34 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,13 +99,6 @@ end_decl_stmt
 begin_comment
 comment|/* Disk cache statistics */
 end_comment
-
-begin_function_decl
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_macro
 name|ftypeok
