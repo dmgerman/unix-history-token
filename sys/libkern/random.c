@@ -27,11 +27,11 @@ begin_define
 define|#
 directive|define
 name|NSHUFF
-value|100
+value|50
 end_define
 
 begin_comment
-comment|/* to drop part of seed -> 1st value correlation */
+comment|/* to drop some "seed -> 1st value" linearity */
 end_comment
 
 begin_decl_stmt
@@ -39,7 +39,7 @@ specifier|static
 name|u_long
 name|randseed
 init|=
-literal|892053144
+literal|937186357
 decl_stmt|;
 end_decl_stmt
 
