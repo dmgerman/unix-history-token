@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ether.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"npx.h"
 end_include
 
