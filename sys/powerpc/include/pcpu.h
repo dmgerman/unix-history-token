@@ -89,9 +89,6 @@ name|u_int32_t
 name|gd_intr_nesting_level
 decl_stmt|;
 comment|/* interrupt recursion */
-name|u_int
-name|gd_astpending
-decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
 argument|globaldata
