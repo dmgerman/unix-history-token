@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.9 83/05/05"
+literal|"@(#)rwhod.c	4.10 83/05/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -845,6 +845,15 @@ continue|continue;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|wd
+operator|.
+name|wd_vers
+operator|!=
+name|WHODVERSION
+condition|)
+continue|continue;
 if|if
 condition|(
 name|wd
