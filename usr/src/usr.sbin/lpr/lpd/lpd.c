@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.4 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * lpd -- line printer daemon.  *  * Listen for a connection and perform the requested operation.  * Operations are:  *	\1printer\n  *		check the queue for jobs and print any found.  *	\2printer\n  *		receive a job from another machine and queue it.  *	\3printer [users ...] [jobs ...]\n  *		return the current state of the queue (short form).  *	\4printer [users ...] [jobs ...]\n  *		return the current state of the queue (long form).  *	\5printer person [users ...] [jobs ...]\n  *		remove jobs from the queue.  *  * Strategy to maintain protected spooling area:  *	1. Spooling area is writable only by daemon and spooling group  *	2. lpr runs setuid root and setgrp spooling group; it uses  *	   root to access any file it wants (verifying things before  *	   with an access call) and group id to know how it should  *	   set up ownership of files in the spooling area.  *	3. Files in spooling area are owned by root, group spooling  *	   group, with mode 660.  *	4. lpd, lpq and lprm run setuid daemon and setgrp spooling group to  *	   access files and printer.  Users can't get to anything  *	   w/o help of lpq and lprm programs.  */
