@@ -1265,7 +1265,7 @@ case|case
 literal|0x24118086
 case|:
 case|case
-literal|0x84ca8086
+literal|0x76018086
 case|:
 return|return
 literal|"Intel ICH ATA66 controller"
