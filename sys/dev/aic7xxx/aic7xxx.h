@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.1 1998/09/15 07:24:16 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.2 1998/11/23 01:33:47 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -362,10 +362,11 @@ name|AHC_TERM_ENB_B
 init|=
 literal|0x800
 block|,
-name|AHC_HANDLING_REQINITS
+name|AHC_INITIATORMODE
 init|=
 literal|0x1000
 block|,
+comment|/* 					  * Allow initiator operations on 					  * this controller. 					  */
 name|AHC_TARGETMODE
 init|=
 literal|0x2000
@@ -407,28 +408,6 @@ block|,
 name|SCB_RECOVERY_SCB
 init|=
 literal|0x0040
-block|,
-name|SCB_MSGOUT_SENT
-init|=
-literal|0x0200
-block|,
-name|SCB_MSGOUT_SDTR
-init|=
-literal|0x0400
-block|,
-name|SCB_MSGOUT_WDTR
-init|=
-literal|0x0800
-block|,
-name|SCB_MSGOUT_BITS
-init|=
-operator|(
-name|SCB_MSGOUT_SDTR
-operator||
-name|SCB_MSGOUT_WDTR
-operator||
-name|SCB_MSGOUT_SENT
-operator|)
 block|,
 name|SCB_ABORT
 init|=
@@ -1067,6 +1046,14 @@ block|,
 name|MSG_TYPE_INITIATOR_MSGIN
 init|=
 literal|0x02
+block|,
+name|MSG_TYPE_TARGET_MSGOUT
+init|=
+literal|0x03
+block|,
+name|MSG_TYPE_TARGET_MSGIN
+init|=
+literal|0x04
 block|}
 name|ahc_msg_type
 typedef|;
@@ -1170,14 +1157,6 @@ name|ultraenb
 decl_stmt|;
 comment|/* Using ultra sync rate  */
 name|u_int16_t
-name|sdtrpending
-decl_stmt|;
-comment|/* Pending SDTR request	  */
-name|u_int16_t
-name|wdtrpending
-decl_stmt|;
-comment|/* Pending WDTR request   */
-name|u_int16_t
 name|discenable
 decl_stmt|;
 comment|/* Disconnection allowed  */
@@ -1185,6 +1164,10 @@ name|u_int16_t
 name|tagenable
 decl_stmt|;
 comment|/* Tagged Queuing allowed */
+name|u_int16_t
+name|targ_msg_req
+decl_stmt|;
+comment|/* Need negotiation messages */
 comment|/* 	 * Hooks into the XPT. 	 */
 name|struct
 name|cam_sim
@@ -1240,24 +1223,38 @@ name|u_int8_t
 name|tqinfifonext
 decl_stmt|;
 comment|/* 	 * Incoming and outgoing message handling. 	 */
+name|u_int8_t
+name|send_msg_perror
+decl_stmt|;
 name|ahc_msg_type
 name|msg_type
 decl_stmt|;
 name|u_int8_t
-name|msg_buf
+name|msgout_buf
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* Message we are sending */
+name|u_int8_t
+name|msgin_buf
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Message we are receiving */
 name|u_int
-name|msg_len
+name|msgout_len
 decl_stmt|;
 comment|/* Length of message to send */
 name|u_int
-name|msg_index
+name|msgout_index
 decl_stmt|;
-comment|/* Current index in message */
+comment|/* Current index in msgout */
+name|u_int
+name|msgin_index
+decl_stmt|;
+comment|/* Current index in msgin */
 comment|/* 	 * "Bus" addresses of our data structures. 	 */
 name|u_int32_t
 name|hscb_busaddr
