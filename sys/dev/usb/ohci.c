@@ -8057,10 +8057,8 @@ argument_list|(
 operator|(
 name|a
 operator|&
-name|LE
-argument_list|(
+operator|~
 name|OHCI_TAILMASK
-argument_list|)
 operator|)
 operator|==
 literal|0
