@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.136 (Berkeley) 1/17/97 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.146 (Berkeley) 6/11/97 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.136 (Berkeley) 1/17/97 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.146 (Berkeley) 6/11/97 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -663,6 +663,11 @@ comment|/* count of HELO/EHLO commands */
 name|bool
 name|ok
 decl_stmt|;
+name|int
+name|lognullconnection
+init|=
+name|TRUE
+decl_stmt|;
 name|char
 name|inp
 index|[
@@ -738,6 +743,9 @@ operator|,
 name|int
 operator|,
 name|char
+operator|*
+operator|,
+name|ENVELOPE
 operator|*
 operator|)
 argument_list|)
@@ -824,11 +832,6 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
-name|LOG
-argument_list|)
-operator|&&
 name|DAEMON
 if|if
 condition|(
@@ -838,9 +841,11 @@ literal|11
 condition|)
 block|{
 comment|/* log connection information */
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"SMTP connect from %.100s (%.100s)"
 argument_list|,
@@ -1092,9 +1097,17 @@ name|HoldErrs
 operator|=
 name|FALSE
 expr_stmt|;
+name|SuprErrs
+operator|=
+name|FALSE
+expr_stmt|;
 name|LogUsrErrs
 operator|=
 name|FALSE
+expr_stmt|;
+name|OnlyOneError
+operator|=
+name|TRUE
 expr_stmt|;
 name|e
 operator|->
@@ -1181,9 +1194,6 @@ argument_list|,
 name|CurSmtpClient
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
@@ -1196,17 +1206,19 @@ else|:
 literal|19
 operator|)
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"lost input channel from %.100s"
 argument_list|,
 name|CurSmtpClient
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|InChild
@@ -1247,26 +1259,25 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>=
 literal|15
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"<-- %s"
 argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|e
@@ -1465,7 +1476,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|message
+name|usrerr
 argument_list|(
 literal|"550 Access denied"
 argument_list|)
@@ -1474,6 +1485,30 @@ continue|continue;
 block|}
 block|}
 comment|/* non-null server */
+switch|switch
+condition|(
+name|c
+operator|->
+name|cmdcode
+condition|)
+block|{
+case|case
+name|CMDMAIL
+case|:
+case|case
+name|CMDEXPN
+case|:
+case|case
+name|CMDVRFY
+case|:
+case|case
+name|CMDETRN
+case|:
+name|lognullconnection
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|c
@@ -1527,6 +1562,8 @@ argument_list|,
 name|MAXHELOCOMMANDS
 argument_list|,
 literal|"HELO/EHLO"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* check for duplicate HELO/EHLO per RFC 1651 4.2 */
@@ -1535,7 +1572,7 @@ condition|(
 name|gothello
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"503 %s Duplicate HELO/EHLO"
 argument_list|,
@@ -1556,7 +1593,7 @@ operator|!
 name|AllowBogusHELO
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"501 %s requires domain address"
 argument_list|,
@@ -1649,7 +1686,7 @@ condition|(
 operator|!
 name|AllowBogusHELO
 condition|)
-name|message
+name|usrerr
 argument_list|(
 literal|"501 Invalid domain name"
 argument_list|)
@@ -1835,7 +1872,7 @@ name|PrivacyFlags
 argument_list|)
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"503 Polite people say HELO first"
 argument_list|)
@@ -1848,7 +1885,7 @@ condition|(
 name|gotmail
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"503 Sender already specified"
 argument_list|)
@@ -2430,7 +2467,7 @@ name|e_msgsize
 argument_list|)
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"452 Insufficient disk space; try again later"
 argument_list|)
@@ -2495,6 +2532,25 @@ name|LogUsrErrs
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* limit flooding of our machine */
+if|if
+condition|(
+name|MaxRcptPerMsg
+operator|>
+literal|0
+operator|&&
+name|nrcpts
+operator|>=
+name|MaxRcptPerMsg
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"450 Too many recipients"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|e
@@ -2861,18 +2917,12 @@ block|}
 else|else
 block|{
 comment|/* punt -- should keep message in ADDRESS.... */
-name|message
+name|usrerr
 argument_list|(
 literal|"550 Addressee unknown"
 argument_list|)
 expr_stmt|;
 block|}
-name|e
-operator|->
-name|e_to
-operator|=
-name|NULL
-expr_stmt|;
 break|break;
 case|case
 name|CMDDATA
@@ -2888,7 +2938,7 @@ operator|!
 name|gotmail
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"503 Need MAIL command"
 argument_list|)
@@ -2903,7 +2953,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"503 Need RCPT (recipient)"
 argument_list|)
@@ -2994,8 +3044,6 @@ argument_list|(
 name|InChannel
 argument_list|,
 name|TRUE
-argument_list|,
-name|doublequeue
 argument_list|,
 name|NULL
 argument_list|,
@@ -3193,6 +3241,21 @@ case|case
 name|CMDRSET
 case|:
 comment|/* rset -- reset state */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|94
+argument_list|,
+literal|100
+argument_list|)
+condition|)
+name|message
+argument_list|(
+literal|"451 Test failure"
+argument_list|)
+expr_stmt|;
+else|else
 name|message
 argument_list|(
 literal|"250 Reset state"
@@ -3222,6 +3285,10 @@ comment|/* clean up a bit */
 name|gotmail
 operator|=
 name|FALSE
+expr_stmt|;
+name|SuprErrs
+operator|=
+name|TRUE
 expr_stmt|;
 name|dropenvelope
 argument_list|(
@@ -3266,6 +3333,8 @@ condition|?
 literal|"VRFY"
 else|:
 literal|"EXPN"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|vrfy
@@ -3305,18 +3374,19 @@ argument_list|(
 literal|"502 Sorry, we do not allow this operation"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|5
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"%.100s: %s [rejected]"
 argument_list|,
@@ -3330,8 +3400,6 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
 elseif|else
@@ -3352,7 +3420,7 @@ name|PrivacyFlags
 argument_list|)
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"503 I demand that you introduce yourself first"
 argument_list|)
@@ -3375,18 +3443,19 @@ operator|>
 literal|0
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|5
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"%.100s: %s"
 argument_list|,
@@ -3400,15 +3469,9 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vrfyqueue
 operator|=
 name|NULL
-expr_stmt|;
-name|QuickAbort
-operator|=
-name|TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -3450,13 +3513,10 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"501 Argument required"
 argument_list|)
-expr_stmt|;
-name|Errors
-operator|++
 expr_stmt|;
 block|}
 else|else
@@ -3502,7 +3562,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"554 Nothing to %s"
 argument_list|,
@@ -3618,7 +3678,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|message
+name|usrerr
 argument_list|(
 literal|"500 Parameter required"
 argument_list|)
@@ -3634,6 +3694,8 @@ argument_list|,
 name|MAXETRNCOMMANDS
 argument_list|,
 literal|"ETRN"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|id
@@ -3657,18 +3719,19 @@ name|id
 operator|=
 literal|'@'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|5
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"%.100s: ETRN %s"
 argument_list|,
@@ -3682,8 +3745,6 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|QueueLimitRecipient
 operator|=
 name|id
@@ -3735,6 +3796,8 @@ argument_list|,
 name|MAXNOOPCOMMANDS
 argument_list|,
 literal|"NOOP"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|message
@@ -3779,6 +3842,25 @@ name|ExitStat
 operator|=
 name|EX_QUIT
 expr_stmt|;
+if|if
+condition|(
+name|lognullconnection
+operator|&&
+name|LogLevel
+operator|>
+literal|5
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Null connection from %.100s"
+argument_list|,
+name|CurSmtpClient
+argument_list|)
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
@@ -3812,11 +3894,13 @@ argument_list|,
 name|MAXNOOPCOMMANDS
 argument_list|,
 literal|"VERB"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|Verbose
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 name|e
 operator|->
@@ -3842,6 +3926,8 @@ argument_list|,
 name|MAXNOOPCOMMANDS
 argument_list|,
 literal|"ONEX"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|OneXact
@@ -3866,6 +3952,8 @@ argument_list|,
 name|MAXNOOPCOMMANDS
 argument_list|,
 literal|"XUSR"
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|UserSubmission
@@ -3943,18 +4031,19 @@ case|case
 name|CMDLOGBOGUS
 case|:
 comment|/* bogus command */
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_CRIT
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"\"%s\" command from %.100s (%.100s)"
 argument_list|,
@@ -3971,8 +4060,6 @@ name|RealHostAddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* FALL THROUGH */
 case|case
 name|CMDERROR
@@ -3997,9 +4084,16 @@ goto|goto
 name|doquit
 goto|;
 block|}
-name|message
+name|usrerr
 argument_list|(
-literal|"500 Command unrecognized"
+literal|"500 Command unrecognized: \"%s\""
+argument_list|,
+name|shortenstring
+argument_list|(
+name|inp
+argument_list|,
+literal|203
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4027,7 +4121,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHECKSMTPATTACK -- check for denial-of-service attack by repetition ** **	Parameters: **		pcounter -- pointer to a counter for this command. **		maxcount -- maximum value for this counter before we **			slow down. **		cname -- command name for logging. ** **	Returns: **		none. ** **	Side Effects: **		Slows down if we seem to be under attack. */
+comment|/* **  CHECKSMTPATTACK -- check for denial-of-service attack by repetition ** **	Parameters: **		pcounter -- pointer to a counter for this command. **		maxcount -- maximum value for this counter before we **			slow down. **		cname -- command name for logging. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Slows down if we seem to be under attack. */
 end_comment
 
 begin_function
@@ -4039,6 +4133,8 @@ parameter_list|,
 name|maxcount
 parameter_list|,
 name|cname
+parameter_list|,
+name|e
 parameter_list|)
 specifier|volatile
 name|int
@@ -4052,6 +4148,10 @@ name|char
 modifier|*
 name|cname
 decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -4064,9 +4164,6 @@ operator|>=
 name|maxcount
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 operator|*
@@ -4079,9 +4176,13 @@ operator|>
 literal|5
 condition|)
 block|{
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"%.100s: %.40s attack?"
 argument_list|,
@@ -4091,8 +4192,6 @@ name|cname
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|sleep
 argument_list|(
 operator|*
@@ -4226,7 +4325,7 @@ condition|)
 block|{
 name|syntax
 label|:
-name|message
+name|usrerr
 argument_list|(
 literal|"501 Syntax error in parameters scanning \"%s\""
 argument_list|,
@@ -4237,9 +4336,6 @@ argument_list|,
 literal|203
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|Errors
-operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -5442,11 +5538,19 @@ operator|||
 operator|(
 name|hf
 operator|=
-name|fopen
+name|safefopen
 argument_list|(
 name|HelpFile
 argument_list|,
-literal|"r"
+name|O_RDONLY
+argument_list|,
+literal|0444
+argument_list|,
+name|SFF_OPENASROOT
+operator||
+name|SFF_REGONLY
+operator||
+name|SFF_NOLOCK
 argument_list|)
 operator|)
 operator|==
