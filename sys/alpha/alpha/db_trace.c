@@ -269,7 +269,7 @@ define|#
 directive|define
 name|CHECK_FRAMESIZE
 define|\
-value|do {									\ 	if (pi->pi_frame_size != 0) {					\ 		printf("frame size botch: adjust register offsets?\n"); \ 	}								\ } while (0)
+value|do {									\ 	if (pi->pi_frame_size != 0) {					\ 		db_printf("frame size botch: adjust register offsets?\n"); \ 	}								\ } while (0)
 for|for
 control|(
 name|pc
@@ -348,7 +348,7 @@ name|signed_immediate
 operator|>
 literal|0
 condition|)
-name|printf
+name|db_printf
 argument_list|(
 literal|"prologue botch: displacement %ld\n"
 argument_list|,
@@ -566,7 +566,7 @@ name|char
 modifier|*
 name|symname
 decl_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|" (%d"
 argument_list|,
@@ -575,14 +575,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|p
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
+operator|!=
+name|NULL
+operator|&&
 literal|0
 operator|<=
 name|number
@@ -627,16 +623,14 @@ expr_stmt|;
 if|if
 condition|(
 name|sym
-operator|==
-name|DB_SYM_NULL
-operator|||
-name|diff
 operator|!=
+name|DB_SYM_NULL
+operator|&&
+name|diff
+operator|==
 literal|0
 condition|)
-goto|goto
-name|out
-goto|;
+block|{
 name|db_symbol_values
 argument_list|(
 name|sym
@@ -647,7 +641,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|", %s, %s"
 argument_list|,
@@ -661,9 +655,8 @@ name|symname
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
-name|printf
+block|}
+name|db_printf
 argument_list|(
 literal|")"
 argument_list|)
@@ -772,24 +765,9 @@ name|have_trapframe
 init|=
 name|FALSE
 decl_stmt|;
-while|while
-condition|(
-operator|(
-name|c
-operator|=
-operator|*
-name|cp
-operator|++
-operator|)
-operator|!=
-literal|0
-condition|)
-name|trace_thread
-operator||=
-name|c
-operator|==
-literal|'t'
-expr_stmt|;
+name|pid_t
+name|pid
+decl_stmt|;
 if|if
 condition|(
 name|count
@@ -838,30 +816,134 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|addr
+operator|<
+name|KERNBASE
+condition|)
+block|{
+name|pid
+operator|=
+operator|(
+name|addr
+operator|%
+literal|16
+operator|)
+operator|+
+operator|(
+operator|(
+name|addr
+operator|>>
+literal|4
+operator|)
+operator|%
+literal|16
+operator|)
+operator|*
+literal|10
+operator|+
+operator|(
+operator|(
+name|addr
+operator|>>
+literal|8
+operator|)
+operator|%
+literal|16
+operator|)
+operator|*
+literal|100
+operator|+
+operator|(
+operator|(
+name|addr
+operator|>>
+literal|12
+operator|)
+operator|%
+literal|16
+operator|)
+operator|*
+literal|1000
+operator|+
+operator|(
+operator|(
+name|addr
+operator|>>
+literal|16
+operator|)
+operator|%
+literal|16
+operator|)
+operator|*
+literal|10000
+expr_stmt|;
+comment|/* 		 * The pcb for curproc is not valid at this point, 		 * so fall back to the default case. 		 */
+if|if
+condition|(
+name|pid
+operator|==
+name|curproc
+operator|->
+name|p_pid
+condition|)
+block|{
+name|p
+operator|=
+name|curproc
+expr_stmt|;
+name|addr
+operator|=
+name|DDB_REGS
+operator|->
+name|tf_regs
+index|[
+name|FRAME_SP
+index|]
+operator|-
+name|FRAME_SIZE
+operator|*
+literal|8
+expr_stmt|;
+name|tf
+operator|=
+operator|(
+expr|struct
+name|trapframe
+operator|*
+operator|)
+name|addr
+expr_stmt|;
+name|have_trapframe
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
+block|{
+comment|/* sx_slock(&allproc_lock); */
+name|LIST_FOREACH
+argument_list|(
+argument|p
+argument_list|,
+argument|&allproc
+argument_list|,
+argument|p_list
+argument_list|)
 block|{
 if|if
 condition|(
-name|trace_thread
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"trace: pid %d "
-argument_list|,
-operator|(
-name|int
-operator|)
-name|addr
-argument_list|)
-expr_stmt|;
 name|p
-operator|=
-name|pfind
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
+operator|->
+name|p_pid
+operator|==
+name|pid
+condition|)
+break|break;
+block|}
+comment|/* sx_sunlock(&allproc_lock); */
 if|if
 condition|(
 name|p
@@ -869,9 +951,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
-literal|"not found\n"
+literal|"pid %d not found\n"
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
 return|return;
@@ -889,9 +973,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
-literal|"swapped out\n"
+literal|"pid %d swapped out\n"
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
 return|return;
@@ -925,27 +1011,20 @@ index|[
 literal|7
 index|]
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"at 0x%lx\n"
-argument_list|,
+name|frame
+operator|=
 name|addr
-argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"alpha trace requires known PC =eject=\n"
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
-name|frame
-operator|=
-name|addr
-expr_stmt|;
 block|}
 while|while
 condition|(
@@ -1028,7 +1107,7 @@ operator|<
 name|symval
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"symbol botch: callpc 0x%lx< "
 literal|"func 0x%lx (%s)\n"
@@ -1043,7 +1122,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * XXX Printing out arguments is Hard.  We'd have to 		 * keep lots of state as we traverse the frame, figuring 		 * out where the arguments to the function are stored 		 * on the stack. 		 * 		 * Even worse, they may be stored to the stack _after_ 		 * being modified in place; arguments are passed in 		 * registers. 		 * 		 * So, in order for this to work reliably, we pretty much 		 * have to have a kernel built with `cc -g': 		 * 		 *	- The debugging symbols would tell us where the 		 *	  arguments are, how many there are, if there were 		 *	  any passed on the stack, etc. 		 * 		 *	- Presumably, the compiler would be careful to 		 *	  store the argument registers on the stack before 		 *	  modifying the registers, so that a debugger could 		 *	  know what those values were upon procedure entry. 		 * 		 * Because of this, we don't bother.  We've got most of the 		 * benefit of back tracking without the arguments, and we 		 * could get the arguments if we use a remote source-level 		 * debugger (for serious debugging). 		 */
-name|printf
+name|db_printf
 argument_list|(
 literal|"%s() at "
 argument_list|,
@@ -1057,7 +1136,7 @@ argument_list|,
 name|DB_STGY_PROC
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1109,7 +1188,7 @@ index|]
 operator|.
 name|ss_val
 condition|)
-name|printf
+name|db_printf
 argument_list|(
 literal|"--- %s"
 argument_list|,
@@ -1179,7 +1258,7 @@ operator|)
 operator|&
 name|XentSys
 condition|)
-name|printf
+name|db_printf
 argument_list|(
 literal|" (from ipl %ld)"
 argument_list|,
@@ -1187,7 +1266,7 @@ name|last_ipl
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|" ---\n"
 argument_list|)
@@ -1257,7 +1336,7 @@ index|]
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"--- root of call graph ---\n"
 argument_list|)
