@@ -4,10 +4,6 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* release_6_5_99 */
-end_comment
-
-begin_comment
 comment|/*  * Soft Definitions for for Qlogic ISP SCSI adapters.  *  *---------------------------------------  * Copyright (c) 1997, 1998, 1999 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
@@ -93,7 +89,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|9
+value|10
 end_define
 
 begin_comment
@@ -250,7 +246,7 @@ name|u_int16_t
 name|dv_codeorg
 decl_stmt|;
 comment|/* code ORG for f/w */
-name|u_int16_t
+name|u_int32_t
 name|dv_fwrev
 decl_stmt|;
 comment|/* f/w revision */
@@ -303,8 +299,76 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ISP_MAX_TARGETS
+parameter_list|(
+name|isp
+parameter_list|)
+value|(IS_FC(isp)? MAX_FC_TARG : MAX_TARGETS)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP2100_SCCLUN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_ISP_FC_LUN
+parameter_list|(
+name|isp
+parameter_list|)
+value|65536
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_ISP_FC_LUN
+parameter_list|(
+name|isp
+parameter_list|)
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_ISP_SCSI_LUN
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|((ISP_FW_REVX(isp->isp_fwrev)>= ISP_FW_REV(7, 55, 0))? 32 : 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_MAX_LUNS
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_FC(isp)? _ISP_FC_LUN(isp) : _ISP_SCSI_LUN(isp))
+end_define
+
 begin_comment
-comment|/* queue length must be a power of two */
+comment|/* this is the size of a queue entry (request and response) */
 end_comment
 
 begin_define
@@ -314,6 +378,10 @@ name|QENTRY_LEN
 value|64
 end_define
 
+begin_comment
+comment|/* both request and result queue length must be a power of two */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -321,12 +389,41 @@ name|RQUEST_QUEUE_LEN
 value|MAXISPREQUEST
 end_define
 
+begin_comment
+comment|/* I've seen wierdnesses with the result queue< 64 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|MAXISPREQUEST
+operator|>
+literal|64
+end_if
+
 begin_define
 define|#
 directive|define
 name|RESULT_QUEUE_LEN
 value|(MAXISPREQUEST/2)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RESULT_QUEUE_LEN
+value|MAXISPREQUEST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -374,7 +471,7 @@ parameter_list|,
 name|qlen
 parameter_list|)
 define|\
-value|((in == out)? (qlen - 1) : ((in> out)? \ 		((qlen - 1) - (in - out)) : (out - in - 1)))
+value|((in == out)? (qlen - 1) : ((in> out)? \ 	((qlen - 1) - (in - out)) : (out - in - 1)))
 end_define
 
 begin_comment
@@ -655,11 +752,44 @@ begin_comment
 comment|/*  * Fibre Channel Specifics  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FL_PORT_ID
+value|0x7e
+end_define
+
+begin_comment
+comment|/* FL_Port Special ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_PORT_ID
+value|0x7f
+end_define
+
+begin_comment
+comment|/* Fabric Controller Special ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FC_SNS_ID
+value|0x80
+end_define
+
+begin_comment
+comment|/* SNS Server Special ID */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|u_int
+name|u_int32_t
 name|isp_fwoptions
 range|:
 literal|16
@@ -697,6 +827,11 @@ name|u_int8_t
 name|isp_alpa
 decl_stmt|;
 comment|/* ALPA */
+specifier|volatile
+name|u_int16_t
+name|isp_lipseq
+decl_stmt|;
+comment|/* LIP sequence # */
 name|u_int32_t
 name|isp_portid
 decl_stmt|;
@@ -708,6 +843,9 @@ name|isp_retry_delay
 decl_stmt|;
 name|u_int8_t
 name|isp_retry_count
+decl_stmt|;
+name|u_int8_t
+name|isp_reserved
 decl_stmt|;
 name|u_int16_t
 name|isp_maxalloc
@@ -758,6 +896,11 @@ block|}
 name|portdb
 index|[
 name|MAX_FC_TARG
+index|]
+struct|,
+name|tport
+index|[
+name|FL_PORT_ID
 index|]
 struct|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
@@ -856,162 +999,6 @@ name|LOOP_READY
 value|7
 end_define
 
-begin_define
-define|#
-directive|define
-name|FL_PORT_ID
-value|0x7e
-end_define
-
-begin_comment
-comment|/* FL_Port Special ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FC_PORT_ID
-value|0x7f
-end_define
-
-begin_comment
-comment|/* Fabric Controller Special ID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FC_SNS_ID
-value|0x80
-end_define
-
-begin_comment
-comment|/* SNS Server Special ID */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-end_ifdef
-
-begin_comment
-comment|/*  * Some temporary Target Mode definitions  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|tmd_cmd
-block|{
-name|u_int8_t
-name|cd_iid
-decl_stmt|;
-comment|/* initiator */
-name|u_int8_t
-name|cd_tgt
-decl_stmt|;
-comment|/* target */
-name|u_int8_t
-name|cd_lun
-decl_stmt|;
-comment|/* LUN for this command */
-name|u_int8_t
-name|cd_state
-decl_stmt|;
-name|u_int8_t
-name|cd_cdb
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* command bytes */
-name|u_int8_t
-name|cd_sensedata
-index|[
-literal|20
-index|]
-decl_stmt|;
-name|u_int16_t
-name|cd_rxid
-decl_stmt|;
-name|u_int32_t
-name|cd_datalen
-decl_stmt|;
-name|u_int32_t
-name|cd_totbytes
-decl_stmt|;
-name|void
-modifier|*
-name|cd_hba
-decl_stmt|;
-block|}
-name|tmd_cmd_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Async Target Mode Event Definitions  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TMD_BUS_RESET
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMD_BDR
-value|1
-end_define
-
-begin_comment
-comment|/*  * Immediate Notify data structure.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOTIFY_MSGLEN
-value|5
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int8_t
-name|nt_iid
-decl_stmt|;
-comment|/* initiator */
-name|u_int8_t
-name|nt_tgt
-decl_stmt|;
-comment|/* target */
-name|u_int8_t
-name|nt_lun
-decl_stmt|;
-comment|/* LUN for this command */
-name|u_int8_t
-name|nt_msg
-index|[
-name|NOTIFY_MSGLEN
-index|]
-decl_stmt|;
-comment|/* SCSI message byte(s) */
-block|}
-name|tmd_notify_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Soft Structure per host adapter  */
 end_comment
@@ -1084,6 +1071,10 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* 'ROM' F/W revision */
+name|u_int16_t
+name|isp_maxcmds
+decl_stmt|;
+comment|/* max active I/O cmds */
 name|void
 modifier|*
 name|isp_param
@@ -1092,14 +1083,11 @@ comment|/* 	 * Volatile state 	 */
 specifier|volatile
 name|u_int
 operator|:
-literal|13
+literal|9
 operator|,
 name|isp_state
 operator|:
 literal|3
-operator|,
-operator|:
-literal|2
 operator|,
 name|isp_sendmarker
 operator|:
@@ -1113,39 +1101,36 @@ operator|,
 comment|/* update parameters */
 name|isp_nactive
 operator|:
-literal|10
+literal|16
 expr_stmt|;
 comment|/* how many commands active */
-comment|/* 	 * Result and Request Queue indices. 	 */
 specifier|volatile
-name|u_int8_t
+name|u_int16_t
 name|isp_reqodx
 decl_stmt|;
 comment|/* index of last ISP pickup */
 specifier|volatile
-name|u_int8_t
+name|u_int16_t
 name|isp_reqidx
 decl_stmt|;
 comment|/* index of next request */
 specifier|volatile
-name|u_int8_t
+name|u_int16_t
 name|isp_residx
 decl_stmt|;
 comment|/* index of next result */
 specifier|volatile
-name|u_int8_t
-name|isp_seqno
+name|u_int16_t
+name|isp_lasthdls
 decl_stmt|;
-comment|/* rolling sequence # */
-comment|/* 	 * Sheer laziness, but it gets us around the problem 	 * where we don't have a clean way of remembering 	 * which transaction is bound to which ISP queue entry. 	 * 	 * There are other more clever ways to do this, but, 	 * jeez, so I blow a couple of KB per host adapter... 	 * and it *is* faster. 	 */
+comment|/* last handle seed */
+comment|/* 	 * Active commands are stored here, found by handle functions. 	 */
 name|ISP_SCSI_XFER_T
 modifier|*
+modifier|*
 name|isp_xflist
-index|[
-name|RQUEST_QUEUE_LEN
-index|]
 decl_stmt|;
-comment|/* 	 * request/result queues and dma handles for them. 	 */
+comment|/* 	 * request/result queue pointers and dma handles for them. 	 */
 name|caddr_t
 name|isp_rquest
 decl_stmt|;
@@ -1158,59 +1143,29 @@ decl_stmt|;
 name|u_int32_t
 name|isp_result_dma
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ISP_TARGET_MODE
-comment|/* 	 * Vectors for handling target mode support. 	 * 	 * isp_tmd_newcmd is for feeding a newly arrived command to some 	 * upper layer. 	 * 	 * isp_tmd_event is for notifying some upper layer that an event has 	 * occurred that is not necessarily tied to any target (e.g., a SCSI 	 * Bus Reset). 	 * 	 * isp_tmd_notify is for notifying some upper layer that some 	 * event is now occurring that is either pertinent for a specific 	 * device or for a specific command (e.g., BDR or ABORT TAG). 	 * 	 * It is left undefined (for now) how pools of commands are managed. 	 */
-name|void
-argument_list|(
-argument|*isp_tmd_newcmd
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|tmd_cmd_t
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-name|void
-argument_list|(
-argument|*isp_tmd_event
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-expr_stmt|;
-name|void
-argument_list|(
-argument|*isp_tmd_notify
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|tmd_notify_t
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SDPARAM
+parameter_list|(
+name|isp
+parameter_list|)
+value|((sdparam *) (isp)->isp_param)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCPARAM
+parameter_list|(
+name|isp
+parameter_list|)
+value|((fcparam *) (isp)->isp_param)
+end_define
 
 begin_comment
 comment|/*  * ISP States  */
@@ -1537,10 +1492,10 @@ name|isp
 parameter_list|,
 name|xs
 parameter_list|,
-name|seqno
+name|hndl
 parameter_list|)
 define|\
-value|if ((isp)->isp_mdvec->dv_dmaclr) \ 		 (*(isp)->isp_mdvec->dv_dmaclr)((isp), (xs), (seqno))
+value|if ((isp)->isp_mdvec->dv_dmaclr) \ 	    (*(isp)->isp_mdvec->dv_dmaclr)((isp), (xs), (hndl))
 end_define
 
 begin_define
