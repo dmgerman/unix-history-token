@@ -2388,9 +2388,17 @@ name|int
 name|reg
 decl_stmt|;
 block|{
+name|int
+name|s
+decl_stmt|;
 name|u_char
 name|val
 decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|outb
 argument_list|(
 name|IO_RTC
@@ -2417,6 +2425,11 @@ argument_list|(
 literal|0x84
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|val
@@ -2438,6 +2451,14 @@ name|u_char
 name|val
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|inb
 argument_list|(
 literal|0x84
@@ -2470,6 +2491,11 @@ literal|0x84
 argument_list|)
 expr_stmt|;
 comment|/* XXX work around wrong order in rtcin() */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4387,6 +4413,11 @@ name|wrong_time
 goto|;
 comment|/* wait for time update to complete */
 comment|/* If RTCSA_TUP is zero, we have at least 244us before next update */
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|rtcin
@@ -4396,7 +4427,18 @@ argument_list|)
 operator|&
 name|RTCSA_TUP
 condition|)
-empty_stmt|;
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+block|}
 name|days
 operator|=
 literal|0
@@ -4447,9 +4489,16 @@ name|year
 operator|<
 literal|1970
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 goto|goto
 name|wrong_time
 goto|;
+block|}
 name|month
 operator|=
 name|readrtc
@@ -4599,11 +4648,6 @@ literal|2
 condition|)
 block|{
 comment|/* badly off, adjust it */
-name|s
-operator|=
-name|splclock
-argument_list|()
-expr_stmt|;
 name|ts
 operator|.
 name|tv_sec
@@ -4622,12 +4666,12 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 name|wrong_time
 label|:
