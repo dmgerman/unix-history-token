@@ -4,7 +4,7 @@ comment|/*  * This code is based on  *  (1) FreeBSD implementation on ISA/EISA E
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.23 1996/07/12 04:11:24 bde Exp $  */
+comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.24 1996/08/06 21:14:12 phk Exp $  */
 end_comment
 
 begin_comment
@@ -1533,33 +1533,12 @@ modifier|*
 name|visa_dev
 decl_stmt|;
 block|{
-name|struct
-name|isa_device
-modifier|*
-name|isa_dev
-init|=
-name|visa_dev
-decl_stmt|;
-name|struct
-name|zp_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|zp_softc
-index|[
-name|isa_dev
-operator|->
-name|id_unit
-index|]
-decl_stmt|;
-name|pcic_power_off
-argument_list|(
-name|sc
-operator|->
-name|slot
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|struct isa_device *isa_dev = visa_dev; 	struct zp_softc *sc =&zp_softc[isa_dev->id_unit];  	pcic_power_off(sc->slot);
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
