@@ -1521,6 +1521,7 @@ name|proc0
 argument_list|)
 expr_stmt|;
 comment|/* Create the file descriptor table. */
+comment|/* XXX this duplicates part of fdinit() */
 name|fdp
 operator|=
 operator|&
@@ -1600,6 +1601,16 @@ operator|.
 name|fd_nfiles
 operator|=
 name|NDFILE
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_fd
+operator|.
+name|fd_map
+operator|=
+name|fdp
+operator|->
+name|fd_dmap
 expr_stmt|;
 comment|/* Create the limits structures. */
 name|p

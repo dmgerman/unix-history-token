@@ -5075,8 +5075,6 @@ name|fdalloc
 argument_list|(
 name|td
 argument_list|,
-literal|0
-argument_list|,
 operator|&
 name|f
 argument_list|)

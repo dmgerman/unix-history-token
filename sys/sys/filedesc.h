@@ -30,11 +30,21 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_comment
+comment|/* XXX for CHAR_BIT */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
 begin_comment
-comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  *  * A process is initially started out with NDFILE descriptors stored within  * this structure, selected to be enough for typical applications based on  * the historical limit of 20 open files (and the usage of descriptors by  * shells).  If these descriptors are exhausted, a larger descriptor table  * may be allocated, up to a process' resource limit; the internal arrays  * are then unused.  The initial expansion is set to NDEXTENT; each time  * it runs out, it is doubled until the resource limit is reached. NDEXTENT  * should be selected to be the biggest multiple of OFILESIZE (see below)  * that will fit in a power-of-two sized piece of memory.  */
+comment|/*  * This structure is used for the management of descriptors.  It may be  * shared by multiple processes.  *  * A process is initially started out with NDFILE descriptors stored within  * this structure, selected to be enough for typical applications based on  * the historical limit of 20 open files (and the usage of descriptors by  * shells).  If these descriptors are exhausted, a larger descriptor table  * may be allocated, up to a process' resource limit; the internal arrays  * are then unused.  */
 end_comment
 
 begin_define
@@ -47,13 +57,53 @@ end_define
 begin_define
 define|#
 directive|define
-name|NDEXTENT
-value|50
+name|NDSLOTTYPE
+value|unsigned long
 end_define
 
-begin_comment
-comment|/* 250 bytes in 256-byte alloc. */
-end_comment
+begin_define
+define|#
+directive|define
+name|NDSLOTSIZE
+value|sizeof(NDSLOTTYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDENTRIES
+value|(NDSLOTSIZE * CHAR_BIT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDSLOT
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) / NDENTRIES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDBIT
+parameter_list|(
+name|x
+parameter_list|)
+value|((NDSLOTTYPE)1<< ((x) % NDENTRIES))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDSLOTS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) + NDENTRIES - 1) / NDENTRIES)
+end_define
 
 begin_struct
 struct|struct
@@ -93,6 +143,11 @@ name|int
 name|fd_nfiles
 decl_stmt|;
 comment|/* number of open files allocated */
+name|NDSLOTTYPE
+modifier|*
+name|fd_map
+decl_stmt|;
+comment|/* bitmap of free fds */
 name|int
 name|fd_lastfile
 decl_stmt|;
@@ -171,6 +226,15 @@ name|char
 name|fd_dfileflags
 index|[
 name|NDFILE
+index|]
+decl_stmt|;
+name|NDSLOTTYPE
+name|fd_dmap
+index|[
+name|NDSLOTS
+argument_list|(
+name|NDFILE
+argument_list|)
 index|]
 decl_stmt|;
 block|}
@@ -378,6 +442,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|fdused
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fdunused
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|fdalloc
 parameter_list|(
@@ -385,9 +479,6 @@ name|struct
 name|thread
 modifier|*
 name|p
-parameter_list|,
-name|int
-name|want
 parameter_list|,
 name|int
 modifier|*
