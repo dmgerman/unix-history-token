@@ -152,6 +152,10 @@ decl_stmt|;
 comment|/* the (y, x) position of the upperleft */
 comment|/* corner and the width<w> of the display */
 comment|/* and length<len> of the field */
+name|int
+name|attr_mask
+decl_stmt|;
+comment|/* special attributes */
 block|}
 name|StringObj
 typedef|;

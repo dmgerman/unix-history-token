@@ -3539,6 +3539,8 @@ argument_list|,
 name|first
 argument_list|,
 name|search_term
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|first

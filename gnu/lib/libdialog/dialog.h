@@ -139,6 +139,17 @@ value|(1<< 20)
 end_define
 
 begin_comment
+comment|/* Attributes as used by entry fields right now */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DITEM_NO_ECHO
+value|0x0001
+end_define
+
+begin_comment
 comment|/* negative offsets for buttons in item lists, if specified */
 end_comment
 
@@ -287,6 +298,8 @@ name|int
 name|DialogX
 decl_stmt|,
 name|DialogY
+decl_stmt|,
+name|DialogInputAttrs
 decl_stmt|;
 end_decl_stmt
 
@@ -616,6 +629,9 @@ name|unsigned
 name|char
 modifier|*
 name|result
+parameter_list|,
+name|int
+name|attr_mask
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -55,6 +55,9 @@ name|old_attr
 parameter_list|,
 name|int
 name|fexit
+parameter_list|,
+name|int
+name|attr_mask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -93,6 +96,9 @@ name|unsigned
 name|char
 modifier|*
 name|result
+parameter_list|,
+name|int
+name|attr_mask
 parameter_list|)
 block|{
 name|int
@@ -252,6 +258,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 for|for
@@ -436,6 +444,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -474,6 +484,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -555,6 +567,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -631,6 +645,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 block|}
@@ -738,6 +754,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 block|}
@@ -894,6 +912,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 block|}
@@ -1005,6 +1025,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1193,6 +1215,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|FALSE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 block|}
@@ -1230,6 +1254,8 @@ argument_list|,
 name|old_attr
 argument_list|,
 name|TRUE
+argument_list|,
+name|attr_mask
 argument_list|)
 expr_stmt|;
 name|wrefresh
@@ -1290,6 +1316,9 @@ name|old_attr
 parameter_list|,
 name|int
 name|fexit
+parameter_list|,
+name|int
+name|attr_mask
 parameter_list|)
 block|{
 name|int
@@ -1358,12 +1387,22 @@ operator|+
 name|i
 index|]
 condition|?
+operator|(
+operator|(
+name|attr_mask
+operator|&
+name|DITEM_NO_ECHO
+operator|)
+condition|?
+literal|'*'
+else|:
 name|instr
 index|[
 name|scroll
 operator|+
 name|i
 index|]
+operator|)
 else|:
 literal|' '
 argument_list|)
@@ -1396,12 +1435,22 @@ operator|+
 name|i
 index|]
 condition|?
+operator|(
+operator|(
+name|attr_mask
+operator|&
+name|DITEM_NO_ECHO
+operator|)
+condition|?
+literal|'*'
+else|:
 name|instr
 index|[
 name|scroll
 operator|+
 name|i
 index|]
+operator|)
 else|:
 literal|' '
 argument_list|)
