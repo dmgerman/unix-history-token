@@ -2615,10 +2615,6 @@ name|sf
 operator|.
 name|sf_addr
 operator|=
-operator|(
-name|register_t
-operator|*
-operator|)
 name|regs
 operator|->
 name|tf_err
@@ -3075,7 +3071,7 @@ name|tf_eip
 operator|=
 name|PS_STRINGS
 operator|-
-name|oszsigcode
+name|szosigcode
 expr_stmt|;
 name|regs
 operator|->
@@ -3601,10 +3597,6 @@ name|sf
 operator|.
 name|sf_addr
 operator|=
-operator|(
-name|register_t
-operator|*
-operator|)
 name|regs
 operator|->
 name|tf_err
