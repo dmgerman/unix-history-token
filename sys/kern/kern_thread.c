@@ -4411,8 +4411,7 @@ expr_stmt|;
 name|td
 operator|->
 name|td_uuticks
-operator|+=
-name|ticks
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -4428,8 +4427,7 @@ condition|)
 name|td
 operator|->
 name|td_usticks
-operator|+=
-name|ticks
+operator|++
 expr_stmt|;
 else|else
 block|{
