@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)repquota.c	4.2 (Berkeley, from Melbourne) %G%"
+literal|"@(#)repquota.c	4.3 (Berkeley, from Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,6 +359,7 @@ name|fup
 operator|==
 literal|0
 condition|)
+block|{
 name|fup
 operator|=
 name|adduid
@@ -386,6 +387,7 @@ name|fu_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|endpwent
 argument_list|()
