@@ -10,7 +10,7 @@ file|"sound_config.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|drain_midi_queue
 name|__P
@@ -237,6 +237,7 @@ value|if (DATA_AVAIL(q)) \ 	{ \ 	  unsigned long flags; \ 	  DISABLE_INTR(flags)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|drain_midi_queue
 parameter_list|(

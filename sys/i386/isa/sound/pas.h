@@ -1063,6 +1063,7 @@ name|DEFINE_TRANSLATIONS
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|I_C_2_PCM_DMA_translate
@@ -1090,6 +1091,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|I_C_3_PCM_IRQ_translate
@@ -1132,7 +1134,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|E_C_MPU401_IRQ_translate
@@ -1169,7 +1178,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|E_C_SB_IRQ_translate
@@ -1211,6 +1226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|E_C_SB_DMA_translate
@@ -1237,7 +1253,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|unused
+end_ifdef
+
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|O_M_1_to_card
@@ -1280,88 +1303,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
-name|I_C_2_PCM_DMA_translate
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* R W  PCM		PCM DMA channel value translations		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
-name|I_C_3_PCM_IRQ_translate
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* R W	PCM		PCM IRQ level value translation			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
-name|E_C_MPU401_IRQ_translate
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* R W	MIDI		MPU401 emulation IRQ value translation		*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
-name|E_C_SB_IRQ_translate
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* R W	PCM		SB emulation IRQ translate			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
-name|E_C_SB_DMA_translate
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* R W	PCM		SB emulation DMA translate			*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|char
-name|O_M_1_to_card
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* R W	Control		Translate (OM1& 0x0f) to card type		*/
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

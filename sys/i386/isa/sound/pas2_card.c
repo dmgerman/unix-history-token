@@ -43,7 +43,7 @@ file|"pas.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|config_pas_hw
 name|__P
@@ -59,7 +59,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|detect_pas_hw
 name|__P
@@ -75,7 +75,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|pas2_msg
 name|__P
@@ -216,6 +216,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pas2_msg
 parameter_list|(
@@ -440,6 +441,7 @@ comment|/******************* Begin of the Initialization Code ******************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|config_pas_hw
 parameter_list|(
@@ -966,6 +968,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|detect_pas_hw
 parameter_list|(

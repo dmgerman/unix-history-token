@@ -22,7 +22,7 @@ file|"gus_hw.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|unsigned
 name|char
 name|gus_look8
@@ -37,7 +37,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|unsigned
 name|short
 name|gus_read16
@@ -52,7 +52,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|gus_write_addr
 name|__P
@@ -73,7 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|gus_write16
 name|__P
@@ -278,6 +278,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|gus_busy
 index|[
@@ -309,6 +310,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|gus_devnum
 init|=
@@ -363,6 +365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|gus_pcm_volume
 init|=
@@ -610,6 +613,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|voice_info
 name|voices
@@ -1278,6 +1282,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|gus_read8
@@ -1328,6 +1333,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|gus_look8
@@ -1376,6 +1382,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gus_write16
 parameter_list|(
@@ -1447,6 +1454,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|short
 name|gus_read16
@@ -1516,6 +1524,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gus_write_addr
 parameter_list|(

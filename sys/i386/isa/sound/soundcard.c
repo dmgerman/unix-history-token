@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/386bsd/soundcard.c  *   * Soundcard driver for FreeBSD.  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: soundcard.c,v 1.38 1995/12/08 23:21:13 phk Exp $  */
+comment|/*  * sound/386bsd/soundcard.c  *   * Soundcard driver for FreeBSD.  *   * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: soundcard.c,v 1.39 1995/12/10 02:53:07 bde Exp $  */
 end_comment
 
 begin_include
@@ -71,60 +71,6 @@ end_endif
 begin_comment
 comment|/*DEVFS*/
 end_comment
-
-begin_decl_stmt
-name|u_int
-name|snd1_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd2_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd3_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd4_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd5_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd6_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd7_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd8_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int
-name|snd9_imask
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -210,6 +156,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|sndprobe
 parameter_list|(
@@ -222,6 +169,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sndattach
 parameter_list|(
@@ -805,9 +753,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|retval
-decl_stmt|;
 name|dev
 operator|=
 name|minor
@@ -1382,6 +1327,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sndprobe
 parameter_list|(
@@ -1464,6 +1410,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sndattach
 parameter_list|(
@@ -1474,8 +1421,6 @@ name|dev
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|unit
 decl_stmt|;
 specifier|static
@@ -1487,12 +1432,6 @@ decl_stmt|;
 specifier|static
 name|int
 name|seq_initialized
-init|=
-literal|0
-decl_stmt|;
-specifier|static
-name|int
-name|generic_midi_initialized
 init|=
 literal|0
 decl_stmt|;
@@ -2263,8 +2202,6 @@ name|void
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|dev
 decl_stmt|;
 name|unsigned
@@ -2510,7 +2447,7 @@ condition|)
 block|{
 name|printk
 argument_list|(
-literal|"snd: Unable to allocate %d bytes of buffer\n"
+literal|"snd: Unable to allocate %ld bytes of buffer\n"
 argument_list|,
 name|audio_devs
 index|[
@@ -2566,41 +2503,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-name|int
-name|snd_ioctl_return
-parameter_list|(
-name|int
-modifier|*
-name|addr
-parameter_list|,
-name|int
-name|value
-parameter_list|)
-block|{
-if|if
-condition|(
-name|value
-operator|<
-literal|0
-condition|)
-return|return
-name|value
-return|;
-comment|/* Error */
-name|suword
-argument_list|(
-name|addr
-argument_list|,
-name|value
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
 
 begin_decl_stmt
 name|int

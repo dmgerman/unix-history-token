@@ -348,6 +348,7 @@ name|__SB_MIXER_C__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|mixer_tab
 name|sbpro_mix
 init|=
@@ -566,6 +567,7 @@ name|__SGNXPRO__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|mixer_tab
 name|sgnxpro_mix
 init|=
@@ -817,6 +819,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|mixer_tab
 name|sb16_mix
 init|=

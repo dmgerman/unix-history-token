@@ -55,7 +55,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|pas_mixer_ioctl
 name|__P
@@ -77,7 +77,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|set_mode
 name|__P
@@ -406,6 +406,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_mode
 parameter_list|(

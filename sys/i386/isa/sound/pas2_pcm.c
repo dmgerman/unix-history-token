@@ -28,7 +28,7 @@ file|"pas.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|pcm_set_bits
 name|__P
@@ -42,7 +42,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|pcm_set_channels
 name|__P
@@ -56,7 +56,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|int
 name|pcm_set_speed
 name|__P
@@ -230,6 +230,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|pcm_set_speed
 parameter_list|(
@@ -473,6 +474,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcm_set_channels
 parameter_list|(
@@ -534,6 +536,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcm_set_bits
 parameter_list|(
