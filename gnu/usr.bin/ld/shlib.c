@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: shlib.c,v 1.4 1993/12/02 00:56:40 jkh Exp $  */
+comment|/*  * $Id: shlib.c,v 1.5 1993/12/04 00:53:02 jkh Exp $  */
 end_comment
 
 begin_include
@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
 end_include
 
@@ -75,6 +81,25 @@ directive|include
 file|"ld.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SUNOS4
+end_ifdef
+
+begin_function_decl
+name|char
+modifier|*
+name|strsep
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Standard directories to search for files specified by -l.  */
 end_comment
@@ -89,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_SEARCH_DIRS
-value|"/usr/lib", "/usr/local/lib"
+value|"/usr/lib", "/usr/X386/lib", "/usr/local/lib"
 end_define
 
 begin_endif
@@ -509,6 +534,8 @@ parameter_list|,
 name|majorp
 parameter_list|,
 name|minorp
+parameter_list|,
+name|do_dot_a
 parameter_list|)
 name|char
 modifier|*
@@ -522,6 +549,12 @@ decl|*
 name|minorp
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|int
+name|do_dot_a
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -637,6 +670,11 @@ name|dirent
 modifier|*
 name|dp
 decl_stmt|;
+name|int
+name|found_dot_a
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|dd
@@ -667,6 +705,83 @@ name|might_take_it
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|do_dot_a
+operator|&&
+name|path
+operator|==
+name|NULL
+operator|&&
+name|dp
+operator|->
+name|d_namlen
+operator|==
+name|len
+operator|+
+literal|2
+operator|&&
+name|strncmp
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|lname
+argument_list|,
+name|len
+argument_list|)
+operator|==
+literal|0
+operator|&&
+operator|(
+name|dp
+operator|->
+name|d_name
+operator|+
+name|len
+operator|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'.'
+operator|&&
+operator|(
+name|dp
+operator|->
+name|d_name
+operator|+
+name|len
+operator|)
+index|[
+literal|1
+index|]
+operator|==
+literal|'a'
+condition|)
+block|{
+name|path
+operator|=
+name|concat
+argument_list|(
+name|search_dirs
+index|[
+name|i
+index|]
+argument_list|,
+literal|"/"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|)
+expr_stmt|;
+name|found_dot_a
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dp
@@ -734,6 +849,31 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|major
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|found_dot_a
+condition|)
+block|{
+comment|/* XXX */
+name|free
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+name|path
+operator|=
+name|NULL
+expr_stmt|;
+name|found_dot_a
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|major
@@ -869,6 +1009,10 @@ operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
+name|found_dot_a
+operator|=
+literal|0
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|tmp
@@ -907,6 +1051,14 @@ argument_list|(
 name|dd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|found_dot_a
+condition|)
+comment|/* 			 * There's a .a archive here. 			 */
+return|return
+name|path
+return|;
 block|}
 return|return
 name|path

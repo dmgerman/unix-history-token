@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: etc.c,v 1.4 1993/12/02 00:56:33 jkh Exp $  */
+comment|/*  * $Id: etc.c,v 1.5 1993/12/04 00:52:55 jkh Exp $  */
 end_comment
 
 begin_include
@@ -349,6 +349,7 @@ name|s2
 parameter_list|,
 name|s3
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s1
@@ -633,75 +634,6 @@ end_function
 begin_escape
 end_escape
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_function
-name|void
-name|bzero
-parameter_list|(
-name|p
-parameter_list|,
-name|n
-parameter_list|)
-name|char
-modifier|*
-name|p
-decl_stmt|;
-block|{
-name|memset
-argument_list|(
-name|p
-argument_list|,
-literal|0
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|bcopy
-parameter_list|(
-name|from
-parameter_list|,
-name|to
-parameter_list|,
-name|n
-parameter_list|)
-name|char
-modifier|*
-name|from
-decl_stmt|,
-decl|*
-name|to
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-name|memcpy
-argument_list|(
-name|to
-argument_list|,
-name|from
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* These must move */
 end_comment
@@ -796,7 +728,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output PADDING zero-bytes to descriptor OUTDESC.    PADDING may be negative; in that case, do nothing.  */
+comment|/*  * Output PADDING zero-bytes to descriptor OUTDESC.  * PADDING may be negative; in that case, do nothing.  */
 end_comment
 
 begin_function

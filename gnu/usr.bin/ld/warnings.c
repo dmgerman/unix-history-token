@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.4 1993/11/05 12:45:25 pk Exp $  */
+comment|/*  * $Id: warnings.c,v 1.2 1993/11/09 04:19:06 paul Exp $  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -473,18 +479,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -540,18 +534,6 @@ modifier|*
 name|entry
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|,
-name|sys_nerr
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 name|char
 modifier|*
 name|s
@@ -710,7 +692,11 @@ name|sp
 operator|->
 name|defined
 operator|==
-literal|1
+operator|(
+name|N_UNDF
+operator||
+name|N_EXT
+operator|)
 condition|)
 name|fprintf
 argument_list|(
@@ -729,13 +715,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|sp
 operator|->
 name|referenced
 condition|)
-block|{
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"  %s: unreferenced\n"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
+operator|!
 name|sp
 operator|->
 name|defined
@@ -744,7 +743,19 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"  %s: %#x %#x\n"
+literal|"  %s: undefined\n"
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"  %s: %#x, size %#x\n"
 argument_list|,
 name|sp
 operator|->
@@ -757,31 +768,6 @@ argument_list|,
 name|sp
 operator|->
 name|size
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|outfile
-argument_list|,
-literal|"  %s: undefined\n"
-argument_list|,
-name|sp
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|fprintf
-argument_list|(
-name|outfile
-argument_list|,
-literal|"  %s: unreferenced\n"
-argument_list|,
-name|sp
-operator|->
-name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -834,6 +820,10 @@ condition|(
 name|entry
 operator|->
 name|just_syms_flag
+operator|||
+name|entry
+operator|->
+name|is_dynamic
 condition|)
 name|fprintf
 argument_list|(
@@ -2789,14 +2779,55 @@ operator|.
 name|filename
 expr_stmt|;
 break|break;
-if|#
-directive|if
-literal|0
-block|case N_SETA | N_EXT: 			case N_SETT | N_EXT: 			case N_SETD | N_EXT: 			case N_SETB | N_EXT: 				if (g->multiply_defined == 2) 					continue; 				errfmt = "First set element definition of symbol %s (multiply defined)"; 				break;
-endif|#
-directive|endif
+case|case
+name|N_SETA
+operator||
+name|N_EXT
+case|:
+case|case
+name|N_SETT
+operator||
+name|N_EXT
+case|:
+case|case
+name|N_SETD
+operator||
+name|N_EXT
+case|:
+case|case
+name|N_SETB
+operator||
+name|N_EXT
+case|:
+if|if
+condition|(
+name|g
+operator|->
+name|multiply_defined
+operator|==
+literal|2
+condition|)
+continue|continue;
+name|errfmt
+operator|=
+literal|"First set element definition of symbol %s (multiply defined)"
+expr_stmt|;
+break|break;
 default|default:
-comment|/* Don't print out multiple defs 					at references.*/
+name|printf
+argument_list|(
+literal|"Multiple def: %s, type %#x\n"
+argument_list|,
+name|g
+operator|->
+name|name
+argument_list|,
+name|s
+operator|->
+name|n_type
+argument_list|)
+expr_stmt|;
+comment|/* Don't print out multiple defs at references.*/
 continue|continue;
 block|}
 block|}
@@ -2810,7 +2841,9 @@ argument_list|,
 name|i
 argument_list|)
 condition|)
+block|{
 continue|continue;
+block|}
 elseif|else
 if|if
 condition|(
