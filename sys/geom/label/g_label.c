@@ -942,7 +942,7 @@ argument_list|()
 expr_stmt|;
 name|G_LABEL_DEBUG
 argument_list|(
-literal|3
+literal|2
 argument_list|,
 literal|"Tasting %s."
 argument_list|,
