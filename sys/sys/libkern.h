@@ -751,6 +751,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|strvalid
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|__inline
