@@ -5317,7 +5317,7 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|,
-name|grade
+name|type
 decl_stmt|;
 name|dest
 operator|=
@@ -5335,7 +5335,7 @@ operator|==
 name|IFT_LOOP
 condition|)
 block|{
-name|grade
+name|type
 operator|=
 name|MAC_BIBA_TYPE_EQUAL
 expr_stmt|;
@@ -5348,7 +5348,7 @@ condition|(
 name|trust_all_interfaces
 condition|)
 block|{
-name|grade
+name|type
 operator|=
 name|MAC_BIBA_TYPE_HIGH
 expr_stmt|;
@@ -5356,7 +5356,7 @@ goto|goto
 name|set
 goto|;
 block|}
-name|grade
+name|type
 operator|=
 name|MAC_BIBA_TYPE_LOW
 expr_stmt|;
@@ -5519,7 +5519,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|grade
+name|type
 operator|=
 name|MAC_BIBA_TYPE_HIGH
 expr_stmt|;
@@ -5566,7 +5566,7 @@ name|mac_biba_set_single
 argument_list|(
 name|dest
 argument_list|,
-name|grade
+name|type
 argument_list|,
 literal|0
 argument_list|,
@@ -5577,13 +5577,13 @@ name|mac_biba_set_range
 argument_list|(
 name|dest
 argument_list|,
-name|grade
+name|type
 argument_list|,
 literal|0
 argument_list|,
 name|NULL
 argument_list|,
-name|grade
+name|type
 argument_list|,
 literal|0
 argument_list|,
