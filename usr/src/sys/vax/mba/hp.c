@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.69	83/02/21	*/
+comment|/*	hp.c	4.70	83/02/24	*/
 end_comment
 
 begin_ifdef
@@ -709,6 +709,54 @@ comment|/* H=cyl 87 thru 390 */
 endif|#
 directive|endif
 block|}
+struct|,
+name|cdc9300_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 26 */
+literal|33440
+block|,
+literal|27
+block|,
+comment|/* B=cyl 27 thru 81 */
+literal|500384
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 822 */
+literal|15884
+block|,
+literal|562
+block|,
+comment|/* D=cyl 562 thru 588 */
+literal|55936
+block|,
+literal|589
+block|,
+comment|/* E=cyl 589 thru 680 */
+literal|86240
+block|,
+literal|681
+block|,
+comment|/* F=cyl 681 thru 822 */
+literal|158592
+block|,
+literal|562
+block|,
+comment|/* G=cyl 562 thru 822 */
+literal|291346
+block|,
+literal|82
+block|,
+comment|/* H=cyl 82 thru 561 */
+block|}
 struct|;
 end_struct
 
@@ -834,8 +882,15 @@ literal|1
 block|,
 define|#
 directive|define
-name|HPDT_RM02
+name|HPDT_9300
 value|12
+operator|-
+literal|1
+block|,
+define|#
+directive|define
+name|HPDT_RM02
+value|13
 name|MBDT_RM02
 block|,
 comment|/* beware, actually capricorn or eagle */
@@ -1064,7 +1119,7 @@ literal|1024
 block|,
 name|capricorn_sizes
 block|,
-comment|/* AMPEX capricorn */
+comment|/* Capricorn */
 literal|48
 block|,
 literal|20
@@ -1077,7 +1132,20 @@ literal|842
 block|,
 name|eagle_sizes
 block|,
-comment|/* Fujitsu EAGLE */
+comment|/* EAGLE */
+literal|32
+block|,
+literal|19
+block|,
+literal|32
+operator|*
+literal|19
+block|,
+literal|815
+block|,
+name|cdc9300_sizes
+block|,
+comment|/* 9300 */
 block|}
 struct|;
 end_struct
@@ -1367,7 +1435,7 @@ name|mi
 operator|->
 name|mi_type
 decl_stmt|;
-comment|/* 	 * Model-byte processing for SI 9400 controllers. 	 * NB:  Only deals with RM03 and RM05 emulations. 	 */
+comment|/* 	 * Model-byte processing for SI controllers. 	 * NB:  Only deals with RM03 and RM05 emulations. 	 */
 if|if
 condition|(
 name|type
@@ -1426,7 +1494,7 @@ name|SI9775D
 case|:
 name|printf
 argument_list|(
-literal|"hp%d: si 9775 (direct)\n"
+literal|"hp%d: 9775 (direct)\n"
 argument_list|,
 name|mi
 operator|->
@@ -1443,7 +1511,7 @@ name|SI9730D
 case|:
 name|printf
 argument_list|(
-literal|"hp%d: si 9730 (direct)\n"
+literal|"hp%d: 9730 (direct)\n"
 argument_list|,
 name|mi
 operator|->
@@ -1455,13 +1523,13 @@ operator|=
 name|HPDT_9730
 expr_stmt|;
 break|break;
-comment|/* 		 * AMPEX 9300, SI Combination needs a have the 		 * drive cleared before we start.  We do not know 		 * why, but tests show that the recalibrate fixes 		 * the problem. 		 */
+comment|/* 		 * Beware, since the only SI controller we 		 * have has a 9300 instead of a 9766, we map the 		 * drive type into the 9300.  This means that 		 * on a 9766 you lose the last 8 cylinders (argh). 		 */
 case|case
 name|SI9766
 case|:
 name|printf
 argument_list|(
-literal|"hp%d: 9776/9300\n"
+literal|"hp%d: 9300\n"
 argument_list|,
 name|mi
 operator|->
@@ -1470,20 +1538,7 @@ argument_list|)
 expr_stmt|;
 name|type
 operator|=
-name|HPDT_RM05
-expr_stmt|;
-name|hpaddr
-operator|->
-name|hpcs1
-operator|=
-name|HP_RECAL
-operator||
-name|HP_GO
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100000
-argument_list|)
+name|HPDT_9300
 expr_stmt|;
 break|break;
 case|case
@@ -1501,6 +1556,40 @@ expr_stmt|;
 name|type
 operator|=
 name|HPDT_RM03
+expr_stmt|;
+break|break;
+case|case
+name|SICAPD
+case|:
+name|printf
+argument_list|(
+literal|"hp%d: capricorn\n"
+argument_list|,
+name|mi
+operator|->
+name|mi_unit
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|HPDT_CAPRICORN
+expr_stmt|;
+break|break;
+case|case
+name|SI9751D
+case|:
+name|printf
+argument_list|(
+literal|"hp%d: eagle\n"
+argument_list|,
+name|mi
+operator|->
+name|mi_unit
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|HPDT_EAGLE
 expr_stmt|;
 break|break;
 block|}
