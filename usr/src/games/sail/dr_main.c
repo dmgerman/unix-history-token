@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dr_main.c	8.1 (Berkeley) %G%"
+literal|"@(#)dr_main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,7 +99,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|setruid
+name|setuid
 argument_list|(
 name|geteuid
 argument_list|()
