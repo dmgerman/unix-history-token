@@ -1112,7 +1112,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|pip
+name|ip
 operator|->
 name|ip_p
 operator|==
@@ -1969,7 +1969,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|pip
+name|ip
 operator|->
 name|ip_p
 operator|==
