@@ -148,14 +148,6 @@ name|pthread
 modifier|*
 name|tcb_thread
 decl_stmt|;
-name|void
-modifier|*
-name|tcb_spare
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* align tcb_tmbx to 16 bytes */
 name|struct
 name|kse_thr_mailbox
 name|tcb_tmbx
