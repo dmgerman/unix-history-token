@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.8 1995/06/11 19:30:46 rgrimes Exp $"
+literal|"$Id: mountd.c,v 1.8.2.1 1996/01/03 14:14:49 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1240,6 +1240,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|dir_only
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|opt_flags
 decl_stmt|;
 end_decl_stmt
@@ -1385,6 +1393,9 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|struct
 name|vfsconf
 modifier|*
@@ -1448,6 +1459,9 @@ literal|"NFS support is not available in the running kernel"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 while|while
 condition|(
 operator|(
@@ -1459,7 +1473,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dn"
+literal|"dnr"
 argument_list|)
 operator|)
 operator|!=
@@ -1470,6 +1484,22 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'n'
+case|:
+name|resvport_only
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|dir_only
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 literal|'d'
 case|:
@@ -1482,20 +1512,12 @@ else|:
 literal|1
 expr_stmt|;
 break|break;
-case|case
-literal|'n'
-case|:
-name|resvport_only
-operator|=
-literal|0
-expr_stmt|;
-break|break;
 default|default:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: mountd [-n] [export_file]\n"
+literal|"Usage: mountd [-r] [-n] [export_file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2065,7 +2087,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * Get the real pathname and make sure it is a directory 		 * that exists. 		 */
+comment|/* 		 * Get the real pathname and make sure it is a directory 		 * or a regular file if the -r option was specified 		 * and it exists. 		 */
 if|if
 condition|(
 name|realpath
@@ -2088,14 +2110,26 @@ operator|<
 literal|0
 operator|||
 operator|(
+operator|!
+name|S_ISDIR
+argument_list|(
 name|stb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
+argument_list|)
+operator|&&
+operator|(
+name|dir_only
+operator|||
+operator|!
+name|S_ISREG
+argument_list|(
+name|stb
+operator|.
+name|st_mode
+argument_list|)
 operator|)
-operator|!=
-name|S_IFDIR
+operator|)
 operator|||
 name|statfs
 argument_list|(
@@ -4606,7 +4640,10 @@ name|hpe
 operator|->
 name|h_name
 operator|=
+name|strdup
+argument_list|(
 literal|"Default"
+argument_list|)
 expr_stmt|;
 name|hpe
 operator|->
