@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)qvioctl.h	1.7 (ULTRIX) 6/11/85  *  * Ioctl definitions for the qvss.  *  *	@(#)qvioctl.h	1.1 (Berkeley) %G%  *  */
+comment|/*  *	@(#)qvioctl.h	1.7 (ULTRIX) 6/11/85  *  * Ioctl definitions for the qvss.  *  *	@(#)qvioctl.h	1.2 (Berkeley) %G%  *  */
 end_comment
 
 begin_ifdef
@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|QIOCGINFO
-value|_IOR(q, 1, struct qv_info)
+value|_IOR('q', 1, struct qv_info)
 end_define
 
 begin_comment
@@ -218,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|QIOCSMSTATE
-value|_IOW(q, 2, vsCursor)
+value|_IOW('q', 2, vsCursor)
 end_define
 
 begin_comment
@@ -229,7 +229,7 @@ begin_define
 define|#
 directive|define
 name|QIOCINIT
-value|_IO(q, 4)
+value|_IO('q', 4)
 end_define
 
 begin_comment
@@ -240,7 +240,7 @@ begin_define
 define|#
 directive|define
 name|QIOCKPCMD
-value|_IOW(q, 5, struct qv_kpcmd)
+value|_IOW('q', 5, struct qv_kpcmd)
 end_define
 
 begin_comment
@@ -251,7 +251,7 @@ begin_define
 define|#
 directive|define
 name|QIOCADDR
-value|_IOR(q, 6, struct qv_info *)
+value|_IOR('q', 6, struct qv_info *)
 end_define
 
 begin_comment
