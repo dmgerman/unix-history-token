@@ -192,11 +192,11 @@ begin_define
 define|#
 directive|define
 name|TCPTV_DELACK
-value|(hz / PR_FASTHZ)
+value|(hz / PR_FASTHZ / 2)
 end_define
 
 begin_comment
-comment|/* 200ms timeout */
+comment|/* 100ms timeout */
 end_comment
 
 begin_ifdef
