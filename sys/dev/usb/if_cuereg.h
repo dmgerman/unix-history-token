@@ -651,6 +651,10 @@ decl_stmt|;
 name|char
 name|cue_dying
 decl_stmt|;
+name|struct
+name|timeval
+name|cue_rx_notice
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -3331,6 +3331,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|usbd_ratecheck
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cue_rx_notice
+argument_list|)
+condition|)
 name|printf
 argument_list|(
 literal|"cue%d: usb error on rx: %s\n"

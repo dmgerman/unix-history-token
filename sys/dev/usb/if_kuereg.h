@@ -662,6 +662,10 @@ decl_stmt|;
 name|char
 name|kue_dying
 decl_stmt|;
+name|struct
+name|timeval
+name|kue_rx_notice
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -3051,6 +3051,17 @@ name|aue_softc
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|usbd_devinfo
+argument_list|(
+name|uaa
+operator|->
+name|device
+argument_list|,
+literal|0
+argument_list|,
+name|devinfo
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|aue_iface
@@ -3148,9 +3159,9 @@ name|id
 operator|=
 name|usbd_get_interface_descriptor
 argument_list|(
-name|uaa
+name|sc
 operator|->
-name|iface
+name|aue_iface
 argument_list|)
 expr_stmt|;
 name|usbd_devinfo
@@ -4628,6 +4639,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|usbd_ratecheck
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aue_rx_notice
+argument_list|)
+condition|)
 name|printf
 argument_list|(
 literal|"aue%d: usb error on rx: %s\n"
