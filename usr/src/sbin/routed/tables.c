@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.5 (Berkeley) %G%"
+literal|"@(#)tables.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,6 +905,10 @@ decl_stmt|,
 name|metricchanged
 init|=
 literal|0
+decl_stmt|,
+name|delete
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|rtentry
@@ -944,9 +948,20 @@ name|rt
 operator|->
 name|rt_metric
 condition|)
+block|{
 name|metricchanged
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|metric
+operator|==
+name|HOPCNT_INFINITY
+condition|)
+name|delete
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|doioctl
@@ -1090,7 +1105,6 @@ name|doioctl
 operator|&&
 name|install
 condition|)
-block|{
 if|if
 condition|(
 name|ioctl
@@ -1118,6 +1132,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|doioctl
+operator|||
+name|delete
+operator|)
+operator|&&
+name|install
+condition|)
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|s
@@ -1139,7 +1163,6 @@ argument_list|(
 literal|"SIOCDELRT"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1205,6 +1228,12 @@ operator|)
 operator|)
 operator|==
 literal|0
+operator|&&
+name|rt
+operator|->
+name|rt_metric
+operator|!=
+name|HOPCNT_INFINITY
 operator|&&
 name|ioctl
 argument_list|(
