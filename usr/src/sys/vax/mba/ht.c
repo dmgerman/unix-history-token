@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.23	82/07/13	*/
+comment|/*	ht.c	4.24	82/07/15	*/
 end_comment
 
 begin_include
@@ -411,6 +411,8 @@ argument_list|(
 argument|mi
 argument_list|,
 argument|ms
+argument_list|,
+argument|sn
 argument_list|)
 end_macro
 
@@ -427,6 +429,12 @@ name|struct
 name|mba_slave
 modifier|*
 name|ms
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sn
 decl_stmt|;
 end_decl_stmt
 
@@ -465,9 +473,7 @@ name|htaddr
 operator|->
 name|httc
 operator|=
-name|ms
-operator|->
-name|ms_slave
+name|sn
 expr_stmt|;
 if|if
 condition|(
@@ -488,9 +494,7 @@ name|sc
 operator|->
 name|sc_slave
 operator|=
-name|ms
-operator|->
-name|ms_slave
+name|sn
 expr_stmt|;
 name|tutoht
 index|[

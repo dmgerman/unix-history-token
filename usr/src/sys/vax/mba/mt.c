@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.4	82/07/13	*/
+comment|/*	mt.c	4.5	82/07/15	*/
 end_comment
 
 begin_include
@@ -404,6 +404,8 @@ argument_list|(
 argument|mi
 argument_list|,
 argument|ms
+argument_list|,
+argument|sn
 argument_list|)
 end_macro
 
@@ -420,6 +422,12 @@ name|struct
 name|mba_slave
 modifier|*
 name|ms
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sn
 decl_stmt|;
 end_decl_stmt
 
@@ -475,9 +483,7 @@ name|mtaddr
 operator|->
 name|mtncs
 index|[
-name|ms
-operator|->
-name|ms_slave
+name|sn
 index|]
 operator|=
 name|MT_SENSE
@@ -524,9 +530,7 @@ name|sc
 operator|->
 name|sc_slave
 operator|=
-name|ms
-operator|->
-name|ms_slave
+name|sn
 expr_stmt|;
 name|mutomt
 index|[
