@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.6 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.7 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_ifndef
@@ -3371,7 +3371,7 @@ name|siso_data
 expr_stmt|;
 while|while
 condition|(
-name|cp2
+name|cp1
 operator|<
 name|cplim
 condition|)
