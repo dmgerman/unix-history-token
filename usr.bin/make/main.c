@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.27 1998/10/18 00:51:46 obrien Exp $"
+literal|"$Id: main.c,v 1.28 1998/11/14 16:15:04 dg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4571,7 +4571,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: make [-Beiknqrst] [-D variable] [-d flags] [-f makefile ]"
+literal|"usage: make [-Beiknqrstv] [-D variable] [-d flags] [-f makefile]"
 argument_list|,
 literal|"            [-I directory] [-j max_jobs] [-m directory] [-V variable]"
 argument_list|,
