@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.43 1995/11/04 14:43:26 bde Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.44 1995/11/05 04:50:48 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -777,7 +777,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"scb:0x%x control:0x%x tcl:0x%x cmdlen:%d cmdpointer:0x%x\n"
+literal|"scb:%p control:0x%x tcl:0x%x cmdlen:%d cmdpointer:0x%lx\n"
 argument_list|,
 name|scb
 argument_list|,
@@ -800,7 +800,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        datlen:%d data:0x%x res:0x%x segs:0x%x segp:0x%x\n"
+literal|"        datlen:%d data:0x%lx res:0x%x segs:0x%x segp:0x%lx\n"
 argument_list|,
 name|scb
 operator|->
@@ -858,7 +858,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"	sg_addr:%x sg_len:%d\n"
+literal|"	sg_addr:%lx sg_len:%ld\n"
 argument_list|,
 name|scb
 operator|->
@@ -1481,7 +1481,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahc at 0x%x: WARNING - Failed chip reset!  "
+literal|"ahc at 0x%lx: WARNING - Failed chip reset!  "
 literal|"Trying to initialize anyway.\n"
 argument_list|,
 name|iobase
@@ -4053,7 +4053,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Handled Residual of %d bytes\n"
+literal|"Handled Residual of %ld bytes\n"
 literal|"SG_COUNT == %d\n"
 argument_list|,
 name|scb
@@ -5384,8 +5384,6 @@ decl_stmt|,
 name|host_id
 decl_stmt|;
 name|int
-name|intdef
-decl_stmt|,
 name|max_targ
 init|=
 literal|15
