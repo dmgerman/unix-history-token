@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.111 1997/12/17 00:19:22 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.112 1997/12/17 21:21:38 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -4071,6 +4071,8 @@ name|n
 parameter_list|)
 block|{
 comment|/* Is arg n of the given command to be hidden from the log ? */
+comment|/* set authkey xxxxx */
+comment|/* set key xxxxx */
 if|if
 condition|(
 name|n
@@ -4117,6 +4119,29 @@ argument_list|,
 literal|2
 argument_list|)
 operator|)
+condition|)
+return|return
+literal|1
+return|;
+comment|/* passwd xxxxx */
+if|if
+condition|(
+name|n
+operator|==
+literal|1
+operator|&&
+operator|!
+name|strncasecmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"p"
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 return|return
 literal|1
