@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.4 %G%"
+literal|"@(#)source.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -856,8 +856,6 @@ operator|=
 name|srcline
 argument_list|(
 name|pc
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|filename
@@ -865,8 +863,6 @@ operator|=
 name|srcfilename
 argument_list|(
 name|pc
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|setsource
