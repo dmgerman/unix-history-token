@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: enabler.c,v 1.8 1997/10/06 11:35:54 charnier Exp $"
+literal|"$Id: enabler.c,v 1.9 1997/10/26 04:36:23 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/card.h>
+file|<pccard/cardinfo.h>
 end_include
 
 begin_include

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: printcis.c,v 1.8 1997/10/06 11:35:55 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/card.h>
+file|<pccard/cardinfo.h>
 end_include
 
 begin_include
