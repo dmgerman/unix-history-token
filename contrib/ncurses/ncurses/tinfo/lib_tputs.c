@@ -52,7 +52,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tputs.c,v 1.47 2000/05/27 23:08:41 tom Exp $"
+literal|"$Id: lib_tputs.c,v 1.51 2000/10/08 00:22:24 tom Exp $"
 argument_list|)
 end_macro
 
@@ -69,7 +69,7 @@ comment|/* used by termcap library */
 end_comment
 
 begin_decl_stmt
-name|speed_t
+name|short
 name|ospeed
 init|=
 literal|0
@@ -279,11 +279,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|USE_WIDEC_SUPPORT
-end_ifdef
+end_if
 
 begin_comment
 comment|/*  * Reference: The Unicode Standard 2.0  *  * No surrogates supported (we're storing only one 16-bit Unicode value per  * cell).  */
@@ -349,6 +349,10 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ch
 operator|<
 literal|0x80
@@ -360,6 +364,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ch
 operator|<
 literal|0x800
@@ -371,6 +379,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ch
 operator|<
 literal|0x10000
@@ -382,6 +394,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ch
 operator|<
 literal|0x200000
@@ -393,6 +409,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ch
 operator|<
 literal|0x4000000
@@ -404,6 +424,10 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ch
 operator|<=
 literal|0x7FFFFFFF
@@ -416,7 +440,7 @@ else|else
 block|{
 name|count
 operator|=
-literal|2
+literal|3
 expr_stmt|;
 name|ch
 operator|=
@@ -453,6 +477,7 @@ name|ch
 operator|>>=
 literal|6
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 literal|5
 case|:
@@ -472,6 +497,7 @@ name|ch
 operator|>>=
 literal|6
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 literal|4
 case|:
@@ -491,6 +517,7 @@ name|ch
 operator|>>=
 literal|6
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 literal|3
 case|:
@@ -510,6 +537,7 @@ name|ch
 operator|>>=
 literal|6
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 literal|2
 case|:
@@ -529,6 +557,7 @@ name|ch
 operator|>>=
 literal|6
 expr_stmt|;
+comment|/* FALLTHRU */
 case|case
 literal|1
 case|:
@@ -545,6 +574,7 @@ name|count
 index|]
 operator|)
 expr_stmt|;
+break|break;
 block|}
 while|while
 condition|(
@@ -623,8 +653,8 @@ decl_stmt|;
 name|int
 name|number
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|BSD_TPUTS
 name|int
 name|trailpad
@@ -777,8 +807,8 @@ operator|!
 name|xon_xoff
 operator|&&
 name|padding_baud_rate
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NCURSES_NO_PADDING
 operator|&&
 operator|(
@@ -806,8 +836,8 @@ name|padding_baud_rate
 operator|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|BSD_TPUTS
 comment|/*      * This ugly kluge deals with the fact that some ancient BSD programs      * (like nethack) actually do the likes of tputs("50") to get delays.      */
 name|trailpad
@@ -1193,8 +1223,8 @@ name|string
 operator|++
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|BSD_TPUTS
 comment|/*      * Emit any BSD-style prefix padding that we've accumulated now.      */
 if|if

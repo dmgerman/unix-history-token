@@ -40,7 +40,7 @@ end_comment
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_baudrate.c,v 1.15 1999/01/31 03:05:25 tom Exp $"
+literal|"$Id: lib_baudrate.c,v 1.17 2000/10/08 00:59:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -52,12 +52,14 @@ begin_struct
 struct|struct
 name|speed
 block|{
-name|speed_t
+name|int
 name|s
 decl_stmt|;
+comment|/* value for 'ospeed' is an index */
 name|int
 name|sp
 decl_stmt|;
+comment|/* the actual speed */
 block|}
 struct|;
 end_struct
@@ -324,9 +326,6 @@ index|]
 operator|.
 name|s
 operator|==
-operator|(
-name|speed_t
-operator|)
 name|OSpeed
 condition|)
 block|{
@@ -364,7 +363,7 @@ name|int
 name|BaudRate
 parameter_list|)
 block|{
-name|speed_t
+name|int
 name|result
 init|=
 literal|1
@@ -449,7 +448,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In debugging, allow the environment symbol to override when we're 	 * redirecting to a file, so we can construct repeatable test-cases 	 * that take into account costs that depend on baudrate. 	 */
+comment|/*      * In debugging, allow the environment symbol to override when we're      * redirecting to a file, so we can construct repeatable test-cases      * that take into account costs that depend on baudrate.      */
 ifdef|#
 directive|ifdef
 name|TRACE

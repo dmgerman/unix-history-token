@@ -160,10 +160,16 @@ directive|include
 file|<dump_entry.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<transform.h>
+end_include
+
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tset.c,v 0.41 2000/03/12 00:03:00 tom Exp $"
+literal|"$Id: tset.c,v 0.47 2000/10/08 01:01:08 tom Exp $"
 argument_list|)
 end_macro
 
@@ -213,6 +219,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|bool
+name|isreset
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* invoked as reset */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|int
 name|terasechar
 init|=
@@ -237,17 +256,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* new interrupt character */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|isreset
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* invoked as reset */
 end_comment
 
 begin_decl_stmt
@@ -878,7 +886,7 @@ name|int
 name|conditional
 decl_stmt|;
 comment|/* Baud rate conditionals bitmask. */
-name|speed_t
+name|int
 name|speed
 decl_stmt|;
 comment|/* Baud rate to compare against. */
@@ -1014,30 +1022,51 @@ block|,
 name|B9600
 block|}
 block|,
+comment|/* sgttyb may define up to this point */
+ifdef|#
+directive|ifdef
+name|B19200
 block|{
 literal|"19200"
 block|,
 name|B19200
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B38400
 block|{
 literal|"38400"
 block|,
 name|B38400
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B19200
 block|{
 literal|"19200"
 block|,
 name|B19200
 block|}
 block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|B38400
 block|{
 literal|"38400"
 block|,
 name|B38400
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|B19200
@@ -2036,28 +2065,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|(
 name|p
 operator|=
-name|strrchr
+name|_nc_basename
 argument_list|(
 name|ttypath
-argument_list|,
-literal|'/'
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-operator|++
-name|p
-expr_stmt|;
-else|else
-name|p
-operator|=
-name|ttypath
 expr_stmt|;
 if|#
 directive|if
@@ -3318,6 +3331,12 @@ begin_comment
 comment|/*  * Returns a "good" value for the erase character.  This is loosely based on  * the BSD4.4 logic.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TERMIOS
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -3361,6 +3380,11 @@ name|result
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Update the values of the erase, interrupt, and kill characters in 'mode'.  *  * SVr4 tset (e.g., Solaris 2.5) only modifies the intr, quit or erase  * characters if they're unset, or if we specify them as options.  This differs  * from BSD 4.4 tset, which always sets erase.  */
@@ -4069,6 +4093,12 @@ begin_comment
 comment|/*  * Tell the user if a control key has been changed from the default value.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TERMIOS
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -4086,9 +4116,6 @@ name|unsigned
 name|def
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|TERMIOS
 name|unsigned
 name|older
 decl_stmt|,
@@ -4243,10 +4270,13 @@ argument_list|,
 name|newer
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Convert the obsolete argument forms into something that getopt can handle.  * This means that -e, -i and -k get default arguments supplied for them.  */
@@ -4448,7 +4478,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-IQrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
+literal|"usage: %s [-IQVrs] [-] [-e ch] [-i ch] [-k ch] [-m mapping] [terminal]\n"
 argument_list|,
 name|pname
 argument_list|)
@@ -4570,12 +4600,9 @@ name|char
 modifier|*
 name|ttype
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TERMIOS
 if|if
 condition|(
-name|tcgetattr
+name|GET_TTY
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -4594,6 +4621,9 @@ name|oldmode
 operator|=
 name|mode
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TERMIOS
 name|ospeed
 operator|=
 name|cfgetospeed
@@ -4604,27 +4634,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-name|gtty
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-operator|&
-name|mode
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|failed
-argument_list|(
-literal|"standard error"
-argument_list|)
-expr_stmt|;
-name|oldmode
-operator|=
-name|mode
-expr_stmt|;
 name|ospeed
 operator|=
 name|mode
@@ -4633,45 +4642,28 @@ name|sg_ospeed
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|(
 name|p
 operator|=
-name|strrchr
+name|_nc_basename
 argument_list|(
 operator|*
 name|argv
-argument_list|,
-literal|'/'
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-operator|++
-name|p
-expr_stmt|;
-else|else
-name|p
-operator|=
-operator|*
-name|argv
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|CaselessCmp
+name|strcmp
 argument_list|(
 name|p
 argument_list|,
-literal|"reset"
+name|PROG_RESET
 argument_list|)
 condition|)
 block|{
 name|isreset
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 name|reset_mode
 argument_list|()
@@ -4707,7 +4699,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:d:e:Ii:k:m:np:qQSrs"
+literal|"a:d:e:Ii:k:m:np:qQSrsV"
 argument_list|)
 operator|)
 operator|!=
@@ -4856,6 +4848,18 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'V'
+case|:
+name|puts
+argument_list|(
+name|curses_version
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|EXIT_SUCCESS
+return|;
 case|case
 literal|'?'
 case|:
@@ -5090,6 +5094,9 @@ name|ttype
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If erase, kill and interrupt characters could have been 	 * modified and not -Q, display the changes. 	 */
+ifdef|#
+directive|ifdef
+name|TERMIOS
 if|if
 condition|(
 operator|!
@@ -5124,6 +5131,8 @@ name|CKILL
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

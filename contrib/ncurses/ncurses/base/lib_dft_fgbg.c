@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_dft_fgbg.c,v 1.11 2000/05/07 01:26:06 tom Exp $"
+literal|"$Id: lib_dft_fgbg.c,v 1.13 2000/07/07 16:50:27 tom Exp $"
 argument_list|)
 end_macro
 
@@ -118,14 +118,22 @@ name|_default_color
 operator|=
 operator|(
 name|fg
-operator|!=
-name|COLOR_WHITE
+operator|<
+literal|0
+operator|||
+name|fg
+operator|==
+name|C_MASK
 operator|)
 operator|||
 operator|(
 name|bg
-operator|!=
-name|COLOR_BLACK
+operator|<
+literal|0
+operator|||
+name|bg
+operator|==
+name|C_MASK
 operator|)
 expr_stmt|;
 name|SP

@@ -368,7 +368,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: xmas.c,v 1.13 1999/11/13 23:39:01 tom Exp $  */
+comment|/*  * $Id: xmas.c,v 1.15 2000/09/02 18:45:53 tom Exp $  */
 end_comment
 
 begin_include
@@ -413,91 +413,236 @@ specifier|static
 name|WINDOW
 modifier|*
 name|treescrn
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|treescrn2
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|treescrn3
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|treescrn4
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|treescrn5
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|treescrn6
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|treescrn7
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|treescrn8
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|dotdeer0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|stardeer0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lildeer0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lildeer1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lildeer2
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lildeer3
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|middeer0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|middeer1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|middeer2
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|middeer3
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|bigdeer0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|bigdeer1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|bigdeer2
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|bigdeer3
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|bigdeer4
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lookdeer0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lookdeer1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lookdeer2
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lookdeer3
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|lookdeer4
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|w_holiday
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|WINDOW
 modifier|*
 name|w_del_msg
 decl_stmt|;
@@ -899,8 +1044,8 @@ block|{
 name|start_color
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HAVE_USE_DEFAULT_COLORS
 if|if
 condition|(
@@ -3627,7 +3772,7 @@ argument_list|,
 name|treescrn3
 argument_list|)
 expr_stmt|;
-comment|/*balls*/
+comment|/*balls */
 name|mvwaddch
 argument_list|(
 name|treescrn3
@@ -3672,7 +3817,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*star*/
+comment|/*star */
 name|mvwaddch
 argument_list|(
 name|treescrn3
@@ -3684,7 +3829,7 @@ argument_list|,
 literal|'*'
 argument_list|)
 expr_stmt|;
-comment|/*strng1*/
+comment|/*strng1 */
 name|mvwaddch
 argument_list|(
 name|treescrn3
@@ -3696,7 +3841,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng2*/
+comment|/*strng2 */
 name|mvwaddch
 argument_list|(
 name|treescrn3
@@ -3719,7 +3864,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng3*/
+comment|/*strng3 */
 name|mvwaddch
 argument_list|(
 name|treescrn3
@@ -3742,7 +3887,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng4*/
+comment|/*strng4 */
 name|mvwaddch
 argument_list|(
 name|treescrn3
@@ -3776,7 +3921,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng5*/
+comment|/*strng5 */
 name|mvwaddch
 argument_list|(
 name|treescrn3
@@ -3807,7 +3952,7 @@ argument_list|,
 name|treescrn4
 argument_list|)
 expr_stmt|;
-comment|/*balls*/
+comment|/*balls */
 name|mvwaddch
 argument_list|(
 name|treescrn4
@@ -3874,7 +4019,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*star*/
+comment|/*star */
 name|wstandout
 argument_list|(
 name|treescrn4
@@ -3896,7 +4041,7 @@ argument_list|(
 name|treescrn4
 argument_list|)
 expr_stmt|;
-comment|/*strng1*/
+comment|/*strng1 */
 name|mvwaddch
 argument_list|(
 name|treescrn4
@@ -3908,8 +4053,8 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng2*/
-comment|/*strng3*/
+comment|/*strng2 */
+comment|/*strng3 */
 name|mvwaddch
 argument_list|(
 name|treescrn4
@@ -3932,7 +4077,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng4*/
+comment|/*strng4 */
 name|mvwaddch
 argument_list|(
 name|treescrn4
@@ -3966,7 +4111,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng5*/
+comment|/*strng5 */
 name|mvwaddch
 argument_list|(
 name|treescrn4
@@ -3997,7 +4142,7 @@ argument_list|,
 name|treescrn5
 argument_list|)
 expr_stmt|;
-comment|/*balls*/
+comment|/*balls */
 name|mvwaddch
 argument_list|(
 name|treescrn5
@@ -4031,7 +4176,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*star*/
+comment|/*star */
 name|mvwaddch
 argument_list|(
 name|treescrn5
@@ -4043,7 +4188,7 @@ argument_list|,
 literal|'*'
 argument_list|)
 expr_stmt|;
-comment|/*strng1*/
+comment|/*strng1 */
 name|mvwaddch
 argument_list|(
 name|treescrn5
@@ -4055,7 +4200,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng2*/
+comment|/*strng2 */
 name|mvwaddch
 argument_list|(
 name|treescrn5
@@ -4067,7 +4212,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng3*/
+comment|/*strng3 */
 name|mvwaddch
 argument_list|(
 name|treescrn5
@@ -4090,7 +4235,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng4*/
+comment|/*strng4 */
 name|mvwaddch
 argument_list|(
 name|treescrn5
@@ -4124,7 +4269,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng5*/
+comment|/*strng5 */
 name|mvwaddch
 argument_list|(
 name|treescrn5
@@ -4155,7 +4300,7 @@ argument_list|,
 name|treescrn6
 argument_list|)
 expr_stmt|;
-comment|/*balls*/
+comment|/*balls */
 name|mvwaddch
 argument_list|(
 name|treescrn6
@@ -4200,7 +4345,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*star*/
+comment|/*star */
 name|wstandout
 argument_list|(
 name|treescrn6
@@ -4222,8 +4367,8 @@ argument_list|(
 name|treescrn6
 argument_list|)
 expr_stmt|;
-comment|/*strng1*/
-comment|/*strng2*/
+comment|/*strng1 */
+comment|/*strng2 */
 name|mvwaddch
 argument_list|(
 name|treescrn6
@@ -4235,7 +4380,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng3*/
+comment|/*strng3 */
 name|mvwaddch
 argument_list|(
 name|treescrn6
@@ -4258,7 +4403,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng4*/
+comment|/*strng4 */
 name|mvwaddch
 argument_list|(
 name|treescrn6
@@ -4292,7 +4437,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng5*/
+comment|/*strng5 */
 name|mvwaddch
 argument_list|(
 name|treescrn6
@@ -4323,7 +4468,7 @@ argument_list|,
 name|treescrn7
 argument_list|)
 expr_stmt|;
-comment|/*balls*/
+comment|/*balls */
 name|mvwaddch
 argument_list|(
 name|treescrn7
@@ -4379,7 +4524,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*star*/
+comment|/*star */
 name|mvwaddch
 argument_list|(
 name|treescrn7
@@ -4391,7 +4536,7 @@ argument_list|,
 literal|'*'
 argument_list|)
 expr_stmt|;
-comment|/*strng1*/
+comment|/*strng1 */
 name|mvwaddch
 argument_list|(
 name|treescrn7
@@ -4403,7 +4548,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng2*/
+comment|/*strng2 */
 name|mvwaddch
 argument_list|(
 name|treescrn7
@@ -4426,7 +4571,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng3*/
+comment|/*strng3 */
 name|mvwaddch
 argument_list|(
 name|treescrn7
@@ -4449,7 +4594,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng4*/
+comment|/*strng4 */
 name|mvwaddch
 argument_list|(
 name|treescrn7
@@ -4483,7 +4628,7 @@ argument_list|,
 literal|' '
 argument_list|)
 expr_stmt|;
-comment|/*strng5*/
+comment|/*strng5 */
 name|mvwaddch
 argument_list|(
 name|treescrn7
@@ -4563,7 +4708,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/*NOTREACHED*/
+comment|/*NOTREACHED */
 block|}
 end_function
 
@@ -6629,7 +6774,7 @@ argument_list|(
 name|treescrn8
 argument_list|)
 expr_stmt|;
-comment|/*ALL ON***************************************************/
+comment|/*ALL ON************************************************** */
 name|overlay
 argument_list|(
 name|treescrn
