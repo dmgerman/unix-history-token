@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.68 1998/01/08 10:50:46 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.69 1998/01/10 13:31:27 kato Exp $  */
 end_comment
 
 begin_include
@@ -1542,12 +1542,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|int
@@ -1575,11 +1569,6 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -3177,29 +3166,6 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|PC98
-name|sc_port
-operator|=
-name|dev
-operator|->
-name|id_iobase
-expr_stmt|;
-name|sc_kbdc
-operator|=
-name|kbdc_open
-argument_list|(
-name|sc_port
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|16
-operator|)
-return|;
-else|#
-directive|else
 if|if
 condition|(
 operator|!
@@ -3274,16 +3240,8 @@ else|:
 name|IO_KBDSIZE
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
 
 begin_comment
 comment|/* probe video adapters, return TRUE if found */
@@ -3331,6 +3289,33 @@ literal|0
 operator|)
 return|;
 comment|/*      * Finish defaulting crtc variables for a mono screen.  Crtat is a      * bogus common variable so that it can be shared with pcvt, so it      * can't be statically initialized.  XXX.      */
+ifdef|#
+directive|ifdef
+name|PC98
+name|Crtat
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|TEXT_VRAM
+expr_stmt|;
+name|Atrat
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|TEXT_VRAM
+operator|+
+name|ATTR_OFFSET
+expr_stmt|;
+name|crtc_type
+operator|=
+name|KD_PC98
+expr_stmt|;
+else|#
+directive|else
 name|Crtat
 operator|=
 operator|(
@@ -3610,6 +3595,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* PC98 */
 return|return
 name|TRUE
 return|;
@@ -3651,6 +3639,9 @@ argument_list|(
 name|sc_port
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 operator|!
@@ -4065,9 +4056,15 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !PC98 */
 return|return
 name|TRUE
 return|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|fail
 label|:
 if|if
@@ -4114,17 +4111,11 @@ expr_stmt|;
 return|return
 name|FALSE
 return|;
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* !PC98 */
-end_comment
+block|}
+end_function
 
 begin_if
 if|#
@@ -4770,21 +4761,25 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|printf
-argument_list|(
-literal|"<text mode>"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 switch|switch
 condition|(
 name|crtc_type
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC98
+case|case
+name|KD_PC98
+case|:
+name|printf
+argument_list|(
+literal|"<text mode>"
+argument_list|)
+expr_stmt|;
+break|break;
+else|#
+directive|else
 case|case
 name|KD_VGA
 case|:
@@ -4849,10 +4844,10 @@ literal|"MDA/hercules"
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 endif|#
 directive|endif
 comment|/* PC98 */
+block|}
 name|printf
 argument_list|(
 literal|"<%d virtual consoles, flags=0x%x>\n"
@@ -6306,20 +6301,6 @@ case|case
 name|CONS_CURRENT
 case|:
 comment|/* get current adapter type */
-ifdef|#
-directive|ifdef
-name|PC98
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
-operator|=
-name|KD_PC98
-expr_stmt|;
-else|#
-directive|else
 operator|*
 operator|(
 name|int
@@ -6329,8 +6310,6 @@ name|data
 operator|=
 name|crtc_type
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -12466,9 +12445,6 @@ name|CN_DEAD
 expr_stmt|;
 return|return;
 block|}
-ifndef|#
-directive|ifndef
-name|PC98
 if|if
 condition|(
 operator|!
@@ -12492,8 +12468,6 @@ name|CN_DEAD
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* initialize required fields */
 name|cp
 operator|->
@@ -21937,29 +21911,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
-name|Crtat
-operator|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|TEXT_VRAM
-expr_stmt|;
-name|Atrat
-operator|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|TEXT_VRAM
-operator|+
-name|ATTR_OFFSET
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|PC98
 ifdef|#
 directive|ifdef
 name|AUTO_CLOCK
@@ -22535,8 +22486,8 @@ name|Atrat
 operator|+
 name|hw_cursor
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
 name|console
 index|[
 literal|0
@@ -22552,6 +22503,8 @@ index|]
 operator|->
 name|cursor_pos
 expr_stmt|;
+endif|#
+directive|endif
 name|console
 index|[
 literal|0
@@ -23166,6 +23119,9 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|scp
 operator|->
 name|cursor_saveunder
@@ -23175,6 +23131,8 @@ name|scp
 operator|->
 name|cursor_pos
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|scp
 return|;
@@ -27660,9 +27618,17 @@ name|u_char
 name|color
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|crtc_type
+condition|)
+block|{
 ifdef|#
 directive|ifdef
 name|PC98
+case|case
+name|KD_PC98
+case|:
 name|outb
 argument_list|(
 literal|0x6c
@@ -27672,13 +27638,9 @@ operator|<<
 literal|4
 argument_list|)
 expr_stmt|;
+break|break;
 else|#
 directive|else
-switch|switch
-condition|(
-name|crtc_type
-condition|)
-block|{
 case|case
 name|KD_EGA
 case|:
@@ -27730,11 +27692,11 @@ case|:
 case|case
 name|KD_HERCULES
 case|:
+endif|#
+directive|endif
 default|default:
 break|break;
 block|}
-endif|#
-directive|endif
 block|}
 ifndef|#
 directive|ifndef
