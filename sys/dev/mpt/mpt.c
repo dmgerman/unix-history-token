@@ -799,6 +799,12 @@ return|return;
 block|}
 name|req
 operator|->
+name|sequence
+operator|=
+literal|0
+expr_stmt|;
+name|req
+operator|->
 name|ccb
 operator|=
 name|NULL
@@ -2439,7 +2445,7 @@ begin_define
 define|#
 directive|define
 name|CFG_DATA_OFF
-value|40
+value|128
 end_define
 
 begin_function
@@ -2512,9 +2518,7 @@ name|bzero
 argument_list|(
 name|cfgp
 argument_list|,
-sizeof|sizeof
-expr|*
-name|cfgp
+name|MPT_REQUEST_AREA
 argument_list|)
 expr_stmt|;
 name|cfgp
