@@ -1,33 +1,55 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * config.h	1.7	82/10/11  * Definitions that everybody needs to know  */
+comment|/*	config.h	1.8	82/10/24	*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|eq
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(strcmp(a,b) == 0)
+name|machinename
+value|machname
 end_define
+
+begin_comment
+comment|/*  * Definitions for config.  */
+end_comment
+
+begin_comment
+comment|/*  * Structures representing objects in config's world.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TRUE
-value|1
+name|TO_NEXUS
+value|-1
 end_define
 
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
+begin_struct
+struct|struct
+name|file_list
+block|{
+name|char
+modifier|*
+name|f_fn
+decl_stmt|;
+comment|/* the name */
+name|int
+name|f_type
+decl_stmt|;
+comment|/* see below */
+name|struct
+name|file_list
+modifier|*
+name|f_next
+decl_stmt|;
+name|char
+modifier|*
+name|f_needs
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -56,36 +78,6 @@ directive|define
 name|PROFILING
 value|4
 end_define
-
-begin_define
-define|#
-directive|define
-name|TO_NEXUS
-value|-1
-end_define
-
-begin_struct
-struct|struct
-name|file_list
-block|{
-name|char
-modifier|*
-name|f_fn
-decl_stmt|;
-name|int
-name|f_type
-decl_stmt|;
-name|char
-modifier|*
-name|f_next
-decl_stmt|;
-name|char
-modifier|*
-name|f_needs
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -124,34 +116,38 @@ name|device
 modifier|*
 name|d_conn
 decl_stmt|;
-comment|/* What it is connected to */
+comment|/* what it is connected to */
 name|char
 modifier|*
 name|d_name
 decl_stmt|;
-comment|/* Name of device (e.g. rk11) */
+comment|/* name of device (e.g. rk11) */
 name|struct
 name|idlist
 modifier|*
 name|d_vec
 decl_stmt|;
-comment|/* Interrupt vectors */
+comment|/* interrupt vectors */
+name|int
+name|d_pri
+decl_stmt|;
+comment|/* interrupt priority */
 name|int
 name|d_addr
 decl_stmt|;
-comment|/* Address of csr */
+comment|/* address of csr */
 name|int
 name|d_unit
 decl_stmt|;
-comment|/* Unit number */
+comment|/* unit number */
 name|int
 name|d_drive
 decl_stmt|;
-comment|/* Drive number */
+comment|/* drive number */
 name|int
 name|d_slave
 decl_stmt|;
-comment|/* Slave number */
+comment|/* slave number */
 define|#
 directive|define
 name|QUES
@@ -169,7 +165,7 @@ comment|/* if init 1 set to number for iostat */
 name|int
 name|d_flags
 decl_stmt|;
-comment|/* Flags for device init */
+comment|/* nlags for device init */
 name|struct
 name|device
 modifier|*
@@ -196,6 +192,41 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Config has a global notion of which machine type is  * being used.  It uses the name of the machine in choosing  * files and directories.  Thus if the name of the machine is ``vax'',  * it will build from ``makefile.vax'' and use ``../vax/asm.sed''  * in the makerules, etc.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|machine
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|machinename
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MACHINE_VAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MACHINE_SUN
+value|2
+end_define
+
+begin_comment
+comment|/*  * For each machine, a set of CPU's may be specified as supported.  * These and the options (below) are put in the C flags in the makefile.  */
+end_comment
+
 begin_struct
 struct|struct
 name|cputype
@@ -214,6 +245,10 @@ modifier|*
 name|cputype
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * A set of options may also be specified which are like CPU types,  * but which may also specify values for the options.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -264,12 +299,27 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|do_trace
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|MACHINE_VAX
+end_if
+
+begin_decl_stmt
+name|bool
 name|seen_mba
 decl_stmt|,
 name|seen_uba
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|struct
@@ -331,9 +381,11 @@ decl_stmt|,
 name|timezone
 decl_stmt|,
 name|hadtz
-decl_stmt|,
-name|maxusers
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|dst
 decl_stmt|;
 end_decl_stmt
@@ -343,6 +395,38 @@ name|int
 name|profiling
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|maxusers
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|eq
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(!strcmp(a,b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRUE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FALSE
+value|0
+end_define
 
 end_unit
 
