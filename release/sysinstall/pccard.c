@@ -39,12 +39,39 @@ begin_comment
 comment|/*  * Set up defines for pccardd interrupt selection.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IRQ_COUNT
+value|11
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|IRQ_COUNT
 value|9
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
 
 begin_define
 define|#
@@ -108,6 +135,35 @@ directive|define
 name|IRQ_15
 value|0x00100
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IRQ_12
+value|0x00200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQ_13
+value|0x00400
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
 
 begin_decl_stmt
 name|unsigned
@@ -252,6 +308,34 @@ block|,
 name|IRQ_15
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"irq_12"
+block|,
+literal|"-i 12"
+block|,
+operator|~
+name|IRQ_12
+block|,
+name|IRQ_12
+block|}
+block|,
+block|{
+literal|"irq_13"
+block|,
+literal|"-i 13"
+block|,
+operator|~
+name|IRQ_13
+block|,
+name|IRQ_13
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* PC98 */
 block|{
 name|NULL
 block|}
@@ -310,8 +394,20 @@ block|,
 literal|"PC-card controller uses memory area to get card information.\n"
 literal|"Please specify an address that is not used by other devices.\n"
 literal|"If you're uncertain of detailed specification of your hardware,\n"
+ifdef|#
+directive|ifdef
+name|PC98
+literal|"leave it untouched (default == 0xd0000).\n"
+literal|"If you use PC-9801 P, NS/A, NX/C, NL/R or PC-9821 Ne please \n"
+literal|"select [DA] here."
+block|,
+else|#
+directive|else
 literal|"leave it untouched (default == 0xd0000)."
 block|,
+endif|#
+directive|endif
+comment|/* PC98 */
 literal|"Press F1 for more HELP"
 block|,
 literal|"pccard"
@@ -373,6 +469,26 @@ block|,
 literal|"_pcicmem=3"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"DA"
+block|,
+literal|"I/O address 0xda000 - 0xdbfff"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"_pcicmem=4"
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* PC98 */
 block|{
 name|NULL
 block|}
@@ -444,6 +560,172 @@ block|,
 literal|' '
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+literal|"3 IRQ 3"
+block|,
+literal|"(INT 0) is 2nd serial port, internal modem"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CardIrq
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|IRQ_03
+block|}
+block|,
+block|{
+literal|"4 IRQ 5"
+block|,
+literal|"(INT 1) is Infrared communication, SCSI I/F, (2nd serial)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CardIrq
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|IRQ_05
+block|}
+block|,
+block|{
+literal|"5 IRQ 6"
+block|,
+literal|"(INT 2) is PC-card Controller"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CardIrq
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|IRQ_06
+block|}
+block|,
+block|{
+literal|"6 IRQ 9"
+block|,
+literal|"(INT 3) is IDE disk Controller"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CardIrq
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|IRQ_09
+block|}
+block|,
+block|{
+literal|"7 IRQ 10"
+block|,
+literal|"(INT 41) is often free"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CardIrq
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|IRQ_10
+block|}
+block|,
+block|{
+literal|"8 IRQ 12"
+block|,
+literal|"(INT 5) is Internal sound"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CardIrq
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|IRQ_12
+block|}
+block|,
+block|{
+literal|"9 IRQ 13"
+block|,
+literal|"(INT 6) is Bus Mouse"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CardIrq
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|IRQ_13
+block|}
+block|,
+else|#
+directive|else
 block|{
 literal|"3 IRQ 10"
 block|,
@@ -651,6 +933,9 @@ block|,
 name|IRQ_06
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* PC98 */
 block|{
 name|NULL
 block|}
@@ -899,6 +1184,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|PC98
+case|case
+literal|4
+case|:
+name|pcic_mem
+operator|=
+literal|0xda000
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"pccard_mem"
+argument_list|,
+literal|"0xda000"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* PC98 */
 block|}
 comment|/* get card_irq out of CardIrq somehow */
 if|if
