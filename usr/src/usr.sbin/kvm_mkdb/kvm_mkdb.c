@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1990 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1990, 1993 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.17 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,19 +67,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -103,12 +115,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"extern.h"
 end_include
 
@@ -119,6 +125,7 @@ name|usage
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -137,8 +144,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|DB
@@ -187,9 +194,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -331,33 +335,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|db
+operator|==
+name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kvm_mkdb: %s: %s\n"
-argument_list|,
-name|dbtemp
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|dbtemp
 argument_list|)
 expr_stmt|;
-block|}
 name|create_knlist
 argument_list|(
 name|nlistpath
@@ -365,16 +355,22 @@ argument_list|,
 name|db
 argument_list|)
 expr_stmt|;
-call|(
-name|void
-call|)
-argument_list|(
+if|if
+condition|(
 name|db
 operator|->
 name|close
-argument_list|)
 argument_list|(
 name|db
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|dbtemp
 argument_list|)
 expr_stmt|;
 if|if
@@ -386,102 +382,20 @@ argument_list|,
 name|dbname
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"kvm_mkdb: %s to %s: %s.\n"
+literal|"rename %s to %s"
 argument_list|,
 name|dbtemp
 argument_list|,
 name|dbname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|error
-parameter_list|(
-name|n
-parameter_list|)
-name|char
-modifier|*
-name|n
-decl_stmt|;
-block|{
-name|int
-name|sverr
-decl_stmt|;
-name|sverr
-operator|=
-name|errno
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kvm_mkdb: "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|sverr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

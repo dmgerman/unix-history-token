@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nlist.c	5.7 (Berkeley) %G%"
+literal|"@(#)nlist.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,18 +37,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<a.out.h>
 end_include
 
@@ -61,13 +49,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -79,7 +73,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -91,7 +97,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -122,6 +128,16 @@ name|_name
 value|n_un.n_name
 end_define
 
+begin_define
+define|#
+directive|define
+name|badfmt
+parameter_list|(
+name|str
+parameter_list|)
+value|errx(1, "%s: %s: %s", kfile, str, strerror(EFTYPE))
+end_define
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -131,20 +147,6 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|badfmt
-name|__P
-argument_list|(
-operator|(
 name|char
 operator|*
 operator|)
@@ -234,8 +236,12 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -246,10 +252,6 @@ name|read
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ebuf
 argument_list|,
@@ -373,19 +375,17 @@ operator|!
 operator|(
 name|strtab
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|strsize
 argument_list|)
 operator|)
 condition|)
-name|error
+name|err
 argument_list|(
-name|name
+literal|1
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -427,8 +427,12 @@ literal|"r"
 argument_list|)
 operator|)
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -449,8 +453,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -529,8 +537,12 @@ argument_list|(
 literal|"corrupted symbol table"
 argument_list|)
 expr_stmt|;
-name|error
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
@@ -585,11 +597,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-call|(
 name|db
 operator|->
 name|put
-call|)
 argument_list|(
 name|db
 argument_list|,
@@ -602,9 +612,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"put"
+literal|1
+argument_list|,
+literal|"record enter"
 argument_list|)
 expr_stmt|;
 if|if
@@ -780,11 +792,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-call|(
 name|db
 operator|->
 name|put
-call|)
 argument_list|(
 name|db
 argument_list|,
@@ -797,9 +807,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|error
+name|err
 argument_list|(
-literal|"put"
+literal|1
+argument_list|,
+literal|"record enter"
 argument_list|)
 expr_stmt|;
 comment|/* Restore to original values. */
@@ -878,53 +890,18 @@ name|nr
 operator|<
 literal|0
 condition|)
-name|error
-argument_list|(
-name|kfile
-argument_list|)
-expr_stmt|;
-name|badfmt
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|badfmt
-parameter_list|(
-name|p
-parameter_list|)
-name|char
-modifier|*
-name|p
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"kvm_mkdb: %s: %s: %s\n"
-argument_list|,
-name|kfile
-argument_list|,
-name|p
-argument_list|,
-name|strerror
-argument_list|(
-name|EFTYPE
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|kfile
+argument_list|)
+expr_stmt|;
+name|badfmt
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
