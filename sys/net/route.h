@@ -1327,15 +1327,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|void
-name|route_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|rt_getifa
 parameter_list|(

@@ -212,9 +212,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|route_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|rn_init
 argument_list|()
