@@ -98,7 +98,7 @@ name|HIDENAME
 parameter_list|(
 name|asmsym
 parameter_list|)
-value|__CONCAT(.,asmsym)
+value|.asmsym
 end_define
 
 begin_comment
