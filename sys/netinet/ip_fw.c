@@ -5701,9 +5701,12 @@ name|f
 operator|->
 name|fw_ipid
 operator|!=
+name|ntohs
+argument_list|(
 name|ip
 operator|->
 name|ip_id
+argument_list|)
 condition|)
 continue|continue;
 if|if
