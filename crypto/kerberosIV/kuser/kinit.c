@@ -657,7 +657,7 @@ if|if
 condition|(
 operator|!
 operator|*
-name|name
+name|aname
 condition|)
 return|return
 literal|0
