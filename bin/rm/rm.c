@@ -151,6 +151,22 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+name|char
+modifier|*
+name|getflags
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|dflag
 decl_stmt|,

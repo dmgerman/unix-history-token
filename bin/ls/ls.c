@@ -177,6 +177,22 @@ value|(1 + CHAR_BIT * sizeof(t) / 3 + 1)
 end_define
 
 begin_decl_stmt
+name|char
+modifier|*
+name|getflags
+name|__P
+argument_list|(
+operator|(
+name|u_long
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|display

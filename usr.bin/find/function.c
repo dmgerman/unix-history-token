@@ -147,6 +147,26 @@ value|{							\ 	switch (plan->flags) {						\ 	case F_EQUAL:							\ 		return (
 end_define
 
 begin_decl_stmt
+name|u_long
+name|setflags
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|,
+name|u_long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|PLAN
 modifier|*
