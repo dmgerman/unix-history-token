@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.94		%G%"
+literal|"@(#)sendmail.h	3.95		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2195,6 +2195,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* level of logging to perform */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|FileMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mode on files */
 end_comment
 
 begin_decl_stmt
