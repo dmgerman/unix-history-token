@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.51 1995/07/23 18:49:48 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.52 1995/07/23 19:37:52 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -4607,14 +4607,14 @@ name|b_lblkno
 operator|*
 name|bsize
 expr_stmt|;
+name|doretry
+label|:
 name|curbpnpages
 operator|=
 name|bp
 operator|->
 name|b_npages
 expr_stmt|;
-name|doretry
-label|:
 name|bp
 operator|->
 name|b_flags
@@ -4823,12 +4823,6 @@ expr_stmt|;
 block|}
 name|VM_WAIT
 expr_stmt|;
-name|curbpnpages
-operator|=
-name|bp
-operator|->
-name|b_npages
-expr_stmt|;
 goto|goto
 name|doretry
 goto|;
@@ -4924,12 +4918,6 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|curbpnpages
-operator|=
-name|bp
-operator|->
-name|b_npages
 expr_stmt|;
 goto|goto
 name|doretry
@@ -5480,7 +5468,11 @@ operator|!
 name|obj
 condition|)
 block|{
-return|return;
+name|panic
+argument_list|(
+literal|"biodone: no object"
+argument_list|)
+expr_stmt|;
 block|}
 if|#
 directive|if
