@@ -1703,6 +1703,13 @@ name|savestring
 argument_list|)
 end_if
 
+begin_define
+define|#
+directive|define
+name|savestring
+value|rl_savestring
+end_define
+
 begin_function_decl
 specifier|extern
 name|char
