@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * $Id: tic.h,v 1.40 2001/08/12 00:45:57 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
+comment|/*  * $Id: tic.h,v 1.41 2002/06/01 19:07:02 tom Exp $  *	tic.h - Global variables and structures for the terminfo  *			compiler.  */
 end_comment
 
 begin_ifndef
@@ -164,6 +164,23 @@ begin_expr_stmt
 unit|)
 name|_nc_visbuf
 argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern NCURSES_EXPORT(const char *
+end_extern
+
+begin_expr_stmt
+unit|)
+name|_nc_visbuf2
+argument_list|(
+name|int
+argument_list|,
 specifier|const
 name|char
 operator|*

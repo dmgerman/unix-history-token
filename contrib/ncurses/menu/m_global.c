@@ -20,9 +20,19 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: m_global.c,v 1.12 2000/12/10 02:16:48 tom Exp $"
+literal|"$Id: m_global.c,v 1.13 2002/06/01 16:16:44 tom Exp $"
 argument_list|)
 end_macro
+
+begin_decl_stmt
+specifier|static
+name|char
+name|mark
+index|[]
+init|=
+literal|"-"
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|NCURSES_EXPORT_VAR
@@ -188,7 +198,7 @@ operator|)
 literal|0
 block|,
 comment|/* userptr */
-literal|"-"
+name|mark
 block|,
 comment|/* mark */
 name|ALL_MENU_OPTS

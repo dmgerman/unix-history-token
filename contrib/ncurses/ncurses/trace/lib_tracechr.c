@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_tracechr.c,v 1.8 2002/02/10 01:26:04 tom Exp $"
+literal|"$Id: lib_tracechr.c,v 1.9 2002/05/25 23:34:19 tom Exp $"
 argument_list|)
 end_macro
 
@@ -63,9 +63,14 @@ argument_list|,
 literal|"'%.30s' = %#03o"
 argument_list|,
 operator|(
+operator|(
 name|ch
 operator|>
 name|KEY_MIN
+operator|||
+name|ch
+operator|<
+literal|0
 operator|)
 condition|?
 name|keyname
@@ -77,10 +82,8 @@ name|unctrl
 argument_list|(
 name|ch
 argument_list|)
-argument_list|,
-operator|(
-name|unsigned
 operator|)
+argument_list|,
 name|ch
 argument_list|)
 expr_stmt|;

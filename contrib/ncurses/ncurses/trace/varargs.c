@@ -22,7 +22,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: varargs.c,v 1.1 2001/10/20 20:37:48 tom Exp $"
+literal|"$Id: varargs.c,v 1.2 2002/06/01 16:16:00 tom Exp $"
 argument_list|)
 end_macro
 
@@ -116,6 +116,13 @@ begin_block
 block|{
 specifier|static
 name|char
+name|dummy
+index|[]
+init|=
+literal|""
+decl_stmt|;
+specifier|static
+name|char
 modifier|*
 name|result_buf
 decl_stmt|;
@@ -141,7 +148,7 @@ operator|==
 literal|'\0'
 condition|)
 return|return
-literal|""
+name|dummy
 return|;
 if|if
 condition|(
@@ -167,7 +174,7 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|""
+name|dummy
 return|;
 operator|*
 name|result_buf
