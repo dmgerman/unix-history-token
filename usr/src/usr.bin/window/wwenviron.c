@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwenviron.c	3.3 83/08/31"
+literal|"@(#)wwenviron.c	3.4 83/11/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,15 +25,6 @@ include|#
 directive|include
 file|"ww.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Set up the environment of this process to run in window 'wp'.  * Can't report errors in any intelligent way, so don't.  */
@@ -54,19 +45,7 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|i
-expr_stmt|;
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-modifier|*
-name|q
-decl_stmt|;
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -74,15 +53,14 @@ name|termcap
 init|=
 literal|0
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|env
-decl_stmt|;
+specifier|static
 name|char
 modifier|*
 name|tbuf
 decl_stmt|;
+specifier|register
+name|i
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -224,6 +202,36 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Do this only once if vfork(). 	 */
+if|if
+condition|(
+name|termcap
+operator|==
+literal|0
+condition|)
+block|{
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+modifier|*
+name|env
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+modifier|*
+name|q
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -244,9 +252,6 @@ name|i
 operator|++
 control|)
 empty_stmt|;
-if|if
-condition|(
-operator|(
 name|env
 operator|=
 operator|(
@@ -271,7 +276,10 @@ name|char
 operator|*
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|env
 operator|==
 literal|0
 condition|)
@@ -375,6 +383,11 @@ name|q
 operator|=
 literal|0
 expr_stmt|;
+name|environ
+operator|=
+name|env
+expr_stmt|;
+block|}
 operator|*
 name|termcap
 operator|=
@@ -440,10 +453,6 @@ name|tbuf
 argument_list|,
 name|wwkeys
 argument_list|)
-expr_stmt|;
-name|environ
-operator|=
-name|env
 expr_stmt|;
 block|}
 end_block
