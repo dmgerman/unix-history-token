@@ -65,13 +65,15 @@ begin_struct
 struct|struct
 name|dbreg
 block|{
-name|uint64_t
+name|unsigned
+name|long
 name|dbr_data
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|uint64_t
+name|unsigned
+name|long
 name|dbr_inst
 index|[
 literal|8
