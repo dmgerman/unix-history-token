@@ -470,7 +470,8 @@ name|_THREAD_SAFE
 end_ifdef
 
 begin_decl_stmt
-name|int
+name|char
+modifier|*
 name|asctime_r
 name|__P
 argument_list|(
@@ -482,15 +483,14 @@ operator|*
 operator|,
 name|char
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|char
+modifier|*
 name|ctime_r
 name|__P
 argument_list|(
@@ -501,8 +501,6 @@ operator|*
 operator|,
 name|char
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
