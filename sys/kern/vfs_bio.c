@@ -4953,23 +4953,11 @@ operator||
 name|B_DELWRI
 operator|)
 condition|)
-block|{
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_DELWRI
-expr_stmt|;
-operator|--
-name|numdirtybuffers
-expr_stmt|;
-name|numdirtywakeup
+name|bundirty
 argument_list|(
-name|lodirtybuffers
+name|bp
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Fixup numfreebuffers count.  The bp is on an appropriate queue 	 * unless locked.  We then bump numfreebuffers if it is not B_DELWRI. 	 * We've already handled the B_INVAL case ( B_DELWRI will be clear 	 * if B_INVAL is set ). 	 */
 if|if
 condition|(
