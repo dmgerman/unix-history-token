@@ -332,11 +332,6 @@ begin_struct
 struct|struct
 name|uma_cache
 block|{
-name|struct
-name|mtx
-name|uc_lock
-decl_stmt|;
-comment|/* Spin lock on this cpu's bucket */
 name|uma_bucket_t
 name|uc_freebucket
 decl_stmt|;
@@ -362,17 +357,6 @@ name|uma_cache_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|LOCKNAME_LEN
-value|16
-end_define
-
-begin_comment
-comment|/* Length of the name for cpu locks */
-end_comment
-
 begin_comment
 comment|/*  * Zone management structure   *  * TODO: Optimize for cache line size  *  */
 end_comment
@@ -381,13 +365,6 @@ begin_struct
 struct|struct
 name|uma_zone
 block|{
-name|char
-name|uz_lname
-index|[
-name|LOCKNAME_LEN
-index|]
-decl_stmt|;
-comment|/* Text name for the cpu lock */
 name|char
 modifier|*
 name|uz_name
@@ -785,27 +762,10 @@ define|#
 directive|define
 name|CPU_LOCK_INIT
 parameter_list|(
-name|z
-parameter_list|,
-name|cpu
-parameter_list|,
-name|lc
-parameter_list|)
-define|\
-value|do {							\ 		if ((lc))					\ 			mtx_init(&(z)->uz_cpu[(cpu)].uc_lock,	\ 			    (z)->uz_lname, (z)->uz_lname,	\ 			    MTX_DEF | MTX_DUPOK);		\ 		else						\ 			mtx_init(&(z)->uz_cpu[(cpu)].uc_lock,	\ 			    (z)->uz_lname, "UMA cpu",		\ 			    MTX_DEF | MTX_DUPOK);		\ 	} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPU_LOCK_FINI
-parameter_list|(
-name|z
-parameter_list|,
 name|cpu
 parameter_list|)
 define|\
-value|mtx_destroy(&(z)->uz_cpu[(cpu)].uc_lock)
+value|mtx_init(&uma_pcpu_mtx[(cpu)], "UMA pcpu", "UMA pcpu",	\ 	    MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define
@@ -813,12 +773,10 @@ define|#
 directive|define
 name|CPU_LOCK
 parameter_list|(
-name|z
-parameter_list|,
 name|cpu
 parameter_list|)
 define|\
-value|mtx_lock(&(z)->uz_cpu[(cpu)].uc_lock)
+value|mtx_lock(&uma_pcpu_mtx[(cpu)])
 end_define
 
 begin_define
@@ -826,12 +784,10 @@ define|#
 directive|define
 name|CPU_UNLOCK
 parameter_list|(
-name|z
-parameter_list|,
 name|cpu
 parameter_list|)
 define|\
-value|mtx_unlock(&(z)->uz_cpu[(cpu)].uc_lock)
+value|mtx_unlock(&uma_pcpu_mtx[(cpu)])
 end_define
 
 begin_comment
