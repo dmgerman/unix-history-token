@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)diffdir.c	4.6 (Berkeley) 82/05/05"
+literal|"@(#)diffdir.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -536,6 +536,10 @@ argument_list|,
 name|file1
 argument_list|,
 name|efile1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|scanpr
@@ -549,6 +553,10 @@ argument_list|,
 name|file2
 argument_list|,
 name|efile2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|scanpr
@@ -557,11 +565,15 @@ name|dir1
 argument_list|,
 name|SAME
 argument_list|,
-literal|"Common identical files"
+literal|"Common identical files in %.*s and %.*s"
 argument_list|,
-literal|0
+name|file1
 argument_list|,
-literal|0
+name|efile1
+argument_list|,
+name|file2
+argument_list|,
+name|efile2
 argument_list|)
 expr_stmt|;
 name|scanpr
@@ -570,11 +582,15 @@ name|dir1
 argument_list|,
 name|DIFFER
 argument_list|,
-literal|"Binary files which differ"
+literal|"Binary files which differ in %.*s and %.*s"
 argument_list|,
-literal|0
+name|file1
 argument_list|,
-literal|0
+name|efile1
+argument_list|,
+name|file2
+argument_list|,
+name|efile2
 argument_list|)
 expr_stmt|;
 name|scanpr
@@ -583,11 +599,15 @@ name|dir1
 argument_list|,
 name|DIRECT
 argument_list|,
-literal|"Common subdirectories"
+literal|"Common subdirectories of %.*s and %.*s"
 argument_list|,
-literal|0
+name|file1
 argument_list|,
-literal|0
+name|efile1
+argument_list|,
+name|file2
+argument_list|,
+name|efile2
 argument_list|)
 expr_stmt|;
 block|}
@@ -773,9 +793,13 @@ name|test
 argument_list|,
 name|title
 argument_list|,
-name|file
+name|file1
 argument_list|,
-name|efile
+name|efile1
+argument_list|,
+name|file2
+argument_list|,
+name|efile2
 argument_list|)
 specifier|register
 expr|struct
@@ -797,10 +821,16 @@ modifier|*
 name|title
 decl_stmt|,
 modifier|*
-name|file
+name|file1
 decl_stmt|,
 modifier|*
-name|efile
+name|efile1
+decl_stmt|,
+modifier|*
+name|file2
+decl_stmt|,
+modifier|*
+name|efile2
 decl_stmt|;
 end_decl_stmt
 
@@ -848,21 +878,10 @@ name|header
 operator|==
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|anychange
-condition|)
-name|printf
-argument_list|(
-literal|"\f"
-argument_list|)
-expr_stmt|;
 name|header
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
 name|printf
 argument_list|(
@@ -873,13 +892,21 @@ name|printf
 argument_list|(
 name|title
 argument_list|,
-name|efile
+name|efile1
 operator|-
-name|file
+name|file1
 operator|-
 literal|1
 argument_list|,
-name|file
+name|file1
+argument_list|,
+name|efile2
+operator|-
+name|file2
+operator|-
+literal|1
+argument_list|,
+name|file2
 argument_list|)
 expr_stmt|;
 name|printf
