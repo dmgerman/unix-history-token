@@ -157,14 +157,14 @@ define|#
 directive|define
 name|EISA_ACCESSOR
 parameter_list|(
-name|A
+name|var
 parameter_list|,
-name|B
+name|ivar
 parameter_list|,
-name|T
+name|type
 parameter_list|)
-define|\ 									 \
-value|static __inline T eisa_get_ ## A(device_t dev)				 \ {									 \ 	uintptr_t v;							 \ 	BUS_READ_IVAR(device_get_parent(dev), dev, EISA_IVAR_ ## B,&v); \ 	return (T) v;							 \ }									 \ 									 \ static __inline void eisa_set_ ## A(device_t dev, T t)			 \ {									 \ 	u_long v = (u_long) t;						 \ 	BUS_WRITE_IVAR(device_get_parent(dev), dev, EISA_IVAR_ ## B, v); \ }
+define|\
+value|__BUS_ACCESSOR(eisa, var, EISA, ivar, type)
 end_define
 
 begin_macro
@@ -199,6 +199,12 @@ argument_list|,
 argument|eisa_id_t
 argument_list|)
 end_macro
+
+begin_undef
+undef|#
+directive|undef
+name|EISA_ACCESSOR
+end_undef
 
 begin_function_decl
 name|int
