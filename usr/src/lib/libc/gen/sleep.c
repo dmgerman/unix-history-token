@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)sleep.c	4.2 (Berkeley) %G%	*/
+comment|/*	@(#)sleep.c	4.3 (Berkeley) %G%	*/
 end_comment
 
 begin_include
@@ -249,14 +249,14 @@ name|oitv
 operator|.
 name|it_value
 expr_stmt|;
-comment|/* 			 * Set the reset value to the smallest possible, 			 * the system will round it to the clock resolution. 			 */
+comment|/* 			 * This is a hack, but we must have time to 			 * return from the setitimer after the longjmp 			 * or else it'll be restarted.  And, anyway, 			 * sleep never did anything more than this before. 			 */
 name|oitv
 operator|.
 name|it_value
 operator|.
 name|tv_sec
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|oitv
 operator|.
@@ -264,7 +264,7 @@ name|it_value
 operator|.
 name|tv_usec
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 block|}
 block|}
@@ -314,6 +314,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
 name|sigpause
 argument_list|(
 name|omask
