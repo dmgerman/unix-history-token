@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: gloadavg.c,v 1.1.2.1 1997/12/12 07:15:37 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|a
 parameter_list|)
 function_decl|;
 end_function_decl
