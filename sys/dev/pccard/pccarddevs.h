@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.79 2003/11/03 16:09:17 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.80 2003/12/31 04:19:50 kato Exp   */
 end_comment
 
 begin_comment
@@ -4593,6 +4593,27 @@ define|#
 directive|define
 name|PCMCIA_STR_TDK_C6500012
 value|"TDK ELSA MicroLink MC all"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_TDK_LAK_CD031
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_TDK_LAK_CD031
+value|0xc1ab
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_TDK_LAK_CD031
+value|"TDK LAK-CD031 Ethernet"
 end_define
 
 begin_comment
