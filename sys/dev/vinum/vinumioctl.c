@@ -877,6 +877,24 @@ comment|/* set an object state */
 return|return
 literal|0
 return|;
+comment|/* 	     * Set state by force, without changing 	     * anything else. 	     */
+case|case
+name|VINUM_SETSTATE_FORCE
+case|:
+name|setstate_by_force
+argument_list|(
+operator|(
+expr|struct
+name|vinum_ioctl_msg
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+comment|/* set an object state */
+return|return
+literal|0
+return|;
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG

@@ -420,8 +420,15 @@ begin_comment
 comment|/* set read policy */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VINUM_SETSTATE_FORCE
+value|_IOC(IOC_IN | IOC_OUT, L, 85, MAX_IOCTL_REPLY)
+end_define
+
 begin_comment
-comment|/* 85 going begging */
+comment|/* diddle object state */
 end_comment
 
 begin_define
