@@ -228,7 +228,7 @@ specifier|const
 name|short_options
 index|[]
 init|=
-literal|"0123456789A:B:C::EFGHIUVX:abcd:e:f:hiLlnqrsuvwxyZz"
+literal|"0123456789A:B:C::EFGHIRUVX:abcd:e:f:hiLlnqrsuvwxyZz"
 decl_stmt|;
 end_decl_stmt
 
