@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.9 (Berkeley) %G%"
+literal|"@(#)main.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -779,6 +779,14 @@ name|stdin
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|fromatty
+condition|)
+name|quit
+argument_list|()
+expr_stmt|;
 name|clearerr
 argument_list|(
 name|stdin
