@@ -527,7 +527,7 @@ name|snd_cdevsw
 argument_list|,
 name|PCMMKMINOR
 argument_list|(
-name|unit
+literal|0
 argument_list|,
 name|SND_DEV_STATUS
 argument_list|)
