@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *    - Initial distribution.  *  * Modified June 1993 by Paul Mackerras, paulus@cs.anu.edu.au,  * so that the entire packet being decompressed doesn't have  * to be in contiguous memory (just the compressed header).  *  *	$Id: pppcompress.c,v 1.3 1994/11/01 09:03:20 pst Exp $  */
+comment|/*  * Routines to compress and uncompess tcp packets (for transmission  * over low speed serial lines.  *  * Van Jacobson (van@helios.ee.lbl.gov), Dec 31, 1989:  *    - Initial distribution.  *  * Modified June 1993 by Paul Mackerras, paulus@cs.anu.edu.au,  * so that the entire packet being decompressed doesn't have  * to be in contiguous memory (just the compressed header).  *  *	$Id: pppcompress.c,v 1.4 1995/05/30 08:08:17 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -1766,12 +1766,30 @@ name|ip_p
 operator|=
 name|IPPROTO_TCP
 expr_stmt|;
+comment|/* 		 * Calculate the size of the TCP/IP header and make sure that 		 * we don't overflow the space we have available for it. 		 */
 name|hlen
 operator|=
 name|ip
 operator|->
 name|ip_hl
+operator|<<
+literal|2
 expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcphdr
+argument_list|)
+operator|>
+name|len
+condition|)
+goto|goto
+name|bad
+goto|;
 name|hlen
 operator|+=
 operator|(
@@ -1783,7 +1801,7 @@ operator|)
 operator|&
 operator|(
 operator|(
-name|int
+name|char
 operator|*
 operator|)
 name|ip
@@ -1794,11 +1812,18 @@ index|]
 operator|)
 operator|->
 name|th_off
-expr_stmt|;
-name|hlen
-operator|<<=
+operator|<<
 literal|2
 expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|>
+name|MAX_HDR
+condition|)
+goto|goto
+name|bad
+goto|;
 name|BCOPY
 argument_list|(
 name|ip
