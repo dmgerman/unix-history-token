@@ -1726,7 +1726,7 @@ argument|VN_FOLLOW
 argument_list|)
 name|printf
 argument_list|(
-literal|"vnioctl(0x%lx, 0x%lx, %p, 0x%x, %p): unit %d\n"
+literal|"vnioctl(0x%lx, 0x%x, %p, 0x%x, %p): unit %d\n"
 argument_list|,
 name|dev
 argument_list|,
