@@ -10161,7 +10161,7 @@ name|FIFO_ENABLE
 else|:
 name|FIFO_ENABLE
 operator||
-name|FIFO_RX_MEDHI
+name|FIFO_RX_MEDH
 expr_stmt|;
 ifdef|#
 directive|ifdef
