@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.26 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -825,6 +825,18 @@ expr_stmt|;
 name|fso
 operator|=
 name|fo
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_inodefmt
+operator|=
+name|FS_44INODEFMT
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_maxsymlinklen
+operator|=
+name|MAXSYMLINKLEN
 expr_stmt|;
 comment|/* 	 * Validate the given file system size. 	 * Verify that its last block can actually be accessed. 	 */
 if|if
@@ -4998,6 +5010,8 @@ expr|struct
 name|direct
 argument_list|)
 block|,
+name|DT_DIR
+block|,
 literal|1
 block|,
 literal|"."
@@ -5011,6 +5025,8 @@ argument_list|(
 expr|struct
 name|direct
 argument_list|)
+block|,
+name|DT_DIR
 block|,
 literal|2
 block|,
@@ -5028,6 +5044,8 @@ argument_list|(
 expr|struct
 name|direct
 argument_list|)
+block|,
+name|DT_DIR
 block|,
 literal|10
 block|,
@@ -5062,6 +5080,8 @@ expr|struct
 name|direct
 argument_list|)
 block|,
+name|DT_DIR
+block|,
 literal|1
 block|,
 literal|"."
@@ -5076,6 +5096,8 @@ expr|struct
 name|direct
 argument_list|)
 block|,
+name|DT_DIR
+block|,
 literal|2
 block|,
 literal|".."
@@ -5085,6 +5107,8 @@ block|{
 literal|0
 block|,
 name|DIRBLKSIZ
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5197,6 +5221,8 @@ index|]
 argument_list|,
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|lost_found_dir
 index|[
@@ -5470,6 +5496,8 @@ name|d_reclen
 operator|=
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|protodir
 index|[
@@ -5535,6 +5563,8 @@ name|cp
 argument_list|,
 name|DIRSIZ
 argument_list|(
+literal|0
+argument_list|,
 operator|&
 name|protodir
 index|[
