@@ -579,8 +579,6 @@ name|struct
 name|ccb_trans_settings
 modifier|*
 name|cts
-decl_stmt|,
-name|set
 decl_stmt|;
 name|CAM_DEBUG
 argument_list|(

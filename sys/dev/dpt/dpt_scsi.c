@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.18 1998/10/09 21:42:19 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.19 1998/10/15 23:17:56 gibbs Exp $"
 end_empty
 
 begin_define
@@ -1837,18 +1837,8 @@ name|eata_ccb_t
 modifier|*
 name|cp
 decl_stmt|;
-name|u_int16_t
-modifier|*
-name|ip
-decl_stmt|;
 name|u_int8_t
 name|status
-decl_stmt|,
-name|sig1
-decl_stmt|,
-name|sig2
-decl_stmt|,
-name|sig3
 decl_stmt|;
 name|int
 name|ndx
@@ -2273,9 +2263,6 @@ decl_stmt|;
 name|u_int8_t
 modifier|*
 name|param
-decl_stmt|;
-name|int
-name|size
 decl_stmt|;
 name|int
 name|bytes
@@ -2797,8 +2784,6 @@ name|dpt
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|i
 decl_stmt|;
 name|dccb
 operator|=
@@ -3309,9 +3294,6 @@ name|struct
 name|dpt_softc
 modifier|*
 name|dpt
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 name|CAM_DEBUG
 argument_list|(
@@ -4679,12 +4661,6 @@ block|{
 name|u_int
 name|loop
 decl_stmt|;
-name|u_int
-name|result
-decl_stmt|;
-name|u_int
-name|test
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -5387,9 +5363,6 @@ name|i
 decl_stmt|;
 name|int
 name|retval
-decl_stmt|;
-name|u_int8_t
-name|byte
 decl_stmt|;
 ifdef|#
 directive|ifdef
