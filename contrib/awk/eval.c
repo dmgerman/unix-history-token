@@ -4,19 +4,13 @@ comment|/*  * eval.c - gawk parse tree interpreter   */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1997 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"awk.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
 end_include
 
 begin_decl_stmt
@@ -2849,6 +2843,25 @@ name|Node_K_next
 case|:
 if|if
 condition|(
+name|in_begin_rule
+condition|)
+name|fatal
+argument_list|(
+literal|"`next' cannot be called from a BEGIN rule"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|in_end_rule
+condition|)
+name|fatal
+argument_list|(
+literal|"`next' cannot be called from an END rule"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|in_function
 argument_list|()
 condition|)
@@ -2866,6 +2879,25 @@ break|break;
 case|case
 name|Node_K_nextfile
 case|:
+if|if
+condition|(
+name|in_begin_rule
+condition|)
+name|fatal
+argument_list|(
+literal|"`nextfile' cannot be called from a BEGIN rule"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|in_end_rule
+condition|)
+name|fatal
+argument_list|(
+literal|"`nextfile' cannot be called from an END rule"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|in_function
@@ -3642,17 +3674,22 @@ modifier|*
 name|dest
 decl_stmt|;
 name|int
-name|count
+name|alloc_count
+decl_stmt|,
+name|str_count
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* 		 * This is an efficiency hack for multiple adjacent string 		 * concatenations, to avoid recursion and string copies. 		 * 		 * Node_concat trees grow downward to the left, so 		 * descend to lowest (first) node, accumulating nodes 		 * to evaluate to strings as we go. 		 */
-comment|/* 		 * But first, no arbitrary limits. Count the number of 		 * nodes and malloc the treelist and strlist arrays. 		 * There will be count + 1 items to concatenate. We 		 * also leave room for an extra pointer at the end to 		 * use as a sentinel.  Thus, start count at 2. 		 */
+comment|/* 		 * But first, no arbitrary limits. Count the number of 		 * nodes and malloc the treelist and strlist arrays. 		 * There will be alloc_count + 1 items to concatenate. We 		 * also leave room for an extra pointer at the end to 		 * use as a sentinel.  Thus, start alloc_count at 2. 		 */
 name|save_tree
 operator|=
 name|tree
 expr_stmt|;
 for|for
 control|(
-name|count
+name|alloc_count
 operator|=
 literal|2
 init|;
@@ -3670,7 +3707,7 @@ name|tree
 operator|->
 name|lnode
 control|)
-name|count
+name|alloc_count
 operator|++
 expr_stmt|;
 name|tree
@@ -3691,7 +3728,7 @@ name|NODE
 operator|*
 argument_list|)
 operator|*
-name|count
+name|alloc_count
 argument_list|,
 literal|"tree_eval"
 argument_list|)
@@ -3710,7 +3747,7 @@ name|NODE
 operator|*
 argument_list|)
 operator|*
-name|count
+name|alloc_count
 argument_list|,
 literal|"tree_eval"
 argument_list|)
@@ -3751,7 +3788,7 @@ name|treep
 operator|=
 name|tree
 expr_stmt|;
-comment|/* 		 * Now, evaluate to strings in LIFO order, accumulating 		 * the string length, so we can do a single malloc at the 		 * end. 		 */
+comment|/* 		 * Now, evaluate to strings in LIFO order, accumulating 		 * the string length, so we can do a single malloc at the 		 * end. 		 * 		 * Evaluate the expressions first, then get their 		 * lengthes, in case one of the expressions has a 		 * side effect that changes one of the others. 		 * See test/nasty.awk. 		 */
 name|strp
 operator|=
 name|strlist
@@ -3780,6 +3817,39 @@ operator|--
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|strp
+operator|++
+expr_stmt|;
+block|}
+operator|*
+name|strp
+operator|=
+name|NULL
+expr_stmt|;
+name|str_count
+operator|=
+name|strp
+operator|-
+name|strlist
+expr_stmt|;
+name|strp
+operator|=
+name|strlist
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|str_count
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|len
 operator|+=
 operator|(
@@ -3793,11 +3863,6 @@ name|strp
 operator|++
 expr_stmt|;
 block|}
-operator|*
-name|strp
-operator|=
-name|NULL
-expr_stmt|;
 name|emalloc
 argument_list|(
 name|str
@@ -6527,7 +6592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * r_get_lhs:  * This returns a POINTER to a node pointer. get_lhs(ptr) is the current  * value of the var, or where to store the var's new value   */
+comment|/*  * r_get_lhs:  * This returns a POINTER to a node pointer. get_lhs(ptr) is the current  * value of the var, or where to store the var's new value   *  * For the special variables, don't unref their current value if it's  * the same as the internal copy; perhaps the current one is used in  * a concatenation or some other expression somewhere higher up in the  * call chain.  Ouch.  */
 end_comment
 
 begin_function
@@ -6581,6 +6646,28 @@ name|type
 operator|==
 name|Node_param_list
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ptr
+operator|->
+name|flags
+operator|&
+name|FUNC
+operator|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"can't use function name `%s' as variable or array"
+argument_list|,
+name|ptr
+operator|->
+name|vname
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|=
 name|stack_ptr
@@ -6590,6 +6677,7 @@ operator|->
 name|param_cnt
 index|]
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|ptr
@@ -6715,6 +6803,17 @@ break|break;
 case|case
 name|Node_FNR
 case|:
+if|if
+condition|(
+name|FNR_node
+operator|->
+name|var_value
+operator|->
+name|numbr
+operator|!=
+name|FNR
+condition|)
+block|{
 name|unref
 argument_list|(
 name|FNR_node
@@ -6734,6 +6833,7 @@ operator|)
 name|FNR
 argument_list|)
 expr_stmt|;
+block|}
 name|aptr
 operator|=
 operator|&
@@ -6758,6 +6858,17 @@ break|break;
 case|case
 name|Node_NR
 case|:
+if|if
+condition|(
+name|NR_node
+operator|->
+name|var_value
+operator|->
+name|numbr
+operator|!=
+name|NR
+condition|)
+block|{
 name|unref
 argument_list|(
 name|NR_node
@@ -6777,6 +6888,7 @@ operator|)
 name|NR
 argument_list|)
 expr_stmt|;
+block|}
 name|aptr
 operator|=
 operator|&
@@ -6801,6 +6913,22 @@ break|break;
 case|case
 name|Node_NF
 case|:
+if|if
+condition|(
+name|NF
+operator|==
+operator|-
+literal|1
+operator|||
+name|NF_node
+operator|->
+name|var_value
+operator|->
+name|numbr
+operator|!=
+name|NF
+condition|)
+block|{
 if|if
 condition|(
 name|NF
@@ -6840,6 +6968,7 @@ operator|)
 name|NF
 argument_list|)
 expr_stmt|;
+block|}
 name|aptr
 operator|=
 operator|&

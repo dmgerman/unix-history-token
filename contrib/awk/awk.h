@@ -4,11 +4,15 @@ comment|/*  * awk.h -- Definitions for gawk.   */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1997 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991-1999 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_comment
 comment|/* ------------------------------ Includes ------------------------------ */
+end_comment
+
+begin_comment
+comment|/*  * config.h absolutely, positively, *M*U*S*T* be included before  * any system headers.  Otherwise, extreme death, destruction  * and loss of life results.  *  * Well, OK, gawk just won't work on systems using egcs and LFS.  But  * that's almost as bad.  */
 end_comment
 
 begin_ifdef
@@ -58,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_ifdef
@@ -2647,7 +2657,7 @@ name|isnondecimal
 parameter_list|(
 name|str
 parameter_list|)
-value|(((str)[0]) == '0')
+value|(((str)[0]) == '0'&& (ISDIGIT((str)[1]) \ 					|| (str)[1] == 'x' || (str)[1] == 'X'))
 end_define
 
 begin_ifdef
