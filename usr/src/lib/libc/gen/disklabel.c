@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.18 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1089,6 +1089,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|cnt
+operator|<
+literal|0
+condition|)
 name|error
 argument_list|(
 name|errno
@@ -2100,6 +2106,18 @@ name|_PATH_DISKTAB
 argument_list|)
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|": "
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 name|p
