@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"tc.c	(CWI)	1.1	85/03/26"
+literal|"@(#)tc.c	1.2	(CWI)	1.2	85/03/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -2694,6 +2694,9 @@ block|{
 case|case
 literal|0
 case|:
+case|case
+literal|'q'
+case|:
 name|done
 argument_list|()
 expr_stmt|;
@@ -3013,6 +3016,13 @@ expr_stmt|;
 name|fputs
 argument_list|(
 literal|"o...	set the -o output list to ...\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"q	quit\n"
 argument_list|,
 name|stderr
 argument_list|)
