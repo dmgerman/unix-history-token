@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forop.c 1.11 %G%"
+literal|"@(#)forop.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -686,6 +686,16 @@ block|}
 ifdef|#
 directive|ifdef
 name|PC
+name|sconv
+argument_list|(
+name|p2type
+argument_list|(
+name|inittype
+argument_list|)
+argument_list|,
+name|P2INT
+argument_list|)
+expr_stmt|;
 name|putop
 argument_list|(
 name|P2ASSIGN
@@ -825,6 +835,16 @@ block|}
 ifdef|#
 directive|ifdef
 name|PC
+name|sconv
+argument_list|(
+name|p2type
+argument_list|(
+name|termtype
+argument_list|)
+argument_list|,
+name|P2INT
+argument_list|)
+expr_stmt|;
 name|putop
 argument_list|(
 name|P2ASSIGN
@@ -1000,9 +1020,23 @@ block|{
 name|postcheck
 argument_list|(
 name|fortype
+argument_list|,
+name|nl
+operator|+
+name|T4INT
 argument_list|)
 expr_stmt|;
 block|}
+name|sconv
+argument_list|(
+name|P2INT
+argument_list|,
+name|p2type
+argument_list|(
+name|fortype
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|putop
 argument_list|(
 name|P2ASSIGN
@@ -1546,6 +1580,10 @@ block|{
 name|postcheck
 argument_list|(
 name|fortype
+argument_list|,
+name|nl
+operator|+
+name|T4INT
 argument_list|)
 expr_stmt|;
 block|}

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat.c 1.8 %G%"
+literal|"@(#)stat.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,6 +1824,21 @@ case|:
 name|postcheck
 argument_list|(
 name|p
+argument_list|,
+name|p1
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|p2type
+argument_list|(
+name|p1
+argument_list|)
+argument_list|,
+name|p2type
+argument_list|(
+name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|putop
@@ -1868,24 +1883,19 @@ break|break;
 case|case
 name|TDOUBLE
 case|:
-if|if
-condition|(
-name|isnta
+name|sconv
+argument_list|(
+name|p2type
 argument_list|(
 name|p1
-argument_list|,
-literal|"d"
 argument_list|)
-condition|)
-block|{
-name|putop
-argument_list|(
-name|P2SCONV
 argument_list|,
-name|P2DOUBLE
+name|p2type
+argument_list|(
+name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|putop
 argument_list|(
 name|P2ASSIGN

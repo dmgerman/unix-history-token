@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.8 %G%"
+literal|"@(#)lval.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1461,6 +1461,18 @@ name|PC
 name|postcheck
 argument_list|(
 name|p
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|sconv
+argument_list|(
+name|p2type
+argument_list|(
+name|ap
+argument_list|)
+argument_list|,
+name|P2INT
 argument_list|)
 expr_stmt|;
 endif|#
