@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* AUTOMATICALLY GENERATED; DO NOT EDIT! */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -61,7 +57,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|quad_t
+name|long
+name|long
 name|_G_fpos_t
 typedef|;
 end_typedef
@@ -221,11 +218,9 @@ begin_comment
 comment|/* default */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_G_USE_PROTOS
-end_ifdef
+begin_comment
+comment|/* #ifdef _G_USE_PROTOS*/
+end_comment
 
 begin_define
 define|#
@@ -237,25 +232,9 @@ parameter_list|)
 value|ARGLIST
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_G_ARGS
-parameter_list|(
-name|ARGLIST
-parameter_list|)
-value|(...)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* #else #define _G_ARGS(ARGLIST) (...) #endif */
+end_comment
 
 begin_comment
 comment|/* #define _G_SYSV */
