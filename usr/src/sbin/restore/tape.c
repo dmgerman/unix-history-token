@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	8.6 (Berkeley) %G%"
+literal|"@(#)tape.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3360,7 +3360,7 @@ name|curblk
 init|=
 literal|0
 decl_stmt|;
-name|long
+name|quad_t
 name|size
 init|=
 name|spcl
@@ -3496,16 +3496,15 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|size
-operator|>
-name|TP_BSIZE
-condition|?
 call|(
 name|long
 call|)
 argument_list|(
+name|size
+operator|>
+name|TP_BSIZE
+condition|?
 name|fssize
-argument_list|)
 else|:
 operator|(
 name|curblk
@@ -3516,6 +3515,7 @@ operator|*
 name|TP_BSIZE
 operator|+
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|curblk
@@ -3544,18 +3544,17 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-name|size
-operator|>
-name|TP_BSIZE
-condition|?
 call|(
 name|long
 call|)
 argument_list|(
+name|size
+operator|>
+name|TP_BSIZE
+condition|?
 name|curblk
 operator|*
 name|TP_BSIZE
-argument_list|)
 else|:
 operator|(
 name|curblk
@@ -3566,6 +3565,7 @@ operator|*
 name|TP_BSIZE
 operator|+
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|curblk
@@ -3580,16 +3580,18 @@ call|)
 argument_list|(
 name|clearedbuf
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|size
 operator|>
 name|TP_BSIZE
 condition|?
-operator|(
-name|long
-operator|)
 name|TP_BSIZE
 else|:
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3692,6 +3694,10 @@ operator|*
 operator|)
 name|buf
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 operator|(
 name|curblk
 operator|*
@@ -3699,6 +3705,7 @@ name|TP_BSIZE
 operator|)
 operator|+
 name|size
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|findinode
