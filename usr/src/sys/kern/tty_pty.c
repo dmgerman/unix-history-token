@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"tty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -193,14 +187,6 @@ begin_comment
 comment|/* for pstat -t */
 end_comment
 
-begin_decl_stmt
-name|int
-name|ptydebug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -338,6 +324,10 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|devtype
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -347,15 +337,16 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|tty
@@ -1349,19 +1340,6 @@ operator|~
 name|PF_WCOLL
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ptydebug
-condition|)
-name|printf
-argument_list|(
-literal|"WAKEUP c_cf %d\n"
-argument_list|,
-name|curproc
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -1383,12 +1361,40 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|ptcopen
+argument_list|(
+argument|dev_t dev
+argument_list|,
+argument|int flag
+argument_list|,
+argument|int devtype
+argument_list|,
+argument|struct proc *p
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|ptcopen
 argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|devtype
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1401,8 +1407,23 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|flag
+decl_stmt|,
+name|devtype
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -2318,6 +2339,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|rw
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -2333,15 +2356,16 @@ name|rw
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
-name|curp
-init|=
-name|curproc
+name|p
 decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|struct
 name|tty
@@ -2374,7 +2398,7 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|p
+name|prev
 decl_stmt|;
 name|int
 name|s
@@ -2510,14 +2534,14 @@ return|;
 if|if
 condition|(
 operator|(
-name|p
+name|prev
 operator|=
 name|pti
 operator|->
 name|pt_selr
 operator|)
 operator|&&
-name|p
+name|prev
 operator|->
 name|p_wchan
 operator|==
@@ -2538,7 +2562,7 @@ name|pti
 operator|->
 name|pt_selr
 operator|=
-name|curp
+name|p
 expr_stmt|;
 break|break;
 case|case
@@ -2631,14 +2655,14 @@ block|}
 if|if
 condition|(
 operator|(
-name|p
+name|prev
 operator|=
 name|pti
 operator|->
 name|pt_selw
 operator|)
 operator|&&
-name|p
+name|prev
 operator|->
 name|p_wchan
 operator|==
@@ -2659,7 +2683,7 @@ name|pti
 operator|->
 name|pt_selw
 operator|=
-name|curp
+name|p
 expr_stmt|;
 break|break;
 block|}
