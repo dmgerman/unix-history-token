@@ -442,6 +442,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|bioq_flush
+parameter_list|(
+name|struct
+name|bio_queue_head
+modifier|*
+name|head
+parameter_list|,
+name|struct
+name|devstat
+modifier|*
+name|stp
+parameter_list|,
+name|int
+name|error
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|bioq_init
 parameter_list|(
 name|struct
