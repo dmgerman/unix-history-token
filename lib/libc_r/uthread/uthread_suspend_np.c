@@ -176,9 +176,39 @@ break|break;
 case|case
 name|PS_MUTEX_WAIT
 case|:
+comment|/* Mark the thread as suspended and still in a queue. */
+name|thread
+operator|->
+name|suspended
+operator|=
+name|SUSP_MUTEX_WAIT
+expr_stmt|;
+name|PTHREAD_SET_STATE
+argument_list|(
+name|thread
+argument_list|,
+name|PS_SUSPENDED
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|PS_COND_WAIT
 case|:
+comment|/* Mark the thread as suspended and still in a queue. */
+name|thread
+operator|->
+name|suspended
+operator|=
+name|SUSP_COND_WAIT
+expr_stmt|;
+name|PTHREAD_SET_STATE
+argument_list|(
+name|thread
+argument_list|,
+name|PS_SUSPENDED
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|PS_FDLR_WAIT
 case|:
@@ -196,7 +226,7 @@ name|thread
 operator|->
 name|suspended
 operator|=
-literal|1
+name|SUSP_YES
 expr_stmt|;
 comment|/* 			 * Threads in these states may be in queues. 			 * In order to preserve queue integrity, the 			 * cancelled thread must remove itself from the 			 * queue.  Mark the thread as interrupted and 			 * set the state to running.  When the thread 			 * resumes, it will remove itself from the queue 			 * and call the suspension completion routine. 			 */
 name|thread
@@ -270,7 +300,7 @@ name|_thread_run
 operator|->
 name|suspended
 operator|!=
-literal|0
+name|SUSP_NO
 condition|)
 name|_thread_kern_sched_state
 argument_list|(

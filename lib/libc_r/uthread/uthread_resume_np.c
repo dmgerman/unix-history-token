@@ -42,6 +42,10 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|enum
+name|pthread_susp
+name|old_suspended
+decl_stmt|;
 comment|/* Find the thread in the list of active threads: */
 if|if
 condition|(
@@ -58,11 +62,17 @@ literal|0
 condition|)
 block|{
 comment|/* Cancel any pending suspensions: */
+name|old_suspended
+operator|=
+name|thread
+operator|->
+name|suspended
+expr_stmt|;
 name|thread
 operator|->
 name|suspended
 operator|=
-literal|0
+name|SUSP_NO
 expr_stmt|;
 comment|/* Is it currently suspended? */
 if|if
@@ -78,6 +88,63 @@ comment|/* 			 * Defer signals to protect the scheduling queues 			 * from acces
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
+switch|switch
+condition|(
+name|old_suspended
+condition|)
+block|{
+case|case
+name|SUSP_MUTEX_WAIT
+case|:
+comment|/* Set the thread's state back. */
+name|PTHREAD_SET_STATE
+argument_list|(
+name|thread
+argument_list|,
+name|PS_MUTEX_WAIT
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SUSP_COND_WAIT
+case|:
+comment|/* Set the thread's state back. */
+name|PTHREAD_SET_STATE
+argument_list|(
+name|thread
+argument_list|,
+name|PS_COND_WAIT
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SUSP_NOWAIT
+case|:
+comment|/* Allow the thread to run. */
+name|PTHREAD_SET_STATE
+argument_list|(
+name|thread
+argument_list|,
+name|PS_RUNNING
+argument_list|)
+expr_stmt|;
+name|PTHREAD_WAITQ_REMOVE
+argument_list|(
+name|thread
+argument_list|)
+expr_stmt|;
+name|PTHREAD_PRIOQ_INSERT_TAIL
+argument_list|(
+name|thread
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SUSP_NO
+case|:
+case|case
+name|SUSP_YES
+case|:
 comment|/* Allow the thread to run. */
 name|PTHREAD_SET_STATE
 argument_list|(
@@ -91,6 +158,8 @@ argument_list|(
 name|thread
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 comment|/* 			 * Undefer and handle pending signals, yielding if 			 * necessary: 			 */
 name|_thread_kern_sig_undefer
 argument_list|()

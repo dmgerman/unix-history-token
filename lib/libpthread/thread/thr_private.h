@@ -848,6 +848,32 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * Additional state for a thread suspended with pthread_suspend_np().  */
+end_comment
+
+begin_enum
+enum|enum
+name|pthread_susp
+block|{
+name|SUSP_NO
+block|,
+comment|/* Not suspended. */
+name|SUSP_YES
+block|,
+comment|/* Suspended. */
+name|SUSP_NOWAIT
+block|,
+comment|/* Suspended, was in a mutex or condition queue. */
+name|SUSP_MUTEX_WAIT
+block|,
+comment|/* Suspended, still in a mutex queue. */
+name|SUSP_COND_WAIT
+comment|/* Suspended, still in a condition queue. */
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Miscellaneous definitions.  */
 end_comment
 
@@ -1395,7 +1421,8 @@ value|0x0010
 name|int
 name|cancelflags
 decl_stmt|;
-name|int
+name|enum
+name|pthread_susp
 name|suspended
 decl_stmt|;
 name|thread_continuation_t
