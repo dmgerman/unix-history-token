@@ -5315,13 +5315,6 @@ argument_list|,
 name|UMA_ZONE_NOFREE
 argument_list|)
 expr_stmt|;
-name|uma_zone_set_max
-argument_list|(
-name|unp_zone
-argument_list|,
-name|nmbclusters
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unp_zone
@@ -5331,6 +5324,13 @@ condition|)
 name|panic
 argument_list|(
 literal|"unp_init"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|unp_zone
+argument_list|,
+name|nmbclusters
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
