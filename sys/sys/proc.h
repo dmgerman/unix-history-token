@@ -2564,12 +2564,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PS_SWAPPING
+name|PS_SWAPPINGOUT
 value|0x00200
 end_define
 
 begin_comment
-comment|/* Process is being swapped. */
+comment|/* Process is being swapped out. */
 end_comment
 
 begin_define
@@ -2580,7 +2580,7 @@ value|0x04000
 end_define
 
 begin_comment
-comment|/* Swapin in progress. */
+comment|/* Process is being swapped in. */
 end_comment
 
 begin_define
@@ -3126,7 +3126,7 @@ name|_PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	if ((p)->p_lock++ == 0) {					\ 		mtx_lock_spin(&sched_lock);				\ 		faultin((p));						\ 		mtx_unlock_spin(&sched_lock);				\ 	}								\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(p)->p_lock++;							\ 	if (((p)->p_sflag& PS_INMEM) == 0)				\ 		faultin((p));						\ } while (0)
 end_define
 
 begin_define
