@@ -1076,6 +1076,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IFM_ATM_VIRTUAL
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFM_ATM_SDH
 value|0x00000100
 end_define
@@ -1565,14 +1572,14 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ATM_DESCRIPTIONS
-value|{					\ 	{ IFM_ATM_UNKNOWN,	"Unknown" },				\ 	{ IFM_ATM_UTP_25,	"UTP/25.6MBit" },			\ 	{ IFM_ATM_TAXI_100,	"Taxi/100MBit" },			\ 	{ IFM_ATM_TAXI_140,	"Taxi/140MBit" },			\ 	{ IFM_ATM_MM_155,	"Multi-mode/155MBit" },			\ 	{ IFM_ATM_SM_155,	"Single-mode/155MBit" },		\ 	{ IFM_ATM_UTP_155,	"UTP/155MBit" },			\ 	{ IFM_ATM_MM_622,	"Multi-mode/622MBit" },			\ 	{ IFM_ATM_SM_622,	"Single-mode/622MBit" },		\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_ATM_UNKNOWN,	"Unknown" },				\ 	{ IFM_ATM_UTP_25,	"UTP/25.6MBit" },			\ 	{ IFM_ATM_TAXI_100,	"Taxi/100MBit" },			\ 	{ IFM_ATM_TAXI_140,	"Taxi/140MBit" },			\ 	{ IFM_ATM_MM_155,	"Multi-mode/155MBit" },			\ 	{ IFM_ATM_SM_155,	"Single-mode/155MBit" },		\ 	{ IFM_ATM_UTP_155,	"UTP/155MBit" },			\ 	{ IFM_ATM_MM_622,	"Multi-mode/622MBit" },			\ 	{ IFM_ATM_SM_622,	"Single-mode/622MBit" },		\ 	{ IFM_ATM_VIRTUAL,	"Virtual" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ATM_ALIASES
-value|{					\ 	{ IFM_ATM_UNKNOWN,	"UNKNOWN" },				\ 	{ IFM_ATM_UTP_25,	"UTP-25" },				\ 	{ IFM_ATM_TAXI_100,	"TAXI-100" },				\ 	{ IFM_ATM_TAXI_140,	"TAXI-140" },				\ 	{ IFM_ATM_MM_155,	"MM-155" },				\ 	{ IFM_ATM_SM_155,	"SM-155" },				\ 	{ IFM_ATM_UTP_155,	"UTP-155" },				\ 	{ IFM_ATM_MM_622,	"MM-622" },				\ 	{ IFM_ATM_SM_622,	"SM-622" },				\ 	{ 0, NULL },							\ }
+value|{					\ 	{ IFM_ATM_UNKNOWN,	"UNKNOWN" },				\ 	{ IFM_ATM_UTP_25,	"UTP-25" },				\ 	{ IFM_ATM_TAXI_100,	"TAXI-100" },				\ 	{ IFM_ATM_TAXI_140,	"TAXI-140" },				\ 	{ IFM_ATM_MM_155,	"MM-155" },				\ 	{ IFM_ATM_SM_155,	"SM-155" },				\ 	{ IFM_ATM_UTP_155,	"UTP-155" },				\ 	{ IFM_ATM_MM_622,	"MM-622" },				\ 	{ IFM_ATM_SM_622,	"SM-622" },				\ 	{ IFM_ATM_VIRTUAL,	"VIRTUAL" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
