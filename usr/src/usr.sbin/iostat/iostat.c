@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.17 (Berkeley) 89/05/29"
+literal|"@(#)iostat.c	4.18 (Berkeley) 91/01/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -2212,7 +2212,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<tahoevba/vbavar.h>
+file|<tahoe/vba/vbavar.h>
 end_include
 
 begin_comment

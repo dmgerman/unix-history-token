@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.5 (Berkeley) %G%"
+literal|"@(#)disks.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1145,7 +1145,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<tahoevba/vbavar.h>
+file|<tahoe/vba/vbavar.h>
 end_include
 
 begin_comment
