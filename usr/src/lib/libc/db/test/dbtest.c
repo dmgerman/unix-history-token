@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.10 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3141,6 +3141,9 @@ name|sb
 operator|.
 name|st_size
 operator|>
+operator|(
+name|off_t
+operator|)
 name|SIZE_T_MAX
 condition|)
 name|err
