@@ -438,12 +438,10 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|uint32_t
 name|CP_READ
 parameter_list|(
-name|unsigned
-name|long
+name|uint32_t
 name|val
 parameter_list|)
 block|{
@@ -470,12 +468,10 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|uint32_t
 name|CP_WRITE
 parameter_list|(
-name|unsigned
-name|long
+name|uint32_t
 name|val
 parameter_list|)
 block|{
@@ -542,7 +538,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|char
 name|c
 decl_stmt|;
 while|while
@@ -566,7 +562,6 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-operator|(
 name|CP_READ
 argument_list|(
 name|Uart
@@ -575,7 +570,6 @@ name|mon_xmithost
 argument_list|)
 operator|&
 name|UART_DATAMASK
-operator|)
 expr_stmt|;
 name|Uart
 operator|->
@@ -649,8 +643,6 @@ block|}
 return|return
 operator|(
 name|c
-operator|&
-literal|0xff
 operator|)
 return|;
 block|}
@@ -801,10 +793,11 @@ block|}
 name|val
 operator|=
 operator|(
+name|int
+operator|)
 name|c
 operator||
 name|UART_VALID
-operator|)
 expr_stmt|;
 name|Uart
 operator|->
@@ -2565,16 +2558,16 @@ parameter_list|)
 block|{
 struct|struct
 block|{
-name|u_long
+name|uint32_t
 name|Id
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|fver
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|start
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|entry
 decl_stmt|;
 block|}
@@ -2585,7 +2578,7 @@ directive|ifdef
 name|sun
 union|union
 block|{
-name|u_long
+name|uint32_t
 name|w
 decl_stmt|;
 name|char
@@ -2608,7 +2601,7 @@ name|u_char
 modifier|*
 name|bufp
 decl_stmt|;
-name|u_long
+name|uint32_t
 modifier|*
 name|lp
 decl_stmt|;
@@ -2687,7 +2680,7 @@ name|n
 operator|<
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|uint32_t
 argument_list|)
 condition|;
 name|n
@@ -2735,7 +2728,7 @@ name|n
 operator|<
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|uint32_t
 argument_list|)
 condition|;
 name|n
@@ -2791,7 +2784,7 @@ decl_stmt|;
 name|lp
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -2813,7 +2806,7 @@ name|size
 operator|/
 sizeof|sizeof
 argument_list|(
-name|long
+name|uint32_t
 argument_list|)
 condition|;
 name|i
@@ -2916,7 +2909,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"go %lx\r\n"
+literal|"go %x\r\n"
 argument_list|,
 name|binhdr
 operator|.
@@ -2993,16 +2986,16 @@ parameter_list|)
 block|{
 struct|struct
 block|{
-name|u_long
+name|uint32_t
 name|Id
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|fver
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|start
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|entry
 decl_stmt|;
 block|}
@@ -3013,7 +3006,7 @@ directive|ifdef
 name|sun
 union|union
 block|{
-name|u_long
+name|uint32_t
 name|w
 decl_stmt|;
 name|char
@@ -3044,7 +3037,7 @@ name|u_char
 modifier|*
 name|bufp
 decl_stmt|;
-name|long
+name|uint32_t
 name|buffer
 index|[
 literal|1024
@@ -3175,7 +3168,7 @@ name|n
 operator|<
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|uint32_t
 argument_list|)
 condition|;
 name|n
@@ -3223,7 +3216,7 @@ name|n
 operator|<
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|uint32_t
 argument_list|)
 condition|;
 name|n
@@ -3328,7 +3321,7 @@ argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|long
+name|uint32_t
 argument_list|)
 condition|;
 name|i
@@ -3491,7 +3484,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"go %lx\r\n"
+literal|"go %x\r\n"
 argument_list|,
 name|binhdr
 operator|.
@@ -4382,16 +4375,16 @@ argument|aap = (Aali *)(void *)(ram + CP_READ(Mon->mon_appl)); 			     for (i =
 literal|0
 argument|; i< MAX_CHECK; i++, sleep(
 literal|1
-argument|)) { 				u_long	hb1
+argument|)) { 				uint32_t hb1
 argument_list|,
 argument|hb2
 argument_list|,
 argument|hb3;  				hb3 = CP_READ(Mon->mon_bstat); 				if (hb3 != BOOT_RUNNING) { 					if (verbose) 						printf(
-literal|"bstat %lx\n"
+literal|"bstat %x\n"
 argument|, hb3); 					continue; 				}  				hb1 = CP_READ(aap->aali_heartbeat); 				delay(
 literal|1
 argument|); 				hb2 = CP_READ(aap->aali_heartbeat); 				if (verbose) 					printf(
-literal|"hb %lx %lx\n"
+literal|"hb %x %x\n"
 argument|, hb1, hb2); 				if (hb1< hb2) 					break; 			     } 			}  			close ( fd ); 		} 	}
 comment|/* 	 * Exit 	 */
 argument|exit (
