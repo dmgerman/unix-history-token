@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.2 (Berkeley) %G%"
+literal|"@(#)mount.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1285,7 +1285,9 @@ name|spec
 expr_stmt|;
 name|args
 operator|.
-name|exroot
+name|export
+operator|.
+name|ex_root
 operator|=
 name|DEFAULT_ROOTUID
 expr_stmt|;
@@ -1297,14 +1299,18 @@ name|MNT_RDONLY
 condition|)
 name|args
 operator|.
-name|exflags
+name|export
+operator|.
+name|ex_flags
 operator|=
 name|MNT_EXRDONLY
 expr_stmt|;
 else|else
 name|args
 operator|.
-name|exflags
+name|export
+operator|.
+name|ex_flags
 operator|=
 literal|0
 expr_stmt|;
@@ -2020,6 +2026,21 @@ condition|)
 return|return
 operator|(
 name|MOUNT_LFS
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|fstype
+argument_list|,
+literal|"isofs"
+argument_list|)
+condition|)
+return|return
+operator|(
+name|MOUNT_ISOFS
 operator|)
 return|;
 return|return
