@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.18 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,19 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"cmap.h"
 end_include
 
 begin_include
@@ -78,13 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../vm/vm_map.h"
+file|"vm/vm.h"
 end_include
 
 begin_decl_stmt
