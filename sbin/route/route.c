@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: $"
+literal|"$Id: route.c,v 1.2.6.1 1996/10/27 17:50:49 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4744,6 +4744,8 @@ name|char
 name|mybuf
 index|[
 literal|50
+operator|+
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|,
 name|cport
@@ -5007,8 +5009,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|mybuf
+argument_list|,
+sizeof|sizeof
 name|mybuf
 argument_list|,
 literal|"%XH.%s%s"
