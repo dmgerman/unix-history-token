@@ -178,6 +178,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_INVSRC
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Invert sense of src check	      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_INVDST
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Invert sense of dst check	      */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_IN
 value|0x0004
 end_define

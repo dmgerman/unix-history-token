@@ -658,7 +658,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" from "
+literal|" from %s"
+argument_list|,
+name|chain
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVSRC
+condition|?
+literal|"not "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|adrt
@@ -911,7 +921,17 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|" to "
+literal|" to %s"
+argument_list|,
+name|chain
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVDST
+condition|?
+literal|"not "
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|adrt
@@ -3809,6 +3829,49 @@ argument_list|(
 literal|"missing ``from''\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"not"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|rule
+operator|.
+name|fw_flag
+operator||=
+name|IP_FW_F_INVSRC
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|ac
+condition|)
+name|show_usage
+argument_list|(
+literal|"Missing arguments\n"
+argument_list|)
+expr_stmt|;
 name|fill_ip
 argument_list|(
 operator|&
@@ -3909,6 +3972,39 @@ argument_list|(
 literal|"missing ``to''\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ac
+operator|&&
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"not"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|rule
+operator|.
+name|fw_flag
+operator||=
+name|IP_FW_F_INVDST
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+name|ac
+operator|--
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

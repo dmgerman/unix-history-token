@@ -1749,6 +1749,16 @@ comment|/* If src-addr doesn't match, not this rule. */
 if|if
 condition|(
 operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVSRC
+operator|)
+operator|!=
+literal|0
+operator|^
+operator|(
 name|src
 operator|.
 name|s_addr
@@ -1770,6 +1780,16 @@ continue|continue;
 comment|/* If dest-addr doesn't match, not this rule. */
 if|if
 condition|(
+operator|(
+name|f
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_INVDST
+operator|)
+operator|!=
+literal|0
+operator|^
 operator|(
 name|dst
 operator|.
