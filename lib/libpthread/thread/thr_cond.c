@@ -1002,8 +1002,8 @@ comment|/* 					 * Note that even though this thread may 					 * have been cance
 if|if
 condition|(
 name|done
-operator|!=
-literal|0
+operator|||
+name|interrupted
 condition|)
 block|{
 name|rval
