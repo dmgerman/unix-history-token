@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	1.7	%G%"
+literal|"@(#)alias.c	1.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -669,6 +669,21 @@ argument_list|(
 name|p
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+comment|/* if our last entry had an alias, process them */
+if|if
+condition|(
+name|q2
+operator|==
+name|NULL
+condition|)
+name|q2
+operator|=
+name|nxtinq
+argument_list|(
+operator|&
+name|SendQ
 argument_list|)
 expr_stmt|;
 block|}
