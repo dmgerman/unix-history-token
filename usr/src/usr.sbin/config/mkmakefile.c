@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.14	82/06/14  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.15	82/07/13  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -1488,7 +1488,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} %ss | sed -f ../sys/asm.sed | ${AS} -o %so\n"
+literal|"\t${C2} %ss | sed -f ../conf/asm.sed | ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -1528,7 +1528,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} -i %ss | sed -f ../sys/asm.sed | ${AS} -o %so\n"
+literal|"\t${C2} -i %ss | sed -f ../conf/asm.sed | ${AS} -o %so\n"
 argument_list|,
 name|tp
 argument_list|,
@@ -1691,7 +1691,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@-symorder ../sys/symbols.sort %s\n"
+literal|"\t@-symorder ../conf/symbols.sort %s\n"
 argument_list|,
 name|fl
 operator|->
@@ -1768,7 +1768,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t${C2} swap%s.s | sed -f ../sys/asm.sed | ${AS} -o swap%s.o\n"
+literal|"\t${C2} swap%s.s | sed -f ../conf/asm.sed | ${AS} -o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
