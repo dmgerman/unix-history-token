@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)time.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -247,9 +247,9 @@ name|tick
 decl_stmt|;
 comment|/* micro-seconds per hz tick */
 name|int
-name|phz
+name|stathz
 decl_stmt|;
-comment|/* alternate clock frequency */
+comment|/* statistics clock frequency */
 name|int
 name|profhz
 decl_stmt|;
