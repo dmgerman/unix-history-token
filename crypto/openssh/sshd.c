@@ -3476,10 +3476,6 @@ directive|ifdef
 name|LIBWRAP
 end_ifdef
 
-begin_comment
-comment|/* XXX LIBWRAP noes not know about IPv6 */
-end_comment
-
 begin_block
 block|{
 name|struct
@@ -3535,7 +3531,19 @@ name|req
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*XXX IPv6 verbose("Connection from %.500s port %d", eval_client(&req), remote_port); */
+name|verbose
+argument_list|(
+literal|"Connection from %.500s port %d"
+argument_list|,
+name|eval_client
+argument_list|(
+operator|&
+name|req
+argument_list|)
+argument_list|,
+name|remote_port
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
