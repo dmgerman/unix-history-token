@@ -2385,7 +2385,7 @@ name|fd_formb
 modifier|*
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -9172,9 +9172,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|fdu_t
@@ -9516,9 +9516,9 @@ name|int
 name|mode
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|fdu_t
@@ -13645,7 +13645,7 @@ name|dev
 parameter_list|,
 name|finfo
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -13656,11 +13656,20 @@ modifier|*
 name|finfo
 decl_stmt|;
 name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+block|{
+name|struct
 name|proc
 modifier|*
 name|p
+init|=
+name|td
+operator|->
+name|td_proc
 decl_stmt|;
-block|{
 name|fdu_t
 name|fdu
 decl_stmt|;
@@ -13967,7 +13976,7 @@ name|addr
 parameter_list|,
 name|flag
 parameter_list|,
-name|p
+name|td
 parameter_list|)
 name|dev_t
 name|dev
@@ -13982,9 +13991,9 @@ name|int
 name|flag
 decl_stmt|;
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 block|{
 name|fdu_t
@@ -14310,7 +14319,7 @@ operator|*
 operator|)
 name|addr
 argument_list|,
-name|p
+name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -14339,9 +14348,9 @@ comment|/* set drive type */
 comment|/* this is considered harmful; only allow for superuser */
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
@@ -14400,9 +14409,9 @@ name|FD_CLRERR
 case|:
 if|if
 condition|(
-name|suser
+name|suser_td
 argument_list|(
-name|p
+name|td
 argument_list|)
 operator|!=
 literal|0
