@@ -825,8 +825,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_SLOW
 value|33
+end_define
+
+begin_comment
+comment|/* 802.3ad slow protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_SCLUSTER
+value|34
+end_define
+
+begin_comment
+comment|/* Sitara cluster protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|35
 end_define
 
 begin_comment
@@ -1212,6 +1234,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_SLOW
+value|AF_SLOW
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_SCLUSTER
+value|AF_SCLUSTER
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_MAX
 value|AF_MAX
 end_define
@@ -1231,7 +1267,7 @@ begin_define
 define|#
 directive|define
 name|CTL_NET_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "unix", CTLTYPE_NODE }, \ 	{ "inet", CTLTYPE_NODE }, \ 	{ "implink", CTLTYPE_NODE }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ "chaos", CTLTYPE_NODE }, \ 	{ "xerox_ns", CTLTYPE_NODE }, \ 	{ "iso", CTLTYPE_NODE }, \ 	{ "emca", CTLTYPE_NODE }, \ 	{ "datakit", CTLTYPE_NODE }, \ 	{ "ccitt", CTLTYPE_NODE }, \ 	{ "ibm_sna", CTLTYPE_NODE }, \ 	{ "decnet", CTLTYPE_NODE }, \ 	{ "dec_dli", CTLTYPE_NODE }, \ 	{ "lat", CTLTYPE_NODE }, \ 	{ "hylink", CTLTYPE_NODE }, \ 	{ "appletalk", CTLTYPE_NODE }, \ 	{ "route", CTLTYPE_NODE }, \ 	{ "link_layer", CTLTYPE_NODE }, \ 	{ "xtp", CTLTYPE_NODE }, \ 	{ "coip", CTLTYPE_NODE }, \ 	{ "cnt", CTLTYPE_NODE }, \ 	{ "rtip", CTLTYPE_NODE }, \ 	{ "ipx", CTLTYPE_NODE }, \ 	{ "sip", CTLTYPE_NODE }, \ 	{ "pip", CTLTYPE_NODE }, \ 	{ "isdn", CTLTYPE_NODE }, \ 	{ "key", CTLTYPE_NODE }, \ 	{ "inet6", CTLTYPE_NODE }, \ 	{ "natm", CTLTYPE_NODE }, \ 	{ "atm", CTLTYPE_NODE }, \ 	{ "hdrcomplete", CTLTYPE_NODE }, \ 	{ "netgraph", CTLTYPE_NODE }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "unix", CTLTYPE_NODE }, \ 	{ "inet", CTLTYPE_NODE }, \ 	{ "implink", CTLTYPE_NODE }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ "chaos", CTLTYPE_NODE }, \ 	{ "xerox_ns", CTLTYPE_NODE }, \ 	{ "iso", CTLTYPE_NODE }, \ 	{ "emca", CTLTYPE_NODE }, \ 	{ "datakit", CTLTYPE_NODE }, \ 	{ "ccitt", CTLTYPE_NODE }, \ 	{ "ibm_sna", CTLTYPE_NODE }, \ 	{ "decnet", CTLTYPE_NODE }, \ 	{ "dec_dli", CTLTYPE_NODE }, \ 	{ "lat", CTLTYPE_NODE }, \ 	{ "hylink", CTLTYPE_NODE }, \ 	{ "appletalk", CTLTYPE_NODE }, \ 	{ "route", CTLTYPE_NODE }, \ 	{ "link_layer", CTLTYPE_NODE }, \ 	{ "xtp", CTLTYPE_NODE }, \ 	{ "coip", CTLTYPE_NODE }, \ 	{ "cnt", CTLTYPE_NODE }, \ 	{ "rtip", CTLTYPE_NODE }, \ 	{ "ipx", CTLTYPE_NODE }, \ 	{ "sip", CTLTYPE_NODE }, \ 	{ "pip", CTLTYPE_NODE }, \ 	{ "isdn", CTLTYPE_NODE }, \ 	{ "key", CTLTYPE_NODE }, \ 	{ "inet6", CTLTYPE_NODE }, \ 	{ "natm", CTLTYPE_NODE }, \ 	{ "atm", CTLTYPE_NODE }, \ 	{ "hdrcomplete", CTLTYPE_NODE }, \ 	{ "netgraph", CTLTYPE_NODE }, \ 	{ "snp", CTLTYPE_NODE }, \ 	{ "scp", CTLTYPE_NODE }, \ }
 end_define
 
 begin_comment
