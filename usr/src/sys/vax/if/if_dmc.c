@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.12	82/04/16	*/
+comment|/*	if_dmc.c	4.13	82/04/20	*/
 end_comment
 
 begin_include
@@ -525,11 +525,15 @@ name|i
 operator|--
 control|)
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|ECHACK
 name|br
 operator|=
 literal|0x16
 expr_stmt|;
-comment|/* temporary ec hack */
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
