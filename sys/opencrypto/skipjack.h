@@ -8,7 +8,7 @@ comment|/*	$OpenBSD: skipjack.h,v 1.3 2002/03/14 01:26:51 millert Exp $	*/
 end_comment
 
 begin_comment
-comment|/*   * Further optimized test implementation of SKIPJACK algorithm   * Mark Tillotson<markt@chaos.org.uk>, 25 June 98  * Optimizations suit RISC (lots of registers) machine best.  *  * based on unoptimized implementation of  * Panu Rissanen<bande@lut.fi> 960624  *  * SKIPJACK and KEA Algorithm Specifications   * Version 2.0   * 29 May 1998 */
+comment|/*-  * Further optimized test implementation of SKIPJACK algorithm   * Mark Tillotson<markt@chaos.org.uk>, 25 June 98  * Optimizations suit RISC (lots of registers) machine best.  *  * based on unoptimized implementation of  * Panu Rissanen<bande@lut.fi> 960624  *  * SKIPJACK and KEA Algorithm Specifications   * Version 2.0   * 29 May 1998 */
 end_comment
 
 begin_function_decl

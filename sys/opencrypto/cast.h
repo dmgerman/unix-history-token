@@ -8,7 +8,7 @@ comment|/*      $OpenBSD: cast.h,v 1.2 2002/03/14 01:26:51 millert Exp $       *
 end_comment
 
 begin_comment
-comment|/*  *	CAST-128 in C  *	Written by Steve Reid<sreid@sea-to-sky.net>  *	100% Public Domain - no warranty  *	Released 1997.10.11  */
+comment|/*-  *	CAST-128 in C  *	Written by Steve Reid<sreid@sea-to-sky.net>  *	100% Public Domain - no warranty  *	Released 1997.10.11  */
 end_comment
 
 begin_ifndef

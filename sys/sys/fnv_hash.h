@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Fowler / Noll / Vo Hash (FNV Hash)  * http://www.isthe.com/chongo/tech/comp/fnv/  *  * This is an implementation of the algorithms posted above.  * This file is placed in the public domain by Peter Wemm.  *  * $FreeBSD$  */
+comment|/*-  * Fowler / Noll / Vo Hash (FNV Hash)  * http://www.isthe.com/chongo/tech/comp/fnv/  *  * This is an implementation of the algorithms posted above.  * This file is placed in the public domain by Peter Wemm.  *  * $FreeBSD$  */
 end_comment
 
 begin_typedef

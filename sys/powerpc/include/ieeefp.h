@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by J.T. Conklin, Apr 6, 1995  * Public domain.  * $NetBSD: ieeefp.h,v 1.2 1999/07/07 01:52:26 danw Exp $  * $FreeBSD$  */
+comment|/* -  * Written by J.T. Conklin, Apr 6, 1995  * Public domain.  * $NetBSD: ieeefp.h,v 1.2 1999/07/07 01:52:26 danw Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
