@@ -1027,7 +1027,6 @@ struct|;
 end_struct
 
 begin_function
-specifier|static
 name|int32_t
 name|ata_find_dev
 parameter_list|(
@@ -1036,6 +1035,9 @@ name|dev
 parameter_list|,
 name|int32_t
 name|type
+parameter_list|,
+name|int32_t
+name|revid
 parameter_list|)
 block|{
 name|device_t
@@ -1127,6 +1129,13 @@ operator|)
 operator|>>
 literal|16
 operator|)
+operator|&&
+name|pci_get_revid
+argument_list|(
+name|child
+argument_list|)
+operator|>=
+name|revid
 condition|)
 block|{
 name|free
@@ -1235,6 +1244,8 @@ argument_list|(
 name|dev
 argument_list|,
 literal|0x05861106
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1247,6 +1258,22 @@ argument_list|(
 name|dev
 argument_list|,
 literal|0x05961106
+argument_list|,
+literal|0x12
+argument_list|)
+condition|)
+return|return
+literal|"VIA 82C596B ATA66 controller"
+return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x05961106
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1259,6 +1286,8 @@ argument_list|(
 name|dev
 argument_list|,
 literal|0x06861106
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1953,7 +1982,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* prepare for ATA-66 on the 82C686 */
+comment|/* prepare for ATA-66 on the 82C686 and rev 0x12 and newer 82C596's */
 if|if
 condition|(
 name|ata_find_dev
@@ -1961,6 +1990,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|0x06861106
+argument_list|,
+literal|0
+argument_list|)
+operator|||
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x05961106
+argument_list|,
+literal|0x12
 argument_list|)
 condition|)
 block|{
@@ -3235,6 +3275,8 @@ name|dev
 argument_list|)
 argument_list|,
 literal|0x05861106
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|scp
@@ -3254,6 +3296,8 @@ name|dev
 argument_list|)
 argument_list|,
 literal|0x05961106
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|scp
@@ -3273,6 +3317,8 @@ name|dev
 argument_list|)
 argument_list|,
 literal|0x06861106
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 name|scp
