@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.1 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,18 +84,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|mask
+name|PRIMASK
 parameter_list|(
 name|p
 parameter_list|)
-value|(1<< (p))
+value|(1<< ((p)& LOG_PRIMASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIFAC
+parameter_list|(
+name|p
+parameter_list|)
+value|(((p)& LOG_FACMASK)>> 3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMPORTANT
-value|(mask(KERN_EMERG)|mask(KERN_ALERT)|mask(KERN_ERR)|mask(KERN_FAIL)\ 	|mask(KERN_RECOV)|mask(KERN_INFO)|mask(LOG_EMERG)|mask(LOG_ALERT)\ 	|mask(LOG_CRIT)|mask(LOG_ERR)|mask(LOG_FAIL))
+value|LOG_ERR
 end_define
 
 begin_decl_stmt
@@ -151,13 +161,22 @@ name|char
 modifier|*
 name|LogTag
 init|=
-name|NULL
+literal|"syslog"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* string to tag the entry with */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|LogMask
+init|=
+literal|0xff
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* mask of priorities to be logged */
@@ -166,42 +185,15 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|LogMask
+name|LogFacility
 init|=
-operator|~
-operator|(
-name|mask
-argument_list|(
-name|KERN_EMERG
-argument_list|)
-operator||
-name|mask
-argument_list|(
-name|KERN_ALERT
-argument_list|)
-operator||
-name|mask
-argument_list|(
-name|KERN_ERR
-argument_list|)
-operator||
-name|mask
-argument_list|(
-name|KERN_FAIL
-argument_list|)
-operator||
-name|mask
-argument_list|(
-name|KERN_RECOV
-argument_list|)
-operator||
-name|mask
-argument_list|(
-name|KERN_INFO
-argument_list|)
-operator|)
+name|LOG_USER
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* default facility code */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -210,6 +202,10 @@ name|sockaddr
 name|SyslogAddr
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* AF_UNIX address of local logger */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -310,12 +306,15 @@ name|pri
 operator|<=
 literal|0
 operator|||
+name|PRIFAC
+argument_list|(
 name|pri
+argument_list|)
 operator|>=
-literal|32
+name|LOG_NFACILITIES
 operator|||
 operator|(
-name|mask
+name|PRIMASK
 argument_list|(
 name|pri
 argument_list|)
@@ -344,6 +343,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* set default facility if none specified */
+if|if
+condition|(
+operator|(
+name|pri
+operator|&
+name|LOG_FACMASK
+operator|)
+operator|==
+literal|0
+condition|)
+name|pri
+operator||=
+name|LogFacility
+expr_stmt|;
+comment|/* build the message */
 name|o
 operator|=
 name|outline
@@ -355,6 +370,34 @@ argument_list|,
 literal|"<%d>"
 argument_list|,
 name|pri
+argument_list|)
+expr_stmt|;
+name|o
+operator|+=
+name|strlen
+argument_list|(
+name|o
+argument_list|)
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|o
+argument_list|,
+literal|"%.15s "
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+operator|+
+literal|4
 argument_list|)
 expr_stmt|;
 name|o
@@ -409,34 +452,23 @@ name|o
 argument_list|)
 expr_stmt|;
 block|}
-name|time
-argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-name|sprintf
+if|if
+condition|(
+name|LogTag
+condition|)
+block|{
+name|strcpy
 argument_list|(
 name|o
 argument_list|,
-literal|": %.15s-- "
-argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|now
-argument_list|)
-operator|+
-literal|4
+literal|": "
 argument_list|)
 expr_stmt|;
 name|o
 operator|+=
-name|strlen
-argument_list|(
-name|o
-argument_list|)
+literal|2
 expr_stmt|;
+block|}
 name|b
 operator|=
 name|buf
@@ -594,6 +626,7 @@ name|c
 operator|=
 name|MAXLINE
 expr_stmt|;
+comment|/* output the message to the local logger */
 if|if
 condition|(
 name|sendto
@@ -625,17 +658,16 @@ operator|&
 name|LOG_CONS
 operator|)
 operator|&&
-operator|!
 operator|(
-name|mask
-argument_list|(
 name|pri
-argument_list|)
 operator|&
-name|IMPORTANT
+name|LOG_PRIMASK
 operator|)
+operator|<=
+name|LOG_ERR
 condition|)
 return|return;
+comment|/* output the message to the console */
 name|pid
 operator|=
 name|fork
@@ -662,7 +694,7 @@ name|open
 argument_list|(
 name|ctty
 argument_list|,
-name|O_RDWR
+name|O_WRONLY
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -730,7 +762,7 @@ argument|ident
 argument_list|,
 argument|logstat
 argument_list|,
-argument|logmask
+argument|logfac
 argument_list|)
 end_macro
 
@@ -745,23 +777,21 @@ begin_decl_stmt
 name|int
 name|logstat
 decl_stmt|,
-name|logmask
+name|logfac
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|LogTag
-operator|=
-operator|(
+if|if
+condition|(
 name|ident
 operator|!=
 name|NULL
-operator|)
-condition|?
+condition|)
+name|LogTag
+operator|=
 name|ident
-else|:
-literal|"syslog"
 expr_stmt|;
 name|LogStat
 operator|=
@@ -769,13 +799,15 @@ name|logstat
 expr_stmt|;
 if|if
 condition|(
-name|logmask
+name|logfac
 operator|!=
 literal|0
 condition|)
-name|LogMask
+name|LogFacility
 operator|=
-name|logmask
+name|logfac
+operator|&
+name|LOG_FACMASK
 expr_stmt|;
 if|if
 condition|(
