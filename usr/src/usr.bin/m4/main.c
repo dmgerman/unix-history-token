@@ -1,6 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit at York University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit at York University.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1989 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_ifndef
@@ -15,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) 11/20/91"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,12 +867,42 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|argc
 operator|--
-condition|)
+condition|;
+operator|++
+name|argv
+control|)
 block|{
+name|p
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+if|if
+condition|(
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|p
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|ifp
+operator|=
+name|stdin
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 operator|(
@@ -856,8 +910,7 @@ name|ifp
 operator|=
 name|fopen
 argument_list|(
-operator|*
-name|argv
+name|p
 argument_list|,
 literal|"r"
 argument_list|)
@@ -869,8 +922,7 @@ name|oops
 argument_list|(
 literal|"%s: %s"
 argument_list|,
-operator|*
-name|argv
+name|p
 argument_list|,
 name|strerror
 argument_list|(
@@ -878,8 +930,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-block|{
 name|sp
 operator|=
 operator|-
@@ -899,6 +949,12 @@ expr_stmt|;
 name|macro
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|!=
+name|stdin
+condition|)
 operator|(
 name|void
 operator|)
@@ -906,10 +962,6 @@ name|fclose
 argument_list|(
 name|ifp
 argument_list|)
-expr_stmt|;
-block|}
-name|argv
-operator|++
 expr_stmt|;
 block|}
 if|if
