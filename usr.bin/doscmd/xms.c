@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Helmut Wirth<hfwirth@ping.at>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, witout modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1997 Helmut Wirth<hfwirth@ping.at>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, witout modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: xms.c,v 1.2 1997/08/15 23:41:25 jlemon Exp $  */
 end_comment
 
 begin_comment
@@ -340,21 +340,8 @@ argument_list|)
 expr_stmt|;
 comment|/*XXX check for EMS emulation, when it is done! */
 comment|/* 0xE0000 to 0xEffff */
-name|add_block
-argument_list|(
-operator|&
-name|UMB_freelist
-argument_list|,
-name|create_block
-argument_list|(
-literal|0xe0000
-argument_list|,
-literal|64
-operator|*
-literal|1024
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* This is used as window for EMS, will be configurable ! */
+comment|/*    add_block(&UMB_freelist, create_block(0xe0000, 64*1024)); */
 name|merge_blocks
 argument_list|()
 expr_stmt|;
@@ -791,6 +778,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* Goto next block */
 name|bp
 operator|=
@@ -798,6 +786,7 @@ name|bp
 operator|->
 name|next
 expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
@@ -1679,7 +1668,11 @@ name|R_AH
 operator|!=
 literal|0
 condition|)
-block|{
+name|vec_grabbed
+operator|=
+literal|1
+expr_stmt|;
+comment|/* If the HMA feature is disabled these calls are "not managed" */
 if|if
 condition|(
 name|HMA_a20
@@ -1687,7 +1680,37 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* This feature is disabled */
+if|if
+condition|(
+name|R_AH
+operator|==
+name|XMS_ALLOCATE_HIGH_MEMORY
+operator|||
+name|R_AH
+operator|==
+name|XMS_FREE_HIGH_MEMORY
+operator|||
+name|R_AH
+operator|==
+name|XMS_GLOBAL_ENABLE_A20
+operator|||
+name|R_AH
+operator|==
+name|XMS_GLOBAL_DISABLE_A20
+operator|||
+name|R_AH
+operator|==
+name|XMS_LOCAL_ENABLE_A20
+operator|||
+name|R_AH
+operator|==
+name|XMS_LOCAL_DISABLE_A20
+operator|||
+name|R_AH
+operator|==
+name|XMS_QUERY_A20
+condition|)
+block|{
 name|R_AX
 operator|=
 literal|0x0
@@ -1698,10 +1721,6 @@ name|XMS_HMA_NOT_MANAGED
 expr_stmt|;
 return|return;
 block|}
-name|vec_grabbed
-operator|=
-literal|1
-expr_stmt|;
 block|}
 switch|switch
 condition|(
@@ -1985,14 +2004,45 @@ break|break;
 case|case
 name|XMS_QUERY_FREE_EXTENDED_MEMORY
 case|:
-name|R_AX
+comment|/* DOS MEM.EXE chokes, if the HMA is enabled and the reported 	 * free space includes the HMA. So we subtract 64kB from the 	 * space reported, if the HMA is enabled. 	 */
+if|if
+condition|(
+name|HMA_a20
+operator|<
+literal|0
+condition|)
+name|R_EAX
 operator|=
-name|R_DX
+name|R_EDX
 operator|=
 name|xms_free_mem
 operator|/
 literal|1024
 expr_stmt|;
+else|else
+name|R_EAX
+operator|=
+name|R_EDX
+operator|=
+operator|(
+name|xms_free_mem
+operator|/
+literal|1024
+operator|)
+operator|-
+literal|64
+expr_stmt|;
+if|if
+condition|(
+name|xms_free_mem
+operator|==
+literal|0
+condition|)
+name|R_BL
+operator|=
+name|XMS_FULL
+expr_stmt|;
+else|else
 name|R_BL
 operator|=
 name|XMS_SUCCESS
@@ -2122,6 +2172,7 @@ name|req_siz
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* This handle is reserved, but has size 0 and no address */
 name|xms_hand
 index|[
@@ -2132,6 +2183,7 @@ name|addr
 operator|=
 name|XMS_NULL_ALLOC
 expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -2583,7 +2635,7 @@ name|eptr
 operator|->
 name|nbytes
 expr_stmt|;
-comment|/* Lenght must be even, see XMS spec */
+comment|/* Length must be even, see XMS spec */
 if|if
 condition|(
 name|n
@@ -3148,7 +3200,9 @@ name|debug
 argument_list|(
 name|D_XMS
 argument_list|,
-literal|"XMS: Get handle information: DX=%04x\n, R_DX"
+literal|"XMS: Get handle information: DX=%04x\n"
+argument_list|,
+name|R_DX
 argument_list|)
 expr_stmt|;
 name|hnum
@@ -3827,10 +3881,75 @@ operator|=
 name|XMS_NOT_IMPLEMENTED
 expr_stmt|;
 break|break;
-comment|/* These are the same as the above functions, but they use 32 bit      * registers (i.e. EDX instead of DX). This is for allocations of       * more than 64MB. I think this will hardly be used in the emulator      * It seems to work without them, but the functions are in the XMS 3.0      * spec. If something breaks because they are not here, I can implement      * them      */
+comment|/* Some test programs use this call */
 case|case
 name|XMS_QUERY_FREE_EXTENDED_MEMORY_LARGE
 case|:
+comment|/* DOS MEM.EXE chokes, if the HMA is enabled and the reported 	 * free space includes the HMA. So we subtract 64kB from the 	 * space reported, if the HMA is enabled. 	 */
+if|if
+condition|(
+name|HMA_a20
+operator|<
+literal|0
+condition|)
+name|R_EAX
+operator|=
+name|R_EDX
+operator|=
+name|xms_free_mem
+operator|/
+literal|1024
+expr_stmt|;
+else|else
+name|R_EAX
+operator|=
+name|R_EDX
+operator|=
+operator|(
+name|xms_free_mem
+operator|/
+literal|1024
+operator|)
+operator|-
+literal|64
+expr_stmt|;
+comment|/* ECX should return the highest address of any memory block 	 * We return 1MB + size of extended memory  	 */
+name|R_ECX
+operator|=
+literal|1024
+operator|*
+literal|1024
+operator|+
+name|xms_maxsize
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|xms_free_mem
+operator|==
+literal|0
+condition|)
+name|R_BL
+operator|=
+name|XMS_FULL
+expr_stmt|;
+else|else
+name|R_BL
+operator|=
+name|XMS_SUCCESS
+expr_stmt|;
+name|debug
+argument_list|(
+name|D_XMS
+argument_list|,
+literal|"XMS: Query free EMM(large): Returned %dkB\n"
+argument_list|,
+name|R_AX
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* These are the same as the above functions, but they use 32 bit      * registers (i.e. EDX instead of DX). This is for allocations of       * more than 64MB. I think this will hardly be used in the emulator      * It seems to work without them, but the functions are in the XMS 3.0      * spec. If something breaks because they are not here, I can implement      * them      */
 case|case
 name|XMS_ALLOCATE_EXTENDED_MEMORY_LARGE
 case|:
@@ -3841,7 +3960,9 @@ name|debug
 argument_list|(
 name|D_XMS
 argument_list|,
-literal|"XMS: 8x function called, not implemented\n"
+literal|"XMS: %02x function called, not implemented\n"
+argument_list|,
+name|R_AH
 argument_list|)
 expr_stmt|;
 name|R_AX
