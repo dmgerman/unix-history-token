@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fcntl.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fcntl.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -255,6 +255,44 @@ end_define
 begin_comment
 comment|/* error if already created */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|fcntl
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|int
+name|fcntl
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
