@@ -6994,6 +6994,14 @@ name|sc
 operator|->
 name|ndis_shlist
 expr_stmt|;
+comment|/* Sanity check: is list empty? */
+if|if
+condition|(
+name|sh
+operator|==
+name|NULL
+condition|)
+return|return;
 while|while
 condition|(
 name|sh
