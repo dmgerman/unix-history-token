@@ -76,6 +76,34 @@ index|[
 name|MAX_LEN
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|height
+operator|<
+literal|0
+operator|||
+name|width
+operator|<
+literal|0
+condition|)
+block|{
+name|endwin
+argument_list|()
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nAutosizing is impossible in dialog_prgbox().\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* center dialog box on screen */
 name|x
 operator|=
