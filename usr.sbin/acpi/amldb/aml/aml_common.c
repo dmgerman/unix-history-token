@@ -87,8 +87,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/acpi.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_NO_OSDFUNC_INLINE
+end_ifndef
+
+begin_include
+include|#
+directive|include
 file|<machine/acpica_osd.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_NO_OSDFUNC_INLINE */
+end_comment
 
 begin_endif
 endif|#
