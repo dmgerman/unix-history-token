@@ -2545,17 +2545,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|snapdebug
-condition|)
-name|vprint
-argument_list|(
-literal|"ffs_snapshot: busy vnode"
-argument_list|,
-name|xvp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|vn_lock
 argument_list|(
 name|xvp
@@ -2579,6 +2568,17 @@ goto|goto
 name|loop
 goto|;
 block|}
+if|if
+condition|(
+name|snapdebug
+condition|)
+name|vprint
+argument_list|(
+literal|"ffs_snapshot: busy vnode"
+argument_list|,
+name|xvp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|VOP_GETATTR
