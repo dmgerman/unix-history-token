@@ -41,6 +41,18 @@ directive|include
 file|<openssl/opensslv.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -61,6 +73,35 @@ include|#
 directive|include
 file|"sha_locl.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ndef OPENSSL_FIPS */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|dummy
+init|=
+operator|&
+name|dummy
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ndef OPENSSL_FIPS */
+end_comment
 
 begin_endif
 endif|#

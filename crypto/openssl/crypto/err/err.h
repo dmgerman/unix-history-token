@@ -303,6 +303,10 @@ name|ERR_LIB_COMP
 value|41
 define|#
 directive|define
+name|ERR_LIB_FIPS
+value|42
+define|#
+directive|define
 name|ERR_LIB_USER
 value|128
 define|#
@@ -530,6 +534,15 @@ parameter_list|,
 name|r
 parameter_list|)
 value|ERR_PUT_error(ERR_LIB_COMP,(f),(r),__FILE__,__LINE__)
+define|#
+directive|define
+name|FIPSerr
+parameter_list|(
+name|f
+parameter_list|,
+name|r
+parameter_list|)
+value|ERR_PUT_error(ERR_LIB_FIPS,(f),(r),__FILE__,__LINE__)
 comment|/* Borland C seems too stupid to be able to shift and do longs in  * the pre-processor :-( */
 define|#
 directive|define

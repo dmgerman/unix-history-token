@@ -4133,14 +4133,14 @@ block|{
 if|if
 condition|(
 operator|!
-name|ASN1_INTEGER_set
+name|rand_serial
 argument_list|(
+name|NULL
+argument_list|,
 name|X509_get_serialNumber
 argument_list|(
 name|x509ss
 argument_list|)
-argument_list|,
-literal|0L
 argument_list|)
 condition|)
 goto|goto

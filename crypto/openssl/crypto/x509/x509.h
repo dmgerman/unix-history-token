@@ -1055,6 +1055,9 @@ comment|/* [0] */
 operator|*
 name|extensions
 expr_stmt|;
+name|ASN1_ENCODING
+name|enc
+decl_stmt|;
 block|}
 name|X509_CRL_INFO
 typedef|;

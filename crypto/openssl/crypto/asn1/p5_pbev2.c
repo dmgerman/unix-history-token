@@ -4,7 +4,7 @@ comment|/* p5_pbev2.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999.  */
+comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999-2004.  */
 end_comment
 
 begin_comment
@@ -290,6 +290,11 @@ end_comment
 begin_if
 if|if
 condition|(
+name|EVP_CIPHER_iv_length
+argument_list|(
+name|cipher
+argument_list|)
+operator|&&
 name|RAND_pseudo_bytes
 argument_list|(
 name|iv
@@ -360,6 +365,12 @@ argument_list|(
 name|ASN1_F_PKCS5_PBE2_SET
 argument_list|,
 name|ASN1_R_ERROR_SETTING_CIPHER_PARAMS
+argument_list|)
+expr_stmt|;
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
 argument_list|)
 expr_stmt|;
 goto|goto

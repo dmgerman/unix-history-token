@@ -363,6 +363,11 @@ argument_list|,
 name|PEM_R_BAD_PASSWORD_READ
 argument_list|)
 expr_stmt|;
+name|X509_SIG_free
+argument_list|(
+name|p8
+argument_list|)
+expr_stmt|;
 goto|goto
 name|err
 goto|;

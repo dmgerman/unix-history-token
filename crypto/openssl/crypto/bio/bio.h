@@ -1148,6 +1148,10 @@ name|BIO_C_RESET_READ_REQUEST
 value|147
 define|#
 directive|define
+name|BIO_C_SET_MD_CTX
+value|148
+define|#
+directive|define
 name|BIO_set_app_data
 parameter_list|(
 name|s

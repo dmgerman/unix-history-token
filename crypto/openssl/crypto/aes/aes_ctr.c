@@ -54,7 +54,7 @@ file|"aes_locl.h"
 end_include
 
 begin_comment
-comment|/* NOTE: CTR mode is big-endian.  The rest of the AES code  * is endian-neutral. */
+comment|/* NOTE: the IV/counter CTR mode is big-endian.  The rest of the AES code  * is endian-neutral. */
 end_comment
 
 begin_comment
@@ -77,32 +77,6 @@ name|long
 name|c
 decl_stmt|;
 comment|/* Grab bottom dword of counter and increment */
-ifdef|#
-directive|ifdef
-name|L_ENDIAN
-name|c
-operator|=
-name|GETU32
-argument_list|(
-name|counter
-operator|+
-literal|0
-argument_list|)
-expr_stmt|;
-name|c
-operator|++
-expr_stmt|;
-name|PUTU32
-argument_list|(
-name|counter
-operator|+
-literal|0
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|c
 operator|=
 name|GETU32
@@ -115,6 +89,10 @@ expr_stmt|;
 name|c
 operator|++
 expr_stmt|;
+name|c
+operator|&=
+literal|0xFFFFFFFF
+expr_stmt|;
 name|PUTU32
 argument_list|(
 name|counter
@@ -124,8 +102,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* if no overflow, we're done */
 if|if
 condition|(
@@ -133,32 +109,6 @@ name|c
 condition|)
 return|return;
 comment|/* Grab 1st dword of counter and increment */
-ifdef|#
-directive|ifdef
-name|L_ENDIAN
-name|c
-operator|=
-name|GETU32
-argument_list|(
-name|counter
-operator|+
-literal|4
-argument_list|)
-expr_stmt|;
-name|c
-operator|++
-expr_stmt|;
-name|PUTU32
-argument_list|(
-name|counter
-operator|+
-literal|4
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|c
 operator|=
 name|GETU32
@@ -171,6 +121,10 @@ expr_stmt|;
 name|c
 operator|++
 expr_stmt|;
+name|c
+operator|&=
+literal|0xFFFFFFFF
+expr_stmt|;
 name|PUTU32
 argument_list|(
 name|counter
@@ -180,8 +134,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* if no overflow, we're done */
 if|if
 condition|(
@@ -189,32 +141,6 @@ name|c
 condition|)
 return|return;
 comment|/* Grab 2nd dword of counter and increment */
-ifdef|#
-directive|ifdef
-name|L_ENDIAN
-name|c
-operator|=
-name|GETU32
-argument_list|(
-name|counter
-operator|+
-literal|8
-argument_list|)
-expr_stmt|;
-name|c
-operator|++
-expr_stmt|;
-name|PUTU32
-argument_list|(
-name|counter
-operator|+
-literal|8
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|c
 operator|=
 name|GETU32
@@ -227,6 +153,10 @@ expr_stmt|;
 name|c
 operator|++
 expr_stmt|;
+name|c
+operator|&=
+literal|0xFFFFFFFF
+expr_stmt|;
 name|PUTU32
 argument_list|(
 name|counter
@@ -236,8 +166,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* if no overflow, we're done */
 if|if
 condition|(
@@ -245,32 +173,6 @@ name|c
 condition|)
 return|return;
 comment|/* Grab top dword of counter and increment */
-ifdef|#
-directive|ifdef
-name|L_ENDIAN
-name|c
-operator|=
-name|GETU32
-argument_list|(
-name|counter
-operator|+
-literal|12
-argument_list|)
-expr_stmt|;
-name|c
-operator|++
-expr_stmt|;
-name|PUTU32
-argument_list|(
-name|counter
-operator|+
-literal|12
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|c
 operator|=
 name|GETU32
@@ -283,6 +185,10 @@ expr_stmt|;
 name|c
 operator|++
 expr_stmt|;
+name|c
+operator|&=
+literal|0xFFFFFFFF
+expr_stmt|;
 name|PUTU32
 argument_list|(
 name|counter
@@ -292,8 +198,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

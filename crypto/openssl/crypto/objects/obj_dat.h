@@ -15,21 +15,21 @@ begin_define
 define|#
 directive|define
 name|NUM_NID
-value|650
+value|660
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_SN
-value|643
+value|653
 end_define
 
 begin_define
 define|#
 directive|define
 name|NUM_LN
-value|643
+value|653
 end_define
 
 begin_define
@@ -22322,6 +22322,126 @@ operator|)
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"AES-128-CFB1"
+block|,
+literal|"aes-128-cfb1"
+block|,
+name|NID_aes_128_cfb1
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"AES-192-CFB1"
+block|,
+literal|"aes-192-cfb1"
+block|,
+name|NID_aes_192_cfb1
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"AES-256-CFB1"
+block|,
+literal|"aes-256-cfb1"
+block|,
+name|NID_aes_256_cfb1
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"AES-128-CFB8"
+block|,
+literal|"aes-128-cfb8"
+block|,
+name|NID_aes_128_cfb8
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"AES-192-CFB8"
+block|,
+literal|"aes-192-cfb8"
+block|,
+name|NID_aes_192_cfb8
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"AES-256-CFB8"
+block|,
+literal|"aes-256-cfb8"
+block|,
+name|NID_aes_256_cfb8
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"DES-CFB1"
+block|,
+literal|"des-cfb1"
+block|,
+name|NID_des_cfb1
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"DES-CFB8"
+block|,
+literal|"des-cfb8"
+block|,
+name|NID_des_cfb8
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"DES-EDE3-CFB1"
+block|,
+literal|"des-ede3-cfb1"
+block|,
+name|NID_des_ede3_cfb1
+block|,
+literal|0
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"DES-EDE3-CFB8"
+block|,
+literal|"des-ede3-cfb8"
+block|,
+name|NID_des_ede3_cfb8
+block|,
+literal|0
+block|,
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -22367,6 +22487,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|650
+index|]
+operator|)
+block|,
+comment|/* "AES-128-CFB1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|653
+index|]
+operator|)
+block|,
+comment|/* "AES-128-CFB8" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|418
 index|]
 operator|)
@@ -22403,6 +22541,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|651
+index|]
+operator|)
+block|,
+comment|/* "AES-192-CFB1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|654
+index|]
+operator|)
+block|,
+comment|/* "AES-192-CFB8" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|422
 index|]
 operator|)
@@ -22435,6 +22591,24 @@ index|]
 operator|)
 block|,
 comment|/* "AES-256-CFB" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|652
+index|]
+operator|)
+block|,
+comment|/* "AES-256-CFB1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|655
+index|]
+operator|)
+block|,
+comment|/* "AES-256-CFB8" */
 operator|&
 operator|(
 name|nid_objs
@@ -22619,6 +22793,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|656
+index|]
+operator|)
+block|,
+comment|/* "DES-CFB1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|657
+index|]
+operator|)
+block|,
+comment|/* "DES-CFB8" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|29
 index|]
 operator|)
@@ -22687,6 +22879,24 @@ index|]
 operator|)
 block|,
 comment|/* "DES-EDE3-CFB" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|658
+index|]
+operator|)
+block|,
+comment|/* "DES-EDE3-CFB1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|659
+index|]
+operator|)
+block|,
+comment|/* "DES-EDE3-CFB8" */
 operator|&
 operator|(
 name|nid_objs
@@ -29113,6 +29323,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|650
+index|]
+operator|)
+block|,
+comment|/* "aes-128-cfb1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|653
+index|]
+operator|)
+block|,
+comment|/* "aes-128-cfb8" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|418
 index|]
 operator|)
@@ -29149,6 +29377,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|651
+index|]
+operator|)
+block|,
+comment|/* "aes-192-cfb1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|654
+index|]
+operator|)
+block|,
+comment|/* "aes-192-cfb8" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|422
 index|]
 operator|)
@@ -29181,6 +29427,24 @@ index|]
 operator|)
 block|,
 comment|/* "aes-256-cfb" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|652
+index|]
+operator|)
+block|,
+comment|/* "aes-256-cfb1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|655
+index|]
+operator|)
+block|,
+comment|/* "aes-256-cfb8" */
 operator|&
 operator|(
 name|nid_objs
@@ -29527,6 +29791,24 @@ operator|&
 operator|(
 name|nid_objs
 index|[
+literal|656
+index|]
+operator|)
+block|,
+comment|/* "des-cfb1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|657
+index|]
+operator|)
+block|,
+comment|/* "des-cfb8" */
+operator|&
+operator|(
+name|nid_objs
+index|[
 literal|29
 index|]
 operator|)
@@ -29595,6 +29877,24 @@ index|]
 operator|)
 block|,
 comment|/* "des-ede3-cfb" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|658
+index|]
+operator|)
+block|,
+comment|/* "des-ede3-cfb1" */
+operator|&
+operator|(
+name|nid_objs
+index|[
+literal|659
+index|]
+operator|)
+block|,
+comment|/* "des-ede3-cfb8" */
 operator|&
 operator|(
 name|nid_objs

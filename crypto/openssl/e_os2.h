@@ -438,6 +438,15 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* --------------------------------- VOS ----------------------------------- */
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYSNAME_VOS
+define|#
+directive|define
+name|OPENSSL_SYS_VOS
+endif|#
+directive|endif
 comment|/* ------------------------------- VxWorks --------------------------------- */
 ifdef|#
 directive|ifdef
@@ -532,7 +541,7 @@ define|#
 directive|define
 name|OPENSSL_EXTERN
 value|OPENSSL_IMPORT
-comment|/* Macros to allow global variables to be reached through function calls when    required (if a shared library version requvres it, for example.    The way it's done allows definitions like this:  	// in foobar.c 	OPENSSL_IMPLEMENT_GLOBAL(int,foobar) = 0; 	// in foobar.h 	OPENSSL_DECLARE_GLOBAL(int,foobar); 	#define foobar OPENSSL_GLOBAL_REF(foobar) */
+comment|/* Macros to allow global variables to be reached through function calls when    required (if a shared library version requires it, for example.    The way it's done allows definitions like this:  	// in foobar.c 	OPENSSL_IMPLEMENT_GLOBAL(int,foobar) = 0; 	// in foobar.h 	OPENSSL_DECLARE_GLOBAL(int,foobar); 	#define foobar OPENSSL_GLOBAL_REF(foobar) */
 ifdef|#
 directive|ifdef
 name|OPENSSL_EXPORT_VAR_AS_FUNCTION
@@ -544,7 +553,8 @@ name|type
 parameter_list|,
 name|name
 parameter_list|)
-value|static type _hide_##name; \         type *_shadow_##name(void) { return&_hide_##name; } \         static type _hide_##name
+define|\
+value|extern type _hide_##name;				     \ 	type *_shadow_##name(void) { return&_hide_##name; }	     \ 	static type _hide_##name
 define|#
 directive|define
 name|OPENSSL_DECLARE_GLOBAL

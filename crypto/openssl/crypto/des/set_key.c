@@ -17,6 +17,12 @@ directive|include
 file|"des_locl.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_expr_stmt
 name|OPENSSL_IMPLEMENT_GLOBAL
 argument_list|(
@@ -2863,6 +2869,15 @@ end_function
 
 begin_comment
 comment|/* #undef des_fixup_key_parity void des_fixup_key_parity(des_cblock *key) 	{ 	des_set_odd_parity(key); 	} */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ndef OPENSSL_FIPS */
 end_comment
 
 end_unit
