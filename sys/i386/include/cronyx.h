@@ -1593,7 +1593,6 @@ name|M_BISYNC
 block|,
 comment|/* BISYNC mode */
 name|M_X21
-block|,
 comment|/* X.21 mode */
 block|}
 name|cx_chan_mode_t
@@ -1797,7 +1796,6 @@ name|BRK_SEND
 block|,
 comment|/* start sending break */
 name|BRK_STOP
-block|,
 comment|/* stop sending break */
 block|}
 name|cx_break_t
@@ -2322,81 +2320,6 @@ directive|define
 name|CX_SPEED_DFLT
 value|9600
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|cx_rxbaud
-decl_stmt|,
-name|cx_txbaud
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cx_univ_mode
-decl_stmt|,
-name|cx_sync_mode
-decl_stmt|,
-name|cx_iftype
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|cx_chan_opt_t
-name|chan_opt_dflt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default mode-independent options */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|cx_opt_async_t
-name|opt_async_dflt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default async options */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|cx_opt_hdlc_t
-name|opt_hdlc_dflt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default hdlc options */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|cx_opt_bisync_t
-name|opt_bisync_dflt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default bisync options */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|cx_opt_x21_t
-name|opt_x21_dflt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* default x21 options */
-end_comment
 
 begin_function_decl
 name|int
