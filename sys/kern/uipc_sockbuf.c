@@ -362,7 +362,7 @@ name|so
 operator|->
 name|so_upcallarg
 argument_list|,
-literal|0
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 return|return;
