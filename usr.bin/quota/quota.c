@@ -34,17 +34,13 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)quota.c	8.1 (Berkeley) 6/6/93";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Id: quota.c,v 1.9 1995/06/18 11:00:49 cgd Exp $"
+literal|"from: @(#)quota.c	8.1 (Berkeley) 6/6/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -705,7 +701,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"quota: %s (uid %d): permission denied\n"
+literal|"quota: %s (uid %lu): permission denied\n"
 argument_list|,
 name|name
 argument_list|,
@@ -799,7 +795,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"quota: %s (uid %d): permission denied\n"
+literal|"quota: %s (uid %u): permission denied\n"
 argument_list|,
 name|name
 argument_list|,
@@ -963,7 +959,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"quota: %s (gid %d): permission denied\n"
+literal|"quota: %s (gid %lu): permission denied\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1126,7 +1122,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"quota: %s (gid %d): permission denied\n"
+literal|"quota: %s (gid %u): permission denied\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1684,7 +1680,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c%7d%8d%8s\n"
+literal|"%8lu%c%7lu%8lu%8s\n"
 argument_list|,
 name|qup
 operator|->
@@ -1805,7 +1801,7 @@ begin_block
 block|{
 name|printf
 argument_list|(
-literal|"Disk quotas for %s %s (%cid %d): %s\n"
+literal|"Disk quotas for %s %s (%cid %lu): %s\n"
 argument_list|,
 name|qfextension
 index|[
@@ -1954,7 +1950,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%ddays"
+literal|"%lddays"
 argument_list|,
 operator|(
 name|hours
@@ -1982,7 +1978,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%2d:%d"
+literal|"%2ld:%ld"
 argument_list|,
 name|minutes
 operator|/
@@ -2003,7 +1999,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%2d"
+literal|"%2ld"
 argument_list|,
 name|minutes
 argument_list|)
