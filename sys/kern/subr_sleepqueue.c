@@ -2454,11 +2454,12 @@ name|td_priority
 operator|>
 name|pri
 condition|)
+name|sched_prio
+argument_list|(
 name|td
-operator|->
-name|td_priority
-operator|=
+argument_list|,
 name|pri
+argument_list|)
 expr_stmt|;
 name|setrunnable
 argument_list|(
