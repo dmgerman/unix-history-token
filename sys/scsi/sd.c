@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.51 1995/03/01 22:24:45 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.52 1995/03/04 20:51:03 dufault Exp $  */
 end_comment
 
 begin_define
@@ -1891,53 +1891,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Place it in the queue of disk activities for this disk 	 */
-comment|/* 	cldisksort(dp, bp, 64*1024); */
-if|if
-condition|(
-operator|(
-name|bp
-operator|->
-name|b_blkno
-operator|<
-literal|0
-operator|)
-operator|||
-operator|(
-name|bp
-operator|->
-name|b_bcount
-operator|>
-literal|3000000
-operator|)
-comment|/* || (bp->b_flags& B_WRITE) */
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"blkno=%lu bcount=%ld flags=0x%lx\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|bp
-operator|->
-name|b_blkno
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|,
-name|bp
-operator|->
-name|b_flags
-argument_list|)
-expr_stmt|;
-name|Debugger
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-block|}
 name|disksort
 argument_list|(
 name|dp
