@@ -240,16 +240,9 @@ name|VM_PROT_READ
 else|:
 name|VM_PROT_WRITE
 decl_stmt|;
-comment|/* 	 * XXX - specially disallow access to user page tables - they are 	 * in the map. 	 * 	 * XXX - don't specially disallow access to the user area - treat 	 * it as incorrectly as elsewhere. 	 * 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  It was 	 * only used (as an end address) in trap.c.  Use it as an end 	 * address here too. 	 */
+comment|/* 	 * XXX - check separately to disallow access to user area and user 	 * page tables - they are in the map. 	 * 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  It was 	 * once only used (as an end address) in trap.c.  Use it as an end 	 * address here too.  This bogusness has spread.  I just fixed 	 * where it was used as a max in vm_mmap.c. 	 */
 if|if
 condition|(
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-operator|>=
-name|VM_MAXUSER_ADDRESS
-operator|||
 operator|(
 name|vm_offset_t
 operator|)
@@ -257,6 +250,7 @@ name|addr
 operator|+
 name|len
 operator|>
+comment|/* XXX */
 name|VM_MAXUSER_ADDRESS
 operator|||
 operator|(
@@ -265,7 +259,7 @@ operator|)
 name|addr
 operator|+
 name|len
-operator|<=
+operator|<
 operator|(
 name|vm_offset_t
 operator|)

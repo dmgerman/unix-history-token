@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_fat.c,v 1.2 1993/10/16 19:29:34 rgrimes Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_fat.c,v 1.3 1993/11/25 01:37:11 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -1153,20 +1153,41 @@ begin_comment
 comment|/*  *  Updating entries in 12 bit fats is a pain in the butt.  *  *  The following picture shows where nibbles go when  *  moving from a 12 bit cluster number into the appropriate  *  bytes in the FAT.  *  *      byte m        byte m+1      byte m+2  *    +----+----+   +----+----+   +----+----+  *    |  0    1 |   |  2    3 |   |  4    5 |   FAT bytes  *    +----+----+   +----+----+   +----+----+  *  *       +----+----+----+ +----+----+----+  *       |  3    0    1 | |  4    5    2 |  *       +----+----+----+ +----+----+----+  *         cluster n        cluster n+1  *  *    Where n is even.  *    m = n + (n>> 2)  *  *	(Function no longer used)  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|void
 name|usemap_alloc
 parameter_list|(
+name|pmp
+parameter_list|,
+name|cn
+parameter_list|)
 name|struct
 name|pcfsmount
 modifier|*
 name|pmp
-parameter_list|,
+decl_stmt|;
 name|u_long
 name|cn
-parameter_list|)
+decl_stmt|;
 block|{
 name|pmp
 operator|->
@@ -1203,19 +1224,23 @@ block|}
 end_function
 
 begin_function
-specifier|extern
+specifier|static
 specifier|inline
 name|void
 name|usemap_free
 parameter_list|(
+name|pmp
+parameter_list|,
+name|cn
+parameter_list|)
 name|struct
 name|pcfsmount
 modifier|*
 name|pmp
-parameter_list|,
+decl_stmt|;
 name|u_long
 name|cn
-parameter_list|)
+decl_stmt|;
 block|{
 name|pmp
 operator|->

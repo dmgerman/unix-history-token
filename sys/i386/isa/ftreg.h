@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1993 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ftreg.h - QIC-40/80 floppy tape driver header  *  10/30/93 v0.3  *  More things will end up here.  QC_VENDORID and QC_VERSION now used.  *  *  08/07/93 v0.2 release  *  Things that should've been here in the first place were moved.  *  Tape geometry and segment request types were added.  *  *  06/03/93 v0.1 Alpha release  *  Initial revision.  Many more things should be moved here.  */
+comment|/*  *  Copyright (c) 1993, 1994 Steve Gerakines  *  *  This is freely redistributable software.  You may do anything you  *  wish with it, so long as the above notice stays intact.  *  *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS  *  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  *  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  *  DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT,  *  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  *  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  *  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  *  POSSIBILITY OF SUCH DAMAGE.  *  *  ftreg.h - QIC-40/80 floppy tape driver header  *  06/03/94 v0.9  *  Changed seek load point to QC_SEEKLP, added reqseg to SegReq structure.  *  *  10/30/93 v0.3  *  More things will end up here.  QC_VENDORID and QC_VERSION now used.  *  *  08/07/93 v0.2 release  *  Things that should've been here in the first place were moved.  *  Tape geometry and segment request types were added.  *  *  06/03/93 v0.1 Alpha release  *  Initial revision.  Many more things should be moved here.  */
 end_comment
 
 begin_comment
@@ -153,7 +153,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QC_SEEKLOAD
+name|QC_SEEKLP
 value|14
 end_define
 
@@ -360,7 +360,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* null-op */
+comment|/* unit+2 */
 end_comment
 
 begin_define
@@ -444,10 +444,20 @@ name|long
 name|reqblk
 decl_stmt|;
 comment|/* Block request starts at */
+name|long
+name|reqseg
+decl_stmt|;
+comment|/* Segment request is at */
 name|int
 name|reqcan
 decl_stmt|;
 comment|/* Cancel read-ahead */
+name|struct
+name|segq
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Next request */
 block|}
 name|SegReq
 typedef|;

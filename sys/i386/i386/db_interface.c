@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.5 1993/12/19 00:50:00 wollman Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.6 1994/03/07 11:38:32 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -766,6 +766,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX move this to machdep.c and allow it to be called iff any debugger is  * installed.  * XXX msg is not printed.  */
+end_comment
+
 begin_function
 name|void
 name|Debugger
@@ -778,7 +782,37 @@ modifier|*
 name|msg
 decl_stmt|;
 block|{
-asm|asm ("int $3");
+specifier|static
+specifier|volatile
+name|u_char
+name|in_Debugger
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|in_Debugger
+condition|)
+block|{
+name|in_Debugger
+operator|=
+literal|1
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+asm|asm("int $3");
+else|#
+directive|else
+name|int3
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|in_Debugger
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 

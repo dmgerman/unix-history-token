@@ -4,11 +4,11 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.a
 end_comment
 
 begin_comment
-comment|/* $Revision: 1.15 $ */
+comment|/* $Revision: 1.16 $ */
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 1.15 1994/01/29 10:30:41 rgrimes Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 1.16 1994/03/23 09:16:04 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1357,6 +1357,17 @@ name|unit
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
+name|st_rd_blk_lim
+argument_list|(
+name|unit
+argument_list|,
+name|SCSI_NOSLEEP
+operator||
+name|SCSI_NOMASK
+operator||
+name|SCSI_SILENT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|st_mode_sense
@@ -1428,7 +1439,15 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"variable"
+literal|"variable(%d->%d)"
+argument_list|,
+name|st
+operator|->
+name|blkmin
+argument_list|,
+name|st
+operator|->
+name|blkmax
 argument_list|)
 expr_stmt|;
 block|}
@@ -1459,6 +1478,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Forget if we've loaded the media, 	 * because sometimes things are unstable at boot time. 	 * We'll get it all again at the first open. 	 */
+name|sc_link
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SDEV_MEDIA_LOADED
+expr_stmt|;
 comment|/* 	 * Set up the buf queue for this device 	 */
 name|st
 operator|->
