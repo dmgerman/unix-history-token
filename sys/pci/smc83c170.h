@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * stable-165  *  */
+comment|/*-  * Copyright (c) 1997 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * stable-166  *  */
 end_comment
 
 begin_comment
@@ -18,16 +18,39 @@ name|EPIC_MAX_DEVICES
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|RX_TO_MBUF
+value|1
+end_define
+
 begin_comment
-comment|/*#define	RX_TO_MBUF	1*/
+comment|/* Eliminates need of copy received */
 end_comment
 
 begin_comment
-comment|/* IT IS BUGGY */
+comment|/* packet to new allocated mbuf, */
 end_comment
 
 begin_comment
-comment|/*#define	EPIC_DEBUG	1*/
+comment|/* receive directly to mbuf */
+end_comment
+
+begin_comment
+comment|/*#define	TX_FRAG_LIST	1	 Eliminites need of copy xmiting */
+end_comment
+
+begin_comment
+comment|/* packet to static buffer, xmit from */
+end_comment
+
+begin_comment
+comment|/* mbuf directly */
+end_comment
+
+begin_comment
+comment|/*#define	EPIC_DEBUG		1*/
 end_comment
 
 begin_define
@@ -42,6 +65,20 @@ define|#
 directive|define
 name|RX_RING_SIZE
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPIC_FULL_DUPLEX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EPIC_HALF_DUPLEX
+value|0
 end_define
 
 begin_define
@@ -1094,6 +1131,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DP83840_ANER
+value|0x06
+end_define
+
+begin_comment
+comment|/* Auto-Negotiation Expansion Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DP83840_PAR
+value|0x19
+end_define
+
+begin_comment
+comment|/* PHY Address Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DP83840_PHYIDR1
 value|0x02
 end_define
@@ -1207,6 +1266,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PAR_FULL_DUPLEX
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANER_MULTIPLE_LINK_FAULT
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|ANAR_10
 value|0x0020
 end_define
@@ -1237,7 +1310,7 @@ comment|/*  * Structures definition and Functions prototypes  */
 end_comment
 
 begin_comment
-comment|/* EPIC's descriptors */
+comment|/* EPIC's hardware descriptors, must be aligned on dword in memory */
 end_comment
 
 begin_struct
@@ -1291,6 +1364,43 @@ end_struct
 
 begin_struct
 struct|struct
+name|epic_frag_elem
+block|{
+comment|/* frag elem structure for LFFORM=0 */
+name|u_int32_t
+name|fragaddr
+decl_stmt|;
+name|u_int32_t
+name|fraglen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|epic_frag_list
+block|{
+name|u_int32_t
+name|numfrags
+decl_stmt|;
+name|struct
+name|epic_frag_elem
+name|frag
+index|[
+literal|63
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* This is driver's structure to define EPIC descriptors */
+end_comment
+
+begin_struct
+struct|struct
 name|epic_rx_buffer
 block|{
 name|struct
@@ -1304,23 +1414,16 @@ decl_stmt|;
 comment|/* Rx buffer address */
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
 name|RX_TO_MBUF
 argument_list|)
-name|caddr_t
-name|pool
-decl_stmt|;
-comment|/* Pool, allocated for buffer */
-else|#
-directive|else
 name|struct
 name|mbuf
 modifier|*
 name|mbuf
 decl_stmt|;
-comment|/* Or mbuf structure */
+comment|/* Or mbuf */
 endif|#
 directive|endif
 block|}
@@ -1336,28 +1439,49 @@ name|epic_tx_desc
 name|desc
 decl_stmt|;
 comment|/* EPIC's descriptor */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TX_FRAG_LIST
+argument_list|)
+name|struct
+name|mbuf
+modifier|*
+name|mbuf
+decl_stmt|;
+comment|/* mbuf contained packet */
+name|struct
+name|epic_frag_list
+name|flist
+decl_stmt|;
+comment|/* static frag list */
+else|#
+directive|else
 name|caddr_t
 name|data
 decl_stmt|;
 comment|/* Tx buffer address */
-name|caddr_t
-name|pool
-decl_stmt|;
-comment|/* Pool, allocated for buffer */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * NB: ALIGN OF ABOVE STRUCTURES  * epic_rx_desc, epic_tx_desc, epic_frag_list - must be aligned on dword  */
+end_comment
+
+begin_comment
+comment|/* Driver status structure */
+end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|int
+name|u_int32_t
 name|unit
-decl_stmt|;
-name|struct
-name|arpcom
-name|epic_ac
 decl_stmt|;
 name|struct
 name|epic_rx_buffer
@@ -1372,6 +1496,10 @@ name|tx_buffer
 index|[
 name|TX_RING_SIZE
 index|]
+decl_stmt|;
+name|struct
+name|arpcom
+name|epic_ac
 decl_stmt|;
 name|u_int32_t
 name|cur_tx
@@ -1424,6 +1552,23 @@ end_comment
 
 begin_function_decl
 specifier|static
+name|char
+modifier|*
+name|epic_pci_probe
+parameter_list|(
+name|pcici_t
+parameter_list|,
+name|pcidi_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Folowing functions calls splimp() */
+end_comment
+
+begin_function_decl
+specifier|static
 name|int
 name|epic_ifioctl
 parameter_list|(
@@ -1438,6 +1583,68 @@ name|caddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|epic_ifstart
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|epic_ifwatchdog
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|epic_pci_attach
+parameter_list|(
+name|pcici_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|epic_init
+parameter_list|(
+name|epic_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|epic_stop
+parameter_list|(
+name|epic_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Following functions doesn't call splimp() */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -1475,55 +1682,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|epic_ifstart
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|epic_ifwatchdog
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|epic_pci_probe
-parameter_list|(
-name|pcici_t
-parameter_list|,
-name|pcidi_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|epic_pci_attach
-parameter_list|(
-name|pcici_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|epic_update_if_media_flags
 parameter_list|(
 name|epic_softc_t
@@ -1534,30 +1692,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|epic_init
-parameter_list|(
-name|epic_softc_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|epic_stop
-parameter_list|(
-name|epic_softc_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
+name|int
 name|epic_init_rings
+parameter_list|(
+name|epic_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|epic_free_rings
 parameter_list|(
 name|epic_softc_t
 modifier|*
@@ -1591,6 +1738,17 @@ begin_function_decl
 specifier|static
 name|void
 name|epic_set_media_speed
+parameter_list|(
+name|epic_softc_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|epic_autoneg
 parameter_list|(
 name|epic_softc_t
 modifier|*
