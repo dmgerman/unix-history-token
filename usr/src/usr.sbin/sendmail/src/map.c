@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.37 (Berkeley) %G%"
+literal|"@(#)map.c	8.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1566,7 +1566,8 @@ operator||=
 name|MF_OPEN
 expr_stmt|;
 block|}
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|tTd
@@ -1626,6 +1627,38 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MF_OPTIONAL
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+condition|)
+block|{
+specifier|extern
+name|MAPCLASS
+name|BogusMapClass
+decl_stmt|;
+name|map
+operator|->
+name|map_class
+operator|=
+operator|&
+name|BogusMapClass
+expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_OPEN
+expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 end_function
@@ -4442,7 +4475,7 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"NIS map %s specified, but NIS not running\n"
+literal|"421 NIS map %s specified, but NIS not running\n"
 argument_list|,
 name|map
 operator|->
@@ -4536,7 +4569,7 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"Cannot bind to domain %s: %s"
+literal|"421 Cannot bind to domain %s: %s"
 argument_list|,
 name|map
 operator|->
@@ -5215,7 +5248,7 @@ comment|/* all other nisplus errors */
 if|#
 directive|if
 literal|0
-block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 				syserr("Cannot find table %s.%s: %s", 					map->map_file, map->map_domain, 					nis_sperrno(res->status));
+block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 				syserr("421 Cannot find table %s.%s: %s", 					map->map_file, map->map_domain, 					nis_sperrno(res->status));
 endif|#
 directive|endif
 name|errno
@@ -5291,7 +5324,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 			syserr("%s.%s: %s is not a table", 				map->map_file, map->map_domain, 				nis_sperrno(res->status));
+block|if (!bitset(MF_OPTIONAL, map->map_mflags)) 			syserr("421 %s.%s: %s is not a table", 				map->map_file, map->map_domain, 				nis_sperrno(res->status));
 endif|#
 directive|endif
 name|errno
@@ -9915,6 +9948,76 @@ block|{
 return|return;
 block|}
 end_function
+
+begin_comment
+comment|/* **  BOGUS stubs */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|bogus_map_lookup
+parameter_list|(
+name|map
+parameter_list|,
+name|key
+parameter_list|,
+name|args
+parameter_list|,
+name|pstat
+parameter_list|)
+name|MAP
+modifier|*
+name|map
+decl_stmt|;
+name|char
+modifier|*
+name|key
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|args
+decl_stmt|;
+name|int
+modifier|*
+name|pstat
+decl_stmt|;
+block|{
+operator|*
+name|pstat
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|MAPCLASS
+name|BogusMapClass
+init|=
+block|{
+literal|"bogus-map"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|bogus_map_lookup
+block|,
+name|null_map_store
+block|,
+name|null_map_open
+block|,
+name|null_map_close
+block|, }
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
