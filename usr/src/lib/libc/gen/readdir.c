@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c	5.2 (Berkeley) %G%"
+literal|"@(#)readdir.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,6 +150,19 @@ operator|->
 name|dd_loc
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|dp
+operator|&
+literal|03
+condition|)
+comment|/* bogus pointer check */
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|dp
