@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,12 +172,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|fixpt_t
-name|ccpu
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dellave
 decl_stmt|;
@@ -211,6 +205,9 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|fixpt_t
+name|ccpu
+decl_stmt|;
 name|argc
 operator|--
 operator|,
