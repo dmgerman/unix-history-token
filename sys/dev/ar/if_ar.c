@@ -9061,20 +9061,26 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|TRC
-argument_list|(
 ifndef|#
 directive|ifndef
 name|NETGRAPH
-argument|if(tt == sc->ifsppp.pp_if.if_ipackets) {
+define|#
+directive|define
+name|IPACKETS
+value|sc->ifsppp.pp_if.if_ipackets
 else|#
 directive|else
 comment|/* NETGRAPH */
-argument|if(tt == sc->ipackets) {
+define|#
+directive|define
+name|IPACKETS
+value|sc->ipackets
 endif|#
 directive|endif
 comment|/* NETGRAPH */
-argument|sca_descriptor *rxdesc; 					int i;  					if(hc->bustype == AR_BUS_ISA) 						ARC_SET_SCA(hc->iobase, scano); 					printf(
+name|TRC
+argument_list|(
+argument|if(tt == IPACKETS) { 					sca_descriptor *rxdesc; 					int i;  					if(hc->bustype == AR_BUS_ISA) 						ARC_SET_SCA(hc->iobase, scano); 					printf(
 literal|"AR: RXINTR isr1 %x, dsr %x, "
 literal|"no data %d pkts, orxhind %d.\n"
 argument|, 					       dotxstart, 					       dsr, 					       tt, 					       ind); 					printf(
