@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.38 1995/10/30 08:04:48 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.39 1995/11/03 12:02:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1782,7 +1782,7 @@ block|,
 block|{
 literal|"XFree86"
 block|,
-literal|"The XFree86 3.1.2 distribution [?]"
+literal|"The XFree86 3.1.2-S distribution"
 block|,
 name|DMENU_CALL
 block|,
@@ -2252,9 +2252,9 @@ init|=
 block|{
 name|DMENU_NORMAL_TYPE
 block|,
-literal|"XFree86 3.1.2 Distribution"
+literal|"XFree86 3.1.2-S Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.1.2\n\ distribution.  We recommend that you select what you need from the basic\n\ component set and at least one entry from the Server and Font set menus."
+literal|"Please select the components you need from the XFree86 3.1.2-S\n\ distribution.  We recommend that you select what you need from the basic\n\ component set and at least one entry from the Server and Font set menus."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -2353,9 +2353,9 @@ name|DMENU_MULTIPLE_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
-literal|"XFree86 3.1.2 base distribution types"
+literal|"XFree86 3.1.2-S base distribution types"
 block|,
-literal|"Please check off the basic XFree86 components you wish to install."
+literal|"Please check off the basic XFree86 components you wish to install.\n\ Bin, lib, xicf, and xdcf are recommended for a minimum installaion."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -2365,7 +2365,7 @@ block|{
 block|{
 literal|"bin"
 block|,
-literal|"X client applications and shared libs [4MB]."
+literal|"Client applications and shared libs [4.1MB]."
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2382,7 +2382,7 @@ block|,
 block|{
 literal|"lib"
 block|,
-literal|"Data files needed at runtime [600K]"
+literal|"Data files needed at runtime [750K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2399,7 +2399,7 @@ block|,
 block|{
 literal|"xicf"
 block|,
-literal|"Customizable xinit runtime configuration file [100K]"
+literal|"Customizable xinit runtime configuration file [10K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2416,7 +2416,7 @@ block|,
 block|{
 literal|"xdcf"
 block|,
-literal|"Customizable xdm runtime configuration file [100K]"
+literal|"Customizable xdm runtime configuration file [20K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2433,7 +2433,7 @@ block|,
 block|{
 literal|"etc"
 block|,
-literal|"XFree86 etc files [100K]"
+literal|"Clock setting and diagnostic source codes [70K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2450,7 +2450,7 @@ block|,
 block|{
 literal|"doc"
 block|,
-literal|"READMEs and XFree86 specific man pages [500K]"
+literal|"READMEs and release notes [600K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2467,7 +2467,7 @@ block|,
 block|{
 literal|"man"
 block|,
-literal|"Man pages (except XFree86 specific ones) [1.2MB]"
+literal|"Man pages [1.7MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2484,7 +2484,7 @@ block|,
 block|{
 literal|"ctrb"
 block|,
-literal|"Various contributed binaries (ico, xman, etc) [500K]"
+literal|"Various contributed binaries (ico, xman, etc) [550K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2501,7 +2501,7 @@ block|,
 block|{
 literal|"prog"
 block|,
-literal|"Programmer's header and library files [4MB]"
+literal|"Programmer's header and library files [4.1MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2518,7 +2518,7 @@ block|,
 block|{
 literal|"link"
 block|,
-literal|"X Server reconfiguration kit [7.8MB]"
+literal|"Kit to reconfigure/rebuild X Servers [8.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2535,7 +2535,7 @@ block|,
 block|{
 literal|"ubin"
 block|,
-literal|"X extra user binaries (rstartd, et al) [2K]"
+literal|"rstart daemon (/usr/bin/rstartd) [2K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2552,7 +2552,7 @@ block|,
 block|{
 literal|"pex"
 block|,
-literal|"PEX fonts and libs needed by PEX apps [500K]"
+literal|"PEX fonts and libs needed by PEX apps [290K]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2569,7 +2569,7 @@ block|,
 block|{
 literal|"sources"
 block|,
-literal|"XFree86 3.1.2 standard + contrib sources [200MB]"
+literal|"XFree86 3.1.2-S standard + contrib sources [200MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2740,7 +2740,7 @@ block|{
 block|{
 literal|"SVGA"
 block|,
-literal|"Standard VGA or Super VGA display [1MB]"
+literal|"Standard VGA or Super VGA display [2.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2757,7 +2757,7 @@ block|,
 block|{
 literal|"VGA16"
 block|,
-literal|"Standard 16 color VGA display [1MB]"
+literal|"Standard 16 color VGA display [1.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2774,7 +2774,7 @@ block|,
 block|{
 literal|"Mono"
 block|,
-literal|"Standard Monochrome display [1MB]"
+literal|"Standard Monochrome display [1.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2791,7 +2791,7 @@ block|,
 block|{
 literal|"8514"
 block|,
-literal|"8-bit (256 color) IBM 8514 or compatible card [1MB]"
+literal|"8-bit (256 color) IBM 8514 or compatible card [2.2MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2808,7 +2808,7 @@ block|,
 block|{
 literal|"AGX"
 block|,
-literal|"8-bit AGX card [1MB]"
+literal|"8-bit AGX card [2.4MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2825,7 +2825,7 @@ block|,
 block|{
 literal|"Ma8"
 block|,
-literal|"8-bit ATI Mach8 card [1MB]"
+literal|"8-bit ATI Mach8 card [2.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2842,7 +2842,7 @@ block|,
 block|{
 literal|"Ma32"
 block|,
-literal|"8 and 16-bit (65K color) for ATI Mach32 card [1MB]"
+literal|"8 and 16-bit (65K color) for ATI Mach32 card [2.4MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2859,7 +2859,7 @@ block|,
 block|{
 literal|"Ma64"
 block|,
-literal|"8 and 16-bit (65K color) for ATI Mach64 card [1MB]"
+literal|"8 and 16-bit (65K color) for ATI Mach64 card [2.5MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2876,7 +2876,7 @@ block|,
 block|{
 literal|"P9K"
 block|,
-literal|"8, 16, and 24-bit color for Weitek P9000 based boards [1MB]"
+literal|"8, 16, and 24-bit color for Weitek P9000 based boards [2.5MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2893,7 +2893,7 @@ block|,
 block|{
 literal|"S3"
 block|,
-literal|"8, 16 and 24-bit color for S3 based boards [1MB]"
+literal|"8, 16 and 24-bit color for S3 based boards [2.7MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2910,7 +2910,7 @@ block|,
 block|{
 literal|"W32"
 block|,
-literal|"8-bit Color for ET4000/W32, /W32i and /W32p cards [1MB]"
+literal|"8-bit Color for ET4000/W32, /W32i and /W32p cards [2.3MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
@@ -2927,7 +2927,7 @@ block|,
 block|{
 literal|"nest"
 block|,
-literal|"A nested server for testing purposes [1MB]"
+literal|"A nested server for testing purposes [1.8MB]"
 block|,
 name|DMENU_SET_FLAG
 block|,
