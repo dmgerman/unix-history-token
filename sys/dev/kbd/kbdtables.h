@@ -1,6 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1992-1998 S
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -35,8 +36,10 @@ literal|0x80
 block|,
 block|{
 comment|/* PC98 keymap */
-comment|/*                                                            alt  * scan                          cntrl          alt    alt   cntrl  * code     base   shift  cntrl  shift   alt   shift  cntrl  shift  spcl  flgs  * ---------------------------------------------------------------------------  */
-comment|/* sc=00 */
+comment|/*                                                         alt  * scan                       cntrl          alt    alt   cntrl  * code  base   shift  cntrl  shift   alt   shift  cntrl  shift    spcl flgs  * ---------------------------------------------------------------------------  */
+block|{
+block|{
+comment|/*00*/
 literal|0x1B
 block|,
 literal|0x1B
@@ -52,12 +55,16 @@ block|,
 name|DBG
 block|,
 literal|0x1B
+block|}
 block|,
 literal|0x02
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=01 */
+block|{
+block|{
+comment|/*01*/
 literal|'1'
 block|,
 literal|'!'
@@ -73,12 +80,16 @@ block|,
 literal|'!'
 block|,
 literal|'!'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=02 */
+block|{
+block|{
+comment|/*02*/
 literal|'2'
 block|,
 literal|'\"'
@@ -94,12 +105,16 @@ block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=03 */
+block|{
+block|{
+comment|/*03*/
 literal|'3'
 block|,
 literal|'#'
@@ -115,12 +130,16 @@ block|,
 literal|0x1B
 block|,
 literal|0x1B
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=04 */
+block|{
+block|{
+comment|/*04*/
 literal|'4'
 block|,
 literal|'$'
@@ -136,12 +155,16 @@ block|,
 literal|0x1C
 block|,
 literal|0x1C
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=05 */
+block|{
+block|{
+comment|/*05*/
 literal|'5'
 block|,
 literal|'%'
@@ -157,12 +180,16 @@ block|,
 literal|0x1D
 block|,
 literal|0x1D
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=06 */
+block|{
+block|{
+comment|/*06*/
 literal|'6'
 block|,
 literal|'&'
@@ -178,12 +205,16 @@ block|,
 literal|0x1E
 block|,
 literal|0x1E
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=07 */
+block|{
+block|{
+comment|/*07*/
 literal|'7'
 block|,
 literal|'\''
@@ -199,12 +230,16 @@ block|,
 literal|'&'
 block|,
 literal|'&'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=08 */
+block|{
+block|{
+comment|/*08*/
 literal|'8'
 block|,
 literal|'('
@@ -220,12 +255,16 @@ block|,
 literal|0x08
 block|,
 literal|0x08
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=09 */
+block|{
+block|{
+comment|/*09*/
 literal|'9'
 block|,
 literal|')'
@@ -241,12 +280,16 @@ block|,
 literal|'('
 block|,
 literal|'('
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=0a */
+block|{
+block|{
+comment|/*0a*/
 literal|'0'
 block|,
 name|NOP
@@ -262,12 +305,16 @@ block|,
 literal|')'
 block|,
 literal|')'
+block|}
 block|,
 literal|0x40
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=0b */
+block|{
+block|{
+comment|/*0b*/
 literal|'-'
 block|,
 literal|'='
@@ -283,12 +330,16 @@ block|,
 literal|0x1F
 block|,
 literal|0x1F
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=0c */
+block|{
+block|{
+comment|/*0c*/
 literal|'^'
 block|,
 literal|'`'
@@ -304,12 +355,16 @@ block|,
 literal|'+'
 block|,
 literal|'+'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=0d */
+block|{
+block|{
+comment|/*0d*/
 literal|'\\'
 block|,
 literal|'|'
@@ -325,12 +380,16 @@ block|,
 literal|0x1C
 block|,
 literal|0x1C
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=0e */
+block|{
+block|{
+comment|/*0e*/
 literal|0x08
 block|,
 literal|0x08
@@ -346,12 +405,16 @@ block|,
 literal|0x08
 block|,
 literal|0x08
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=0f */
+block|{
+block|{
+comment|/*0f*/
 literal|'\t'
 block|,
 literal|'\t'
@@ -367,12 +430,16 @@ block|,
 literal|'\t'
 block|,
 literal|'\t'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=10 */
+block|{
+block|{
+comment|/*10*/
 literal|'q'
 block|,
 literal|'Q'
@@ -388,12 +455,16 @@ block|,
 literal|0x11
 block|,
 literal|0x11
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=11 */
+block|{
+block|{
+comment|/*11*/
 literal|'w'
 block|,
 literal|'W'
@@ -409,12 +480,16 @@ block|,
 literal|0x17
 block|,
 literal|0x17
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=12 */
+block|{
+block|{
+comment|/*12*/
 literal|'e'
 block|,
 literal|'E'
@@ -430,12 +505,16 @@ block|,
 literal|0x05
 block|,
 literal|0x05
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=13 */
+block|{
+block|{
+comment|/*13*/
 literal|'r'
 block|,
 literal|'R'
@@ -451,12 +530,16 @@ block|,
 literal|0x12
 block|,
 literal|0x12
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=14 */
+block|{
+block|{
+comment|/*14*/
 literal|'t'
 block|,
 literal|'T'
@@ -472,12 +555,16 @@ block|,
 literal|0x14
 block|,
 literal|0x14
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=15 */
+block|{
+block|{
+comment|/*15*/
 literal|'y'
 block|,
 literal|'Y'
@@ -493,12 +580,16 @@ block|,
 literal|0x19
 block|,
 literal|0x19
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=16 */
+block|{
+block|{
+comment|/*16*/
 literal|'u'
 block|,
 literal|'U'
@@ -514,12 +605,16 @@ block|,
 literal|0x15
 block|,
 literal|0x15
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=17 */
+block|{
+block|{
+comment|/*17*/
 literal|'i'
 block|,
 literal|'I'
@@ -535,12 +630,16 @@ block|,
 literal|0x09
 block|,
 literal|0x09
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=18 */
+block|{
+block|{
+comment|/*18*/
 literal|'o'
 block|,
 literal|'O'
@@ -556,12 +655,16 @@ block|,
 literal|0x0F
 block|,
 literal|0x0F
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=19 */
+block|{
+block|{
+comment|/*19*/
 literal|'p'
 block|,
 literal|'P'
@@ -577,12 +680,16 @@ block|,
 literal|0x10
 block|,
 literal|0x10
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=1a */
+block|{
+block|{
+comment|/*1a*/
 literal|'@'
 block|,
 literal|'~'
@@ -598,12 +705,16 @@ block|,
 literal|0x1B
 block|,
 literal|0x1B
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=1b */
+block|{
+block|{
+comment|/*1b*/
 literal|'['
 block|,
 literal|'{'
@@ -619,12 +730,16 @@ block|,
 literal|0x1D
 block|,
 literal|0x1D
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=1c */
+block|{
+block|{
+comment|/*1c*/
 literal|'\r'
 block|,
 literal|'\r'
@@ -640,12 +755,16 @@ block|,
 literal|'\n'
 block|,
 literal|'\n'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=1d */
+block|{
+block|{
+comment|/*1d*/
 literal|'a'
 block|,
 literal|'A'
@@ -661,12 +780,16 @@ block|,
 literal|0x01
 block|,
 literal|0x01
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=1e */
+block|{
+block|{
+comment|/*1e*/
 literal|'s'
 block|,
 literal|'S'
@@ -682,12 +805,16 @@ block|,
 literal|0x13
 block|,
 literal|0x13
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=1f */
+block|{
+block|{
+comment|/*1f*/
 literal|'d'
 block|,
 literal|'D'
@@ -703,12 +830,16 @@ block|,
 literal|0x04
 block|,
 literal|0x04
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=20 */
+block|{
+block|{
+comment|/*20*/
 literal|'f'
 block|,
 literal|'F'
@@ -724,12 +855,16 @@ block|,
 literal|0x06
 block|,
 literal|0x06
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=21 */
+block|{
+block|{
+comment|/*21*/
 literal|'g'
 block|,
 literal|'G'
@@ -745,12 +880,16 @@ block|,
 literal|0x07
 block|,
 literal|0x07
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=22 */
+block|{
+block|{
+comment|/*22*/
 literal|'h'
 block|,
 literal|'H'
@@ -766,12 +905,16 @@ block|,
 literal|0x08
 block|,
 literal|0x08
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=23 */
+block|{
+block|{
+comment|/*23*/
 literal|'j'
 block|,
 literal|'J'
@@ -787,12 +930,16 @@ block|,
 literal|'\n'
 block|,
 literal|'\n'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=24 */
+block|{
+block|{
+comment|/*24*/
 literal|'k'
 block|,
 literal|'K'
@@ -808,12 +955,16 @@ block|,
 literal|0x0B
 block|,
 literal|0x0B
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=25 */
+block|{
+block|{
+comment|/*25*/
 literal|'l'
 block|,
 literal|'L'
@@ -829,12 +980,16 @@ block|,
 literal|0x0C
 block|,
 literal|0x0C
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=26 */
+block|{
+block|{
+comment|/*26*/
 literal|';'
 block|,
 literal|'+'
@@ -850,12 +1005,16 @@ block|,
 literal|';'
 block|,
 literal|';'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=27 */
+block|{
+block|{
+comment|/*27*/
 literal|':'
 block|,
 literal|'*'
@@ -871,12 +1030,16 @@ block|,
 literal|'\''
 block|,
 literal|'\''
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=28 */
+block|{
+block|{
+comment|/*28*/
 literal|']'
 block|,
 literal|'}'
@@ -892,12 +1055,16 @@ block|,
 literal|'~'
 block|,
 literal|'~'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=29 */
+block|{
+block|{
+comment|/*29*/
 literal|'z'
 block|,
 literal|'Z'
@@ -913,12 +1080,16 @@ block|,
 literal|0x1A
 block|,
 literal|0x1A
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=2a */
+block|{
+block|{
+comment|/*2a*/
 literal|'x'
 block|,
 literal|'X'
@@ -934,12 +1105,16 @@ block|,
 literal|0x18
 block|,
 literal|0x18
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=2b */
+block|{
+block|{
+comment|/*2b*/
 literal|'c'
 block|,
 literal|'C'
@@ -955,12 +1130,16 @@ block|,
 literal|0x03
 block|,
 literal|0x03
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=2c */
+block|{
+block|{
+comment|/*2c*/
 literal|'v'
 block|,
 literal|'V'
@@ -976,12 +1155,16 @@ block|,
 literal|0x16
 block|,
 literal|0x16
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=2d */
+block|{
+block|{
+comment|/*2d*/
 literal|'b'
 block|,
 literal|'B'
@@ -997,12 +1180,16 @@ block|,
 literal|0x02
 block|,
 literal|0x02
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=2e */
+block|{
+block|{
+comment|/*2e*/
 literal|'n'
 block|,
 literal|'N'
@@ -1018,12 +1205,16 @@ block|,
 literal|0x0E
 block|,
 literal|0x0E
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=2f */
+block|{
+block|{
+comment|/*2f*/
 literal|'m'
 block|,
 literal|'M'
@@ -1039,12 +1230,16 @@ block|,
 literal|'\r'
 block|,
 literal|'\r'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x01
+block|}
 block|,
-comment|/* sc=30 */
+block|{
+block|{
+comment|/*30*/
 literal|','
 block|,
 literal|'<'
@@ -1060,12 +1255,16 @@ block|,
 literal|'<'
 block|,
 literal|'<'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=31 */
+block|{
+block|{
+comment|/*31*/
 literal|'.'
 block|,
 literal|'>'
@@ -1081,12 +1280,16 @@ block|,
 literal|'>'
 block|,
 literal|'>'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=32 */
+block|{
+block|{
+comment|/*32*/
 literal|'/'
 block|,
 literal|'?'
@@ -1102,12 +1305,16 @@ block|,
 literal|0x7F
 block|,
 literal|0x7F
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=33 */
+block|{
+block|{
+comment|/*33*/
 name|NOP
 block|,
 literal|'_'
@@ -1123,12 +1330,16 @@ block|,
 literal|0x1C
 block|,
 literal|0x1C
+block|}
 block|,
 literal|0x80
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=34 */
+block|{
+block|{
+comment|/*34*/
 literal|' '
 block|,
 literal|' '
@@ -1144,12 +1355,16 @@ block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=35 */
+block|{
+block|{
+comment|/*35*/
 literal|0x1B
 block|,
 literal|0x1B
@@ -1165,12 +1380,16 @@ block|,
 literal|0x1B
 block|,
 literal|0x1B
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=36 */
+block|{
+block|{
+comment|/*36*/
 name|F
 argument_list|(
 literal|59
@@ -1210,12 +1429,16 @@ name|F
 argument_list|(
 literal|59
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=37 */
+block|{
+block|{
+comment|/*37*/
 name|F
 argument_list|(
 literal|51
@@ -1255,12 +1478,16 @@ name|F
 argument_list|(
 literal|51
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=38 */
+block|{
+block|{
+comment|/*38*/
 name|F
 argument_list|(
 literal|60
@@ -1300,12 +1527,16 @@ name|F
 argument_list|(
 literal|60
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=39 */
+block|{
+block|{
+comment|/*39*/
 literal|0x7F
 block|,
 literal|0x7F
@@ -1321,12 +1552,16 @@ block|,
 name|RBT
 block|,
 name|RBT
+block|}
 block|,
 literal|0x03
 block|,
 literal|0x02
+block|}
 block|,
-comment|/* sc=3a */
+block|{
+block|{
+comment|/*3a*/
 name|F
 argument_list|(
 literal|50
@@ -1366,12 +1601,16 @@ name|F
 argument_list|(
 literal|50
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=3b */
+block|{
+block|{
+comment|/*3b*/
 name|F
 argument_list|(
 literal|53
@@ -1411,12 +1650,16 @@ name|F
 argument_list|(
 literal|53
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=3c */
+block|{
+block|{
+comment|/*3c*/
 name|F
 argument_list|(
 literal|55
@@ -1456,12 +1699,16 @@ name|F
 argument_list|(
 literal|55
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=3d */
+block|{
+block|{
+comment|/*3d*/
 name|F
 argument_list|(
 literal|58
@@ -1501,12 +1748,16 @@ name|F
 argument_list|(
 literal|58
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=3e */
+block|{
+block|{
+comment|/*3e*/
 name|F
 argument_list|(
 literal|49
@@ -1546,12 +1797,16 @@ name|F
 argument_list|(
 literal|49
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=3f */
+block|{
+block|{
+comment|/*3f*/
 name|NOP
 block|,
 name|NOP
@@ -1567,12 +1822,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=40 */
+block|{
+block|{
+comment|/*40*/
 literal|'-'
 block|,
 literal|'-'
@@ -1588,12 +1847,16 @@ block|,
 literal|'-'
 block|,
 literal|'-'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=41 */
+block|{
+block|{
+comment|/*41*/
 literal|'/'
 block|,
 literal|'/'
@@ -1609,12 +1872,16 @@ block|,
 literal|'/'
 block|,
 literal|'/'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=42 */
+block|{
+block|{
+comment|/*42*/
 literal|'7'
 block|,
 literal|'7'
@@ -1630,12 +1897,16 @@ block|,
 literal|'7'
 block|,
 literal|'7'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=43 */
+block|{
+block|{
+comment|/*43*/
 literal|'8'
 block|,
 literal|'8'
@@ -1651,12 +1922,16 @@ block|,
 literal|'8'
 block|,
 literal|'8'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=44 */
+block|{
+block|{
+comment|/*44*/
 literal|'9'
 block|,
 literal|'9'
@@ -1672,12 +1947,16 @@ block|,
 literal|'9'
 block|,
 literal|'9'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=45 */
+block|{
+block|{
+comment|/*45*/
 literal|'*'
 block|,
 literal|'*'
@@ -1693,12 +1972,16 @@ block|,
 literal|'*'
 block|,
 literal|'*'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=46 */
+block|{
+block|{
+comment|/*46*/
 literal|'4'
 block|,
 literal|'4'
@@ -1714,12 +1997,16 @@ block|,
 literal|'4'
 block|,
 literal|'4'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=47 */
+block|{
+block|{
+comment|/*47*/
 literal|'5'
 block|,
 literal|'5'
@@ -1735,12 +2022,16 @@ block|,
 literal|'5'
 block|,
 literal|'5'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=48 */
+block|{
+block|{
+comment|/*48*/
 literal|'6'
 block|,
 literal|'6'
@@ -1756,12 +2047,16 @@ block|,
 literal|'6'
 block|,
 literal|'6'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=49 */
+block|{
+block|{
+comment|/*49*/
 literal|'+'
 block|,
 literal|'+'
@@ -1777,12 +2072,16 @@ block|,
 literal|'+'
 block|,
 literal|'+'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=4a */
+block|{
+block|{
+comment|/*4a*/
 literal|'1'
 block|,
 literal|'1'
@@ -1798,12 +2097,16 @@ block|,
 literal|'1'
 block|,
 literal|'1'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=4b */
+block|{
+block|{
+comment|/*4b*/
 literal|'2'
 block|,
 literal|'2'
@@ -1819,12 +2122,16 @@ block|,
 literal|'2'
 block|,
 literal|'2'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=4c */
+block|{
+block|{
+comment|/*4c*/
 literal|'3'
 block|,
 literal|'3'
@@ -1840,12 +2147,16 @@ block|,
 literal|'3'
 block|,
 literal|'3'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=4d */
+block|{
+block|{
+comment|/*4d*/
 literal|'='
 block|,
 literal|'='
@@ -1861,12 +2172,16 @@ block|,
 literal|'='
 block|,
 literal|'='
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=4e */
+block|{
+block|{
+comment|/*4e*/
 literal|'0'
 block|,
 literal|'0'
@@ -1882,12 +2197,16 @@ block|,
 literal|'0'
 block|,
 literal|'0'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=4f */
+block|{
+block|{
+comment|/*4f*/
 literal|','
 block|,
 literal|','
@@ -1903,12 +2222,16 @@ block|,
 literal|','
 block|,
 literal|','
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=50 */
+block|{
+block|{
+comment|/*50*/
 literal|'.'
 block|,
 literal|'.'
@@ -1924,12 +2247,16 @@ block|,
 literal|'.'
 block|,
 literal|'.'
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=51 */
+block|{
+block|{
+comment|/*51*/
 literal|0x1B
 block|,
 literal|0x1B
@@ -1945,12 +2272,16 @@ block|,
 literal|0x1B
 block|,
 literal|0x1B
+block|}
 block|,
 literal|0x00
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=52 */
+block|{
+block|{
+comment|/*52*/
 name|F
 argument_list|(
 literal|11
@@ -1990,12 +2321,16 @@ name|S
 argument_list|(
 literal|11
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=53 */
+block|{
+block|{
+comment|/*53*/
 name|F
 argument_list|(
 literal|12
@@ -2035,12 +2370,16 @@ name|S
 argument_list|(
 literal|12
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=54 */
+block|{
+block|{
+comment|/*54*/
 name|SLK
 block|,
 name|SLK
@@ -2056,12 +2395,16 @@ block|,
 name|SLK
 block|,
 name|SLK
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=55 */
+block|{
+block|{
+comment|/*55*/
 name|NOP
 block|,
 name|NOP
@@ -2077,33 +2420,16 @@ block|,
 name|NOP
 block|,
 name|NOP
-block|,
-literal|0xFF
-block|,
-literal|0x00
-block|,
-comment|/* sc=56 */
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=57 */
+block|{
+block|{
+comment|/*56*/
 name|NOP
 block|,
 name|NOP
@@ -2119,33 +2445,16 @@ block|,
 name|NOP
 block|,
 name|NOP
-block|,
-literal|0xFF
-block|,
-literal|0x00
-block|,
-comment|/* sc=58 */
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=59 */
+block|{
+block|{
+comment|/*57*/
 name|NOP
 block|,
 name|NOP
@@ -2161,12 +2470,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=5a */
+block|{
+block|{
+comment|/*58*/
 name|NOP
 block|,
 name|NOP
@@ -2182,12 +2495,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=5b */
+block|{
+block|{
+comment|/*59*/
 name|NOP
 block|,
 name|NOP
@@ -2203,12 +2520,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=5c */
+block|{
+block|{
+comment|/*5a*/
 name|NOP
 block|,
 name|NOP
@@ -2224,12 +2545,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=5d */
+block|{
+block|{
+comment|/*5b*/
 name|NOP
 block|,
 name|NOP
@@ -2245,12 +2570,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=5e */
+block|{
+block|{
+comment|/*5c*/
 name|NOP
 block|,
 name|NOP
@@ -2266,12 +2595,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=5f */
+block|{
+block|{
+comment|/*5d*/
 name|NOP
 block|,
 name|NOP
@@ -2287,12 +2620,66 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=60 */
+block|{
+block|{
+comment|/*5e*/
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|}
+block|,
+literal|0xFF
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+block|{
+comment|/*5f*/
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|}
+block|,
+literal|0xFF
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+block|{
+comment|/*60*/
 name|F
 argument_list|(
 literal|57
@@ -2332,12 +2719,16 @@ name|F
 argument_list|(
 literal|57
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=61 */
+block|{
+block|{
+comment|/*61*/
 name|NOP
 block|,
 name|NOP
@@ -2353,12 +2744,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=62 */
+block|{
+block|{
+comment|/*62*/
 name|F
 argument_list|(
 literal|1
@@ -2398,12 +2793,16 @@ name|S
 argument_list|(
 literal|1
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=63 */
+block|{
+block|{
+comment|/*63*/
 name|F
 argument_list|(
 literal|2
@@ -2443,12 +2842,16 @@ name|S
 argument_list|(
 literal|2
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=64 */
+block|{
+block|{
+comment|/*64*/
 name|F
 argument_list|(
 literal|3
@@ -2488,12 +2891,16 @@ name|S
 argument_list|(
 literal|3
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=65 */
+block|{
+block|{
+comment|/*65*/
 name|F
 argument_list|(
 literal|4
@@ -2533,12 +2940,16 @@ name|S
 argument_list|(
 literal|4
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=66 */
+block|{
+block|{
+comment|/*66*/
 name|F
 argument_list|(
 literal|5
@@ -2578,12 +2989,16 @@ name|S
 argument_list|(
 literal|5
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=67 */
+block|{
+block|{
+comment|/*67*/
 name|F
 argument_list|(
 literal|6
@@ -2623,12 +3038,16 @@ name|S
 argument_list|(
 literal|6
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=68 */
+block|{
+block|{
+comment|/*68*/
 name|F
 argument_list|(
 literal|7
@@ -2668,12 +3087,16 @@ name|S
 argument_list|(
 literal|7
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=69 */
+block|{
+block|{
+comment|/*69*/
 name|F
 argument_list|(
 literal|8
@@ -2713,12 +3136,16 @@ name|S
 argument_list|(
 literal|8
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=6a */
+block|{
+block|{
+comment|/*6a*/
 name|F
 argument_list|(
 literal|9
@@ -2758,12 +3185,16 @@ name|S
 argument_list|(
 literal|9
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=6b */
+block|{
+block|{
+comment|/*6b*/
 name|F
 argument_list|(
 literal|10
@@ -2803,12 +3234,16 @@ name|S
 argument_list|(
 literal|10
 argument_list|)
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=6c */
+block|{
+block|{
+comment|/*6c*/
 name|NOP
 block|,
 name|NOP
@@ -2824,12 +3259,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=6d */
+block|{
+block|{
+comment|/*6d*/
 name|NOP
 block|,
 name|NOP
@@ -2845,12 +3284,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=6e */
+block|{
+block|{
+comment|/*6e*/
 name|NOP
 block|,
 name|NOP
@@ -2866,12 +3309,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=6f */
+block|{
+block|{
+comment|/*6f*/
 name|NOP
 block|,
 name|NOP
@@ -2887,12 +3334,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=70 */
+block|{
+block|{
+comment|/*70*/
 name|LSH
 block|,
 name|LSH
@@ -2908,12 +3359,16 @@ block|,
 name|LSH
 block|,
 name|LSH
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=71 */
+block|{
+block|{
+comment|/*71*/
 name|CLK
 block|,
 name|CLK
@@ -2929,12 +3384,16 @@ block|,
 name|CLK
 block|,
 name|CLK
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=72 */
+block|{
+block|{
+comment|/*72*/
 name|LALT
 block|,
 name|LALT
@@ -2950,12 +3409,16 @@ block|,
 name|LALT
 block|,
 name|LALT
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=73 */
+block|{
+block|{
+comment|/*73*/
 name|LALT
 block|,
 name|LALT
@@ -2971,12 +3434,16 @@ block|,
 name|LALT
 block|,
 name|LALT
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=74 */
+block|{
+block|{
+comment|/*74*/
 name|LCTR
 block|,
 name|LCTR
@@ -2992,12 +3459,16 @@ block|,
 name|LCTR
 block|,
 name|LCTR
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=75 */
+block|{
+block|{
+comment|/*75*/
 name|NOP
 block|,
 name|NOP
@@ -3013,33 +3484,16 @@ block|,
 name|NOP
 block|,
 name|NOP
-block|,
-literal|0xFF
-block|,
-literal|0x00
-block|,
-comment|/* sc=76 */
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=77 */
+block|{
+block|{
+comment|/*76*/
 name|NOP
 block|,
 name|NOP
@@ -3055,33 +3509,16 @@ block|,
 name|NOP
 block|,
 name|NOP
-block|,
-literal|0xFF
-block|,
-literal|0x00
-block|,
-comment|/* sc=78 */
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
-block|,
-name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=79 */
+block|{
+block|{
+comment|/*77*/
 name|NOP
 block|,
 name|NOP
@@ -3097,12 +3534,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=7a */
+block|{
+block|{
+comment|/*78*/
 name|NOP
 block|,
 name|NOP
@@ -3118,12 +3559,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=7b */
+block|{
+block|{
+comment|/*79*/
 name|NOP
 block|,
 name|NOP
@@ -3139,12 +3584,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=7c */
+block|{
+block|{
+comment|/*7a*/
 name|NOP
 block|,
 name|NOP
@@ -3160,12 +3609,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=7d */
+block|{
+block|{
+comment|/*7b*/
 name|NOP
 block|,
 name|NOP
@@ -3181,12 +3634,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=7e */
+block|{
+block|{
+comment|/*7c*/
 name|NOP
 block|,
 name|NOP
@@ -3202,12 +3659,16 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
 block|,
-comment|/* sc=7f */
+block|{
+block|{
+comment|/*7d*/
 name|NOP
 block|,
 name|NOP
@@ -3223,10 +3684,62 @@ block|,
 name|NOP
 block|,
 name|NOP
+block|}
 block|,
 literal|0xFF
 block|,
 literal|0x00
+block|}
+block|,
+block|{
+block|{
+comment|/*7e*/
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|}
+block|,
+literal|0xFF
+block|,
+literal|0x00
+block|}
+block|,
+block|{
+block|{
+comment|/*7f*/
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|,
+name|NOP
+block|}
+block|,
+literal|0xFF
+block|,
+literal|0x00
+block|}
 block|, }
 block|}
 decl_stmt|;

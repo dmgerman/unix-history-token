@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pc98/pc98/pc98_machdep.h>
 end_include
 
