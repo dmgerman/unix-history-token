@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.h	4.3	82/03/03	*/
+comment|/*	in_pcb.h	4.4	82/03/29	*/
 end_comment
 
 begin_comment
@@ -54,6 +54,11 @@ name|caddr_t
 name|inp_ppcb
 decl_stmt|;
 comment|/* pointer to per-protocol pcb */
+name|struct
+name|route
+name|inp_route
+decl_stmt|;
+comment|/* placeholder for routing entry */
 block|}
 struct|;
 end_struct

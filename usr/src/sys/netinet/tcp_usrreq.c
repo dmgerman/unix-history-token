@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.53 82/03/11 */
+comment|/* tcp_usrreq.c 1.54 82/03/29 */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"../net/in.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_include

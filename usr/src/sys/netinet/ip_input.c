@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.35	82/03/28	*/
+comment|/*	ip_input.c	1.36	82/03/29	*/
 end_comment
 
 begin_include
@@ -665,7 +665,7 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fast check on the first interface in the list. 	 */
+comment|/* 	 * Fast check on the first internet 	 * interface in the list. 	 */
 if|if
 condition|(
 name|ifinet
@@ -690,6 +690,31 @@ name|if_addr
 expr_stmt|;
 if|if
 condition|(
+name|sin
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+condition|)
+goto|goto
+name|ours
+goto|;
+if|if
+condition|(
+operator|(
+name|ifinet
+operator|->
+name|if_flags
+operator|&
+name|IFF_BROADCAST
+operator|)
+operator|&&
 name|sin
 operator|->
 name|sin_addr
@@ -809,63 +834,7 @@ argument_list|,
 name|mopt
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Check the routing table in case we should 		 * munge the src address before it gets passed on. 		 */
-name|ipaddr
-operator|.
-name|sin_addr
-operator|=
-name|ip
-operator|->
-name|ip_src
-expr_stmt|;
-name|rt
-operator|=
-name|reroute
-argument_list|(
-operator|&
-name|ipaddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rt
-operator|&&
-operator|(
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_MUNGE
-operator|)
-condition|)
-block|{
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
-name|sin
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|rt
-operator|->
-name|rt_dst
-expr_stmt|;
-name|ip
-operator|->
-name|ip_src
-operator|=
-name|sin
-operator|->
-name|sin_addr
-expr_stmt|;
-block|}
-comment|/* 0 here means no directed broadcast */
+comment|/* last 0 here means no directed broadcast */
 operator|(
 name|void
 operator|)

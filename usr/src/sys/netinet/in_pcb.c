@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.22	82/03/28	*/
+comment|/*	in_pcb.c	4.23	82/03/29	*/
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_include
@@ -196,7 +202,24 @@ operator|->
 name|sin_addr
 operator|.
 name|s_addr
-operator|&&
+condition|)
+block|{
+name|int
+name|tport
+init|=
+name|sin
+operator|->
+name|sin_port
+decl_stmt|;
+name|sin
+operator|->
+name|sin_port
+operator|=
+literal|0
+expr_stmt|;
+comment|/* yech... */
+if|if
+condition|(
 name|if_ifwithaddr
 argument_list|(
 operator|(
@@ -214,6 +237,13 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
+name|sin
+operator|->
+name|sin_port
+operator|=
+name|tport
+expr_stmt|;
+block|}
 name|lport
 operator|=
 name|sin
@@ -921,6 +951,23 @@ expr_stmt|;
 name|sofree
 argument_list|(
 name|so
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
+condition|)
+name|freeroute
+argument_list|(
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
 argument_list|)
 expr_stmt|;
 name|remque

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.20	82/03/28	*/
+comment|/*	tcp_subr.c	4.21	82/03/29	*/
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"../net/in.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/route.h"
 end_include
 
 begin_include
@@ -109,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|"../net/tcpip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../net/route.h"
 end_include
 
 begin_include
@@ -455,6 +455,13 @@ literal|0
 decl_stmt|,
 name|tlen
 decl_stmt|;
+name|struct
+name|route
+modifier|*
+name|ro
+init|=
+literal|0
+decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_RESPOND
@@ -464,6 +471,7 @@ if|if
 condition|(
 name|tp
 condition|)
+block|{
 name|win
 operator|=
 name|sbspace
@@ -478,6 +486,16 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+name|ro
+operator|=
+operator|&
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_route
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags
@@ -841,7 +859,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-literal|0
+name|ro
 argument_list|,
 literal|0
 argument_list|)
