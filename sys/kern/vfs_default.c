@@ -1437,14 +1437,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|devsw
+name|vn_isdisk
 argument_list|(
 name|vp
-operator|->
-name|v_rdev
 argument_list|)
-operator|!=
-name|NULL
 condition|)
 block|{
 comment|/* 			 * This simply allocates the biggest object possible 			 * for a disk vnode.  This should be fixed, but doesn't 			 * cause any problems (yet). 			 */
