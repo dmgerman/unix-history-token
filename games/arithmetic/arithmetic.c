@@ -107,6 +107,18 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -179,6 +191,99 @@ name|NQUESTS
 value|20
 end_define
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|getrandom
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|intr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|opnum
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|penalise
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|problem
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|showstats
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Select keys from +-x/ to be asked addition, subtraction, multiplication,  * and division problems.  More than one key may be given.  The default is  * +-.  Specify a range to confine the operands to 0 - range.  Default upper  * bound is 10.  After every NQUESTS questions, statistics on the performance  * so far are printed.  */
 end_comment
@@ -200,24 +305,11 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
 name|cnt
 decl_stmt|;
-name|void
-name|intr
-parameter_list|()
-function_decl|;
 comment|/* Revoke setgid privileges */
 name|setgid
 argument_list|(
@@ -416,7 +508,12 @@ end_comment
 begin_function
 name|void
 name|intr
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|showstats
 argument_list|()
@@ -433,12 +530,10 @@ begin_comment
 comment|/* Print score.  Original `arithmetic' had a delay after printing it. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|showstats
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -512,18 +607,16 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Pick a problem and ask it.  Keeps asking the same problem until supplied  * with the correct answer, or until EOF or interrupt is typed.  Problems are  * selected such that the right operand and either the left operand (for +, x)  * or the correct result (for -, /) are in the range 0 to rangemax.  Each wrong  * answer causes the numbers in the problem to be penalised, so that they are  * more likely to appear in subsequent problems.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|problem
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|char
 modifier|*
@@ -549,6 +642,18 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+name|left
+operator|=
+literal|0
+expr_stmt|;
+name|right
+operator|=
+literal|0
+expr_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
 name|op
 operator|=
 name|keys
@@ -914,7 +1019,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Here is the code for accumulating penalties against the numbers for which  * a wrong answer was given.  The right operand and either the left operand  * (for +, x) or the result (for -, /) are stored in a list for the particular  * operation, and each becomes more likely to appear again in that operation.  * Initially, each number is charged a penalty of WRONGPENALTY, giving it that  * many extra chances of appearing.  Each time it is selected because of this,  * its penalty is decreased by one; it is removed when it reaches 0.  *  * The penalty[] array gives the sum of all penalties in the list for  * each operation and each operand.  The penlist[] array has the lists of  * penalties themselves.  */
@@ -984,18 +1089,16 @@ begin_comment
 comment|/*  * Add a penalty for the number `value' to the list for operation `op',  * operand number `operand' (0 or 1).  If we run out of memory, we just  * forget about the penalty (how likely is this, anyway?).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|penalise
-argument_list|(
-argument|value
-argument_list|,
-argument|op
-argument_list|,
-argument|operand
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|value
+parameter_list|,
+name|op
+parameter_list|,
+name|operand
+parameter_list|)
 name|int
 name|value
 decl_stmt|,
@@ -1003,9 +1106,6 @@ name|op
 decl_stmt|,
 name|operand
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|penalty
@@ -1088,24 +1188,22 @@ operator|=
 name|value
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Select a random value from 0 to maxval - 1 for operand `operand' (0 or 1)  * of operation `op'.  The random number we generate is either used directly  * as a value, or represents a position in the penalty list.  If the latter,  * we find the corresponding value and return that, decreasing its penalty.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getrandom
-argument_list|(
-argument|maxval
-argument_list|,
-argument|op
-argument_list|,
-argument|operand
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|maxval
+parameter_list|,
+name|op
+parameter_list|,
+name|operand
+parameter_list|)
 name|int
 name|maxval
 decl_stmt|,
@@ -1113,9 +1211,6 @@ name|op
 decl_stmt|,
 name|operand
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|value
@@ -1292,26 +1387,21 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Return an index for the character op, which is one of [+-x/]. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|opnum
-argument_list|(
-argument|op
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|op
+parameter_list|)
 name|int
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1365,18 +1455,17 @@ name|keylist
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Print usage message and quit. */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -1394,7 +1483,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
