@@ -1649,6 +1649,12 @@ name|s1
 operator|==
 literal|'~'
 operator|||
+comment|/* Tcl procedure */
+operator|*
+name|s1
+operator|==
+literal|'.'
+operator|||
 comment|/* C++ scope operator */
 operator|(
 name|strlen
