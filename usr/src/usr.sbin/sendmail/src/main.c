@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.36 (Berkeley) %G%"
+literal|"@(#)main.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3869,15 +3869,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|syslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"Cannot open frozen config file %s: %m"
-argument_list|,
-name|freezefile
-argument_list|)
-expr_stmt|;
 name|errno
 operator|=
 literal|0
@@ -3910,8 +3901,10 @@ sizeof|sizeof
 name|fhdr
 condition|)
 block|{
-name|syserr
+name|syslog
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"Cannot read frozen config file"
 argument_list|)
 expr_stmt|;
