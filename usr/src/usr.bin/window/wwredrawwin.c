@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwredrawwin.c	3.10 %G%"
+literal|"@(#)wwredrawwin.c	3.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,9 @@ name|union
 name|ww_char
 modifier|*
 name|ns
+decl_stmt|;
+name|int
+name|x
 decl_stmt|;
 name|int
 name|nchanged
@@ -179,17 +182,16 @@ operator|==
 name|w
 operator|->
 name|ww_index
-condition|)
-block|{
-name|nchanged
-operator|++
-expr_stmt|;
+operator|&&
 name|ns
 index|[
 name|col
 index|]
 operator|.
 name|c_w
+operator|!=
+operator|(
+name|x
 operator|=
 name|buf
 index|[
@@ -204,6 +206,20 @@ name|col
 index|]
 operator|<<
 name|WWC_MSHIFT
+operator|)
+condition|)
+block|{
+name|nchanged
+operator|++
+expr_stmt|;
+name|ns
+index|[
+name|col
+index|]
+operator|.
+name|c_w
+operator|=
+name|x
 expr_stmt|;
 block|}
 if|if
