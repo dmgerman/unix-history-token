@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.19 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,7 +570,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ifconfig interface\n%s%s%s%s"
+literal|"usage: ifconfig interface\n%s%s%s%s%s"
 argument_list|,
 literal|"\t[ af [ address [ dest_addr ] ] [ up ] [ down ]"
 argument_list|,
