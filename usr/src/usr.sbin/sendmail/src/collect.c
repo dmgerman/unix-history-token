@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.40 (Berkeley) %G%"
+literal|"@(#)collect.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1407,6 +1407,16 @@ name|fp
 argument_list|)
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|errmsg
+init|=
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1418,14 +1428,31 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"collect: %s\n"
+literal|"collect: premature EOM: %s\n"
 argument_list|,
-name|errstring
-argument_list|(
-name|errno
-argument_list|)
+name|errmsg
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|2
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"collect: premature EOM: %s"
+argument_list|,
+name|errmsg
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|inputerr
 operator|=
 name|TRUE
