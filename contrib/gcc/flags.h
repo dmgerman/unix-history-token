@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Compilation switch flag definitions for GNU CC.    Copyright (C) 1987, 88, 94, 95, 96, 97, 1998 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Compilation switch flag definitions for GNU CC.    Copyright (C) 1987, 88, 94-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -644,13 +648,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means treat all global and extern variables as global.  */
+comment|/* Nonzero means treat all global and extern variables as volatile.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|flag_volatile_global
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means treat all static variables as volatile.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_volatile_static
 decl_stmt|;
 end_decl_stmt
 
@@ -666,6 +681,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means the front end generally wants `errno' maintained by math    operations, like built-in SQRT, unless overridden by flag_fast_math.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_errno_math
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0 means straightforward implementation of complex divide acceptable.    1 means wide ranges of inputs must work for complex divide.    2 means C9X-like requirements for complex divide (not yet implemented).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_complex_divide_method
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means to run loop optimizations twice.  */
 end_comment
 
@@ -673,17 +710,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_rerun_loop_opt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means to assume that a structure or an array reference at    a varying address cannot alias a scalar at a fixed address. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_structure_noalias
 decl_stmt|;
 end_decl_stmt
 
@@ -809,6 +835,15 @@ name|flag_schedule_speculative_load_dangerous
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAIFA */
+end_comment
+
 begin_comment
 comment|/* flag_on_branch_count_reg means try to replace add-1,compare,branch tupple    by a cheaper branch, on a count register. */
 end_comment
@@ -820,15 +855,6 @@ name|flag_branch_on_count_reg
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAIFA */
-end_comment
-
 begin_comment
 comment|/* Nonzero means put things in delayed-branch slots if supported. */
 end_comment
@@ -837,6 +863,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_delayed_branch
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means suppress output of instruction numbers and line number    notes in debugging dumps.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_dump_unnumbered
 decl_stmt|;
 end_decl_stmt
 
@@ -929,6 +966,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* ... and similar for data.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_data_sections
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* -fverbose-asm causes extra commentary information to be produced in    the generated assembly code (to make it more readable).  This option    is generally only of use to those who actually need to read the    generated assembly code (perhaps while debugging the compiler itself).    -fno-verbose-asm, the default, causes the extra information    to not be added and is useful when comparing two assembler files.  */
 end_comment
 
@@ -1013,6 +1061,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_regmove
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Instrument functions with calls at entry and exit, for profiling.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_instrument_function_entry_exit
 decl_stmt|;
 end_decl_stmt
 
@@ -1126,6 +1185,64 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|g_switch_set
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Value of the -finline-limit flag.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inline_max_insns
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we dump in VCG format, not plain text.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dump_for_graph
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Selection of the graph form.  */
+end_comment
+
+begin_enum
+enum|enum
+name|graph_dump_types
+block|{
+name|no_graph
+init|=
+literal|0
+block|,
+name|vcg
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|graph_dump_types
+name|graph_dump_format
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means ignore `#ident' directives.  0 means handle them.    On SVR4 targets, it also controls whether or not to emit a    string identifying the compiler.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_no_ident
 decl_stmt|;
 end_decl_stmt
 
