@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.17 1995/07/30 01:44:45 ache Exp $ */
+comment|/* $Id: lib.h,v 1.18 1995/08/26 10:15:12 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -448,8 +448,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|leave_playpen
+name|char
+modifier|*
+name|where_playpen
 parameter_list|(
 name|void
 parameter_list|)
@@ -457,11 +458,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|leave_playpen
+parameter_list|(
 name|char
 modifier|*
-name|where_playpen
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -547,6 +548,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|strconcat
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* File */
 end_comment
@@ -608,6 +623,9 @@ name|fileGetURL
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -649,6 +667,9 @@ name|char
 modifier|*
 name|fileFindByPath
 parameter_list|(
+name|char
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: info.h,v 1.6 1994/12/06 00:51:42 jkh Exp $ */
+comment|/* $Id: info.h,v 1.7.4.1 1995/10/09 11:16:25 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -171,8 +171,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
 name|PlayPen
+index|[]
 decl_stmt|;
 end_decl_stmt
 

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.16 1995/05/30 03:49:59 rgrimes Exp $"
+literal|"$Id: perform.c,v 1.17 1995/07/30 01:44:38 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,6 +271,14 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|Home
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -339,6 +347,8 @@ name|cp
 operator|=
 name|fileGetURL
 argument_list|(
+name|NULL
+argument_list|,
 name|pkg
 argument_list|)
 operator|)
@@ -446,6 +456,8 @@ name|cp
 operator|=
 name|fileFindByPath
 argument_list|(
+name|NULL
+argument_list|,
 name|pkg
 argument_list|)
 operator|)
@@ -496,9 +508,8 @@ goto|goto
 name|bail
 goto|;
 block|}
-operator|(
-name|void
-operator|)
+name|Home
+operator|=
 name|make_playpen
 argument_list|(
 name|PlayPen
@@ -913,7 +924,9 @@ expr_stmt|;
 name|bail
 label|:
 name|leave_playpen
-argument_list|()
+argument_list|(
+name|Home
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -939,7 +952,9 @@ name|sig
 parameter_list|)
 block|{
 name|leave_playpen
-argument_list|()
+argument_list|(
+name|Home
+argument_list|)
 expr_stmt|;
 block|}
 end_function

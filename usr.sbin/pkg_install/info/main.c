@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.8 1994/12/06 00:51:44 jkh Exp $"
+literal|"$Id: main.c,v 1.9.4.1 1995/10/09 11:16:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,10 +81,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|PlayPen
-init|=
-name|NULL
+index|[
+name|FILENAME_MAX
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -309,9 +309,12 @@ break|break;
 case|case
 literal|'t'
 case|:
+name|strcpy
+argument_list|(
 name|PlayPen
-operator|=
+argument_list|,
 name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
