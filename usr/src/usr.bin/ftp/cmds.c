@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.20 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,22 @@ name|rindex
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1343,38 +1359,6 @@ literal|1
 index|]
 operator|=
 literal|"tenex"
-expr_stmt|;
-name|settype
-argument_list|(
-literal|2
-argument_list|,
-name|stype
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Set ebcdic transfer type.  */
-end_comment
-
-begin_comment
-comment|/*VARARGS*/
-end_comment
-
-begin_macro
-name|setebcdic
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|stype
-index|[
-literal|1
-index|]
-operator|=
-literal|"ebcdic"
 expr_stmt|;
 name|settype
 argument_list|(
@@ -4754,12 +4738,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|code

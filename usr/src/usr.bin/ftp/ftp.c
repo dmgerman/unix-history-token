@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.30 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,22 @@ name|lostpeer
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strerror
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -2637,9 +2653,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3140,9 +3165,18 @@ name|c
 operator|<
 literal|0
 condition|)
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3323,9 +3357,18 @@ argument_list|(
 name|fin
 argument_list|)
 condition|)
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3936,9 +3979,18 @@ operator|!=
 name|EACCES
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4000,9 +4052,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4041,9 +4102,28 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|oldintr
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4382,9 +4462,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4939,9 +5028,18 @@ argument_list|(
 name|fout
 argument_list|)
 condition|)
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7482,9 +7580,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"local: %s: %s\n"
+argument_list|,
 name|local
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
