@@ -126,9 +126,7 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|bsd42
+comment|/* #ifdef bsd42 */
 comment|/* don't want broadcasts to match */
 if|if
 condition|(
@@ -182,15 +180,7 @@ operator|)
 return|;
 block|}
 block|}
-endif|#
-directive|endif
-name|ia
-operator|=
-name|in_iafromif
-argument_list|(
-name|inetifp
-argument_list|)
-expr_stmt|;
+comment|/* #endif     ia = in_iafromif(inetifp); */
 return|return
 operator|(
 name|IA_INADDR
@@ -225,9 +215,7 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|bsd42
+comment|/* #ifdef bsd42 */
 comment|/* note we use ip_src, not ip_dst here */
 if|if
 condition|(
@@ -261,15 +249,7 @@ name|l
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-name|ia
-operator|=
-name|in_iafromif
-argument_list|(
-name|inetifp
-argument_list|)
-expr_stmt|;
+comment|/* #endif     ia = in_iafromif(inetifp); */
 return|return
 operator|(
 name|IA_INADDR
