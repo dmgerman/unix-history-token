@@ -21,6 +21,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"opt_md.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -505,12 +511,22 @@ name|__pcpu
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MDSIZE
-value|8192
-end_define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MD_ROOT_SIZE
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|SIMICS needs MD_ROOT and MD_ROOT_SIZE
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Physical and virtual addresses for some global pages */
@@ -1018,7 +1034,7 @@ name|i
 operator|++
 index|]
 operator|=
-name|MDSIZE
+name|MD_ROOT_SIZE
 operator|*
 literal|1024
 expr_stmt|;
@@ -1153,17 +1169,6 @@ operator|)
 name|round_page
 argument_list|(
 name|physical_freestart
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"freemempos %p\n"
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|freemempos
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1485,27 +1490,6 @@ name|PTE_CACHE
 argument_list|)
 expr_stmt|;
 comment|/* Map the stack pages */
-name|printf
-argument_list|(
-literal|"avant irq %p %p\n"
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|irqstack
-operator|.
-name|pv_va
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|irqstack
-operator|.
-name|pv_pa
-argument_list|)
-expr_stmt|;
 name|pmap_map_chunk
 argument_list|(
 name|l1pagetable
@@ -1529,11 +1513,6 @@ argument_list|,
 name|PTE_CACHE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"apres irq\n"
-argument_list|)
-expr_stmt|;
 name|pmap_map_chunk
 argument_list|(
 name|l1pagetable
@@ -1546,7 +1525,7 @@ name|md_addr
 operator|.
 name|pv_pa
 argument_list|,
-name|MDSIZE
+name|MD_ROOT_SIZE
 operator|*
 literal|1024
 argument_list|,
@@ -1860,11 +1839,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Pages were allocated during the secondary bootstrap for the 	 * stacks for different CPU modes. 	 * We must now set the r13 registers in the different CPU modes to 	 * point to these stacks. 	 * Since the ARM stacks use STMFD etc. we must set r13 to the top end 	 * of the stack memory. 	 */
-name|printf
-argument_list|(
-literal|"init subsystems: stacks\n"
-argument_list|)
-expr_stmt|;
 name|set_stackptr
 argument_list|(
 name|PSR_IRQ32_MODE
