@@ -2113,9 +2113,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|24
+name|LINES
 argument_list|,
-literal|79
+name|COLS
 argument_list|,
 name|dialog_attr
 argument_list|,
