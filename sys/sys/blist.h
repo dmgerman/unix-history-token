@@ -15,15 +15,52 @@ directive|define
 name|_SYS_BLIST_H_
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|int
 name|LOG2
 parameter_list|(
+name|u_daddr_t
 name|v
 parameter_list|)
-value|(((u_daddr_t)(v)>= 0x80000000U) ? 31 : \ 			((u_daddr_t)(v)>= 0x40000000U) ? 30 : \ 			((u_daddr_t)(v)>= 0x20000000U) ? 29 : \ 			((u_daddr_t)(v)>= 0x10000000U) ? 28 : \ 			((u_daddr_t)(v)>= 0x08000000U) ? 27 : \ 			((u_daddr_t)(v)>= 0x04000000U) ? 26 : \ 			((u_daddr_t)(v)>= 0x02000000U) ? 25 : \ 			((u_daddr_t)(v)>= 0x01000000U) ? 24 : \ 			((u_daddr_t)(v)>= 0x00800000U) ? 23 : \ 			((u_daddr_t)(v)>= 0x00400000U) ? 22 : \ 			((u_daddr_t)(v)>= 0x00200000U) ? 21 : \ 			((u_daddr_t)(v)>= 0x00100000U) ? 20 : \ 			((u_daddr_t)(v)>= 0x00080000U) ? 19 : \ 			((u_daddr_t)(v)>= 0x00040000U) ? 18 : \ 			((u_daddr_t)(v)>= 0x00020000U) ? 17 : \ 			((u_daddr_t)(v)>= 0x00010000U) ? 16 : \ 			((u_daddr_t)(v)>= 0x00008000U) ? 15 : \ 			((u_daddr_t)(v)>= 0x00004000U) ? 14 : \ 			((u_daddr_t)(v)>= 0x00002000U) ? 13 : \ 			((u_daddr_t)(v)>= 0x00001000U) ? 12 : \ 			((u_daddr_t)(v)>= 0x00000800U) ? 11 : \ 			((u_daddr_t)(v)>= 0x00000400U) ? 10 : \ 			((u_daddr_t)(v)>= 0x00000200U) ? 9 : \ 			((u_daddr_t)(v)>= 0x00000100U) ? 8 : \ 			((u_daddr_t)(v)>= 0x00000080U) ? 7 : \ 			((u_daddr_t)(v)>= 0x00000040U) ? 6 : \ 			((u_daddr_t)(v)>= 0x00000020U) ? 5 : \ 			((u_daddr_t)(v)>= 0x00000010U) ? 4 : \ 			((u_daddr_t)(v)>= 0x00000008U) ? 3 : \ 			((u_daddr_t)(v)>= 0x00000004U) ? 2 : \ 			((u_daddr_t)(v)>= 0x00000002U) ? 1 : 0)
-end_define
+block|{
+name|int
+name|i
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|v
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+while|while
+condition|(
+name|v
+condition|)
+block|{
+name|i
+operator|++
+expr_stmt|;
+name|v
+operator|>>=
+literal|1
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|i
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * blmeta and bl_bitmap_t MUST be a power of 2 in size.  */
