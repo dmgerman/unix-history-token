@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1991 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  **********************************************************************  * HISTORY  * $Log: libc.h,v $  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.7  89/04/03  11:10:45  vanryzin  * 	Changed definition of qsort for c++ to indicate the procedure  * 	passed to qsort has parameters.  Since we were unsure if ANSI C  * 	could handle the syntax I placed the new definition within #if  * 	defined(c_plusplus) conditionals.  This may not be necessary  * 	and perhaps should be fixed at a later time.  * 	[89/04/03            vanryzin]  *   * Revision 1.6  89/02/05  15:55:57  gm0w  * 	Added extern char *errmsg().  * 	[89/02/04            gm0w]  *   * Revision 1.5  89/01/20  15:34:40  gm0w  * 	Moved all of the STDC changes to other existing include files  * 	back into this one.  Added non-STDC extern declarations for  * 	all functions without int return values to match those defined  * 	by STDC.  Added include of sysent.h.  Removed obsolete cdate  * 	extern declaration.  * 	[88/12/17            gm0w]  *   * Revision 1.4  88/12/22  16:58:56  mja  * 	Correct __STDC__ parameter type for getenv().  * 	[88/12/20            dld]  *   * Revision 1.3  88/12/14  23:31:42  mja  * 	Made file reentrant.  Added declarations for __STDC__.  * 	[88/01/06            jjk]  *   * 30-Apr-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added pathof() extern.  *  * 01-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added getname() extern.  *  * 29-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added lseek() extern.  *  * 02-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added salloc() extern.  *  * 14-Aug-81  Mike Accetta (mja) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
+comment|/*  **********************************************************************  * HISTORY  * $Log: libc.h,v $  * Revision 1.2  1995/12/26 05:02:45  peter  * Apply ports/net/sup/patches/patch-aa...  *  * Revision 1.1.1.1  1995/12/26 04:54:47  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.1.1.1  1993/08/21  00:46:33  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:17  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.7  89/04/03  11:10:45  vanryzin  * 	Changed definition of qsort for c++ to indicate the procedure  * 	passed to qsort has parameters.  Since we were unsure if ANSI C  * 	could handle the syntax I placed the new definition within #if  * 	defined(c_plusplus) conditionals.  This may not be necessary  * 	and perhaps should be fixed at a later time.  * 	[89/04/03            vanryzin]  *   * Revision 1.6  89/02/05  15:55:57  gm0w  * 	Added extern char *errmsg().  * 	[89/02/04            gm0w]  *   * Revision 1.5  89/01/20  15:34:40  gm0w  * 	Moved all of the STDC changes to other existing include files  * 	back into this one.  Added non-STDC extern declarations for  * 	all functions without int return values to match those defined  * 	by STDC.  Added include of sysent.h.  Removed obsolete cdate  * 	extern declaration.  * 	[88/12/17            gm0w]  *   * Revision 1.4  88/12/22  16:58:56  mja  * 	Correct __STDC__ parameter type for getenv().  * 	[88/12/20            dld]  *   * Revision 1.3  88/12/14  23:31:42  mja  * 	Made file reentrant.  Added declarations for __STDC__.  * 	[88/01/06            jjk]  *   * 30-Apr-88  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added pathof() extern.  *  * 01-Dec-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added getname() extern.  *  * 29-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added lseek() extern.  *  * 02-Nov-85  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Added salloc() extern.  *  * 14-Aug-81  Mike Accetta (mja) at Carnegie-Mellon University  *	Created.  *  **********************************************************************  */
 end_comment
 
 begin_ifndef
@@ -63,27 +63,6 @@ end_endif
 
 begin_comment
 comment|/* _TYPES_ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYSENT_H_
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sysent.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SYSENT_H_ */
 end_comment
 
 begin_ifndef
