@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/* $Id: popper.h,v 1.50 2001/09/10 11:56:34 joda Exp $ */
+comment|/* $Id: popper.h,v 1.51 2002/07/04 13:56:12 joda Exp $ */
 end_comment
 
 begin_comment
@@ -1201,6 +1201,14 @@ decl_stmt|;
 comment|/*  OTP context */
 endif|#
 directive|endif
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|POP_FLAG_CAPA
+value|1
 block|}
 name|POP
 typedef|;

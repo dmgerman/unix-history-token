@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: localtime_r.c,v 1.1 2001/10/21 23:24:33 assar Exp $"
+literal|"$Id: localtime_r.c,v 1.2 2002/08/20 13:00:35 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -31,7 +31,19 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roken.h"
 end_include
 
 begin_ifndef

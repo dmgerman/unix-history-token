@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_decode.c,v 1.17 2001/09/25 13:39:26 assar Exp $"
+literal|"$Id: gen_decode.c,v 1.18 2002/08/09 15:37:34 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -917,7 +917,7 @@ name|codefile
 argument_list|,
 literal|"size_t ret = 0, reallen;\n"
 literal|"size_t l;\n"
-literal|"int i, e;\n\n"
+literal|"int e;\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -927,14 +927,6 @@ argument_list|,
 literal|"memset(data, 0, sizeof(*data));\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|codefile
-argument_list|,
-literal|"i = 0;\n"
-argument_list|)
-expr_stmt|;
-comment|/* hack to avoid `unused variable' */
 name|fprintf
 argument_list|(
 name|codefile

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_bsd.c,v 1.29 2001/12/20 20:39:52 joda Exp $"
+literal|"$Id: sys_bsd.c,v 1.30 2002/04/18 16:18:43 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3005,13 +3005,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|perror
 argument_list|(
-literal|"SetSockOpt"
+literal|"setsockopt (SO_OOBINLINE) (ignored)"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* defined(SO_OOBINLINE) */

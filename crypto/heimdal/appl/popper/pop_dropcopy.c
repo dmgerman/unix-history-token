@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: pop_dropcopy.c,v 1.25 1999/09/16 20:38:49 assar Exp $"
+literal|"$Id: pop_dropcopy.c,v 1.26 2002/07/04 14:10:11 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -481,7 +481,19 @@ name|p
 argument_list|,
 name|POP_FAILURE
 argument_list|,
-literal|"Maildrop lock busy!  Is another session active?"
+literal|"%sMaildrop lock busy!  Is another session active?"
+argument_list|,
+operator|(
+name|p
+operator|->
+name|flags
+operator|&
+name|POP_FLAG_CAPA
+operator|)
+condition|?
+literal|"[IN-USE] "
+else|:
+literal|""
 argument_list|)
 return|;
 comment|/* NOTREACHED */

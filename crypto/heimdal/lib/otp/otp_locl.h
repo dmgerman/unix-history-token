@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: otp_locl.h,v 1.11 1999/12/02 16:58:44 joda Exp $ */
+comment|/* $Id: otp_locl.h,v 1.12 2002/08/12 15:09:20 joda Exp $ */
 end_comment
 
 begin_include
@@ -174,14 +174,14 @@ begin_define
 define|#
 directive|define
 name|OTP_DB
-value|"/etc/otp"
+value|SYSCONFDIR "/otp"
 end_define
 
 begin_define
 define|#
 directive|define
 name|OTP_DB_LOCK
-value|"/etc/otp-lock"
+value|SYSCONFDIR "/otp-lock"
 end_define
 
 end_unit

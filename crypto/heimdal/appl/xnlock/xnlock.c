@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: xnlock.c,v 1.89 2001/09/10 14:12:43 assar Exp $"
+literal|"$Id: xnlock.c,v 1.90 2002/08/23 19:29:38 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1513,6 +1513,33 @@ literal|"cannot allocate memory for message"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"--version"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|print_version
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

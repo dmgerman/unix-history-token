@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnetd.c,v 1.67 2001/09/17 02:08:29 assar Exp $"
+literal|"$Id: telnetd.c,v 1.69 2002/08/23 19:28:01 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -690,6 +690,36 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CRAY */
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"--version"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|print_version
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
@@ -3316,7 +3346,8 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/issue.net"
+name|SYSCONFDIR
+literal|"/issue.net"
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3331,7 +3362,8 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/issue"
+name|SYSCONFDIR
+literal|"/issue"
 argument_list|,
 literal|"r"
 argument_list|)

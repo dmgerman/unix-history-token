@@ -29,7 +29,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnet.c,v 1.31 2001/12/20 20:39:52 joda Exp $"
+literal|"$Id: telnet.c,v 1.34 2002/05/03 10:19:43 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -8325,6 +8325,8 @@ name|ENCRYPTION
 comment|/*      * Note: we assume a tie to the authentication option here.  This      * is necessary so that authentication fails, we don't spin      * forever.       */
 if|if
 condition|(
+name|telnetport
+operator|&&
 name|wantencryption
 condition|)
 block|{
@@ -8369,6 +8371,18 @@ name|TELOPT_AUTHENTICATION
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|wantencryption
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+break|break;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"\nServer refused to negotiate authentication,\n"
@@ -8384,6 +8398,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -8514,7 +8529,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"done.\n"
+literal|"Encryption negotiated.\n"
 argument_list|)
 expr_stmt|;
 name|intr_waiting

@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: pop_debug.c,v 1.22 2002/02/07 17:27:12 joda Exp $"
+literal|"$Id: pop_debug.c,v 1.23 2002/05/02 16:27:16 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -461,7 +461,7 @@ argument_list|,
 operator|&
 name|ticket
 argument_list|,
-name|POP_TICKET_NAME
+literal|"pop"
 argument_list|,
 name|host
 argument_list|,
@@ -595,7 +595,7 @@ name|context
 argument_list|,
 name|host
 argument_list|,
-name|POP_TICKET_NAME
+literal|"pop"
 argument_list|,
 name|KRB5_NT_SRV_HST
 argument_list|,

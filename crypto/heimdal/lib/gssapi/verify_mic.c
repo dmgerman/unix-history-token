@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify_mic.c,v 1.15 2001/08/23 04:35:55 assar Exp $"
+literal|"$Id: verify_mic.c,v 1.16 2002/05/20 15:14:00 nectar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1048,6 +1048,17 @@ decl_stmt|;
 name|krb5_keytype
 name|keytype
 decl_stmt|;
+if|if
+condition|(
+name|qop_state
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|qop_state
+operator|=
+name|GSS_C_QOP_DEFAULT
+expr_stmt|;
 name|ret
 operator|=
 name|gss_krb5_get_remotekey

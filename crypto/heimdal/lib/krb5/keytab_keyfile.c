@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_keyfile.c,v 1.12 2002/02/15 14:32:52 joda Exp $"
+literal|"$Id: keytab_keyfile.c,v 1.13 2002/04/18 14:04:21 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -757,7 +757,7 @@ if|if
 condition|(
 name|ret
 operator|==
-name|KRB5_CC_END
+name|KRB5_KT_END
 condition|)
 return|return
 name|KRB5_KT_NOTFOUND
@@ -812,11 +812,7 @@ name|ret
 decl_stmt|;
 name|pos
 operator|=
-name|cursor
-operator|->
-name|sp
-operator|->
-name|seek
+name|krb5_storage_seek
 argument_list|(
 name|cursor
 operator|->
@@ -985,11 +981,7 @@ goto|;
 block|}
 name|ret
 operator|=
-name|cursor
-operator|->
-name|sp
-operator|->
-name|fetch
+name|krb5_storage_read
 argument_list|(
 name|cursor
 operator|->
@@ -1040,11 +1032,7 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-name|cursor
-operator|->
-name|sp
-operator|->
-name|seek
+name|krb5_storage_seek
 argument_list|(
 name|cursor
 operator|->
@@ -1281,12 +1269,7 @@ else|else
 block|{
 if|if
 condition|(
-call|(
-modifier|*
-name|sp
-operator|->
-name|seek
-call|)
+name|krb5_storage_seek
 argument_list|(
 name|sp
 argument_list|,
@@ -1363,12 +1346,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-call|(
-modifier|*
-name|sp
-operator|->
-name|seek
-call|)
+name|krb5_storage_seek
 argument_list|(
 name|sp
 argument_list|,
@@ -1440,12 +1418,7 @@ return|;
 block|}
 if|if
 condition|(
-call|(
-modifier|*
-name|sp
-operator|->
-name|seek
-call|)
+name|krb5_storage_seek
 argument_list|(
 name|sp
 argument_list|,
@@ -1529,9 +1502,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|sp
-operator|->
-name|store
+name|krb5_storage_write
 argument_list|(
 name|sp
 argument_list|,

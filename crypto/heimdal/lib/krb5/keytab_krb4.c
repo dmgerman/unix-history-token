@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_krb4.c,v 1.9 2002/02/11 14:05:10 joda Exp $"
+literal|"$Id: keytab_krb4.c,v 1.10 2002/04/18 14:04:46 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -488,6 +488,15 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
+name|krb5_storage_set_eof_code
+argument_list|(
+name|c
+operator|->
+name|sp
+argument_list|,
+name|KRB5_KT_END
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -721,11 +730,7 @@ return|;
 block|}
 name|ret
 operator|=
-name|c
-operator|->
-name|sp
-operator|->
-name|fetch
+name|krb5_storage_read
 argument_list|(
 name|c
 operator|->
@@ -1195,12 +1200,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-call|(
-modifier|*
-name|sp
-operator|->
-name|store
-call|)
+name|krb5_storage_write
 argument_list|(
 name|sp
 argument_list|,
@@ -1337,6 +1337,13 @@ operator|=
 name|krb5_storage_from_fd
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+name|krb5_storage_set_eof_code
+argument_list|(
+name|sp
+argument_list|,
+name|KRB5_KT_END
 argument_list|)
 expr_stmt|;
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popper.c,v 1.15 1997/05/11 11:04:37 assar Exp $"
+literal|"$Id: popper.c,v 1.16 2002/07/04 14:09:25 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -237,13 +237,7 @@ name|p
 argument_list|,
 name|POP_SUCCESS
 argument_list|,
-literal|"UCB based pop server (version %s at %s) starting."
-argument_list|,
-name|VERSION
-argument_list|,
-name|p
-operator|.
-name|myhost
+literal|"POP3 server ready"
 argument_list|)
 expr_stmt|;
 comment|/*  State loop.  The POP server is always in a particular state in          which a specific suite of commands can be executed.  The following          loop reads a line from the client, gets the command, and processes          it in the current context (if allowed) or rejects it.  This continues          until the client quits or an error occurs. */

@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: auth-proto.h,v 1.10 2000/01/18 03:08:55 assar Exp $ */
+comment|/* $Id: auth-proto.h,v 1.11 2002/08/28 20:56:14 joda Exp $ */
 end_comment
 
 begin_ifdef
@@ -726,6 +726,24 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kerberos5_set_forward
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kerberos5_set_forwardable
+parameter_list|(
 name|int
 parameter_list|)
 function_decl|;

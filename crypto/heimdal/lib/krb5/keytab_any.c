@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab_any.c,v 1.5 2002/02/11 14:05:37 joda Exp $"
+literal|"$Id: keytab_any.c,v 1.6 2002/04/18 14:02:11 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -610,7 +610,7 @@ if|if
 condition|(
 name|ret
 operator|==
-name|KRB5_CC_END
+name|KRB5_KT_END
 condition|)
 block|{
 name|ret2
@@ -696,7 +696,7 @@ name|context
 argument_list|)
 expr_stmt|;
 return|return
-name|KRB5_CC_END
+name|KRB5_KT_END
 return|;
 block|}
 block|}
@@ -709,7 +709,7 @@ do|while
 condition|(
 name|ret
 operator|==
-name|KRB5_CC_END
+name|KRB5_KT_END
 condition|)
 do|;
 return|return
