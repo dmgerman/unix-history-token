@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	8.4 (Berkeley) %G%  *  * from: $Header: cpu.h,v 1.12 93/05/25 10:36:34 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	8.5 (Berkeley) %G%  *  * from: $Header: cpu.h,v 1.12 93/05/25 10:36:34 torek Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -123,6 +123,19 @@ name|ap
 parameter_list|)
 value|((p)->p_md.md_tf->tf_out[6] = (ap) - 64)
 end_define
+
+begin_define
+define|#
+directive|define
+name|BACKTRACE
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* not implemented */
+end_comment
 
 begin_comment
 comment|/*  * See syscall() for an explanation of the following.  Note that the  * locore bootstrap code follows the syscall stack protocol.  The  * framep argument is unused.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -82,6 +82,19 @@ name|fp
 parameter_list|)
 value|(p)->p_md.md_regs = fp
 end_define
+
+begin_define
+define|#
+directive|define
+name|BACKTRACE
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* not implemented */
+end_comment
 
 begin_comment
 comment|/*  * Arguments to hardclock, softclock and gatherstats  * encapsulate the previous machine state in an opaque  * clockframe; for now, use generic intrframe.  */
