@@ -347,25 +347,21 @@ begin_comment
 comment|/*  * Find the right pkt destination:  *	BDG_BCAST	is a broadcast  *	BDG_MCAST	is a multicast  *	BDG_LOCAL	is for a local address  *	BDG_DROP	must be dropped  *	other		ifp of the dest. interface (incl.self)  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
-name|struct
+name|__inline
+expr|struct
 name|ifnet
-modifier|*
+operator|*
 name|bridge_dst_lookup
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-block|{
-name|struct
+argument_list|(
+argument|struct mbuf *m
+argument_list|)
+block|{     struct
 name|ether_header
-modifier|*
+operator|*
 name|eh
-init|=
+operator|=
 name|mtod
 argument_list|(
 name|m
@@ -374,21 +370,20 @@ expr|struct
 name|ether_header
 operator|*
 argument_list|)
-decl_stmt|;
-name|struct
+block|;     struct
 name|ifnet
-modifier|*
+operator|*
 name|dst
-decl_stmt|;
+block|;
 name|int
 name|index
-decl_stmt|;
+block|;
 name|u_char
-modifier|*
+operator|*
 name|eth_addr
-init|=
+operator|=
 name|bdg_addresses
-decl_stmt|;
+block|;
 if|if
 condition|(
 name|IS_ETHER_BROADCAST
@@ -401,6 +396,9 @@ condition|)
 return|return
 name|BDG_BCAST
 return|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|eh
@@ -415,7 +413,13 @@ condition|)
 return|return
 name|BDG_MCAST
 return|;
+end_if
+
+begin_comment
 comment|/*      * Lookup local addresses in case one matches.      */
+end_comment
+
+begin_for
 for|for
 control|(
 name|index
@@ -449,7 +453,13 @@ condition|)
 return|return
 name|BDG_LOCAL
 return|;
+end_for
+
+begin_comment
 comment|/*      * Look for a possible destination in table      */
+end_comment
+
+begin_expr_stmt
 name|index
 operator|=
 name|HASH_FN
@@ -459,6 +469,9 @@ operator|->
 name|ether_dhost
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|dst
 operator|=
 name|bdg_table
@@ -468,6 +481,9 @@ index|]
 operator|.
 name|name
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|dst
@@ -493,10 +509,10 @@ else|else
 return|return
 name|BDG_UNKNOWN
 return|;
-block|}
-end_function
+end_if
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
