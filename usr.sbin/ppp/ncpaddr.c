@@ -562,6 +562,8 @@ name|end
 decl_stmt|;
 name|int
 name|masklen
+decl_stmt|,
+name|m
 decl_stmt|;
 name|p
 operator|=
@@ -612,6 +614,10 @@ control|(
 name|c
 operator|=
 name|masks
+operator|,
+name|m
+operator|=
+literal|0
 init|;
 name|c
 operator|<
@@ -621,6 +627,9 @@ sizeof|sizeof
 name|masks
 condition|;
 name|c
+operator|++
+operator|,
+name|m
 operator|++
 control|)
 if|if
@@ -634,9 +643,7 @@ condition|)
 block|{
 name|masklen
 operator|+=
-name|c
-operator|-
-name|masks
+name|m
 expr_stmt|;
 break|break;
 block|}
