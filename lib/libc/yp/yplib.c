@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.16 1996/03/19 19:27:03 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.4 1996/04/24 18:32:22 wpaul Exp wpaul $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,6 +1142,28 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * We're trying to make a new binding: zorch the 		 * existing handle now (if any). 		 */
+if|if
+condition|(
+name|ysd
+operator|->
+name|dom_client
+condition|)
+block|{
+name|clnt_destroy
+argument_list|(
+name|ysd
+operator|->
+name|dom_client
+argument_list|)
+expr_stmt|;
+name|ysd
+operator|->
+name|dom_client
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|path
@@ -1436,6 +1458,28 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * We're trying to make a new binding: zorch the 		 * existing handle now (if any). 		 */
+if|if
+condition|(
+name|ysd
+operator|->
+name|dom_client
+condition|)
+block|{
+name|clnt_destroy
+argument_list|(
+name|ysd
+operator|->
+name|dom_client
+argument_list|)
+expr_stmt|;
+name|ysd
+operator|->
+name|dom_client
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 operator|(
@@ -1496,7 +1540,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * These conditions indicate ypbind just isn't 			 * alive -- we probably don't want to shoot our 			 * mouth off in this case and generate error 			 * messages only for really exotic problems. 			 */
+comment|/* 			 * These conditions indicate ypbind just isn't 			 * alive -- we probably don't want to shoot our 			 * mouth off in this case; instead generate error 			 * messages only for really exotic problems. 			 */
 if|if
 condition|(
 name|rpc_createerr
@@ -1770,6 +1814,16 @@ name|dom
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Don't rebuild the connection to the server unless we have to. */
+if|if
+condition|(
+name|ysd
+operator|->
+name|dom_client
+operator|==
+name|NULL
+condition|)
+block|{
 name|tv
 operator|.
 name|tv_sec
@@ -1783,19 +1837,6 @@ operator|.
 name|tv_usec
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|ysd
-operator|->
-name|dom_client
-condition|)
-name|clnt_destroy
-argument_list|(
-name|ysd
-operator|->
-name|dom_client
-argument_list|)
 expr_stmt|;
 name|ysd
 operator|->
@@ -1872,6 +1913,7 @@ argument_list|(
 literal|"fcntl: F_SETFD"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|new
@@ -2483,6 +2525,12 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+else|else
+name|_yp_unbind
+argument_list|(
+name|ysd
+argument_list|)
+expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_val
@@ -2493,11 +2541,6 @@ operator|*
 operator|)
 operator|&
 name|yprv
-argument_list|)
-expr_stmt|;
-name|_yp_unbind
-argument_list|(
-name|ysd
 argument_list|)
 expr_stmt|;
 return|return
@@ -2880,6 +2923,12 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+else|else
+name|_yp_unbind
+argument_list|(
+name|ysd
+argument_list|)
+expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_key_val
@@ -2890,11 +2939,6 @@ operator|*
 operator|)
 operator|&
 name|yprkv
-argument_list|)
-expr_stmt|;
-name|_yp_unbind
-argument_list|(
-name|ysd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3269,6 +3313,12 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
+else|else
+name|_yp_unbind
+argument_list|(
+name|ysd
+argument_list|)
+expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_key_val
@@ -3279,11 +3329,6 @@ operator|*
 operator|)
 operator|&
 name|yprkv
-argument_list|)
-expr_stmt|;
-name|_yp_unbind
-argument_list|(
-name|ysd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3721,12 +3766,34 @@ goto|goto
 name|again
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|r
+operator|=
+name|ypprot_err
+argument_list|(
+name|ypro
+operator|.
+name|stat
+argument_list|)
+operator|)
+condition|)
+block|{
 operator|*
 name|outorder
 operator|=
 name|ypro
 operator|.
 name|ordernum
+expr_stmt|;
+block|}
+else|else
+name|_yp_unbind
+argument_list|(
+name|ysd
+argument_list|)
 expr_stmt|;
 name|xdr_free
 argument_list|(
@@ -3960,6 +4027,12 @@ name|peer
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|_yp_unbind
+argument_list|(
+name|ysd
+argument_list|)
+expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_master
@@ -3970,11 +4043,6 @@ operator|*
 operator|)
 operator|&
 name|yprm
-argument_list|)
-expr_stmt|;
-name|_yp_unbind
-argument_list|(
-name|ysd
 argument_list|)
 expr_stmt|;
 return|return
@@ -4130,6 +4198,21 @@ goto|goto
 name|again
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|r
+operator|=
+name|ypprot_err
+argument_list|(
+name|ypml
+operator|.
+name|stat
+argument_list|)
+operator|)
+condition|)
+block|{
 operator|*
 name|outmaplist
 operator|=
@@ -4137,12 +4220,14 @@ name|ypml
 operator|.
 name|maps
 expr_stmt|;
-comment|/* NO: xdr_free(xdr_ypresp_maplist,&ypml);*/
+block|}
+else|else
 name|_yp_unbind
 argument_list|(
 name|ysd
 argument_list|)
 expr_stmt|;
+comment|/* NO: xdr_free(xdr_ypresp_maplist,&ypml);*/
 return|return
 name|ypprot_err
 argument_list|(
