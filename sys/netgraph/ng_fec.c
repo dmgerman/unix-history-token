@@ -632,6 +632,37 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* ng_ether_input_p - see sys/netgraph/ng_ether.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|ng_ether_input_p
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+name|mp
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+name|eh
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Netgraph methods */
 end_comment
 
@@ -3119,7 +3150,7 @@ name|mh_len
 operator|=
 name|ETHER_HDR_LEN
 expr_stmt|;
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|bifp
 argument_list|,
@@ -3888,13 +3919,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-name|bpf_mtap
+name|BPF_MTAP
 argument_list|(
 name|ifp
 argument_list|,
@@ -4416,7 +4441,11 @@ name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|,
-name|ETHER_BPF_SUPPORTED
+name|priv
+operator|->
+name|arpcom
+operator|.
+name|ac_enaddr
 argument_list|)
 expr_stmt|;
 name|callout_handle_init
@@ -4820,8 +4849,6 @@ operator|->
 name|arpcom
 operator|.
 name|ac_if
-argument_list|,
-name|ETHER_BPF_SUPPORTED
 argument_list|)
 expr_stmt|;
 name|ifmedia_removeall
