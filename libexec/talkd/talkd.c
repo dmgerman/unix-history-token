@@ -540,6 +540,11 @@ name|void
 name|timeout
 parameter_list|()
 block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|time
@@ -560,6 +565,10 @@ name|alarm
 argument_list|(
 name|TIMEOUT
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 block|}
 end_function
