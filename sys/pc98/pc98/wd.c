@@ -2111,6 +2111,9 @@ name|char
 modifier|*
 name|dname
 decl_stmt|;
+name|dev_t
+name|dev
+decl_stmt|;
 name|dvp
 operator|->
 name|id_intr
@@ -2717,6 +2720,8 @@ name|DEVSTAT_PRIORITY_DISK
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Register this media as a disk 			 */
+name|dev
+operator|=
 name|disk_create
 argument_list|(
 name|lunit
@@ -2734,6 +2739,16 @@ argument_list|,
 operator|&
 name|wddisk_cdevsw
 argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|si_drv1
+operator|=
+operator|&
+name|wddrives
+index|[
+name|lunit
+index|]
 expr_stmt|;
 block|}
 else|else
@@ -2924,40 +2939,29 @@ name|du
 decl_stmt|;
 name|int
 name|lunit
-init|=
-name|dkunit
-argument_list|(
-name|bp
-operator|->
-name|bio_dev
-argument_list|)
 decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* valid unit, controller, and request?  */
+name|du
+operator|=
+name|bp
+operator|->
+name|bio_dev
+operator|->
+name|si_drv1
+expr_stmt|;
 if|if
 condition|(
-name|lunit
-operator|>=
-name|NWD
+name|du
+operator|==
+name|NULL
 operator|||
 name|bp
 operator|->
 name|bio_blkno
 operator|<
 literal|0
-operator|||
-operator|(
-name|du
-operator|=
-name|wddrives
-index|[
-name|lunit
-index|]
-operator|)
-operator|==
-name|NULL
 operator|||
 name|bp
 operator|->
@@ -2984,6 +2988,12 @@ goto|goto
 name|done
 goto|;
 block|}
+name|lunit
+operator|=
+name|du
+operator|->
+name|dk_unit
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -3378,21 +3388,19 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* obtain controller and drive information */
-name|lunit
+name|du
 operator|=
-name|dkunit
-argument_list|(
 name|bp
 operator|->
 name|bio_dev
-argument_list|)
+operator|->
+name|si_drv1
 expr_stmt|;
-name|du
-operator|=
-name|wddrives
-index|[
 name|lunit
-index|]
+operator|=
+name|du
+operator|->
+name|dk_unit
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3647,7 +3655,7 @@ argument|return;
 comment|/* controller is free, start new op */
 argument|wdtab[unit].b_active =
 literal|0
-argument|; 		wdstart (unit); 		return; 	} 	bp = bioq_first(&wdtab[unit].controller_queue); 	du = wddrives[dkunit(bp->bio_dev)];
+argument|; 		wdstart (unit); 		return; 	} 	bp = bioq_first(&wdtab[unit].controller_queue); 	du = bp->bio_dev->si_drv1;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -3788,9 +3796,7 @@ argument|wdustart(du);
 comment|/* anything more for controller to do? */
 argument|wdstart(unit); }
 comment|/*  * Initialize a drive.  */
-argument|int wdopen(dev_t dev, int flags, int fmt, struct thread *td) { 	register unsigned int lunit; 	register struct softc *du;  	lunit = dkunit(dev); 	if (lunit>= NWD || dksparebits(dev) !=
-literal|0
-argument|) 		return (ENXIO); 	du = wddrives[lunit]; 	if (du == NULL) 		return (ENXIO);  	dev->si_iosize_max =
+argument|int wdopen(dev_t dev, int flags, int fmt, struct thread *td) { 	register struct softc *du;  	du = dev->si_drv1; 	if (du == NULL) 		return (ENXIO);  	dev->si_iosize_max =
 literal|248
 argument|*
 literal|512
@@ -3826,7 +3832,7 @@ argument|);  	return
 literal|0
 argument|; }
 comment|/*  * Implement operations other than read/write.  * Called from wdstart or wdintr during opens.  * Uses finite-state-machine to track progress of operation in progress.  * Returns 0 if operation still in progress, 1 if completed, 2 if error.  */
-argument|static int wdcontrol(register struct bio *bp) { 	register struct softc *du; 	int	ctrlr;  	du = wddrives[dkunit(bp->bio_dev)]; 	ctrlr = du->dk_ctrlr_cmd640;
+argument|static int wdcontrol(register struct bio *bp) { 	register struct softc *du; 	int	ctrlr;  	du = bp->bio_dev->si_drv1; 	ctrlr = du->dk_ctrlr_cmd640;
 ifdef|#
 directive|ifdef
 name|PC98
