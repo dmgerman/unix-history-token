@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.1 (Berkeley) %G%"
+literal|"@(#)init.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,6 +511,13 @@ literal|0
 block|}
 block|,
 comment|/* auto-baud detect with '\r' */
+block|{
+literal|"dx"
+block|,
+literal|0
+block|}
+block|,
+comment|/* set decctlq */
 block|{
 literal|0
 block|}
