@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994 Free Software Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994, 1996, 1997 Free Software Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__FreeBSD__ -D__386BSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Di386 -D__FreeBSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
 begin_comment
@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"%{!p:%{!pg:-lc}}%{p:-lc_p}%{pg:-lc_p}"
+value|"%{!shared:%{!pg:-lc}%{pg:-lc_p}}"
 end_define
 
 begin_undef
@@ -114,14 +114,14 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE
-value|"short unsigned int"
+value|"int"
 end_define
 
 begin_define
 define|#
 directive|define
 name|WCHAR_UNSIGNED
-value|1
+value|0
 end_define
 
 begin_undef
@@ -134,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|WCHAR_TYPE_SIZE
-value|16
+value|BITS_PER_WORD
 end_define
 
 begin_define
@@ -144,19 +144,19 @@ name|HAVE_ATEXIT
 end_define
 
 begin_comment
-comment|/* There are conflicting reports about whether this system uses    a different assembler syntax.  wilson@cygnus.com says # is right.  */
+comment|/* Override the default comment-starter of "/".  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|COMMENT_BEGIN
+name|ASM_COMMENT_START
 end_undef
 
 begin_define
 define|#
 directive|define
-name|COMMENT_BEGIN
+name|ASM_COMMENT_START
 value|"#"
 end_define
 
@@ -184,6 +184,17 @@ define|#
 directive|define
 name|ASM_APP_OFF
 value|"#NO_APP\n"
+end_define
+
+begin_comment
+comment|/* FreeBSD using a.out does not support DWARF2 unwinding mechanisms.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_UNWIND_INFO
+value|0
 end_define
 
 begin_escape
@@ -214,6 +225,8 @@ name|ASM_OUTPUT_ADDR_DIFF_ELT
 parameter_list|(
 name|FILE
 parameter_list|,
+name|BODY
+parameter_list|,
 name|VALUE
 parameter_list|,
 name|REL
@@ -230,6 +243,7 @@ begin_define
 define|#
 directive|define
 name|JUMP_TABLES_IN_TEXT_SECTION
+value|1
 end_define
 
 begin_comment
@@ -241,6 +255,42 @@ define|#
 directive|define
 name|DEFAULT_PCC_STRUCT_RETURN
 value|0
+end_define
+
+begin_comment
+comment|/* Ensure we the configuration knows our system correctly so we can link with    libraries compiled with the native cc. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NO_DOLLAR_IN_LABEL
+end_undef
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* i386 freebsd still uses old binutils that don't insert nops by default    when the .align directive demands to insert extra space in the text    segment.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_OUTPUT_ALIGN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGN
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|)
+define|\
+value|if ((LOG)!=0) fprintf ((FILE), "\t.align %d,0x90\n", (LOG))
 end_define
 
 begin_escape
@@ -426,7 +476,15 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*}"
+value|"%{p:%e`-p' not supported; use `-pg' and gprof(1)} \    %{shared:-Bshareable} \    %{!shared:%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} \    %{pg:-Bstatic} %{Z}} \    %{assert*} %{R*}"
+end_define
+
+begin_define
+define|#
+directive|define
+name|STARTFILE_SPEC
+define|\
+value|"%{shared:c++rt0.o%s} \    %{!shared:%{pg:gcrt0.o%s}%{!pg:%{static:scrt0.o%s}%{!static:crt0.o%s}}}"
 end_define
 
 begin_comment
@@ -443,7 +501,7 @@ begin_define
 define|#
 directive|define
 name|INCLUDE_DEFAULTS
-value|{ \ 	{ "/usr/include", 0 }, \ 	{ "/usr/include/g++", 1 }, \ 	{ 0, 0} \ 	}
+value|{ \ 	{ "/usr/include", 0, 0, 0 }, \ 	{ "/usr/include/g++", "G++", 1, 1 }, \ 	{ 0, 0, 0, 0} \ 	}
 end_define
 
 begin_undef
