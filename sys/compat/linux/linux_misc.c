@@ -6305,7 +6305,7 @@ name|__alpha__
 end_ifndef
 
 begin_comment
-comment|/*  * The FreeBSD native getpid(2), getgid(2) and getuid(2) also modify  * td->td_retval[1] when COMPAT_43 or COMPAT_SUNOS is defined. This  * globbers registers that are assumed to be preserved. The following  * lightweight syscalls fixes this. See also linux_getgid16() and  * linux_getuid16() in linux_uid16.c.  *  * linux_getpid() - MP SAFE  * linux_getgid() - MP SAFE  * linux_getuid() - MP SAFE  */
+comment|/*  * The FreeBSD native getpid(2), getgid(2) and getuid(2) also modify  * td->td_retval[1] when COMPAT_43 is defined. This  * globbers registers that are assumed to be preserved. The following  * lightweight syscalls fixes this. See also linux_getgid16() and  * linux_getuid16() in linux_uid16.c.  *  * linux_getpid() - MP SAFE  * linux_getgid() - MP SAFE  * linux_getuid() - MP SAFE  */
 end_comment
 
 begin_function

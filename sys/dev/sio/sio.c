@@ -9039,11 +9039,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 name|u_long
 name|oldcmd
 decl_stmt|;
@@ -9268,11 +9263,6 @@ directive|if
 name|defined
 argument_list|(
 name|COMPAT_43
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
 argument_list|)
 name|term
 operator|=

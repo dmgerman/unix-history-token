@@ -1191,11 +1191,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 name|td
 operator|->
 name|td_sigstk
@@ -1830,11 +1825,6 @@ directive|if
 name|defined
 argument_list|(
 name|COMPAT_43
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
 argument_list|)
 if|if
 condition|(

@@ -34,11 +34,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 end_if
 
 begin_include
@@ -2638,7 +2633,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_43 || COMPAT_SUNOS */
+comment|/* COMPAT_43 */
 end_comment
 
 end_unit

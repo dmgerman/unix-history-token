@@ -70,11 +70,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 end_if
 
 begin_include
@@ -3835,11 +3830,6 @@ directive|if
 name|defined
 argument_list|(
 name|COMPAT_43
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
 argument_list|)
 case|case
 name|TIOCSETC

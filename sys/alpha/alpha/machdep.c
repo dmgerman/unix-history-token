@@ -4643,11 +4643,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 name|td
 operator|->
 name|td_sigstk
@@ -5529,11 +5524,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 name|td
 operator|->
 name|td_sigstk
@@ -6309,11 +6299,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 name|td
 operator|->
 name|td_sigstk
@@ -6801,11 +6786,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 comment|/* 	 * Restore the user-supplied information 	 */
 if|if
 condition|(
@@ -7262,11 +7242,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 if|if
 condition|(
 name|uc
@@ -7671,11 +7646,6 @@ directive|if
 name|defined
 argument_list|(
 name|COMPAT_43
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
 argument_list|)
 if|if
 condition|(

@@ -127,7 +127,7 @@ comment|/* !_SYS_IOCTL_H_ */
 end_comment
 
 begin_comment
-comment|/*  * Keep outside _SYS_IOCTL_H_  * Compatibility with old terminal driver  *  * Source level -> #define USE_OLD_TTY  * Kernel level -> options COMPAT_43 or COMPAT_SUNOS  */
+comment|/*  * Keep outside _SYS_IOCTL_H_  * Compatibility with old terminal driver  *  * Source level -> #define USE_OLD_TTY  * Kernel level -> options COMPAT_43  */
 end_comment
 
 begin_if
@@ -141,11 +141,6 @@ operator|||
 name|defined
 argument_list|(
 name|COMPAT_43
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
 argument_list|)
 end_if
 

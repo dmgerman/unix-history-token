@@ -1113,28 +1113,6 @@ begin_comment
 comment|/* XXX dubious. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_SUNOS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SA_USERTRAMP
-value|0x0100
-end_define
-
-begin_comment
-comment|/* do not bounce off kernel's sigtramp */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif

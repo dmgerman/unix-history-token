@@ -1116,11 +1116,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 operator|(
 operator|(
 name|td
@@ -1797,38 +1792,6 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_SUNOS
-if|if
-condition|(
-name|act
-operator|->
-name|sa_flags
-operator|&
-name|SA_USERTRAMP
-condition|)
-name|SIGADDSET
-argument_list|(
-name|ps
-operator|->
-name|ps_usertramp
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-else|else
-name|SIGDELSET
-argument_list|(
-name|ps
-operator|->
-name|ps_usertramp
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sig
@@ -5156,11 +5119,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 end_if
 
 begin_comment
@@ -5363,17 +5321,6 @@ operator|^=
 name|SA_RESTART
 expr_stmt|;
 comment|/* opposite of SV_INTERRUPT */
-ifdef|#
-directive|ifdef
-name|COMPAT_SUNOS
-name|nsap
-operator|->
-name|sa_flags
-operator||=
-name|SA_USERTRAMP
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|error
 operator|=
@@ -5440,18 +5387,6 @@ name|sv_flags
 operator|^=
 name|SA_RESTART
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_SUNOS
-name|vec
-operator|.
-name|sv_flags
-operator|&=
-operator|~
-name|SA_NOCLDSTOP
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|copyout
@@ -5714,7 +5649,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_43 || COMPAT_SUNOS */
+comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
@@ -6095,11 +6030,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 end_if
 
 begin_ifndef
@@ -6313,7 +6243,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_43 || COMPAT_SUNOS */
+comment|/* COMPAT_43 */
 end_comment
 
 begin_ifndef
@@ -7213,11 +7143,6 @@ name|defined
 argument_list|(
 name|COMPAT_43
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|COMPAT_SUNOS
-argument_list|)
 end_if
 
 begin_ifndef
@@ -7316,7 +7241,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* COMPAT_43 || COMPAT_SUNOS */
+comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
