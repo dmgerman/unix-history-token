@@ -4905,6 +4905,9 @@ name|size
 condition|)
 block|{
 comment|/* 				 * Page is out of the parent object's range, we  				 * can simply destroy it.  				 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_protect
 argument_list|(
 name|p
@@ -4916,6 +4919,9 @@ name|vm_page_free
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|p
 operator|=
@@ -4951,6 +4957,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* 				 * page already exists in parent OR swap exists 				 * for this location in the parent.  Destroy  				 * the original page from the backing object. 				 * 				 * Leave the parent's page alone 				 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_protect
 argument_list|(
 name|p
@@ -4962,6 +4971,9 @@ name|vm_page_free
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|p
 operator|=
@@ -5790,6 +5802,9 @@ name|dirty
 condition|)
 continue|continue;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|p
@@ -5806,6 +5821,9 @@ name|vm_page_free
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -5923,6 +5941,9 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|p
@@ -5939,6 +5960,9 @@ name|vm_page_free
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 block|}
 name|start
