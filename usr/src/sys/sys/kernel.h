@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -144,30 +144,6 @@ name|realitexpire
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_struct
-struct|struct
-name|clockinfo
-block|{
-name|int
-name|hz
-decl_stmt|;
-comment|/* clock frequency */
-name|int
-name|tick
-decl_stmt|;
-comment|/* micro-seconds per hz tick */
-name|int
-name|phz
-decl_stmt|;
-comment|/* alternate clock frequency */
-name|int
-name|profhz
-decl_stmt|;
-comment|/* profiling clock frequency */
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
