@@ -2204,7 +2204,7 @@ name|message
 operator|->
 name|state
 operator|=
-name|object_up
+name|object_initialized
 expr_stmt|;
 name|message
 operator|->
