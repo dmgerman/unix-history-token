@@ -980,6 +980,18 @@ name|sblock
 operator|.
 name|fs_fmask
 expr_stmt|;
+comment|/* This should match the kernel limit in ffs_oldfscompat(). */
+name|sblock
+operator|.
+name|fs_maxfilesize
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+literal|1
+operator|<<
+literal|39
+expr_stmt|;
 name|newinofmt
 operator|=
 literal|0
