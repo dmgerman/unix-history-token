@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_expr.c	7.1	86/11/20	*/
+comment|/*	kdb_expr.c	7.2	86/11/20	*/
 end_comment
 
 begin_include
@@ -1375,7 +1375,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+literal|1
 operator|)
 return|;
 block|}
