@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)arcs.c	1.11 (Berkeley) %G%"
+literal|"@(#)arcs.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1880,7 +1880,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"time %f propself %f\n"
+literal|"time %f propself %f printtime %f\n"
 argument_list|,
 name|childp
 operator|->
@@ -1889,6 +1889,8 @@ argument_list|,
 name|childp
 operator|->
 name|propself
+argument_list|,
+name|printtime
 argument_list|)
 expr_stmt|;
 block|}
@@ -1984,6 +1986,15 @@ name|arcp
 operator|->
 name|arc_parentp
 expr_stmt|;
+if|if
+condition|(
+name|childp
+operator|==
+name|parentp
+condition|)
+block|{
+continue|continue;
+block|}
 name|childp
 operator|->
 name|printflag
