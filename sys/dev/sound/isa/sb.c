@@ -5989,7 +5989,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-literal|"SB DSP %d.%02d%s"
+literal|"SB DSP %d.%02d%s%s"
 argument_list|,
 name|ver
 operator|>>
@@ -6006,6 +6006,16 @@ name|BD_F_ESS
 operator|)
 condition|?
 literal|" (ESS mode)"
+else|:
+literal|""
+argument_list|,
+operator|(
+name|f
+operator|&
+name|BD_F_SB16X
+operator|)
+condition|?
+literal|" (ViBRA16X)"
 else|:
 literal|""
 argument_list|)
