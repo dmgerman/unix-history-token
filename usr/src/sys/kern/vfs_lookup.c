@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	6.15	84/08/29	*/
+comment|/*	vfs_lookup.c	6.16	85/01/10	*/
 end_comment
 
 begin_include
@@ -1397,6 +1397,27 @@ operator|.
 name|nc_time
 condition|)
 block|{
+if|if
+condition|(
+name|u
+operator|.
+name|u_ncache
+operator|.
+name|nc_prevoffset
+operator|>
+name|dp
+operator|->
+name|i_size
+condition|)
+name|u
+operator|.
+name|u_ncache
+operator|.
+name|nc_prevoffset
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|u
 operator|.
 name|u_ncache
