@@ -11,7 +11,7 @@ name|char
 name|nhash_sccsid
 index|[]
 init|=
-literal|"@(#)nhash.c	4.2	(Berkeley)	82/11/06"
+literal|"@(#)nhash.c	4.3	(Berkeley)	91/02/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,7 +430,9 @@ name|aatsize
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function

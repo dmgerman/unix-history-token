@@ -11,7 +11,7 @@ name|char
 name|ehash_sccsid
 index|[]
 init|=
-literal|"@(#)ehash.c	4.2	(Berkeley)	82/11/06"
+literal|"@(#)ehash.c	4.3	(Berkeley)	91/02/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -1046,7 +1046,9 @@ literal|"hash table full\n"
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_function
