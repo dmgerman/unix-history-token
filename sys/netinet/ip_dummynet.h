@@ -181,6 +181,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * struct dn_pkt identifies a packet in the dummynet queue, but  * is also used to tag packets passed back to the various destinations  * (ip_input(), ip_output(), bdg_forward()  and so on).  * As such the first part of the structure must be a struct m_hdr,  * followed by dummynet-specific parameters. The m_hdr must be  * initialized with  *   mh_type	= MT_TAG;  *   mh_flags	= PACKET_TYPE_DUMMYNET;  *   mh_next	=<pointer to the actual mbuf>  *  * mh_nextpkt, mh_data are free for dummynet use (mh_nextpkt is used to  * build a linked list of packets in a dummynet queue).  */
 end_comment
@@ -262,6 +268,15 @@ comment|/* flags, for ip_output (IPv6 ?)	*/
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Overall structure of dummynet (with WF2Q+):  In dummynet, packets are selected with the firewall rules, and passed to two different objects: PIPE or QUEUE.  A QUEUE is just a queue with configurable size and queue management policy. It is also associated with a mask (to discriminate among different flows), a weight (used to give different shares of the bandwidth to different flows) and a "pipe", which essentially supplies the transmit clock for all queues associated with that pipe.  A PIPE emulates a fixed-bandwidth link, whose bandwidth is configurable.  The "clock" for a pipe can come from either an internal timer, or from the transmit interrupt of an interface. A pipe is also associated with one (or more, if masks are used) queue, where all packets for that pipe are stored.  The bandwidth available on the pipe is shared by the queues associated with that pipe (only one in case the packet is sent to a PIPE) according to the WF2Q+ scheduling algorithm and the configured weights.  In general, incoming packets are stored in the appropriate queue, which is then placed into one of a few heaps managed by a scheduler to decide when the packet should be extracted. The scheduler (a function called dummynet()) is run at every timer tick, and grabs queues from the head of the heaps when they are ready for processing.  There are three data structures definining a pipe and associated queues:   + dn_pipe, which contains the main configuration parameters related    to delay and bandwidth;  + dn_flow_set, which contains WF2Q+ configuration, flow    masks, plr and RED configuration;  + dn_flow_queue, which is the per-flow queue (containing the packets)  Multiple dn_flow_set can be linked to the same pipe, and multiple dn_flow_queue can be linked to the same dn_flow_set. All data structures are linked in a linear list which is used for housekeeping purposes.  During configuration, we create and initialize the dn_flow_set and dn_pipe structures (a dn_pipe also contains a dn_flow_set).  At runtime: packets are sent to the appropriate dn_flow_set (either WFQ ones, or the one embedded in the dn_pipe for fixed-rate flows), which in turn dispatches them to the appropriate dn_flow_queue (created dynamically according to the masks).  The transmit clock for fixed rate flows (ready_event()) selects the dn_flow_queue to be used to transmit the next packet. For WF2Q, wfq_ready_event() extract a pipe which in turn selects the right flow using a number of heaps defined into the pipe itself.   *  */
