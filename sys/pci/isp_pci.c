@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.15 1999/02/09 01:12:52 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.16 1999/03/17 05:07:18 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_16_99 */
+comment|/* release_03_25_99 */
 end_comment
 
 begin_comment
@@ -375,13 +375,13 @@ name|isp_pci_reset1
 block|,
 name|isp_pci_dumpregs
 block|,
-name|ISP_RISC_CODE
+name|ISP1080_RISC_CODE
 block|,
-name|ISP_CODE_LENGTH
+name|ISP1080_CODE_LENGTH
 block|,
-name|ISP_CODE_ORG
+name|ISP1080_CODE_ORG
 block|,
-name|ISP_CODE_VERSION
+name|ISP1080_CODE_VERSION
 block|,
 name|BIU_BURST_ENABLE
 operator||
@@ -1000,17 +1000,8 @@ expr|union
 block|{
 name|sdparam
 name|_x
-block|; 		struct
-block|{
-name|fcparam
-name|_a
 block|;
-name|char
-name|_b
-index|[
-name|ISP2100_SCRLEN
-index|]
-block|; 		}
+name|fcparam
 name|_y
 block|; 	}
 name|_z
@@ -1108,9 +1099,13 @@ directive|if
 literal|0
 block|case PCI_QLOGIC_ISP1240:
 comment|/* 1240 not ready yet */
-block|x = "Qlogic ISP 1080/1240 PCI SCSI Adapter"; 		break;
 endif|#
 directive|endif
+name|x
+operator|=
+literal|"Qlogic ISP 1080/1240 PCI SCSI Adapter"
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 ifndef|#
@@ -1738,8 +1733,6 @@ operator|->
 name|_z
 operator|.
 name|_y
-operator|.
-name|_a
 expr_stmt|;
 name|pcs
 operator|->
@@ -2147,11 +2140,10 @@ block|{
 comment|/* If we're a Fibre Channel Card, we allow deferred attach */
 if|if
 condition|(
+name|IS_SCSI
+argument_list|(
 name|isp
-operator|->
-name|isp_type
-operator|&
-name|ISP_HA_SCSI
+argument_list|)
 condition|)
 block|{
 name|isp_uninit
@@ -3284,64 +3276,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp
-operator|->
-name|isp_type
-operator|&
-name|ISP_HA_FC
-condition|)
-block|{
-name|fcparam
-modifier|*
-name|fcp
-init|=
-operator|(
-name|fcparam
-operator|*
-operator|)
-name|isp
-operator|->
-name|isp_param
-decl_stmt|;
-name|fcp
-operator|->
-name|isp_scratch
-operator|=
-name|isp
-operator|->
-name|isp_result
-operator|+
-name|ISP_QUEUE_SIZE
-argument_list|(
-name|RESULT_QUEUE_LEN
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_load
-argument_list|(
-name|pci
-operator|->
-name|cntrol_dmat
-argument_list|,
-name|pci
-operator|->
-name|cntrol_dmap
-argument_list|,
-name|fcp
-operator|->
-name|isp_scratch
-argument_list|,
-name|ISP2100_SCRLEN
-argument_list|,
-name|isp_map_fcscrt
-argument_list|,
-name|pci
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Use this opportunity to initialize/create data DMA maps. 	 */
 for|for
 control|(
@@ -3398,6 +3332,67 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_type
+operator|&
+name|ISP_HA_FC
+condition|)
+block|{
+name|fcparam
+modifier|*
+name|fcp
+init|=
+operator|(
+name|fcparam
+operator|*
+operator|)
+name|isp
+operator|->
+name|isp_param
+decl_stmt|;
+name|fcp
+operator|->
+name|isp_scratch
+operator|=
+name|base
+operator|+
+name|ISP_QUEUE_SIZE
+argument_list|(
+name|RQUEST_QUEUE_LEN
+argument_list|)
+operator|+
+name|ISP_QUEUE_SIZE
+argument_list|(
+name|RESULT_QUEUE_LEN
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_load
+argument_list|(
+name|pci
+operator|->
+name|cntrol_dmat
+argument_list|,
+name|pci
+operator|->
+name|cntrol_dmap
+argument_list|,
+name|fcp
+operator|->
+name|isp_scratch
+argument_list|,
+name|ISP2100_SCRLEN
+argument_list|,
+name|isp_map_fcscrt
+argument_list|,
+name|pci
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
