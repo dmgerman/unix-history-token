@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	8.1 (Berkeley) %G%"
+literal|"@(#)find.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,7 +250,7 @@ comment|/*  * find_execute --  *	take a search plan and an array of search paths
 end_comment
 
 begin_function
-name|void
+name|int
 name|find_execute
 parameter_list|(
 name|plan
@@ -278,9 +278,11 @@ name|PLAN
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|tree
 operator|=
@@ -300,6 +302,8 @@ operator|)
 name|NULL
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
@@ -308,15 +312,24 @@ argument_list|,
 literal|"ftsopen"
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|rval
+operator|=
+literal|0
+init|;
+operator|(
 name|entry
 operator|=
 name|fts_read
 argument_list|(
 name|tree
 argument_list|)
-condition|)
+operator|)
+operator|!=
+name|NULL
+condition|;
+control|)
 block|{
 switch|switch
 condition|(
@@ -361,6 +374,12 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|entry
+operator|->
+name|fts_errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"%s"
@@ -369,6 +388,10 @@ name|entry
 operator|->
 name|fts_path
 argument_list|)
+expr_stmt|;
+name|rval
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
@@ -407,9 +430,13 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * call all the functions in the execution plan until one is 		 * false or all have been executed.  This is where we do all 		 * the work specified by the user on the command line. 		 */
+comment|/* 		 * Call all the functions in the execution plan until one is 		 * false or all have been executed.  This is where we do all 		 * the work specified by the user on the command line. 		 */
 for|for
 control|(
 name|p
@@ -437,14 +464,22 @@ name|next
 control|)
 empty_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|fts_close
+if|if
+condition|(
+name|errno
+condition|)
+name|err
 argument_list|(
-name|tree
+literal|1
+argument_list|,
+literal|"fts_read"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 block|}
 end_function
 
