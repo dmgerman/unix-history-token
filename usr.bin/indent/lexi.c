@@ -1188,6 +1188,14 @@ case|case
 literal|3
 case|:
 comment|/* a "struct" */
+if|if
+condition|(
+name|ps
+operator|.
+name|p_l_follow
+condition|)
+break|break;
+comment|/* inside parens: cast */
 comment|/* 		 * Next time around, we may want to know that we have had a 		 * 'struct' 		 */
 name|l_struct
 operator|=
