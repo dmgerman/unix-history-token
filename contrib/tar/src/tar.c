@@ -2104,7 +2104,11 @@ name|new_argv
 operator|=
 name|xmalloc
 argument_list|(
+operator|(
 name|new_argc
+operator|+
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -2236,6 +2240,13 @@ operator|=
 operator|*
 name|in
 operator|++
+expr_stmt|;
+comment|/* And NULL terminate the argv[] array */
+operator|*
+name|out
+operator|++
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Replace the old option list by the new one.  */
 name|argc
