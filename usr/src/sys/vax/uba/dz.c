@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	3.11	%G%	*/
+comment|/*	dz.c	3.12	%G%	*/
 end_comment
 
 begin_comment
@@ -317,21 +317,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|dzinit
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|dzdtr
-index|[
-operator|(
-name|NDZ
-operator|+
-literal|7
-operator|)
-operator|/
-literal|8
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2740,20 +2725,6 @@ name|dzdtr
 operator||=
 name|bit
 expr_stmt|;
-name|dzdtr
-index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|>>
-literal|3
-index|]
-operator|=
-name|dzaddr
-operator|->
-name|dzdtr
-expr_stmt|;
 block|}
 end_block
 
@@ -2923,17 +2894,6 @@ operator|&=
 operator|~
 name|bit
 expr_stmt|;
-name|dzdtr
-index|[
-name|i
-operator|>>
-literal|3
-index|]
-operator|=
-name|dzaddr
-operator|->
-name|dzdtr
-expr_stmt|;
 name|flushtty
 argument_list|(
 name|tp
@@ -2983,7 +2943,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Reset state of driver if UBA reset was necessary.  * Reset all the dzdtr registers, then the csr and lpr  * registers, then restart all pending transmissions.  */
+comment|/*  * Reset state of driver if UBA reset was necessary.  * Reset parameters and restart transmission on open lines.  */
 end_comment
 
 begin_macro
@@ -3006,40 +2966,6 @@ name|printf
 argument_list|(
 literal|" dz"
 argument_list|)
-expr_stmt|;
-name|dzinit
-operator|=
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|d
-operator|=
-literal|0
-init|;
-name|d
-operator|<
-name|NDZ
-condition|;
-name|d
-operator|+=
-literal|8
-control|)
-name|dzpdma
-index|[
-name|d
-index|]
-operator|.
-name|p_addr
-operator|->
-name|dzdtr
-operator|=
-name|dzdtr
-index|[
-name|d
-operator|>>
-literal|3
-index|]
 expr_stmt|;
 for|for
 control|(
@@ -3081,7 +3007,21 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|dzxint
+name|dzmodem
+argument_list|(
+name|d
+argument_list|,
+name|ON
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|BUSY
+expr_stmt|;
+name|dzstart
 argument_list|(
 name|tp
 argument_list|)
@@ -3090,10 +3030,6 @@ block|}
 block|}
 name|dztimer
 argument_list|()
-expr_stmt|;
-name|dzinit
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_block
