@@ -38,7 +38,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.22 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,6 +715,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* modify the following to make work on dead kernels */
 if|if
 condition|(
 name|kvm_openfiles
@@ -1019,27 +1020,14 @@ name|p_textp
 operator|&&
 name|kvm_read
 argument_list|(
+operator|&
 operator|(
-name|int
-operator|)
 name|p
 operator|->
 name|p_textp
-operator|+
-operator|(
-name|int
-operator|)
-operator|&
-operator|(
-operator|(
-expr|struct
-name|text
-operator|*
-operator|)
-literal|0
-operator|)
 operator|->
 name|x_vptr
+operator|)
 argument_list|,
 operator|&
 name|xvptr
