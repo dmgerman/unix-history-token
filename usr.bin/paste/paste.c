@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: paste.c,v 1.3 1997/07/31 06:59:26 charnier Exp $"
+literal|"$Id: paste.c,v 1.4 1997/08/05 03:40:04 asami Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
