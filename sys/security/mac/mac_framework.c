@@ -500,6 +500,12 @@ begin_comment
 comment|/*  * mac_static_policy_list holds a list of policy modules that are not  * loaded while the system is "live", and cannot be unloaded.  These  * policies can be invoked without holding the busy count.  *  * mac_policy_list stores the list of dynamic policies.  A busy count is  * maintained for the list, stored in mac_policy_busy.  The busy count  * is protected by mac_policy_mtx; the list may be modified only  * while the busy count is 0, requiring that the lock be held to  * prevent new references to the list from being acquired.  For almost  * all operations, incrementing the busy count is sufficient to  * guarantee consistency, as the list cannot be modified while the  * busy count is elevated.  For a few special operations involving a  * change to the list of active policies, the mtx itself must be held.  * A condition variable, mac_policy_cv, is used to signal potential  * exclusive consumers that they should try to acquire the lock if a  * first attempt at exclusive access fails.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -522,6 +528,11 @@ name|int
 name|mac_policy_count
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -548,6 +559,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
 name|WITNESS_WARN
 argument_list|(
 name|WARN_GIANTOK
@@ -584,6 +598,8 @@ operator|&
 name|mac_policy_mtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -594,6 +610,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
 name|mtx_assert
 argument_list|(
 operator|&
@@ -613,6 +632,8 @@ literal|"mac_policy_assert_exclusive(): not exclusive"
 operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -623,6 +644,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
 name|KASSERT
 argument_list|(
 name|mac_policy_count
@@ -646,6 +670,8 @@ operator|&
 name|mac_policy_cv
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -656,6 +682,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
 name|mtx_lock
 argument_list|(
 operator|&
@@ -671,6 +700,8 @@ operator|&
 name|mac_policy_mtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -681,6 +712,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
 name|int
 name|ret
 decl_stmt|;
@@ -724,6 +758,15 @@ operator|(
 name|ret
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -734,6 +777,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
 name|mtx_lock
 argument_list|(
 operator|&
@@ -772,6 +818,8 @@ operator|&
 name|mac_policy_mtx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -802,6 +850,9 @@ expr_stmt|;
 name|mac_labelzone_init
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MAC_STATIC
 name|mtx_init
 argument_list|(
 operator|&
@@ -822,6 +873,8 @@ argument_list|,
 literal|"mac_policy_cv"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -969,6 +1022,27 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_STATIC
+if|if
+condition|(
+name|mac_late
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mac_policy_modevent: MAC_STATIC and late\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|type
