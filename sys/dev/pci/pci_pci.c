@@ -1595,7 +1595,7 @@ operator|->
 name|membase
 operator|&&
 name|end
-operator|>
+operator|>=
 name|sc
 operator|->
 name|membase
