@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -50,6 +50,50 @@ end_define
 
 begin_comment
 comment|/* no todr to set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCKEY
+value|255
+end_define
+
+begin_comment
+comment|/* maximal allowed code key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDKEY
+value|255
+end_define
+
+begin_comment
+comment|/* maximal allowed data key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCKEY
+value|(MAXCKEY+1)
+end_define
+
+begin_comment
+comment|/* # code keys, including 0 (reserved) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDKEY
+value|(MAXDKEY+1)
+end_define
+
+begin_comment
+comment|/* # data keys, including 0 (reserved) */
 end_comment
 
 begin_ifndef
@@ -130,11 +174,19 @@ struct|struct
 name|keystats
 block|{
 name|long
+name|ks_avail
+decl_stmt|;
+comment|/* number of keys currently unallocated */
+name|long
+name|ks_dirty
+decl_stmt|;
+comment|/* number of keys currently waiting for purge */
+name|long
 name|ks_allocs
 decl_stmt|;
 comment|/* number of keys allocated */
 name|long
-name|ks_free
+name|ks_allocfree
 decl_stmt|;
 comment|/* key allocated from free slot */
 name|long
@@ -149,6 +201,10 @@ name|long
 name|ks_shared
 decl_stmt|;
 comment|/* key taken from multiple processes */
+name|long
+name|ks_inval
+decl_stmt|;
+comment|/* number of times keys exchanged */
 block|}
 struct|;
 end_struct
