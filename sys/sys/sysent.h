@@ -268,6 +268,47 @@ name|int
 name|sv_minsigstksz
 decl_stmt|;
 comment|/* minimum signal stack size */
+name|int
+name|sv_pagesize
+decl_stmt|;
+comment|/* pagesize override */
+name|vm_offset_t
+name|sv_maxuser
+decl_stmt|;
+comment|/* VM_MAXUSER_ADDRESS override */
+name|vm_offset_t
+name|sv_usrstack
+decl_stmt|;
+comment|/* USRSTACK override */
+name|register_t
+modifier|*
+function_decl|(
+modifier|*
+name|sv_copyout_strings
+function_decl|)
+parameter_list|(
+name|struct
+name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sv_setregs
+function_decl|)
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

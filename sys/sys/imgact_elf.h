@@ -41,6 +41,12 @@ parameter_list|)
 value|{suword(pos++, id); suword(pos++, val);}
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_if
 if|#
 directive|if
@@ -96,6 +102,9 @@ block|{
 name|int
 name|brand
 decl_stmt|;
+name|int
+name|machine
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -131,7 +140,7 @@ end_define
 
 begin_function_decl
 name|int
-name|elf_brand_inuse
+name|elf32_brand_inuse
 parameter_list|(
 name|Elf32_Brandinfo
 modifier|*
@@ -142,7 +151,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|elf_insert_brand_entry
+name|elf32_insert_brand_entry
 parameter_list|(
 name|Elf32_Brandinfo
 modifier|*
@@ -153,11 +162,43 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|elf_remove_brand_entry
+name|elf32_remove_brand_entry
 parameter_list|(
 name|Elf32_Brandinfo
 modifier|*
 name|entry
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|elf32_freebsd_fixup
+parameter_list|(
+name|register_t
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|elf32_coredump
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -218,6 +259,9 @@ block|{
 name|int
 name|brand
 decl_stmt|;
+name|int
+name|machine
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -253,7 +297,7 @@ end_define
 
 begin_function_decl
 name|int
-name|elf_brand_inuse
+name|elf64_brand_inuse
 parameter_list|(
 name|Elf64_Brandinfo
 modifier|*
@@ -264,7 +308,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|elf_insert_brand_entry
+name|elf64_insert_brand_entry
 parameter_list|(
 name|Elf64_Brandinfo
 modifier|*
@@ -275,7 +319,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|elf_remove_brand_entry
+name|elf64_remove_brand_entry
 parameter_list|(
 name|Elf64_Brandinfo
 modifier|*
@@ -284,24 +328,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ELF_TARG_CLASS == ELFCLASS32 */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|thread
-struct_decl|;
-end_struct_decl
+begin_function_decl
+name|int
+name|elf64_freebsd_fixup
+parameter_list|(
+name|register_t
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
-name|elf_coredump
+name|elf64_coredump
 parameter_list|(
 name|struct
 name|thread
@@ -315,6 +359,15 @@ name|off_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ELF_TARG_CLASS == ELFCLASS32 */
+end_comment
 
 begin_endif
 endif|#

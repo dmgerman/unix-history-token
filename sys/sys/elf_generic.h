@@ -105,6 +105,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|__elfN
+parameter_list|(
+name|x
+parameter_list|)
+value|__CONCAT(__CONCAT(__CONCAT(elf,__ELF_WORD_SIZE),_),x)
+end_define
+
+begin_define
+define|#
+directive|define
 name|__ElfN
 parameter_list|(
 name|x

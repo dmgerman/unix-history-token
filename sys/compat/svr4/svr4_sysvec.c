@@ -469,7 +469,7 @@ name|NULL
 block|,
 literal|"SVR4"
 block|,
-name|elf_coredump
+name|elf32_coredump
 block|,
 name|NULL
 block|,
@@ -485,6 +485,9 @@ init|=
 block|{
 name|ELFOSABI_SYSV
 block|,
+name|EM_386
+block|,
+comment|/* XXX only implemented for x86 so far. */
 literal|"SVR4"
 block|,
 name|svr4_emul_path
@@ -1399,7 +1402,7 @@ name|MOD_LOAD
 case|:
 if|if
 condition|(
-name|elf_insert_brand_entry
+name|elf32_insert_brand_entry
 argument_list|(
 operator|&
 name|svr4_brand
@@ -1437,7 +1440,7 @@ case|:
 comment|/* Only allow the emulator to be removed if it isn't in use. */
 if|if
 condition|(
-name|elf_brand_inuse
+name|elf32_brand_inuse
 argument_list|(
 operator|&
 name|svr4_brand
@@ -1454,7 +1457,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|elf_remove_brand_entry
+name|elf32_remove_brand_entry
 argument_list|(
 operator|&
 name|svr4_brand

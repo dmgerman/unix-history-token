@@ -976,6 +976,14 @@ argument|NULL
 argument_list|)
 end_macro
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|sysentvec
+name|null_sysvec
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  ***************************************************************************  ****  **** The two following SYSINT's are proc0 specific glue code.  I am not  **** convinced that they can not be safely combined, but their order of  **** operation has been maintained as the same as the original init_main.c  **** for right now.  ****  **** These probably belong in init_proc.c or kern_proc.c, since they  **** deal with proc0 (the fork template process).  ****  ***************************************************************************  */
 end_comment
@@ -1172,27 +1180,13 @@ name|s_leader
 operator|=
 name|p
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__ELF__
 name|p
 operator|->
 name|p_sysent
 operator|=
 operator|&
-name|elf_freebsd_sysvec
+name|null_sysvec
 expr_stmt|;
-else|#
-directive|else
-name|p
-operator|->
-name|p_sysent
-operator|=
-operator|&
-name|aout_sysvec
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * proc_linkup was already done in init_i386() or alphainit() etc. 	 * because the earlier code needed to follow td->td_proc. Otherwise 	 * I would have done it here.. maybe this means this should be 	 * done earlier too. 	 */
 name|ke
 operator|=

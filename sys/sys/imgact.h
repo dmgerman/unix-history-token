@@ -181,6 +181,12 @@ parameter_list|(
 name|struct
 name|image_params
 modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
+parameter_list|,
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl

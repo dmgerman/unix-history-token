@@ -1558,6 +1558,12 @@ block|}
 name|exec_new_vmspace
 argument_list|(
 name|imgp
+argument_list|,
+name|VM_MIN_ADDRESS
+argument_list|,
+name|VM_MAXUSER_ADDRESS
+argument_list|,
+name|USRSTACK
 argument_list|)
 expr_stmt|;
 name|vmspace

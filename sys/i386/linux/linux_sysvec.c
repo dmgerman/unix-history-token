@@ -4075,7 +4075,7 @@ name|linux_prepsyscall
 block|,
 literal|"Linux ELF"
 block|,
-name|elf_coredump
+name|elf32_coredump
 block|,
 name|exec_linux_imgact_try
 block|,
@@ -4091,6 +4091,8 @@ name|linux_brand
 init|=
 block|{
 name|ELFOSABI_LINUX
+block|,
+name|EM_386
 block|,
 literal|"Linux"
 block|,
@@ -4111,6 +4113,8 @@ name|linux_glibc2brand
 init|=
 block|{
 name|ELFOSABI_LINUX
+block|,
+name|EM_386
 block|,
 literal|"Linux"
 block|,
@@ -4204,7 +4208,7 @@ name|brandinfo
 control|)
 if|if
 condition|(
-name|elf_insert_brand_entry
+name|elf32_insert_brand_entry
 argument_list|(
 operator|*
 name|brandinfo
@@ -4275,7 +4279,7 @@ name|brandinfo
 control|)
 if|if
 condition|(
-name|elf_brand_inuse
+name|elf32_brand_inuse
 argument_list|(
 operator|*
 name|brandinfo
@@ -4312,7 +4316,7 @@ name|brandinfo
 control|)
 if|if
 condition|(
-name|elf_remove_brand_entry
+name|elf32_remove_brand_entry
 argument_list|(
 operator|*
 name|brandinfo
