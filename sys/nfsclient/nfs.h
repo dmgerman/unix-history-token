@@ -46,7 +46,7 @@ begin_define
 define|#
 directive|define
 name|NFS_TICKINTVL
-value|5
+value|10
 end_define
 
 begin_comment
