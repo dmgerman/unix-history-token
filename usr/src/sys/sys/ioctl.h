@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	6.7	85/01/24	*/
+comment|/*	ioctl.h	6.8	85/03/07	*/
 end_comment
 
 begin_comment
@@ -1516,6 +1516,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCUCNTL
+value|_IOW(t, 102, int)
+end_define
+
+begin_comment
+comment|/* pty: set/clr usr cntl mode */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OTTYDISC
 value|0
 end_define
@@ -1832,12 +1843,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCSIFBRDADDR
+value|_IOW(i,19, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set broadcast addr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCGIFCONF
 value|_IOWR(i,20, struct ifconf)
 end_define
 
 begin_comment
 comment|/* get ifnet list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFNETMASK
+value|_IOWR(i,21, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get net addr mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFNETMASK
+value|_IOW(i,22, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set net addr mask */
 end_comment
 
 begin_define
