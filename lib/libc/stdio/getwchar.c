@@ -53,6 +53,12 @@ directive|include
 file|"local.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|getwchar
+end_undef
+
 begin_comment
 comment|/*  * Synonym for fgetwc(stdin).  */
 end_comment

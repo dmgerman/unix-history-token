@@ -53,6 +53,12 @@ directive|include
 file|"local.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|putwchar
+end_undef
+
 begin_comment
 comment|/*  * Synonym for fputwc(wc, stdout).  */
 end_comment

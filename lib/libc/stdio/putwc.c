@@ -53,6 +53,12 @@ directive|include
 file|"local.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|putwc
+end_undef
+
 begin_comment
 comment|/*  * Synonym for fputwc(). The only difference is that putwc(), if it is a  * macro, may evaluate `fp' more than once.  */
 end_comment
