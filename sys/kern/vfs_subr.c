@@ -259,7 +259,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_LONG
 argument_list|(
-name|_debug
+name|_vfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -386,7 +386,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_LONG
 argument_list|(
-name|_debug
+name|_vfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -418,7 +418,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_LONG
 argument_list|(
-name|_debug
+name|_vfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
