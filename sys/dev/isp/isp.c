@@ -794,7 +794,7 @@ name|isp_diffmode
 operator|=
 literal|1
 expr_stmt|;
-name|PRINTF
+name|CFGPRINTF
 argument_list|(
 literal|"%s: Differential Mode\n"
 argument_list|,
@@ -813,7 +813,7 @@ name|isp_ultramode
 operator|=
 literal|1
 expr_stmt|;
-name|PRINTF
+name|CFGPRINTF
 argument_list|(
 literal|"%s: Single-Ended Mode\n"
 argument_list|,
@@ -1013,7 +1013,7 @@ operator|&
 name|SXP_PINS_DIFF_MODE
 condition|)
 block|{
-name|PRINTF
+name|CFGPRINTF
 argument_list|(
 literal|"%s: Differential Mode\n"
 argument_list|,
@@ -1075,7 +1075,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PRINTF
+name|CFGPRINTF
 argument_list|(
 literal|"%s: Ultra Mode Capable\n"
 argument_list|,
@@ -9521,7 +9521,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|PRINTF
+name|CFGPRINTF
 argument_list|(
 literal|"%s: driver initiated bus reset of bus %d\n"
 argument_list|,
