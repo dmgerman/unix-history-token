@@ -833,13 +833,14 @@ name|TUN_OPEN
 condition|)
 return|return
 name|EBUSY
+return|;
 name|ifp
 operator|=
 operator|&
 name|tp
 operator|->
 name|tun_if
-return|;
+expr_stmt|;
 name|tp
 operator|->
 name|tun_flags
