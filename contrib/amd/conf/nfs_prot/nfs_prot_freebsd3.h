@@ -683,8 +683,12 @@ begin_define
 define|#
 directive|define
 name|MOUNT_NFS3
-value|MOUNT_NFS
+value|"nfs"
 end_define
+
+begin_comment
+comment|/* is this right? */
+end_comment
 
 begin_define
 define|#
