@@ -476,6 +476,13 @@ name|FW_FEATURE_FAST_POST
 value|0x1
 end_define
 
+begin_define
+define|#
+directive|define
+name|MBOX_ENABLE_TARGET_MODE
+value|0x55
+end_define
+
 begin_comment
 comment|/* These are for the ISP2100 FC cards */
 end_comment
