@@ -783,8 +783,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|intrhand
+name|void
 modifier|*
 name|rc_ih
 decl_stmt|;
@@ -1531,14 +1530,12 @@ operator|&
 name|rc_cdevsw
 argument_list|)
 expr_stmt|;
-name|rc_ih
-operator|=
-name|sinthand_add
+name|swi_add
 argument_list|(
-literal|"tty:rc"
-argument_list|,
 operator|&
 name|tty_ithd
+argument_list|,
+literal|"tty:rc"
 argument_list|,
 name|rcpoll
 argument_list|,
@@ -1547,6 +1544,9 @@ argument_list|,
 name|SWI_TTY
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|rc_ih
 argument_list|)
 expr_stmt|;
 name|rc_wakeup
@@ -2087,7 +2087,7 @@ name|rc
 operator|->
 name|rc_hotchar
 condition|)
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
@@ -2280,7 +2280,7 @@ name|rc
 operator|->
 name|rc_hotchar
 condition|)
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
@@ -2533,7 +2533,7 @@ name|rc_flags
 operator||=
 name|RC_MODCHG
 expr_stmt|;
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
@@ -2787,7 +2787,7 @@ name|rc_flags
 operator||=
 name|RC_DOXXFER
 expr_stmt|;
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|rc_ih
 argument_list|,
