@@ -157,13 +157,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|G_RAID3_MAX_IO_SIZE
-value|(DFLTPHYS * 2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|G_RAID3_BIO_CFLAG_REGULAR
 value|0x01
 end_define
@@ -253,6 +246,10 @@ name|off_t
 name|ds_offset_done
 decl_stmt|;
 comment|/* Offset of already synchronized 					   region. */
+name|off_t
+name|ds_resync
+decl_stmt|;
+comment|/* Resynchronize from this offset. */
 name|u_int
 name|ds_syncid
 decl_stmt|;
