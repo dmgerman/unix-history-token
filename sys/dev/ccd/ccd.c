@@ -6005,6 +6005,13 @@ name|error
 operator|)
 return|;
 block|}
+name|free
+argument_list|(
+name|cpp
+argument_list|,
+name|M_CCD
+argument_list|)
+expr_stmt|;
 comment|/* 		 * The ccd has been successfully initialized, so 		 * we can place it into the array and read the disklabel. 		 */
 name|ccio
 operator|->
