@@ -1449,9 +1449,14 @@ argument_list|)
 operator|)
 return|;
 block|}
+name|errno
+operator|=
+name|ENOENT
+expr_stmt|;
 return|return
 operator|(
-name|ENOENT
+operator|-
+literal|1
 operator|)
 return|;
 comment|/* XXXMAC: ENOLABEL */
