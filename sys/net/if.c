@@ -469,9 +469,9 @@ name|if_snd
 operator|.
 name|ifq_mtx
 operator|.
-name|mtx_flags
+name|mtx_description
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|printf
