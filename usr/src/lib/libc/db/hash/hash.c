@@ -2192,6 +2192,8 @@ block|{
 name|HASHHDR
 modifier|*
 name|whdrp
+decl_stmt|,
+name|whdr
 decl_stmt|;
 name|int
 name|fp
