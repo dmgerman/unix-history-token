@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.2 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,8 @@ name|gp
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|devnull
 decl_stmt|;
 name|char
 name|pbuf
@@ -406,8 +408,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* special case for removing files */
+name|devnull
+operator|=
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"/dev/null"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|!
+name|devnull
+operator|&&
 operator|!
 operator|(
 name|from_sb
@@ -463,6 +482,14 @@ operator|&
 name|S_IFDIR
 condition|)
 block|{
+name|char
+modifier|*
+name|C
+decl_stmt|,
+modifier|*
+name|rindex
+argument_list|()
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -479,6 +506,23 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|C
+operator|=
+name|rindex
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+condition|?
+operator|++
+name|C
+else|:
 name|argv
 index|[
 literal|0
@@ -498,20 +542,24 @@ condition|)
 goto|goto
 name|nocompare
 goto|;
+block|}
 if|if
 condition|(
+operator|!
+operator|(
 name|to_sb
 operator|.
 name|st_mode
 operator|&
-name|S_IFDIR
+name|S_IFREG
+operator|)
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"install: %s is a directory.\n"
+literal|"install: %s isn't a regular file.\n"
 argument_list|,
 name|path
 argument_list|)
@@ -521,7 +569,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -679,6 +726,15 @@ name|bad
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|devnull
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dostrip
