@@ -337,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|UMTX_INITIALIZER
-value|{ NULL, NULL }
+value|{ NULL }
 end_define
 
 begin_struct
