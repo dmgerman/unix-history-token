@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.67 (Berkeley) %G%"
+literal|"@(#)login.c	5.68 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +194,33 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rootlogin
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ROOTLOGIN
+value|(rootlogin || (pwd&& pwd->pw_uid == 0))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ROOTLOGIN
+value|(pwd&& pwd->pw_uid == 0)
+end_define
 
 begin_endif
 endif|#
@@ -1061,13 +1088,7 @@ expr_stmt|;
 comment|/* 		 * If trying to log in as root, but with insecure terminal, 		 * refuse the login attempt. 		 */
 if|if
 condition|(
-name|pwd
-operator|&&
-name|pwd
-operator|->
-name|pw_uid
-operator|==
-literal|0
+name|ROOTLOGIN
 operator|&&
 operator|!
 name|rootterm
@@ -1255,9 +1276,10 @@ expr_stmt|;
 comment|/* if user not super-user, check for disabled logins */
 if|if
 condition|(
-name|pwd
-operator|->
-name|pw_uid
+operator|!
+operator|(
+name|ROOTLOGIN
+operator|)
 condition|)
 name|checknologin
 argument_list|()
@@ -1948,11 +1970,7 @@ expr_stmt|;
 comment|/* if fflag is on, assume caller/authenticator has logged root login */
 if|if
 condition|(
-name|pwd
-operator|->
-name|pw_uid
-operator|==
-literal|0
+name|ROOTLOGIN
 operator|&&
 name|fflag
 operator|==
@@ -1966,7 +1984,9 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ROOT LOGIN ON %s FROM %s"
+literal|"ROOT LOGIN (%s) ON %s FROM %s"
+argument_list|,
+name|username
 argument_list|,
 name|tty
 argument_list|,
@@ -1978,7 +1998,9 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"ROOT LOGIN ON %s"
+literal|"ROOT LOGIN (%s) ON %s"
+argument_list|,
+name|username
 argument_list|,
 name|tty
 argument_list|)
@@ -2176,6 +2198,19 @@ literal|"setlogin() failure: %m"
 argument_list|)
 expr_stmt|;
 comment|/* discard permissions last so can't get killed and drop core */
+if|if
+condition|(
+name|ROOTLOGIN
+condition|)
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -2218,6 +2253,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|KERBEROS
+define|#
+directive|define
+name|NBUFSIZ
+value|(UT_NAMESIZE + 1 + 5)
+comment|/* .root suffix */
+else|#
+directive|else
+define|#
+directive|define
+name|NBUFSIZ
+value|(UT_NAMESIZE + 1)
+endif|#
+directive|endif
 name|getloginname
 argument_list|()
 block|{
@@ -2229,14 +2280,15 @@ specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|instance
 decl_stmt|;
 specifier|static
 name|char
 name|nbuf
 index|[
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|NBUFSIZ
 index|]
 decl_stmt|;
 for|for
@@ -2294,7 +2346,11 @@ name|p
 operator|<
 name|nbuf
 operator|+
-name|UT_NAMESIZE
+operator|(
+name|NBUFSIZ
+operator|-
+literal|1
+operator|)
 condition|)
 operator|*
 name|p
@@ -2342,6 +2398,73 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|KERBEROS
+if|if
+condition|(
+operator|(
+name|instance
+operator|=
+name|index
+argument_list|(
+name|nbuf
+argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|instance
+argument_list|,
+literal|".root"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|rootlogin
+operator|++
+expr_stmt|;
+block|}
+operator|*
+name|instance
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|instance
+operator|-
+name|nbuf
+operator|)
+operator|>
+name|UT_NAMESIZE
+condition|)
+name|nbuf
+index|[
+name|UT_NAMESIZE
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+name|rootlogin
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|void
 name|timedout

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)klogin.c	5.5 (Berkeley) %G%"
+literal|"@(#)klogin.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|PRINCIPAL_INST
-value|""
+value|(rootlogin ? "root" : "")
 end_define
 
 begin_define
@@ -102,6 +102,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|notickets
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rootlogin
 decl_stmt|;
 end_decl_stmt
 
