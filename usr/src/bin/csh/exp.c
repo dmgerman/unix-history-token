@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exp.c	5.12 (Berkeley) %G%"
+literal|"@(#)exp.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,27 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHORT_STRINGS
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SHORT_STRINGS */
+end_comment
 
 begin_if
 if|#
