@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_if
@@ -24,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.12 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_comment
 comment|/*  * SYSLOG -- print message on log file  *  * This routine looks a lot like printf, except that it  * outputs to the log file instead of the standard output.  * Also:  *	adds a timestamp,  *	prints the module name in front of the message,  *	has some other formatting types (or will sometime),  *	adds a newline on the end of the message.  *  * The output of this routine is intended to be read by /etc/syslogd.  *  * Author: Eric Allman  * Modified to use UNIX domain IPC by Ralph Campbell  */
@@ -111,6 +114,10 @@ name|p
 parameter_list|)
 value|(((p)& LOG_FACMASK)>> 3)
 end_define
+
+begin_comment
+comment|/* XXX should be in<syslog.h> */
+end_comment
 
 begin_define
 define|#
@@ -313,10 +320,9 @@ decl_stmt|;
 comment|/* see if we should just throw out this message */
 if|if
 condition|(
-name|pri
-operator|<=
-literal|0
-operator|||
+operator|(
+name|unsigned
+operator|)
 name|PRIFAC
 argument_list|(
 name|pri
@@ -328,11 +334,26 @@ operator|(
 name|LOG_MASK
 argument_list|(
 name|pri
+operator|&
+name|LOG_PRIMASK
 argument_list|)
 operator|&
 name|LogMask
 operator|)
 operator|==
+literal|0
+operator|||
+operator|(
+name|pri
+operator|&
+operator|~
+operator|(
+name|LOG_PRIMASK
+operator||
+name|LOG_PRIMASK
+operator|)
+operator|)
+operator|!=
 literal|0
 condition|)
 return|return;
@@ -879,12 +900,19 @@ condition|(
 name|logfac
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|logfac
+operator|&
+operator|~
+name|LOG_FACMASK
+operator|)
+operator|==
+literal|0
 condition|)
 name|LogFacility
 operator|=
 name|logfac
-operator|&
-name|LOG_FACMASK
 expr_stmt|;
 if|if
 condition|(
