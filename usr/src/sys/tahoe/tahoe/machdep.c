@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -315,6 +315,18 @@ begin_comment
 comment|/* set when safe to use msgbuf */
 end_comment
 
+begin_decl_stmt
+name|int
+name|physmem
+init|=
+name|MAXMEM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max supported memory, changes to actual */
+end_comment
+
 begin_comment
 comment|/*  * Machine-dependent startup code  */
 end_comment
@@ -366,7 +378,9 @@ name|residual
 decl_stmt|;
 comment|/* 	 * Initialize error message buffer (at end of core). 	 */
 name|maxmem
-operator|-=
+operator|=
+name|physmem
+operator|-
 name|btoc
 argument_list|(
 sizeof|sizeof
@@ -384,7 +398,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
@@ -396,6 +410,8 @@ expr|struct
 name|msgbuf
 argument_list|)
 argument_list|)
+operator|+
+literal|1
 condition|;
 name|i
 operator|++
@@ -413,8 +429,8 @@ operator||
 name|PG_KW
 operator||
 operator|(
-name|maxmem
-operator|+
+name|physmem
+operator|-
 name|i
 operator|)
 expr_stmt|;
@@ -446,7 +462,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"real mem  = %d\n"
+literal|"real mem = %d\n"
 argument_list|,
 name|ctob
 argument_list|(
@@ -2642,6 +2658,115 @@ begin_comment
 comment|/* also for savecore */
 end_comment
 
+begin_macro
+name|dumpconf
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|nblks
+decl_stmt|;
+name|dumpsize
+operator|=
+name|physmem
+expr_stmt|;
+if|if
+condition|(
+name|dumpdev
+operator|!=
+name|NODEV
+operator|&&
+name|bdevsw
+index|[
+name|major
+argument_list|(
+name|dumpdev
+argument_list|)
+index|]
+operator|.
+name|d_psize
+condition|)
+block|{
+name|nblks
+operator|=
+operator|(
+operator|*
+name|bdevsw
+index|[
+name|major
+argument_list|(
+name|dumpdev
+argument_list|)
+index|]
+operator|.
+name|d_psize
+operator|)
+operator|(
+name|dumpdev
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|dumpsize
+operator|>
+name|btoc
+argument_list|(
+name|dbtob
+argument_list|(
+name|nblks
+operator|-
+name|dumplo
+argument_list|)
+argument_list|)
+condition|)
+name|dumpsize
+operator|=
+name|btoc
+argument_list|(
+name|dbtob
+argument_list|(
+name|nblks
+operator|-
+name|dumplo
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dumplo
+operator|==
+literal|0
+condition|)
+name|dumplo
+operator|=
+name|nblks
+operator|-
+name|btodb
+argument_list|(
+name|ctob
+argument_list|(
+name|physmem
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Don't dump on the first CLSIZE pages, 	 * in case the dump device includes a disk label. 	 */
+if|if
+condition|(
+name|dumplo
+operator|<
+name|CLSIZE
+condition|)
+name|dumplo
+operator|=
+name|CLSIZE
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Doadump comes here after turning off memory management and  * getting on the dump stack, either when called above, or by  * the auto-restart code.  */
 end_comment
@@ -2660,29 +2785,23 @@ operator|==
 name|NODEV
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|notdef
+comment|/* 	 * For dumps during autoconfiguration, 	 * if dump device has already configured... 	 */
 if|if
 condition|(
-operator|(
-name|minor
-argument_list|(
-name|dumpdev
-argument_list|)
-operator|&
-literal|07
-operator|)
-operator|!=
-literal|1
+name|dumpsize
+operator|==
+literal|0
+condition|)
+name|dumpconf
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|dumplo
+operator|<
+literal|0
 condition|)
 return|return;
-endif|#
-directive|endif
-name|dumpsize
-operator|=
-name|physmem
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"\ndumping to dev %x, offset %d\n"
