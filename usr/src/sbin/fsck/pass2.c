@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.10 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
