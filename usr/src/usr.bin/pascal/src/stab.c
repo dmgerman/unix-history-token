@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.3 %G%"
+literal|"@(#)stab.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,6 +221,7 @@ name|N_LSYM
 argument_list|,
 name|type
 argument_list|,
+operator|-
 name|offset
 argument_list|)
 expr_stmt|;
