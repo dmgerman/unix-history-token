@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)protosw.h	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)protosw.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|pr_flags
 decl_stmt|;
 comment|/* see below */
 comment|/* protocol-protocol hooks */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|pr_input
@@ -46,7 +46,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* output to protocol (from above) */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|pr_ctlinput
@@ -72,7 +72,7 @@ parameter_list|()
 function_decl|;
 comment|/* user request: see list below */
 comment|/* utility hooks */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|pr_init
@@ -80,7 +80,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* initialization hook */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|pr_fasttimo
@@ -88,7 +88,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* fast timeout (200ms) */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|pr_slowtimo
@@ -96,7 +96,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* slow timeout (500ms) */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|pr_drain
