@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.5 %G%"
+literal|"@(#)lcmd2.c	3.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,7 +148,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"wwwrite\tattmpt\tchar\n"
+literal|"wwwrite\tattempt\tchar\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
