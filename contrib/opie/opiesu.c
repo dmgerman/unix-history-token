@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opiesu.c: main body of code for the su(1m) program  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1998 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.32. Set up TERM and PATH correctly. 	Modified by cmetz for OPIE 2.31. Fix sulog(). Replaced Getlogin() with 		currentuser. Fixed fencepost error in month printed by sulog(). 	Modified by cmetz for OPIE 2.3. Limit the length of TERM on full login. 		Use HAVE_SULOG instead of DOSULOG.         Modified by cmetz for OPIE 2.2. Don't try to clear non-blocking I/O.                 Use opiereadpass(). Minor speedup. Removed termios manipulation                 -- that's opiereadpass()'s job. Change opiereadpass() calls                 to add echo arg. Removed useless strings (I don't think that                 removing the ucb copyright one is a problem -- please let me                 know if I'm wrong). Use FUNCTION declaration et al. Ifdef                 around some headers. Make everything static. Removed                 closelog() prototype. Use the same catchexit() trickery as                 opielogin.         Modified at NRL for OPIE 2.2. Changed opiestrip_crlf to                 opiestripcrlf.         Modified at NRL for OPIE 2.1. Added struct group declaration. 	        Added Solaris(+others?) sulog capability. Symbol changes 		for autoconf. Removed des_crypt.h. File renamed to 		opiesu.c. Symbol+misc changes for autoconf. Added bletch 		for setpriority.         Modified at NRL for OPIE 2.02. Added SU_STAR_CHECK (turning a bug                 into a feature ;). Fixed Solaris shadow password problem                 introduced in OPIE 2.01 (the shadow password structure is                 spwd, not spasswd).         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to use a static structure to avoid problems with drain-                 bamaged shadow password packages. Always log failures.                 Make sure to close syslog by function to avoid problems                  with drain bamaged syslog implementations. Log a few                  interesting errors. 	Modified at NRL for OPIE 2.0. 	Modified at Bellcore for the S/Key Version 1 software distribution. 	Originally from BSD. */
+comment|/* opiesu.c: main body of code for the su(1m) program  %%% portions-copyright-cmetz-96 Portions of this software are Copyright 1996-1999 by Craig Metz, All Rights Reserved. The Inner Net License Version 2 applies to these portions of the software. You should have received a copy of the license with this software. If you didn't get a copy, you may request one from<license@inner.net>.  Portions of this software are Copyright 1995 by Randall Atkinson and Dan McDonald, All Rights Reserved. All Rights under this copyright are assigned to the U.S. Naval Research Laboratory (NRL). The NRL Copyright Notice and License Agreement applies to this software.  	History:  	Modified by cmetz for OPIE 2.4. Check euid on startup. Use 		opiestrncpy(). 	Modified by cmetz for OPIE 2.32. Set up TERM and PATH correctly. 	Modified by cmetz for OPIE 2.31. Fix sulog(). Replaced Getlogin() with 		currentuser. Fixed fencepost error in month printed by sulog(). 	Modified by cmetz for OPIE 2.3. Limit the length of TERM on full login. 		Use HAVE_SULOG instead of DOSULOG.         Modified by cmetz for OPIE 2.2. Don't try to clear non-blocking I/O.                 Use opiereadpass(). Minor speedup. Removed termios manipulation                 -- that's opiereadpass()'s job. Change opiereadpass() calls                 to add echo arg. Removed useless strings (I don't think that                 removing the ucb copyright one is a problem -- please let me                 know if I'm wrong). Use FUNCTION declaration et al. Ifdef                 around some headers. Make everything static. Removed                 closelog() prototype. Use the same catchexit() trickery as                 opielogin.         Modified at NRL for OPIE 2.2. Changed opiestrip_crlf to                 opiestripcrlf.         Modified at NRL for OPIE 2.1. Added struct group declaration. 	        Added Solaris(+others?) sulog capability. Symbol changes 		for autoconf. Removed des_crypt.h. File renamed to 		opiesu.c. Symbol+misc changes for autoconf. Added bletch 		for setpriority.         Modified at NRL for OPIE 2.02. Added SU_STAR_CHECK (turning a bug                 into a feature ;). Fixed Solaris shadow password problem                 introduced in OPIE 2.01 (the shadow password structure is                 spwd, not spasswd).         Modified at NRL for OPIE 2.01. Changed password lookup handling                 to use a static structure to avoid problems with drain-                 bamaged shadow password packages. Always log failures.                 Make sure to close syslog by function to avoid problems                  with drain bamaged syslog implementations. Log a few                  interesting errors. 	Modified at NRL for OPIE 2.0. 	Modified at Bellcore for the S/Key Version 1 software distribution. 	Originally from BSD. */
 end_comment
 
 begin_comment
@@ -1565,7 +1565,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1577,21 +1577,7 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1602,7 +1588,7 @@ name|p
 operator|=
 literal|"unknown"
 expr_stmt|;
-name|strncpy
+name|opiestrncpy
 argument_list|(
 name|currentuser
 argument_list|,
@@ -1610,13 +1596,6 @@ name|p
 argument_list|,
 literal|31
 argument_list|)
-expr_stmt|;
-name|currentuser
-index|[
-literal|31
-index|]
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1708,6 +1687,57 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|geteuid
+argument_list|()
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"'%s' failed for %s on %s: not running with superuser priveleges"
+argument_list|,
+name|argvbuf
+argument_list|,
+name|currentuser
+argument_list|,
+name|ttyname
+argument_list|(
+literal|2
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|HAVE_SULOG
+name|sulog
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_SULOG */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"You do not have permission to su %s\n"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|/* Implement the BSD "wheel group" su restriction. */
 if|#
 directive|if
