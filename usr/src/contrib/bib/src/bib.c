@@ -276,6 +276,28 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|bibfname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file name currently reading */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|biblineno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line number in that file */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -388,11 +410,17 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|bibfname
+operator|=
+literal|"<stdin>"
+expr_stmt|;
 name|rdtext
 argument_list|(
 name|stdin
 argument_list|)
 expr_stmt|;
+block|}
 comment|/*     sort references, make citations, add disambiguating characters    */
 if|if
 condition|(
@@ -512,6 +540,10 @@ name|c
 decl_stmt|,
 name|d
 decl_stmt|;
+name|biblineno
+operator|=
+literal|0
+expr_stmt|;
 name|lastc
 operator|=
 literal|0
@@ -848,6 +880,15 @@ expr_stmt|;
 name|lastc
 operator|=
 name|c
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|biblineno
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -1486,10 +1527,8 @@ return|;
 block|}
 else|else
 block|{
-name|fprintf
+name|bibwarning
 argument_list|(
-name|stderr
-argument_list|,
 literal|"no reference matching %s\n"
 argument_list|,
 name|huntstr
@@ -1855,10 +1894,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|fprintf
+name|bibwarning
 argument_list|(
-name|stderr
-argument_list|,
 literal|"multiple references match %s\n"
 argument_list|,
 name|huntstr
@@ -4362,11 +4399,15 @@ name|dumped
 operator|==
 name|false
 condition|)
-name|fprintf
+name|bibwarning
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Warning: references never dumped\n"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4654,6 +4695,58 @@ argument_list|(
 name|ofd
 argument_list|,
 literal|".][\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  *	print out a warning message  */
+end_comment
+
+begin_macro
+name|bibwarning
+argument_list|(
+argument|msg
+argument_list|,
+argument|arg
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"`%s', line %d: "
+argument_list|,
+name|bibfname
+argument_list|,
+name|biblineno
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|msg
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}

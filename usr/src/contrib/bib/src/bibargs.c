@@ -274,6 +274,20 @@ begin_comment
 comment|/* top of defined words array                */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|bibfname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|biblineno
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* where output goes */
 end_comment
@@ -994,6 +1008,10 @@ name|defstyle
 argument_list|)
 expr_stmt|;
 block|}
+name|bibfname
+operator|=
+literal|"<stdin>"
+expr_stmt|;
 name|rdtext
 argument_list|(
 name|stdin
@@ -1078,6 +1096,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|bibfname
+operator|=
+name|argv
+index|[
+name|i
+index|]
+expr_stmt|;
 name|rdtext
 argument_list|(
 name|fd
