@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci_compat.c,v 1.26 1999/05/08 21:59:41 dfr Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci_compat.c,v 1.27 1999/05/10 16:06:32 peter Exp $  *  */
 end_comment
 
 begin_include
@@ -102,13 +102,13 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|RESOURCE_CHECK
+name|APIC_IO
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sys/drvresource.h>
+file|<machine/smp.h>
 end_include
 
 begin_endif
@@ -119,13 +119,13 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|APIC_IO
+name|__i386__
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<machine/smp.h>
+file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_endif
@@ -615,7 +615,7 @@ modifier|*
 name|maskptr
 parameter_list|,
 name|u_int
-name|flags
+name|intflags
 parameter_list|)
 block|{
 name|int
@@ -662,10 +662,43 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|resflags
+init|=
+name|RF_SHAREABLE
+operator||
+name|RF_ACTIVE
+decl_stmt|;
 name|void
 modifier|*
 name|ih
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INTR_FAST
+if|if
+condition|(
+name|intflags
+operator|&
+name|INTR_FAST
+condition|)
+name|flags
+operator||=
+name|INTR_FAST
+expr_stmt|;
+if|if
+condition|(
+name|intflags
+operator|&
+name|INTR_EXCL
+condition|)
+name|resflags
+operator|&=
+operator|~
+name|RF_SHAREABLE
+expr_stmt|;
+endif|#
+directive|endif
 name|res
 operator|=
 name|bus_alloc_resource
@@ -685,9 +718,7 @@ name|irq
 argument_list|,
 literal|1
 argument_list|,
-name|RF_SHAREABLE
-operator||
-name|RF_ACTIVE
+name|resflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -714,7 +745,7 @@ operator|&
 name|tty_imask
 condition|)
 name|flags
-operator|=
+operator||=
 name|INTR_TYPE_TTY
 expr_stmt|;
 elseif|else
@@ -726,7 +757,7 @@ operator|&
 name|bio_imask
 condition|)
 name|flags
-operator|=
+operator||=
 name|INTR_TYPE_BIO
 expr_stmt|;
 elseif|else
@@ -738,7 +769,7 @@ operator|&
 name|net_imask
 condition|)
 name|flags
-operator|=
+operator||=
 name|INTR_TYPE_NET
 expr_stmt|;
 elseif|else
@@ -750,7 +781,7 @@ operator|&
 name|cam_imask
 condition|)
 name|flags
-operator|=
+operator||=
 name|INTR_TYPE_CAM
 expr_stmt|;
 name|error
@@ -908,9 +939,7 @@ name|nextpin
 argument_list|,
 literal|1
 argument_list|,
-name|RF_SHAREABLE
-operator||
-name|RF_ACTIVE
+name|resflags
 argument_list|)
 expr_stmt|;
 if|if
