@@ -1999,7 +1999,7 @@ modifier|*
 name|trail
 decl_stmt|;
 comment|/* remaining part after parsing, should be '' */
-name|int
+name|size_t
 name|len
 decl_stmt|;
 comment|/* length of current line */
