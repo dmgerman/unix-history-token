@@ -3414,6 +3414,37 @@ operator|==
 name|EINTR
 condition|)
 block|{
+if|if
+condition|(
+name|TimerServiceRequest
+operator|>
+literal|0
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|logprintf
+argument_list|(
+literal|"Invoking TimerService\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Maybe a bit cautious.... */
+name|TimerServiceRequest
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|TimerService
+argument_list|()
+expr_stmt|;
+name|TimerServiceRequest
+operator|=
+literal|0
+expr_stmt|;
+block|}
 continue|continue;
 comment|/* Got SIGALRM, Do check a queue for dialing */
 block|}

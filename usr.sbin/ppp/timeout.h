@@ -114,6 +114,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|TimerServiceRequest
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If this is>0, call TimerService() */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|StartTimer
 name|__P
