@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.1 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,24 +48,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|envelope
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  NEWENVELOPE -- allocate a new envelope ** **	Supports inheritance. ** **	Parameters: **		e -- the new envelope to fill in. ** **	Returns: **		e. ** **	Side Effects: **		none. */
@@ -824,6 +806,9 @@ literal|10
 index|]
 decl_stmt|;
 comment|/* holds pid */
+ifdef|#
+directive|ifdef
+name|TTYNAME
 specifier|static
 name|char
 name|ybuf
@@ -837,6 +822,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+endif|#
+directive|endif
+endif|TTYNAME
 specifier|extern
 name|char
 modifier|*
