@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -12,18 +12,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"ttychars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ttydev.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"termios.h"
 end_include
 
@@ -31,18 +19,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ttychars.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ttydev.h>
-end_include
 
 begin_include
 include|#
@@ -89,74 +65,14 @@ begin_struct
 struct|struct
 name|tty
 block|{
-union|union
-block|{
-struct|struct
-block|{
 name|struct
 name|clist
-name|T_rawq
-decl_stmt|;
-name|struct
-name|clist
-name|T_canq
-decl_stmt|;
-block|}
-name|t_t
-struct|;
-define|#
-directive|define
 name|t_rawq
-value|t_nu.t_t.T_rawq
-comment|/* raw characters or partial line */
-define|#
-directive|define
-name|t_canq
-value|t_nu.t_t.T_canq
-comment|/* canonicalized lines */
-struct|struct
-block|{
+decl_stmt|;
 name|struct
-name|buf
-modifier|*
-name|T_bufp
+name|clist
+name|t_canq
 decl_stmt|;
-name|char
-modifier|*
-name|T_cp
-decl_stmt|;
-name|int
-name|T_inbuf
-decl_stmt|;
-name|int
-name|T_rec
-decl_stmt|;
-block|}
-name|t_n
-struct|;
-define|#
-directive|define
-name|t_bufp
-value|t_nu.t_n.T_bufp
-comment|/* buffer allocated to protocol */
-define|#
-directive|define
-name|t_cp
-value|t_nu.t_n.T_cp
-comment|/* pointer into the ripped off buffer */
-define|#
-directive|define
-name|t_inbuf
-value|t_nu.t_n.T_inbuf
-comment|/* number chars in the buffer */
-define|#
-directive|define
-name|t_rec
-value|t_nu.t_n.T_rec
-comment|/* have a complete record */
-block|}
-name|t_nu
-union|;
 name|struct
 name|clist
 name|t_outq
@@ -192,7 +108,7 @@ decl_stmt|;
 name|caddr_t
 name|T_LINEP
 decl_stmt|;
-comment|/* ### */
+comment|/* XXX */
 name|caddr_t
 name|t_addr
 decl_stmt|;
@@ -204,7 +120,7 @@ comment|/* device */
 name|int
 name|t_flags
 decl_stmt|;
-comment|/* (old) some of both */
+comment|/* (compat) some of both */
 name|int
 name|t_state
 decl_stmt|;
@@ -217,10 +133,6 @@ decl_stmt|;
 comment|/* tty */
 name|pid_t
 name|t_pgid
-decl_stmt|;
-comment|/* tty */
-name|char
-name|t_delct
 decl_stmt|;
 comment|/* tty */
 name|char
@@ -322,13 +234,6 @@ end_define
 begin_comment
 comment|/* limits */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NSPEEDS
-value|16
-end_define
 
 begin_define
 define|#
@@ -677,6 +582,111 @@ define|#
 directive|define
 name|RETURN
 value|6
+end_define
+
+begin_struct
+struct|struct
+name|speedtab
+block|{
+name|int
+name|sp_speed
+decl_stmt|;
+name|int
+name|sp_code
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Flags on character passed to ttyinput  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_CHARMASK
+value|0x000000ff
+end_define
+
+begin_comment
+comment|/* Character mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_QUOTE
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Character quoted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_ERRORMASK
+value|0xff000000
+end_define
+
+begin_comment
+comment|/* Error mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_FE
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* Framing error or BREAK condition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TTY_PE
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Parity error */
+end_comment
+
+begin_comment
+comment|/*  * Modem control commands (driver).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMSET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMBIS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMBIC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMGET
+value|3
 end_define
 
 end_unit
