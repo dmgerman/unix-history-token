@@ -7906,6 +7906,22 @@ block|{
 name|wbinvd
 argument_list|()
 expr_stmt|;
+comment|/* 		 * Set memory between 0-640K to be WB 		 */
+name|wrmsr
+argument_list|(
+literal|0x250
+argument_list|,
+literal|0x0606060606060606LL
+argument_list|)
+expr_stmt|;
+name|wrmsr
+argument_list|(
+literal|0x258
+argument_list|,
+literal|0x0606060606060606LL
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Set normal, PC video memory to be WC 		 */
 name|wrmsr
 argument_list|(
 literal|0x259
