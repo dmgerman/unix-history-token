@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.39 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -365,6 +365,16 @@ directive|ifdef
 name|__hpux
 end_ifdef
 
+begin_comment
+comment|/* avoid m_flags conflict between db.h& sys/sysmacros.h on HP 300 */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|m_flags
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -506,6 +516,12 @@ ifdef|#
 directive|ifdef
 name|IRIX
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
 
 begin_define
 define|#
