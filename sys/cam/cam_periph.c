@@ -2127,7 +2127,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Increment the reference count on the peripheral 	 * while we wait for our lock attempt to succeed 	 * to ensure the peripheral doesn't dissappear 	 * out from under us while we sleep. 	 */
+comment|/* 	 * Increment the reference count on the peripheral 	 * while we wait for our lock attempt to succeed 	 * to ensure the peripheral doesn't disappear out 	 * from under us while we sleep. 	 */
 if|if
 condition|(
 name|cam_periph_acquire
@@ -5933,6 +5933,8 @@ name|status
 operator|&=
 name|CAM_STATUS_MASK
 expr_stmt|;
+name|openings
+operator|=
 name|relsim_flags
 operator|=
 literal|0
@@ -5993,6 +5995,12 @@ argument_list|(
 literal|"AutoSense Failed\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+comment|/* we have to kill the command */
+break|break;
 case|case
 name|CAM_REQ_CMP_ERR
 case|:
