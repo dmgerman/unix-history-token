@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_de.c	6.1	83/11/02	*/
+comment|/*	if_de.c	6.2	84/02/02	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * DEC DEUNA interface  *  *	Lou Salkind  *	New York University  *  * TODO:  *	timeout routine (get statistics)  *	generalize UNIBUS routines  */
+comment|/*  * DEC DEUNA interface  *  *	Lou Salkind  *	New York University  *  * TODO:  *	timeout routine (get statistics)  */
 end_comment
 
 begin_include
@@ -202,6 +202,14 @@ end_define
 
 begin_decl_stmt
 name|int
+name|dedebug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|deprobe
 argument_list|()
 decl_stmt|,
@@ -371,6 +379,10 @@ directive|define
 name|DSF_LOCK
 value|1
 comment|/* lock out destart */
+define|#
+directive|define
+name|DSF_RUNNING
+value|2
 name|int
 name|ds_ubaddr
 decl_stmt|;
@@ -937,6 +949,10 @@ operator|->
 name|ds_ubaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dedebug
+condition|)
 name|printf
 argument_list|(
 literal|"de%d: addr=%d:%d:%d:%d:%d:%d\n"
@@ -1185,6 +1201,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+comment|/* NEED TO RESET IFF_RUNNING AND DSF_RUNNING? */
 name|deinit
 argument_list|(
 name|unit
@@ -1947,6 +1964,16 @@ name|ds_xfree
 operator|=
 literal|0
 expr_stmt|;
+name|ds
+operator|->
+name|ds_if
+operator|.
+name|if_flags
+operator||=
+name|IFF_UP
+operator||
+name|IFF_RUNNING
+expr_stmt|;
 name|destart
 argument_list|(
 name|unit
@@ -1970,15 +1997,10 @@ name|PCSR0_INTE
 expr_stmt|;
 name|ds
 operator|->
-name|ds_if
-operator|.
-name|if_flags
+name|ds_flags
 operator||=
-name|IFF_UP
-operator||
-name|IFF_RUNNING
+name|DSF_RUNNING
 expr_stmt|;
-comment|/* after destart */
 name|splx
 argument_list|(
 name|s
@@ -2275,11 +2297,9 @@ if|if
 condition|(
 name|ds
 operator|->
-name|ds_if
-operator|.
-name|if_flags
+name|ds_flags
 operator|&
-name|IFF_UP
+name|DSF_RUNNING
 condition|)
 name|addr
 operator|->
@@ -2465,6 +2485,10 @@ operator|.
 name|if_oerrors
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|dedebug
+condition|)
 name|printf
 argument_list|(
 literal|"de%d: oerror, flags=%b tdrerr=%b (len=%d)\n"
@@ -2825,6 +2849,10 @@ operator|.
 name|if_ierrors
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|dedebug
+condition|)
 name|printf
 argument_list|(
 literal|"de%d: ierror, flags=%b lenerr=%b (len=%d)\n"
