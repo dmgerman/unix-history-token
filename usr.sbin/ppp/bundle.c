@@ -5733,14 +5733,15 @@ name|state
 operator|==
 name|TIMER_RUNNING
 operator|)
+operator|||
+name|dl
+operator|->
+name|state
+operator|==
+name|DATALINK_READY
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|force
-condition|)
-comment|/* Ignore redial timeout ? */
 name|timer_Stop
 argument_list|(
 operator|&
@@ -5751,6 +5752,7 @@ operator|.
 name|timer
 argument_list|)
 expr_stmt|;
+comment|/* We're finished with this */
 name|datalink_Up
 argument_list|(
 name|dl
@@ -5766,8 +5768,8 @@ name|mask
 operator|&
 name|PHYS_AUTO
 condition|)
-comment|/* Only one AUTO link at a time */
 break|break;
+comment|/* Only one AUTO link at a time */
 block|}
 if|if
 condition|(
