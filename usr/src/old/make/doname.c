@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)doname.c	4.7 (Berkeley) 85/08/30"
+literal|"@(#)doname.c	4.8 (Berkeley) 85/09/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,6 +21,12 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_comment
 comment|/*  BASIC PROCEDURE.  RECURSIVE.  */
 end_comment
@@ -28,6 +34,15 @@ end_comment
 begin_comment
 comment|/* p->done = 0   don't know what to do yet p->done = 1   file in process of being updated p->done = 2   file already exists in current state p->done = 3   file make failed */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_siglist
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|doname
@@ -1528,27 +1543,77 @@ name|nohalt
 argument_list|)
 condition|)
 block|{
+name|unsigned
+name|sig
+init|=
+name|status
+operator|&
+literal|0177
+decl_stmt|;
 if|if
 condition|(
-name|status
-operator|>>
-literal|8
+name|sig
+condition|)
+block|{
+if|if
+condition|(
+name|sig
+operator|<
+name|NSIG
+operator|&&
+name|sys_siglist
+index|[
+name|sig
+index|]
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|sys_siglist
+index|[
+name|sig
+index|]
+operator|!=
+literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"*** Error code %d"
+literal|"*** %s"
 argument_list|,
-name|status
-operator|>>
-literal|8
+name|sys_siglist
+index|[
+name|sig
+index|]
 argument_list|)
 expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"*** Termination code %d"
+literal|"*** Signal %d"
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+literal|0200
+condition|)
+name|printf
+argument_list|(
+literal|" - core dumped"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"*** Exit %d"
 argument_list|,
 name|status
+operator|>>
+literal|8
 argument_list|)
 expr_stmt|;
 if|if
