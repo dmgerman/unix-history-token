@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.1 (Berkeley) %G%"
+literal|"@(#)order.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2900,6 +2900,14 @@ operator|.
 name|op
 operator|=
 name|STASG
+expr_stmt|;
+name|pasg
+operator|->
+name|in
+operator|.
+name|rall
+operator|=
+name|NOPREF
 expr_stmt|;
 name|pasg
 operator|->
