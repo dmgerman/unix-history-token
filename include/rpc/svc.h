@@ -51,6 +51,42 @@ name|SVCSET_VERSQUIET
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|SVCGET_CONNMAXREC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SVCSET_CONNMAXREC
+value|4
+end_define
+
+begin_comment
+comment|/*  * Operations for rpc_control().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RPC_SVC_CONNMAXREC_SET
+value|0
+end_define
+
+begin_comment
+comment|/* set max rec size, enable nonblock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RPC_SVC_CONNMAXREC_GET
+value|1
+end_define
+
 begin_enum
 enum|enum
 name|xprt_stat

@@ -294,6 +294,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|SVCXPRT
+modifier|*
+modifier|*
+name|__svc_xports
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__svc_maxrec
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
