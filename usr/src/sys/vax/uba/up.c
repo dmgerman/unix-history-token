@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.70	83/02/17	*/
+comment|/*	up.c	4.71	83/02/21	*/
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ name|int
 name|cyloff
 decl_stmt|;
 block|}
-name|up_sizes
+name|up9300_sizes
 index|[
 literal|8
 index|]
@@ -240,7 +240,55 @@ block|,
 comment|/* H=cyl 82 thru 561 */
 block|}
 struct|,
-name|fj_sizes
+name|up9766_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 26 */
+literal|33440
+block|,
+literal|27
+block|,
+comment|/* B=cyl 27 thru 81 */
+literal|500384
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 822 */
+literal|15884
+block|,
+literal|562
+block|,
+comment|/* D=cyl 562 thru 588 */
+literal|55936
+block|,
+literal|589
+block|,
+comment|/* E=cyl 589 thru 680 */
+literal|86240
+block|,
+literal|681
+block|,
+comment|/* F=cyl 681 thru 822 */
+literal|158592
+block|,
+literal|562
+block|,
+comment|/* G=cyl 562 thru 822 */
+literal|291346
+block|,
+literal|82
+block|,
+comment|/* H=cyl 82 thru 561 */
+block|}
+struct|,
+name|up160_sizes
 index|[
 literal|8
 index|]
@@ -261,28 +309,30 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 822 */
-literal|0
+literal|15884
 block|,
-literal|0
+literal|155
 block|,
-literal|0
+comment|/* D=cyl 155 thru 204 */
+literal|55936
 block|,
-literal|0
+literal|205
 block|,
-literal|0
+comment|/* E=cyl 205 thru 379 */
+literal|141664
 block|,
-literal|0
+literal|380
 block|,
-literal|0
-block|,
-literal|0
-block|,
+comment|/* F=cyl 380 thru 822 */
 literal|213664
 block|,
 literal|155
 block|,
-comment|/* H=cyl 155 thru 822 */
-block|}
+comment|/* G=cyl 155 thru 822 */
+literal|0
+block|,
+literal|0
+block|, }
 struct|,
 name|upam_sizes
 index|[
@@ -305,23 +355,26 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 1023 */
-literal|27786
+literal|15884
 block|,
 literal|668
 block|,
-literal|27786
+comment|/* D=cyl 668 thru 699 */
+literal|55936
 block|,
-literal|723
+literal|700
 block|,
-literal|125440
+comment|/* E=cyl 700 thru 809 */
+literal|109472
 block|,
-literal|778
+literal|810
 block|,
-literal|181760
+comment|/* F=cyl 810 thru 1023 */
+literal|182176
 block|,
 literal|668
 block|,
-comment|/* G=cyl 668 thru 1022 */
+comment|/* G=cyl 668 thru 1023 */
 literal|291346
 block|,
 literal|98
@@ -551,7 +604,7 @@ literal|19
 block|,
 literal|815
 block|,
-name|up_sizes
+name|up9300_sizes
 block|,
 comment|/* 9300 */
 literal|32
@@ -564,7 +617,7 @@ literal|19
 block|,
 literal|823
 block|,
-name|up_sizes
+name|up9766_sizes
 block|,
 comment|/* 9766 */
 literal|32
@@ -577,7 +630,7 @@ literal|10
 block|,
 literal|823
 block|,
-name|fj_sizes
+name|up160_sizes
 block|,
 comment|/* fujitsu 160m */
 literal|32
