@@ -809,6 +809,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NPset
+value|gettyflags[21].set
+end_define
+
+begin_define
+define|#
+directive|define
 name|MB
 value|gettyflags[22].value
 end_define

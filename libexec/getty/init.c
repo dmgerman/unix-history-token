@@ -142,7 +142,7 @@ block|{
 literal|"er"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -155,7 +155,7 @@ block|{
 literal|"kl"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -168,7 +168,7 @@ block|{
 literal|"et"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -217,7 +217,7 @@ block|{
 literal|"in"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -230,7 +230,7 @@ block|{
 literal|"qu"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -243,7 +243,7 @@ block|{
 literal|"xn"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -256,7 +256,7 @@ block|{
 literal|"xf"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -269,7 +269,7 @@ block|{
 literal|"bk"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -282,7 +282,7 @@ block|{
 literal|"su"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -295,7 +295,7 @@ block|{
 literal|"ds"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -308,7 +308,7 @@ block|{
 literal|"rp"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -321,7 +321,7 @@ block|{
 literal|"fl"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -334,7 +334,7 @@ block|{
 literal|"we"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
@@ -347,7 +347,7 @@ block|{
 literal|"ln"
 block|,
 operator|&
-name|tmode
+name|omode
 operator|.
 name|c_cc
 index|[
