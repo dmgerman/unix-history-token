@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/ic/ns16550.h>
+file|<dev/ic/ns16550.h>
 end_include
 
 begin_decl_stmt

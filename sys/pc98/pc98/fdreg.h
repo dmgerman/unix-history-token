@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<isa/ic/nec765.h>
+file|<dev/ic/nec765.h>
 end_include
 
 begin_ifdef
