@@ -3265,9 +3265,9 @@ name|spin_order_list
 index|[]
 init|=
 block|{
-literal|"sched lock"
-block|,
 literal|"sio"
+block|,
+literal|"sched lock"
 block|,
 ifdef|#
 directive|ifdef
