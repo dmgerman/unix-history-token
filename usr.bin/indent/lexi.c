@@ -131,7 +131,7 @@ name|struct
 name|templ
 name|specials
 index|[
-literal|1000
+literal|100
 index|]
 init|=
 block|{
@@ -301,18 +301,6 @@ block|{
 literal|"sizeof"
 block|,
 literal|7
-block|}
-block|,
-block|{
-literal|"const"
-block|,
-literal|9
-block|}
-block|,
-block|{
-literal|"volatile"
-block|,
-literal|9
 block|}
 block|,
 block|{
@@ -1334,12 +1322,11 @@ name|p_l_follow
 condition|)
 break|break;
 comment|/* inside parens: cast */
-comment|/* 		 * Next time around, we may want to know that we have had a 		 * 'struct' 		 */
 name|l_struct
 operator|=
 name|true
 expr_stmt|;
-comment|/* 		 * Fall through to test for a cast, function prototype or 		 * sizeof(). 		 */
+comment|/* 		 * Next time around, we will want to know that we have had a 		 * 'struct' 		 */
 case|case
 literal|4
 case|:
@@ -1361,19 +1348,8 @@ name|ps
 operator|.
 name|p_l_follow
 expr_stmt|;
-comment|/* 		     * Forget that we saw `struct' if we're in a sizeof(). 		     */
-if|if
-condition|(
-name|ps
-operator|.
-name|sizeof_mask
-condition|)
-name|l_struct
-operator|=
-name|false
-expr_stmt|;
 break|break;
-comment|/* inside parens: cast, prototype or sizeof() */
+comment|/* inside parens: cast */
 block|}
 name|last_code
 operator|=
