@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.12 (Berkeley) %G%"
+literal|"@(#)trees.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2261,15 +2261,7 @@ argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval / val; 		else p->
 literal|0
 argument|) uerror(
 literal|"division by 0"
-argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval % val; 		else p->tn.lval %= val; 		break; 	case AND: 		p->tn.lval&= val; 		break; 	case OR: 		p->tn.lval |= val; 		break; 	case ER: 		p->tn.lval ^= val; 		break; 	case LS: 		i = val; 		p->tn.lval = p->tn.lval<< i; 		break; 	case RS: 		i = val; 		if ( u ) p->tn.lval = (unsigned) p->tn.lval>> i; 		else p->tn.lval = p->tn.lval>> i; 		break;  	case UNARY MINUS: 		p->tn.lval = - p->tn.lval; 		break; 	case COMPL: 		p->tn.lval = ~p->tn.lval; 		break; 	case NOT: 		p->tn.lval = !p->tn.lval; 		break; 	case LT: 		p->tn.lval = p->tn.lval< val; 		break; 	case LE: 		p->tn.lval = p->tn.lval<= val; 		break; 	case GT: 		p->tn.lval = p->tn.lval> val; 		break; 	case GE: 		p->tn.lval = p->tn.lval>= val; 		break; 	case ULT: 		p->tn.lval = (p->tn.lval-val)<
-literal|0
-argument|; 		break; 	case ULE: 		p->tn.lval = (p->tn.lval-val)<=
-literal|0
-argument|; 		break; 	case UGE: 		p->tn.lval = (p->tn.lval-val)>=
-literal|0
-argument|; 		break; 	case UGT: 		p->tn.lval = (p->tn.lval-val)>
-literal|0
-argument|; 		break; 	case EQ: 		p->tn.lval = p->tn.lval == val; 		break; 	case NE: 		p->tn.lval = p->tn.lval != val; 		break; 	default: 		return(
+argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval % val; 		else p->tn.lval %= val; 		break; 	case AND: 		p->tn.lval&= val; 		break; 	case OR: 		p->tn.lval |= val; 		break; 	case ER: 		p->tn.lval ^= val; 		break; 	case LS: 		i = val; 		p->tn.lval = p->tn.lval<< i; 		break; 	case RS: 		i = val; 		if ( u ) p->tn.lval = (unsigned) p->tn.lval>> i; 		else p->tn.lval = p->tn.lval>> i; 		break;  	case UNARY MINUS: 		p->tn.lval = - p->tn.lval; 		break; 	case COMPL: 		p->tn.lval = ~p->tn.lval; 		break; 	case NOT: 		p->tn.lval = !p->tn.lval; 		break; 	case LT: 		p->tn.lval = p->tn.lval< val; 		break; 	case LE: 		p->tn.lval = p->tn.lval<= val; 		break; 	case GT: 		p->tn.lval = p->tn.lval> val; 		break; 	case GE: 		p->tn.lval = p->tn.lval>= val; 		break; 	case ULT: 		p->tn.lval = p->tn.lval< (unsigned) val; 		break; 	case ULE: 		p->tn.lval = p->tn.lval<= (unsigned) val; 		break; 	case UGT: 		p->tn.lval = p->tn.lval> (unsigned) val; 		break; 	case UGE: 		p->tn.lval = p->tn.lval>= (unsigned) val; 		break; 	case EQ: 		p->tn.lval = p->tn.lval == val; 		break; 	case NE: 		p->tn.lval = p->tn.lval != val; 		break; 	default: 		return(
 literal|0
 argument|); 		} 	return(
 literal|1
