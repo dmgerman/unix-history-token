@@ -7993,6 +7993,18 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|ndis_link
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
 name|len
 operator|=
 sizeof|sizeof
@@ -8026,7 +8038,7 @@ name|sc
 operator|->
 name|ndis_dev
 argument_list|,
-literal|"failed to get bssid"
+literal|"failed to get bssid\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8066,7 +8078,7 @@ name|sc
 operator|->
 name|ndis_dev
 argument_list|,
-literal|"bssid_list failed"
+literal|"bssid_list failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8118,7 +8130,7 @@ name|sc
 operator|->
 name|ndis_dev
 argument_list|,
-literal|"bssid_list failed"
+literal|"bssid_list failed\n"
 argument_list|)
 expr_stmt|;
 return|return
