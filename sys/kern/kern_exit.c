@@ -2552,10 +2552,12 @@ modifier|*
 name|parent
 decl_stmt|;
 block|{
-name|SX_ASSERT_XLOCKED
+name|sx_assert
 argument_list|(
 operator|&
 name|proctree_lock
+argument_list|,
+name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK_ASSERT
