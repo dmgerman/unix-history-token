@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)split.c	4.1 (Berkeley) %G%"
+literal|"@(#)split.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,11 +232,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot open input\n"
+name|ifil
 argument_list|)
 expr_stmt|;
 name|exit

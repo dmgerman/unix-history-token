@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deroff.c	4.3	(Berkeley)	82/11/06"
+literal|"@(#)deroff.c	4.4	(Berkeley)	83/04/29"
 decl_stmt|;
 end_decl_stmt
 
@@ -1153,13 +1153,25 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+block|{
+name|fprintf
 argument_list|(
-literal|"Cannot open file %s\n"
+name|stderr
 argument_list|,
+literal|"Deroff: "
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|fd

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)comm.c	4.1 (Berkeley) %G%"
+literal|"@(#)comm.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -864,12 +864,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"comm: cannot open %s\n"
-argument_list|,
 name|s
 argument_list|)
 expr_stmt|;

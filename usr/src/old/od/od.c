@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.10 (Berkeley) %G%"
+literal|"@(#)od.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2330,10 +2330,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"od: cannot open %s\n"
-argument_list|,
 operator|*
 name|argv
 argument_list|)

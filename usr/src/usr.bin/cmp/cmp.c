@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmp.c	4.1 (Berkeley) %G%"
+literal|"@(#)cmp.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -523,10 +523,8 @@ if|if
 condition|(
 name|lflg
 condition|)
-name|printf
+name|perror
 argument_list|(
-literal|"cmp: cannot open %s\n"
-argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;

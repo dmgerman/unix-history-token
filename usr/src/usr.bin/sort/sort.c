@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.4 (Berkeley) %G%"
+literal|"@(#)sort.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4694,10 +4694,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|diag
+name|perror
 argument_list|(
-literal|"can't open "
-argument_list|,
 name|f
 argument_list|)
 expr_stmt|;

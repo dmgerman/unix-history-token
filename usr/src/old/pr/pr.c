@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pr.c	4.3 (Berkeley) %G%"
+literal|"@(#)pr.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -989,12 +989,8 @@ name|tty
 operator|==
 name|NULL
 condition|)
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"pr: can't open %s\n"
-argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;

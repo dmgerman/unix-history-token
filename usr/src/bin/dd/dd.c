@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dd.c	4.2 (Berkeley) %G%"
+literal|"@(#)dd.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2306,12 +2306,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot open: %s\n"
-argument_list|,
 name|ifile
 argument_list|)
 expr_stmt|;

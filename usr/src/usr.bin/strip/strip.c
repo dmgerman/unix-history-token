@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)strip.c	4.2 (Berkeley) %G%"
+literal|"@(#)strip.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,10 +238,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"cannot open %s\n"
-argument_list|,
 name|name
 argument_list|)
 expr_stmt|;

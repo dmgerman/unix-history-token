@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)checkeq.c	4.1 (Berkeley) %G%"
+literal|"@(#)checkeq.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,10 +81,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"Can't open %s\n"
-argument_list|,
 operator|*
 name|argv
 argument_list|)
