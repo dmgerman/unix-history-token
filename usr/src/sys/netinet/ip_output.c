@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	6.7	85/03/18	*/
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_output.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -462,6 +462,66 @@ name|rt_gateway
 expr_stmt|;
 name|gotif
 label|:
+ifndef|#
+directive|ifndef
+name|notdef
+comment|/* 	 * If source address not specified yet, use address 	 * of outgoing interface. 	 */
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
+condition|)
+block|{
+specifier|register
+name|struct
+name|in_ifaddr
+modifier|*
+name|ia
+decl_stmt|;
+for|for
+control|(
+name|ia
+operator|=
+name|in_ifaddr
+init|;
+name|ia
+condition|;
+name|ia
+operator|=
+name|ia
+operator|->
+name|ia_next
+control|)
+if|if
+condition|(
+name|ia
+operator|->
+name|ia_ifp
+operator|==
+name|ifp
+condition|)
+block|{
+name|ip
+operator|->
+name|ip_src
+operator|=
+name|IA_SIN
+argument_list|(
+name|ia
+argument_list|)
+operator|->
+name|sin_addr
+expr_stmt|;
+break|break;
+block|}
+block|}
+endif|#
+directive|endif
 comment|/* 	 * Look for broadcast address and 	 * and verify user is allowed to send 	 * such a packet. 	 */
 if|if
 condition|(
