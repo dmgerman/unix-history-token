@@ -216,6 +216,51 @@ directive|include
 file|<gnu/ext2fs/ext2_extern.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ext2_fsync
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_fsync_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ext2_read
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_read_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ext2_write
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_write_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Global vfs data structures for ufs. */
 end_comment
@@ -229,6 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|ext2_vnodeop_entries
@@ -748,6 +794,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|ext2fs_vnodeop_opv_desc
@@ -770,6 +817,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|ext2_specop_entries
@@ -1289,6 +1337,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|ext2fs_specop_opv_desc
@@ -1311,6 +1360,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|ext2_fifoop_entries
@@ -1830,6 +1880,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|ext2fs_fifoop_opv_desc
@@ -1898,6 +1949,7 @@ file|<sys/sysctl.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|doclusterread
 init|=
@@ -1927,6 +1979,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|doclusterwrite
 init|=
@@ -2030,6 +2083,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ext2_fsync
 parameter_list|(

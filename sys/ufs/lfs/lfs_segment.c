@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_segment.c	8.5 (Berkeley) 1/4/94  * $Id: lfs_segment.c,v 1.14 1995/09/04 00:21:01 dyson Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_segment.c	8.5 (Berkeley) 1/4/94  * $Id: lfs_segment.c,v 1.15 1995/12/03 11:16:46 bde Exp $  */
 end_comment
 
 begin_include
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|caddr_t
 name|lfs_alloc_buffer
 name|__P
@@ -163,7 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|void
 name|lfs_reclaim_buffers
 name|__P
@@ -197,18 +197,21 @@ value|(1024*512)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_total_io_size
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_total_io_count
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|int
 name|lfs_total_free_count
@@ -216,18 +219,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_free_needed
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_in_buffer_reclaim
 decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|lfs_freebuf
 block|{
@@ -300,6 +306,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lfs_reclaim_buffers
 parameter_list|()
@@ -425,6 +432,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|caddr_t
 name|lfs_alloc_buffer
 parameter_list|(
@@ -546,6 +554,7 @@ value|((fs)->lfs_dbpseg - ((fs)->lfs_offset - (fs)->lfs_curseg)> \ 	1<< (fs)->lf
 end_define
 
 begin_decl_stmt
+specifier|static
 name|void
 name|lfs_callback
 name|__P
@@ -560,6 +569,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|lfs_gather
 name|__P
@@ -617,6 +627,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_match_data
 name|__P
@@ -635,6 +646,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_match_dindir
 name|__P
@@ -653,6 +665,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_match_indir
 name|__P
@@ -671,6 +684,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lfs_match_tindir
 name|__P
@@ -689,6 +703,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|lfs_newseg
 name|__P
@@ -703,6 +718,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|lfs_shellsort
 name|__P
@@ -724,6 +740,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|lfs_supercallback
 name|__P
@@ -738,6 +755,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|lfs_writefile
 name|__P
@@ -760,6 +778,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 name|lfs_writevnodes
 name|__P
@@ -1068,6 +1087,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lfs_writevnodes
 parameter_list|(
@@ -1701,6 +1721,7 @@ comment|/*  * Write the dirty blocks associated with a vnode.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lfs_writefile
 parameter_list|(
@@ -2810,6 +2831,7 @@ block|}
 end_function
 
 begin_function_decl
+specifier|static
 name|void
 name|lfs_gather
 parameter_list|(
@@ -3846,6 +3868,7 @@ comment|/*  * Return the next segment to write.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lfs_newseg
 parameter_list|(
@@ -5155,6 +5178,7 @@ comment|/*  * Logical block number match routines used when traversing the dirty
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lfs_match_data
 parameter_list|(
@@ -5186,6 +5210,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|lfs_match_indir
 parameter_list|(
@@ -5238,6 +5263,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|lfs_match_dindir
 parameter_list|(
@@ -5290,6 +5316,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|lfs_match_tindir
 parameter_list|(
@@ -5465,6 +5492,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lfs_callback
 parameter_list|(
@@ -5552,6 +5580,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lfs_supercallback
 parameter_list|(
@@ -5602,6 +5631,7 @@ comment|/*  * This is our own private copy of shellsort because we want to sort 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|lfs_shellsort
 parameter_list|(

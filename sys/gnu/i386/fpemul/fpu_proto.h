@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  *    $Id: fpu_proto.h,v 1.3 1995/03/16 18:11:11 bde Exp $  *  */
+comment|/*  *  *    $Id: fpu_proto.h,v 1.4 1995/12/14 09:50:23 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -502,22 +502,6 @@ end_function_decl
 begin_comment
 comment|/* fpu_trig.c */
 end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|convert_l2reg
-parameter_list|(
-name|long
-modifier|*
-name|arg
-parameter_list|,
-name|FPU_REG
-modifier|*
-name|dest
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern

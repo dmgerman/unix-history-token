@@ -93,6 +93,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|READ
 parameter_list|(
@@ -662,6 +663,7 @@ comment|/*  * Vnode op for writing.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|WRITE
 parameter_list|(

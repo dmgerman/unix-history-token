@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vnops.c	8.3 (Berkeley) 9/21/93  * $Id: mfs_vnops.c,v 1.11 1995/10/31 10:45:48 peter Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mfs_vnops.c	8.3 (Berkeley) 9/21/93  * $Id: mfs_vnops.c,v 1.12 1995/11/09 08:14:29 bde Exp $  */
 end_comment
 
 begin_include
@@ -149,6 +149,155 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_badop
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_bmap
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_bmap_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_close_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_ioctl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_ioctl_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_inactive
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_inactive_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_open
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_open_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_print
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_print_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_reclaim
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_reclaim_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mfs_strategy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_strategy_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_comment
 comment|/*  * mfs vnode operations.  */
 end_comment
@@ -162,6 +311,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_entry_desc
 name|mfs_vnodeop_entries
@@ -669,6 +819,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vnodeopv_desc
 name|mfs_vnodeop_opv_desc
@@ -699,6 +850,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_open
 parameter_list|(
@@ -746,6 +898,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_ioctl
 parameter_list|(
@@ -771,6 +924,7 @@ comment|/*  * Pass I/O requests to the memory filesystem process.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_strategy
 parameter_list|(
@@ -1068,6 +1222,7 @@ comment|/*  * This is a noop, simply returning what one has been given.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_bmap
 parameter_list|(
@@ -1146,6 +1301,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_close
 parameter_list|(
@@ -1328,6 +1484,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_inactive
 parameter_list|(
@@ -1395,6 +1552,7 @@ comment|/*  * Reclaim a memory filesystem devvp so that it can be reused.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_reclaim
 parameter_list|(
@@ -1439,6 +1597,7 @@ comment|/*  * Print out the contents of an mfsnode.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_print
 parameter_list|(
@@ -1494,6 +1653,7 @@ comment|/*  * Block device bad operation  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mfs_badop
 parameter_list|()
@@ -1504,23 +1664,6 @@ literal|"mfs_badop called"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Memory based filesystem initialization.  */
-end_comment
-
-begin_function
-name|int
-name|mfs_init
-parameter_list|()
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
