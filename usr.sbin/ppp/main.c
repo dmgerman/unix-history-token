@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.155 1999/05/13 16:34:57 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.156 1999/08/09 22:54:51 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -96,7 +96,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 end_ifndef
 
 begin_ifdef
@@ -787,11 +787,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: ppp [-auto | -background | -direct | -dedicated | -ddial ]"
+literal|"Usage: ppp [-auto | -foreground | -background | -direct | -dedicated | -ddial | -interactive]"
 ifndef|#
 directive|ifndef
 name|NOALIAS
-literal|" [ -alias ]"
+literal|" [-nat]"
 endif|#
 directive|endif
 literal|" [system ...]\n"
@@ -824,7 +824,15 @@ name|mode
 parameter_list|,
 name|int
 modifier|*
-name|alias
+name|nat
+parameter_list|,
+name|int
+modifier|*
+name|fg
+parameter_list|,
+name|int
+modifier|*
+name|quiet
 parameter_list|)
 block|{
 name|int
@@ -848,7 +856,17 @@ operator|=
 name|PHYS_INTERACTIVE
 expr_stmt|;
 operator|*
-name|alias
+name|nat
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|fg
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|quiet
 operator|=
 literal|0
 expr_stmt|;
@@ -907,6 +925,15 @@ name|strcmp
 argument_list|(
 name|cp
 argument_list|,
+literal|"nat"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
 literal|"alias"
 argument_list|)
 operator|==
@@ -915,18 +942,18 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|NOALIAS
+name|NONAT
 name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Cannot load alias library (compiled out)\n"
+literal|"Cannot load libalias (compiled out)\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 operator|*
-name|alias
+name|nat
 operator|=
 literal|1
 expr_stmt|;
@@ -936,6 +963,54 @@ name|optc
 operator|--
 expr_stmt|;
 comment|/* this option isn't exclusive */
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"quiet"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|quiet
+operator|=
+literal|1
+expr_stmt|;
+name|optc
+operator|--
+expr_stmt|;
+comment|/* this option isn't exclusive */
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"foreground"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|*
+name|mode
+operator|=
+name|PHYS_BACKGROUND
+expr_stmt|;
+comment|/* Kinda like background mode */
+operator|*
+name|fg
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 name|Usage
@@ -1118,7 +1193,11 @@ name|nfds
 decl_stmt|,
 name|mode
 decl_stmt|,
-name|alias
+name|nat
+decl_stmt|,
+name|fg
+decl_stmt|,
+name|quiet
 decl_stmt|,
 name|label
 decl_stmt|,
@@ -1186,7 +1265,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 name|PacketAliasInit
 argument_list|()
 expr_stmt|;
@@ -1204,7 +1283,13 @@ operator|&
 name|mode
 argument_list|,
 operator|&
-name|alias
+name|nat
+argument_list|,
+operator|&
+name|fg
+argument_list|,
+operator|&
+name|quiet
 argument_list|)
 expr_stmt|;
 comment|/*    * A FreeBSD& OpenBSD hack to dodge a bug in the tty driver that drops    * output occasionally.... I must find the real reason some time.  To    * display the dodgy behaviour, comment out this bit, make yourself a large    * routing table and then run ppp in interactive mode.  The `show route'    * command will drop chunks of data !!!    */
@@ -1422,6 +1507,11 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|prompt_Printf
 argument_list|(
 name|prompt
@@ -1487,6 +1577,11 @@ operator|=
 name|bundle
 expr_stmt|;
 comment|/* couldn't do it earlier */
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
 name|prompt_Printf
 argument_list|(
 name|prompt
@@ -1507,13 +1602,13 @@ name|bundle
 expr_stmt|;
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 operator|=
-name|alias
+name|nat
 expr_stmt|;
 if|if
 condition|(
-name|alias
+name|nat
 condition|)
 name|bundle
 operator|->
@@ -1736,6 +1831,12 @@ condition|(
 name|mode
 operator|!=
 name|PHYS_DIRECT
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|fg
 condition|)
 block|{
 name|int
@@ -2003,7 +2104,8 @@ name|bundle
 argument_list|)
 expr_stmt|;
 comment|/* we have a new pid */
-comment|/* -auto, -dedicated, -ddial& -background */
+block|}
+comment|/* -auto, -dedicated, -ddial, -foreground& -background */
 name|prompt_Destroy
 argument_list|(
 name|prompt
@@ -2026,13 +2128,18 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|fg
+condition|)
 name|setsid
 argument_list|()
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* -direct: STDIN_FILENO gets used by modem_Open */
+comment|/* -direct - STDIN_FILENO gets used by physical_Open */
 name|prompt_TtyInit
 argument_list|(
 name|NULL
@@ -2052,7 +2159,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Interactive mode */
+comment|/* -interactive */
 name|close
 argument_list|(
 name|STDERR_FILENO

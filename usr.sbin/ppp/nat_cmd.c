@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.28 1999/07/24 02:53:39 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.29 1999/07/28 19:39:00 brian Exp $  */
 end_comment
 
 begin_include
@@ -368,7 +368,7 @@ end_function
 
 begin_function
 name|int
-name|alias_RedirectPort
+name|nat_RedirectPort
 parameter_list|(
 name|struct
 name|cmdargs
@@ -384,7 +384,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 condition|)
 block|{
 name|prompt_Printf
@@ -568,7 +568,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"alias port: error reading localaddr:port\n"
+literal|"nat port: error reading localaddr:port\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -611,7 +611,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"alias port: error reading alias port\n"
+literal|"nat port: error reading alias port\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -676,7 +676,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"alias port: error reading "
+literal|"nat port: error reading "
 literal|"remoteaddr:port\n"
 argument_list|)
 expr_stmt|;
@@ -745,7 +745,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"alias port: local& alias port ranges "
+literal|"nat port: local& alias port ranges "
 literal|"are not equal\n"
 argument_list|)
 expr_stmt|;
@@ -773,7 +773,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"alias port: local& remote port ranges "
+literal|"nat port: local& remote port ranges "
 literal|"are not equal\n"
 argument_list|)
 expr_stmt|;
@@ -830,7 +830,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"alias port: %d: error %d\n"
+literal|"nat port: %d: error %d\n"
 argument_list|,
 name|laliasport
 argument_list|,
@@ -868,7 +868,7 @@ end_function
 
 begin_function
 name|int
-name|alias_RedirectAddr
+name|nat_RedirectAddr
 parameter_list|(
 name|struct
 name|cmdargs
@@ -884,7 +884,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 condition|)
 block|{
 name|prompt_Printf
@@ -893,7 +893,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"alias not enabled\n"
+literal|"nat not enabled\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1002,7 +1002,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Usage: alias %s %s\n"
+literal|"Usage: nat %s %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -1053,7 +1053,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"Usage: alias %s %s\n"
+literal|"Usage: nat %s %s\n"
 argument_list|,
 name|arg
 operator|->
@@ -1485,7 +1485,7 @@ end_function
 
 begin_function
 name|int
-name|alias_ProxyRule
+name|nat_ProxyRule
 parameter_list|(
 name|struct
 name|cmdargs
@@ -1616,7 +1616,7 @@ end_function
 
 begin_function
 name|int
-name|alias_Pptp
+name|nat_Pptp
 parameter_list|(
 name|struct
 name|cmdargs
@@ -1730,7 +1730,7 @@ specifier|static
 name|struct
 name|mbuf
 modifier|*
-name|alias_PadMbuf
+name|nat_PadMbuf
 parameter_list|(
 name|struct
 name|mbuf
@@ -1819,7 +1819,7 @@ specifier|static
 name|struct
 name|mbuf
 modifier|*
-name|alias_LayerPush
+name|nat_LayerPush
 parameter_list|(
 name|struct
 name|bundle
@@ -1849,7 +1849,7 @@ condition|(
 operator|!
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 operator|||
 operator|*
 name|proto
@@ -1863,18 +1863,18 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"alias_LayerPush: PROTO_IP -> PROTO_IP\n"
+literal|"nat_LayerPush: PROTO_IP -> PROTO_IP\n"
 argument_list|)
 expr_stmt|;
 name|bp
 operator|=
 name|mbuf_Contiguous
 argument_list|(
-name|alias_PadMbuf
+name|nat_PadMbuf
 argument_list|(
 name|bp
 argument_list|,
-name|MB_ALIASOUT
+name|MB_NATOUT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1922,7 +1922,7 @@ specifier|static
 name|struct
 name|mbuf
 modifier|*
-name|alias_LayerPull
+name|nat_LayerPull
 parameter_list|(
 name|struct
 name|bundle
@@ -1972,7 +1972,7 @@ condition|(
 operator|!
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 operator|||
 operator|*
 name|proto
@@ -1986,18 +1986,18 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"alias_LayerPull: PROTO_IP -> PROTO_IP\n"
+literal|"nat_LayerPull: PROTO_IP -> PROTO_IP\n"
 argument_list|)
 expr_stmt|;
 name|bp
 operator|=
 name|mbuf_Contiguous
 argument_list|(
-name|alias_PadMbuf
+name|nat_PadMbuf
 argument_list|(
 name|bp
 argument_list|,
-name|MB_ALIASIN
+name|MB_NATIN
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2105,7 +2105,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"alias_LayerPull: Problem with IP header length\n"
+literal|"nat_LayerPull: Problem with IP header length\n"
 argument_list|)
 expr_stmt|;
 name|mbuf_Free
@@ -2219,7 +2219,7 @@ name|mbuf_Alloc
 argument_list|(
 name|len
 argument_list|,
-name|MB_ALIASIN
+name|MB_NATIN
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2273,16 +2273,16 @@ end_function
 begin_decl_stmt
 name|struct
 name|layer
-name|aliaslayer
+name|natlayer
 init|=
 block|{
-name|LAYER_ALIAS
+name|LAYER_NAT
 block|,
-literal|"alias"
+literal|"nat"
 block|,
-name|alias_LayerPush
+name|nat_LayerPush
 block|,
-name|alias_LayerPull
+name|nat_LayerPull
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.206 1999/08/17 14:59:05 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.207 1999/08/17 17:22:44 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -120,7 +120,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 end_ifndef
 
 begin_ifdef
@@ -243,7 +243,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 end_ifndef
 
 begin_include
@@ -759,7 +759,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1999/08/17 14:59:05 $"
+literal|"$Date: 1999/08/17 17:22:44 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -987,7 +987,7 @@ end_function_decl
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 end_ifndef
 
 begin_function_decl
@@ -3531,7 +3531,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 end_ifndef
 
 begin_decl_stmt
@@ -3548,13 +3548,13 @@ literal|"addr"
 block|,
 name|NULL
 block|,
-name|alias_RedirectAddr
+name|nat_RedirectAddr
 block|,
 name|LOCAL_AUTH
 block|,
 literal|"static address translation"
 block|,
-literal|"alias addr [addr_local addr_alias]"
+literal|"nat addr [addr_local addr_alias]"
 block|}
 block|,
 block|{
@@ -3568,7 +3568,7 @@ name|LOCAL_AUTH
 block|,
 literal|"stop incoming connections"
 block|,
-literal|"alias deny_incoming [yes|no]"
+literal|"nat deny_incoming yes|no"
 block|,
 operator|(
 specifier|const
@@ -3587,9 +3587,9 @@ name|AliasEnable
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"enable IP aliasing"
+literal|"enable NAT"
 block|,
-literal|"alias enable [yes|no]"
+literal|"nat enable yes|no"
 block|}
 block|,
 block|{
@@ -3601,9 +3601,9 @@ name|AliasOption
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"log aliasing link creation"
+literal|"log NAT link creation"
 block|,
-literal|"alias log [yes|no]"
+literal|"nat log yes|no"
 block|,
 operator|(
 specifier|const
@@ -3618,13 +3618,13 @@ literal|"port"
 block|,
 name|NULL
 block|,
-name|alias_RedirectPort
+name|nat_RedirectPort
 block|,
 name|LOCAL_AUTH
 block|,
 literal|"port redirection"
 block|,
-literal|"alias port proto localaddr:port[-port] aliasport[-aliasport]"
+literal|"nat port proto localaddr:port[-port] aliasport[-aliasport]"
 block|}
 block|,
 block|{
@@ -3632,13 +3632,13 @@ literal|"pptp"
 block|,
 name|NULL
 block|,
-name|alias_Pptp
+name|nat_Pptp
 block|,
 name|LOCAL_AUTH
 block|,
 literal|"Set the PPTP address"
 block|,
-literal|"alias pptp IP"
+literal|"nat pptp IP"
 block|}
 block|,
 block|{
@@ -3646,13 +3646,13 @@ literal|"proxy"
 block|,
 name|NULL
 block|,
-name|alias_ProxyRule
+name|nat_ProxyRule
 block|,
 name|LOCAL_AUTH
 block|,
 literal|"proxy control"
 block|,
-literal|"alias proxy server host[:port] ..."
+literal|"nat proxy server host[:port] ..."
 block|}
 block|,
 block|{
@@ -3666,7 +3666,7 @@ name|LOCAL_AUTH
 block|,
 literal|"try to leave port numbers unchanged"
 block|,
-literal|"alias same_ports [yes|no]"
+literal|"nat same_ports yes|no"
 block|,
 operator|(
 specifier|const
@@ -3685,9 +3685,9 @@ name|AliasOption
 block|,
 name|LOCAL_AUTH
 block|,
-literal|"alias unregistered (private) IP address space only"
+literal|"translate unregistered (private) IP address space only"
 block|,
-literal|"alias unregistered_only [yes|no]"
+literal|"nat unregistered_only yes|no"
 block|,
 operator|(
 specifier|const
@@ -3708,7 +3708,7 @@ name|LOCAL_AUTH
 block|,
 literal|"allocate host sockets"
 block|,
-literal|"alias use_sockets [yes|no]"
+literal|"nat use_sockets yes|no"
 block|,
 operator|(
 specifier|const
@@ -3731,7 +3731,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
-literal|"alias help|? [command]"
+literal|"nat help|? [command]"
 block|,
 name|AliasCommands
 block|}
@@ -3960,7 +3960,7 @@ name|LOCAL_NO_AUTH
 block|,
 literal|"Display this message"
 block|,
-literal|"alias help|? [command]"
+literal|"nat help|? [command]"
 block|,
 name|IfaceCommands
 block|}
@@ -4037,27 +4037,6 @@ operator|)
 literal|1
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|NOALIAS
-block|{
-literal|"alias"
-block|,
-name|NULL
-block|,
-name|RunListCommand
-block|,
-name|LOCAL_AUTH
-block|,
-literal|"alias control"
-block|,
-literal|"alias option [yes|no]"
-block|,
-name|AliasCommands
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|"allow"
 block|,
@@ -4300,6 +4279,27 @@ block|,
 literal|"load [system ...]"
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|NONAT
+block|{
+literal|"nat"
+block|,
+literal|"alias"
+block|,
+name|RunListCommand
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"NAT control"
+block|,
+literal|"nat option yes|no"
+block|,
+name|AliasCommands
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"open"
 block|,
@@ -13942,7 +13942,7 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 end_ifndef
 
 begin_function
@@ -13996,7 +13996,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 condition|)
 block|{
 if|if
@@ -14032,7 +14032,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 operator|=
 literal|1
 expr_stmt|;
@@ -14065,7 +14065,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 operator|=
 literal|0
 expr_stmt|;
@@ -14155,7 +14155,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 condition|)
 block|{
 name|PacketAliasSetMode
@@ -14173,7 +14173,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"alias not enabled\n"
+literal|"nat not enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -14203,7 +14203,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 condition|)
 block|{
 name|PacketAliasSetMode
@@ -14221,7 +14221,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"alias not enabled\n"
+literal|"nat not enabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -14239,7 +14239,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #ifndef NOALIAS */
+comment|/* #ifndef NONAT */
 end_comment
 
 begin_function
@@ -14993,7 +14993,7 @@ name|arg
 operator|->
 name|bundle
 operator|->
-name|AliasEnabled
+name|NatEnabled
 condition|)
 block|{
 name|arg
@@ -15010,7 +15010,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Cannot enable iface-alias without IP aliasing\n"
+literal|"Cannot enable iface-alias without NAT\n"
 argument_list|)
 expr_stmt|;
 name|result
