@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.25 1999/08/02 14:55:58 sheldonh Exp $"
+literal|"$Id: ls.c,v 1.26 1999/08/19 11:36:12 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,7 +173,7 @@ name|STRBUF_SIZEOF
 parameter_list|(
 name|t
 parameter_list|)
-value|(CHAR_BIT * sizeof(t) / 3 + 1)
+value|(1 + CHAR_BIT * sizeof(t) / 3 + 1)
 end_define
 
 begin_decl_stmt
