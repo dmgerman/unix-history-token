@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.16.2.6 1998/03/12 02:00:38 jkh Exp $"
+literal|"$Id: w.c,v 1.16.2.7 1998/05/22 09:09:29 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1167,18 +1167,55 @@ argument_list|)
 expr_stmt|;
 define|#
 directive|define
-name|HEADER
-value|"USER     TTY FROM              LOGIN@  IDLE WHAT\n"
+name|HEADER_USER
+value|"USER"
+define|#
+directive|define
+name|HEADER_TTY
+value|"TTY"
+define|#
+directive|define
+name|HEADER_FROM
+value|"FROM"
+define|#
+directive|define
+name|HEADER_LOGIN_IDLE
+value|"LOGIN@  IDLE "
+define|#
+directive|define
+name|HEADER_WHAT
+value|"WHAT\n"
 define|#
 directive|define
 name|WUSED
-value|(sizeof (HEADER) - sizeof ("WHAT\n"))
+value|(UT_NAMESIZE + UT_LINESIZE + UT_HOSTSIZE + \ 		sizeof(HEADER_LOGIN_IDLE) + 3)
+comment|/* header width incl. spaces */
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-name|HEADER
+literal|"%-*.*s %-*.*s %-*.*s  %s"
+argument_list|,
+argument|UT_NAMESIZE
+argument_list|,
+argument|UT_NAMESIZE
+argument_list|,
+argument|HEADER_USER
+argument_list|,
+argument|UT_LINESIZE
+argument_list|,
+argument|UT_LINESIZE
+argument_list|,
+argument|HEADER_TTY
+argument_list|,
+argument|UT_HOSTSIZE
+argument_list|,
+argument|UT_HOSTSIZE
+argument_list|,
+argument|HEADER_FROM
+argument_list|,
+argument|HEADER_LOGIN_IDLE HEADER_WHAT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2082,7 +2119,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*s %-3.3s %-*.*s "
+literal|"%-*.*s %-*.*s %-*.*s "
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -2093,6 +2130,10 @@ operator|->
 name|utmp
 operator|.
 name|ut_name
+argument_list|,
+name|UT_LINESIZE
+argument_list|,
+name|UT_LINESIZE
 argument_list|,
 name|strncmp
 argument_list|(
