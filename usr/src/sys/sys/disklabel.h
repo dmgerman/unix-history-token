@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -486,7 +486,7 @@ literal|"SCSI"
 block|,
 literal|"ESDI"
 block|,
-literal|"type 6"
+literal|"ST506"
 block|,
 literal|"type 7"
 block|,
@@ -605,6 +605,17 @@ begin_comment
 comment|/* 4.2BSD fast file system */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FS_MSDOS
+value|8
+end_define
+
+begin_comment
+comment|/* MSDOS file system */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -634,6 +645,8 @@ block|,
 literal|"Eighth Edition"
 block|,
 literal|"4.2BSD"
+block|,
+literal|"MSDOS"
 block|,
 literal|0
 block|}
