@@ -1471,7 +1471,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|len
+name|lenused
 operator|<=
 name|args
 operator|->
