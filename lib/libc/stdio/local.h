@@ -381,7 +381,7 @@ parameter_list|(
 name|fp
 parameter_list|)
 define|\
-value|((((fp)->_flags& __SWR) == 0 || (fp)->_bf._base == NULL)&& \ 	 __swsetup(fp))
+value|((((fp)->_flags& __SWR) == 0 || \  	    ((fp)->_bf._base == NULL&& ((fp)->_flags& __SSTR) == 0))&& \ 	 __swsetup(fp))
 end_define
 
 begin_comment
