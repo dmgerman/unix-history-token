@@ -3122,6 +3122,17 @@ name|count
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|count
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"zero count"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3149,6 +3160,17 @@ operator|.
 name|vnp_size
 operator|-
 name|foff
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|size
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"zero size"
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * round up physical size for real devices. 	 */
 if|if
