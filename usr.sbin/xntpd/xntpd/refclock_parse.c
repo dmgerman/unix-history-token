@@ -21,15 +21,15 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/xntpd/refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp  *  * refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp  *  * generic reference clock driver for receivers  *  * make use of a STREAMS module for input processing where  * available and configured. Currently the STREAMS module  * is only available for Suns running SunOS 4.x and SunOS5.x (new - careful!)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/xntpd/refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp  *  * refclock_parse.c,v 3.53 1994/03/25 13:07:39 kardel Exp  *  * generic reference clock driver for receivers  *  * Added support for the Boeder DCF77 receiver on FreeBSD  * by Vincenzo Capuano 1995/04/18.  *  * make use of a STREAMS module for input processing where  * available and configured. Currently the STREAMS module  * is only available for Suns running SunOS 4.x and SunOS5.x (new - careful!)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_comment
-comment|/*  * Defines:  *  REFCLOCK&& (PARSE||PARSEPPS)  *                    - enable this mess  *  STREAM            - allow for STREAMS modules  *                      ("parse", "ppsclocd", "ppsclock")  *  PARSEPPS          - provide PPS information to loopfilter (for  *                      backward compatibilty only)  *  PPS		      - supply loopfilter with PPS samples (if configured)  *  PPSPPS            - notify loopfilter of PPS file descriptor  *  *  FREEBSD_CONRAD    - Make very cheap "Conrad DCF77 RS-232" gadget work  *			with FreeBSD.  * TTY defines:  *  HAVE_BSD_TTYS     - currently unsupported  *  HAVE_SYSV_TTYS    - will use termio.h  *  HAVE_TERMIOS      - will use termios.h  *  STREAM            - will use streams and implies HAVE_TERMIOS  */
+comment|/*  * Defines:  *  REFCLOCK&& (PARSE||PARSEPPS)  *                    - enable this mess  *  STREAM            - allow for STREAMS modules  *                      ("parse", "ppsclocd", "ppsclock")  *  PARSEPPS          - provide PPS information to loopfilter (for  *                      backward compatibilty only)  *  PPS		      - supply loopfilter with PPS samples (if configured)  *  PPSPPS            - notify loopfilter of PPS file descriptor  *  *  FREEBSD_CONRAD    - Make very cheap "Conrad DCF77 RS-232" gadget work  *			with FreeBSD.  *  BOEDER            - Make cheap "Boeder DCF77 RS-232" receiver work  *			with FreeBSD.  * TTY defines:  *  HAVE_BSD_TTYS     - currently unsupported  *  HAVE_SYSV_TTYS    - will use termio.h  *  HAVE_TERMIOS      - will use termios.h  *  STREAM            - will use streams and implies HAVE_TERMIOS  */
 end_comment
 
 begin_comment
-comment|/*  * This driver currently provides the support for  *   - Meinberg DCF77 receiver DCF77 PZF 535 (TCXO version) (DCF)  *   - Meinberg DCF77 receiver DCF77 PZF 535 (OCXO version) (DCF)  *   - Meinberg DCF77 receiver U/A 31                       (DCF)  *   - ELV DCF7000                                          (DCF)  *   - Schmid clock                                         (DCF)  *   - Conrad DCF77 receiver module                         (DCF)  *   - FAU DCF77 NTP receiver (TimeBrick)                   (DCF)  *   - Meinberg GPS166                                      (GPS)  *   - Trimble SV6 (TSIP and TAIP protocol)                 (GPS)  *  */
+comment|/*  * This driver currently provides the support for  *   - Meinberg DCF77 receiver DCF77 PZF 535 (TCXO version) (DCF)  *   - Meinberg DCF77 receiver DCF77 PZF 535 (OCXO version) (DCF)  *   - Meinberg DCF77 receiver U/A 31                       (DCF)  *   - ELV DCF7000                                          (DCF)  *   - Schmid clock                                         (DCF)  *   - Conrad DCF77 receiver module                         (DCF)  *   - Boeder DCF77 receiver                                (DCF)  *   - FAU DCF77 NTP receiver (TimeBrick)                   (DCF)  *   - Meinberg GPS166                                      (GPS)  *   - Trimble SV6 (TSIP and TAIP protocol)                 (GPS)  *  */
 end_comment
 
 begin_comment
@@ -326,7 +326,7 @@ name|parse_start
 name|P
 argument_list|(
 operator|(
-name|u_int
+name|int
 operator|,
 expr|struct
 name|peer
@@ -344,6 +344,10 @@ name|P
 argument_list|(
 operator|(
 name|int
+operator|,
+expr|struct
+name|peer
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -373,7 +377,7 @@ name|parse_control
 name|P
 argument_list|(
 operator|(
-name|u_int
+name|int
 operator|,
 expr|struct
 name|refclockstat
@@ -1800,11 +1804,26 @@ begin_comment
 comment|/* sorry - its a true receiver - no signal - no time */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FREEBSD_CONRAD
-end_ifdef
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|SYS_FREEBSD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BOEDER
+argument_list|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -1875,6 +1894,28 @@ define|#
 directive|define
 name|CONRAD_DESCRIPTION
 value|"RAW DCF77 CODE (Conrad DCF77 receiver module)"
+end_define
+
+begin_comment
+comment|/*  * Boeder receiver  *  * simple (cheap) DCF clock - e. g. DCF77 receiver by Boeder  * followed by a level converter for RS232  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOEDER_BASEDELAY
+value|0x420C49B0
+end_define
+
+begin_comment
+comment|/* ~258 ms - Conrad receiver @ 50 Baud */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOEDER_DESCRIPTION
+value|"RAW DCF77 CODE (BOEDER DCF77 receiver)"
 end_define
 
 begin_comment
@@ -2719,6 +2760,43 @@ block|,
 name|TRIMBLETSIP_OFLAG
 block|,
 name|TRIMBLETSIP_LFLAG
+block|}
+block|,
+block|{
+comment|/* 127.127.8.40+<device> */
+name|RAWDCF_FLAGS
+block|,
+name|NO_POLL
+block|,
+name|NO_INIT
+block|,
+name|NO_END
+block|,
+name|NO_DATA
+block|,
+name|RAWDCF_ROOTDELAY
+block|,
+name|BOEDER_BASEDELAY
+block|,
+name|NO_PPSDELAY
+block|,
+name|DCF_A_ID
+block|,
+name|BOEDER_DESCRIPTION
+block|,
+name|RAWDCF_FORMAT
+block|,
+name|DCF_TYPE
+block|,
+name|RAWDCF_MAXUNSYNC
+block|,
+name|RAWDCF_CFLAG
+block|,
+name|RAWDCF_IFLAG
+block|,
+name|RAWDCF_OFLAG
+block|,
+name|RAWDCF_LFLAG
 block|}
 block|}
 struct|;
@@ -6143,6 +6221,10 @@ operator|*
 name|s
 operator|++
 argument_list|,
+operator|(
+name|timestamp_t
+operator|*
+operator|)
 operator|&
 name|rbufp
 operator|->
@@ -8300,9 +8382,16 @@ name|void
 name|parse_shutdown
 parameter_list|(
 name|unit
+parameter_list|,
+name|peer
 parameter_list|)
 name|int
 name|unit
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|peer
 decl_stmt|;
 block|{
 specifier|register
@@ -8506,7 +8595,7 @@ name|sysunit
 parameter_list|,
 name|peer
 parameter_list|)
-name|u_int
+name|int
 name|sysunit
 decl_stmt|;
 name|struct
@@ -8691,6 +8780,32 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYS_FREEBSD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BOEDER
+argument_list|)
+name|fd232
+operator|=
+name|open
+argument_list|(
+name|parsedev
+argument_list|,
+name|O_RDONLY
+operator||
+name|O_NONBLOCK
+argument_list|,
+literal|0777
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 ifndef|#
 directive|ifndef
 name|O_NOCTTY
@@ -8713,6 +8828,8 @@ argument_list|,
 literal|0777
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fd232
@@ -9125,6 +9242,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9164,6 +9283,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9337,21 +9458,61 @@ index|]
 operator|.
 name|cl_lflag
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYS_FREEBSD
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|BOEDER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|FREEBSD_CONRAD
+argument_list|)
+operator|)
+if|if
+condition|(
+name|cfsetspeed
+argument_list|(
+operator|&
 name|tm
-operator|.
-name|c_ispeed
-operator|=
-literal|50
+argument_list|,
+name|B50
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"PARSE receiver #%d: parse_start: cfsetspeed(&tm, B50): %m"
+argument_list|,
+name|unit
+argument_list|)
 expr_stmt|;
-name|tm
-operator|.
-name|c_ospeed
-operator|=
-literal|50
+name|parse_shutdown
+argument_list|(
+name|parse
+operator|->
+name|unit
+argument_list|,
+name|peer
+argument_list|)
 expr_stmt|;
+comment|/* let our cleaning staff do the work */
+return|return
+literal|0
+return|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -9384,6 +9545,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9477,6 +9640,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9551,6 +9716,109 @@ block|}
 block|}
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYS_FREEBSD
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|BOEDER
+argument_list|)
+if|if
+condition|(
+name|fcntl
+argument_list|(
+name|fd232
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|fcntl
+argument_list|(
+name|fd232
+argument_list|,
+name|F_GETFL
+argument_list|,
+literal|0
+argument_list|)
+operator|&
+operator|~
+name|O_NONBLOCK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"PARSE receiver #%d: parse_start: fcntl(%d, F_SETFL, ...): %m"
+argument_list|,
+name|unit
+argument_list|,
+name|fd232
+argument_list|)
+expr_stmt|;
+name|parse_shutdown
+argument_list|(
+name|parse
+operator|->
+name|unit
+argument_list|,
+name|peer
+argument_list|)
+expr_stmt|;
+comment|/* let our cleaning staff do the work */
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd232
+argument_list|,
+name|TIOCCDTR
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"PARSE receiver #%d: parse_start: ioctl(%d, TIOCCDTR, 0): %m"
+argument_list|,
+name|unit
+argument_list|,
+name|fd232
+argument_list|)
+expr_stmt|;
+name|parse_shutdown
+argument_list|(
+name|parse
+operator|->
+name|unit
+argument_list|,
+name|peer
+argument_list|)
+expr_stmt|;
+comment|/* let our cleaning staff do the work */
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
 name|strcpy
 argument_list|(
 name|tmp_ctl
@@ -9607,6 +9875,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9693,6 +9963,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9728,6 +10000,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9858,6 +10132,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -9958,6 +10234,8 @@ argument_list|(
 name|parse
 operator|->
 name|unit
+argument_list|,
+name|peer
 argument_list|)
 expr_stmt|;
 comment|/* let our cleaning staff do the work */
@@ -10454,7 +10732,7 @@ name|in
 parameter_list|,
 name|out
 parameter_list|)
-name|u_int
+name|int
 name|unit
 decl_stmt|;
 name|struct

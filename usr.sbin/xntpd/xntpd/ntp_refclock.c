@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|MAXUNIT
-value|4
+value|44
 end_define
 
 begin_comment
