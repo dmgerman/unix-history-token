@@ -6871,9 +6871,7 @@ name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
-name|zone
-operator|->
-name|uz_maxpages
+name|pages
 argument_list|)
 expr_stmt|;
 else|else
@@ -6881,9 +6879,7 @@ name|_vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
-name|zone
-operator|->
-name|uz_maxpages
+name|pages
 argument_list|,
 name|obj
 argument_list|)
