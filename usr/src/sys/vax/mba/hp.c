@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	6.2	83/09/25	*/
+comment|/*	hp.c	6.3	84/03/22	*/
 end_comment
 
 begin_ifdef
@@ -876,7 +876,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Beware, sdist and rdist are not well tuned  * for many of the drives listed in this table.  * Try patching things with something i/o intensive  * running and watch iostat.  */
+comment|/*  * These variable are all measured in sectors.    * Sdist is how much to "lead" in the search for a desired sector  * (i.e. if want N, search for N-sdist.)  * Maxdist and mindist define the region right before our desired sector within  * which we don't bother searching.  We don't search when we are already less  * then maxdist and more than mindist sectors "before" our desired sector.  * Maxdist should be>= sdist.  *   * Beware, sdist, mindist and maxdist are not well tuned  * for many of the drives listed in this table.  * Try patching things with something i/o intensive  * running and watch iostat.  */
 end_comment
 
 begin_struct
@@ -910,9 +910,13 @@ name|sdist
 decl_stmt|;
 comment|/* seek distance metric */
 name|short
-name|rdist
+name|maxdist
 decl_stmt|;
-comment|/* rotational distance metric */
+comment|/* boundaries of non-searched area */
+name|short
+name|mindist
+decl_stmt|;
+comment|/* preceding the target sector */
 block|}
 name|hpst
 index|[]
@@ -931,9 +935,11 @@ literal|823
 block|,
 name|rm03_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* RM03 */
@@ -950,9 +956,11 @@ literal|823
 block|,
 name|rm05_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* RM05 */
@@ -969,9 +977,11 @@ literal|815
 block|,
 name|rp06_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* RP06 */
@@ -988,9 +998,11 @@ literal|559
 block|,
 name|rm80_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* RM80 */
@@ -1007,9 +1019,11 @@ literal|411
 block|,
 name|rp05_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* RP04 */
@@ -1026,9 +1040,11 @@ literal|411
 block|,
 name|rp05_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* RP05 */
@@ -1045,9 +1061,11 @@ literal|630
 block|,
 name|rp07_sizes
 block|,
-literal|7
+literal|15
 block|,
 literal|8
+block|,
+literal|3
 block|}
 block|,
 comment|/* RP07 */
@@ -1059,6 +1077,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1082,6 +1102,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|0
 block|}
 block|,
 comment|/* ML11B */
@@ -1098,9 +1120,11 @@ literal|843
 block|,
 name|cdc9775_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* 9775 */
@@ -1117,9 +1141,11 @@ literal|823
 block|,
 name|cdc9730_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* 9730 */
@@ -1136,9 +1162,11 @@ literal|1024
 block|,
 name|capricorn_sizes
 block|,
-literal|7
+literal|10
 block|,
-literal|8
+literal|4
+block|,
+literal|3
 block|}
 block|,
 comment|/* Capricorn */
@@ -1155,9 +1183,11 @@ literal|842
 block|,
 name|eagle_sizes
 block|,
-literal|7
+literal|15
 block|,
 literal|8
+block|,
+literal|3
 block|}
 block|,
 comment|/* EAGLE */
@@ -1174,9 +1204,11 @@ literal|815
 block|,
 name|ampex_sizes
 block|,
-literal|3
+literal|7
 block|,
 literal|4
+block|,
+literal|1
 block|}
 block|,
 comment|/* 9300 */
@@ -2610,24 +2642,6 @@ name|st
 operator|->
 name|nspc
 expr_stmt|;
-name|sn
-operator|=
-operator|(
-name|sn
-operator|+
-name|st
-operator|->
-name|nsect
-operator|-
-name|st
-operator|->
-name|sdist
-operator|)
-operator|%
-name|st
-operator|->
-name|nsect
-expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -2655,6 +2669,8 @@ operator|)
 return|;
 name|dist
 operator|=
+name|sn
+operator|-
 operator|(
 name|MASKREG
 argument_list|(
@@ -2666,10 +2682,6 @@ operator|>>
 literal|6
 operator|)
 operator|-
-name|st
-operator|->
-name|nsect
-operator|+
 literal|1
 expr_stmt|;
 if|if
@@ -2690,11 +2702,13 @@ name|dist
 operator|>
 name|st
 operator|->
-name|nsect
-operator|-
+name|maxdist
+operator|||
+name|dist
+operator|<
 name|st
 operator|->
-name|rdist
+name|mindist
 condition|)
 return|return
 operator|(
@@ -2727,6 +2741,24 @@ name|HP_GO
 expr_stmt|;
 else|else
 block|{
+name|sn
+operator|=
+operator|(
+name|sn
+operator|+
+name|st
+operator|->
+name|nsect
+operator|-
+name|st
+operator|->
+name|sdist
+operator|)
+operator|%
+name|st
+operator|->
+name|nsect
+expr_stmt|;
 name|hpaddr
 operator|->
 name|hpda
@@ -3674,11 +3706,12 @@ if|if
 condition|(
 name|retry
 condition|)
-return|return
-operator|(
-name|MBD_RETRY
-operator|)
-return|;
+name|sc
+operator|->
+name|sc_recal
+operator|=
+literal|2
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -3829,21 +3862,30 @@ name|HP_OFFSET
 operator||
 name|HP_GO
 expr_stmt|;
-name|sc
-operator|->
-name|sc_recal
-operator|++
-expr_stmt|;
-return|return
+while|while
+condition|(
 operator|(
-name|MBD_RESTARTED
+name|hpaddr
+operator|->
+name|hpds
+operator|&
+operator|(
+name|HPDS_DRY
+operator||
+name|HPDS_PIP
 operator|)
-return|;
+operator|)
+operator|!=
+name|HPDS_DRY
+condition|)
+empty_stmt|;
+name|mbclrattn
+argument_list|(
+name|mi
+argument_list|)
+expr_stmt|;
 name|donerecal
 label|:
-case|case
-literal|3
-case|:
 name|sc
 operator|->
 name|sc_recal
@@ -3898,11 +3940,19 @@ name|HP_GO
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|hpaddr
 operator|->
 name|hpds
 operator|&
+operator|(
+name|HPDS_DRY
+operator||
 name|HPDS_PIP
+operator|)
+operator|)
+operator|!=
+name|HPDS_DRY
 condition|)
 empty_stmt|;
 name|mbclrattn
