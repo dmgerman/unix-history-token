@@ -5932,7 +5932,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uintptr_t
 name|func
 decl_stmt|,
 name|ver
@@ -6010,10 +6010,16 @@ name|buf
 argument_list|,
 literal|"SB DSP %d.%02d%s%s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ver
 operator|>>
 literal|8
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ver
 operator|&
 literal|0xff
@@ -6066,7 +6072,7 @@ name|sb_info
 modifier|*
 name|sb
 decl_stmt|;
-name|u_int32_t
+name|uintptr_t
 name|ver
 decl_stmt|;
 name|sb
