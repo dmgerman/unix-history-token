@@ -2329,11 +2329,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|intptr_t
-operator|)
 name|vs
 operator|==
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|-
 literal|1
 condition|)
