@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.25	(Berkeley)	85/01/18"
+literal|"@(#)tape.c	3.26	(Berkeley)	85/02/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,8 +97,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|magtape
+index|[
+name|BUFSIZ
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +221,9 @@ name|RRESTORE
 name|char
 modifier|*
 name|host
+decl_stmt|,
+modifier|*
+name|tape
 decl_stmt|;
 endif|#
 directive|endif
@@ -270,7 +275,7 @@ name|host
 operator|=
 name|source
 expr_stmt|;
-name|magtape
+name|tape
 operator|=
 name|index
 argument_list|(
@@ -281,7 +286,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|magtape
+name|tape
 operator|==
 literal|0
 condition|)
@@ -300,10 +305,20 @@ argument_list|)
 expr_stmt|;
 block|}
 operator|*
-name|magtape
+name|tape
 operator|++
 operator|=
 literal|'\0'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|magtape
+argument_list|,
+name|tape
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -394,9 +409,15 @@ name|pipein
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
 name|magtape
-operator|=
+argument_list|,
 name|source
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1322,9 +1343,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Mount tape volume %d then type return "
+literal|"Mount tape volume %d\n"
 argument_list|,
 name|newvol
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"then enter tape name (default: %s) "
+argument_list|,
+name|magtape
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1335,15 +1365,18 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|getc
+operator|(
+name|void
+operator|)
+name|fgets
 argument_list|(
+name|tbf
+argument_list|,
+name|BUFSIZ
+argument_list|,
 name|terminal
 argument_list|)
-operator|!=
-literal|'\n'
-condition|)
+expr_stmt|;
 if|if
 condition|(
 name|feof
@@ -1356,6 +1389,39 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tbf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\n'
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|magtape
+argument_list|,
+name|tbf
+argument_list|)
+expr_stmt|;
+name|magtape
+index|[
+name|strlen
+argument_list|(
+name|magtape
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|RRESTORE
@@ -1400,8 +1466,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Cannot open tape!\n"
+literal|"Cannot open %s\n"
+argument_list|,
+name|magtape
 argument_list|)
+expr_stmt|;
+name|volno
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 goto|goto
 name|again
