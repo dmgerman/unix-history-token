@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_frag.c,v 2.10.2.5 2000/10/19 15:39:58 darrenr Exp $"
+literal|"@(#)$Id: ip_frag.c,v 2.10.2.7 2000/11/27 10:26:56 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,6 +978,14 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
+name|frag
+operator|.
+name|ipfr_ifp
+operator|=
+name|fin
+operator|->
+name|fin_ifp
+expr_stmt|;
 name|idx
 operator|*=
 literal|127
@@ -1513,6 +1521,14 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
+name|frag
+operator|.
+name|ipfr_ifp
+operator|=
+name|fin
+operator|->
+name|fin_ifp
+expr_stmt|;
 name|idx
 operator|*=
 literal|127
@@ -1787,18 +1803,7 @@ name|ipf
 operator|->
 name|ipfr_data
 expr_stmt|;
-if|if
-condition|(
-name|nat
-operator|->
-name|nat_ifp
-operator|==
-name|fin
-operator|->
-name|fin_ifp
-condition|)
-block|{
-comment|/* 			 * This is the last fragment for this packet. 			 */
+comment|/* 		 * This is the last fragment for this packet. 		 */
 if|if
 condition|(
 operator|(
@@ -1829,12 +1834,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-block|}
-else|else
-name|nat
-operator|=
-name|NULL
-expr_stmt|;
 block|}
 else|else
 name|nat
