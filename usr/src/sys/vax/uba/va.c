@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.13.1.1	82/11/27	*/
+comment|/*	va.c	4.13.1.2	82/11/27	*/
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"../h/vcmd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_decl_stmt
@@ -225,6 +231,17 @@ end_define
 
 begin_comment
 comment|/* interrupt enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA_DMAGO
+value|0000010
+end_define
+
+begin_comment
+comment|/* DMA go bit */
 end_comment
 
 begin_define
@@ -561,6 +578,9 @@ name|vacsh
 operator|=
 name|VAPLOT
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|VARIANGOBIT
 name|vaaddr
 operator|->
 name|vacsl
@@ -587,6 +607,15 @@ name|vacsl
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|vadevice
+argument_list|)
+operator|)
+return|;
 name|vaaddr
 operator|->
 name|vawc
@@ -1108,6 +1137,8 @@ begin_macro
 name|vawrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
@@ -1117,8 +1148,32 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+if|if
+condition|(
+name|VAUNIT
+argument_list|(
+name|dev
+argument_list|)
+operator|>
+name|NVA
+condition|)
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+else|else
 name|physio
 argument_list|(
 name|vastrategy
@@ -1137,6 +1192,8 @@ argument_list|,
 name|B_WRITE
 argument_list|,
 name|minvaph
+argument_list|,
+name|uio
 argument_list|)
 expr_stmt|;
 block|}
@@ -1425,13 +1482,13 @@ name|dev
 argument_list|,
 name|cmd
 argument_list|,
-name|addr
+name|data
 argument_list|,
 name|flag
 argument_list|)
 specifier|register
 name|caddr_t
-name|addr
+name|data
 expr_stmt|;
 end_expr_stmt
 
@@ -1464,50 +1521,31 @@ block|{
 case|case
 name|VGETSTATE
 case|:
+operator|*
 operator|(
-name|void
+name|int
+operator|*
 operator|)
-name|suword
-argument_list|(
-name|addr
-argument_list|,
+name|data
+operator|=
 name|sc
 operator|->
 name|sc_state
-argument_list|)
 expr_stmt|;
 return|return;
 case|case
 name|VSETSTATE
 case|:
-name|vcmd
-operator|=
-name|fuword
-argument_list|(
-name|addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vcmd
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|EFAULT
-expr_stmt|;
-return|return;
-block|}
 name|vacmd
 argument_list|(
 name|dev
 argument_list|,
-name|vcmd
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
 argument_list|)
 expr_stmt|;
 return|return;
