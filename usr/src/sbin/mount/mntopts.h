@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *      The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mntopts.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *      The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mntopts.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -33,49 +33,49 @@ begin_define
 define|#
 directive|define
 name|MOPT_ASYNC
-value|{ "async",	 0, MNT_ASYNC }
+value|{ "async",	0, MNT_ASYNC }
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOPT_NODEV
-value|{ "dev",	 1, MNT_NODEV }
+value|{ "dev",	1, MNT_NODEV }
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOPT_NOEXEC
-value|{ "exec",	 1, MNT_NOEXEC }
+value|{ "exec",	1, MNT_NOEXEC }
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOPT_NOSUID
-value|{ "suid",	 1, MNT_NOSUID }
+value|{ "suid",	1, MNT_NOSUID }
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOPT_RDONLY
-value|{ "rdonly",	 0, MNT_RDONLY }
+value|{ "rdonly",	0, MNT_RDONLY }
 end_define
 
 begin_define
 define|#
 directive|define
-name|MOPT_SYNCHRONOUS
-value|{ "synchronous", 0, MNT_SYNCHRONOUS }
+name|MOPT_SYNC
+value|{ "sync",	0, MNT_SYNCHRONOUS }
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOPT_UNION
-value|{ "union",	 0, MNT_UNION }
+value|{ "union",	0, MNT_UNION }
 end_define
 
 begin_comment
@@ -86,14 +86,14 @@ begin_define
 define|#
 directive|define
 name|MOPT_FORCE
-value|{ "exec",	 1, MNT_FORCE }
+value|{ "exec",	1, MNT_FORCE }
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOPT_UPDATE
-value|{ "update",	 0, MNT_UPDATE }
+value|{ "update",	0, MNT_UPDATE }
 end_define
 
 begin_comment
@@ -104,14 +104,14 @@ begin_define
 define|#
 directive|define
 name|MOPT_RO
-value|{ "ro",		 0, MNT_RDONLY }
+value|{ "ro",		0, MNT_RDONLY }
 end_define
 
 begin_define
 define|#
 directive|define
 name|MOPT_RW
-value|{ "rw",		 1, MNT_RDONLY }
+value|{ "rw",		1, MNT_RDONLY }
 end_define
 
 begin_define
