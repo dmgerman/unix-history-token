@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	4.3	83/02/21	*/
+comment|/*	vmparam.h	4.3	83/06/14	*/
 end_comment
 
 begin_comment
@@ -248,6 +248,56 @@ end_define
 begin_comment
 comment|/* klusters advance/retard for seq. fifo */
 end_comment
+
+begin_comment
+comment|/*  * Paging thresholds (see vm_sched.c).  * Strategy of 4/22/81:  *	lotsfree is 1/4 of memory free.  *	desfree is 200k bytes, but at most 1/8 of memory  *	minfree is 64k bytes, but at most 1/2 of desfree  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOTSFREEFRACT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DESFREE
+value|(200 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DESFREEFRACT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINFREE
+value|(64 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MINFREEFRACT
+value|2
+end_define
+
+begin_comment
+comment|/*  * Believed threshold (in megabytes) for which interleaved  * swapping area is desirable.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOTSOFMEM
+value|2
+end_define
 
 end_unit
 
