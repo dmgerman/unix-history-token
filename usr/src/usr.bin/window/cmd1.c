@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	1.4 83/07/22"
+literal|"@(#)cmd1.c	1.5 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -921,14 +921,6 @@ expr_stmt|;
 name|labelwin
 argument_list|(
 name|w
-argument_list|,
-name|w
-operator|==
-name|selwin
-condition|?
-name|WINVERSE
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
