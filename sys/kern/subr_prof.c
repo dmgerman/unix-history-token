@@ -2463,19 +2463,8 @@ decl_stmt|;
 name|u_short
 name|v
 decl_stmt|;
-comment|/* Testing PS_PROFIL may be unnecessary, but is certainly safe. */
 if|if
 condition|(
-operator|(
-name|p
-operator|->
-name|p_sflag
-operator|&
-name|PS_PROFIL
-operator|)
-operator|==
-literal|0
-operator|||
 name|ticks
 operator|==
 literal|0
