@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.18 (Berkeley) %G%"
+literal|"@(#)command.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,21 +905,19 @@ condition|(
 name|next_name
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sprintf
+name|putstr
 argument_list|(
-name|pbuf
-argument_list|,
-literal|": END (next file: %s)"
-argument_list|,
+literal|": END (next file: "
+argument_list|)
+expr_stmt|;
+name|putstr
+argument_list|(
 name|next_name
 argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-name|pbuf
+literal|")"
 argument_list|)
 expr_stmt|;
 block|}
