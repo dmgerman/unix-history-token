@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glob.c	5.3 (Berkeley) %G%"
+literal|"@(#)glob.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,7 +94,7 @@ end_decl_stmt
 
 begin_function_decl
 name|int
-name|argcmp
+name|sortscmp
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -104,7 +104,7 @@ define|#
 directive|define
 name|sort
 parameter_list|()
-value|qsort((char *)sortbas,&gargv[gargc] - sortbas, \ 		      sizeof(*sortbas), argcmp), sortbas =&gargv[gargc]
+value|qsort((char *)sortbas,&gargv[gargc] - sortbas, \ 		      sizeof(*sortbas), sortscmp), sortbas =&gargv[gargc]
 end_define
 
 begin_function
@@ -574,24 +574,30 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
-name|argcmp
+begin_comment
+comment|/*  * String compare for qsort.  Also used by filec code in sh.file.c.  */
+end_comment
+
+begin_macro
+name|sortscmp
 argument_list|(
 argument|a1
 argument_list|,
 argument|a2
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|a1
-operator|,
-operator|*
-operator|*
+decl_stmt|,
+modifier|*
+modifier|*
 name|a2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
