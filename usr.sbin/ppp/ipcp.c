@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.51 1998/05/21 21:45:46 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.52 1998/05/23 22:24:39 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -3813,7 +3813,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* This is where we should be setting up the interface in DEMAND mode */
+comment|/* This is where we should be setting up the interface in AUTO mode */
 block|}
 end_function
 
@@ -4287,7 +4287,7 @@ name|bundle
 operator|->
 name|phys_type
 operator|&
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|)
 condition|)
 name|ipcp_CleanInterface
@@ -5003,7 +5003,7 @@ argument_list|)
 operator|>=
 literal|0
 condition|)
-comment|/*                * If we've already got a valid address configured for the peer                * (in DEMAND mode), try NAKing with that so that we don't                * have to upset things too much.                */
+comment|/*                * If we've already got a valid address configured for the peer                * (in AUTO mode), try NAKing with that so that we don't                * have to upset things too much.                */
 name|ipcp
 operator|->
 name|peer_ip

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.9 1998/05/28 23:15:29 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bundle.c,v 1.10 1998/05/28 23:17:31 brian Exp $  */
 end_comment
 
 begin_include
@@ -1056,7 +1056,7 @@ name|bundle
 argument_list|,
 name|NULL
 argument_list|,
-name|PHYS_DEMAND
+name|PHYS_AUTO
 argument_list|)
 expr_stmt|;
 block|}
@@ -1108,7 +1108,7 @@ name|physical
 operator|->
 name|type
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|&&
 name|dl
 operator|->
@@ -1226,7 +1226,7 @@ name|physical
 operator|->
 name|type
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 condition|)
 block|{
 if|if
@@ -1408,7 +1408,7 @@ name|physical
 operator|->
 name|type
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 condition|)
 name|adl
 operator|=
@@ -2790,7 +2790,7 @@ name|bundle
 operator|->
 name|phys_type
 operator|&
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|)
 condition|)
 block|{
@@ -3433,7 +3433,7 @@ name|bundle
 argument_list|,
 name|NULL
 argument_list|,
-name|PHYS_DEMAND
+name|PHYS_AUTO
 argument_list|)
 expr_stmt|;
 else|else
@@ -5950,7 +5950,7 @@ modifier|*
 name|dl
 parameter_list|)
 block|{
-comment|/*    * Our datalink has closed.    * CleanDatalinks() (called from DoLoop()) will remove closed    * 1OFF and DIRECT links.    * If it's the last data link, enter phase DEAD.    *    * NOTE: dl may not be in our list (bundle_SendDatalink()) !    */
+comment|/*    * Our datalink has closed.    * CleanDatalinks() (called from DoLoop()) will remove closed    * BACKGROUND and DIRECT links.    * If it's the last data link, enter phase DEAD.    *    * NOTE: dl may not be in our list (bundle_SendDatalink()) !    */
 name|struct
 name|datalink
 modifier|*
@@ -6008,7 +6008,7 @@ name|physical
 operator|->
 name|type
 operator|!=
-name|PHYS_DEMAND
+name|PHYS_AUTO
 condition|)
 comment|/* Not in -auto mode */
 name|bundle_DownInterface
@@ -6206,9 +6206,9 @@ if|if
 condition|(
 name|mask
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 condition|)
-comment|/* Only one DEMAND link at a time (see the AutoLoad timer) */
+comment|/* Only one AUTO link at a time (see the AutoLoad timer) */
 break|break;
 block|}
 if|if
@@ -7182,7 +7182,7 @@ operator|&
 operator|(
 name|PHYS_DEDICATED
 operator||
-name|PHYS_PERM
+name|PHYS_DDIAL
 operator|)
 operator|)
 operator|!=
@@ -7444,7 +7444,7 @@ name|physical
 operator|->
 name|type
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|&&
 name|bundle
 operator|->
@@ -7528,7 +7528,7 @@ operator|&
 operator|(
 name|PHYS_DEDICATED
 operator||
-name|PHYS_PERM
+name|PHYS_DDIAL
 operator|)
 operator|)
 operator|==
@@ -7748,7 +7748,7 @@ operator|&
 operator|(
 name|PHYS_DIRECT
 operator||
-name|PHYS_1OFF
+name|PHYS_BACKGROUND
 operator|)
 condition|)
 block|{
@@ -9075,7 +9075,7 @@ if|if
 condition|(
 name|mode
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|&&
 operator|!
 operator|(
@@ -9083,7 +9083,7 @@ name|bundle
 operator|->
 name|phys_type
 operator|&
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|)
 condition|)
 comment|/* Changing to demand-dial mode */
@@ -9135,7 +9135,7 @@ if|if
 condition|(
 name|mode
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|&&
 operator|!
 operator|(
@@ -9143,7 +9143,7 @@ name|bundle
 operator|->
 name|phys_type
 operator|&
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|)
 condition|)
 name|ipcp_InterfaceUp
@@ -9166,7 +9166,7 @@ if|if
 condition|(
 name|omode
 operator|==
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|&&
 operator|!
 operator|(
@@ -9174,7 +9174,7 @@ name|bundle
 operator|->
 name|phys_type
 operator|&
-name|PHYS_DEMAND
+name|PHYS_AUTO
 operator|)
 condition|)
 comment|/* Changing from demand-dial mode */
