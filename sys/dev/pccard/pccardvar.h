@@ -440,11 +440,10 @@ comment|/* Offset from ccr_base of CIS */
 name|int
 name|pf_ccr_window
 decl_stmt|;
-name|long
+name|bus_addr_t
 name|pf_mfc_iobase
 decl_stmt|;
-comment|/* Right type? */
-name|long
+name|bus_addr_t
 name|pf_mfc_iomax
 decl_stmt|;
 name|int
@@ -1403,12 +1402,6 @@ define|\
 value|{ PCMCIA_STR_ ## p2, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  f, PCMCIA_CIS_ ## p2}
 end_define
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_define
 define|#
 directive|define
@@ -1439,11 +1432,6 @@ parameter_list|)
 define|\
 value|{ NULL, PCMCIA_VENDOR_ ## v1, PCCARD_P(v1, p1), \ 		  f, PCMCIA_CIS_ ## p2}
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
