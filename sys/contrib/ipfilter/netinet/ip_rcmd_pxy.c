@@ -442,15 +442,6 @@ name|mb_t
 modifier|*
 name|m
 decl_stmt|;
-if|#
-directive|if
-name|SOLARIS
-name|mb_t
-modifier|*
-name|m1
-decl_stmt|;
-endif|#
-directive|endif
 name|tcp
 operator|=
 operator|(

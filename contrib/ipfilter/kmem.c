@@ -234,7 +234,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: kmem.c,v 2.2.2.16 2002/12/06 11:40:27 darrenr Exp $"
+literal|"@(#)$Id: kmem.c,v 2.2.2.18 2003/11/09 17:22:22 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,6 +271,8 @@ specifier|static
 name|char
 modifier|*
 name|kvm_errstr
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -411,11 +413,18 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|kvm_errstr
+operator|!=
+name|NULL
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%s:"
 argument_list|,
 name|kvm_errstr
 argument_list|)
@@ -425,6 +434,7 @@ argument_list|(
 literal|"lseek"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|-
 literal|1
@@ -540,7 +550,7 @@ name|NULL
 argument_list|,
 name|O_RDONLY
 argument_list|,
-literal|""
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

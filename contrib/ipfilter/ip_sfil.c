@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.23.2.24 2002/12/06 11:42:22 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.23.2.27 2003/06/12 16:03:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3555,6 +3555,10 @@ name|fr_next
 expr_stmt|;
 else|else
 block|{
+name|ftail
+operator|=
+name|fprev
+expr_stmt|;
 if|if
 condition|(
 name|fp
@@ -3562,10 +3566,6 @@ operator|->
 name|fr_hits
 condition|)
 block|{
-name|ftail
-operator|=
-name|fprev
-expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -4415,8 +4415,6 @@ operator|->
 name|th_flags
 operator|=
 name|TH_RST
-operator||
-name|TH_ACK
 expr_stmt|;
 block|}
 else|else
@@ -4454,6 +4452,8 @@ operator|->
 name|th_flags
 operator|=
 name|TH_RST
+operator||
+name|TH_ACK
 expr_stmt|;
 block|}
 name|tcp2
@@ -4467,14 +4467,6 @@ name|tcphdr
 argument_list|)
 operator|>>
 literal|2
-expr_stmt|;
-name|tcp2
-operator|->
-name|th_flags
-operator|=
-name|TH_RST
-operator||
-name|TH_ACK
 expr_stmt|;
 comment|/* 	 * This is to get around a bug in the Solaris 2.4/2.5 TCP checksum 	 * computation that is done by their put routine. 	 */
 name|tcp2

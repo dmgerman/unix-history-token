@@ -366,7 +366,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.1.2.13 2002/12/06 11:40:27 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.1.2.15 2003/03/22 15:31:49 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2703,21 +2703,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|np
-operator|->
-name|in_nextip
-operator|.
-name|s_addr
-operator|=
-name|htonl
-argument_list|(
-name|np
-operator|->
-name|in_nextip
-operator|.
-name|s_addr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2908,6 +2893,25 @@ block|{
 name|printf
 argument_list|(
 literal|" proxy port"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|in_dcmp
+operator|!=
+literal|0
+condition|)
+name|np
+operator|->
+name|in_dport
+operator|=
+name|htons
+argument_list|(
+name|np
+operator|->
+name|in_dport
 argument_list|)
 expr_stmt|;
 if|if
@@ -3269,6 +3273,23 @@ operator|&
 name|OPT_DEBUG
 condition|)
 block|{
+name|struct
+name|in_addr
+name|nip
+decl_stmt|;
+name|nip
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|np
+operator|->
+name|in_nextip
+operator|.
+name|s_addr
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\tspace %lu nextip %s pnext %d"
@@ -3279,9 +3300,7 @@ name|in_space
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|np
-operator|->
-name|in_nextip
+name|nip
 argument_list|)
 argument_list|,
 name|np
