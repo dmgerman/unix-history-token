@@ -4467,8 +4467,7 @@ expr_stmt|;
 name|round
 operator|=
 operator|(
-name|unsigned
-name|int
+name|uintptr_t
 operator|)
 name|sc
 operator|->
