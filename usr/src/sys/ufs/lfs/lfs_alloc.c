@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_alloc.c	2.10	82/08/03	*/
+comment|/*	lfs_alloc.c	2.11	82/09/06	*/
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../h/quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_function_decl
@@ -1952,6 +1958,8 @@ operator|->
 name|cg_time
 operator|=
 name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 name|bno
 operator|=
@@ -2300,6 +2308,8 @@ operator|->
 name|cg_time
 operator|=
 name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 if|if
 condition|(
@@ -3334,6 +3344,8 @@ operator|->
 name|cg_time
 operator|=
 name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 if|if
 condition|(
@@ -3741,6 +3753,8 @@ operator|->
 name|cg_time
 operator|=
 name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 name|bno
 operator|=
@@ -4343,6 +4357,8 @@ operator|->
 name|cg_time
 operator|=
 name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 name|ino
 operator|%=
@@ -5492,6 +5508,8 @@ operator|->
 name|fs_time
 operator|=
 name|time
+operator|.
+name|tv_sec
 expr_stmt|;
 name|sbupdate
 argument_list|(
@@ -5550,9 +5568,13 @@ name|ip
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 literal|0
 argument_list|)
