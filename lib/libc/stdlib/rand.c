@@ -126,17 +126,6 @@ begin_comment
 comment|/* TEST */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NSHUFF
-value|100
-end_define
-
-begin_comment
-comment|/* to drop part of seed -> 1st value correlation */
-end_comment
-
 begin_function
 specifier|static
 name|int
@@ -309,13 +298,9 @@ specifier|static
 name|u_long
 name|next
 init|=
-literal|892053144
+literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* after srand(1), NSHUFF counted */
-end_comment
 
 begin_function
 name|int
@@ -344,31 +329,9 @@ name|u_int
 name|seed
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|next
 operator|=
 name|seed
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NSHUFF
-condition|;
-name|i
-operator|++
-control|)
-operator|(
-name|void
-operator|)
-name|rand
-argument_list|()
 expr_stmt|;
 block|}
 end_function
