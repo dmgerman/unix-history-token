@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2000 Mark R V Murray  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/* #define ENTROPYSOURCE nn	   entropy sources (actually classes)  *				   The entropy classes will as follows:  *					0 - Direct write  *					1 - Keyboard  *					2 - Mouse  */
+comment|/* #define ENTROPYSOURCE nn	   entropy sources (actually classes)  *					This is properly defined in  *					an enum in sys/random.h  */
 end_comment
 
 begin_define
