@@ -117,6 +117,14 @@ directive|define
 name|READLINE_CALLBACKS
 end_define
 
+begin_comment
+comment|/* Define this if you want the cursor to indicate insert or overwrite mode. */
+end_comment
+
+begin_comment
+comment|/* #define CURSOR_MODE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

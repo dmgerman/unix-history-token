@@ -322,7 +322,26 @@ specifier|static
 name|SigHandler
 modifier|*
 name|rl_set_sighandler
-name|__P
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|SigHandler
+operator|*
+operator|,
+name|sighandler_cxt
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|rl_maybe_set_sighandler
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -970,6 +989,7 @@ name|sa_flags
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX - should we set SA_RESTART for SIGWINCH? */
 name|sigemptyset
 argument_list|(
 operator|&

@@ -122,7 +122,7 @@ comment|/* Begin a session in which the history functions might be used.  This  
 specifier|extern
 name|void
 name|using_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -134,7 +134,7 @@ specifier|extern
 name|HISTORY_STATE
 modifier|*
 name|history_get_history_state
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -145,7 +145,7 @@ comment|/* Set the state of the current history array to STATE. */
 specifier|extern
 name|void
 name|history_set_history_state
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|HISTORY_STATE
@@ -158,7 +158,7 @@ comment|/* Place STRING at the end of the history list.    The associated data f
 specifier|extern
 name|void
 name|add_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -172,7 +172,7 @@ specifier|extern
 name|HIST_ENTRY
 modifier|*
 name|remove_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -184,7 +184,7 @@ specifier|extern
 name|HIST_ENTRY
 modifier|*
 name|replace_history_entry
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -201,7 +201,7 @@ comment|/* Clear the history list and start over. */
 specifier|extern
 name|void
 name|clear_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -212,7 +212,7 @@ comment|/* Stifle the history list, remembering only MAX number of entries. */
 specifier|extern
 name|void
 name|stifle_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -223,7 +223,7 @@ comment|/* Stop stifling the history.  This returns the previous amount the    h
 specifier|extern
 name|int
 name|unstifle_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -234,7 +234,7 @@ comment|/* Return 1 if the history is stifled, 0 if it is not. */
 specifier|extern
 name|int
 name|history_is_stifled
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -248,7 +248,7 @@ name|HIST_ENTRY
 modifier|*
 modifier|*
 name|history_list
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -259,7 +259,7 @@ comment|/* Returns the number which says what history element we are now    look
 specifier|extern
 name|int
 name|where_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -271,7 +271,7 @@ specifier|extern
 name|HIST_ENTRY
 modifier|*
 name|current_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -283,7 +283,7 @@ specifier|extern
 name|HIST_ENTRY
 modifier|*
 name|history_get
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -294,7 +294,7 @@ comment|/* Return the number of bytes that the primary history entries are using
 specifier|extern
 name|int
 name|history_total_bytes
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -306,7 +306,7 @@ comment|/* Set the position in the history list to POS. */
 specifier|extern
 name|int
 name|history_set_pos
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -318,7 +318,7 @@ specifier|extern
 name|HIST_ENTRY
 modifier|*
 name|previous_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -330,7 +330,7 @@ specifier|extern
 name|HIST_ENTRY
 modifier|*
 name|next_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -342,7 +342,7 @@ comment|/* Search the history for STRING, starting at history_offset.    If DIRE
 specifier|extern
 name|int
 name|history_search
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -357,7 +357,7 @@ comment|/* Search the history for STRING, starting at history_offset.    The sea
 specifier|extern
 name|int
 name|history_search_prefix
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -372,7 +372,7 @@ comment|/* Search for STRING in the history list, starting at POS, an    absolut
 specifier|extern
 name|int
 name|history_search_pos
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -390,7 +390,7 @@ comment|/* Add the contents of FILENAME to the history list, a line at a time.  
 specifier|extern
 name|int
 name|read_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -403,7 +403,7 @@ comment|/* Read a range of lines from FILENAME, adding them to the history list.
 specifier|extern
 name|int
 name|read_history_range
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -420,7 +420,7 @@ comment|/* Write the current history to FILENAME.  If FILENAME is NULL,    then 
 specifier|extern
 name|int
 name|write_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -433,7 +433,7 @@ comment|/* Append NELEMENT entries to FILENAME.  The entries appended are from  
 specifier|extern
 name|int
 name|append_history
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -448,7 +448,7 @@ comment|/* Truncate the history file, leaving only the last NLINES lines. */
 specifier|extern
 name|int
 name|history_truncate_file
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -464,7 +464,7 @@ comment|/* Expand the string STRING, placing the result into OUTPUT, a pointer  
 specifier|extern
 name|int
 name|history_expand
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|char
@@ -481,7 +481,7 @@ specifier|extern
 name|char
 modifier|*
 name|history_arg_extract
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -499,7 +499,7 @@ specifier|extern
 name|char
 modifier|*
 name|get_history_event
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -519,7 +519,7 @@ name|char
 modifier|*
 modifier|*
 name|history_tokenize
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const

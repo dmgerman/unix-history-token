@@ -139,7 +139,7 @@ comment|/* Control-g */
 block|{
 name|ISFUNC
 block|,
-name|rl_backward
+name|rl_backward_char
 block|}
 block|,
 comment|/* Control-h */
@@ -341,7 +341,7 @@ comment|/* The start of printing characters. */
 block|{
 name|ISFUNC
 block|,
-name|rl_forward
+name|rl_forward_char
 block|}
 block|,
 comment|/* SPACE */
@@ -934,7 +934,7 @@ comment|/* g */
 block|{
 name|ISFUNC
 block|,
-name|rl_backward
+name|rl_backward_char
 block|}
 block|,
 comment|/* h */
@@ -962,7 +962,7 @@ comment|/* k */
 block|{
 name|ISFUNC
 block|,
-name|rl_forward
+name|rl_forward_char
 block|}
 block|,
 comment|/* l */

@@ -83,7 +83,7 @@ comment|/* Bindable functions */
 typedef|typedef
 name|int
 name|rl_command_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|int
 typedef|,
@@ -94,7 +94,7 @@ typedef|typedef
 name|char
 modifier|*
 name|rl_compentry_func_t
-name|__P
+name|PARAMS
 typedef|((const
 name|char
 modifier|*
@@ -106,7 +106,7 @@ name|char
 modifier|*
 modifier|*
 name|rl_completion_func_t
-name|__P
+name|PARAMS
 typedef|((const
 name|char
 modifier|*
@@ -119,7 +119,7 @@ typedef|typedef
 name|char
 modifier|*
 name|rl_quote_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -133,7 +133,7 @@ typedef|typedef
 name|char
 modifier|*
 name|rl_dequote_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -143,7 +143,7 @@ typedef|));
 typedef|typedef
 name|int
 name|rl_compignore_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -152,7 +152,7 @@ typedef|));
 typedef|typedef
 name|void
 name|rl_compdisp_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -166,7 +166,7 @@ comment|/* Type for input and pre-read hook functions like rl_event_hook */
 typedef|typedef
 name|int
 name|rl_hook_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|void
 typedef|));
@@ -174,7 +174,7 @@ comment|/* Input function type */
 typedef|typedef
 name|int
 name|rl_getc_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|FILE
 modifier|*
@@ -183,7 +183,7 @@ comment|/* Generic function that takes a character buffer (which could be the re
 typedef|typedef
 name|int
 name|rl_linebuf_func_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -194,7 +194,7 @@ comment|/* `Generic' function pointer typedefs */
 typedef|typedef
 name|int
 name|rl_intfunc_t
-name|__P
+name|PARAMS
 typedef|((
 name|int
 typedef|));
@@ -205,7 +205,7 @@ value|rl_hook_func_t
 typedef|typedef
 name|int
 name|rl_icpfunc_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -213,7 +213,7 @@ typedef|));
 typedef|typedef
 name|int
 name|rl_icppfunc_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -222,21 +222,21 @@ typedef|));
 typedef|typedef
 name|void
 name|rl_voidfunc_t
-name|__P
+name|PARAMS
 typedef|((
 name|void
 typedef|));
 typedef|typedef
 name|void
 name|rl_vintfunc_t
-name|__P
+name|PARAMS
 typedef|((
 name|int
 typedef|));
 typedef|typedef
 name|void
 name|rl_vcpfunc_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*
@@ -244,7 +244,7 @@ typedef|));
 typedef|typedef
 name|void
 name|rl_vcppfunc_t
-name|__P
+name|PARAMS
 typedef|((
 name|char
 modifier|*

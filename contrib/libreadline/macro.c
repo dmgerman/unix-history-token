@@ -146,18 +146,6 @@ directive|include
 file|"xmalloc.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|SWAP
-parameter_list|(
-name|s
-parameter_list|,
-name|e
-parameter_list|)
-value|do { int t; t = s; s = e; e = t; } while (0)
-end_define
-
 begin_comment
 comment|/* **************************************************************** */
 end_comment
@@ -192,18 +180,6 @@ name|char
 operator|*
 operator|)
 name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Non-zero means to save keys that we dispatch on in a kbd macro. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|_rl_defining_kbd_macro
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -552,6 +528,10 @@ literal|0
 condition|)
 name|current_macro
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 name|current_macro_size
@@ -562,6 +542,10 @@ expr_stmt|;
 else|else
 name|current_macro
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xrealloc
 argument_list|(
 name|current_macro
@@ -637,10 +621,6 @@ name|executing_macro_index
 operator|=
 literal|0
 expr_stmt|;
-name|_rl_defining_kbd_macro
-operator|=
-literal|0
-expr_stmt|;
 name|RL_UNSETSTATE
 argument_list|(
 name|RL_STATE_MACRODEF
@@ -669,7 +649,10 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|_rl_defining_kbd_macro
+name|RL_ISSTATE
+argument_list|(
+name|RL_STATE_MACRODEF
+argument_list|)
 condition|)
 block|{
 name|_rl_abort_internal
@@ -703,10 +686,6 @@ name|current_macro_index
 operator|=
 literal|0
 expr_stmt|;
-name|_rl_defining_kbd_macro
-operator|=
-literal|1
-expr_stmt|;
 name|RL_SETSTATE
 argument_list|(
 name|RL_STATE_MACRODEF
@@ -738,7 +717,10 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|_rl_defining_kbd_macro
+name|RL_ISSTATE
+argument_list|(
+name|RL_STATE_MACRODEF
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -763,10 +745,6 @@ name|current_macro_index
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-name|_rl_defining_kbd_macro
-operator|=
-literal|0
 expr_stmt|;
 name|RL_UNSETSTATE
 argument_list|(
@@ -816,7 +794,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|_rl_defining_kbd_macro
+name|RL_ISSTATE
+argument_list|(
+name|RL_STATE_MACRODEF
+argument_list|)
 condition|)
 block|{
 name|rl_ding

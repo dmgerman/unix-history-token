@@ -56,6 +56,26 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|FD_SET
 argument_list|)
 operator|&&
@@ -214,7 +234,7 @@ begin_decl_stmt
 specifier|static
 name|int
 name|find_matching_open
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|char
@@ -422,7 +442,7 @@ operator|||
 operator|!
 name|rl_blink_matching_paren
 condition|)
-name|rl_insert
+name|_rl_insert_char
 argument_list|(
 name|count
 argument_list|,
@@ -451,7 +471,7 @@ decl_stmt|;
 name|fd_set
 name|readfds
 decl_stmt|;
-name|rl_insert
+name|_rl_insert_char
 argument_list|(
 literal|1
 argument_list|,
@@ -563,7 +583,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* !HAVE_SELECT */
-name|rl_insert
+name|_rl_insert_char
 argument_list|(
 name|count
 argument_list|,

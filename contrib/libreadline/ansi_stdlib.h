@@ -42,15 +42,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|long
-name|int
-name|atol
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|double
 name|atof
 parameter_list|()
@@ -69,10 +60,61 @@ begin_comment
 comment|/* Memory allocation functions. */
 end_comment
 
+begin_comment
+comment|/* Generic pointer type. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTR_T
+end_ifndef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PTR_T
+value|void *
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PTR_T
+value|char *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PTR_T */
+end_comment
+
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|PTR_T
 name|malloc
 parameter_list|()
 function_decl|;
@@ -80,8 +122,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
+name|PTR_T
 name|realloc
 parameter_list|()
 function_decl|;

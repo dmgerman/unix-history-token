@@ -172,7 +172,7 @@ end_if
 
 begin_decl_stmt
 specifier|static
-name|char
+name|void
 modifier|*
 name|xmalloc
 argument_list|()
@@ -188,36 +188,11 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xrealloc
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
 
 begin_endif
 endif|#
@@ -244,7 +219,7 @@ name|struct
 name|passwd
 modifier|*
 name|getpwuid
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|uid_t
@@ -259,7 +234,7 @@ name|struct
 name|passwd
 modifier|*
 name|getpwnam
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -289,26 +264,6 @@ name|savestring
 argument_list|)
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|strcpy
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -316,7 +271,7 @@ name|savestring
 parameter_list|(
 name|x
 parameter_list|)
-value|strcpy (xmalloc (1 + strlen (x)), (x))
+value|strcpy ((char *)xmalloc (1 + strlen (x)), (x))
 end_define
 
 begin_endif
@@ -393,7 +348,7 @@ specifier|extern
 name|char
 modifier|*
 name|sh_get_home_dir
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -407,7 +362,7 @@ specifier|extern
 name|char
 modifier|*
 name|sh_get_env_value
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -544,6 +499,79 @@ name|default_suffixes
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|tilde_find_prefix
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|tilde_find_suffix
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|isolate_tilde_prefix
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|glue_prefix_and_suffix
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Find the start of a tilde expansion in STRING, and return the index of    the tilde which starts the expansion.  Place the length of the text    which identified this tilde starter in LEN, excluding the tilde itself. */
 end_comment
@@ -557,6 +585,7 @@ name|string
 parameter_list|,
 name|len
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -716,6 +745,7 @@ name|tilde_find_suffix
 parameter_list|(
 name|string
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|string
@@ -899,6 +929,10 @@ argument_list|)
 condition|)
 name|result
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 name|result_size
@@ -916,6 +950,10 @@ expr_stmt|;
 else|else
 name|result
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 name|result_size
@@ -978,6 +1016,10 @@ name|result_size
 condition|)
 name|result
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xrealloc
 argument_list|(
 name|result
@@ -1036,6 +1078,10 @@ break|break;
 comment|/* Expand the entire tilde word, and copy it into RESULT. */
 name|tilde_word
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 literal|1
@@ -1119,6 +1165,10 @@ name|result_size
 condition|)
 name|result
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xrealloc
 argument_list|(
 name|result
@@ -1185,6 +1235,7 @@ name|fname
 parameter_list|,
 name|lenp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -1203,6 +1254,10 @@ name|i
 decl_stmt|;
 name|ret
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 name|strlen
@@ -1325,19 +1380,15 @@ parameter_list|)
 name|char
 modifier|*
 name|prefix
-decl_stmt|,
-decl|*
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 name|suffix
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|int
 name|suffind
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1375,6 +1426,10 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|xmalloc
 argument_list|(
 name|plen
@@ -1410,7 +1465,7 @@ return|return
 name|ret
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Do the work of tilde expansion on FILENAME.  FILENAME starts with a    tilde.  If there is no expansion, call tilde_expansion_failure_hook.    This always returns a newly-allocated string, never static storage. */
@@ -1865,17 +1920,17 @@ end_function_decl
 
 begin_function
 specifier|static
-name|char
+name|void
 modifier|*
 name|xmalloc
 parameter_list|(
 name|bytes
 parameter_list|)
-name|int
+name|size_t
 name|bytes
 decl_stmt|;
 block|{
-name|char
+name|void
 modifier|*
 name|temp
 init|=
@@ -1906,7 +1961,7 @@ end_function
 
 begin_function
 specifier|static
-name|char
+name|void
 modifier|*
 name|xrealloc
 parameter_list|(
@@ -1914,7 +1969,7 @@ name|pointer
 parameter_list|,
 name|bytes
 parameter_list|)
-name|char
+name|void
 modifier|*
 name|pointer
 decl_stmt|;
@@ -1922,7 +1977,7 @@ name|int
 name|bytes
 decl_stmt|;
 block|{
-name|char
+name|void
 modifier|*
 name|temp
 decl_stmt|;
@@ -1933,10 +1988,6 @@ name|pointer
 condition|)
 name|temp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|bytes
@@ -1945,10 +1996,6 @@ expr_stmt|;
 else|else
 name|temp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|pointer

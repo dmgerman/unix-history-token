@@ -34,7 +34,7 @@ specifier|extern
 name|char
 modifier|*
 name|sh_single_quote
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|char
@@ -48,7 +48,7 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|sh_set_lines_and_columns
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int
@@ -64,7 +64,7 @@ specifier|extern
 name|char
 modifier|*
 name|sh_get_env_value
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -80,7 +80,7 @@ specifier|extern
 name|char
 modifier|*
 name|sh_get_home_dir
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -93,7 +93,7 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|sh_unset_nodelay_mode
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|int

@@ -74,11 +74,15 @@ decl_stmt|;
 block|}
 name|KEYMAP_ENTRY
 typedef|;
-comment|/* This must be large enough to hold bindings for all of the characters    in a desired character set (e.g, 128 for ASCII, 256 for ISO Latin-x,    and so on). */
+comment|/* This must be large enough to hold bindings for all of the characters    in a desired character set (e.g, 128 for ASCII, 256 for ISO Latin-x,    and so on) plus one for subsequence matching. */
 define|#
 directive|define
 name|KEYMAP_SIZE
-value|256
+value|257
+define|#
+directive|define
+name|ANYOTHERKEY
+value|KEYMAP_SIZE-1
 comment|/* I wanted to make the above structure contain a union of:    union { rl_command_func_t *function; struct _keymap_entry *keymap; } value;    but this made it impossible for me to create a static array.    Maybe I need C lessons. */
 typedef|typedef
 name|KEYMAP_ENTRY
@@ -123,7 +127,7 @@ comment|/* Return a new, empty keymap.    Free it with free() when you are done.
 specifier|extern
 name|Keymap
 name|rl_make_bare_keymap
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -134,7 +138,7 @@ comment|/* Return a new keymap which is a copy of MAP. */
 specifier|extern
 name|Keymap
 name|rl_copy_keymap
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|Keymap
@@ -145,7 +149,7 @@ comment|/* Return a new keymap with the printing characters bound to rl_insert, 
 specifier|extern
 name|Keymap
 name|rl_make_keymap
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -156,7 +160,7 @@ comment|/* Free the storage associated with a keymap. */
 specifier|extern
 name|void
 name|rl_discard_keymap
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|Keymap
@@ -168,7 +172,7 @@ comment|/* Return the keymap corresponding to a given name.  Names look like    
 specifier|extern
 name|Keymap
 name|rl_get_keymap_by_name
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 specifier|const
@@ -181,7 +185,7 @@ comment|/* Return the current keymap. */
 specifier|extern
 name|Keymap
 name|rl_get_keymap
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|void
@@ -192,7 +196,7 @@ comment|/* Set the current keymap to MAP. */
 specifier|extern
 name|void
 name|rl_set_keymap
-name|__P
+name|PARAMS
 argument_list|(
 operator|(
 name|Keymap
