@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.12 (Berkeley) %G%"
+literal|"@(#)misc.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1170,6 +1170,20 @@ argument_list|(
 name|i
 argument_list|,
 name|j
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|!=
+name|i
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 return|return
