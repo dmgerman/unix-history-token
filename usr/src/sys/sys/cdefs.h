@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)cdefs.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -60,6 +60,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The __CONCAT macro is a bit tricky -- make sure you don't put  * spaces in between its arguments, also you can't use strings in  * code that's intended for historical compilers.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -83,6 +87,10 @@ name|protos
 parameter_list|)
 value|protos
 end_define
+
+begin_comment
+comment|/* full-blown ANSI C */
+end_comment
 
 begin_define
 define|#
@@ -111,6 +119,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* traditional style */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -123,6 +135,10 @@ directive|define
 name|const
 value|__const
 end_define
+
+begin_comment
+comment|/* GCC: ANSI C with -traditional */
+end_comment
 
 begin_define
 define|#
@@ -156,6 +172,10 @@ directive|define
 name|const
 end_define
 
+begin_comment
+comment|/* delete ANSI C keywords */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -188,6 +208,10 @@ name|protos
 parameter_list|)
 value|()
 end_define
+
+begin_comment
+comment|/* traditional C preprocessor */
+end_comment
 
 begin_define
 define|#
