@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comm.c	5.7 (Berkeley) %G%"
+literal|"@(#)comm.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -67,7 +67,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -616,7 +634,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 operator|(
 name|fp
 operator|=
@@ -627,6 +644,8 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 operator|(
@@ -636,9 +655,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"comm: can't read %s.\n"
+literal|"comm: %s: %s\n"
 argument_list|,
 name|name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -669,7 +693,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: comm [-123] [ - ] file1 file2\n"
+literal|"usage: comm [-123] file1 file2\n"
 argument_list|)
 expr_stmt|;
 name|exit
