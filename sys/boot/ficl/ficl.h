@@ -893,6 +893,39 @@ name|char
 name|delimiter
 parameter_list|)
 function_decl|;
+name|STRINGINFO
+name|vmParseStringEx
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|char
+name|delimiter
+parameter_list|,
+name|char
+name|fSkipLeading
+parameter_list|)
+function_decl|;
+name|CELL
+name|vmPop
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+name|void
+name|vmPush
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|CELL
+name|c
+parameter_list|)
+function_decl|;
 name|void
 name|vmPopIP
 parameter_list|(
@@ -939,6 +972,19 @@ name|OUTFUNC
 name|textOut
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|FICL_WANT_DEBUGGER
+name|void
+name|vmStep
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 name|void
 name|vmTextOut
 parameter_list|(
@@ -989,12 +1035,12 @@ value|((pVM)->runningWord)
 comment|/* ** The inner interpreter - coded as a macro (see note for  ** INLINE_INNER_LOOP in sysdep.h for complaints about VC++ 5 */
 define|#
 directive|define
-name|M_INNER_LOOP
+name|M_VM_STEP
 parameter_list|(
 name|pVM
 parameter_list|)
 define|\
-value|for (;;) \     {  \         FICL_WORD *tempFW = *(pVM)->ip++; \         (pVM)->runningWord = tempFW; \         tempFW->code(pVM); \     }
+value|FICL_WORD *tempFW = *(pVM)->ip++; \         (pVM)->runningWord = tempFW; \         tempFW->code(pVM); \  #define M_INNER_LOOP(pVM) \     for (;;)  { M_VM_STEP(pVM) }
 if|#
 directive|if
 name|INLINE_INNER_LOOP
@@ -1718,6 +1764,15 @@ modifier|*
 name|ficlNewVM
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+comment|/* ** Force deletion of a VM. You do not need to do this  ** unless you're creating and discarding a lot of VMs. ** For systems that use a constant pool of VMs for the life ** of the system, ficltermSystem takes care of VM cleanup ** automatically. */
+name|void
+name|ficlFreeVM
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
 parameter_list|)
 function_decl|;
 comment|/* ** Set the stack sizes (return and parameter) to be used for all ** subsequently created VMs. Returns actual stack size to be used. */

@@ -1268,7 +1268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         d i c t E m p t y ** Empty the dictionary, reset its hash table, and reset its search order. ** Clears and (re-)creates the main hash table (pForthWords) with the ** size specified by nHash. **************************************************************************/
+comment|/**************************************************************************                         d i c t E m p t y ** Empty the dictionary, reset its hash table, and reset its search order. ** Clears and (re-)creates the hash table with the size specified by nHash. **************************************************************************/
 end_comment
 
 begin_function
