@@ -4,7 +4,7 @@ comment|/* cmds.c */
 end_comment
 
 begin_comment
-comment|/*  $RCSfile: cmds.c,v $  *  $Revision: 14020.14 $  *  $Date: 93/07/09 11:31:53 $  */
+comment|/*  $RCSfile: cmds.c,v $  *  $Revision: 1.1.1.1 $  *  $Date: 1994/09/22 23:45:33 $  */
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ begin_decl_stmt
 name|int
 name|passivemode
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
