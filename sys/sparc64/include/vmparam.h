@@ -326,6 +326,20 @@ name|KERNBASE
 value|(VM_MIN_KERNEL_ADDRESS)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_MIN_PROM_ADDRESS
+value|(0xf0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_PROM_ADDRESS
+value|(0xffffe000)
+end_define
+
 begin_comment
 comment|/*  * Initial pagein size of beginning of executable file.  */
 end_comment
