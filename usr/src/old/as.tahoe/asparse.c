@@ -950,6 +950,9 @@ name|layoutpos
 operator|=
 name|layout
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|layoutpos
@@ -978,6 +981,9 @@ name|e_xvalue
 operator|>=
 name|datbase
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|layoutpos
@@ -986,6 +992,9 @@ literal|" *  "
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|layoutpos
@@ -2216,6 +2225,9 @@ operator|==
 literal|2
 operator|)
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|layoutpos
@@ -2768,6 +2780,9 @@ name|i
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|layoutpos
@@ -2872,6 +2887,9 @@ name|k
 operator|++
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|layoutpos

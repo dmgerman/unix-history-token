@@ -1583,6 +1583,9 @@ name|FILE
 modifier|*
 name|file
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tname
@@ -2434,6 +2437,9 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|layoutpos
