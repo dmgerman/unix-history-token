@@ -5393,7 +5393,7 @@ name|fd_fd
 operator|.
 name|fd_mtx
 argument_list|,
-literal|"filedesc structure"
+name|FILEDESC_LOCK_DESC
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -5743,7 +5743,7 @@ name|newfdp
 operator|->
 name|fd_mtx
 argument_list|,
-literal|"filedesc structure"
+name|FILEDESC_LOCK_DESC
 argument_list|,
 name|MTX_DEF
 argument_list|)

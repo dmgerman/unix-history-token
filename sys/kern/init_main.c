@@ -1404,7 +1404,7 @@ name|fd_fd
 operator|.
 name|fd_mtx
 argument_list|,
-literal|"struct filedesc"
+name|FILEDESC_LOCK_DESC
 argument_list|,
 name|MTX_DEF
 argument_list|)

@@ -300,6 +300,13 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|FILEDESC_LOCK_DESC
+value|"filedesc structure"
+end_define
+
 begin_comment
 comment|/* Lock a file descriptor table. */
 end_comment
