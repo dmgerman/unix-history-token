@@ -1059,18 +1059,6 @@ name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|d_open_t
-name|noopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|d_close_t
-name|noclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|d_read_t
 name|noread
 decl_stmt|;
