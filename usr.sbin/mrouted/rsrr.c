@@ -29,22 +29,11 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SA_LEN
+end_ifdef
 
 begin_include
 include|#
@@ -52,28 +41,35 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_comment
+comment|/* for offsetof */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Taken from prune.c */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
-begin_comment
-comment|/*  * checks for scoped multicast addresses  */
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#) $Id: \ rsrr.c,v 3.8.4.8 1998/01/06 01:57:58 fenner Exp $"
+decl_stmt|;
+end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|GET_SCOPE
-parameter_list|(
-name|gt
-parameter_list|)
-value|{ \ 	register int _i; \ 	if (((gt)->gt_mcastgrp& 0xff000000) == 0xef000000) \ 	    for (_i = 0; _i< numvifs; _i++) \ 		if (scoped_addr(_i, (gt)->gt_mcastgrp)) \ 		    VIFM_SET(_i, (gt)->gt_scope); \ 	}
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Exported variables.  */
@@ -194,6 +190,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
+name|rsrr_read
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|fd_set
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|rsrr_send
 name|__P
@@ -304,20 +316,9 @@ argument_list|,
 name|RSRR_SERV_PATH
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|)
+ifdef|#
+directive|ifdef
+name|HAVE_SA_LEN
 name|servlen
 operator|=
 name|offsetof
@@ -417,6 +418,7 @@ comment|/* Read a message from the RSRR socket */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|rsrr_read
 parameter_list|(
@@ -435,10 +437,6 @@ block|{
 specifier|register
 name|int
 name|rsrr_recvlen
-decl_stmt|;
-specifier|register
-name|int
-name|omask
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -506,28 +504,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Use of omask taken from main() */
-name|omask
-operator|=
-name|sigblock
-argument_list|(
-name|sigmask
-argument_list|(
-name|SIGALRM
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|rsrr_accept
 argument_list|(
 name|rsrr_recvlen
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|omask
 argument_list|)
 expr_stmt|;
 block|}
@@ -632,9 +611,13 @@ case|case
 name|RSRR_INITIAL_QUERY
 case|:
 comment|/* Send Initial Reply to client */
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
@@ -683,9 +666,13 @@ operator|+
 name|RSRR_HEADER_LEN
 operator|)
 expr_stmt|;
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
@@ -965,9 +952,13 @@ operator|*
 name|RSRR_VIF_LEN
 expr_stmt|;
 comment|/* Send it. */
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|0
 argument_list|,
@@ -1035,8 +1026,6 @@ name|r
 decl_stmt|;
 name|int
 name|sendlen
-decl_stmt|,
-name|i
 decl_stmt|;
 name|u_long
 name|mcastgrp
@@ -1168,6 +1157,15 @@ name|gt_route
 operator|->
 name|rt_parent
 expr_stmt|;
+if|if
+condition|(
+name|BIT_TST
+argument_list|(
+name|flags
+argument_list|,
+name|RSRR_NOTIFICATION_BIT
+argument_list|)
+condition|)
 name|route_reply
 operator|->
 name|out_vif_bm
@@ -1175,6 +1173,13 @@ operator|=
 name|gt_notify
 operator|->
 name|gt_grpmems
+expr_stmt|;
+else|else
+name|route_reply
+operator|->
+name|out_vif_bm
+operator|=
+literal|0
 expr_stmt|;
 block|}
 elseif|else
@@ -1314,93 +1319,10 @@ operator|=
 name|r
 expr_stmt|;
 comment|/* obtain the multicast group membership list */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|numvifs
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|VIFM_ISSET
-argument_list|(
-name|i
-argument_list|,
-name|r
-operator|->
-name|rt_children
-argument_list|)
-operator|&&
-operator|!
-operator|(
-name|VIFM_ISSET
-argument_list|(
-name|i
-argument_list|,
-name|r
-operator|->
-name|rt_leaves
-argument_list|)
-operator|)
-condition|)
-name|VIFM_SET
-argument_list|(
-name|i
-argument_list|,
-name|gt
-operator|->
-name|gt_grpmems
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|VIFM_ISSET
-argument_list|(
-name|i
-argument_list|,
-name|r
-operator|->
-name|rt_leaves
-argument_list|)
-operator|&&
-name|grplst_mem
-argument_list|(
-name|i
-argument_list|,
-name|mcastgrp
-argument_list|)
-condition|)
-name|VIFM_SET
-argument_list|(
-name|i
-argument_list|,
-name|gt
-operator|->
-name|gt_grpmems
-argument_list|)
-expr_stmt|;
-block|}
-name|GET_SCOPE
+name|determine_forwvifs
 argument_list|(
 name|gt
 argument_list|)
-expr_stmt|;
-name|gt
-operator|->
-name|gt_grpmems
-operator|&=
-operator|~
-name|gt
-operator|->
-name|gt_scope
 expr_stmt|;
 comment|/* Include the routing entry. */
 name|route_reply
@@ -1436,36 +1358,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|"%sSend RSRR Route Reply for src %s dst %s in vif %d out vif %d\n"
+argument_list|,
 name|gt_notify
-condition|)
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|0
-argument_list|,
-literal|"Route Change: Send RSRR Route Reply"
-argument_list|)
-expr_stmt|;
-else|else
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|0
-argument_list|,
-literal|"Send RSRR Route Reply"
-argument_list|)
-expr_stmt|;
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|0
-argument_list|,
-literal|"for src %s dst %s in vif %d out vif %d\n"
+condition|?
+literal|"Route Change: "
+else|:
+literal|""
 argument_list|,
 name|inet_fmt
 argument_list|(
@@ -1754,6 +1663,10 @@ name|route_query
 operator|->
 name|query_id
 expr_stmt|;
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -1889,6 +1802,10 @@ name|gt_rsrr_cache
 operator|=
 name|rc
 expr_stmt|;
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -1995,6 +1912,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|IF_DEBUG
+argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -2068,8 +1989,16 @@ decl_stmt|,
 modifier|*
 name|rc_next
 decl_stmt|;
-name|printf
+name|IF_DEBUG
 argument_list|(
+argument|DEBUG_RSRR
+argument_list|)
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|0
+argument_list|,
 literal|"cleaning cache for group %s\n"
 argument_list|,
 name|inet_fmt

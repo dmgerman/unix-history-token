@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id: mapper.c,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * mapper.c,v 3.8.4.3 1998/01/06 01:57:47 fenner Exp  */
 end_comment
 
 begin_comment
@@ -59,6 +59,27 @@ include|#
 directive|include
 file|<varargs.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#) $Id: \ mapper.c,v 3.8.4.3 1998/01/06 01:57:47 fenner Exp $"
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -4359,11 +4380,6 @@ name|graph
 init|=
 name|FALSE
 decl_stmt|;
-name|setlinebuf
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|geteuid
@@ -4376,7 +4392,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"must be root\n"
+literal|"map-mbone: must be root\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4385,6 +4401,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|init_igmp
+argument_list|()
+expr_stmt|;
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|argv
 operator|++
 operator|,
@@ -4633,9 +4663,6 @@ argument_list|,
 name|debug
 argument_list|)
 expr_stmt|;
-name|init_igmp
-argument_list|()
-expr_stmt|;
 block|{
 comment|/* Find a good local address for us. */
 name|int
@@ -4659,20 +4686,9 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199103
-operator|)
-operator|)
+ifdef|#
+directive|ifdef
+name|HAVE_SA_LEN
 name|addr
 operator|.
 name|sin_len

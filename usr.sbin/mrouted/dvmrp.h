@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: dvmrp.h,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * dvmrp.h,v 3.8.4.5 1997/11/18 23:25:57 fenner Exp  */
 end_comment
 
 begin_comment
@@ -414,7 +414,7 @@ begin_define
 define|#
 directive|define
 name|NEIGHBOR_EXPIRE_TIME
-value|140
+value|30
 end_define
 
 begin_comment
@@ -424,38 +424,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GROUP_QUERY_INTERVAL
-value|125
+name|OLD_NEIGHBOR_EXPIRE_TIME
+value|140
 end_define
 
 begin_comment
-comment|/* periodic group query interval    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GROUP_EXPIRE_TIME
-value|270
-end_define
-
-begin_comment
-comment|/* time to consider group gone      */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LEAVE_EXPIRE_TIME
-value|3
-end_define
-
-begin_comment
-comment|/* " " after receiving a leave	    */
-end_comment
-
-begin_comment
-comment|/* Note: LEAVE_EXPIRE_TIME should ideally be shorter, but the resolution of  * the timer in mrouted doesn't allow us to make it any shorter. */
+comment|/* time to consider neighbor gone   */
 end_comment
 
 begin_define
@@ -517,7 +491,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_TUN_RATE_LIMIT
-value|500
+value|0
 end_define
 
 begin_comment
@@ -538,6 +512,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MIN_CACHE_LIFETIME
+value|60
+end_define
+
+begin_comment
+comment|/* minimum allowed cache lifetime   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AVERAGE_PRUNE_LIFETIME
+value|7200
+end_define
+
+begin_comment
+comment|/* average lifetime of prunes sent  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_PRUNE_LIFETIME
+value|120
+end_define
+
+begin_comment
+comment|/* minimum allowed prune lifetime   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GRAFT_TIMEOUT_VAL
 value|5
 end_define
@@ -549,9 +556,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OLD_AGE_THRESHOLD
-value|2
+name|PRUNE_REXMIT_VAL
+value|3
 end_define
+
+begin_comment
+comment|/* initial time for prune rexmission*/
+end_comment
 
 end_unit
 

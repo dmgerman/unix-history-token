@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: inet.c,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * inet.c,v 3.8.4.2 1998/01/06 01:57:44 fenner Exp  */
 end_comment
 
 begin_include
@@ -8,6 +8,27 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#) $Id: \ inet.c,v 3.8.4.2 1998/01/06 01:57:44 fenner Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Exported variables.  */
@@ -622,10 +643,15 @@ name|u_int32
 name|inet_parse
 parameter_list|(
 name|s
+parameter_list|,
+name|n
 parameter_list|)
 name|char
 modifier|*
 name|s
+decl_stmt|;
+name|int
+name|n
 decl_stmt|;
 block|{
 name|u_int32
@@ -635,18 +661,29 @@ literal|0
 decl_stmt|;
 name|u_int
 name|a0
+init|=
+literal|0
 decl_stmt|,
 name|a1
+init|=
+literal|0
 decl_stmt|,
 name|a2
+init|=
+literal|0
 decl_stmt|,
 name|a3
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-if|if
-condition|(
+name|i
+operator|=
 name|sscanf
 argument_list|(
 name|s
@@ -668,7 +705,15 @@ argument_list|,
 operator|&
 name|c
 argument_list|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+name|n
+operator|||
+name|i
+operator|>
 literal|4
 operator|||
 name|a0

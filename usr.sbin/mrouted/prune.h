@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: prune.h,v 3.8 1995/11/29 22:36:57 fenner Rel $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * prune.h,v 3.8.4.5 1998/02/27 22:45:43 fenner Exp  */
 end_comment
 
 begin_comment
@@ -65,11 +65,15 @@ comment|/* timer for this group entry	    */
 name|time_t
 name|gt_ctime
 decl_stmt|;
-comment|/* time of entry creation         */
+comment|/* time of entry creation	    */
 name|u_char
 name|gt_grftsnt
 decl_stmt|;
 comment|/* graft sent/retransmit timer	    */
+name|nbrbitmap_t
+name|gt_prunes
+decl_stmt|;
+comment|/* bitmap of neighbors who pruned   */
 name|struct
 name|stable
 modifier|*
@@ -88,6 +92,14 @@ modifier|*
 name|gt_route
 decl_stmt|;
 comment|/* parent route			    */
+name|int
+name|gt_rexmit_timer
+decl_stmt|;
+comment|/* timer for prune retransmission   */
+name|int
+name|gt_prune_rexmit
+decl_stmt|;
+comment|/* time til prune retransmission    */
 ifdef|#
 directive|ifdef
 name|RSRR
@@ -126,6 +138,14 @@ name|u_long
 name|st_pktcnt
 decl_stmt|;
 comment|/* packet count for src-grp entry   */
+name|u_long
+name|st_savpkt
+decl_stmt|;
+comment|/* saved pkt cnt when no krnl entry */
+name|time_t
+name|st_ctime
+decl_stmt|;
+comment|/* kernel entry creation time	    */
 block|}
 struct|;
 end_struct
@@ -153,12 +173,27 @@ name|pt_vifi
 decl_stmt|;
 comment|/* vif prune received on	    */
 name|int
+name|pt_index
+decl_stmt|;
+comment|/* neighbor index of router	    */
+name|int
 name|pt_timer
 decl_stmt|;
 comment|/* timer for prune		    */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MIN_PRUNE_LIFE
+value|TIMER_INTERVAL
+end_define
+
+begin_comment
+comment|/* min prune lifetime to bother with */
+end_comment
 
 begin_comment
 comment|/*  * The packet format for a traceroute request.  */
@@ -457,7 +492,7 @@ name|x
 parameter_list|,
 name|i
 parameter_list|)
-value|{ \ 			x = htonl(~((1<< (32 - (i))) - 1)); \ 			};
+value|{ \ 			x = i ? htonl(~((1<< (32 - (i))) - 1)) : 0; \ 			};
 end_define
 
 begin_define
