@@ -437,6 +437,8 @@ argument_list|,
 name|cardno
 argument_list|,
 name|c
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -456,6 +458,8 @@ argument_list|,
 argument|x
 argument_list|,
 argument|c
+argument_list|,
+argument|blank
 argument_list|)
 end_macro
 
@@ -477,6 +481,12 @@ end_decl_stmt
 begin_decl_stmt
 name|CARD
 name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|BOOLEAN
+name|blank
 decl_stmt|;
 end_decl_stmt
 
@@ -556,6 +566,12 @@ argument_list|,
 literal|"+-----+"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|blank
+condition|)
+block|{
 name|mvwaddch
 argument_list|(
 name|win
@@ -632,6 +648,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
