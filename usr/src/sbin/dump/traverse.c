@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.23 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,10 +465,10 @@ name|dp
 operator|->
 name|di_flags
 operator|&
-name|NODUMP
+name|UF_NODUMP
 operator|)
 operator|!=
-name|NODUMP
+name|UF_NODUMP
 else|#
 directive|else
 name|dp
