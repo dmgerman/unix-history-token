@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.128 1996/10/04 14:53:50 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.129 1996/10/05 10:43:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -103,6 +103,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SAVE_USERCONFIG
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -113,6 +119,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2325,15 +2336,17 @@ literal|"/kernel.GENERIC"
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SAVE_USERCONFIG
 comment|/* Snapshot any boot -c changes back to the GENERIC kernel */
 name|save_userconfig_to_kernel
 argument_list|(
 literal|"/kernel.GENERIC"
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vsystem
@@ -2693,9 +2706,21 @@ decl_stmt|;
 comment|/* If we've already done this, bail out */
 if|if
 condition|(
+operator|(
+name|str
+operator|=
 name|variable_get
 argument_list|(
-name|DISK_PREPARED
+name|DISK_LABELLED
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"written"
 argument_list|)
 condition|)
 return|return
@@ -3476,13 +3501,6 @@ expr_stmt|;
 name|command_execute
 argument_list|()
 expr_stmt|;
-name|variable_set2
-argument_list|(
-name|DISK_PREPARED
-argument_list|,
-literal|"yes"
-argument_list|)
-expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 return|;
@@ -3809,35 +3827,6 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|isa_list
-index|[]
-init|=
-block|{
-literal|"device"
-block|,
-literal|"ioport"
-block|,
-literal|"irq"
-block|,
-literal|"drq"
-block|,
-literal|"iomem"
-block|,
-literal|"iosize"
-block|,
-literal|"flags"
-block|,
-literal|"alive"
-block|,
-literal|"enabled"
-block|, }
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -3860,6 +3849,9 @@ name|struct
 name|list
 modifier|*
 name|c_isa
+decl_stmt|,
+modifier|*
+name|b_isa
 decl_stmt|,
 modifier|*
 name|c_dev
@@ -3888,7 +3880,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Can't read in-core information for kernel.\n"
+literal|"save_userconf: Can't read in-core information for kernel.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3909,13 +3901,18 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Can't read device information for kernel image %s\n"
+literal|"save_userconf: Can't read device information for kernel image %s\n"
 argument_list|,
 name|kern
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|msgNotify
+argument_list|(
+literal|"Saving any boot -c changes to new kernel..."
+argument_list|)
+expr_stmt|;
 name|c_isa
 operator|=
 name|uc_getdev
@@ -3923,6 +3920,33 @@ argument_list|(
 name|core
 argument_list|,
 literal|"-isa"
+argument_list|)
+expr_stmt|;
+name|b_isa
+operator|=
+name|uc_getdev
+argument_list|(
+name|boot
+argument_list|,
+literal|"-isa"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"save_userconf: got %d ISA device entries from core, %d from boot.\n"
+argument_list|,
+name|c_isa
+operator|->
+name|ac
+argument_list|,
+name|b_isa
+operator|->
+name|ac
 argument_list|)
 expr_stmt|;
 for|for
@@ -3948,7 +3972,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Outer loop, c_isa->av[%d] = %s\n"
+literal|"save_userconf: ISA device loop, c_isa->av[%d] = %s\n"
 argument_list|,
 name|d
 argument_list|,
@@ -3975,7 +3999,7 @@ literal|"npx0"
 argument_list|)
 condition|)
 block|{
-comment|/* special case npx0, which 					       mucks with its id_irq member */
+comment|/* special case npx0, which mucks with its id_irq member */
 name|c_dev
 operator|=
 name|uc_getdev
@@ -3996,12 +4020,57 @@ name|uc_getdev
 argument_list|(
 name|boot
 argument_list|,
+name|b_isa
+operator|->
+name|av
+index|[
+name|d
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|c_dev
+operator|||
+operator|!
+name|b_dev
+condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"save_userconf: c_dev: %x b_dev: %x\n"
+argument_list|,
+name|c_dev
+argument_list|,
+name|b_dev
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"save_userconf: ISA device %s: %d config parameters (core), %d (boot)\n"
+argument_list|,
 name|c_isa
 operator|->
 name|av
 index|[
 name|d
 index|]
+argument_list|,
+name|c_dev
+operator|->
+name|ac
+argument_list|,
+name|b_dev
+operator|->
+name|ac
 argument_list|)
 expr_stmt|;
 for|for
@@ -4027,11 +4096,20 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Inner loop, c_dev->av[%d] = %s\n"
+literal|"save_userconf: c_dev->av[%d] = %s, b_dev->av[%d] = %s\n"
 argument_list|,
 name|i
 argument_list|,
 name|c_dev
+operator|->
+name|av
+index|[
+name|i
+index|]
+argument_list|,
+name|i
+argument_list|,
+name|b_dev
 operator|->
 name|av
 index|[
@@ -4066,28 +4144,16 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"%s %s changed: %s (boot) -> %s (core)\n"
+literal|"save_userconf: %s (boot) -> %s (core)\n"
 argument_list|,
 name|c_dev
-operator|->
-name|av
-index|[
-literal|0
-index|]
-argument_list|,
-name|isa_list
-index|[
-name|i
-index|]
-argument_list|,
-name|b_dev
 operator|->
 name|av
 index|[
 name|i
 index|]
 argument_list|,
-name|c_dev
+name|b_dev
 operator|->
 name|av
 index|[
