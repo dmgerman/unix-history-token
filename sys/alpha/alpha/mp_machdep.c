@@ -682,7 +682,7 @@ expr_stmt|;
 name|spl0
 argument_list|()
 expr_stmt|;
-name|smp_ipi_all
+name|ipi_all
 argument_list|(
 literal|0
 argument_list|)
@@ -1988,7 +1988,7 @@ name|map
 operator|!=
 literal|0
 condition|)
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -2098,7 +2098,7 @@ name|checkstate_need_ast
 operator||=
 name|map
 expr_stmt|;
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -2220,7 +2220,7 @@ name|map
 operator|!=
 literal|0
 condition|)
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -2459,7 +2459,7 @@ name|checkstate_need_ast
 operator||=
 name|map
 expr_stmt|;
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -2617,7 +2617,7 @@ name|checkstate_need_ast
 operator||=
 name|map
 expr_stmt|;
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -2739,7 +2739,7 @@ operator|&
 operator|~
 name|stopped_cpus
 expr_stmt|;
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -2817,7 +2817,7 @@ name|map
 argument_list|)
 expr_stmt|;
 comment|/* send the stop IPI to all CPUs in map */
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -3167,7 +3167,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* signal other processors, which will enter the IPI with interrupts off */
-name|smp_ipi_all_but_self
+name|ipi_all_but_self
 argument_list|(
 name|IPI_RENDEZVOUS
 argument_list|)
@@ -3192,7 +3192,7 @@ end_comment
 
 begin_function
 name|void
-name|smp_ipi_selected
+name|ipi_selected
 parameter_list|(
 name|u_int32_t
 name|cpus
@@ -3210,7 +3210,7 @@ name|CTR2
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"smp_ipi_selected: cpus: %x ipi: %lx"
+literal|"ipi_selected: cpus: %x ipi: %lx"
 argument_list|,
 name|cpus
 argument_list|,
@@ -3294,13 +3294,13 @@ end_comment
 
 begin_function
 name|void
-name|smp_ipi_all
+name|ipi_all
 parameter_list|(
 name|u_int64_t
 name|ipi
 parameter_list|)
 block|{
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|all_cpus
 argument_list|,
@@ -3316,13 +3316,13 @@ end_comment
 
 begin_function
 name|void
-name|smp_ipi_all_but_self
+name|ipi_all_but_self
 parameter_list|(
 name|u_int64_t
 name|ipi
 parameter_list|)
 block|{
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|PCPU_GET
 argument_list|(
@@ -3341,13 +3341,13 @@ end_comment
 
 begin_function
 name|void
-name|smp_ipi_self
+name|ipi_self
 parameter_list|(
 name|u_int64_t
 name|ipi
 parameter_list|)
 block|{
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 literal|1
 operator|<<

@@ -56,7 +56,7 @@ end_define
 
 begin_function_decl
 name|void
-name|smp_ipi_selected
+name|ipi_selected
 parameter_list|(
 name|u_int32_t
 name|cpus
@@ -69,7 +69,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|smp_ipi_all
+name|ipi_all
 parameter_list|(
 name|u_int64_t
 name|ipi
@@ -79,7 +79,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|smp_ipi_all_but_self
+name|ipi_all_but_self
 parameter_list|(
 name|u_int64_t
 name|ipi
@@ -89,7 +89,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|smp_ipi_self
+name|ipi_self
 parameter_list|(
 name|u_int64_t
 name|ipi

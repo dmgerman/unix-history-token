@@ -9579,7 +9579,7 @@ name|smp_started
 operator|&&
 name|invltlb_ok
 condition|)
-name|smp_ipi_all_but_self
+name|ipi_all_but_self
 argument_list|(
 name|IPI_INVLTLB
 argument_list|)
@@ -10558,7 +10558,7 @@ name|map
 operator|!=
 literal|0
 condition|)
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -10668,7 +10668,7 @@ name|checkstate_need_ast
 operator||=
 name|map
 expr_stmt|;
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -10790,7 +10790,7 @@ name|map
 operator|!=
 literal|0
 condition|)
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -11026,7 +11026,7 @@ name|checkstate_need_ast
 operator||=
 name|map
 expr_stmt|;
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -11184,7 +11184,7 @@ name|checkstate_need_ast
 operator||=
 name|map
 expr_stmt|;
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -11309,7 +11309,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -11318,7 +11318,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|smp_ipi_all_but_self
+name|ipi_all_but_self
 argument_list|(
 name|IPI_AST
 argument_list|)
@@ -11383,7 +11383,7 @@ return|return
 literal|0
 return|;
 comment|/* send the Xcpustop IPI to all CPUs in map */
-name|smp_ipi_selected
+name|ipi_selected
 argument_list|(
 name|map
 argument_list|,
@@ -11825,7 +11825,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * signal other processors, which will enter the IPI with interrupts off 	 */
-name|smp_ipi_all_but_self
+name|ipi_all_but_self
 argument_list|(
 name|IPI_RENDEZVOUS
 argument_list|)
@@ -11844,7 +11844,7 @@ expr_stmt|;
 block|}
 comment|/*  * send an IPI to a set of cpus.  */
 name|void
-name|smp_ipi_selected
+name|ipi_selected
 parameter_list|(
 name|u_int32_t
 name|cpus
@@ -11877,7 +11877,7 @@ expr_stmt|;
 block|}
 comment|/*  * send an IPI INTerrupt containing 'vector' to all CPUs, including myself  */
 name|void
-name|smp_ipi_all
+name|ipi_all
 parameter_list|(
 name|u_int
 name|ipi
@@ -11905,7 +11905,7 @@ expr_stmt|;
 block|}
 comment|/*  * send an IPI to all CPUs EXCEPT myself  */
 name|void
-name|smp_ipi_all_but_self
+name|ipi_all_but_self
 parameter_list|(
 name|u_int
 name|ipi
@@ -11933,7 +11933,7 @@ expr_stmt|;
 block|}
 comment|/*  * send an IPI to myself  */
 name|void
-name|smp_ipi_self
+name|ipi_self
 parameter_list|(
 name|u_int
 name|ipi

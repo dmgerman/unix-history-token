@@ -1120,7 +1120,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/*      * We should use smp_ipi_all_but_self() to call other CPUs into a       * locking gate, then call a target function to do this work.      * The "proper" solution involves a generalised locking gate      * implementation, not ready yet.      */
+comment|/*      * We should use ipi_all_but_self() to call other CPUs into a       * locking gate, then call a target function to do this work.      * The "proper" solution involves a generalised locking gate      * implementation, not ready yet.      */
 name|smp_rendezvous
 argument_list|(
 name|NULL
