@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ktrace.c	1.1 (Berkeley) %G%"
+literal|"@(#)ktrace.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,10 +50,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*#include<time.h>*/
 end_comment
 
 begin_include
@@ -92,6 +88,21 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_decl_stmt
+name|char
+modifier|*
+name|tracefile
+init|=
+literal|"trace.out"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|append
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -115,11 +126,6 @@ modifier|*
 name|optarg
 decl_stmt|;
 name|int
-name|ops
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|facs
 init|=
 name|KTRFAC_SYSCALL
@@ -127,6 +133,11 @@ operator||
 name|KTRFAC_SYSRET
 operator||
 name|KTRFAC_NAMEI
+decl_stmt|;
+name|int
+name|ops
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|pid
@@ -145,7 +156,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cp:g:i"
+literal|"acp:g:if:d"
 argument_list|)
 operator|)
 operator|!=
@@ -198,6 +209,29 @@ operator||=
 name|KTROP_INHERITFLAG
 expr_stmt|;
 break|break;
+case|case
+literal|'f'
+case|:
+name|tracefile
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+name|append
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|facs
+operator||=
+name|KTRFAC_GENIO
+expr_stmt|;
+break|break;
 default|default:
 name|fprintf
 argument_list|(
@@ -237,7 +271,7 @@ condition|)
 block|{
 name|ktrace
 argument_list|(
-literal|"trace.out"
+name|tracefile
 argument_list|,
 name|ops
 argument_list|,
@@ -253,15 +287,35 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
 name|open
 argument_list|(
-literal|"trace.out"
+name|tracefile
 argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
 argument_list|,
 literal|0777
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|append
+condition|)
+name|close
+argument_list|(
+name|open
+argument_list|(
+name|tracefile
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_TRUNC
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -275,7 +329,7 @@ if|if
 condition|(
 name|ktrace
 argument_list|(
-literal|"trace.out"
+name|tracefile
 argument_list|,
 name|ops
 argument_list|,
@@ -310,7 +364,7 @@ if|if
 condition|(
 name|ktrace
 argument_list|(
-literal|"trace.out"
+name|tracefile
 argument_list|,
 name|ops
 argument_list|,
