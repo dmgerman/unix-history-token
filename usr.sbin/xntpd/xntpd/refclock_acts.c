@@ -442,7 +442,7 @@ comment|/* system peer structure pointer */
 end_comment
 
 begin_comment
-comment|/*  * Tables to compute the ddd of year form icky dd/mm timecode. Viva la  * leap.  */
+comment|/*  * Tables to compute the ddd of year from icky dd/mm timecode. Viva la  * leap.  */
 end_comment
 
 begin_expr_stmt
@@ -1659,7 +1659,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Yes, I know this code incorrectly thinks that 2000 is a leap 	 * year. The ACTS timecode format croaks then anyway. Life is 	 * short. Would only the timecode mavens resist the urge to 	 * express months of the year and days of the month in favor of 	 * days of the year. 	 */
+comment|/* 	 * Yes, I know this code incorrectly thinks that 2100 is a leap 	 * year. The ACTS timecode format croaks then anyway. Life is 	 * short. Would only the timecode mavens resist the urge to 	 * express months of the year and days of the month in favor of 	 * days of the year. 	 */
 if|if
 condition|(
 name|month
