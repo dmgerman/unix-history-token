@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.19 1995/04/22 01:20:13 jkh Exp $"
+literal|"$Id: perform.c,v 1.21 1995/04/22 14:55:07 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
+file|<sys/syslimits.h>
 end_include
 
 begin_function_decl
@@ -818,7 +818,7 @@ decl_stmt|;
 name|char
 name|cmd
 index|[
-name|_POSIX_ARG_MAX
+name|ARG_MAX
 index|]
 decl_stmt|;
 name|int
