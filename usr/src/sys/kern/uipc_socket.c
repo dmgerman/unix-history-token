@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.30	82/01/24	*/
+comment|/*	uipc_socket.c	4.31	82/02/25	*/
 end_comment
 
 begin_include
@@ -1224,11 +1224,22 @@ name|so_state
 operator|&
 name|SS_CANTSENDMORE
 condition|)
+block|{
+name|psignal
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|SIGPIPE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPIPE
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|sosendallatonce
