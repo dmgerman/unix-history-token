@@ -317,7 +317,7 @@ name|Static
 name|int
 name|kue_match
 parameter_list|(
-name|device_t
+name|device_ptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -327,7 +327,7 @@ name|Static
 name|int
 name|kue_attach
 parameter_list|(
-name|device_t
+name|device_ptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -337,7 +337,7 @@ name|Static
 name|int
 name|kue_detach
 parameter_list|(
-name|device_t
+name|device_ptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -347,7 +347,7 @@ name|Static
 name|void
 name|kue_shutdown
 parameter_list|(
-name|device_t
+name|device_ptr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2108,7 +2108,7 @@ name|Static
 name|int
 name|kue_detach
 parameter_list|(
-name|device_t
+name|device_ptr_t
 name|dev
 parameter_list|)
 block|{
@@ -5075,7 +5075,7 @@ name|Static
 name|void
 name|kue_shutdown
 parameter_list|(
-name|device_t
+name|device_ptr_t
 name|dev
 parameter_list|)
 block|{
