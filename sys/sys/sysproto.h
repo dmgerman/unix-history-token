@@ -6670,12 +6670,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"opt_compat.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
