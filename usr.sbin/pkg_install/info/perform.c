@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.16.4.1 1995/08/30 07:49:55 jkh Exp $"
+literal|"$Id: perform.c,v 1.16.4.2 1995/10/09 11:16:27 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,6 +271,14 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|Home
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -500,9 +508,8 @@ goto|goto
 name|bail
 goto|;
 block|}
-operator|(
-name|void
-operator|)
+name|Home
+operator|=
 name|make_playpen
 argument_list|(
 name|PlayPen
@@ -917,7 +924,9 @@ expr_stmt|;
 name|bail
 label|:
 name|leave_playpen
-argument_list|()
+argument_list|(
+name|Home
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -943,7 +952,9 @@ name|sig
 parameter_list|)
 block|{
 name|leave_playpen
-argument_list|()
+argument_list|(
+name|Home
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.26 1995/05/10 20:46:06 jkh Exp $"
+literal|"$Id: perform.c,v 1.27 1995/05/10 22:33:55 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|home
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|pkg_perform
@@ -98,9 +106,6 @@ name|pkgs
 decl_stmt|;
 comment|/* Only one arg to create */
 name|char
-modifier|*
-name|home
-decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
@@ -1269,7 +1274,9 @@ name|sig
 parameter_list|)
 block|{
 name|leave_playpen
-argument_list|()
+argument_list|(
+name|home
+argument_list|)
 expr_stmt|;
 block|}
 end_function
