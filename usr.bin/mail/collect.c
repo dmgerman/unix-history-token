@@ -1130,7 +1130,7 @@ case|:
 case|case
 literal|'a'
 case|:
-comment|/* 			 * Insert named variable in message 			 */
+comment|/* 			 * Insert named variable in message. 			 */
 switch|switch
 condition|(
 name|c
