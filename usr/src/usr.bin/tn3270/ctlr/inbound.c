@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../general.h"
 end_include
 
@@ -1118,6 +1124,8 @@ argument_list|)
 expr_stmt|;
 name|ExitString
 argument_list|(
+name|stderr
+argument_list|,
 name|buffer
 argument_list|,
 literal|1
@@ -2183,6 +2191,8 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unknown scancode encountered in DataFrom3270.\n"
 argument_list|,
 literal|1
@@ -2343,6 +2353,8 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unknown scancode encountered in DataFrom3270.\n"
 argument_list|,
 literal|1
@@ -2486,6 +2498,8 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Unknown scancode encountered in DataFrom3270.\n"
 argument_list|,
 literal|1
@@ -2625,6 +2639,8 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
+name|stderr
+argument_list|,
 literal|"More BREAK_SHIFT than MAKE_SHIFT.\n"
 argument_list|,
 literal|1
@@ -2655,6 +2671,8 @@ condition|)
 block|{
 name|ExitString
 argument_list|(
+name|stderr
+argument_list|,
 literal|"More BREAK_ALT than MAKE_ALT.\n"
 argument_list|,
 literal|1

@@ -27,12 +27,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ORDER_SFE
+value|0x29
+end_define
+
+begin_comment
+comment|/* Start Field Extended */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ORDER_SBA
 value|0x11
 end_define
 
 begin_comment
 comment|/* Set Buffer Address (for output) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ORDER_SA
+value|0x28
+end_define
+
+begin_comment
+comment|/* Set Attribute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ORDER_MF
+value|0x2c
+end_define
+
+begin_comment
+comment|/* Modify field */
 end_comment
 
 begin_define
@@ -71,17 +104,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ORDER_SFE
-value|0x29
-end_define
-
-begin_comment
-comment|/* Start Field Extended */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ORDER_EUA
 value|0x12
 end_define
@@ -93,23 +115,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ORDER_MF
-value|0x2c
+name|ORDER_GE
+value|0x08
 end_define
 
 begin_comment
-comment|/* Modify field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ORDER_SA
-value|0x28
-end_define
-
-begin_comment
-comment|/* Set Attribute */
+comment|/* Graphics Escape */
 end_comment
 
 begin_define
@@ -122,6 +133,38 @@ end_define
 begin_comment
 comment|/* This is a special YALE order, which 					 * introduces YALE extended orders 					 * (like setting tabs, etc.). 					 */
 end_comment
+
+begin_comment
+comment|/* The following is defined for initialization and error messages. */
+end_comment
+
+begin_struct
+struct|struct
+name|orders_def
+block|{
+name|int
+name|code
+decl_stmt|;
+comment|/* As in 3270 data stream */
+name|char
+modifier|*
+name|short_name
+decl_stmt|,
+comment|/* Short name */
+modifier|*
+name|long_name
+decl_stmt|;
+comment|/* Long name */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ORDERS_DEF
+value|{ \ 			    ORDER_SF, "SF", "Start Field", \ 			    ORDER_SFE, "SFE", "Start Field Extended", \ 			    ORDER_SBA, "SBA", "Set Buffer Address", \ 			    ORDER_SA, "SA", "Set Attribute", \ 			    ORDER_MF, "MF", "Modify Field", \ 			    ORDER_IC, "IC", "Insert Cursor", \ 			    ORDER_PT, "PT", "Program Tab", \ 			    ORDER_RA, "RA", "Repeat to Address", \ 			    ORDER_EUA, "EUA", "Erase Unprotected to Address", \ 			    ORDER_GE, "GE", "Graphics Escape", \ 			    ORDER_YALE, "YALE", "Yale Order" \ 			}
+end_define
 
 begin_define
 define|#
