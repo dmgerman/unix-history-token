@@ -13320,6 +13320,10 @@ parameter_list|)
 block|{
 name|fprintf
 argument_list|(
+name|verbose
+condition|?
+name|stdout
+else|:
 name|stderr
 argument_list|,
 literal|"usage:  camcontrol<command>  [device id][generic args][command args]\n"
@@ -13355,7 +13359,7 @@ condition|)
 return|return;
 name|fprintf
 argument_list|(
-name|stderr
+name|stdout
 argument_list|,
 literal|"Specify one of the following options:\n"
 literal|"devlist     list all CAM devices\n"
