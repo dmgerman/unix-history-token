@@ -61,7 +61,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|size_t
+name|__size_t
 name|we_wordc
 decl_stmt|;
 comment|/* count of words matched */
@@ -71,7 +71,7 @@ modifier|*
 name|we_wordv
 decl_stmt|;
 comment|/* pointer to list of words */
-name|size_t
+name|__size_t
 name|we_offs
 decl_stmt|;
 comment|/* slots to reserve in we_wordv */
@@ -80,7 +80,7 @@ modifier|*
 name|we_strings
 decl_stmt|;
 comment|/* storage for wordv strings */
-name|size_t
+name|__size_t
 name|we_nbytes
 decl_stmt|;
 comment|/* size of we_strings */
