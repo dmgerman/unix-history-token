@@ -63,7 +63,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ctags.c,v 1.3 1997/07/10 06:43:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -462,22 +462,6 @@ specifier|extern
 name|int
 name|optind
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|lint
-name|copyright
-index|[
-literal|0
-index|]
-operator|=
-name|copyright
-index|[
-literal|0
-index|]
-expr_stmt|;
-comment|/* to satisfy compiler */
-endif|#
-directive|endif
 name|aflag
 operator|=
 name|uflag
