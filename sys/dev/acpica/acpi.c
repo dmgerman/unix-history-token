@@ -6576,6 +6576,9 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
+name|env
+decl_stmt|,
+modifier|*
 name|np
 decl_stmt|;
 name|int
@@ -6601,7 +6604,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|cp
+name|env
 operator|=
 name|getenv
 argument_list|(
@@ -6617,6 +6620,10 @@ literal|0
 operator|)
 return|;
 comment|/* scan the avoid list checking for a match */
+name|cp
+operator|=
+name|env
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -6691,7 +6698,7 @@ condition|)
 block|{
 name|freeenv
 argument_list|(
-name|cp
+name|env
 argument_list|)
 expr_stmt|;
 return|return
@@ -6707,7 +6714,7 @@ expr_stmt|;
 block|}
 name|freeenv
 argument_list|(
-name|cp
+name|env
 argument_list|)
 expr_stmt|;
 return|return
