@@ -657,6 +657,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_kern_random_sys_harvest
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|swi
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|harvest
+operator|.
+name|swi
+argument_list|,
+literal|0
+argument_list|,
+name|random_check_boolean
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Harvest SWI entropy"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
