@@ -279,6 +279,17 @@ name|unsigned
 name|char
 name|stat
 decl_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|serial_putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|stat
