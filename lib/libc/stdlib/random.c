@@ -463,7 +463,8 @@ name|srandom
 parameter_list|(
 name|x
 parameter_list|)
-name|u_int
+name|unsigned
+name|int
 name|x
 decl_stmt|;
 block|{
@@ -584,7 +585,8 @@ name|arg_state
 parameter_list|,
 name|n
 parameter_list|)
-name|u_int
+name|unsigned
+name|int
 name|seed
 decl_stmt|;
 comment|/* seed for R.N.G. */
