@@ -1937,7 +1937,7 @@ name|strcmp
 argument_list|(
 name|buf
 argument_list|,
-literal|"/dev/msg0"
+literal|"/dev/mse0"
 argument_list|)
 return|;
 if|if

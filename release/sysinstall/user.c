@@ -402,10 +402,10 @@ block|,
 literal|6
 block|,
 name|UT_NAMESIZE
-operator|+
-literal|4
 block|,
 name|UT_NAMESIZE
+operator|+
+literal|1
 block|,
 literal|"Login ID:"
 block|,
@@ -1642,7 +1642,7 @@ literal|8
 argument_list|,
 name|USER_DIALOG_HEIGHT
 operator|-
-literal|6
+literal|8
 argument_list|,
 name|USER_DIALOG_WIDTH
 operator|-
@@ -1770,6 +1770,9 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|cancel
+operator|&&
 operator|!
 name|verifyGroupSettings
 argument_list|()
@@ -3297,7 +3300,7 @@ literal|3
 argument_list|,
 name|USER_DIALOG_HEIGHT
 operator|-
-literal|5
+literal|6
 argument_list|,
 name|USER_DIALOG_WIDTH
 operator|-
@@ -3500,6 +3503,9 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|cancel
+operator|&&
 operator|!
 name|verifyUserSettings
 argument_list|(

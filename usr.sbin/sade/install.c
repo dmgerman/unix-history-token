@@ -2450,6 +2450,56 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to add any initial user accounts to the system?\n"
+literal|"Adding at least one account for yourself at this stage is suggested\n"
+literal|"since working as the \"root\" user is dangerous (it is easy to do\n"
+literal|"things which adversely affect the entire system)."
+argument_list|)
+condition|)
+name|configUsers
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to set the system manager's password now?\n\n"
+literal|"This is the password you'll use to log in as \"root\"."
+argument_list|)
+condition|)
+block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
+name|systemExecute
+argument_list|(
+literal|"passwd root"
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 comment|/* Give user the option of one last configuration spree */
 name|installConfigure
