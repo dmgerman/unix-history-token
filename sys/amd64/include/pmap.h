@@ -369,7 +369,7 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES - (NPGPTD + 1))
+value|(KVA_PAGES - 1)
 end_define
 
 begin_comment
@@ -385,7 +385,7 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES - NPGPTD)
+value|(KVA_PAGES)
 end_define
 
 begin_comment
@@ -406,17 +406,6 @@ begin_comment
 comment|/*  * The *PTDI values control the layout of virtual memory  *  * XXX This works for now, but I am not real happy with it, I'll fix it  * right after I fix locore.s and the magic 28K hole  *  * SMP_PRIVPAGES: The per-cpu address space is 0xff80000 -> 0xffbfffff  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|APTDPTDI
-value|(NPDEPTD-NPGPTD)
-end_define
-
-begin_comment
-comment|/* alt ptd entry that points to APTD */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -427,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|MPPTDI
-value|(APTDPTDI-1)
+value|(NPDEPTD-1)
 end_define
 
 begin_comment
@@ -454,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|KPTDI
-value|(APTDPTDI-NKPDE)
+value|(NPDEPTD-NKPDE)
 end_define
 
 begin_comment
@@ -605,9 +594,6 @@ specifier|extern
 name|pt_entry_t
 name|PTmap
 index|[]
-decl_stmt|,
-name|APTmap
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -616,9 +602,6 @@ specifier|extern
 name|pd_entry_t
 name|PTD
 index|[]
-decl_stmt|,
-name|APTD
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -626,9 +609,6 @@ begin_decl_stmt
 specifier|extern
 name|pd_entry_t
 name|PTDpde
-index|[]
-decl_stmt|,
-name|APTDpde
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -687,16 +667,6 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(PTmap + i386_btop(va))
-end_define
-
-begin_define
-define|#
-directive|define
-name|avtopte
-parameter_list|(
-name|va
-parameter_list|)
-value|(APTmap + i386_btop(va))
 end_define
 
 begin_comment
