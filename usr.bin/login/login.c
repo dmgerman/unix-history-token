@@ -2223,6 +2223,9 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Parent: wait for child to finish, then clean up 		 * session. 		 */
+name|int
+name|status
+decl_stmt|;
 name|setproctitle
 argument_list|(
 literal|"-%s [pam]"
@@ -2231,9 +2234,14 @@ name|getprogname
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|wait
+name|waitpid
 argument_list|(
-name|NULL
+name|pid
+argument_list|,
+operator|&
+name|status
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|bail
