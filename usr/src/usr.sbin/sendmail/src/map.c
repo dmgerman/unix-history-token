@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.16 (Berkeley) %G%"
+literal|"@(#)map.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  MAP.C -- implementations for various map classes. ** **	Each map class implements a series of functions: ** **	bool map_parse(MAP *map, char *args) **		Parse the arguments from the config file.  Return TRUE **		if they were ok, FALSE otherwise.  Fill in map with the **		values. ** **	char *map_lookup(MAP *map, char buf[], int bufsize, **			 char **args, int *pstat) **		Look up the key given in buf in the given map.  If found, **		do any rewriting the map wants (including "args" if desired) **		and return the value.  Set *pstat to the appropriate status **		on error and return NULL. ** **	void map_store(MAP *map, char *key, char *value) **		Store the key:value pair in the map. ** **	bool map_open(MAP *map, int mode) **		Open the map for the indicated mode.  Return TRUE if it **		was opened successfully, FALSE otherwise. ** **	void map_close(MAP *map) **		Close the map. */
+comment|/* **  MAP.C -- implementations for various map classes. ** **	Each map class implements a series of functions: ** **	bool map_parse(MAP *map, char *args) **		Parse the arguments from the config file.  Return TRUE **		if they were ok, FALSE otherwise.  Fill in map with the **		values. ** **	char *map_lookup(MAP *map, char *key, char **args, int *pstat) **		Look up the key in the given map.  If found, do any **		rewriting the map wants (including "args" if desired) **		and return the value.  Set *pstat to the appropriate status **		on error and return NULL.  Args will be NULL if called **		from the alias routines, although this should probably **		not be relied upon.  It is suggested you call map_rewrite **		to return the results -- it takes care of null termination **		and uses a dynamically expanded buffer as needed. ** **	void map_store(MAP *map, char *key, char *value) **		Store the key:value pair in the map. ** **	bool map_open(MAP *map, int mode) **		Open the map for the indicated mode.  Mode should **		be either O_RDONLY or O_RDWR.  Return TRUE if it **		was opened successfully, FALSE otherwise.  If the open **		failed an the MF_OPTIONAL flag is not set, it should **		also print an error.  If the MF_ALIAS bit is set **		and this map class understands the @:@ convention, it **		should call aliaswait() before returning. ** **	void map_close(MAP *map) **		Close the map. */
 end_comment
 
 begin_define
@@ -1721,7 +1721,7 @@ name|buf
 argument_list|,
 name|mode
 argument_list|,
-literal|0644
+name|DBMMODE
 argument_list|,
 name|DB_BTREE
 argument_list|,
@@ -1882,7 +1882,7 @@ name|buf
 argument_list|,
 name|mode
 argument_list|,
-literal|0644
+name|DBMMODE
 argument_list|,
 name|DB_HASH
 argument_list|,
