@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.16 91/01/18$  *  *	@(#)vmparam.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.16 91/01/18$  *  *	@(#)vmparam.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -15,14 +15,7 @@ begin_define
 define|#
 directive|define
 name|USRTEXT
-value|0x00400000
-end_define
-
-begin_define
-define|#
-directive|define
-name|USRDATA
-value|0x10000000
+value|0x00001000
 end_define
 
 begin_define
@@ -51,14 +44,7 @@ begin_define
 define|#
 directive|define
 name|LOWPAGES
-value|0x00400
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIDPAGES
-value|0x10000
+value|0x00001
 end_define
 
 begin_define
