@@ -3765,6 +3765,24 @@ value|0x9102
 end_define
 
 begin_comment
+comment|/*  * The DM9102A has the same PCI device ID as the DM9102,  * but a higher revision code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_REVISION_DM9102
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_REVISION_DM9102A
+value|0x30
+end_define
+
+begin_comment
 comment|/*  * ADMtek vendor ID.  */
 end_comment
 

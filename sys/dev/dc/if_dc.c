@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ee.columbia.edu>
 end_comment
 
 begin_comment
-comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN985 (www.admtek.com.tw)  * Davicom DM9100, DM9102 (www.davicom8.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN985 (www.admtek.com.tw)  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -257,6 +257,14 @@ block|,
 name|DC_DEVICEID_DM9102
 block|,
 literal|"Davicom DM9102 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DC_VENDORID_DAVICOM
+block|,
+name|DC_DEVICEID_DM9102
+block|,
+literal|"Davicom DM9102A 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -5223,6 +5231,14 @@ name|DC_NETCFG_SCRAMBLER
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DC_IS_DAVICOM
+argument_list|(
+name|sc
+argument_list|)
+condition|)
 name|DC_SETBIT
 argument_list|(
 name|sc
@@ -5369,6 +5385,14 @@ argument_list|,
 name|DC_NETCFG_PCS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|DC_IS_DAVICOM
+argument_list|(
+name|sc
+argument_list|)
+condition|)
 name|DC_SETBIT
 argument_list|(
 name|sc
@@ -5853,6 +5877,21 @@ operator|&&
 name|rev
 operator|>=
 name|DC_REVISION_82C169
+condition|)
+name|t
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|->
+name|dc_did
+operator|==
+name|DC_DEVICEID_DM9102
+operator|&&
+name|rev
+operator|>=
+name|DC_REVISION_DM9102A
 condition|)
 name|t
 operator|++
@@ -6843,6 +6882,20 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Save the cache line size. */
+if|if
+condition|(
+name|DC_IS_DAVICOM
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|dc_cachesize
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|sc
 operator|->
 name|dc_cachesize
@@ -11011,6 +11064,11 @@ comment|/* 	 * Set cache alignment and burst length. 	 */
 if|if
 condition|(
 name|DC_IS_ASIX
+argument_list|(
+name|sc
+argument_list|)
+operator|||
+name|DC_IS_DAVICOM
 argument_list|(
 name|sc
 argument_list|)
