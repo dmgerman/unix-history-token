@@ -2788,6 +2788,7 @@ name|size_t
 name|tlen
 decl_stmt|;
 comment|/* 	 * Make sure SPACE has enough memory and ramp up quickly.  Appends 	 * need two extra bytes, one for the newline, one for a terminating 	 * NULL. 	 */
+comment|/*	tlen = sp->len + len + spflag == APPENDNL ? 2 : 1; */
 name|tlen
 operator|=
 name|sp
@@ -2796,6 +2797,7 @@ name|len
 operator|+
 name|len
 operator|+
+operator|(
 name|spflag
 operator|==
 name|APPENDNL
@@ -2803,7 +2805,9 @@ condition|?
 literal|2
 else|:
 literal|1
+operator|)
 expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|tlen
