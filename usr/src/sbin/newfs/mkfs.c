@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.17 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1728,7 +1728,7 @@ name|sblock
 operator|.
 name|fs_ntrak
 argument_list|,
-literal|"\nFile system performance may be impaired.\n"
+literal|"\nFile system performance may be impared.\n"
 argument_list|)
 expr_stmt|;
 name|sblock
