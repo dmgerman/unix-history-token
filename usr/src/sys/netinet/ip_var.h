@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.7	82/12/28	*/
+comment|/*	ip_var.h	4.8	83/02/05	*/
 end_comment
 
 begin_comment
@@ -204,15 +204,6 @@ end_decl_stmt
 begin_comment
 comment|/* ip reass. queue */
 end_comment
-
-begin_function_decl
-name|struct
-name|ipq
-modifier|*
-name|ip_freef
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|u_short
