@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfs_ops.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)nfs_ops.c	8.2 (Berkeley) 5/10/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_comment
 comment|/* NFS_3 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -100,12 +106,6 @@ end_endif
 begin_comment
 comment|/* NFS_HDR */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
 
 begin_include
 include|#
@@ -2118,20 +2118,6 @@ argument_list|(
 name|opts
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|voidp
-operator|)
-operator|&
-name|nfs_args
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|nfs_args
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mnt
 operator|.
 name|mnt_dir
@@ -2191,6 +2177,17 @@ expr_stmt|;
 comment|/* XXX */
 comment|/*again:*/
 comment|/* 	 * set mount args 	 */
+ifdef|#
+directive|ifdef
+name|NFS_ARGSVERSION
+name|nfs_args
+operator|.
+name|version
+operator|=
+name|NFS_ARGSVERSION
+expr_stmt|;
+endif|#
+directive|endif
 name|NFS_FH_DREF
 argument_list|(
 name|nfs_args

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)os-bsd44.h	8.1 (Berkeley) 6/6/93  *  * $Id: os-bsd44.h,v 5.2.2.1 1992/02/09 15:10:11 jsp beta $  *  * 4.4 BSD definitions for Amd (automounter)  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)os-bsd44.h	8.2 (Berkeley) 5/10/95  *  * $Id: os-bsd44.h,v 5.2.2.1 1992/02/09 15:10:11 jsp beta $  *  * 4.4 BSD definitions for Amd (automounter)  */
 end_comment
 
 begin_comment
@@ -22,6 +22,39 @@ define|#
 directive|define
 name|RPC_4
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199506
+end_if
+
+begin_define
+define|#
+directive|define
+name|NFS_HDR
+value|"misc-bsd44l.h"
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_HDR
+value|"misc-bsd44l.h"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Which version of the NFS interface are we using.  * This is the implementation release number, not  * the protocol revision number.  */
@@ -159,6 +192,31 @@ directive|undef
 name|NFS_SA_DREF
 end_undef
 
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199506
+end_if
+
+begin_define
+define|#
+directive|define
+name|NFS_SA_DREF
+parameter_list|(
+name|dst
+parameter_list|,
+name|src
+parameter_list|)
+value|{ \ 		(dst).addr = (struct sockaddr *) (src); \ 		(dst).addrlen = sizeof(*src); \ 		(dst).sotype = SOCK_DGRAM; \ 		(dst).proto = 0; \ 		(dst).fhsize = FHSIZE; \ 		(dst).wsize = NFS_WSIZE; \ 		(dst).rsize =  NFS_RSIZE; \ 		(dst).readdirsize =  NFS_READDIRSIZE; \ 		(dst).timeo = 10; \ 		(dst).retrans = NFS_RETRANS; \ 		(dst).maxgrouplist = NFS_MAXGRPS; \ 		(dst).readahead = NFS_DEFRAHEAD; \ 		(dst).leaseterm = 0; \ 		(dst).deadthresh = 0; \ 	}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -170,6 +228,11 @@ name|src
 parameter_list|)
 value|{ \ 		(dst).addr = (struct sockaddr *) (src); \ 		(dst).addrlen = sizeof(*src); \ 		(dst).sotype = SOCK_DGRAM; \ 		(dst).proto = 0; \ 	}
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Byte ordering  */
@@ -372,12 +435,37 @@ directive|undef
 name|NFS_FH_TYPE
 end_undef
 
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199506
+end_if
+
+begin_define
+define|#
+directive|define
+name|NFS_FH_TYPE
+value|void *
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|NFS_FH_TYPE
 value|nfsv2fh_t *
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * How to get a mount list  */
@@ -421,6 +509,53 @@ directive|define
 name|RE_HDR
 value|<regexp.h>
 end_define
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199506
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|MTYPE_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|MTYPE_TYPE
+value|char *
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_NFS
+value|"nfs"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_UFS
+value|"ffs"
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUNT_MFS
+value|"mfs"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

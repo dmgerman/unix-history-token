@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)spec.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -960,7 +960,7 @@ name|ip
 operator|->
 name|st_size
 operator|=
-name|strtoul
+name|strtouq
 argument_list|(
 name|val
 argument_list|,

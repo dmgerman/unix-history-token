@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edquota.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)edquota.c	8.3 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -1173,7 +1179,7 @@ argument_list|(
 name|fd
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|id
@@ -1455,9 +1461,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|long
-operator|)
+call|(
+name|off_t
+call|)
+argument_list|(
 name|id
 operator|*
 operator|(
@@ -1468,8 +1475,9 @@ argument_list|(
 expr|struct
 name|dqblk
 argument_list|)
+argument_list|)
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 if|if

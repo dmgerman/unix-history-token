@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	8.2 (Berkeley) 1/26/94"
+literal|"@(#)iostat.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1780,7 +1780,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" us ni sy id\n"
+literal|" us ni sy in id\n"
 argument_list|)
 expr_stmt|;
 block|}
