@@ -11527,6 +11527,8 @@ decl_stmt|,
 name|error1
 decl_stmt|,
 name|flags
+decl_stmt|,
+name|locked
 decl_stmt|;
 name|struct
 name|mount
@@ -11803,8 +11805,9 @@ name|l_type
 operator|=
 name|F_WRLCK
 expr_stmt|;
-name|error
+name|locked
 operator|=
+operator|(
 name|VOP_ADVLOCK
 argument_list|(
 name|vp
@@ -11821,14 +11824,10 @@ name|lf
 argument_list|,
 name|F_FLOCK
 argument_list|)
+operator|==
+literal|0
+operator|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|out2
-goto|;
 if|if
 condition|(
 name|vn_start_write
@@ -12014,6 +12013,11 @@ argument_list|)
 else|:
 name|ENOSYS
 expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+block|{
 name|lf
 operator|.
 name|l_type
@@ -12037,6 +12041,7 @@ argument_list|,
 name|F_FLOCK
 argument_list|)
 expr_stmt|;
+block|}
 name|vn_finished_write
 argument_list|(
 name|mp
