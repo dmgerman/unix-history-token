@@ -237,7 +237,7 @@ literal|0xe0
 operator|&&
 name|rune
 operator|<
-literal|0xfa
+literal|0xfd
 operator|)
 condition|)
 block|{
