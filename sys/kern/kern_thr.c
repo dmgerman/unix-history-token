@@ -534,6 +534,13 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|td0
 operator|->
 name|td_sigmask
@@ -541,6 +548,13 @@ operator|=
 name|td
 operator|->
 name|td_sigmask
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(

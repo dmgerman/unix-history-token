@@ -3270,6 +3270,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|uc
 operator|->
 name|uc_sigmask
@@ -3277,6 +3284,13 @@ operator|=
 name|td
 operator|->
 name|td_sigmask
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
