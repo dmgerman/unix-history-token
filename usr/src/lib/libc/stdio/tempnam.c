@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tempnam.c	5.1 (Berkeley) %G%"
+literal|"@(#)tempnam.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,9 +149,27 @@ name|name
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s/%sXXXXXX"
+literal|"%s%s%sXXXXXX"
 argument_list|,
 name|f
+argument_list|,
+operator|*
+operator|(
+name|f
+operator|+
+name|strlen
+argument_list|(
+name|f
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'/'
+condition|?
+literal|""
+else|:
+literal|"/"
 argument_list|,
 name|pfx
 argument_list|)
@@ -191,9 +209,27 @@ name|name
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s/%sXXXXXX"
+literal|"%s%s%sXXXXXX"
 argument_list|,
 name|f
+argument_list|,
+operator|*
+operator|(
+name|f
+operator|+
+name|strlen
+argument_list|(
+name|f
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|==
+literal|'/'
+condition|?
+literal|""
+else|:
+literal|"/"
 argument_list|,
 name|pfx
 argument_list|)
@@ -226,7 +262,7 @@ name|name
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s/%sXXXXXX"
+literal|"%s%sXXXXXX"
 argument_list|,
 name|f
 argument_list|,
@@ -260,7 +296,7 @@ name|name
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s/%sXXXXXX"
+literal|"%s%sXXXXXX"
 argument_list|,
 name|f
 argument_list|,

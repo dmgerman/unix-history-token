@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmpnam.c	5.3 (Berkeley) %G%"
+literal|"@(#)tmpnam.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,7 @@ name|s
 argument_list|,
 name|L_tmpnam
 argument_list|,
-literal|"%s/tmp.XXXXXX"
+literal|"%stmp.XXXXXX"
 argument_list|,
 name|P_tmpdir
 argument_list|)
