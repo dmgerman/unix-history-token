@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.36 93/08/13$  *  *	@(#)grf.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.36 93/08/13$  *  *	@(#)grf.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2553,28 +2553,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|curproc
-decl_stmt|;
-comment|/* XXX */
-name|struct
-name|grf_softc
-modifier|*
-name|gp
-init|=
-operator|&
-name|grf_softc
-index|[
-name|GRFUNIT
-argument_list|(
-name|dev
-argument_list|)
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2592,7 +2570,7 @@ name|printf
 argument_list|(
 literal|"iommap(%d): addr %x\n"
 argument_list|,
-name|p
+name|curproc
 operator|->
 name|p_pid
 argument_list|,
