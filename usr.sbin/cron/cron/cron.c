@@ -182,6 +182,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|dst_enabled
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -197,7 +206,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cron [-x debugflag[,...]]\n"
+literal|"usage: cron [-s] [-x debugflag[,...]]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -726,9 +735,16 @@ argument_list|)
 comment|/* check for the daylight saving time change  	 * we support only change by +-1 hour happening at :00 minutes, 	 * those living in more strange timezones are out of luck 	 */
 if|if
 condition|(
+name|dst_enabled
+operator|&&
 name|last_time
 operator|!=
 literal|0
+operator|&&
+name|TargetTime
+operator|>
+name|last_time
+comment|/* exclude stepping back */
 operator|&&
 name|tm
 operator|->
@@ -737,11 +753,6 @@ operator|!=
 name|lasttm
 operator|.
 name|tm_isdst
-operator|&&
-name|TargetTime
-operator|>
-name|last_time
-comment|/* exclude stepping back */
 condition|)
 block|{
 name|int
@@ -1873,7 +1884,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"x:"
+literal|"sx:"
 argument_list|)
 operator|)
 operator|!=
@@ -1886,6 +1897,14 @@ condition|(
 name|argch
 condition|)
 block|{
+case|case
+literal|'s'
+case|:
+name|dst_enabled
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'x'
 case|:
