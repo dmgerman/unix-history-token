@@ -5340,6 +5340,13 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
+name|int
+name|unknown
+decl_stmt|;
+name|unknown
+operator|=
+literal|0
+expr_stmt|;
 name|dinfo
 operator|=
 name|device_get_ivars
@@ -5390,20 +5397,34 @@ condition|(
 operator|!
 name|desc
 condition|)
+block|{
 name|desc
 operator|=
 literal|"unknown card"
 expr_stmt|;
+name|unknown
+operator|++
+expr_stmt|;
+block|}
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
+literal|"<%s>"
+argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+operator|||
+name|unknown
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|" (vendor=0x%04x, dev=0x%04x) at %d.%d"
+literal|" (vendor=0x%04x, dev=0x%04x)"
 argument_list|,
 name|cfg
 operator|->
@@ -5412,6 +5433,12 @@ argument_list|,
 name|cfg
 operator|->
 name|device
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|" at %d.%d"
 argument_list|,
 name|pci_get_slot
 argument_list|(
