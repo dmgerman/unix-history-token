@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)dcm.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)dcm.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -33,18 +33,11 @@ directive|include
 file|"../dev/dcmreg.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|CONSPORT
-value|(1)
-end_define
-
 begin_decl_stmt
 name|struct
 name|dcmdevice
 modifier|*
-name|CONSOLE
+name|dcmcnaddr
 init|=
 name|NULL
 decl_stmt|;
@@ -96,7 +89,7 @@ operator|<
 operator|&
 name|sc_table
 index|[
-name|MAX_CTLR
+name|MAXCTLRS
 index|]
 condition|;
 name|hw
@@ -104,11 +97,12 @@ operator|++
 control|)
 if|if
 condition|(
+name|HW_ISDEV
+argument_list|(
 name|hw
-operator|->
-name|hw_type
-operator|==
-name|COMMDCM
+argument_list|,
+name|D_COMMDCM
+argument_list|)
 operator|&&
 operator|!
 name|badaddr
@@ -118,17 +112,19 @@ name|caddr_t
 operator|)
 name|hw
 operator|->
-name|hw_addr
+name|hw_kva
 argument_list|)
 condition|)
 break|break;
 if|if
 condition|(
+operator|!
+name|HW_ISDEV
+argument_list|(
 name|hw
-operator|->
-name|hw_type
-operator|!=
-name|COMMDCM
+argument_list|,
+name|D_COMMDCM
+argument_list|)
 condition|)
 block|{
 name|cp
@@ -139,7 +135,7 @@ name|CN_DEAD
 expr_stmt|;
 return|return;
 block|}
-name|CONSOLE
+name|dcmcnaddr
 operator|=
 operator|(
 expr|struct
@@ -148,11 +144,11 @@ operator|*
 operator|)
 name|hw
 operator|->
-name|hw_addr
+name|hw_kva
 expr_stmt|;
 name|dcm
 operator|=
-name|CONSOLE
+name|dcmcnaddr
 expr_stmt|;
 switch|switch
 condition|(
@@ -218,13 +214,13 @@ name|dcmdevice
 modifier|*
 name|dcm
 init|=
-name|CONSOLE
+name|dcmcnaddr
 decl_stmt|;
 specifier|register
 name|int
 name|port
 init|=
-name|CONSPORT
+name|CONUNIT
 decl_stmt|;
 name|dcm
 operator|->
@@ -335,7 +331,7 @@ name|dcmdevice
 modifier|*
 name|dcm
 init|=
-name|CONSOLE
+name|dcmcnaddr
 decl_stmt|;
 specifier|register
 name|struct
@@ -362,7 +358,7 @@ name|port
 decl_stmt|;
 name|port
 operator|=
-name|CONSPORT
+name|CONUNIT
 expr_stmt|;
 name|pp
 operator|=
@@ -507,7 +503,7 @@ name|dcmdevice
 modifier|*
 name|dcm
 init|=
-name|CONSOLE
+name|dcmcnaddr
 decl_stmt|;
 specifier|register
 name|struct
@@ -529,7 +525,7 @@ name|stat
 decl_stmt|;
 name|port
 operator|=
-name|CONSPORT
+name|CONUNIT
 expr_stmt|;
 name|pp
 operator|=

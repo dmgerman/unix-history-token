@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.19 89/08/22$  *  *	@(#)ite.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.20 91/01/21$  *  *	@(#)ite.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -287,7 +287,7 @@ operator|<
 operator|&
 name|sc_table
 index|[
-name|MAX_CTLR
+name|MAXCTLRS
 index|]
 condition|;
 name|hw
@@ -296,11 +296,13 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|HW_ISDEV
+argument_list|(
 name|hw
-operator|->
-name|hw_type
-operator|!=
-name|BITMAP
+argument_list|,
+name|D_BITMAP
+argument_list|)
 condition|)
 continue|continue;
 name|gr
@@ -312,7 +314,7 @@ operator|*
 operator|)
 name|hw
 operator|->
-name|hw_addr
+name|hw_kva
 expr_stmt|;
 comment|/* XXX: redundent but safe */
 if|if
@@ -455,7 +457,7 @@ operator|>=
 operator|(
 name|caddr_t
 operator|)
-literal|0x1000000
+name|DIOIIBASE
 condition|)
 name|ip
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -33,19 +33,15 @@ directive|include
 file|"../hp300/cons.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|CONSDEV
-value|(0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONSOLE
-value|((struct dcadevice *)(EXTIOBASE + (9 * IOCARDSIZE)))
-end_define
+begin_decl_stmt
+name|struct
+name|dcadevice
+modifier|*
+name|dcacnaddr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|dcaprobe
@@ -69,9 +65,19 @@ name|struct
 name|dcadevice
 modifier|*
 name|dca
-init|=
-name|CONSOLE
 decl_stmt|;
+name|dcacnaddr
+operator|=
+operator|(
+expr|struct
+name|dcadevice
+operator|*
+operator|)
+name|sctoaddr
+argument_list|(
+name|CONSCODE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|badaddr
@@ -80,7 +86,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|CONSOLE
+name|dcacnaddr
 argument_list|)
 condition|)
 block|{
@@ -92,6 +98,10 @@ name|CN_DEAD
 expr_stmt|;
 return|return;
 block|}
+name|dca
+operator|=
+name|dcacnaddr
+expr_stmt|;
 switch|switch
 condition|(
 name|dca
@@ -160,7 +170,7 @@ name|dcadevice
 modifier|*
 name|dca
 init|=
-name|CONSOLE
+name|dcacnaddr
 decl_stmt|;
 name|dca
 operator|->
@@ -235,7 +245,7 @@ name|dcadevice
 modifier|*
 name|dca
 init|=
-name|CONSOLE
+name|dcacnaddr
 decl_stmt|;
 name|short
 name|stat
@@ -322,7 +332,7 @@ name|dcadevice
 modifier|*
 name|dca
 init|=
-name|CONSOLE
+name|dcacnaddr
 decl_stmt|;
 specifier|register
 name|int

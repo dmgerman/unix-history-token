@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -47,7 +47,10 @@ begin_decl_stmt
 name|int
 name|internalhpib
 init|=
+name|IIOV
+argument_list|(
 literal|0x478000
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +150,7 @@ operator|<
 operator|&
 name|sc_table
 index|[
-name|MAX_CTLR
+name|MAXCTLRS
 index|]
 condition|;
 name|hw
@@ -156,11 +159,11 @@ control|)
 block|{
 if|if
 condition|(
+operator|!
+name|HW_ISHPIB
+argument_list|(
 name|hw
-operator|->
-name|hw_type
-operator|!=
-name|HPIB
+argument_list|)
 condition|)
 continue|continue;
 name|hs
@@ -177,7 +180,7 @@ name|sc_addr
 operator|=
 name|hw
 operator|->
-name|hw_addr
+name|hw_kva
 expr_stmt|;
 if|if
 condition|(
