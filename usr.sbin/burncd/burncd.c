@@ -833,7 +833,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|CDRIOCGETBLOCKSIZE
+name|CDRIOCSETBLOCKSIZE
 argument_list|,
 operator|&
 name|saved_block_size
