@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.74 (Berkeley) %G%"
+literal|"@(#)login.c	5.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1157,6 +1157,11 @@ condition|)
 name|rootlogin
 operator|=
 literal|1
+expr_stmt|;
+else|else
+name|rootlogin
+operator|=
+literal|0
 expr_stmt|;
 operator|(
 name|void
