@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.20 (Berkeley) %G%"
+literal|"@(#)rm.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1012,9 +1012,18 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rm: %s not removed\n"
+literal|"rm: %s: "
 argument_list|,
 name|arg
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|errcode
