@@ -784,8 +784,14 @@ value|0xc
 block|cache_line = DEF_CACHE_LINE; 	pci_write_config(self, PCIR_CACHELNSZ, cache_line, 1);
 endif|#
 directive|endif
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|self
+argument_list|,
 literal|"cache size %d.\n"
 argument_list|,
 operator|(

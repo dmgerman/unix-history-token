@@ -2827,20 +2827,6 @@ name|d
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
-argument_list|(
-literal|"%s: firewire bus attach\n"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|sc
-operator|->
-name|fc
-operator|->
-name|dev
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|fc
@@ -5850,6 +5836,10 @@ name|tcode
 operator||=
 name|FWTCODE_PHY
 expr_stmt|;
+if|if
+condition|(
+name|firewire_debug
+condition|)
 name|printf
 argument_list|(
 literal|"send phy_config root_node=%d gap_count=%d\n"
@@ -7604,16 +7594,13 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"%s:Discover new %s device ID:%08x%08x\n"
-argument_list|,
-name|device_get_nameunit
+name|device_printf
 argument_list|(
 name|fc
 operator|->
 name|dev
-argument_list|)
+argument_list|,
+literal|"New %s device ID:%08x%08x\n"
 argument_list|,
 name|linkspeed
 index|[
@@ -7892,6 +7879,10 @@ name|status
 operator|=
 name|FWBUSEXPDONE
 expr_stmt|;
+if|if
+condition|(
+name|firewire_debug
+condition|)
 name|printf
 argument_list|(
 literal|"bus_explore done\n"
@@ -9518,6 +9509,15 @@ operator|)
 operator|&
 literal|0xf
 expr_stmt|;
+name|device_printf
+argument_list|(
+name|fc
+operator|->
+name|dev
+argument_list|,
+literal|"Device "
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|fwdev
@@ -9540,7 +9540,7 @@ name|CSRVAL_T10SBP2
 case|:
 name|printf
 argument_list|(
-literal|"Device SBP-II"
+literal|"SBP-II"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9563,7 +9563,7 @@ name|CSR_PROTAVC
 case|:
 name|printf
 argument_list|(
-literal|"Device AV/C"
+literal|"AV/C"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9572,7 +9572,7 @@ name|CSR_PROTCAL
 case|:
 name|printf
 argument_list|(
-literal|"Device CAL"
+literal|"CAL"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9581,7 +9581,7 @@ name|CSR_PROTEHS
 case|:
 name|printf
 argument_list|(
-literal|"Device EHS"
+literal|"EHS"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9590,7 +9590,7 @@ name|CSR_PROTHAVI
 case|:
 name|printf
 argument_list|(
-literal|"Device HAVi"
+literal|"HAVi"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9599,7 +9599,7 @@ name|CSR_PROTCAM104
 case|:
 name|printf
 argument_list|(
-literal|"Device 1394 Cam 1.04"
+literal|"1394 Cam 1.04"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9608,7 +9608,7 @@ name|CSR_PROTCAM120
 case|:
 name|printf
 argument_list|(
-literal|"Device 1394 Cam 1.20"
+literal|"1394 Cam 1.20"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9617,7 +9617,7 @@ name|CSR_PROTCAM130
 case|:
 name|printf
 argument_list|(
-literal|"Device 1394 Cam 1.30"
+literal|"1394 Cam 1.30"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9626,7 +9626,7 @@ name|CSR_PROTDPP
 case|:
 name|printf
 argument_list|(
-literal|"Device 1394 Direct print"
+literal|"1394 Direct print"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9635,20 +9635,25 @@ name|CSR_PROTIICP
 case|:
 name|printf
 argument_list|(
-literal|"Device Industrial& Instrument"
+literal|"Industrial& Instrument"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Device unkwon 1394TA"
+literal|"unknown 1394TA"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 break|break;
 default|default:
+name|printf
+argument_list|(
+literal|"unknown spec"
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 name|fwdev

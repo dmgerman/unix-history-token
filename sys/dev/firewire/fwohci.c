@@ -2057,9 +2057,22 @@ operator|)
 operator|==
 literal|0x3f
 condition|)
-block|{
-name|printf
+name|bm
+operator|=
+name|node
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"fw_set_bus_manager: %d->%d (loop=%d)\n"
 argument_list|,
 name|bm
@@ -2069,25 +2082,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|bm
-operator|=
-name|node
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"fw_set_bus_manager: %d-X%d (loop=%d)\n"
-argument_list|,
-name|bm
-argument_list|,
-name|node
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|bm
@@ -3250,6 +3244,10 @@ argument_list|,
 name|OHCI_HCC_RESET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -3287,6 +3285,10 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"done (%d)\n"
@@ -3353,6 +3355,10 @@ operator|<<
 literal|12
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -3711,6 +3717,10 @@ condition|)
 block|{
 endif|#
 directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -5356,8 +5366,14 @@ goto|;
 block|}
 else|else
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"fwohci_start: lack of db_trq\n"
 argument_list|)
 expr_stmt|;
@@ -5406,8 +5422,18 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"start AT DMA status=%x\n"
 argument_list|,
 name|OREAD
@@ -12085,8 +12111,18 @@ operator|*
 operator|)
 name|fc
 expr_stmt|;
-name|printf
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|fc
+operator|.
+name|dev
+argument_list|,
 literal|"fwochi_set_intr: %d\n"
 argument_list|,
 name|enable

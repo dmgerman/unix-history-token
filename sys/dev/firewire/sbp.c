@@ -512,7 +512,7 @@ specifier|static
 name|int
 name|debug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -2833,6 +2833,10 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -2846,6 +2850,7 @@ name|SBP_DEV_TOATTACH
 operator|)
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 block|}
 else|else
 block|{
@@ -5281,6 +5286,10 @@ name|lun_id
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -5304,6 +5313,7 @@ literal|0xf
 index|]
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 switch|switch
 condition|(
 name|func

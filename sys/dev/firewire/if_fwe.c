@@ -863,7 +863,8 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"if_fwe%d: %02x:%02x:%02x:%02x:%02x:%02x\n"
+literal|"if_fwe%d: Fake Ethernet address: "
+literal|"%02x:%02x:%02x:%02x:%02x:%02x\n"
 argument_list|,
 name|unit
 argument_list|,
