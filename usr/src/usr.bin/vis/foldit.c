@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)foldit.c	1.1 (Berkeley) %G%"
+literal|"@(#)foldit.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
