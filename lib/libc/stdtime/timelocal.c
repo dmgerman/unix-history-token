@@ -146,10 +146,10 @@ block|,
 comment|/* X_fmt */
 literal|"%H:%M:%S"
 block|,
-comment|/* 	** x_fmt 	** Since the C language standard calls for 	** "date, using locale's date format," anything goes. 	** Using just numbers (as here) makes Quakers happier; 	** it's also compatible with SVR4. 	*/
+comment|/* 	 * x_fmt 	 * Since the C language standard calls for 	 * "date, using locale's date format," anything goes. 	 * Using just numbers (as here) makes Quakers happier; 	 * it's also compatible with SVR4. 	 */
 literal|"%m/%d/%y"
 block|,
-comment|/* 	** c_fmt 	*/
+comment|/* 	 * c_fmt 	 */
 literal|"%a %b %e %H:%M:%S %Y"
 block|,
 comment|/* am */
@@ -161,7 +161,7 @@ block|,
 comment|/* date_fmt */
 literal|"%a %b %e %H:%M:%S %Z %Y"
 block|,
-comment|/* alt_month 	** Standalone months forms for %OB 	*/
+comment|/* alt_month 	 * Standalone months forms for %OB 	 */
 block|{
 literal|"January"
 block|,
@@ -188,10 +188,10 @@ block|,
 literal|"December"
 block|}
 block|,
-comment|/* md_order 	** Month / day order in dates 	*/
+comment|/* md_order 	 * Month / day order in dates 	 */
 literal|"md"
 block|,
-comment|/* ampm_fmt 	** To determine 12-hour clock format time (empty, if N/A) 	*/
+comment|/* ampm_fmt 	 * To determine 12-hour clock format time (empty, if N/A) 	 */
 literal|"%I:%M:%S %p"
 block|}
 decl_stmt|;
