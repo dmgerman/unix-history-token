@@ -8033,6 +8033,33 @@ name|ip
 operator|->
 name|ip_len
 decl_stmt|;
+comment|/* Take care of delayed checksums */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&
+name|CSUM_DELAY_DATA
+condition|)
+block|{
+name|in_delayed_cksum
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|csum_flags
+operator|&=
+operator|~
+name|CSUM_DELAY_DATA
+expr_stmt|;
+block|}
 comment|/*      * copy the old packet& pullup its IP header into the      * new mbuf so we can modify it.  Try to fill the new      * mbuf since if we don't the ethernet driver will.      */
 name|MGETHDR
 argument_list|(
@@ -12091,8 +12118,6 @@ operator|.
 name|tv_sec
 operator|-
 name|loops
-operator|+
-literal|1
 operator|)
 operator|%
 name|BW_METER_BUCKETS
@@ -12124,6 +12149,7 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Disconnect the list of bw_meter entries from the bin */
 name|tmp_list
 operator|=
 name|bw_meter_timers
@@ -12138,6 +12164,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Process the list of bw_meter entries */
 while|while
 condition|(
 name|tmp_list
@@ -12200,6 +12227,34 @@ argument_list|,
 name|time_hash
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|time_hash
+operator|==
+name|i
+operator|&&
+name|process_endtime
+operator|.
+name|tv_sec
+operator|==
+name|now
+operator|.
+name|tv_sec
+condition|)
+block|{
+comment|/* 		     * XXX: somehow the bin processing is a bit ahead of time. 		     * Put the entry in the next bin. 		     */
+if|if
+condition|(
+operator|++
+name|time_hash
+operator|>=
+name|BW_METER_BUCKETS
+condition|)
+name|time_hash
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|x
 operator|->
 name|bm_time_next
@@ -12598,7 +12653,7 @@ decl_stmt|;
 name|int
 name|mtu
 decl_stmt|;
-comment|/*      * XXX: take care of delayed checksums.      * XXX: if network interfaces are capable of computing checksum for      * encapsulated multicast data packets, we need to reconsider this.      */
+comment|/* Take care of delayed checksums */
 if|if
 condition|(
 name|m
@@ -12700,6 +12755,63 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ip
+operator|->
+name|ip_len
+operator|<=
+name|mtu
+condition|)
+block|{
+comment|/* Turn the IP header into a valid one */
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|htons
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_off
+operator|=
+name|htons
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_sum
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|ip_sum
+operator|=
+name|in_cksum
+argument_list|(
+name|mb_copy
+argument_list|,
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Fragment the packet */
+if|if
+condition|(
 name|ip_fragment
 argument_list|(
 name|ip
@@ -12711,7 +12823,7 @@ name|mtu
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|CSUM_DELAY_IP
 argument_list|)
 operator|!=
 literal|0
@@ -12725,6 +12837,7 @@ expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 block|}
 return|return
 name|mb_copy
