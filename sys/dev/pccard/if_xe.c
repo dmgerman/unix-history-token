@@ -2756,7 +2756,10 @@ modifier|*
 name|str
 init|=
 name|ver_str
+operator|+
+literal|2
 decl_stmt|;
+comment|/* version number is 2 bytes, skip those */
 if|#
 directive|if
 name|XE_DEBUG
@@ -2767,6 +2770,26 @@ argument_list|(
 literal|"xe%d: Checking for weird CE2 string\n"
 argument_list|,
 name|unit
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xe%d: card says it is type: %s \n"
+argument_list|,
+name|unit
+argument_list|,
+name|scp
+operator|->
+name|card_type
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"xe%d: str[0] = %s \n"
+argument_list|,
+name|unit
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2780,7 +2803,7 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-comment|/* Skip forward to 3rd version string */
+comment|/* Skip forward to 2nd version string */
 name|str
 operator|+=
 name|strlen
@@ -2790,15 +2813,22 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-name|str
-operator|+=
-name|strlen
+if|#
+directive|if
+name|XE_DEBUG
+operator|>
+literal|1
+name|printf
 argument_list|(
+literal|"xe%d: skipped-to  version string is: %s \n"
+argument_list|,
+name|unit
+argument_list|,
 name|str
 argument_list|)
-operator|+
-literal|1
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
