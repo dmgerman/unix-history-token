@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	6.1 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,43 +531,6 @@ argument_list|(
 name|NAMESERVER_PORT
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_DEBUG
-condition|)
-name|printf
-argument_list|(
-literal|"Server #%d address = %s\n"
-argument_list|,
-name|n
-operator|+
-literal|1
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|_res
-operator|.
-name|nsaddr_list
-index|[
-name|n
-index|]
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 operator|++
@@ -593,7 +556,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"MAXNS reached\n"
+literal|"MAXNS reached, reading resolv.conf\n"
 argument_list|)
 expr_stmt|;
 endif|#
