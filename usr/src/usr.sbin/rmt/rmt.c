@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	5.6 (Berkeley) %G%"
+literal|"@(#)rmt.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,18 +55,6 @@ end_comment
 begin_comment
 comment|/*  * rmt  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
 
 begin_include
 include|#
@@ -95,7 +83,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -122,14 +140,6 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|checkbuf
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -180,13 +190,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|long
-name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|FILE
 modifier|*
@@ -230,7 +233,49 @@ parameter_list|)
 value|if (debug) fprintf(debug, f, a1, a2)
 end_define
 
+begin_decl_stmt
+name|char
+modifier|*
+name|checkbuf
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|error
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|getstring
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -464,10 +509,7 @@ name|lseek
 argument_list|(
 name|tape
 argument_list|,
-operator|(
-name|long
-operator|)
-name|atoi
+name|atol
 argument_list|(
 name|count
 argument_list|)
@@ -923,21 +965,16 @@ goto|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|getstring
-argument_list|(
-argument|bp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|bp
+parameter_list|)
 name|char
 modifier|*
 name|bp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1001,7 +1038,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -1020,12 +1057,6 @@ name|int
 name|size
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|size
@@ -1114,20 +1145,15 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|num
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|num
+parameter_list|)
 name|int
 name|num
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|DEBUG2
 argument_list|(
@@ -1174,7 +1200,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
