@@ -4645,6 +4645,9 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|fd_in
 argument_list|(
 name|fdc
@@ -4652,9 +4655,10 @@ argument_list|,
 operator|&
 name|status
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+literal|0
+operator|)
+operator|&&
 operator|(
 name|status
 operator|&
