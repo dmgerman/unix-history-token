@@ -2122,11 +2122,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|sp
-condition|)
+else|else
 block|{
 name|msgInfo
 argument_list|(

@@ -364,11 +364,14 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Couldn't open FTP connection to %s, errcode = %d"
+literal|"Couldn't open FTP connection to %s:\n  %s."
 argument_list|,
 name|hostname
 argument_list|,
+name|ftpErrString
+argument_list|(
 name|code
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -441,13 +444,16 @@ expr_stmt|;
 else|else
 name|msgConfirm
 argument_list|(
-literal|"FTP chdir to ftp://%s/%s returned error status %d\n"
+literal|"FTP chdir to ftp://%s/%s returned error status:\n  %s."
 argument_list|,
 name|hostname
 argument_list|,
 name|dir
 argument_list|,
+name|ftpErrString
+argument_list|(
 name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto

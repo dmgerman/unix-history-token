@@ -192,6 +192,7 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Move stderr aside */
 if|if
 condition|(
@@ -204,7 +205,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Probe for all relevant devices on the system */
 name|deviceGetAll
 argument_list|()

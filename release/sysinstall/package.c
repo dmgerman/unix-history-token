@@ -114,6 +114,11 @@ argument_list|,
 name|R_OK
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
 literal|"package check for %s returns %s.\n"
