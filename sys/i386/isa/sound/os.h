@@ -499,7 +499,7 @@ parameter_list|,
 name|time_limit
 parameter_list|)
 define|\
-value|{ \ 	  int flag; \ 	  f.mode = WK_SLEEP; \ 	  flag=tsleep(&q, (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  f.mode&= ~WK_SLEEP; \ 	  if (flag == EINTR) \ 		f.aborting = 1; \ 	  else { \ 		f.aborting = 0; \ 		if (flag == EWOULDBLOCK) \ 			f.mode |= WK_TIMEOUT; \ 	  } \ 	}
+value|{ \ 	  int flag; \ 	  f.mode = WK_SLEEP; \ 	  flag=tsleep(&q, (PRIBIO-5)|PCATCH, "sndint", time_limit); \ 	  f.mode&= ~WK_SLEEP; \ 	  if (flag == EWOULDBLOCK) { \ 		f.mode |= WK_TIMEOUT; \ 		f.aborting = 0; \ 	  } else \ 		f.aborting = flag; \ 	}
 end_define
 
 begin_comment
