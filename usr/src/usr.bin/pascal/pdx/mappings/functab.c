@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)functab.c	5.1 (Berkeley) %G%"
+literal|"@(#)functab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,11 +205,6 @@ name|ADDRESS
 name|addr
 decl_stmt|;
 block|{
-specifier|register
-name|SYM
-modifier|*
-name|p
-decl_stmt|;
 specifier|register
 name|int
 name|i
