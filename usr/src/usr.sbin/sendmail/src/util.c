@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.19 (Berkeley) %G%"
+literal|"@(#)util.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,7 +2034,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. **		timeout -- the timeout before error occurs. ** **	Returns: **		NULL on error (including timeout).  This will also leave **			buf containing a null string. **		buf otherwise. ** **	Side Effects: **		none. */
+comment|/* **  SFGETS -- "safe" fgets -- times out and ignores random interrupts. ** **	Parameters: **		buf -- place to put the input line. **		siz -- size of buf. **		fp -- file to read from. **		timeout -- the timeout before error occurs. **		during -- what we are trying to read (for error messages). ** **	Returns: **		NULL on error (including timeout).  This will also leave **			buf containing a null string. **		buf otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_decl_stmt
@@ -2056,6 +2056,8 @@ parameter_list|,
 name|fp
 parameter_list|,
 name|timeout
+parameter_list|,
+name|during
 parameter_list|)
 name|char
 modifier|*
@@ -2070,6 +2072,10 @@ name|fp
 decl_stmt|;
 name|time_t
 name|timeout
+decl_stmt|;
+name|char
+modifier|*
+name|during
 decl_stmt|;
 block|{
 specifier|register
@@ -2114,13 +2120,15 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"timeout waiting for input from %s\n"
+literal|"timeout waiting for input from %s during %s\n"
 argument_list|,
 name|CurHostName
 condition|?
 name|CurHostName
 else|:
 literal|"local"
+argument_list|,
+name|during
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2131,7 +2139,9 @@ literal|0
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"451 timeout waiting for input"
+literal|"451 timeout waiting for input during %s"
+argument_list|,
+name|during
 argument_list|)
 expr_stmt|;
 name|buf

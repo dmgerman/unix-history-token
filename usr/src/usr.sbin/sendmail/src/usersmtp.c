@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.32 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.33 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.32 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.33 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,7 +365,7 @@ name|mci
 operator|->
 name|mci_phase
 operator|=
-literal|"greeting wait"
+literal|"client greeting"
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -464,7 +464,7 @@ name|mci
 operator|->
 name|mci_phase
 operator|=
-literal|"EHLO wait"
+literal|"client EHLO"
 expr_stmt|;
 block|}
 else|else
@@ -486,7 +486,7 @@ name|mci
 operator|->
 name|mci_phase
 operator|=
-literal|"HELO wait"
+literal|"client HELO"
 expr_stmt|;
 block|}
 name|setproctitle
@@ -1234,7 +1234,7 @@ name|mci
 operator|->
 name|mci_phase
 operator|=
-literal|"MAIL wait"
+literal|"client MAIL"
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -1475,7 +1475,7 @@ name|mci
 operator|->
 name|mci_phase
 operator|=
-literal|"RCPT wait"
+literal|"client RCPT"
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -1677,7 +1677,7 @@ name|mci
 operator|->
 name|mci_phase
 operator|=
-literal|"DATA wait"
+literal|"client DATA 354"
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -1888,7 +1888,7 @@ name|mci
 operator|->
 name|mci_phase
 operator|=
-literal|"result wait"
+literal|"client DATA 250"
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -2092,6 +2092,10 @@ operator|!=
 name|MCIS_ERROR
 condition|)
 block|{
+name|SmtpPhase
+operator|=
+literal|"client QUIT"
+expr_stmt|;
 name|smtpmessage
 argument_list|(
 literal|"QUIT"
@@ -2209,6 +2213,10 @@ block|{
 name|int
 name|r
 decl_stmt|;
+name|SmtpPhase
+operator|=
+literal|"client RSET"
+expr_stmt|;
 name|smtpmessage
 argument_list|(
 literal|"RSET"
@@ -2321,6 +2329,10 @@ init|=
 operator|&
 name|BlankEnvelope
 decl_stmt|;
+name|SmtpPhase
+operator|=
+literal|"client probe"
+expr_stmt|;
 name|smtpmessage
 argument_list|(
 literal|"RSET"
@@ -2574,6 +2586,8 @@ operator|->
 name|mci_in
 argument_list|,
 name|timeout
+argument_list|,
+name|SmtpPhase
 argument_list|)
 expr_stmt|;
 name|mci

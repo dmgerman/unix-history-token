@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.58 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.59 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.58 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.59 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -508,7 +508,7 @@ name|RealHostName
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"srvrsmtp %s startup"
+literal|"server %s startup"
 argument_list|,
 name|CurHostName
 argument_list|)
@@ -634,11 +634,11 @@ expr_stmt|;
 comment|/* read the input line */
 name|SmtpPhase
 operator|=
-literal|"srvrsmtp cmd read"
+literal|"server cmd read"
 expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"srvrsmtp %s cmd read"
+literal|"server %s cmd read"
 argument_list|,
 name|CurHostName
 argument_list|)
@@ -657,6 +657,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_nextcommand
+argument_list|,
+name|SmtpPhase
 argument_list|)
 expr_stmt|;
 comment|/* handle errors */
@@ -926,7 +928,7 @@ literal|"ESMTP"
 expr_stmt|;
 name|SmtpPhase
 operator|=
-literal|"EHLO"
+literal|"server EHLO"
 expr_stmt|;
 block|}
 else|else
@@ -937,7 +939,7 @@ literal|"SMTP"
 expr_stmt|;
 name|SmtpPhase
 operator|=
-literal|"HELO"
+literal|"server HELO"
 expr_stmt|;
 block|}
 name|sendinghost
@@ -1008,7 +1010,7 @@ case|:
 comment|/* mail -- designate sender */
 name|SmtpPhase
 operator|=
-literal|"MAIL"
+literal|"server MAIL"
 expr_stmt|;
 comment|/* check for validity of this command */
 if|if
@@ -1632,7 +1634,7 @@ break|break;
 block|}
 name|SmtpPhase
 operator|=
-literal|"RCPT"
+literal|"server RCPT"
 expr_stmt|;
 if|if
 condition|(
@@ -1771,7 +1773,7 @@ case|:
 comment|/* data -- text of mail */
 name|SmtpPhase
 operator|=
-literal|"DATA"
+literal|"server DATA"
 expr_stmt|;
 if|if
 condition|(
@@ -3117,7 +3119,7 @@ decl_stmt|;
 comment|/* parent -- wait for child to complete */
 name|setproctitle
 argument_list|(
-literal|"srvrsmtp %s child wait"
+literal|"server %s child wait"
 argument_list|,
 name|CurHostName
 argument_list|)

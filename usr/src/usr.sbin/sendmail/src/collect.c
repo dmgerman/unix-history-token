@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.19 (Berkeley) %G%"
+literal|"@(#)collect.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -191,6 +191,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datablock
+argument_list|,
+literal|"initial message read"
 argument_list|)
 operator|==
 name|NULL
@@ -258,6 +260,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datablock
+argument_list|,
+literal|"message header read"
 argument_list|)
 operator|==
 name|NULL
@@ -395,6 +399,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datablock
+argument_list|,
+literal|"message header read"
 argument_list|)
 operator|==
 name|NULL
@@ -652,6 +658,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datablock
+argument_list|,
+literal|"message separator read"
 argument_list|)
 operator|==
 name|NULL
@@ -803,6 +811,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datablock
+argument_list|,
+literal|"message body read"
 argument_list|)
 operator|!=
 name|NULL
@@ -1209,6 +1219,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datablock
+argument_list|,
+literal|"long line flush"
 argument_list|)
 operator|==
 name|NULL
