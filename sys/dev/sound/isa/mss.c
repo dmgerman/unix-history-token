@@ -2334,6 +2334,8 @@ operator|->
 name|conf_base
 argument_list|)
 expr_stmt|;
+name|BVDDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"mss_init: opti_offset=%d\n"
@@ -2341,6 +2343,7 @@ argument_list|,
 name|mss
 operator|->
 name|opti_offset
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|opti_wr
@@ -5303,11 +5306,16 @@ name|i
 operator|==
 literal|10
 condition|)
+block|{
+name|BVDDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"mss_intr: irq, but not from mss\n"
 argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -5316,11 +5324,14 @@ operator|==
 literal|0
 condition|)
 block|{
+name|BVDDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"mss_intr: unexpected irq with reason %x\n"
 argument_list|,
 name|c
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 	* this should not happen... I have no idea what to do now. 	 	* maybe should do a sanity check and restart dmas ? 	 	*/
@@ -5916,9 +5927,12 @@ operator|==
 literal|0
 condition|)
 block|{
+name|DEB
+argument_list|(
 name|printf
 argument_list|(
 literal|"--- hey, leave_MCE: MCE bit was not set!\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6962,10 +6976,12 @@ name|retry
 operator|==
 literal|0
 condition|)
+name|BVDDB
+argument_list|(
 name|printf
 argument_list|(
-literal|"start dma, failed to set bit 0x%02x 0x%02x\n"
-argument_list|,
+literal|"stop dma, failed to set bit 0x%02x 0x%02x\n"
+argument_list|, \
 name|m
 argument_list|,
 name|ad_read
@@ -6973,6 +6989,7 @@ argument_list|(
 name|mss
 argument_list|,
 literal|9
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7598,7 +7615,7 @@ directive|if
 literal|0
 block|reason = io_rd(mss, MSS_STATUS);     	if (!(reason& 1)) {
 comment|/* no int, maybe a shared line ? */
-block|printf("intr: flag 0, mcir11 0x%02x\n", ad_read(mss, 11)); 		return;     	}
+block|DEB(printf("intr: flag 0, mcir11 0x%02x\n", ad_read(mss, 11))); 		return;     	}
 endif|#
 directive|endif
 name|i11
@@ -7677,13 +7694,16 @@ name|mc11
 operator|&
 name|masked
 condition|)
+name|BVDDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"irq reset failed, mc11 0x%02x, 0x%02x\n"
-argument_list|,
+argument_list|,\
 name|mc11
 argument_list|,
 name|masked
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|masked
@@ -7743,11 +7763,14 @@ name|loops
 operator|==
 literal|0
 condition|)
+name|BVDDB
+argument_list|(
 name|printf
 argument_list|(
 literal|"intr, nothing in mcir11 0x%02x\n"
 argument_list|,
 name|mc11
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
