@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)RESET.c 1.5 %G%"
+literal|"@(#)RESET.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,29 +161,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|filep
-operator|->
-name|funit
-operator|&
-name|TEMP
-condition|)
-block|{
-name|filep
-operator|->
-name|funit
-operator||=
-operator|(
-name|EOFF
-operator||
-name|SYNC
-operator||
-name|FREAD
-operator|)
-expr_stmt|;
-return|return;
-block|}
+comment|/* 		 * This allows unnamed temp files to be opened even if 		 * they have not been rewritten yet. We decided to remove 		 * this feature since the standard requires that files be 		 * defined before being reset. 		 * 		if (filep->funit& TEMP) { 			filep->funit |= (EOFF | SYNC | FREAD); 			return; 		} 		 */
 name|PERROR
 argument_list|(
 literal|"Could not open "
