@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.17 (Berkeley) 85/03/17"
+literal|"@(#)rlogin.c	4.18 (Berkeley) 85/05/31"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|eight
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|litout
 decl_stmt|;
 end_decl_stmt
 
@@ -496,6 +502,36 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-L"
+argument_list|)
+condition|)
+block|{
+name|litout
+operator|=
+literal|1
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+goto|goto
+name|another
+goto|;
+block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-w"
 argument_list|)
 condition|)
@@ -804,7 +840,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rlogin host [ -ex ] [ -l username ] [ -8 ]\n"
+literal|"usage: rlogin host [ -ex ] [ -l username ] [ -8 ] [ -L ] [ -w ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -840,6 +876,12 @@ name|int
 name|defflags
 decl_stmt|,
 name|tabflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|deflflags
 decl_stmt|;
 end_decl_stmt
 
@@ -977,6 +1019,20 @@ operator|=
 name|sb
 operator|.
 name|sg_kill
+expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCLGET
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|deflflags
+argument_list|)
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -2136,6 +2192,9 @@ name|struct
 name|sgttyb
 name|sb
 decl_stmt|;
+name|int
+name|lflags
+decl_stmt|;
 name|ioctl
 argument_list|(
 literal|0
@@ -2148,6 +2207,20 @@ operator|*
 operator|)
 operator|&
 name|sb
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCLGET
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|lflags
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2200,6 +2273,10 @@ operator|.
 name|sg_erase
 operator|=
 name|deferase
+expr_stmt|;
+name|lflags
+operator|=
+name|deflflags
 expr_stmt|;
 break|break;
 case|case
@@ -2265,6 +2342,14 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|litout
+condition|)
+name|lflags
+operator||=
+name|LLITOUT
+expr_stmt|;
 break|break;
 default|default:
 return|return;
@@ -2307,6 +2392,20 @@ operator|*
 operator|)
 operator|&
 name|sb
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCLSET
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|lflags
 argument_list|)
 expr_stmt|;
 block|}
