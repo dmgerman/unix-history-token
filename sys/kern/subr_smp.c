@@ -4951,26 +4951,23 @@ block|}
 block|}
 comment|/* 	 * bus_0 == slot of bus with ID of 0 	 * bus_pci == slot of last PCI bus encountered 	 */
 comment|/* check the 1 PCI bus case for sanity */
+comment|/* if it is number 0 all is well */
 if|if
 condition|(
 name|num_pci_bus
 operator|==
 literal|1
-condition|)
-block|{
-comment|/* if it is number 0 all is well */
-if|if
-condition|(
+operator|&&
 name|bus_data
 index|[
 name|bus_pci
 index|]
 operator|.
 name|bus_id
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return;
+block|{
 comment|/* mis-numbered, swap with whichever bus uses slot 0 */
 comment|/* swap the bus entry types */
 name|bus_data
