@@ -588,21 +588,6 @@ name|ngsocketlist_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|MTX_SYSINIT
-argument_list|(
-name|ngsocketlist
-argument_list|,
-operator|&
-name|ngsocketlist_mtx
-argument_list|,
-literal|"ng_socketlist"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_define
 define|#
 directive|define
@@ -4741,6 +4726,18 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|mtx_init
+argument_list|(
+operator|&
+name|ngsocketlist_mtx
+argument_list|,
+literal|"ng_socketlist"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 comment|/* Register protocol domain */
 name|net_add_domain
 argument_list|(
@@ -4807,6 +4804,12 @@ operator|!=
 literal|0
 condition|)
 break|break;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|ngsocketlist_mtx
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 endif|#
