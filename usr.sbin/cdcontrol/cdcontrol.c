@@ -2587,7 +2587,14 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"  end  "
+literal|"%5d  "
+argument_list|,
+name|toc_buffer
+index|[
+name|n
+index|]
+operator|.
+name|track
 argument_list|)
 expr_stmt|;
 name|prtrack
