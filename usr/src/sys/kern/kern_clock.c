@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -784,7 +784,7 @@ name|c_func
 operator|=
 name|ftn
 expr_stmt|;
-comment|/* 	 * The time for each event is stored as a difference from the time 	 * of the previous event on the queue.  Walk the queue, correcting 	 * the ticks argument for queue entries passed.  Correct the ticks 	 * value for the queue entry immediately after the insertion point 	 * as well. 	 */
+comment|/* 	 * The time for each event is stored as a difference from the time 	 * of the previous event on the queue.  Walk the queue, correcting 	 * the ticks argument for queue entries passed.  Correct the ticks 	 * value for the queue entry immediately after the insertion point 	 * as well.  Watch out for negative c_time values; these represent 	 * overdue events. 	 */
 for|for
 control|(
 name|p
@@ -812,6 +812,14 @@ name|p
 operator|=
 name|t
 control|)
+if|if
+condition|(
+name|t
+operator|->
+name|c_time
+operator|>
+literal|0
+condition|)
 name|ticks
 operator|-=
 name|t
