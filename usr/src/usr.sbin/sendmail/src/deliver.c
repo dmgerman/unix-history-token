@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.70 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.71 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5187,6 +5187,8 @@ argument_list|,
 name|m
 argument_list|,
 name|e
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* get the exit status */
@@ -7187,7 +7189,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		fp -- file to output onto. **		m -- a mailer descriptor to control output format. **		e -- the envelope to put out. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
+comment|/* **  PUTBODY -- put the body of a message. ** **	Parameters: **		fp -- file to output onto. **		m -- a mailer descriptor to control output format. **		e -- the envelope to put out. **		separator -- if non-NULL, a message separator that must **			not be permitted in the resulting message. ** **	Returns: **		none. ** **	Side Effects: **		The message is written onto fp. */
 end_comment
 
 begin_macro
@@ -7198,6 +7200,8 @@ argument_list|,
 argument|m
 argument_list|,
 argument|e
+argument_list|,
+argument|separator
 argument_list|)
 end_macro
 
@@ -7220,6 +7224,13 @@ specifier|register
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|separator
 decl_stmt|;
 end_decl_stmt
 
@@ -7378,6 +7389,64 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|buf
+index|[
+literal|1
+index|]
+operator|==
+literal|'-'
+operator|&&
+name|separator
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* possible separator */
+name|int
+name|sl
+init|=
+name|strlen
+argument_list|(
+name|separator
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|2
+index|]
+argument_list|,
+name|separator
+argument_list|,
+name|sl
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|' '
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 name|putline
 argument_list|(
 name|buf
@@ -7971,6 +8040,8 @@ argument_list|,
 name|FileMailer
 argument_list|,
 name|e
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|putline

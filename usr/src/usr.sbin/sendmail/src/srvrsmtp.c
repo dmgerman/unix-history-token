@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.49 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.50 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.49 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.50 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1838,6 +1838,13 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
+expr_stmt|;
 if|if
 condition|(
 name|Errors
@@ -1870,13 +1877,6 @@ operator|=
 name|EM_MAIL
 expr_stmt|;
 block|}
-name|e
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
-expr_stmt|;
 name|e
 operator|->
 name|e_xfp
@@ -1954,7 +1954,19 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_FATALERRS
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+comment|/* avoid sending back an extra message */
 name|e
 operator|->
 name|e_flags
@@ -1962,6 +1974,9 @@ operator|&=
 operator|~
 name|EF_FATALERRS
 expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* if we just queued, poke it */
 if|if
 condition|(
@@ -1998,6 +2013,7 @@ name|e_id
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 block|}
 comment|/* now make it really happen */
 if|if

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.55 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.56 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.55 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.56 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -503,6 +503,8 @@ argument_list|,
 name|FileMailer
 argument_list|,
 name|e
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(

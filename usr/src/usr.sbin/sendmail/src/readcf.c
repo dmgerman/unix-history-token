@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.33 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4160,6 +4160,18 @@ literal|'i'
 case|:
 comment|/* ignore dot lines in message */
 name|IgnrDot
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'j'
+case|:
+comment|/* send errors in MIME (RFC 1341) format */
+name|SendMIMEErrors
 operator|=
 name|atobool
 argument_list|(
