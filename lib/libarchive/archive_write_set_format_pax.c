@@ -2033,9 +2033,14 @@ operator|->
 name|st_size
 operator|>=
 operator|(
+operator|(
+operator|(
+name|int64_t
+operator|)
 literal|1
+operator|)
 operator|<<
-literal|30
+literal|33
 operator|)
 condition|)
 block|{
