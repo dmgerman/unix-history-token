@@ -255,6 +255,7 @@ block|}
 block|}
 name|skip
 label|:
+empty_stmt|;
 block|}
 name|endgrent
 argument_list|()
