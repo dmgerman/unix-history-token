@@ -107,6 +107,89 @@ value|{			\ 	{							\ 	  { "enabled",&ng_parse_int8_type	},	\ 	  { "enableDelay
 end_define
 
 begin_comment
+comment|/* Statistics struct */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_pptpgre_stats
+block|{
+name|u_int32_t
+name|xmitPackets
+decl_stmt|;
+comment|/* number of GRE packets xmit */
+name|u_int32_t
+name|xmitOctets
+decl_stmt|;
+comment|/* number of GRE octets xmit */
+name|u_int32_t
+name|xmitLoneAcks
+decl_stmt|;
+comment|/* ack-only packets transmitted */
+name|u_int32_t
+name|xmitDrops
+decl_stmt|;
+comment|/* xmits dropped due to full window */
+name|u_int32_t
+name|xmitTooBig
+decl_stmt|;
+comment|/* xmits dropped because too big */
+name|u_int32_t
+name|recvPackets
+decl_stmt|;
+comment|/* number of GRE packets rec'd */
+name|u_int32_t
+name|recvOctets
+decl_stmt|;
+comment|/* number of GRE octets rec'd */
+name|u_int32_t
+name|recvRunts
+decl_stmt|;
+comment|/* too short packets rec'd */
+name|u_int32_t
+name|recvBadGRE
+decl_stmt|;
+comment|/* bogus packets rec'd (bad GRE hdr) */
+name|u_int32_t
+name|recvBadAcks
+decl_stmt|;
+comment|/* bogus ack's rec'd in GRE header */
+name|u_int32_t
+name|recvBadCID
+decl_stmt|;
+comment|/* pkts with unknown call ID rec'd */
+name|u_int32_t
+name|recvOutOfOrder
+decl_stmt|;
+comment|/* packets rec'd out of order */
+name|u_int32_t
+name|recvDuplicates
+decl_stmt|;
+comment|/* packets rec'd with duplicate seq # */
+name|u_int32_t
+name|recvLoneAcks
+decl_stmt|;
+comment|/* ack-only packets rec'd */
+name|u_int32_t
+name|recvAckTimeouts
+decl_stmt|;
+comment|/* times peer failed to ack in time */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Keep this in sync with the above structure definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPTPGRE_STATS_TYPE_INFO
+value|{			\ 	{							\ 	  { "xmitPackets",&ng_parse_int32_type	},	\ 	  { "xmitOctets",&ng_parse_int32_type	},	\ 	  { "xmitLoneAcks",&ng_parse_int32_type	},	\ 	  { "xmitDrops",&ng_parse_int32_type	},	\ 	  { "xmitTooBig",&ng_parse_int32_type	},	\ 	  { "recvPackets",&ng_parse_int32_type	},	\ 	  { "recvOctets",&ng_parse_int32_type	},	\ 	  { "recvRunts",&ng_parse_int32_type	},	\ 	  { "recvBadGRE",&ng_parse_int32_type	},	\ 	  { "recvBadAcks",&ng_parse_int32_type	},	\ 	  { "recvBadCID",&ng_parse_int32_type	},	\ 	  { "recvOutOfOrder",&ng_parse_int32_type	},	\ 	  { "recvDuplicates",&ng_parse_int32_type	},	\ 	  { "recvLoneAcks",&ng_parse_int32_type	},	\ 	  { "recvAckTimeouts",&ng_parse_int32_type	},	\ 	  { NULL }						\ 	}							\ }
+end_define
+
+begin_comment
 comment|/* Netgraph commands */
 end_comment
 
@@ -121,6 +204,15 @@ comment|/* supply a struct ng_pptpgre_conf */
 name|NGM_PPTPGRE_GET_CONFIG
 block|,
 comment|/* returns a struct ng_pptpgre_conf */
+name|NGM_PPTPGRE_GET_STATS
+block|,
+comment|/* returns struct ng_pptpgre_stats */
+name|NGM_PPTPGRE_CLR_STATS
+block|,
+comment|/* clears stats */
+name|NGM_PPTPGRE_GETCLR_STATS
+block|,
+comment|/* returns& clears stats */
 block|}
 enum|;
 end_enum
