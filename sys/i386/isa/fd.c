@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.49 1995/01/12 19:20:28 joerg Exp $  *  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Don Ahn.  *  * Copyright (c) 1993, 1994 by  *  jc@irbs.UUCP (John Capo)  *  vak@zebub.msk.su (Serge Vakulenko)  *  ache@astral.msk.su (Andrew A. Chernov)  *  * Copyright (c) 1993, 1994, 1995 by  *  joerg_wunsch@uriah.sax.de (Joerg Wunsch)  *  dufault@hda.com (Peter Dufault)  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)fd.c	7.4 (Berkeley) 5/25/91  *	$Id: fd.c,v 1.51 1995/01/27 20:03:07 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dkbad.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -98,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ioctl_fd.h>
 end_include
 
@@ -105,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/diskslice.h>
 end_include
 
 begin_include
@@ -579,16 +585,13 @@ end_function
 begin_define
 define|#
 directive|define
-name|RAW_PART
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
 name|b_cylin
 value|b_resid
 end_define
+
+begin_comment
+comment|/* XXX now spelled b_cylinder elsewhere */
+end_comment
 
 begin_comment
 comment|/* misuse a flag to identify format operation */
@@ -1417,6 +1420,12 @@ parameter_list|(
 name|dev_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|proc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1428,6 +1437,12 @@ parameter_list|(
 name|dev_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|proc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3423,20 +3438,17 @@ argument_list|,
 name|fdu
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXX assume rate is FDC_500KBPS. 			 */
 name|dk_wpms
 index|[
 name|dk_ndrive
 index|]
 operator|=
-operator|(
-literal|500
-operator|*
-literal|1024
+literal|500000
+operator|/
+literal|8
 operator|/
 literal|2
-operator|)
-operator|/
-literal|1000
 expr_stmt|;
 name|fd
 operator|->
@@ -4520,6 +4532,14 @@ name|dev
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|fdu_t
@@ -4844,6 +4864,14 @@ name|dev
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|int
+name|mode
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 block|{
 name|fdu_t
@@ -8260,7 +8288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * TODO: Think about allocating buffer off stack.  *       Don't pass uncast 0's and NULL's to read/write/setdisklabel().  *       Watch out for NetBSD's different *disklabel() interface.  *  */
+comment|/*  * TODO: don't allocate buffer on stack.  */
 end_comment
 
 begin_function
