@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ksiginfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -686,19 +692,13 @@ name|p_sigcatch
 operator|)
 argument_list|)
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"siglist = 0x%x\n"
-operator|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_siglist
-operator|)
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX - use ksiginfo_to_sigset_t ? */
+block|DPRINTF(("siglist = 0x%x\n", td->td_proc->p_siglist));
+endif|#
+directive|endif
 block|}
 if|#
 directive|if

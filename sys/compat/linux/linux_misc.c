@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ksiginfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -4054,13 +4060,13 @@ condition|)
 return|return
 name|error
 return|;
-name|SIGDELSET
+name|signal_delete
 argument_list|(
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_siglist
+argument_list|,
+name|NULL
 argument_list|,
 name|SIGCHLD
 argument_list|)

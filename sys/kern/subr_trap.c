@@ -95,6 +95,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ksiginfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -199,7 +211,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|SIGPENDING
+name|signal_pending
 argument_list|(
 name|p
 argument_list|)

@@ -2906,16 +2906,10 @@ name|sb
 argument_list|,
 literal|"SigPnd:\t%08x\n"
 argument_list|,
-name|p
-operator|->
-name|p_siglist
-operator|.
-name|__bits
-index|[
 literal|0
-index|]
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 comment|/* 	 * I can't seem to find out where the signal mask is in 	 * relation to struct proc, so SigBlk is left unimplemented. 	 */
 name|sbuf_printf
 argument_list|(

@@ -1246,6 +1246,14 @@ argument_list|,
 name|p_pglist
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_sigq
+argument_list|)
+expr_stmt|;
 name|pgrp0
 operator|.
 name|pg_session

@@ -171,6 +171,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/ksiginfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -698,11 +704,13 @@ operator||
 name|P_PPWAIT
 operator|)
 expr_stmt|;
-name|SIGEMPTYSET
+name|signal_delete
 argument_list|(
 name|p
-operator|->
-name|p_siglist
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
@@ -1629,6 +1637,16 @@ condition|)
 name|wakeup
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+comment|/* 	 * And now, kill off its signals... 	 */
+name|signal_delete
+argument_list|(
+name|p
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
