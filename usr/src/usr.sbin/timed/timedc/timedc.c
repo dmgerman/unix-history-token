@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	1.2 (Berkeley) %G%"
+literal|"@(#)timedc.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_decl_stmt
