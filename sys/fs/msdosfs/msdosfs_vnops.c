@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.31 1996/06/14 11:01:41 asami Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.32 1996/09/03 14:23:33 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2283,7 +2283,7 @@ name|vap
 operator|->
 name|va_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|!=
 name|VNOVAL
 condition|)

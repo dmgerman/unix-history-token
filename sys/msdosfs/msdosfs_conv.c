@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.8 1996/04/05 16:31:49 ache Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.9 1996/04/05 18:59:06 ache Exp $ */
 end_comment
 
 begin_comment
@@ -219,7 +219,7 @@ name|t
 operator|=
 name|tsp
 operator|->
-name|ts_sec
+name|tv_sec
 operator|-
 operator|(
 name|tz
@@ -695,7 +695,7 @@ expr_stmt|;
 block|}
 name|tsp
 operator|->
-name|ts_sec
+name|tv_sec
 operator|=
 name|seconds
 operator|+
@@ -714,7 +714,7 @@ expr_stmt|;
 comment|/* + daylight savings time correction */
 name|tsp
 operator|->
-name|ts_nsec
+name|tv_nsec
 operator|=
 literal|0
 expr_stmt|;
