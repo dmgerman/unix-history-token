@@ -894,9 +894,13 @@ name|i
 operator|++
 control|)
 block|{
-name|ttyregister
+name|pcvt_tty
+index|[
+name|i
+index|]
+operator|=
+name|ttymalloc
 argument_list|(
-operator|&
 name|pcvt_tty
 index|[
 name|i
@@ -910,7 +914,6 @@ index|]
 operator|.
 name|vs_tty
 operator|=
-operator|&
 name|pcvt_tty
 index|[
 name|i
@@ -1020,7 +1023,6 @@ name|ENXIO
 return|;
 name|tp
 operator|=
-operator|&
 name|pcvt_tty
 index|[
 name|i
@@ -1325,7 +1327,6 @@ name|ENXIO
 return|;
 name|tp
 operator|=
-operator|&
 name|pcvt_tty
 index|[
 name|i
@@ -1434,7 +1435,6 @@ name|ENXIO
 return|;
 name|tp
 operator|=
-operator|&
 name|pcvt_tty
 index|[
 name|i
@@ -1600,6 +1600,11 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
+name|struct
+name|tty
+modifier|*
+name|tp
+decl_stmt|;
 if|#
 directive|if
 name|PCVT_SLOW_INTERRUPT
@@ -1621,6 +1626,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PCVT_SCREENSAVER */
+name|tp
+operator|=
+name|pcvt_tty
+index|[
+name|current_video_screen
+index|]
+expr_stmt|;
 while|while
 condition|(
 name|pcvt_kbd_count
@@ -1667,7 +1679,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|pcvt_ttyp
+name|tp
 operator|->
 name|t_line
 index|]
@@ -1677,7 +1689,7 @@ operator|)
 operator|(
 literal|'\0'
 operator|,
-name|pcvt_ttyp
+name|tp
 operator|)
 expr_stmt|;
 block|}
@@ -1695,7 +1707,7 @@ operator|(
 operator|*
 name|linesw
 index|[
-name|pcvt_ttyp
+name|tp
 operator|->
 name|t_line
 index|]
@@ -1709,7 +1721,7 @@ operator|++
 operator|&
 literal|0xff
 operator|,
-name|pcvt_ttyp
+name|tp
 operator|)
 expr_stmt|;
 block|}
@@ -2386,11 +2398,23 @@ name|cn_pri
 operator|=
 name|CN_INTERNAL
 expr_stmt|;
+name|pcvt_tty
+index|[
+literal|0
+index|]
+operator|=
+name|ttymalloc
+argument_list|(
+name|pcvt_tty
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 name|cp
 operator|->
 name|cn_tp
 operator|=
-operator|&
 name|pcvt_tty
 index|[
 literal|0

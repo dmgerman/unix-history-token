@@ -3439,6 +3439,7 @@ begin_decl_stmt
 name|EXTERN
 name|struct
 name|tty
+modifier|*
 name|pcvt_tty
 index|[
 name|PCVT_NSCREENS
@@ -4192,24 +4193,6 @@ name|BG_LIGHTGREY
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tty
-modifier|*
-name|pcvt_ttyp
-init|=
-operator|&
-name|pcvt_tty
-index|[
-literal|0
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ptr to current device */
-end_comment
 
 begin_decl_stmt
 name|video_state
@@ -5239,15 +5222,6 @@ begin_decl_stmt
 specifier|extern
 name|u_char
 name|vga_type
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-modifier|*
-name|pcvt_ttyp
 decl_stmt|;
 end_decl_stmt
 

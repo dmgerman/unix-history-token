@@ -6536,15 +6536,6 @@ operator|=
 name|n
 expr_stmt|;
 comment|/* current screen no */
-name|pcvt_ttyp
-operator|=
-operator|&
-name|pcvt_tty
-index|[
-name|n
-index|]
-expr_stmt|;
-comment|/* current tty */
 name|vsp
 operator|=
 operator|&
