@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.1 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -654,6 +654,26 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+if|if
+condition|(
+name|j
+operator|<
+name|ROOTINO
+condition|)
+break|break;
+name|errexit
+argument_list|(
+literal|"BAD STATE %d FOR INODE I=%d"
+argument_list|,
+name|statemap
+index|[
+name|j
+index|]
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
