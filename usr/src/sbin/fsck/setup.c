@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.19 (Berkeley) %G%"
+literal|"@(#)setup.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,30 @@ parameter_list|(
 name|num
 parameter_list|)
 value|(((num)& ((num) - 1)) == 0)
+end_define
+
+begin_comment
+comment|/*  * The size of a cylinder group is calculated by CGSIZE. The maximum size  * is limited by the fact that cylinder groups are at most one block.  * Its size is derived from the size of the maps maintained in the   * cylinder group and the (struct cg) size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGSIZE
+parameter_list|(
+name|fs
+parameter_list|)
+define|\
+comment|/* base cg */
+value|(sizeof(struct cg) + \
+comment|/* blktot size */
+value|(fs)->fs_cpg * sizeof(long) + \
+comment|/* blks size */
+value|(fs)->fs_cpg * (fs)->fs_nrpos * sizeof(short) + \
+comment|/* inode map */
+value|howmany((fs)->fs_ipg, NBBY) + \
+comment|/* block map */
+value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPF(fs), NBBY))
 end_define
 
 begin_function_decl
@@ -929,6 +953,22 @@ operator|.
 name|fs_link
 operator|)
 expr_stmt|;
+name|sblock
+operator|.
+name|fs_cgsize
+operator|=
+name|fragroundup
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+name|CGSIZE
+argument_list|(
+operator|&
+name|sblock
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Planning now for future expansion. 			 */
 if|#
 directive|if
@@ -1137,6 +1177,31 @@ operator|.
 name|fs_postblformat
 operator|=
 name|FS_42POSTBLFMT
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_cgsize
+operator|=
+name|fragroundup
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ocg
+argument_list|)
+operator|+
+name|howmany
+argument_list|(
+name|sblock
+operator|.
+name|fs_fpg
+argument_list|,
+name|NBBY
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|sbdirty
 argument_list|()
