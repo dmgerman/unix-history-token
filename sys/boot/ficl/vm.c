@@ -7,11 +7,45 @@ begin_comment
 comment|/* ** This file implements the virtual machine of FICL. Each virtual ** machine retains the state of an interpreter. A virtual machine ** owns a pair of stacks for parameters and return addresses, as ** well as a pile of state variables and the two dedicated registers ** of the interp. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TESTMAIN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<stand.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

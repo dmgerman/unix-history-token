@@ -7,11 +7,33 @@ begin_comment
 comment|/* ** This is an ANS Forth interpreter written in C. ** Ficl uses Forth syntax for its commands, but turns the Forth  ** model on its head in other respects. ** Ficl provides facilities for interoperating ** with programs written in C: C functions can be exported to Ficl, ** and Ficl commands can be executed via a C calling interface. The ** interpreter is re-entrant, so it can be used in multiple instances ** in a multitasking system. Unlike Forth, Ficl's outer interpreter ** expects a text block as input, and returns to the caller after each ** text block, so the data pump is somewhere in external code. This ** is more like TCL than Forth. ** ** Code is written in ANSI C for portability.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TESTMAIN
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<stand.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

@@ -3,11 +3,45 @@ begin_comment
 comment|/******************************************************************* ** w o r d s . c ** Forth Inspired Command Language ** ANS Forth CORE word-set written in C ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 19 July 1997 **  *******************************************************************/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TESTMAIN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<stand.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

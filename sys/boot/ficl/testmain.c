@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** stub main for testing FICL under Win32 **  */
+comment|/* ** stub main for testing FICL **  */
 end_comment
 
 begin_include
@@ -21,23 +21,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIN32
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<direct.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -50,22 +33,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|linux
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -74,7 +46,7 @@ file|"ficl.h"
 end_include
 
 begin_comment
-comment|/* ** Ficl interface to _getcwd (Win32) ** Prints the current working directory using the VM's  ** textOut method... */
+comment|/* ** Ficl interface to getcwd ** Prints the current working directory using the VM's  ** textOut method... */
 end_comment
 
 begin_function
@@ -91,20 +63,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|WIN32
-name|cp
-operator|=
-name|_getcwd
-argument_list|(
-name|NULL
-argument_list|,
-literal|80
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|cp
 operator|=
 name|getcwd
@@ -114,8 +72,6 @@ argument_list|,
 literal|80
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vmTextOut
 argument_list|(
 name|pVM
@@ -135,7 +91,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Ficl interface to _chdir (Win32) ** Gets a newline (or NULL) delimited string from the input ** and feeds it to the Win32 chdir function... ** Example: **    cd c:\tmp */
+comment|/* ** Ficl interface to chdir ** Gets a newline (or NULL) delimited string from the input ** and feeds it to chdir() ** Example: **    cd c:\tmp */
 end_comment
 
 begin_function
@@ -178,21 +134,6 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|WIN32
-name|int
-name|err
-init|=
-name|_chdir
-argument_list|(
-name|pFS
-operator|->
-name|text
-argument_list|)
-decl_stmt|;
-else|#
-directive|else
 name|int
 name|err
 init|=
@@ -203,8 +144,6 @@ operator|->
 name|text
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|err
@@ -245,7 +184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Ficl interface to system (ANSI) ** Gets a newline (or NULL) delimited string from the input ** and feeds it to the Win32 system function... ** Example: **    system del *.* **    \ ouch! */
+comment|/* ** Ficl interface to system (ANSI) ** Gets a newline (or NULL) delimited string from the input ** and feeds it to system() ** Example: **    system del *.* **    \ ouch! */
 end_comment
 
 begin_function
@@ -408,21 +347,10 @@ decl_stmt|;
 name|CELL
 name|id
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|WIN32
-name|struct
-name|_stat
-name|buf
-decl_stmt|;
-else|#
-directive|else
 name|struct
 name|stat
 name|buf
 decl_stmt|;
-endif|#
-directive|endif
 name|vmGetString
 argument_list|(
 name|pVM
@@ -453,23 +381,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*     ** get the file's size and make sure it exists      */
-ifdef|#
-directive|ifdef
-name|WIN32
-name|result
-operator|=
-name|_stat
-argument_list|(
-name|pFilename
-operator|->
-name|text
-argument_list|,
-operator|&
-name|buf
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|result
 operator|=
 name|stat
@@ -482,8 +393,6 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|result
@@ -980,16 +889,6 @@ return|return;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_WINDOWS
-argument_list|)
-end_if
-
 begin_function
 name|int
 name|main
@@ -1077,11 +976,25 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-name|gets
+if|if
+condition|(
+name|fgets
+argument_list|(
+name|in
+argument_list|,
+sizeof|sizeof
 argument_list|(
 name|in
 argument_list|)
-expr_stmt|;
+operator|-
+literal|1
+argument_list|,
+name|stdin
+argument_list|)
+operator|==
+name|NULL
+condition|)
+break|break;
 name|ret
 operator|=
 name|ficlExec
@@ -1109,11 +1022,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

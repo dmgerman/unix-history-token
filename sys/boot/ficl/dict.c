@@ -7,11 +7,45 @@ begin_comment
 comment|/* ** This file implements the dictionary -- FICL's model of  ** memory management. All FICL words are stored in the ** dictionary. A word is a named chunk of data with its ** associated code. FICL treats all words the same, even ** precompiled ones, so your words become first-class ** extensions of the language. You can even define new  ** control structures. ** ** 29 jun 1998 (sadler) added variable sized hash table support */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TESTMAIN
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<stand.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
