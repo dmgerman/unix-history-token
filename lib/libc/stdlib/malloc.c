@@ -1961,6 +1961,26 @@ break|break;
 block|}
 block|}
 block|}
+comment|/*      * Sensitive processes, somewhat arbitrarily defined here as setuid,      * setgid, root and wheel cannot afford to have malloc mistakes.      */
+if|if
+condition|(
+name|issetugid
+argument_list|()
+operator|||
+name|getuid
+argument_list|()
+operator|==
+literal|0
+operator|||
+name|getgid
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|malloc_abort
+operator|=
+literal|1
+expr_stmt|;
 name|UTRACE
 argument_list|(
 literal|0
