@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -61,6 +55,18 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs4client/nfs4_dev.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs4client/nfs4_idmap.h>
 end_include
 
 begin_include
@@ -111,22 +117,6 @@ directive|include
 file|<grp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<nfs4client/nfs4_dev.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfs4client/nfs4_idmap.h>
-end_include
-
-begin_comment
-comment|/* #include "idmap.h" */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -159,14 +149,14 @@ begin_define
 define|#
 directive|define
 name|BADUID
-value|(-2)
+value|65534
 end_define
 
 begin_define
 define|#
 directive|define
 name|BADGID
-value|(-2)
+value|65533
 end_define
 
 begin_struct
