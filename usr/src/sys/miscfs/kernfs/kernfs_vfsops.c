@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vfsops.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vfsops.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ decl_stmt|;
 name|int
 name|error
 init|=
-name|ENOENT
+name|ENXIO
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -753,25 +753,6 @@ name|FORCECLOSE
 expr_stmt|;
 block|}
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
-if|#
-directive|if
-literal|0
-ifdef|#
-directive|ifdef
-name|KERNFS_DIAGNOSTIC
-block|printf("kernfs_unmount: calling mntflushbuf\n");
-endif|#
-directive|endif
-block|mntflushbuf(mp, 0);
-ifdef|#
-directive|ifdef
-name|KERNFS_DIAGNOSTIC
-block|printf("kernfs_unmount: calling mntinvalbuf\n");
-endif|#
-directive|endif
-block|if (mntinvalbuf(mp, 1)) 		return (EBUSY);
-endif|#
-directive|endif
 if|if
 condition|(
 name|rootvp
@@ -1098,14 +1079,12 @@ name|f_files
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Allow for "." */
 name|sbp
 operator|->
 name|f_ffree
 operator|=
 literal|0
 expr_stmt|;
-comment|/* See comments above */
 if|if
 condition|(
 name|sbp
