@@ -1107,10 +1107,8 @@ parameter_list|,
 specifier|const
 name|rpcvers_t
 parameter_list|,
-specifier|const
 name|u_int
 parameter_list|,
-specifier|const
 name|u_int
 parameter_list|)
 function_decl|;

@@ -578,10 +578,12 @@ modifier|*
 name|raddr
 decl_stmt|;
 comment|/* servers address */
+specifier|const
 name|rpcprog_t
 name|prog
 decl_stmt|;
 comment|/* program number */
+specifier|const
 name|rpcvers_t
 name|vers
 decl_stmt|;
