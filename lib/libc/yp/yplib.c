@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.10.4.6 1996/06/25 17:53:33 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.10.4.7 1996/11/08 02:06:30 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -882,6 +882,23 @@ name|retries
 init|=
 literal|0
 decl_stmt|;
+comment|/* Not allowed; bad doggie. Bad. */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|dom
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|YPERR_BADARGS
+operator|)
+return|;
 name|gpid
 operator|=
 name|getpid
