@@ -186,6 +186,17 @@ begin_comment
 comment|/* enable auxiliary port */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PSM_ENABLE
+value|0xa9
+end_define
+
+begin_comment
+comment|/* test auxiliary port */
+end_comment
+
 begin_comment
 comment|/* mouse commands */
 end_comment
@@ -374,12 +385,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MSBSZ
+name|PSM_CHUNK
+value|128
+end_define
+
+begin_comment
+comment|/* chunk size for read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_BSIZE
 value|1024
 end_define
 
 begin_comment
-comment|/* Output queue size (pwr of 2 is best) */
+comment|/* buffer size */
 end_comment
 
 begin_struct
@@ -396,7 +418,7 @@ decl_stmt|;
 name|char
 name|queue
 index|[
-name|MSBSZ
+name|PSM_BSIZE
 index|]
 decl_stmt|;
 block|}
@@ -580,6 +602,131 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_psm
+index|[
+name|NPSM
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"psm"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_ISA
+block|,
+literal|0
+block|,
+literal|"tty"
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNCONFIGURED
+block|,
+comment|/* state */
+literal|"PS/2 Mouse"
+block|,
+name|DC_CLS_MISC
+comment|/* class */
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|psm_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|)
+block|{
+if|if
+condition|(
+name|id
+operator|->
+name|id_unit
+condition|)
+name|kdc_psm
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|=
+name|kdc_psm
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|kdc_psm
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_unit
+operator|=
+name|id
+operator|->
+name|id_unit
+expr_stmt|;
+name|kdc_psm
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc_isa
+operator|=
+name|id
+expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|kdc_psm
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -686,6 +833,11 @@ name|c
 decl_stmt|,
 name|unit
 decl_stmt|;
+name|psm_registerdev
+argument_list|(
+name|dvp
+argument_list|)
+expr_stmt|;
 name|ioport
 operator|=
 name|dvp
@@ -709,20 +861,20 @@ name|PSM_RESET
 argument_list|)
 expr_stmt|;
 comment|/* Reset aux device */
+endif|#
+directive|endif
 name|psm_poll_status
 argument_list|(
 name|ioport
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|outb
 argument_list|(
 name|ioport
 operator|+
 name|PSM_CNTRL
 argument_list|,
-literal|0xa9
+name|PSM_AUX_TEST
 argument_list|)
 expr_stmt|;
 name|psm_poll_status
@@ -937,6 +1089,15 @@ name|state
 operator|=
 literal|0
 expr_stmt|;
+name|kdc_psm
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
+expr_stmt|;
 comment|/* Done */
 return|return
 operator|(
@@ -1038,6 +1199,15 @@ name|EBUSY
 operator|)
 return|;
 comment|/* Initialize state */
+name|kdc_psm
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
 name|sc
 operator|->
 name|state
@@ -1229,7 +1399,6 @@ argument_list|)
 operator|&
 literal|0x03
 condition|)
-block|{
 if|if
 condition|(
 name|c
@@ -1245,7 +1414,6 @@ operator|+
 name|PSM_DATA
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 end_function
@@ -1333,6 +1501,15 @@ operator|&=
 operator|~
 name|PSM_OPEN
 expr_stmt|;
+name|kdc_psm
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
+expr_stmt|;
 comment|/* close is almost always successful */
 return|return
 operator|(
@@ -1380,7 +1557,7 @@ name|unsigned
 name|char
 name|buffer
 index|[
-literal|100
+name|PSM_CHUNK
 index|]
 decl_stmt|;
 comment|/* Get device information */
@@ -1536,7 +1713,7 @@ name|first
 operator|+
 name|length
 operator|>=
-name|MSBSZ
+name|PSM_BSIZE
 condition|)
 block|{
 name|bcopy
@@ -1557,7 +1734,7 @@ index|]
 argument_list|,
 name|buffer
 argument_list|,
-name|MSBSZ
+name|PSM_BSIZE
 operator|-
 name|sc
 operator|->
@@ -1577,7 +1754,7 @@ argument_list|,
 operator|&
 name|buffer
 index|[
-name|MSBSZ
+name|PSM_BSIZE
 operator|-
 name|sc
 operator|->
@@ -1589,7 +1766,7 @@ argument_list|,
 name|length
 operator|-
 operator|(
-name|MSBSZ
+name|PSM_BSIZE
 operator|-
 name|sc
 operator|->
@@ -1638,7 +1815,7 @@ operator|+
 name|length
 operator|)
 operator|%
-name|MSBSZ
+name|PSM_BSIZE
 expr_stmt|;
 name|sc
 operator|->
@@ -1959,7 +2136,7 @@ operator|.
 name|last
 operator|++
 operator|%
-name|MSBSZ
+name|PSM_BSIZE
 index|]
 operator|=
 name|inb
