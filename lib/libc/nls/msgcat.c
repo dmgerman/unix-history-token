@@ -346,6 +346,15 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+name|strchr
+argument_list|(
+name|lang
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|lang
 operator|=
