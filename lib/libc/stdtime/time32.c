@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<timeconv.h>
 end_include
 
 begin_comment
