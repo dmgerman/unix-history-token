@@ -4,8 +4,14 @@ comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California. 
 end_comment
 
 begin_comment
-comment|/* @(#)hkboot.c	7.1 (Berkeley) %G% */
+comment|/* @(#)hkboot.c	7.2 (Berkeley) %G% */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
+end_include
 
 begin_expr_stmt
 operator|.
@@ -244,6 +250,27 @@ name|r5
 decl_stmt|,
 name|r11
 comment|/* boot flags */
+name|brw
+name|start0
+comment|/*  * Leave space for pack label.  */
+name|pad
+range|:
+operator|.
+name|space
+name|LABELOFFSET
+operator|-
+operator|(
+name|pad
+operator|-
+name|init
+operator|)
+name|packlabel
+operator|:
+operator|.
+name|space
+name|d_end_
+name|start0
+operator|:
 name|movl
 name|physUBA
 index|[
@@ -404,9 +431,9 @@ name|clrl
 name|r0
 decl|1
 range|:
-empty|#	bisl3	$0x80000000,r0,UBA_MAP(r9)
-empty|#	addl2	$4,r9
-empty|#	aobleq	$BOOTSIZE,r0,1b
+comment|/*	bisl3	$0x80000000,r0,UBA_MAP(r9) */
+comment|/*	addl2	$4,r9 */
+comment|/*	aobleq	$BOOTSIZE,r0,1b */
 name|clrw
 name|HK_ba
 argument_list|(

@@ -4,17 +4,17 @@ comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* "@(#)hpboot.c	7.1 (Berkeley) %G%" */
+comment|/* "@(#)hpboot.c	7.2 (Berkeley) %G%" */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PARTITION
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
+end_include
 
 begin_comment
-comment|/* Partition is in bits 12 to 15 of R5  /*  * RP??/RM?? 1st level boot program: loads next 7.5Kbytes from  * boot sectors of file system and sets it up to run.  * Reads from the controller and drive passed in from the boot  * rom.  *   R1:  address of the boot device's adapter  *   R2:  controller number of the boot device  *   R3:  unit number of the boot device  *   R5:  software boot control flags  *   R6:  address of driver subroutine from ROM  *   SP:  base address of usable memory + 0x200  */
+comment|/*  * RP??/RM?? 1st level boot program: loads next 7.5Kbytes from  * boot sectors of file system and sets it up to run.  * Reads from the controller and drive passed in from the boot  * rom.  *   R1:  address of the boot device's adapter  *   R2:  controller number of the boot device  *   R3:  unit number of the boot device  *   R5:  software boot control flags  *   R6:  address of driver subroutine from ROM  *   SP:  base address of usable memory + 0x200  */
 end_comment
 
 begin_expr_stmt
@@ -282,9 +282,6 @@ name|$8
 decl_stmt|,
 name|r10
 comment|/* drive number */
-ifdef|#
-directive|ifdef
-name|PARTITION
 name|extzv
 name|$12
 decl_stmt|,
@@ -308,8 +305,6 @@ name|$4
 decl_stmt|,
 name|r10
 comment|/* set partition */
-endif|#
-directive|endif
 name|movl
 name|r5
 decl_stmt|,
@@ -324,6 +319,27 @@ name|r3
 decl_stmt|,
 name|r8
 comment|/* and unit number */
+name|brw
+name|start0
+comment|/*  * Leave space for pack label.  */
+name|pad
+range|:
+operator|.
+name|space
+name|LABELOFFSET
+operator|-
+operator|(
+name|pad
+operator|-
+name|init
+operator|)
+name|packlabel
+operator|:
+operator|.
+name|space
+name|d_end_
+name|start0
+operator|:
 name|movl
 name|$RELOC
 decl_stmt|,

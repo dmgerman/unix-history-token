@@ -4,8 +4,14 @@ comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* "@(#)raboot.c	7.1 (Berkeley) %G%" */
+comment|/* "@(#)raboot.c	7.2 (Berkeley) %G%" */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
+end_include
 
 begin_expr_stmt
 operator|.
@@ -170,6 +176,27 @@ name|r3
 decl_stmt|,
 name|r7
 comment|/* unit number */
+name|brw
+name|start0
+comment|/*  * Leave space for pack label.  */
+name|pad
+range|:
+operator|.
+name|space
+name|LABELOFFSET
+operator|-
+operator|(
+name|pad
+operator|-
+name|init
+operator|)
+name|packlabel
+operator|:
+operator|.
+name|space
+name|d_end_
+name|start0
+operator|:
 name|movl
 name|$RELOC
 decl_stmt|,
