@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.6 1995/11/29 19:57:16 wollman Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.7 1995/12/10 13:38:07 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,19 @@ directive|define
 name|_MACHINE_CLOCK_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|I586_CPU
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -144,11 +152,19 @@ name|disable_rtc_set
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|I586_CPU
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -203,11 +219,19 @@ name|timer0_prescaler_count
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|I586_CPU
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|void
@@ -226,11 +250,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|I586_CPU
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|I686_CPU
+argument_list|)
+end_if
 
 begin_function
 specifier|static
