@@ -1552,118 +1552,67 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
+begin_comment
+comment|/* Entries EAI_ADDRFAMILY (1) and EAI_NODATA (7) are obsoleted, but left */
+end_comment
+
+begin_comment
+comment|/* for backward compatibility with userland code prior to 2553bis-02 */
+end_comment
+
+begin_decl_stmt
 specifier|static
-struct|struct
-name|ai_errlist
-block|{
 specifier|const
 name|char
 modifier|*
-name|str
-decl_stmt|;
-name|int
-name|code
-decl_stmt|;
-block|}
 name|ai_errlist
 index|[]
 init|=
 block|{
-block|{
 literal|"Success"
 block|,
-literal|0
-block|, }
-block|,
-block|{
-literal|"Temporary failure in name resolution"
-block|,
-name|EAI_AGAIN
-block|, }
-block|,
-block|{
-literal|"Invalid value for ai_flags"
-block|,
-name|EAI_BADFLAGS
-block|, }
-block|,
-block|{
-literal|"Non-recoverable failure in name resolution"
-block|,
-name|EAI_FAIL
-block|, }
-block|,
-block|{
-literal|"ai_family not supported"
-block|,
-name|EAI_FAMILY
-block|, }
-block|,
-block|{
-literal|"Memory allocation failure"
-block|,
-name|EAI_MEMORY
-block|, }
-block|,
-block|{
-literal|"hostname nor servname provided, or not known"
-block|,
-name|EAI_NONAME
-block|, }
-block|,
-block|{
-literal|"servname not supported for ai_socktype"
-block|,
-name|EAI_SERVICE
-block|, }
-block|,
-block|{
-literal|"ai_socktype not supported"
-block|,
-name|EAI_SOCKTYPE
-block|, }
-block|,
-block|{
-literal|"System error returned in errno"
-block|,
-name|EAI_SYSTEM
-block|, }
-block|,
-block|{
-literal|"Invalid value for hints"
-block|,
-name|EAI_BADHINTS
-block|, }
-block|,
-block|{
-literal|"Resolved protocol is unknown"
-block|,
-name|EAI_PROTOCOL
-block|, }
-block|,
-comment|/* backward compatibility with userland code prior to 2553bis-02 */
-block|{
+comment|/* 0 */
 literal|"Address family for hostname not supported"
 block|,
-literal|1
-block|, }
+comment|/* 1 */
+literal|"Temporary failure in name resolution"
 block|,
-block|{
+comment|/* EAI_AGAIN */
+literal|"Invalid value for ai_flags"
+block|,
+comment|/* EAI_BADFLAGS */
+literal|"Non-recoverable failure in name resolution"
+block|,
+comment|/* EAI_FAIL */
+literal|"ai_family not supported"
+block|,
+comment|/* EAI_FAMILY */
+literal|"Memory allocation failure"
+block|,
+comment|/* EAI_MEMORY */
 literal|"No address associated with hostname"
 block|,
-literal|7
-block|, }
+comment|/* 7 */
+literal|"hostname nor servname provided, or not known"
 block|,
-block|{
-name|NULL
+comment|/* EAI_NONAME */
+literal|"servname not supported for ai_socktype"
 block|,
-operator|-
-literal|1
-block|, }
-block|, }
-struct|;
-end_struct
+comment|/* EAI_SERVICE */
+literal|"ai_socktype not supported"
+block|,
+comment|/* EAI_SOCKTYPE */
+literal|"System error returned in errno"
+block|,
+comment|/* EAI_SYSTEM */
+literal|"Invalid value for hints"
+block|,
+comment|/* EAI_BADHINTS */
+literal|"Resolved protocol is unknown"
+comment|/* EAI_PROTOCOL */
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * XXX: Many dependencies are not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call them.  */
@@ -1804,53 +1753,31 @@ value|(w)&& ((x) == ANY || (y) == ANY)))
 end_define
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|gai_strerror
 parameter_list|(
-name|ecode
-parameter_list|)
 name|int
 name|ecode
-decl_stmt|;
-block|{
-name|struct
-name|ai_errlist
-modifier|*
-name|p
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|ai_errlist
-init|;
-name|p
-operator|->
-name|str
-condition|;
-name|p
-operator|++
-control|)
+parameter_list|)
 block|{
 if|if
 condition|(
-name|p
-operator|->
-name|code
-operator|==
 name|ecode
+operator|>=
+literal|0
+operator|&&
+name|ecode
+operator|<
+name|EAI_MAX
 condition|)
 return|return
-operator|(
-name|char
-operator|*
-operator|)
-name|p
-operator|->
-name|str
+name|ai_errlist
+index|[
+name|ecode
+index|]
 return|;
-block|}
 return|return
 literal|"Unknown error"
 return|;
