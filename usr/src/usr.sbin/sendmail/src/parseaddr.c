@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	2.3	%G%"
+literal|"@(#)parseaddr.c	2.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1428,6 +1428,11 @@ expr_stmt|;
 block|}
 name|space
 operator|=
+name|isascii
+argument_list|(
+name|c
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 name|c
