@@ -1503,9 +1503,9 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
-literal|"ste"
+literal|"sis"
 block|,
-literal|"Sundance ST201 PCI Ethernet adapters"
+literal|"Sis 900/SiS 7016 Ethernet adapters"
 block|,
 literal|0
 block|,
@@ -1516,6 +1516,16 @@ block|{
 literal|"sk"
 block|,
 literal|"SysKonnect SK-984x gigabit Ethernet adapters"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
+literal|"ste"
+block|,
+literal|"Sundance ST201 PCI Ethernet adapters"
 block|,
 literal|0
 block|,
@@ -1616,6 +1626,16 @@ block|{
 literal|"de"
 block|,
 literal|"DEC DC21040 Ethernet adapter"
+block|,
+name|FLG_FIXED
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
+literal|"dm"
+block|,
+literal|"Davicom DM910x Ethernet adapter"
 block|,
 name|FLG_FIXED
 block|,
