@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	q931.c - print Q.931 traces  *	---------------------------  *  *	$Id: q931.c,v 1.6 1999/12/13 21:25:26 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Dec 13 21:56:56 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	q931.c - print Q.931 traces  *	---------------------------  *  *	$Id: q931.c,v 1.10 2000/02/14 16:25:22 hm Exp $   *  * $FreeBSD$  *  *      last edit-date: [Mon Feb 14 14:51:13 2000]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -314,7 +314,7 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"pd=User-User (0x%02x), "
+literal|"pd=User-User (0x%02x)\n"
 argument_list|,
 name|pd
 argument_list|)
@@ -362,7 +362,7 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"pd=Other Layer 3 or X.25 (0x%02x), "
+literal|"pd=Other Layer 3 or X.25 (0x%02x)\n"
 argument_list|,
 name|pd
 argument_list|)
@@ -389,7 +389,7 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"pd=National Use (0x%02x), "
+literal|"pd=National Use (0x%02x)\n"
 argument_list|,
 name|pd
 argument_list|)
@@ -416,7 +416,7 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"pd=Other Layer 3 or X.25 (0x%02x), "
+literal|"pd=Other Layer 3 or X.25 (0x%02x)\n"
 argument_list|,
 name|pd
 argument_list|)
@@ -433,7 +433,7 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"pd=Reserved (0x%02x), "
+literal|"pd=Reserved (0x%02x)\n"
 argument_list|,
 name|pd
 argument_list|)
@@ -820,7 +820,7 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"HOLD (Q.932): "
+literal|"HOLD: "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -874,7 +874,7 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"HOLD ACKNOWLEDGE (Q.932): "
+literal|"HOLD ACKNOWLEDGE: "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3103,9 +3103,25 @@ name|pbuf
 argument_list|)
 operator|)
 argument_list|,
-literal|"[notification ind: "
+literal|"[notification indicator: "
 argument_list|)
 expr_stmt|;
+name|i
+operator|+=
+name|p_q931notification
+argument_list|(
+name|pbuf
+argument_list|,
+operator|&
+name|buf
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 break|break;
 case|case
 literal|0x28
@@ -3990,6 +4006,22 @@ argument_list|,
 literal|"[redirecting number: "
 argument_list|)
 expr_stmt|;
+name|i
+operator|+=
+name|p_q931redir
+argument_list|(
+name|pbuf
+argument_list|,
+operator|&
+name|buf
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 break|break;
 case|case
 literal|0x76
@@ -4008,6 +4040,22 @@ argument_list|,
 literal|"[redirection number: "
 argument_list|)
 expr_stmt|;
+name|i
+operator|+=
+name|p_q931redir
+argument_list|(
+name|pbuf
+argument_list|,
+operator|&
+name|buf
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 break|break;
 case|case
 literal|0x78
@@ -4114,6 +4162,22 @@ argument_list|,
 literal|"[user-user: "
 argument_list|)
 expr_stmt|;
+name|i
+operator|+=
+name|p_q931user_user
+argument_list|(
+name|pbuf
+argument_list|,
+operator|&
+name|buf
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
 break|break;
 case|case
 literal|0x7f
