@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	5.1 (Berkeley) %G%"
+literal|"@(#)look.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -464,7 +470,41 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-operator|||
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|>
+name|SIZE_T_MAX
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|EFBIG
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|front
 operator|=
@@ -472,13 +512,16 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|sb
 operator|.
 name|st_size
 argument_list|,
 name|PROT_READ
 argument_list|,
-name|MAP_FILE
+literal|0
 argument_list|,
 name|fd
 argument_list|,
