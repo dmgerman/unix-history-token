@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet.c,v 1.27 1998/05/15 20:19:15 wollman Exp $"
+literal|"$Id: inet.c,v 1.28 1998/05/19 16:00:55 pb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2720,7 +2720,9 @@ specifier|static
 name|char
 name|line
 index|[
-literal|50
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -2859,13 +2861,34 @@ if|if
 condition|(
 name|cp
 condition|)
-name|strcpy
+block|{
+name|strncpy
 argument_list|(
 name|line
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
+name|line
+index|[
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 else|else
 block|{
 name|inp

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.29 1998/04/19 18:18:25 phk Exp $"
+literal|"$Id: route.c,v 1.30 1998/04/22 06:54:31 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2911,6 +2911,7 @@ if|if
 condition|(
 name|cp
 condition|)
+block|{
 name|strncpy
 argument_list|(
 name|line
@@ -2925,6 +2926,19 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|line
+index|[
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 else|else
 block|{
 define|#
@@ -3980,9 +3994,14 @@ if|if
 condition|(
 name|sp
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|cport
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cport
+argument_list|)
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -3999,9 +4018,14 @@ name|s_name
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|cport
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cport
+argument_list|)
 argument_list|,
 literal|"%s%x"
 argument_list|,
@@ -4022,9 +4046,14 @@ name|cport
 operator|=
 literal|0
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|mybuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mybuf
+argument_list|)
 argument_list|,
 literal|"%s.%s%s"
 argument_list|,
