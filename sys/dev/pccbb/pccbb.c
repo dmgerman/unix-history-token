@@ -2555,7 +2555,7 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-literal|0
+literal|0x10000000
 argument_list|,
 operator|~
 literal|0
