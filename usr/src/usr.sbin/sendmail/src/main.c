@@ -59,7 +59,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.43	%G%"
+literal|"@(#)main.c	3.44	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,6 +241,13 @@ literal|10
 index|]
 decl_stmt|;
 comment|/* holds tty id */
+name|char
+name|ibuf
+index|[
+literal|30
+index|]
+decl_stmt|;
+comment|/* holds HostName */
 name|bool
 name|aliasinit
 init|=
@@ -1177,6 +1184,29 @@ name|ConfFile
 argument_list|,
 name|safecf
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+literal|"$i"
+argument_list|,
+name|ibuf
+argument_list|,
+operator|&
+name|ibuf
+index|[
+sizeof|sizeof
+name|ibuf
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|HostName
+operator|=
+name|ibuf
 expr_stmt|;
 comment|/* 	**  Initialize aliases. 	*/
 name|initaliases

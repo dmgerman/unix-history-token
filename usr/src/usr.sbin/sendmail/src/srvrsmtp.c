@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.2	%G%"
+literal|"@(#)srvrsmtp.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,11 +251,9 @@ name|bool
 name|hasdata
 decl_stmt|;
 comment|/* has mail data */
-comment|/*%%%*/
-name|HostName
-operator|=
-literal|"XYZZY"
-expr_stmt|;
+name|int
+name|baseerrs
+decl_stmt|;
 name|hasmail
 operator|=
 name|hasmrcp
@@ -283,9 +281,9 @@ name|To
 operator|=
 name|NULL
 expr_stmt|;
-name|Errors
+name|baseerrs
 operator|=
-literal|0
+name|Errors
 expr_stmt|;
 if|if
 condition|(
@@ -307,7 +305,9 @@ name|message
 argument_list|(
 literal|"421"
 argument_list|,
-literal|"Lost input channel"
+literal|"%s Lost input channel"
+argument_list|,
+name|HostName
 argument_list|)
 expr_stmt|;
 name|finis
@@ -315,45 +315,12 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* clean up end of line */
-name|p
-operator|=
-name|index
+name|fixcrlf
 argument_list|(
 name|inp
 argument_list|,
-literal|'\n'
+name|TRUE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
-name|p
-operator|=
-name|index
-argument_list|(
-name|inp
-argument_list|,
-literal|'\r'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|p
-operator|=
-literal|'\0'
 expr_stmt|;
 comment|/* break off command */
 for|for
@@ -447,6 +414,20 @@ case|case
 name|CMDMAIL
 case|:
 comment|/* mail -- designate sender */
+if|if
+condition|(
+name|hasmail
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"503"
+argument_list|,
+literal|"Sender already specified"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|p
 operator|=
 name|skipword
@@ -496,7 +477,7 @@ if|if
 condition|(
 name|Errors
 operator|==
-literal|0
+name|baseerrs
 condition|)
 block|{
 name|message
@@ -569,7 +550,7 @@ if|if
 condition|(
 name|Errors
 operator|==
-literal|0
+name|baseerrs
 condition|)
 block|{
 name|message
@@ -603,7 +584,7 @@ if|if
 condition|(
 name|Errors
 operator|==
-literal|0
+name|baseerrs
 condition|)
 block|{
 name|message
@@ -672,7 +653,7 @@ if|if
 condition|(
 name|Errors
 operator|==
-literal|0
+name|baseerrs
 condition|)
 name|message
 argument_list|(
@@ -714,7 +695,7 @@ if|if
 condition|(
 name|Errors
 operator|==
-literal|0
+name|baseerrs
 condition|)
 name|message
 argument_list|(

@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.24	%G%"
+literal|"@(#)collect.c	3.25	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,6 +186,13 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|fixcrlf
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NOTUNIX
@@ -222,6 +229,13 @@ sizeof|sizeof
 name|buf
 argument_list|,
 name|stdin
+argument_list|)
+expr_stmt|;
+name|fixcrlf
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -264,6 +278,13 @@ name|bool
 name|isheader
 parameter_list|()
 function_decl|;
+name|fixcrlf
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 comment|/* see if the header is over */
 if|if
 condition|(
@@ -331,6 +352,13 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|fixcrlf
+argument_list|(
+name|p
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -399,6 +427,7 @@ index|]
 operator|==
 literal|'\n'
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -412,6 +441,14 @@ argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
+name|fixcrlf
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	**  Collect the body of the message. 	*/
 for|for
 control|(
@@ -452,6 +489,13 @@ name|bp
 init|=
 name|buf
 decl_stmt|;
+name|fixcrlf
+argument_list|(
+name|buf
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 comment|/* check for end-of-message */
 if|if
 condition|(
@@ -598,9 +642,9 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-name|syserr
+name|usrerr
 argument_list|(
-literal|"collect: Out of disk space for temp file"
+literal|"452 Out of disk space for temp file"
 argument_list|)
 expr_stmt|;
 block|}
