@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)kvm_getvfsbyname.c	8.1 (Berkeley) 4/3/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)kvm_getvfsbyname.c	8.1 (Berkeley) 4/3/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +40,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_NEW_VFSCONF
+end_define
 
 begin_include
 include|#
@@ -57,24 +76,6 @@ include|#
 directive|include
 file|<kvm.h>
 end_include
-
-begin_decl_stmt
-name|int
-name|getvfsbyname
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-expr|struct
-name|vfsconf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Given a filesystem name, determine if it is resident in the kernel,  * and if it is resident, return its vfsconf structure.  */
