@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prt3270.c	3.1 (Berkeley) %G%"
+literal|"@(#)prt3270.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,7 +978,7 @@ name|CMD_SNA_READ_MODIFIED
 case|:
 name|putstr
 argument_list|(
-literal|"read_modified command\n"
+literal|"sna_read_modified command\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -987,7 +987,7 @@ name|CMD_SNA_READ_MODIFIED_ALL
 case|:
 name|putstr
 argument_list|(
-literal|"read_modified command\n"
+literal|"sna_read_modified_all command\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -996,7 +996,7 @@ name|CMD_READ_BUFFER
 case|:
 name|putstr
 argument_list|(
-literal|"read_modified command\n"
+literal|"read_buffer command\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1005,7 +1005,7 @@ name|CMD_SNA_READ_BUFFER
 case|:
 name|putstr
 argument_list|(
-literal|"read_modified command\n"
+literal|"sna_read_buffer command\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2169,7 +2169,7 @@ block|{
 name|int
 name|location
 decl_stmt|;
-name|int
+name|char
 name|new
 decl_stmt|;
 name|int
