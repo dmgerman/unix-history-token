@@ -103,6 +103,17 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
+name|reset
+function_decl|)
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|dmainit
 function_decl|)
 parameter_list|(
