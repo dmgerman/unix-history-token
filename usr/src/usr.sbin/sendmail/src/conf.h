@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)conf.h	5.1 (Berkeley) %G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)conf.h	5.2 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -15,7 +15,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINE
-value|512
+value|1024
 end_define
 
 begin_comment
@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|MAXNAME
-value|128
+value|256
 end_define
 
 begin_comment
