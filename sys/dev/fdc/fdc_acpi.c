@@ -635,10 +635,6 @@ operator|->
 name|Type
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|ENXIO
-expr_stmt|;
 goto|goto
 name|out
 goto|;
