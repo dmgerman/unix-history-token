@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.19 83/12/21"
+literal|"@(#)ttgeneric.c	3.20 84/01/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,18 +261,14 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|gen_GS
+name|gen_AS
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* graphics */
-end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|gen_GE
+name|gen_AE
 decl_stmt|;
 end_decl_stmt
 
@@ -514,22 +510,22 @@ condition|)
 block|{
 if|if
 condition|(
-name|gen_GS
+name|gen_AS
 condition|)
 name|ps
 argument_list|(
-name|gen_GS
+name|gen_AS
 argument_list|)
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|gen_GE
+name|gen_AE
 condition|)
 name|ps
 argument_list|(
-name|gen_GE
+name|gen_AE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1579,6 +1575,20 @@ argument_list|(
 literal|"nl"
 argument_list|)
 expr_stmt|;
+name|gen_AS
+operator|=
+name|tt_xgetstr
+argument_list|(
+literal|"as"
+argument_list|)
+expr_stmt|;
+name|gen_AE
+operator|=
+name|tt_xgetstr
+argument_list|(
+literal|"ae"
+argument_list|)
+expr_stmt|;
 name|gen_MI
 operator|=
 name|tgetflag
@@ -1827,6 +1837,16 @@ operator|.
 name|tt_availmodes
 operator||=
 name|WWM_UL
+expr_stmt|;
+if|if
+condition|(
+name|gen_AS
+condition|)
+name|tt
+operator|.
+name|tt_availmodes
+operator||=
+name|WWM_GRP
 expr_stmt|;
 name|tt
 operator|.
