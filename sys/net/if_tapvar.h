@@ -64,6 +64,13 @@ define|#
 directive|define
 name|TAP_VMNET
 value|(1<< 4)
+name|u_int8_t
+name|ether_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* ether addr of the remote side */
 name|pid_t
 name|tap_pid
 decl_stmt|;
