@@ -180,7 +180,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AHA_2902_04_10_15_20_30C
+name|ID_AHA_2902_04_10_15_20C_30C
 value|0x5078900478509004ull
 end_define
 
@@ -1115,11 +1115,11 @@ init|=
 block|{
 comment|/* aic7850 based controllers */
 block|{
-name|ID_AHA_2902_04_10_15_20_30C
+name|ID_AHA_2902_04_10_15_20C_30C
 block|,
 name|ID_ALL_MASK
 block|,
-literal|"Adaptec 2902/04/10/15/20/30C SCSI adapter"
+literal|"Adaptec 2902/04/10/15/20C/30C SCSI adapter"
 block|,
 name|ahc_aic785X_setup
 block|}
