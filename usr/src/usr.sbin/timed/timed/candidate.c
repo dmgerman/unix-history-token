@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)candidate.c	1.3 (Berkeley) %G%"
+literal|"@(#)candidate.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,6 +199,12 @@ operator|.
 name|tsp_name
 argument_list|,
 name|hostname
+argument_list|)
+expr_stmt|;
+name|bytenetorder
+argument_list|(
+operator|&
+name|msg
 argument_list|)
 expr_stmt|;
 name|broadcast

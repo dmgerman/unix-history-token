@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)broadcast.c	1.3 (Berkeley) %G%"
+literal|"@(#)broadcast.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,20 +78,11 @@ name|struct
 name|in_addr
 name|broadcastaddr
 decl_stmt|;
-name|int
-name|bytenetorder
-parameter_list|()
-function_decl|;
 name|msg
 operator|->
 name|tsp_vers
 operator|=
 name|TSPVERSION
-expr_stmt|;
-name|bytenetorder
-argument_list|(
-name|msg
-argument_list|)
 expr_stmt|;
 name|server
 operator|.

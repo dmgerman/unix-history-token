@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acksend.c	1.2 (Berkeley) %G%"
+literal|"@(#)acksend.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,21 @@ name|server
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|trace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|fd
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Acksend implements reliable datagram transmission by using sequence   * numbers and retransmission when necessary.  * `name' is set to name of destination whose address is in global   * variable `server'.  * If `name' is ANYADDR, this routine implements reliable broadcast.  */
 end_comment
@@ -152,22 +167,70 @@ modifier|*
 name|readmsg
 parameter_list|()
 function_decl|;
-name|int
-name|bytenetorder
-parameter_list|()
-function_decl|;
 name|count
 operator|=
 literal|0
 expr_stmt|;
-do|do
-block|{
+name|message
+operator|->
+name|tsp_vers
+operator|=
+name|TSPVERSION
+expr_stmt|;
 name|message
 operator|->
 name|tsp_seq
 operator|=
 name|sequence
 expr_stmt|;
+if|if
+condition|(
+name|trace
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"acksend: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|ANYADDR
+condition|)
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"broadcast: "
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|print
+argument_list|(
+name|message
+argument_list|)
+expr_stmt|;
+block|}
+name|bytenetorder
+argument_list|(
+name|message
+argument_list|)
+expr_stmt|;
+do|do
+block|{
 if|if
 condition|(
 name|name
@@ -183,17 +246,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|message
-operator|->
-name|tsp_vers
-operator|=
-name|TSPVERSION
-expr_stmt|;
-name|bytenetorder
-argument_list|(
-name|message
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sendto
@@ -231,7 +283,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"sendto: %m"
+literal|"acksend: sendto: %m"
 argument_list|)
 expr_stmt|;
 name|exit
