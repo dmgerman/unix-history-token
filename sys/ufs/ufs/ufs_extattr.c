@@ -3401,7 +3401,7 @@ end_comment
 
 begin_function
 name|int
-name|ufs_vop_getextattr
+name|ufs_getextattr
 parameter_list|(
 name|struct
 name|vop_getextattr_args
@@ -4098,7 +4098,7 @@ end_comment
 
 begin_function
 name|int
-name|ufs_vop_setextattr
+name|ufs_setextattr
 parameter_list|(
 name|struct
 name|vop_setextattr_args
