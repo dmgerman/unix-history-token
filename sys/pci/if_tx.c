@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.17 1998/11/09 09:34:00 peter Exp $ */
+comment|/*	$Id: if_tx.c,v 1.18 1998/12/07 21:58:46 archie Exp $ */
 end_comment
 
 begin_comment
@@ -574,6 +574,7 @@ operator|(
 expr|struct
 name|ifnet
 operator|*
+specifier|const
 operator|)
 argument_list|)
 decl_stmt|;
