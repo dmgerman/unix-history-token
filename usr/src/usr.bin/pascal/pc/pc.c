@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.9 %G%"
+literal|"@(#)pc.c 3.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -717,7 +717,7 @@ literal|'2'
 case|:
 name|pc2
 operator|=
-literal|"/usr/src/cmd/pc2/a.out"
+literal|"/usr/src/cmd/pascal/pc2"
 expr_stmt|;
 continue|continue;
 case|case
@@ -725,7 +725,7 @@ literal|'3'
 case|:
 name|pc3
 operator|=
-literal|"/usr/src/cmd/pc3/a.out"
+literal|"/usr/src/cmd/pascal/pc3"
 expr_stmt|;
 continue|continue;
 case|case
