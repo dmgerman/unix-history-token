@@ -1644,20 +1644,14 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
-literal|"%c"
+literal|"\nwtmp begins %c\n"
 argument_list|,
 name|tm
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nwtmp begins %10.10s %5.5s \n"
-argument_list|,
 name|ct
-argument_list|,
-name|ct
-operator|+
-literal|11
 argument_list|)
 expr_stmt|;
 block|}
