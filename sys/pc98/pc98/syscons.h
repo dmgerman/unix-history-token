@@ -1100,7 +1100,9 @@ begin_function_decl
 name|void
 name|load_palette
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|palette
 parameter_list|)
 function_decl|;
 end_function_decl
