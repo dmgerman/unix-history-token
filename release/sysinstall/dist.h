@@ -469,22 +469,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SRC
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XF86_CSRC
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_XF86_MISC_ALL
-value|0x3FFF
+value|0x0FFF
 end_define
 
 begin_define

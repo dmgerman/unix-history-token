@@ -6172,52 +6172,6 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|" sources"
-block|,
-literal|"XFree86 3.3.5 standard sources"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_SRC
-block|}
-block|,
-block|{
-literal|" csources"
-block|,
-literal|"XFree86 3.3.5 contrib sources"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|XF86Dists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_XF86_CSRC
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
