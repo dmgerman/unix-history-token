@@ -885,6 +885,9 @@ name|printf
 argument_list|(
 literal|"symbols=[0x%lx+0x%lx"
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ehdr
@@ -974,6 +977,9 @@ name|printf
 argument_list|(
 literal|"+0x%lx+0x%x]"
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 name|ss
