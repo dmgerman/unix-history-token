@@ -1938,6 +1938,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_HANDLE
+name|acpi_GetReference
+parameter_list|(
+name|ACPI_HANDLE
+name|scope
+parameter_list|,
+name|ACPI_OBJECT
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
