@@ -2641,6 +2641,27 @@ end_function
 
 begin_function
 name|usbd_status
+name|usbd_abort_default_pipe
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|usbd_abort_pipe
+argument_list|(
+name|dev
+operator|->
+name|default_pipe
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|usbd_status
 name|usbd_clear_endpoint_stall
 parameter_list|(
 name|usbd_pipe_handle

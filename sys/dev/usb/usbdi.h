@@ -408,6 +408,15 @@ end_function_decl
 
 begin_function_decl
 name|usbd_status
+name|usbd_abort_default_pipe
+parameter_list|(
+name|usbd_device_handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usbd_status
 name|usbd_clear_endpoint_stall
 parameter_list|(
 name|usbd_pipe_handle
