@@ -1667,7 +1667,6 @@ name|bcmp
 argument_list|(
 operator|(
 name|caddr_t
-operator|*
 operator|)
 name|info
 operator|.
@@ -1680,7 +1679,6 @@ literal|1
 argument_list|,
 operator|(
 name|caddr_t
-operator|*
 operator|)
 name|t
 operator|->
