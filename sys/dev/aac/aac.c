@@ -6735,7 +6735,7 @@ name|aac_fib
 argument_list|)
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -6815,7 +6815,7 @@ comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
