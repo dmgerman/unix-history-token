@@ -2526,6 +2526,12 @@ begin_comment
 comment|/* Must initialize before CAM layer picks up our HBA driver */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ASR_VERY_BROKEN
+end_ifdef
+
 begin_macro
 name|SYSINIT
 argument_list|(
@@ -2540,6 +2546,11 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* I2O support routines */
