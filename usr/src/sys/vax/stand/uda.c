@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.5	82/12/30	*/
+comment|/*	uda.c	4.6	83/02/16	*/
 end_comment
 
 begin_comment
@@ -99,7 +99,7 @@ name|udastd
 index|[]
 init|=
 block|{
-literal|0777550
+literal|0772550
 block|}
 decl_stmt|;
 end_decl_stmt
