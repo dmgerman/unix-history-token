@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_pty.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty_pty.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -192,6 +192,14 @@ end_decl_stmt
 begin_comment
 comment|/* for pstat -t */
 end_comment
+
+begin_decl_stmt
+name|int
+name|ptydebug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -496,6 +504,13 @@ name|t_state
 operator||=
 name|TS_WOPEN
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|FNDELAY
+condition|)
+break|break;
 name|sleep
 argument_list|(
 operator|(
@@ -527,6 +542,8 @@ operator|(
 name|dev
 operator|,
 name|tp
+operator|,
+name|flag
 operator|)
 expr_stmt|;
 name|ptcwakeup
@@ -621,6 +638,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -793,11 +812,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|tp
-operator|->
-name|t_state
+name|flag
 operator|&
-name|TS_NBIO
+name|FNDELAY
 condition|)
 return|return
 operator|(
@@ -920,6 +937,8 @@ operator|(
 name|tp
 operator|,
 name|uio
+operator|,
+name|flag
 operator|)
 expr_stmt|;
 name|ptcwakeup
@@ -947,6 +966,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -1054,6 +1075,8 @@ operator|(
 name|tp
 operator|,
 name|uio
+operator|,
+name|flag
 operator|)
 operator|)
 return|;
@@ -1271,6 +1294,21 @@ operator|~
 name|PF_WCOLL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ptydebug
+condition|)
+name|printf
+argument_list|(
+literal|"WAKEUP c_cf %d\n"
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -1505,6 +1543,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -1821,22 +1861,36 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EIO
+literal|0
 operator|)
 return|;
+comment|/* EOF */
 if|if
 condition|(
-name|pti
-operator|->
-name|pt_flags
+name|flag
 operator|&
-name|PF_NBIO
+name|FNDELAY
 condition|)
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+if|if
+condition|(
+name|ptydebug
+condition|)
+name|printf
+argument_list|(
+literal|"SLEEP(1) c_cf %d\n"
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
 name|sleep
 argument_list|(
 operator|(
@@ -2518,6 +2572,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -2998,6 +3054,8 @@ operator|(
 operator|*
 name|cp
 operator|++
+operator|&
+literal|0377
 operator|,
 name|tp
 operator|)
@@ -3041,11 +3099,19 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|pti
 operator|->
 name|pt_flags
 operator|&
 name|PF_NBIO
+operator|)
+operator|||
+operator|(
+name|flag
+operator|&
+name|FNDELAY
+operator|)
 condition|)
 block|{
 name|iov
@@ -3089,6 +3155,21 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|ptydebug
+condition|)
+name|printf
+argument_list|(
+literal|"SLEEP(2) c_cf %d\n"
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
 name|sleep
 argument_list|(
 operator|(
@@ -4256,6 +4337,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|tp
+argument_list|,
+name|flag
 argument_list|)
 expr_stmt|;
 name|error
