@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.35	82/06/15	*/
+comment|/*	if_imp.c	4.36	82/06/15	*/
 end_comment
 
 begin_include
@@ -465,16 +465,6 @@ expr_stmt|;
 name|impnoops
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|if_rtinit
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|imp_if
-argument_list|,
-name|RTF_UP
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1067,6 +1057,16 @@ operator|.
 name|if_flags
 operator||=
 name|IFF_UP
+expr_stmt|;
+name|if_rtinit
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|imp_if
+argument_list|,
+name|RTF_UP
+argument_list|)
 expr_stmt|;
 goto|goto
 name|drop
