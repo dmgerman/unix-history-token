@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwupdate.c	3.20 (Berkeley) %G%"
+literal|"@(#)wwupdate.c	3.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +146,13 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|scan_bot
+operator|-
+name|scan_top
+operator|>
+literal|1
+operator|&&
+operator|(
 name|tt
 operator|.
 name|tt_clreos
@@ -157,6 +164,7 @@ operator|.
 name|tt_clear
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 name|int
@@ -165,7 +173,7 @@ init|=
 name|tt
 operator|.
 name|tt_clreos
-operator|==
+operator|!=
 literal|0
 condition|?
 name|scan_top
@@ -697,7 +705,7 @@ index|[
 name|i
 operator|++
 index|]
-operator|=
+operator||=
 name|WWU_TOUCHED
 expr_stmt|;
 name|u
