@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  * OMRON: $Id: cpu.h,v 1.2 92/06/14 06:27:54 moti Exp $  *  *	@(#)cpu.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  * OMRON: $Id: cpu.h,v 1.2 92/06/14 06:27:54 moti Exp $  *  * from: hp300/include/cpu.h   7.12 (Berkeley) 7/8/92  *  *	@(#)cpu.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,50 +19,6 @@ end_define
 
 begin_comment
 comment|/* copy sigcode above user stack in exec */
-end_comment
-
-begin_comment
-comment|/*  * function vs. inline configuration;  * these are defined to get generic functions  * rather than inline or machine-dependent implementations  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_MINMAX
-end_define
-
-begin_comment
-comment|/* need {,i,l,ul}{min,max} functions */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_FFS
-end_undef
-
-begin_comment
-comment|/* don't need ffs function */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_BCMP
-end_undef
-
-begin_comment
-comment|/* don't need bcmp function */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|NEED_STRLEN
-end_undef
-
-begin_comment
-comment|/* don't need strlen function */
 end_comment
 
 begin_define
@@ -105,25 +61,32 @@ value|(p)->p_md.md_regs[SP] = ap
 end_define
 
 begin_comment
-comment|/*  * Arguments to hardclock, softclock and gatherstats  * encapsulate the previous machine state in an opaque  * clockframe; for 68k, use just what the hardware  * leaves on the stack.  */
+comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  One the 68k, we use  * what the hardware pushes on an interrupt (but we pad the sr to a  * longword boundary).  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|intrframe
+name|clockframe
 block|{
-name|char
-modifier|*
+name|u_short
+name|pad
+decl_stmt|;
+comment|/* pad to get stack aligned */
+name|u_short
+name|sr
+decl_stmt|;
+comment|/* sr at time of interrupt */
+name|u_long
 name|pc
 decl_stmt|;
-name|int
-name|ps
+comment|/* pc at time of interrupt */
+name|u_short
+name|vo
 decl_stmt|;
+comment|/* vector offset (4-word frame) */
 block|}
-name|clockframe
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -132,7 +95,7 @@ name|CLKF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
-value|(((framep)->ps& PSL_S) == 0)
+value|(((framep)->sr& PSL_S) == 0)
 end_define
 
 begin_define
@@ -142,7 +105,7 @@ name|CLKF_BASEPRI
 parameter_list|(
 name|framep
 parameter_list|)
-value|(((framep)->ps& PSL_IPL7) == 0)
+value|(((framep)->sr& PSL_IPL) == 0)
 end_define
 
 begin_define
@@ -154,6 +117,54 @@ name|framep
 parameter_list|)
 value|((framep)->pc)
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* We would like to do it this way... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLKF_INTR
+parameter_list|(
+name|framep
+parameter_list|)
+value|(((framep)->sr& PSL_M) == 0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* but until we start using PSL_M, we have to do this instead */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLKF_INTR
+parameter_list|(
+name|framep
+parameter_list|)
+value|(0)
+end_define
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  */
@@ -168,17 +179,15 @@ value|{ want_resched++; aston(); }
 end_define
 
 begin_comment
-comment|/*  * Give a profiling tick to the current process from the softclock  * interrupt.  On 68k, request an ast to send us through trap(),  * marking the proc as needing a profiling tick.  */
+comment|/*  * Give a profiling tick to the current process when the user profiling  * buffer pages are invalid.  On the 68k, request an ast to send us  * through trap, marking the proc as needing a profiling tick.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|profile_tick
+name|need_proftick
 parameter_list|(
 name|p
-parameter_list|,
-name|framep
 parameter_list|)
 value|{ (p)->p_flag |= SOWEUPC; aston(); }
 end_define

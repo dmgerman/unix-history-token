@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * OMRON: $Id: machdep.c,v 1.3 92/06/14 06:17:12 moti Exp $  *  * from: hp300/hp300/machdep.c	7.28 (Berkeley) 6/5/92  *  *	@(#)machdep.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.63 91/04/24$  * OMRON: $Id: machdep.c,v 1.3 92/06/14 06:17:12 moti Exp $  *  * from: hp300/hp300/machdep.c  7.29 (Berkeley) 7/8/92  *  *	@(#)machdep.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3434,67 +3434,6 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
-name|microtime
-argument_list|(
-name|tvp
-argument_list|)
-specifier|register
-expr|struct
-name|timeval
-operator|*
-name|tvp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
-operator|*
-name|tvp
-operator|=
-name|time
-expr_stmt|;
-name|tvp
-operator|->
-name|tv_usec
-operator|+=
-name|tick
-expr_stmt|;
-while|while
-condition|(
-name|tvp
-operator|->
-name|tv_usec
-operator|>
-literal|1000000
-condition|)
-block|{
-name|tvp
-operator|->
-name|tv_sec
-operator|++
-expr_stmt|;
-name|tvp
-operator|->
-name|tv_usec
-operator|-=
-literal|1000000
-expr_stmt|;
-block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_macro
 name|initcpu
 argument_list|()
@@ -4104,19 +4043,23 @@ begin_comment
 comment|/* give em half a second */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|candbtimer
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 name|crashandburn
 operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -4206,7 +4149,8 @@ argument_list|(
 name|candbtimer
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  * OMRON: $Id: param.h,v 1.3 92/06/14 06:28:28 moti Exp $  *  * from: hp300/include/param.h	7.8 (Berkeley) 6/28/91  *  *	@(#)param.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  * OMRON: $Id: param.h,v 1.3 92/06/14 06:28:28 moti Exp $  *  * from: hp300/include/param.h	7.12 (Berkeley) 7/8/92  *  *	@(#)param.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -589,6 +589,14 @@ begin_define
 define|#
 directive|define
 name|splclock
+parameter_list|()
+value|spl5()
+end_define
+
+begin_define
+define|#
+directive|define
+name|splstatclock
 parameter_list|()
 value|spl5()
 end_define

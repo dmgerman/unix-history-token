@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  * OMRON: $Id: clock.c,v 1.1 92/05/27 14:24:06 moti Exp $  *  * from: hp300/hp300/clock.c	7.8 (Berkeley) 2/25/92  *  *	@(#)clock.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clock.c 1.18 91/01/21$  * OMRON: $Id: clock.c,v 1.1 92/05/27 14:24:06 moti Exp $  *  * from: hp300/hp300/clock.c    7.14 (Berkeley) 7/8/92  *  *	@(#)clock.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -20,6 +20,13 @@ include|#
 directive|include
 file|"clockreg.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|clock_on
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -103,7 +110,7 @@ comment|/*  * Start the real-time clock.  */
 end_comment
 
 begin_macro
-name|startrtclock
+name|cpu_initclocks
 argument_list|()
 end_macro
 
@@ -219,28 +226,83 @@ argument_list|,
 name|rtcstrings
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*   * Enable clock intrruupt.  */
-end_comment
-
-begin_macro
-name|enablertclock
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|clock_on
-decl_stmt|;
 comment|/* set flag for clockintr. */
 name|clock_on
 operator|=
 literal|1
+expr_stmt|;
+block|}
+end_block
+
+begin_function
+name|void
+name|setstatclockrate
+parameter_list|(
+name|newhz
+parameter_list|)
+name|int
+name|newhz
+decl_stmt|;
+block|{ }
+end_function
+
+begin_expr_stmt
+name|microtime
+argument_list|(
+name|tvp
+argument_list|)
+specifier|register
+expr|struct
+name|timeval
+operator|*
+name|tvp
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+name|int
+name|s
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
+operator|*
+name|tvp
+operator|=
+name|time
+expr_stmt|;
+name|tvp
+operator|->
+name|tv_usec
+operator|+=
+name|tick
+expr_stmt|;
+while|while
+condition|(
+name|tvp
+operator|->
+name|tv_usec
+operator|>
+literal|1000000
+condition|)
+block|{
+name|tvp
+operator|->
+name|tv_sec
+operator|++
+expr_stmt|;
+name|tvp
+operator|->
+name|tv_usec
+operator|-=
+literal|1000000
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block

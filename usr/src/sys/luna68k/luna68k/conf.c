@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.1 (Berkeley) 6/4/92  *  *	@(#)conf.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.13 (Berkeley) 7/9/92  *  *	@(#)conf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -771,26 +771,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* #include "clock.h" cdev_decl(clock); */
-end_comment
-
-begin_comment
-comment|/* open, close, ioctl, map -- XXX should be a map device */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cdev_clock_init
-parameter_list|(
-name|c
-parameter_list|,
-name|n
-parameter_list|)
-value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), (dev_type_read((*))) nullop, \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	(dev_type_select((*))) nullop, dev_init(c,n,map), 0 }
-end_define
-
 begin_expr_stmt
 name|cdev_decl
 argument_list|(
@@ -987,7 +967,7 @@ comment|/* 17 */
 name|cdev_notdef
 argument_list|()
 block|,
-comment|/* 18: mapped clock */
+comment|/* 18 */
 name|cdev_vn_init
 argument_list|(
 name|NVN
