@@ -1557,6 +1557,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|RCFGP
+value|printf
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RCFGP
+value|if (0) printf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|u_int32_t
@@ -1600,6 +1630,23 @@ decl_stmt|;
 name|u_int64_t
 name|paddr
 decl_stmt|;
+name|RCFGP
+argument_list|(
+literal|"CFGREAD %u.%u.%u.%u.%u.%d"
+argument_list|,
+name|bh
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+name|off
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
 name|rvp
 operator|=
 name|data
@@ -1610,14 +1657,19 @@ expr_stmt|;
 if|if
 condition|(
 name|bh
-operator|>
-literal|3
-condition|)
-return|return
+operator|==
 operator|(
-name|data
+name|u_int8_t
 operator|)
-return|;
+operator|-
+literal|1
+condition|)
+name|bh
+operator|=
+name|bus
+operator|>>
+literal|4
+expr_stmt|;
 name|dev
 operator|=
 name|mcpcias
@@ -1635,6 +1687,11 @@ operator|)
 literal|0
 condition|)
 block|{
+name|RCFGP
+argument_list|(
+literal|" (no dev)\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|data
@@ -1648,12 +1705,10 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The bus number being passed is the pci instance number- not 	 * the actual pci bus number. FreeBSD farts bad on this one. 	 */
 name|bus
-operator|=
-literal|0
+operator|&=
+literal|0xf
 expr_stmt|;
-comment|/* No secondaries for the moment */
 comment|/* 	 * There's nothing in slot 0 on a primary bus. 	 */
 if|if
 condition|(
@@ -1671,11 +1726,18 @@ operator|>=
 name|MCPCIA_MAXDEV
 operator|)
 condition|)
+block|{
+name|RCFGP
+argument_list|(
+literal|" (no slot)\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|data
 operator|)
 return|;
+block|}
 name|paddr
 operator|=
 name|bus
@@ -1745,12 +1807,20 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("CFGREAD MID %d %d.%d.%d sz %d off %d -> paddr 0x%x", mcbus_get_mid(dev), bus , slot, func, sz, off, paddr);
-endif|#
-directive|endif
+name|RCFGP
+argument_list|(
+literal|" hose %d MID%d paddr 0x%lx"
+argument_list|,
+name|bh
+argument_list|,
+name|mcbus_get_mid
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|paddr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|badaddr
@@ -1831,12 +1901,15 @@ operator|=
 name|data
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|printf(" data 0x%x -> 0x%x\n", data, rvp);
-endif|#
-directive|endif
+name|RCFGP
+argument_list|(
+literal|" data %x->0x%x\n"
+argument_list|,
+name|data
+argument_list|,
+name|rvp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rvp
@@ -1844,6 +1917,36 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|WCFGP
+value|printf
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|WCFGP
+value|if (0) printf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1887,13 +1990,39 @@ decl_stmt|;
 name|u_int64_t
 name|paddr
 decl_stmt|;
+name|WCFGP
+argument_list|(
+literal|"CFGWRITE %u.%u.%u.%u.%u.%d"
+argument_list|,
+name|bh
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+name|off
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bh
-operator|>
-literal|3
+operator|==
+operator|(
+name|u_int8_t
+operator|)
+operator|-
+literal|1
 condition|)
-return|return;
+name|bh
+operator|=
+name|bus
+operator|>>
+literal|4
+expr_stmt|;
 name|dev
 operator|=
 name|mcpcias
@@ -1911,6 +2040,11 @@ operator|)
 literal|0
 condition|)
 block|{
+name|WCFGP
+argument_list|(
+literal|" (no dev)\n"
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|sc
@@ -1921,15 +2055,14 @@ name|dev
 argument_list|)
 expr_stmt|;
 name|bus
-operator|=
-literal|0
+operator|&=
+literal|0xf
 expr_stmt|;
-comment|/* No secondaries for the moment */
 comment|/* 	 * There's nothing in slot 0 on a primary bus. 	 */
 if|if
 condition|(
 name|bus
-operator|!=
+operator|==
 literal|0
 operator|&&
 operator|(
@@ -1942,7 +2075,14 @@ operator|>=
 name|MCPCIA_MAXDEV
 operator|)
 condition|)
+block|{
+name|WCFGP
+argument_list|(
+literal|" (no slot)\n"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|paddr
 operator|=
 name|bus
@@ -2012,6 +2152,20 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
+name|WCFGP
+argument_list|(
+literal|" hose %d MID%d paddr 0x%lx\n"
+argument_list|,
+name|bh
+argument_list|,
+name|mcbus_get_mid
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|paddr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|badaddr
@@ -2073,12 +2227,6 @@ operator|=
 name|data
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|printf("CFGWRITE MID%d %d.%d.%d sz %d off %d paddr %lx, data %x new_data %x\n", mcbus_get_mid(dev), bus , slot, func, sz, off, paddr, data, new_data);
-endif|#
-directive|endif
 operator|*
 name|dp
 operator|=
