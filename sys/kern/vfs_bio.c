@@ -9820,31 +9820,32 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	biodone:  *  *	Finish I/O on a buffer, optionally calling a completion function.  *	This is usually called from an interrupt so process blocking is  *	not allowed.  *  *	biodone is also responsible for setting B_CACHE in a B_VMIO bp.  *	In a non-VMIO bp, B_CACHE will be set on the next getblk()   *	assuming B_INVAL is clear.  *  *	For the VMIO case, we set B_CACHE if the op was a read and no  *	read error occured, or if the op was a write.  B_CACHE is never  *	set if the buffer is invalid or otherwise uncacheable.  *  *	biodone does not mess with B_INVAL, allowing the I/O routine or the  *	initiator to leave B_INVAL set to brelse the buffer out of existance  *	in the biodone routine.  */
+comment|/*   * Call back function from struct bio back up to struct buf.   * The corresponding initialization lives in sys/conf.h:DEV_STRATEGY().   */
 end_comment
 
 begin_function
 name|void
-name|biodone
+name|bufdonebio
 parameter_list|(
 name|struct
 name|bio
 modifier|*
-name|bip
+name|bp
 parameter_list|)
 block|{
 name|bufdone
 argument_list|(
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
-name|bip
+name|bp
+operator|->
+name|bio_caller2
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  *	bufdone:  *  *	Finish I/O on a buffer, optionally calling a completion function.  *	This is usually called from an interrupt so process blocking is  *	not allowed.  *  *	biodone is also responsible for setting B_CACHE in a B_VMIO bp.  *	In a non-VMIO bp, B_CACHE will be set on the next getblk()   *	assuming B_INVAL is clear.  *  *	For the VMIO case, we set B_CACHE if the op was a read and no  *	read error occured, or if the op was a write.  B_CACHE is never  *	set if the buffer is invalid or otherwise uncacheable.  *  *	biodone does not mess with B_INVAL, allowing the I/O routine or the  *	initiator to leave B_INVAL set to brelse the buffer out of existance  *	in the biodone routine.  */
+end_comment
 
 begin_function
 name|void

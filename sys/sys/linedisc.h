@@ -618,6 +618,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BIO_STRATEGY
+parameter_list|(
+name|bp
+parameter_list|,
+name|dummy
+parameter_list|)
+define|\
+value|do {								\ 	if ((!(bp)->bio_cmd) || ((bp)->bio_cmd& ((bp)->bio_cmd - 1)))	\ 		Debugger("bio_cmd botch");				\ 	(*devsw((bp)->bio_dev)->d_strategy)(bp);			\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEV_STRATEGY
 parameter_list|(
 name|bp
@@ -625,7 +638,7 @@ parameter_list|,
 name|dummy
 parameter_list|)
 define|\
-value|do {								\ 	if ((!(bp)->b_iocmd) || ((bp)->b_iocmd& ((bp)->b_iocmd - 1)))	\ 		Debugger("d_iocmd botch");				\ 	if ((bp)->b_flags& B_PHYS)					\ 		(bp)->b_io.bio_offset = (bp)->b_offset;			\ 	else								\ 		(bp)->b_io.bio_offset = dbtob((bp)->b_blkno);		\ 	(*devsw((bp)->b_dev)->d_strategy)(&(bp)->b_io);			\ 	} while (0)
+value|do {								\ 	if ((bp)->b_flags& B_PHYS)					\ 		(bp)->b_io.bio_offset = (bp)->b_offset;			\ 	else								\ 		(bp)->b_io.bio_offset = dbtob((bp)->b_blkno);		\ 	(bp)->b_io.bio_done = bufdonebio;				\ 	(bp)->b_io.bio_caller2 = (bp);					\ 	BIO_STRATEGY(&(bp)->b_io, dummy);				\ 	} while (0)
 end_define
 
 begin_comment

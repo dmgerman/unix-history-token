@@ -29,6 +29,12 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
+name|bio
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|buf
 struct_decl|;
 end_struct_decl
@@ -185,7 +191,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 operator|)
 argument_list|)
@@ -271,7 +277,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|buf
+name|bio
 operator|*
 operator|)
 argument_list|)
@@ -317,6 +323,28 @@ block|}
 struct|;
 end_struct
 
+begin_function
+specifier|static
+name|__inline__
+name|void
+name|biodone
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|bp
+operator|->
+name|bio_done
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * The buffer header describes an I/O operation in the kernel.  *  * NOTES:  *	b_bufsize, b_bcount.  b_bufsize is the allocation size of the  *	buffer, either DEV_BSIZE or PAGE_SIZE aligned.  b_bcount is the  *	originally requested buffer size and can serve as a bounds check  *	against EOF.  For most, but not all uses, b_bcount == b_bufsize.  *  *	b_dirtyoff, b_dirtyend.  Buffers support piecemeal, unaligned  *	ranges of dirty data that need to be written to backing store.  *	The range is typically clipped at b_bcount ( not b_bufsize ).  *  *	b_resid.  Number of bytes remaining in I/O.  After an I/O operation  *	completes, b_resid is usually 0 indicating 100% success.  */
 end_comment
@@ -345,10 +373,6 @@ name|b_caller1
 value|b_io.bio_caller1
 define|#
 directive|define
-name|b_caller2
-value|b_io.bio_caller2
-define|#
-directive|define
 name|b_data
 value|b_io.bio_data
 define|#
@@ -373,14 +397,6 @@ name|b_iocmd
 value|b_io.bio_cmd
 define|#
 directive|define
-name|b_iodone
-value|b_io.bio_done
-define|#
-directive|define
-name|b_iodone_chain
-value|b_io.bio_done_chain
-define|#
-directive|define
 name|b_ioflags
 value|b_io.bio_flags
 define|#
@@ -391,6 +407,19 @@ define|#
 directive|define
 name|b_resid
 value|b_io.bio_resid
+name|void
+argument_list|(
+argument|*b_iodone
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 name|off_t
 name|b_offset
 decl_stmt|;
@@ -2983,7 +3012,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|biodone
+name|bufdonebio
 name|__P
 argument_list|(
 operator|(
