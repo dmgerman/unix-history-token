@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.0, Fri Oct  6 20:39:21 MSK 1995  *  * $FreeBSD$  */
+comment|/*  * Defines for synchronous PPP/Cisco/Frame Relay link level subroutines.  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (C) 1994-2000 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.0, Fri Oct  6 20:39:21 MSK 1995  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -482,7 +486,7 @@ name|pp_last_sent
 decl_stmt|;
 comment|/* time last packet has been sent */
 name|struct
-name|callout_handle
+name|callout
 name|ch
 index|[
 name|IDX_COUNT
@@ -490,10 +494,15 @@ index|]
 decl_stmt|;
 comment|/* per-proto and if callouts */
 name|struct
-name|callout_handle
+name|callout
 name|pap_my_to_ch
 decl_stmt|;
 comment|/* PAP needs one more... */
+name|struct
+name|callout
+name|keepalive_callout
+decl_stmt|;
+comment|/* keepalive callout */
 name|struct
 name|slcp
 name|lcp
@@ -525,6 +534,14 @@ modifier|*
 name|pp_comp
 decl_stmt|;
 comment|/* for VJ compression */
+name|u_short
+name|fr_dlci
+decl_stmt|;
+comment|/* Frame Relay DLCI number, 16..1023 */
+name|u_char
+name|fr_status
+decl_stmt|;
+comment|/* PVC status, active/new/delete */
 comment|/* 	 * These functions are filled in by sppp_attach(), and are 	 * expected to be used by the lower layer (hardware) drivers 	 * in order to communicate the (un)availability of the 	 * communication link.  Lower layer drivers that are always 	 * ready to communicate (like hardware HDLC) can shortcut 	 * pp_up from pp_tls, and pp_down from pp_tlf. 	 */
 name|void
 function_decl|(
@@ -611,6 +628,28 @@ decl_stmt|;
 name|int
 name|pp_loweri
 decl_stmt|;
+comment|/* Lock */
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* if_start () wrapper */
+name|void
+function_decl|(
+modifier|*
+name|if_start
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+name|struct
+name|callout
+name|ifstart_callout
+decl_stmt|;
+comment|/* if_start () scheduler */
 block|}
 struct|;
 end_struct
@@ -628,6 +667,17 @@ end_define
 
 begin_comment
 comment|/* use keepalive protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PP_FR
+value|0x04
+end_define
+
+begin_comment
+comment|/* use Frame Relay protocol instead of PPP */
 end_comment
 
 begin_comment
@@ -764,6 +814,85 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Internal functions */
+end_comment
+
+begin_function_decl
+name|void
+name|sppp_fr_input
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sppp_fr_header
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|fam
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sppp_fr_keepalive
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sppp_get_ip_addrs
+parameter_list|(
+name|struct
+name|sppp
+modifier|*
+name|sp
+parameter_list|,
+name|u_long
+modifier|*
+name|src
+parameter_list|,
+name|u_long
+modifier|*
+name|dst
+parameter_list|,
+name|u_long
+modifier|*
+name|srcmask
 parameter_list|)
 function_decl|;
 end_function_decl
