@@ -64,6 +64,20 @@ name|cell_t
 typedef|;
 end_typedef
 
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|openfirmware
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|phandle_t

@@ -30,7 +30,6 @@ file|"openfirm.h"
 end_include
 
 begin_function_decl
-specifier|static
 name|int
 function_decl|(
 modifier|*
