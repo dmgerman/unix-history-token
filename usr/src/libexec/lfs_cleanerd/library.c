@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.4 (Berkeley) %G%"
+literal|"@(#)library.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1996,6 +1996,14 @@ name|bi_bp
 operator|=
 name|bp
 expr_stmt|;
+name|bip
+operator|->
+name|bi_version
+operator|=
+name|ifp
+operator|->
+name|if_version
+expr_stmt|;
 name|psegaddr
 operator|+=
 name|db_per_block
@@ -2253,6 +2261,13 @@ name|LFS_IFILE_INUM
 condition|)
 block|{
 name|bp
+operator|->
+name|bi_version
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Ifile version should be 1 */
+name|bp
 operator|++
 expr_stmt|;
 operator|++
@@ -2295,6 +2310,14 @@ name|daddrp
 argument_list|,
 name|bp
 argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|bi_version
+operator|=
+name|ifp
+operator|->
+name|if_version
 expr_stmt|;
 if|if
 condition|(
