@@ -1979,9 +1979,14 @@ name|bio_imask
 operator||=
 name|tty_imask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
 name|update_intr_masks
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
