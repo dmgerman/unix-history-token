@@ -6632,6 +6632,31 @@ operator|(
 literal|"OPTi 82C822 host to PCI Bridge"
 operator|)
 return|;
+comment|/* Texas Instruments -- vendor 0x104c */
+case|case
+literal|0xac50104c
+case|:
+return|return
+operator|(
+literal|"Texas Instruments PCI1410 CardBus controller"
+operator|)
+return|;
+case|case
+literal|0xac51104c
+case|:
+return|return
+operator|(
+literal|"Texas Instruments PCI1420 CardBus controller"
+operator|)
+return|;
+case|case
+literal|0xac52104c
+case|:
+return|return
+operator|(
+literal|"Texas Instruments PCI1451 CardBus controller"
+operator|)
+return|;
 comment|/* NEC -- vendor 0x1033 */
 comment|/* PCI to C-bus bridge */
 comment|/* The following chipsets are PCI to PC98 C-bus bridge. 	 * The C-bus is the 16-bits bus on PC98 and it should be probed as 	 * PCI to ISA bridge.  Because class of the C-bus is not defined, 	 * C-bus bridges are recognized as "other bridge."  To make C-bus 	 * bridge be recognized as ISA bridge, this function returns NULL. 	 */
