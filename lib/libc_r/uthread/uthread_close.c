@@ -97,9 +97,18 @@ index|[
 literal|1
 index|]
 operator|)
+operator|||
+operator|(
+name|_thread_fd_table
+index|[
+name|fd
+index|]
+operator|==
+name|NULL
+operator|)
 condition|)
 block|{
-comment|/* 		 * Don't allow silly programs to close the kernel pipe. 		 */
+comment|/* 		 * Don't allow silly programs to close the kernel pipe 		 * and non-active descriptors. 		 */
 name|errno
 operator|=
 name|EBADF
