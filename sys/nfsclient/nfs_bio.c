@@ -4200,12 +4200,17 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Since this block is being modified, it must be written 		 * again and not just committed.  Since write clustering does 		 * not work for the stage 1 data write, only the stage 2 		 * commit rpc, we have to clear B_CLUSTEROK as well. 		 */
 name|bp
 operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -4302,14 +4307,6 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Since this block is being modified, it must be written 		 * again and not just committed. 		 */
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_NEEDCOMMIT
-expr_stmt|;
 comment|/* 		 * If the lease is non-cachable or IO_SYNC do bwrite(). 		 * 		 * IO_INVAL appears to be unused.  The idea appears to be 		 * to turn off caching in this case.  Very odd.  XXX 		 */
 if|if
 condition|(
@@ -4467,7 +4464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get an nfs cache block.  * Allocate a new one if the block isn't currently in the cache  * and return the block marked busy. If the calling process is  * interrupted by a signal for an interruptible mount point, return  * NULL.  */
+comment|/*  * Get an nfs cache block.  *  * Allocate a new one if the block isn't currently in the cache  * and return the block marked busy. If the calling process is  * interrupted by a signal for an interruptible mount point, return  * NULL.  *  * The caller must carefully deal with the possible B_INVAL state of  * the buffer.  nfs_doio() clears B_INVAL (and nfs_asyncio() clears it  * indirectly), so synchronous reads can be issued without worrying about  * the B_INVAL state.  We have to be a little more careful when dealing  * with writes (see comments in nfs_write()) when extending a file past  * its EOF.  */
 end_comment
 
 begin_function
@@ -6231,7 +6228,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 name|bp
 operator|->
@@ -6428,7 +6429,7 @@ operator|&
 name|must_commit
 argument_list|)
 expr_stmt|;
-comment|/* 		 * When setting B_NEEDCOMMIT also set B_CLUSTEROK to try 		 * to cluster the buffers needing commit.  This will allow 		 * the system to submit a single commit rpc for the whole 		 * cluster. 		 */
+comment|/* 		 * When setting B_NEEDCOMMIT also set B_CLUSTEROK to try 		 * to cluster the buffers needing commit.  This will allow 		 * the system to submit a single commit rpc for the whole 		 * cluster.  We can do this even if the buffer is not 100%  		 * dirty (relative to the NFS blocksize), so we optimize the 		 * append-to-file-case. 		 * 		 * (when clearing B_NEEDCOMMIT, B_CLUSTEROK must also be 		 * cleared because write clustering only works for commit 		 * rpc's, not for the data portion of the write). 		 */
 if|if
 condition|(
 operator|!
@@ -6475,7 +6476,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 block|}
 name|bp

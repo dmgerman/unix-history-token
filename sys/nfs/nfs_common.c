@@ -5927,6 +5927,7 @@ name|va_size
 expr_stmt|;
 block|}
 else|else
+block|{
 name|np
 operator|->
 name|n_size
@@ -5935,6 +5936,7 @@ name|vap
 operator|->
 name|va_size
 expr_stmt|;
+block|}
 name|vnode_pager_setsize
 argument_list|(
 name|vp
@@ -5946,6 +5948,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|np
 operator|->
 name|n_size
@@ -5954,6 +5957,7 @@ name|vap
 operator|->
 name|va_size
 expr_stmt|;
+block|}
 block|}
 name|np
 operator|->
@@ -6414,6 +6418,7 @@ name|va_size
 expr_stmt|;
 block|}
 else|else
+block|{
 name|np
 operator|->
 name|n_size
@@ -6422,6 +6427,7 @@ name|vap
 operator|->
 name|va_size
 expr_stmt|;
+block|}
 name|vnode_pager_setsize
 argument_list|(
 name|vp
@@ -6433,6 +6439,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|np
 operator|->
 name|n_size
@@ -6441,6 +6448,7 @@ name|vap
 operator|->
 name|va_size
 expr_stmt|;
+block|}
 block|}
 name|bcopy
 argument_list|(
@@ -9789,7 +9797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The write verifier has changed (probably due to a server reboot), so all  * B_NEEDCOMMIT blocks will have to be written again. Since they are on the  * dirty block list as B_DELWRI, all this takes is clearing the B_NEEDCOMMIT  * flag. Once done the new write verifier can be set for the mount point.  */
+comment|/*  * The write verifier has changed (probably due to a server reboot), so all  * B_NEEDCOMMIT blocks will have to be written again. Since they are on the  * dirty block list as B_DELWRI, all this takes is clearing the B_NEEDCOMMIT  * and B_CLUSTEROK flags.  Once done the new write verifier can be set for the  * mount point.  *  * B_CLUSTEROK must be cleared along with B_NEEDCOMMIT because stage 1 data   * writes are not clusterable.  */
 end_comment
 
 begin_function
@@ -9929,7 +9937,11 @@ operator|->
 name|b_flags
 operator|&=
 operator|~
+operator|(
 name|B_NEEDCOMMIT
+operator||
+name|B_CLUSTEROK
+operator|)
 expr_stmt|;
 block|}
 block|}

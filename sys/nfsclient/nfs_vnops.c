@@ -15976,6 +15976,8 @@ operator|(
 name|B_NEEDCOMMIT
 operator||
 name|B_WRITEINPROG
+operator||
+name|B_CLUSTEROK
 operator|)
 expr_stmt|;
 if|if
@@ -16266,13 +16268,9 @@ name|bp
 operator|->
 name|b_flags
 operator||=
-operator|(
 name|B_ASYNC
 operator||
 name|B_WRITEINPROG
-operator||
-name|B_NEEDCOMMIT
-operator|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -16782,14 +16780,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX removed, moved to nfs_doio XXX 	 */
-comment|/* 	 * If B_NEEDCOMMIT is set, a commit rpc may do the trick. If not 	 * an actual write will have to be scheduled via. VOP_STRATEGY(). 	 * If B_WRITEINPROG is already set, then push it with a write anyhow. 	 */
-block|if ((oldflags& (B_NEEDCOMMIT | B_WRITEINPROG)) == B_NEEDCOMMIT) { 		off = ((u_quad_t)bp->b_blkno) * DEV_BSIZE + bp->b_dirtyoff; 		bp->b_flags |= B_WRITEINPROG; 		retv = nfs_commit(bp->b_vp, off, bp->b_dirtyend-bp->b_dirtyoff, 			bp->b_wcred, procp); 		bp->b_flags&= ~B_WRITEINPROG; 		if (!retv) { 			bp->b_dirtyoff = bp->b_dirtyend = 0; 			bp->b_flags&= ~B_NEEDCOMMIT; 			biodone(bp); 		} else if (retv == NFSERR_STALEWRITEVERF) { 			nfs_clearcommit(bp->b_vp->v_mount); 		} 	}
-endif|#
-directive|endif
 if|if
 condition|(
 name|force
