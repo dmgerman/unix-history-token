@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.11	%G%"
+literal|"@(#)deliver.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1062,6 +1062,13 @@ begin_comment
 comment|/* **  SENDOFF -- send off call to mailer& collect response. ** **	Parameters: **		m -- mailer descriptor. **		pvp -- parameter vector to send to it. **		editfcn -- function to pipe it through. ** **	Returns: **		exit status of mailer. ** **	Side Effects: **		none. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFORKTRIES
+value|5
+end_define
+
 begin_expr_stmt
 unit|sendoff
 operator|(
@@ -1213,37 +1220,53 @@ return|;
 block|}
 end_if
 
-begin_ifdef
+begin_for
+for|for
+control|(
+name|i
+operator|=
+name|NFORKTRIES
+init|;
+name|i
+operator|--
+operator|>
+literal|0
+condition|;
+control|)
+block|{
 ifdef|#
 directive|ifdef
 name|VFORK
-end_ifdef
-
-begin_expr_stmt
 name|pid
 operator|=
 name|vfork
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_expr_stmt
 name|pid
 operator|=
 name|fork
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+if|if
+condition|(
+name|pid
+operator|>=
+literal|0
+condition|)
+break|break;
+name|sleep
+argument_list|(
+name|NFORKTRIES
+operator|-
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_for
 
 begin_if
 if|if
