@@ -67,6 +67,16 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|long
+name|cp_time
+index|[
+name|CPUSTATES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
 name|tk_cancc
 decl_stmt|;
 end_decl_stmt
