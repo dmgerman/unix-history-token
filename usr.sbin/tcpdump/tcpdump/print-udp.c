@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-udp.c,v 1.37 94/06/10 17:01:42 mccanne Exp $ (LBL)"
+literal|"$Id: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-udp.c,v 1.3 1995/03/08 12:52:45 olah Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -635,6 +635,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KERBEROS_PORT
+value|80
+end_define
+
+begin_comment
+comment|/*XXX*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SUNRPC_PORT
 value|111
 end_define
@@ -681,6 +692,28 @@ define|#
 directive|define
 name|RIP_PORT
 value|520
+end_define
+
+begin_comment
+comment|/*XXX*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERBEROS_SEC_PORT
+value|750
+end_define
+
+begin_comment
+comment|/*XXX*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSVP_ENCAP_PORT
+value|3455
 end_define
 
 begin_comment
@@ -1486,6 +1519,41 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ISPORT
+argument_list|(
+name|KERBEROS_PORT
+argument_list|)
+operator|||
+name|ISPORT
+argument_list|(
+name|KERBEROS_SEC_PORT
+argument_list|)
+condition|)
+name|krb_print
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+operator|(
+name|up
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+if|else if (ISPORT(RSVP_ENCAP_PORT)) 			rsvpUDP_print((const u_char *)(up + 1), length);
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
