@@ -3,15 +3,17 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
-begin_comment
-comment|/* -*-c++-*- */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__msgcath
+name|_MSGCAT_H_
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MSGCAT_H_
+end_define
 
 begin_comment
 comment|/*********************************************************** Copyright 1990, by Alfalfa Software Incorporated, Cambridge, Massachusetts.                          All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that Alfalfa's name not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  ALPHALPHA DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL ALPHALPHA BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  If you make any modifications, bugfixes or other changes to this software we'd appreciate it if you could send a copy to us so we can keep things up-to-date.  Many thanks. 				Kee Hinckley 				Alfalfa Software, Inc. 				267 Allston St., #3 				Cambridge, MA 02139  USA 				nazgul@alfalfa.com  ******************************************************************/
@@ -25,10 +27,6 @@ end_include
 
 begin_comment
 comment|/*  * On disk data structures  */
-end_comment
-
-begin_comment
-comment|/* Edit History  02/25/91   2 nazgul	Byte order flags, upped the version number 11/03/90   1 hamilton	Alphalpha->Alfalfa& OmegaMail->Poste 08/13/90   1 schulert	move from ua to omu */
 end_comment
 
 begin_comment
@@ -66,24 +64,6 @@ name|id
 parameter_list|)
 value|(unsigned int) ( (id<< (sizeof(short) * 8)) \>> (sizeof(short) * 8) )
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|S
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|UI
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|UL
-end_undef
 
 begin_define
 define|#
@@ -369,6 +349,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_MSGCAT_H_ */
+end_comment
 
 end_unit
 
