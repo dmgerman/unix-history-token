@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.7	81/11/29	*/
+comment|/*	protosw.h	4.8	81/12/12	*/
 end_comment
 
 begin_comment
@@ -115,6 +115,17 @@ end_define
 
 begin_comment
 comment|/* 2 slow timeouts per second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PR_FASTHZ
+value|10
+end_define
+
+begin_comment
+comment|/* 10 fast timeouts per second */
 end_comment
 
 begin_comment
