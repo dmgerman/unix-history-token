@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.9 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,16 +101,6 @@ end_define
 begin_comment
 comment|/* manifest */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PRIMASK
-parameter_list|(
-name|p
-parameter_list|)
-value|(1<< ((p)& LOG_PRIMASK))
-end_define
 
 begin_define
 define|#
@@ -335,7 +325,7 @@ operator|>=
 name|LOG_NFACILITIES
 operator|||
 operator|(
-name|PRIMASK
+name|LOG_MASK
 argument_list|(
 name|pri
 argument_list|)
