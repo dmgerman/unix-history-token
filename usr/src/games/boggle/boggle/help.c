@@ -1,6 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vi: set tabstop=4 : */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Barry Brachman.  *  * %sccs.include.redist.c%  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)help.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -21,13 +46,21 @@ directive|include
 file|"bog.h"
 end_include
 
-begin_macro
-name|help
-argument_list|()
-end_macro
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
-begin_block
+begin_function
+name|int
+name|help
+parameter_list|()
 block|{
+specifier|extern
+name|int
+name|nlines
+decl_stmt|;
 name|int
 name|eof
 decl_stmt|,
@@ -47,12 +80,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|extern
-name|int
-name|ncols
-decl_stmt|,
-name|nlines
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -66,10 +93,6 @@ literal|"r"
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -280,20 +303,6 @@ condition|(
 name|eof
 condition|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|version
-decl_stmt|;
-name|wprintw
-argument_list|(
-name|win
-argument_list|,
-literal|"%s"
-argument_list|,
-name|version
-argument_list|)
-expr_stmt|;
 name|wmove
 argument_list|(
 name|win
@@ -342,7 +351,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

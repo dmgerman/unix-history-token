@@ -1,17 +1,56 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vi: set tabstop=4 : */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Barry Brachman.  *  * %sccs.include.redist.c%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1993 The Regents of the University of California.\n\  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/*  * bog - the game of boggle  *  * 6-Mar-89     changed loaddict() to use a large buffer and check for overflow,  *              minor cleanup  */
+comment|/* not lint */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"bog.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)bog.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -22,15 +61,55 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bog.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_decl_stmt
-name|char
-modifier|*
-name|version
-init|=
-literal|"bog V1.3 brachman@ubc.csnet 6-Mar-89"
+specifier|static
+name|int
+name|compar
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +139,7 @@ literal|16
 index|]
 init|=
 block|{
-comment|/*    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F */
+comment|/*        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F */
 block|{
 literal|0
 block|,
@@ -741,12 +820,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIMER
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -759,12 +832,6 @@ name|env
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-endif|TIMER
-end_endif
-
 begin_decl_stmt
 name|long
 name|start_t
@@ -776,12 +843,6 @@ specifier|static
 name|FILE
 modifier|*
 name|dictfp
-init|=
-operator|(
-name|FILE
-operator|*
-operator|)
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -815,33 +876,8 @@ name|tlimit
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|char
-modifier|*
-name|batchword
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getline
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|long
-name|atol
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|long
-name|random
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -853,11 +889,16 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
+name|long
+name|seed
+decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|done
 decl_stmt|,
 name|i
@@ -873,37 +914,21 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|long
-name|seed
-decl_stmt|;
-name|FILE
-modifier|*
-name|opendict
-parameter_list|()
-function_decl|;
+name|batch
+operator|=
 name|debug
+operator|=
+name|reuse
+operator|=
+name|selfuse
+operator|=
+name|sflag
 operator|=
 literal|0
 expr_stmt|;
 name|bspec
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
-expr_stmt|;
-name|reuse
-operator|=
-literal|0
-expr_stmt|;
-name|batch
-operator|=
-literal|0
-expr_stmt|;
-name|selfuse
-operator|=
-literal|0
 expr_stmt|;
 name|minlength
 operator|=
@@ -914,46 +939,26 @@ operator|=
 literal|180
 expr_stmt|;
 comment|/* 3 minutes is standard */
-name|sflag
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|argc
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
+while|while
 condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
 name|argv
-index|[
-name|i
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'-'
+argument_list|,
+literal|"bds:t:w:"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
 condition|)
-block|{
 switch|switch
 condition|(
-name|argv
-index|[
-name|i
-index|]
-index|[
-literal|1
-index|]
+name|ch
 condition|)
 block|{
 case|case
@@ -983,14 +988,7 @@ name|seed
 operator|=
 name|atol
 argument_list|(
-operator|&
-name|argv
-index|[
-name|i
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1004,36 +1002,19 @@ name|tlimit
 operator|=
 name|atoi
 argument_list|(
-operator|&
-name|argv
-index|[
-name|i
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 argument_list|)
 operator|)
 operator|<
 literal|1
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Bad time limit\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"bad time limit"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'w'
@@ -1045,52 +1026,43 @@ name|minlength
 operator|=
 name|atoi
 argument_list|(
-operator|&
-name|argv
-index|[
-name|i
-index|]
-index|[
-literal|2
-index|]
+name|optarg
 argument_list|)
 operator|)
 operator|<
 literal|3
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Min word length must be> 2\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"min word length must be> 2"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
+case|case
+literal|'?'
+case|:
 default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
 block|}
-block|}
-elseif|else
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
 argument_list|(
 name|argv
 index|[
-name|i
+literal|0
 index|]
 argument_list|,
 literal|"+"
@@ -1109,7 +1081,7 @@ name|strcmp
 argument_list|(
 name|argv
 index|[
-name|i
+literal|0
 index|]
 argument_list|,
 literal|"++"
@@ -1128,7 +1100,7 @@ name|islower
 argument_list|(
 name|argv
 index|[
-name|i
+literal|0
 index|]
 index|[
 literal|0
@@ -1142,7 +1114,7 @@ name|strlen
 argument_list|(
 name|argv
 index|[
-name|i
+literal|0
 index|]
 argument_list|)
 operator|!=
@@ -1152,24 +1124,19 @@ block|{
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
 comment|/* This board is assumed to be valid... */
 name|bspec
 operator|=
 name|argv
 index|[
-name|i
+literal|0
 index|]
 expr_stmt|;
 block|}
 else|else
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*NOREACHED*/
-block|}
 block|}
 if|if
 condition|(
@@ -1177,34 +1144,19 @@ name|batch
 operator|&&
 name|bspec
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Must give both -b and a board setup\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"must give both -b and a board setup"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|selfuse
 condition|)
-block|{
 for|for
 control|(
 name|i
@@ -1228,7 +1180,6 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|batch
@@ -1250,10 +1201,6 @@ name|stdin
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 operator|(
@@ -1266,9 +1213,12 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
-else|else
-block|{
 name|setup
 argument_list|(
 name|sflag
@@ -1292,21 +1242,12 @@ name|DICT
 argument_list|)
 operator|)
 operator|==
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't load %s\n"
+literal|"%s"
 argument_list|,
 name|DICT
 argument_list|)
@@ -1333,14 +1274,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't load %s\n"
+literal|"can't load %s"
 argument_list|,
 name|DICT
 argument_list|)
@@ -1364,10 +1300,6 @@ argument_list|)
 expr_stmt|;
 name|dictfp
 operator|=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 endif|#
@@ -1382,14 +1314,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Can't load %s\n"
+literal|"can't load %s"
 argument_list|,
 name|DICTINDEX
 argument_list|)
@@ -1416,15 +1343,16 @@ operator|!=
 literal|' '
 condition|)
 empty_stmt|;
+for|for
+control|(
 name|done
 operator|=
 literal|0
-expr_stmt|;
-while|while
-condition|(
+init|;
 operator|!
 name|done
-condition|)
+condition|;
+control|)
 block|{
 name|newgame
 argument_list|(
@@ -1433,10 +1361,6 @@ argument_list|)
 expr_stmt|;
 name|bspec
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 comment|/* reset for subsequent games */
@@ -1459,14 +1383,12 @@ argument_list|(
 name|stdin
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
-name|int
-name|ch
-decl_stmt|;
 name|ch
 operator|=
 name|inputch
@@ -1525,7 +1447,6 @@ block|}
 name|cleanup
 argument_list|()
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
@@ -1563,11 +1484,6 @@ name|char
 modifier|*
 name|w
 decl_stmt|;
-name|char
-modifier|*
-name|nextword
-parameter_list|()
-function_decl|;
 name|q
 operator|=
 operator|&
@@ -1606,10 +1522,6 @@ name|fp
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1670,10 +1582,6 @@ return|;
 block|}
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
@@ -1684,12 +1592,10 @@ begin_comment
 comment|/*  * Play a single game  * Reset the word lists from last game  * Keep track of the running stats  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|playgame
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 comment|/* Can't use register variables if setjmp() is used! */
 name|int
@@ -1712,10 +1618,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|int
-name|compar
-parameter_list|()
-function_decl|;
 name|ngames
 operator|++
 expr_stmt|;
@@ -1803,10 +1705,6 @@ argument_list|(
 name|buf
 argument_list|)
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1873,9 +1771,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"%d:%02d"
 argument_list|,
@@ -2102,14 +2005,9 @@ name|MAXPSPACE
 index|]
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Too many words!\n"
+literal|"Too many words!"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -2177,10 +2075,6 @@ index|[
 name|npwords
 index|]
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 comment|/* 	 * These words don't need to be sorted since the dictionary is sorted 	 */
@@ -2199,38 +2093,33 @@ name|results
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check if the given word is present on the board, with the constraint  * that the first letter of the word is adjacent to square 'prev'  * Keep track of the current path of squares for the word  * A 'q' must be followed by a 'u'  * Words must end with a null  * Return 1 on success, -1 on failure  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|checkword
-argument_list|(
-argument|word
-argument_list|,
-argument|prev
-argument_list|,
-argument|path
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|word
+parameter_list|,
+name|prev
+parameter_list|,
+name|path
+parameter_list|)
 name|char
 modifier|*
 name|word
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|prev
 decl_stmt|,
-modifier|*
+decl|*
 name|path
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2485,7 +2374,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * A cube is only adjacent to itself in the adjacency matrix if selfuse 	 * was set, so a cube can't be used twice in succession if only the reuse 	 * flag is set 	 */
+comment|/* 	 * A cube is only adjacent to itself in the adjacency matrix if selfuse 	 * was set, so a cube can't be used twice in succession if only the 	 * reuse flag is set 	 */
 for|for
 control|(
 name|i
@@ -2530,7 +2419,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* If necessary, check if the square has already been used */
+comment|/* 			 * If necessary, check if the square has already 			 * been used. 			 */
 if|if
 condition|(
 operator|!
@@ -2607,21 +2496,16 @@ begin_comment
 comment|/*  * A word is invalid if it is not in the dictionary  * At this point it is already known that the word can be formed from  * the current board  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|validword
-argument_list|(
-argument|word
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|word
+parameter_list|)
 name|char
 modifier|*
 name|word
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2635,11 +2519,6 @@ decl_stmt|,
 modifier|*
 name|w
 decl_stmt|;
-name|char
-modifier|*
-name|nextword
-parameter_list|()
-function_decl|;
 name|j
 operator|=
 name|word
@@ -2698,10 +2577,6 @@ name|dictfp
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2773,10 +2648,6 @@ if|if
 condition|(
 name|dictfp
 operator|!=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 operator|&&
 name|feof
@@ -2796,18 +2667,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check each word in the dictionary against the board  * Delete words from the machine list that the player has found  * Assume both the dictionary and the player's words are already sorted  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|checkdict
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -2887,10 +2756,6 @@ name|dictfp
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2909,7 +2774,7 @@ operator|!=
 name|prevch
 condition|)
 block|{
-comment|/* 			 * If we've moved on to a word with a different first letter 			 * then we can speed things up by skipping all words starting 			 * with a letter that doesn't appear in the cube 			 */
+comment|/* 			 * If we've moved on to a word with a different first 			 * letter then we can speed things up by skipping all 			 * words starting with a letter that doesn't appear in 			 * the cube. 			 */
 name|i
 operator|=
 call|(
@@ -2961,7 +2826,7 @@ name|i
 operator|+
 literal|'a'
 expr_stmt|;
-comment|/* 			 * Fall through if the word's first letter appears in the cube 			 * (i.e., if we can't skip ahead), otherwise seek to the 			 * beginning of words in the dictionary starting with the 			 * next letter (alphabetically) appearing in the cube and then 			 * read the first word 			 */
+comment|/* 			 * Fall through if the word's first letter appears in 			 * the cube (i.e., if we can't skip ahead), otherwise 			 * seek to the beginning of words in the dictionary 			 * starting with the next letter (alphabetically) 			 * appearing in the cube and then read the first word. 			 */
 if|if
 condition|(
 name|i
@@ -2990,14 +2855,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Seek error in checkdict()\n"
+literal|"seek error in checkdict()"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -3064,10 +2924,6 @@ condition|(
 operator|*
 name|pw
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|&&
 operator|(
@@ -3114,14 +2970,9 @@ name|MAXMSPACE
 index|]
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Too many words!\n"
+literal|"too many words!"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -3158,27 +3009,22 @@ condition|)
 empty_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Crank up a new game  * If the argument is non-null then it is assumed to be a legal board spec  * in ascending cube order, oth. make a random board  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|newgame
-argument_list|(
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|b
+parameter_list|)
 name|char
 modifier|*
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -3245,10 +3091,6 @@ if|if
 condition|(
 name|b
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -3557,28 +3399,25 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|compar
-argument_list|(
-argument|p
-argument_list|,
-argument|q
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
+parameter_list|(
+name|p
+parameter_list|,
+name|q
+parameter_list|)
+specifier|const
+name|void
 modifier|*
 name|p
 decl_stmt|,
-modifier|*
-modifier|*
+decl|*
 name|q
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -3587,9 +3426,19 @@ operator|(
 name|strcmp
 argument_list|(
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|p
 argument_list|,
 operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 name|q
 argument_list|)
 operator|)
@@ -3597,12 +3446,10 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -3611,87 +3458,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: bog [-b] [-d] [-s#] [-t#] [-w#] [+[+]] [boardspec]\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-b: 'batch mode' (boardspec must be present)\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-d: debug\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-s#: use # as the random number seed\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-t#: time limit is # seconds\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"-w#: minimum word length is # letters\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"+: can reuse a cube, but not twice in succession\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"++: can reuse cubes arbitrarily\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"boardspec: the first board to use (use 'q' for 'qu')\n"
+literal|"usage: bog [-bd] [-s#] [-t#] [-w#] [+[+]] [boardspec]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3700,7 +3467,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
