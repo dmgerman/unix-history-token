@@ -1923,7 +1923,7 @@ name|td
 operator|->
 name|td_sigstk
 expr_stmt|;
-comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats substruct is set in vm_forkproc. 	 */
+comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 */
 name|p2
 operator|->
 name|p_flag
@@ -2085,6 +2085,17 @@ argument_list|(
 name|p1
 operator|->
 name|p_limit
+argument_list|)
+expr_stmt|;
+name|pstats_fork
+argument_list|(
+name|p1
+operator|->
+name|p_stats
+argument_list|,
+name|p2
+operator|->
+name|p_stats
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
