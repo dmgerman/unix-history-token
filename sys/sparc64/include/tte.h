@@ -234,27 +234,20 @@ begin_define
 define|#
 directive|define
 name|TS_EXEC
-value|(1L<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TS_INIT
 value|(1L<< 4)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_MNG
+name|TS_INIT
 value|(1L<< 3)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_MOD
+name|TS_MNG
 value|(1L<< 2)
 end_define
 
@@ -268,7 +261,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TS_TSB
+name|TS_W
 value|(1L<< 0)
 end_define
 
@@ -375,13 +368,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_MOD
-value|(TS_MOD<< TD_SOFT_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TD_REF
 value|(TS_REF<< TD_SOFT_SHIFT)
 end_define
@@ -389,8 +375,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_TSB
-value|(TS_TSB<< TD_SOFT_SHIFT)
+name|TD_SW
+value|(TS_W<< TD_SOFT_SHIFT)
 end_define
 
 begin_define

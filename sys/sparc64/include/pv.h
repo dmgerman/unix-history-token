@@ -713,6 +713,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|pv_bit_count
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|,
+name|u_long
+name|bits
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pv_bit_set
 parameter_list|(
