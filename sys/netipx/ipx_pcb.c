@@ -130,6 +130,8 @@ argument_list|,
 name|M_PCB
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -143,15 +145,6 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|ipxp
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ipxp
-argument_list|)
-expr_stmt|;
 name|ipxp
 operator|->
 name|ipxp_socket
