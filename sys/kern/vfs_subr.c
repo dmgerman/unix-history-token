@@ -7288,7 +7288,7 @@ operator|==
 operator|&
 name|lbolt
 condition|)
-comment|/* XXXKSE */
+block|{
 name|unsleep
 argument_list|(
 name|td
@@ -7304,6 +7304,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_unlock_spin
 argument_list|(
 operator|&
