@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ftp.c,v 1.5 1998/08/17 09:30:19 des Exp $  */
+comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ftp.c,v 1.6 1998/11/05 19:48:17 des Exp $  */
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ftperr.c"
+file|"ftperr.inc"
 end_include
 
 begin_define
@@ -182,7 +182,8 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|url_t
+name|struct
+name|url
 name|cached_host
 decl_stmt|;
 end_decl_stmt
@@ -227,6 +228,9 @@ name|line
 decl_stmt|;
 name|size_t
 name|len
+decl_stmt|;
+name|int
+name|err
 decl_stmt|;
 if|if
 condition|(
@@ -366,8 +370,7 @@ condition|)
 block|{
 name|_ftp_seterr
 argument_list|(
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -375,8 +378,8 @@ operator|-
 literal|1
 return|;
 block|}
-name|_ftp_seterr
-argument_list|(
+name|err
+operator|=
 operator|(
 name|line
 index|[
@@ -407,6 +410,10 @@ index|]
 operator|-
 literal|'0'
 operator|)
+expr_stmt|;
+name|_ftp_seterr
+argument_list|(
+name|err
 argument_list|)
 expr_stmt|;
 if|if
@@ -416,7 +423,7 @@ condition|)
 operator|*
 name|e
 operator|=
-name|fetchLastErrCode
+name|err
 expr_stmt|;
 return|return
 operator|(
@@ -1560,7 +1567,8 @@ specifier|static
 name|int
 name|_ftp_isconnected
 parameter_list|(
-name|url_t
+name|struct
+name|url
 modifier|*
 name|url
 parameter_list|)
@@ -1638,7 +1646,8 @@ name|FILE
 modifier|*
 name|fetchXxxFTP
 parameter_list|(
-name|url_t
+name|struct
+name|url
 modifier|*
 name|url
 parameter_list|,
@@ -1764,7 +1773,8 @@ name|url
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|url_t
+expr|struct
+name|url
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1807,7 +1817,8 @@ name|FILE
 modifier|*
 name|fetchGetFTP
 parameter_list|(
-name|url_t
+name|struct
+name|url
 modifier|*
 name|url
 parameter_list|,
@@ -1836,7 +1847,8 @@ name|FILE
 modifier|*
 name|fetchPutFTP
 parameter_list|(
-name|url_t
+name|struct
+name|url
 modifier|*
 name|url
 parameter_list|,
@@ -1880,6 +1892,51 @@ literal|"w"
 argument_list|,
 name|flags
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function_decl
+specifier|extern
+name|void
+name|warnx
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|int
+name|fetchStatFTP
+parameter_list|(
+name|struct
+name|url
+modifier|*
+name|url
+parameter_list|,
+name|struct
+name|url_stat
+modifier|*
+name|us
+parameter_list|,
+name|char
+modifier|*
+name|flags
+parameter_list|)
+block|{
+name|warnx
+argument_list|(
+literal|"fetchStatFTP(): not implemented"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function

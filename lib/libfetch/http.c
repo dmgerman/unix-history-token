@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: http.c,v 1.5 1998/08/17 09:30:19 des Exp $  */
+comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: http.c,v 1.6 1998/11/05 19:48:17 des Exp $  */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"httperr.c"
+file|"httperr.inc"
 end_include
 
 begin_ifndef
@@ -1263,7 +1263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * retrieve a file by HTTP  */
+comment|/*  * Retrieve a file by HTTP  */
 end_comment
 
 begin_function
@@ -1271,7 +1271,8 @@ name|FILE
 modifier|*
 name|fetchGetHTTP
 parameter_list|(
-name|url_t
+name|struct
+name|url
 modifier|*
 name|URL
 parameter_list|,
@@ -1762,13 +1763,7 @@ operator|!=
 literal|200
 condition|)
 block|{
-name|fetchLastErrCode
-operator|=
-name|err
-expr_stmt|;
-name|fetchLastErrText
-operator|=
-name|_http_errstring
+name|_http_seterr
 argument_list|(
 name|err
 argument_list|)
@@ -2226,7 +2221,8 @@ name|FILE
 modifier|*
 name|fetchPutHTTP
 parameter_list|(
-name|url_t
+name|struct
+name|url
 modifier|*
 name|URL
 parameter_list|,
@@ -2242,6 +2238,41 @@ argument_list|)
 expr_stmt|;
 return|return
 name|NULL
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Get an HTTP document's metadata  */
+end_comment
+
+begin_function
+name|int
+name|fetchStatHTTP
+parameter_list|(
+name|struct
+name|url
+modifier|*
+name|url
+parameter_list|,
+name|struct
+name|url_stat
+modifier|*
+name|us
+parameter_list|,
+name|char
+modifier|*
+name|flags
+parameter_list|)
+block|{
+name|warnx
+argument_list|(
+literal|"fetchStatHTTP(): not implemented"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function
