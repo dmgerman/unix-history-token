@@ -762,6 +762,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"approx waits/sec:  %lld\n"
+argument_list|,
+name|waited
+operator|/
+name|duration
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"approx wait rate:  %lld\n"
 argument_list|,
 name|waited
