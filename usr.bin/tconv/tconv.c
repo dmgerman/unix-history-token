@@ -126,7 +126,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: tconv.c,v 1.2.6.1 1997/08/14 06:37:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4007,7 +4007,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad terminal name '%s', ingored.\n"
+literal|"bad terminal name '%s', ignored.\n"
 argument_list|,
 name|s
 argument_list|)
@@ -4289,7 +4289,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad terminal name '%s', ingored.\n"
+literal|"bad terminal name '%s', ignored.\n"
 argument_list|,
 name|s
 argument_list|)
