@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.31 (Berkeley) 5/20/95  * $Id: ffs_vfsops.c,v 1.86 1998/09/07 13:17:06 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_vfsops.c	8.31 (Berkeley) 5/20/95  * $Id: ffs_vfsops.c,v 1.87 1998/09/14 19:56:41 sos Exp $  */
 end_comment
 
 begin_include
@@ -377,14 +377,13 @@ name|int
 name|error
 decl_stmt|,
 name|flags
-decl_stmt|;
-name|mode_t
-name|accessmode
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ronly
 init|=
 literal|0
+decl_stmt|;
+name|mode_t
+name|accessmode
 decl_stmt|;
 comment|/* 	 * Use NULL path to flag a root mount 	 */
 if|if
@@ -606,9 +605,7 @@ name|MNT_NOCLUSTERW
 expr_stmt|;
 if|if
 condition|(
-name|fs
-operator|->
-name|fs_ronly
+name|ronly
 operator|==
 literal|0
 operator|&&
@@ -672,6 +669,10 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|ronly
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -723,53 +724,6 @@ name|MNTK_WANTRDWR
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-name|fs
-operator|->
-name|fs_clean
-condition|)
-block|{
-if|if
-condition|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_FORCE
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: %s was not properly dismounted.\n"
-argument_list|,
-name|fs
-operator|->
-name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"WARNING: R/W mount of %s denied. Filesystem is not clean - run fsck.\n"
-argument_list|,
-name|fs
-operator|->
-name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|EPERM
-expr_stmt|;
-goto|goto
-name|error_1
-goto|;
-block|}
-block|}
 comment|/* 			 * If upgrade to read-write by non-root, then verify 			 * that user has necessary permissions on the device. 			 */
 if|if
 condition|(
@@ -837,6 +791,54 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_clean
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_FORCE
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: %s was not properly dismounted\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: R/W mount of %s denied.  Filesystem is not clean - run fsck\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
+name|err
+operator|=
+name|EPERM
+expr_stmt|;
+goto|goto
+name|error_1
+goto|;
+block|}
 block|}
 comment|/* check to see if we need to start softdep */
 if|if
@@ -1385,7 +1387,7 @@ name|MNT_UPDATE
 operator|)
 condition|)
 block|{
-comment|/* update superblock after ro -> rw update */
+comment|/* Update clean flag after changing read-onlyness. */
 name|fs
 operator|=
 name|ump
@@ -1394,9 +1396,8 @@ name|um_fs
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ronly
-operator|&&
+operator|!=
 name|fs
 operator|->
 name|fs_ronly
@@ -1406,12 +1407,26 @@ name|fs
 operator|->
 name|fs_ronly
 operator|=
-literal|0
+name|ronly
 expr_stmt|;
 name|fs
 operator|->
 name|fs_clean
 operator|=
+name|ronly
+operator|&&
+operator|(
+name|fs
+operator|->
+name|fs_flags
+operator|&
+name|FS_UNCLEAN
+operator|)
+operator|==
+literal|0
+condition|?
+literal|1
+else|:
 literal|0
 expr_stmt|;
 name|ffs_sbupdate
@@ -2671,14 +2686,28 @@ name|fs_fmod
 operator|=
 literal|0
 expr_stmt|;
+name|fs
+operator|->
+name|fs_flags
+operator|&=
+operator|~
+name|FS_UNCLEAN
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|fs
 operator|->
 name|fs_clean
+operator|==
+literal|0
 condition|)
 block|{
+name|fs
+operator|->
+name|fs_flags
+operator||=
+name|FS_UNCLEAN
+expr_stmt|;
 if|if
 condition|(
 name|ronly
@@ -2694,7 +2723,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s was not properly dismounted.\n"
+literal|"WARNING: %s was not properly dismounted\n"
 argument_list|,
 name|fs
 operator|->
@@ -2706,7 +2735,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: R/W mount of %s denied. Filesystem is not clean - run fsck.\n"
+literal|"WARNING: R/W mount of %s denied.  Filesystem is not clean - run fsck\n"
 argument_list|,
 name|fs
 operator|->
@@ -3822,6 +3851,14 @@ name|fs
 operator|->
 name|fs_clean
 operator|=
+name|fs
+operator|->
+name|fs_flags
+operator|&
+name|FS_UNCLEAN
+condition|?
+literal|0
+else|:
 literal|1
 expr_stmt|;
 name|error
