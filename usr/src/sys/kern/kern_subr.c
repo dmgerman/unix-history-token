@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_subr.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_subr.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -453,12 +453,6 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_comment
 comment|/*  * Get next character written in by user from uio.  */
 end_comment
@@ -490,6 +484,20 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_resid
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|again
 label|:
 if|if
@@ -497,12 +505,6 @@ condition|(
 name|uio
 operator|->
 name|uio_iovcnt
-operator|<=
-literal|0
-operator|||
-name|uio
-operator|->
-name|uio_resid
 operator|<=
 literal|0
 condition|)
@@ -528,14 +530,24 @@ condition|)
 block|{
 name|uio
 operator|->
-name|uio_iovcnt
-operator|--
-expr_stmt|;
-name|uio
-operator|->
 name|uio_iov
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|--
+name|uio
+operator|->
+name|uio_iovcnt
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 goto|goto
 name|again
 goto|;
@@ -628,11 +640,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
