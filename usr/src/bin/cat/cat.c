@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cat.c	5.15 (Berkeley) %G%"
+literal|"@(#)cat.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1124,7 +1124,12 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"stdout"
+literal|"stdout: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
