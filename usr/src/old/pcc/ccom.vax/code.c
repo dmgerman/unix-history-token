@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)code.c	1.6 (Berkeley) %G%"
+literal|"@(#)code.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,6 +1283,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|ejobcode
 argument_list|(
@@ -1325,6 +1329,10 @@ ifndef|#
 directive|ifndef
 name|aocode
 end_ifndef
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|aocode
@@ -1735,6 +1743,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|fldal
 argument_list|(
@@ -1764,6 +1776,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|fldty
 argument_list|(
@@ -1785,6 +1801,10 @@ comment|/* fix up type of field p */
 empty_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|where
