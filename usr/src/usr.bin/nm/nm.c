@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c	5.7 (Berkeley) %G%"
+literal|"@(#)nm.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,10 +152,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|cmp_value
+name|fcount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|fname
 argument_list|()
 decl_stmt|,
-name|cmp_name
+name|rname
+argument_list|()
+decl_stmt|,
+name|value
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -164,32 +179,13 @@ begin_function_decl
 name|int
 function_decl|(
 modifier|*
-name|sort_func
+name|sfunc
 function_decl|)
 parameter_list|()
 init|=
-name|cmp_name
+name|fname
 function_decl|;
 end_function_decl
-
-begin_enum
-enum|enum
-block|{
-name|FORWARD
-block|,
-name|BACKWARD
-block|}
-name|sort_direction
-init|=
-name|FORWARD
-enum|;
-end_enum
-
-begin_decl_stmt
-name|int
-name|fcount
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* some macros for symbol type (nlist.n_type) handling */
@@ -224,6 +220,14 @@ name|x
 parameter_list|)
 value|((x)& (N_TYPE | N_STAB))
 end_define
+
+begin_function_decl
+name|void
+modifier|*
+name|emalloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * main()  *	parse command line, execute process_file() for each file  *	specified on the command line.  */
@@ -296,9 +300,9 @@ break|break;
 case|case
 literal|'n'
 case|:
-name|sort_func
+name|sfunc
 operator|=
-name|cmp_value
+name|value
 expr_stmt|;
 break|break;
 case|case
@@ -312,7 +316,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|sort_func
+name|sfunc
 operator|=
 name|NULL
 expr_stmt|;
@@ -320,9 +324,9 @@ break|break;
 case|case
 literal|'r'
 case|:
-name|sort_direction
+name|rev
 operator|=
-name|BACKWARD
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -359,6 +363,18 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+name|rev
+operator|&&
+name|sfunc
+operator|==
+name|fname
+condition|)
+name|sfunc
+operator|=
+name|rname
 expr_stmt|;
 if|if
 condition|(
@@ -703,15 +719,7 @@ name|p
 decl_stmt|,
 modifier|*
 name|name
-decl_stmt|,
-modifier|*
-name|emalloc
-argument_list|()
 decl_stmt|;
-name|long
-name|atol
-parameter_list|()
-function_decl|;
 name|name
 operator|=
 name|emalloc
@@ -1181,10 +1189,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|stab
-decl_stmt|,
-modifier|*
-name|emalloc
-argument_list|()
 decl_stmt|;
 comment|/* read a.out header */
 if|if
@@ -1373,11 +1377,6 @@ block|}
 comment|/* get memory for the symbol table */
 name|names
 operator|=
-operator|(
-expr|struct
-name|nlist
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 operator|(
@@ -1732,7 +1731,7 @@ block|}
 comment|/* sort the symbol table if applicable */
 if|if
 condition|(
-name|sort_func
+name|sfunc
 condition|)
 name|qsort
 argument_list|(
@@ -1753,7 +1752,7 @@ operator|*
 name|names
 argument_list|)
 argument_list|,
-name|sort_func
+name|sfunc
 argument_list|)
 expr_stmt|;
 comment|/* print out symbols */
@@ -2311,12 +2310,8 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * cmp_name()  *	compare two symbols by their names  */
-end_comment
-
 begin_macro
-name|cmp_name
+name|fname
 argument_list|(
 argument|a0
 argument_list|,
@@ -2350,10 +2345,6 @@ name|b0
 decl_stmt|;
 return|return
 operator|(
-name|sort_direction
-operator|==
-name|FORWARD
-condition|?
 name|strcmp
 argument_list|(
 name|a
@@ -2368,7 +2359,46 @@ name|n_un
 operator|.
 name|n_name
 argument_list|)
-else|:
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|rname
+argument_list|(
+argument|a0
+argument_list|,
+argument|b0
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|void
+modifier|*
+name|a0
+decl_stmt|,
+modifier|*
+name|b0
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|struct
+name|nlist
+modifier|*
+name|a
+init|=
+name|a0
+decl_stmt|,
+modifier|*
+name|b
+init|=
+name|b0
+decl_stmt|;
+return|return
+operator|(
 name|strcmp
 argument_list|(
 name|b
@@ -2388,12 +2418,8 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * cmp_value()  *	compare two symbols by their values  */
-end_comment
-
 begin_macro
-name|cmp_value
+name|value
 argument_list|(
 argument|a0
 argument_list|,
@@ -2479,6 +2505,11 @@ operator|)
 return|;
 if|if
 condition|(
+name|rev
+condition|)
+block|{
+if|if
+condition|(
 name|a
 operator|->
 name|n_value
@@ -2489,28 +2520,55 @@ name|n_value
 condition|)
 return|return
 operator|(
-name|cmp_name
+name|rname
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|a
+name|a0
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|b
+name|b0
 argument_list|)
 operator|)
 return|;
 return|return
 operator|(
-name|sort_direction
-operator|==
-name|FORWARD
+name|b
+operator|->
+name|n_value
+operator|>
+name|a
+operator|->
+name|n_value
 condition|?
+literal|1
+else|:
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|a
+operator|->
+name|n_value
+operator|==
+name|b
+operator|->
+name|n_value
+condition|)
+return|return
+operator|(
+name|fname
+argument_list|(
+name|a0
+argument_list|,
+name|b0
+argument_list|)
+operator|)
+return|;
+return|return
+operator|(
 name|a
 operator|->
 name|n_value
@@ -2518,21 +2576,19 @@ operator|>
 name|b
 operator|->
 name|n_value
+condition|?
+literal|1
 else|:
-name|a
-operator|->
-name|n_value
-operator|<
-name|b
-operator|->
-name|n_value
+operator|-
+literal|1
 operator|)
 return|;
+block|}
 block|}
 end_block
 
 begin_function
-name|char
+name|void
 modifier|*
 name|emalloc
 parameter_list|(
@@ -2549,17 +2605,18 @@ decl_stmt|;
 comment|/* NOSTRICT */
 if|if
 condition|(
-operator|!
-operator|(
 name|p
 operator|=
 name|malloc
 argument_list|(
 name|size
 argument_list|)
-operator|)
 condition|)
-block|{
+return|return
+operator|(
+name|p
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -2567,7 +2624,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nm: no more memory.\n"
+literal|"nm: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2575,12 +2637,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-return|return
-operator|(
-name|p
-operator|)
-return|;
 block|}
 end_function
 
