@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.43 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3747,6 +3747,11 @@ name|n
 operator|!=
 literal|0
 condition|)
+block|{
+name|WINDOW
+modifier|*
+name|wp
+decl_stmt|;
 name|scrolln
 argument_list|(
 name|win
@@ -3762,6 +3767,33 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Need to repoint any subwindow lines to the rotated 		 * line structured.  		 */
+for|for
+control|(
+name|wp
+operator|=
+name|win
+operator|->
+name|nextp
+init|;
+name|wp
+operator|!=
+name|win
+condition|;
+name|wp
+operator|=
+name|wp
+operator|->
+name|nextp
+control|)
+name|__set_subwin
+argument_list|(
+name|win
+argument_list|,
+name|wp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
