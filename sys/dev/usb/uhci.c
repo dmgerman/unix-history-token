@@ -9712,6 +9712,11 @@ argument_list|,
 name|xfer
 argument_list|)
 expr_stmt|;
+name|usb_transfer_complete
+argument_list|(
+name|xfer
+argument_list|)
+expr_stmt|;
 name|usb_rem_task
 argument_list|(
 name|xfer
