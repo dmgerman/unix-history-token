@@ -816,7 +816,7 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
-literal|" CONTINUE "
+literal|"  OK  "
 argument_list|,
 name|height
 operator|-
@@ -826,7 +826,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|8
+literal|6
 argument_list|,
 name|TRUE
 argument_list|)
@@ -1335,6 +1335,10 @@ case|case
 literal|'k'
 case|:
 case|case
+literal|'\020'
+case|:
+comment|/* ^P */
+case|case
 name|KEY_UP
 case|:
 if|if
@@ -1564,6 +1568,10 @@ comment|/* Next line */
 case|case
 literal|'j'
 case|:
+case|case
+literal|'\016'
+case|:
+comment|/* ^N */
 case|case
 name|KEY_DOWN
 case|:
@@ -3539,6 +3547,8 @@ argument_list|,
 name|first
 argument_list|,
 name|search_term
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|first

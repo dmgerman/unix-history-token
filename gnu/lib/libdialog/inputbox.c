@@ -645,6 +645,8 @@ argument_list|,
 name|first
 argument_list|,
 name|instr
+argument_list|,
+name|DialogInputAttrs
 argument_list|)
 expr_stmt|;
 name|first

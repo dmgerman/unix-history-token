@@ -51,6 +51,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This "secret" global allows you to change the behavior of an input field */
+end_comment
+
+begin_decl_stmt
+name|int
+name|DialogInputAttrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Do some initialization for dialog  */
 end_comment
 
@@ -1450,17 +1460,6 @@ name|label
 operator|+=
 name|temp
 expr_stmt|;
-name|wattrset
-argument_list|(
-name|win
-argument_list|,
-name|selected
-condition|?
-name|button_label_active_attr
-else|:
-name|button_label_inactive_attr
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1508,9 +1507,9 @@ name|win
 argument_list|,
 name|selected
 condition|?
-name|button_label_active_attr
+name|button_active_attr
 else|:
-name|button_label_inactive_attr
+name|button_inactive_attr
 argument_list|)
 expr_stmt|;
 name|waddstr
@@ -1520,17 +1519,6 @@ argument_list|,
 name|label
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-name|wattrset
-argument_list|(
-name|win
-argument_list|,
-name|selected
-condition|?
-name|button_active_attr
-else|:
-name|button_inactive_attr
 argument_list|)
 expr_stmt|;
 name|waddstr

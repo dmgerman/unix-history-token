@@ -566,7 +566,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|4
+literal|6
 argument_list|,
 name|TRUE
 argument_list|)
@@ -1061,7 +1061,7 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
-literal|" CONTINUE "
+literal|"  OK  "
 argument_list|,
 name|height
 operator|-
@@ -1071,7 +1071,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|8
+literal|6
 argument_list|,
 name|TRUE
 argument_list|)
@@ -1229,6 +1229,10 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'\020'
+case|:
+comment|/* ^P */
+case|case
 name|KEY_UP
 case|:
 if|if
@@ -1241,6 +1245,10 @@ name|startline
 operator|--
 expr_stmt|;
 break|break;
+case|case
+literal|'\016'
+case|:
+comment|/* ^N */
 case|case
 name|KEY_DOWN
 case|:
