@@ -99,12 +99,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|cmd_aui
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|cmd_gateway
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -135,7 +138,7 @@ literal|"?"
 block|,
 name|cmd_help
 block|,
-literal|"              this list"
+literal|"                 this list"
 block|}
 block|,
 block|{
@@ -160,6 +163,14 @@ block|,
 name|cmd_server
 block|,
 literal|"<addr>      set TFTP server IP addr"
+block|}
+block|,
+block|{
+literal|"gateway"
+block|,
+name|cmd_gateway
+block|,
+literal|"<addr>      set default router"
 block|}
 block|,
 block|{
@@ -451,6 +462,89 @@ literal|"off"
 else|:
 literal|"on"
 argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/************************************************************************** CMD_GATEWAY - Set routers IP address **************************************************************************/
+end_comment
+
+begin_macro
+name|cmd_gateway
+argument_list|(
+argument|p
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|setip
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|arptable
+index|[
+name|ARP_GATEWAY
+index|]
+operator|.
+name|ipaddr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Server IP address is %I\r\n"
+argument_list|,
+name|arptable
+index|[
+name|ARP_GATEWAY
+index|]
+operator|.
+name|ipaddr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* Need to clear arp entry if we change IP address */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|6
+condition|;
+name|i
+operator|++
+control|)
+name|arptable
+index|[
+name|ARP_GATEWAY
+index|]
+operator|.
+name|node
+index|[
+name|i
+index|]
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_block
