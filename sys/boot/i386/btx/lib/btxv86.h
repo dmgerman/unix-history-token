@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: btxv86.h,v 1.1 1998/09/14 10:37:00 rnordier Exp $  */
+comment|/*  *	$Id: btxv86.h,v 1.2 1998/09/17 23:52:05 msmith Exp $  */
 end_comment
 
 begin_ifndef
@@ -217,8 +217,15 @@ name|__exit
 parameter_list|(
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
 end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
