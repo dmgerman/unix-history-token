@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ch.c	5.3 (Berkeley) %G%"
+literal|"@(#)ch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,13 +395,16 @@ expr_stmt|;
 block|}
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|file
 argument_list|,
 name|pos
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Read the block. 	 * If we read less than a full block, we just return the 	 * partial block and pick up the rest next time. 	 */
@@ -1117,6 +1120,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Cannot allocate enough buffers. 		 * If we don't have ANY, then quit. 		 * Otherwise, just report the error and return. 		 */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|message
@@ -1240,6 +1246,9 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|nnew
 argument_list|,
 sizeof|sizeof
