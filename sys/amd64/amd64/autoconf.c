@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.109 1998/10/10 08:12:22 jkh Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)autoconf.c	7.1 (Berkeley) 5/9/91  *	$Id: autoconf.c,v 1.110 1998/10/26 07:05:34 bde Exp $  */
 end_comment
 
 begin_comment
@@ -251,39 +251,22 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"card.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NCARD
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<pccard/driver.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"scbus.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|configure_first
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -299,20 +282,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|SYSINIT
+begin_decl_stmt
+specifier|static
+name|void
+name|configure_final
+name|__P
 argument_list|(
-argument|configure
-argument_list|,
-argument|SI_SUB_CONFIGURE
-argument_list|,
-argument|SI_ORDER_FIRST
-argument_list|,
-argument|configure
-argument_list|,
-argument|NULL
+operator|(
+name|void
+operator|*
+operator|)
 argument_list|)
-end_macro
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -366,6 +348,62 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|configure1
+argument_list|,
+name|SI_SUB_CONFIGURE
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|configure_first
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* SI_ORDER_SECOND is hookable */
+end_comment
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|configure2
+argument_list|,
+name|SI_SUB_CONFIGURE
+argument_list|,
+name|SI_ORDER_THIRD
+argument_list|,
+name|configure
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* SI_ORDER_MIDDLE is hookable */
+end_comment
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|configure3
+argument_list|,
+name|SI_SUB_CONFIGURE
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|configure_final
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|#
@@ -688,19 +726,6 @@ begin_comment
 comment|/* CD9660 || CD9660_ROOT */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|xpt_init
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -731,18 +756,7 @@ specifier|static
 name|void
 name|configure_start
 parameter_list|()
-block|{
-if|#
-directive|if
-name|NSCBUS
-operator|>
-literal|0
-name|xpt_init
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -760,6 +774,25 @@ end_comment
 begin_function
 specifier|static
 name|void
+name|configure_first
+parameter_list|(
+name|dummy
+parameter_list|)
+name|void
+modifier|*
+name|dummy
+decl_stmt|;
+block|{
+name|configure_start
+argument_list|()
+expr_stmt|;
+comment|/* DDB hook? */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|configure
 parameter_list|(
 name|dummy
@@ -769,12 +802,6 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
-name|configure_start
-argument_list|()
-expr_stmt|;
 comment|/* Allow all routines to decide for themselves if they want intrs */
 comment|/* 	 * XXX Since this cannot be achieved on all architectures, we should 	 * XXX go back to disabling all interrupts until configuration is 	 * XXX completed and switch any devices that rely on the current 	 * XXX behavior to no longer rely on interrupts or to register an 	 * XXX interrupt_driven_config_hook for the task. 	 */
 comment|/* 	 * XXX The above is wrong, because we're implicitly at splhigh(), 	 * XXX and should stay there, so enabling interrupts in the CPU 	 * XXX and the ICU at most gives pending interrupts which just get 	 * XXX in the way. 	 */
@@ -853,20 +880,28 @@ name|safepri
 operator|=
 name|cpl
 expr_stmt|;
-if|#
-directive|if
-name|NCARD
-operator|>
-literal|0
-comment|/* After everyone else has a chance at grabbing resources */
-name|pccard_configure
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|configure_final
+parameter_list|(
+name|dummy
+parameter_list|)
+name|void
+modifier|*
+name|dummy
+decl_stmt|;
+block|{
+name|int
+name|i
+decl_stmt|;
 name|configure_finish
 argument_list|()
 expr_stmt|;
+comment|/* DDB hook? */
 name|cninit_finish
 argument_list|()
 expr_stmt|;
