@@ -26,20 +26,6 @@ file|"i386/xm-i386v.h"
 end_include
 
 begin_comment
-comment|/* Apparently there is inconsistency among various System V's about what    the name of this field is.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|U_FPSTATE
-parameter_list|(
-name|u
-parameter_list|)
-value|u.u_fps.u_fpstate
-end_define
-
-begin_comment
 comment|/* SCO 3.2v2 and later have job control.  */
 end_comment
 
@@ -57,23 +43,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_TERMIOS
-end_define
-
-begin_comment
-comment|/* SCO's assembler doesn't grok dollar signs in identifiers.    So we use dots instead.  This item must be coordinated with G++. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPLUS_MARKER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPLUS_MARKER
-value|'.'
 end_define
 
 end_unit

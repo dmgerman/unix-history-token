@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Dynamic architecture support for GDB, the GNU debugger.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Dynamic architecture support for GDB, the GNU debugger.     Copyright 1998, 1999, 2000, 2002, 2003 Free Software Foundation,    Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,36 @@ directive|define
 name|GDBARCH_UTILS_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|gdbarch
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|frame_info
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|minimal_symbol
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|type
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|gdbarch_info
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* gdbarch trace variable */
 end_comment
@@ -27,58 +57,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Fallback for register convertible. */
+comment|/* Implementation of extract return value that grubs around in the    register cache.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|gdbarch_register_convertible_ftype
-name|generic_register_convertible_not
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|CORE_ADDR
-name|generic_cannot_extract_struct_value_address
-parameter_list|(
-name|char
-modifier|*
-name|dummy
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Helper function for targets that don't know how my arguments are    being passed */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|gdbarch_frame_num_args_ftype
-name|frame_num_args_unknown
+name|gdbarch_extract_return_value_ftype
+name|legacy_extract_return_value
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Implementation of breakpoint from PC using any of the deprecated    macros BREAKPOINT, LITTLE_BREAKPOINT, BIG_BREAPOINT.  For legacy    targets that don't yet implement their own breakpoint_from_pc(). */
+comment|/* Implementation of store return value that grubs the register cache.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|gdbarch_breakpoint_from_pc_ftype
-name|legacy_breakpoint_from_pc
+name|gdbarch_store_return_value_ftype
+name|legacy_store_return_value
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Frameless functions not identifable. */
+comment|/* To return any structure or union type by value, store it at the    address passed as an invisible first argument to the function.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|gdbarch_frameless_function_invocation_ftype
-name|generic_frameless_function_invocation_not
+name|gdbarch_use_struct_convention_ftype
+name|always_use_struct_convention
 decl_stmt|;
 end_decl_stmt
 
@@ -92,41 +99,6 @@ name|gdbarch_return_value_on_stack_ftype
 name|generic_return_value_on_stack_not
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Map onto old REGISTER_NAMES. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|legacy_register_name
-parameter_list|(
-name|int
-name|i
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Accessor for old global function pointer for disassembly. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|legacy_print_insn
-parameter_list|(
-name|bfd_vma
-name|vma
-parameter_list|,
-name|disassemble_info
-modifier|*
-name|info
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Backward compatible call_dummy_words. */
@@ -155,17 +127,6 @@ begin_decl_stmt
 specifier|extern
 name|gdbarch_remote_translate_xfer_address_ftype
 name|generic_remote_translate_xfer_address
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Generic implementation of prologue_frameless_p.  Just calls    SKIP_PROLOG and checks the return value to see if it actually    changed. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|gdbarch_prologue_frameless_p_ftype
-name|generic_prologue_frameless_p
 decl_stmt|;
 end_decl_stmt
 
@@ -238,81 +199,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Helper function for targets that don't know how my arguments are    being passed */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|frame_num_args_unknown
-parameter_list|(
-name|struct
-name|frame_info
-modifier|*
-name|fi
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* The following DEPRECATED interfaces are for pre- multi-arch legacy    targets. */
-end_comment
-
-begin_comment
-comment|/* DEPRECATED pre- multi-arch interface.  Explicitly set the dynamic    target-system-dependent parameters based on bfd_architecture and    machine.  This function is deprecated, use    set_gdbarch_from_arch_machine(). */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|set_architecture_from_arch_mach
-parameter_list|(
-name|enum
-name|bfd_architecture
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* DEPRECATED pre- multi-arch interface.  Notify the target dependent    backend of a change to the selected architecture. A zero return    status indicates that the target did not like the change. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-function_decl|(
-modifier|*
-name|target_architecture_hook
-function_decl|)
-parameter_list|(
-specifier|const
-name|struct
-name|bfd_arch_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Default raw->sim register re-numbering - does nothing. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|default_register_sim_regno
-parameter_list|(
-name|int
-name|reg_nr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Identity function on a CORE_ADDR.  Just returns its parameter.  */
+comment|/* Identity functions on a CORE_ADDR.  Just return the "addr".  */
 end_comment
 
 begin_function_decl
@@ -325,6 +212,13 @@ name|addr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|gdbarch_convert_from_func_ptr_addr_ftype
+name|convert_from_func_ptr_addr_identity
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* No-op conversion of reg to regnum. */
@@ -342,69 +236,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Default frame_args_address and frame_locals_address.  */
+comment|/* Versions of init_frame_pc().  Do nothing; do the default. */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|CORE_ADDR
-name|default_frame_address
-parameter_list|(
-name|struct
-name|frame_info
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Default prepare_to_procced. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|default_prepare_to_proceed
-parameter_list|(
-name|int
-name|select_it
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|generic_prepare_to_proceed
-parameter_list|(
-name|int
-name|select_it
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Versions of init_frame_pc().  Do nothing; do the default. */
-end_comment
-
-begin_function_decl
-name|void
-name|init_frame_pc_noop
-parameter_list|(
-name|int
-name|fromleaf
-parameter_list|,
-name|struct
-name|frame_info
-modifier|*
-name|prev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|init_frame_pc_default
+name|deprecated_init_frame_pc_default
 parameter_list|(
 name|int
 name|fromleaf
@@ -471,7 +309,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Legacy version of target_virtual_frame_pointer().  Assumes that    there is an FP_REGNUM and that it is the same, cooked or raw.  */
+comment|/* Legacy version of target_virtual_frame_pointer().  Assumes that    there is an DEPRECATED_FP_REGNUM and that it is the same, cooked or    raw.  */
 end_comment
 
 begin_decl_stmt
@@ -494,8 +332,39 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|CORE_ADDR
+name|generic_skip_solib_resolver
+parameter_list|(
+name|struct
+name|gdbarch
+modifier|*
+name|gdbarch
+parameter_list|,
+name|CORE_ADDR
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|generic_in_solib_call_trampoline
+parameter_list|(
+name|CORE_ADDR
+name|pc
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|generic_in_solib_return_trampoline
 parameter_list|(
 name|CORE_ADDR
 name|pc
@@ -523,24 +392,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|default_print_float_info
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
-comment|/* Assume all registers are the same size and a size identical to that    of the integer type.  */
+comment|/* Assume that the world is sane, a registers raw and virtual size    both match its type.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|int
-name|generic_register_raw_size
+name|generic_register_size
 parameter_list|(
 name|int
 name|regnum
@@ -549,13 +408,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Assume the virtual size of registers corresponds to the virtual type.  */
+comment|/* Assume that the world is sane, the registers are all adjacent.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|int
-name|generic_register_virtual_size
+name|generic_register_byte
 parameter_list|(
 name|int
 name|regnum
@@ -564,7 +423,161 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Initialize a ``struct info''.  Can't use memset(0) since some    default values are not zero.  */
+comment|/* Prop up old targets that use various IN_SIGTRAMP() macros.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|legacy_pc_in_sigtramp
+parameter_list|(
+name|CORE_ADDR
+name|pc
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* The orginal register_convert*() functions were overloaded.  They    were used to both: convert between virtual and raw register formats    (something that is discouraged); and to convert a register to the    type of a corresponding variable.  These legacy functions preserve    that overloaded behavour in existing targets.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|legacy_convert_register_p
+parameter_list|(
+name|int
+name|regnum
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|legacy_register_to_value
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+name|frame
+parameter_list|,
+name|int
+name|regnum
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|,
+name|void
+modifier|*
+name|to
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|legacy_value_to_register
+parameter_list|(
+name|struct
+name|frame_info
+modifier|*
+name|frame
+parameter_list|,
+name|int
+name|regnum
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|from
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|default_stabs_argument_has_addr
+parameter_list|(
+name|struct
+name|gdbarch
+modifier|*
+name|gdbarch
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* For compatibility with older architectures, returns    (LEGACY_SIM_REGNO_IGNORE) when the register doesn't have a valid    name.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|legacy_register_sim_regno
+parameter_list|(
+name|int
+name|regnum
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the selected byte order, or BFD_ENDIAN_UNKNOWN if no byte    order was explicitly selected.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|enum
+name|bfd_endian
+name|selected_byte_order
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the selected architecture's name, or NULL if no architecture    was explicitly selected.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|selected_architecture_name
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Initialize a ``struct info''.  Can't use memset(0) since some    default values are not zero.  "fill" takes all available    information and fills in any unspecified fields.  */
 end_comment
 
 begin_function_decl
@@ -576,6 +589,64 @@ name|struct
 name|gdbarch_info
 modifier|*
 name|info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|gdbarch_info_fill
+parameter_list|(
+name|struct
+name|gdbarch
+modifier|*
+name|gdbarch
+parameter_list|,
+name|struct
+name|gdbarch_info
+modifier|*
+name|info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Similar to init, but this time fill in the blanks.  Information is    obtained from the specified architecture, global "set ..." options,    and explicitly initialized INFO fields.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|gdbarch_info_fill
+parameter_list|(
+name|struct
+name|gdbarch
+modifier|*
+name|gdbarch
+parameter_list|,
+name|struct
+name|gdbarch_info
+modifier|*
+name|info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return the architecture for ABFD.  If no suitable architecture    could be find, return NULL.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|gdbarch
+modifier|*
+name|gdbarch_from_bfd
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
 parameter_list|)
 function_decl|;
 end_function_decl

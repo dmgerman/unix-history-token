@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Event loop machinery for GDB, the GNU debugger.    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.    Written by Elena Zannoni<ezannoni@cygnus.com> of Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA. */
+comment|/* Event loop machinery for GDB, the GNU debugger.    Copyright 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Elena Zannoni<ezannoni@cygnus.com> of Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_include
@@ -500,18 +500,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|gdb_do_one_event
-parameter_list|(
-name|void
-modifier|*
-name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|check_async_ready
 parameter_list|(
 name|void
@@ -915,7 +903,6 @@ comment|/* Process one high level event.  If nothing is ready at this time,    w
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|gdb_do_one_event
 parameter_list|(
@@ -989,8 +976,10 @@ literal|1
 condition|)
 block|{
 name|int
-name|result
-init|=
+name|gdb_result
+decl_stmt|;
+name|gdb_result
+operator|=
 name|catch_errors
 argument_list|(
 name|gdb_do_one_event
@@ -1001,17 +990,18 @@ literal|""
 argument_list|,
 name|RETURN_MASK_ALL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|result
+name|gdb_result
 operator|<
 literal|0
 condition|)
 break|break;
+comment|/* If we long-jumped out of do_one_event, we probably          didn't get around to resetting the prompt, which leaves          readline in a messed-up state.  Reset it here. */
 if|if
 condition|(
-name|result
+name|gdb_result
 operator|==
 literal|0
 condition|)
@@ -1289,25 +1279,6 @@ name|first_file_handler
 operator|=
 name|file_ptr
 expr_stmt|;
-block|}
-name|file_ptr
-operator|->
-name|proc
-operator|=
-name|proc
-expr_stmt|;
-name|file_ptr
-operator|->
-name|client_data
-operator|=
-name|client_data
-expr_stmt|;
-name|file_ptr
-operator|->
-name|mask
-operator|=
-name|mask
-expr_stmt|;
 if|if
 condition|(
 name|use_poll
@@ -1555,6 +1526,25 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+block|}
+name|file_ptr
+operator|->
+name|proc
+operator|=
+name|proc
+expr_stmt|;
+name|file_ptr
+operator|->
+name|client_data
+operator|=
+name|client_data
+expr_stmt|;
+name|file_ptr
+operator|->
+name|mask
+operator|=
+name|mask
+expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Perform arithmetic and other operations on values, for GDB.    Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Perform arithmetic and other operations on values, for GDB.     Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -63,6 +63,12 @@ directive|include
 file|<math.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"infcall.h"
+end_include
+
 begin_comment
 comment|/* Define whether or not the C operator '/' truncates towards zero for    differently signed operands (truncation direction is undefined in C). */
 end_comment
@@ -117,6 +123,124 @@ end_function_decl
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Given a pointer, return the size of its target.    If the pointer type is void *, then return 1.    If the target type is incomplete, then error out.    This isn't a general purpose function, but just a     helper for value_sub& value_add. */
+end_comment
+
+begin_function
+specifier|static
+name|LONGEST
+name|find_size_for_pointer_math
+parameter_list|(
+name|struct
+name|type
+modifier|*
+name|ptr_type
+parameter_list|)
+block|{
+name|LONGEST
+name|sz
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|struct
+name|type
+modifier|*
+name|ptr_target
+decl_stmt|;
+name|ptr_target
+operator|=
+name|check_typedef
+argument_list|(
+name|TYPE_TARGET_TYPE
+argument_list|(
+name|ptr_type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sz
+operator|=
+name|TYPE_LENGTH
+argument_list|(
+name|ptr_target
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|ptr_type
+argument_list|)
+operator|==
+name|TYPE_CODE_VOID
+condition|)
+name|sz
+operator|=
+literal|1
+expr_stmt|;
+else|else
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|name
+operator|=
+name|TYPE_NAME
+argument_list|(
+name|ptr_target
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+name|name
+operator|=
+name|TYPE_TAG_NAME
+argument_list|(
+name|ptr_target
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"Cannot perform pointer math on incomplete types, "
+literal|"try casting to a known type, or void *."
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"Cannot perform pointer math on incomplete type \"%s\", "
+literal|"try casting to a known type, or void *."
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+name|sz
+return|;
+block|}
+end_function
+
 begin_function
 name|struct
 name|value
@@ -144,9 +268,8 @@ name|value
 modifier|*
 name|valptr
 decl_stmt|;
-specifier|register
-name|int
-name|len
+name|LONGEST
+name|sz
 decl_stmt|;
 name|struct
 name|type
@@ -268,30 +391,13 @@ operator|=
 name|type2
 expr_stmt|;
 block|}
-name|len
+name|sz
 operator|=
-name|TYPE_LENGTH
-argument_list|(
-name|check_typedef
-argument_list|(
-name|TYPE_TARGET_TYPE
+name|find_size_for_pointer_math
 argument_list|(
 name|valptrtype
 argument_list|)
-argument_list|)
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-condition|)
-name|len
-operator|=
-literal|1
-expr_stmt|;
-comment|/* For (void *) */
 name|retval
 operator|=
 name|value_from_pointer
@@ -304,7 +410,7 @@ name|valptr
 argument_list|)
 operator|+
 operator|(
-name|len
+name|sz
 operator|*
 name|value_as_long
 argument_list|(
@@ -419,15 +525,9 @@ comment|/* pointer - integer.  */
 name|LONGEST
 name|sz
 init|=
-name|TYPE_LENGTH
-argument_list|(
-name|check_typedef
-argument_list|(
-name|TYPE_TARGET_TYPE
+name|find_size_for_pointer_math
 argument_list|(
 name|type1
-argument_list|)
-argument_list|)
 argument_list|)
 decl_stmt|;
 return|return
@@ -1144,6 +1244,16 @@ name|v
 argument_list|)
 operator|=
 name|VALUE_ADDRESS
+argument_list|(
+name|array
+argument_list|)
+expr_stmt|;
+name|VALUE_REGNO
+argument_list|(
+name|v
+argument_list|)
+operator|=
+name|VALUE_REGNO
 argument_list|(
 name|array
 argument_list|)
@@ -3290,7 +3400,7 @@ name|error
 argument_list|(
 literal|"Cannot perform exponentiation: %s"
 argument_list|,
-name|strerror
+name|safe_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -3485,7 +3595,7 @@ block|}
 else|else
 comment|/* Integral operations here.  */
 comment|/* FIXME:  Also mixed integral/booleans, with result an integer. */
-comment|/* FIXME: This implements ANSI C rules (also correct for C++).        What about FORTRAN and chill?  */
+comment|/* FIXME: This implements ANSI C rules (also correct for C++).        What about FORTRAN and (the deleted) chill ?  */
 block|{
 name|unsigned
 name|int
@@ -3761,7 +3871,7 @@ name|error
 argument_list|(
 literal|"Cannot perform exponentiation: %s"
 argument_list|,
-name|strerror
+name|safe_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -3782,29 +3892,6 @@ case|case
 name|BINOP_MOD
 case|:
 comment|/* Knuth 1.2.4, integer only.  Note that unlike the C '%' op, 	         v1 mod 0 has a defined value, v1. */
-comment|/* Chill specifies that v2 must be> 0, so check for that. */
-if|if
-condition|(
-name|current_language
-operator|->
-name|la_language
-operator|==
-name|language_chill
-operator|&&
-name|value_as_long
-argument_list|(
-name|arg2
-argument_list|)
-operator|<=
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"Second operand of MOD must be greater than zero."
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|v2
@@ -4099,7 +4186,7 @@ name|error
 argument_list|(
 literal|"Cannot perform exponentiation: %s"
 argument_list|,
-name|strerror
+name|safe_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -4120,26 +4207,6 @@ case|case
 name|BINOP_MOD
 case|:
 comment|/* Knuth 1.2.4, integer only.  Note that unlike the C '%' op, 	         X mod 0 has a defined value, X. */
-comment|/* Chill specifies that v2 must be> 0, so check for that. */
-if|if
-condition|(
-name|current_language
-operator|->
-name|la_language
-operator|==
-name|language_chill
-operator|&&
-name|v2
-operator|<=
-literal|0
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"Second operand of MOD must be greater than zero."
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|v2
@@ -4383,11 +4450,9 @@ modifier|*
 name|arg1
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -4635,11 +4700,9 @@ modifier|*
 name|arg2
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p1
@@ -4977,12 +5040,10 @@ modifier|*
 name|arg2
 parameter_list|)
 block|{
-specifier|register
 name|enum
 name|type_code
 name|code1
 decl_stmt|;
-specifier|register
 name|enum
 name|type_code
 name|code2
@@ -5258,13 +5319,11 @@ modifier|*
 name|arg1
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
 name|type
 decl_stmt|;
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -5334,7 +5393,7 @@ operator|==
 name|TYPE_CODE_BOOL
 condition|)
 block|{
-comment|/* Perform integral promotion for ANSI C/C++.          FIXME: What about FORTRAN and chill ?  */
+comment|/* Perform integral promotion for ANSI C/C++.  FIXME: What about          FORTRAN and (the deleted) chill ?  */
 if|if
 condition|(
 name|TYPE_LENGTH
@@ -5391,13 +5450,11 @@ modifier|*
 name|arg1
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
 name|type
 decl_stmt|;
-specifier|register
 name|struct
 name|type
 modifier|*

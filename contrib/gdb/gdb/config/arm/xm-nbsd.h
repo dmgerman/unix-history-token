@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"xm-nbsd.h"
+file|"config/xm-nbsd.h"
 end_include
 
 end_unit

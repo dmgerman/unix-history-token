@@ -15,23 +15,12 @@ directive|define
 name|TM_ARM_H
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GDB_MULTI_ARCH
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|GDB_MULTI_ARCH
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Specify that for the native compiler variables for a particular    lexical context are listed after the beginning LBRAC instead of    before in the executables list of symbols.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Top level stuff for GDB, the GNU debugger.    Copyright 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Elena Zannoni<ezannoni@cygnus.com> of Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA. */
+comment|/* Top level stuff for GDB, the GNU debugger.    Copyright 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.    Written by Elena Zannoni<ezannoni@cygnus.com> of Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_include
@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"interps.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -72,13 +78,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline/readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<readline/history.h>
+file|"readline/history.h"
 end_include
 
 begin_comment
@@ -90,16 +96,6 @@ undef|#
 directive|undef
 name|savestring
 end_undef
-
-begin_function_decl
-specifier|extern
-name|void
-name|_initialize_event_loop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -165,15 +161,6 @@ parameter_list|(
 name|char
 modifier|*
 name|command
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cli_command_loop
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -785,10 +772,12 @@ init|=
 name|get_prompt
 argument_list|()
 decl_stmt|;
-comment|/* When an alternative interpreter has been installed, do not      display the comand prompt. */
+comment|/* Each interpreter has its own rules on displaying the command      prompt.  */
 if|if
 condition|(
-name|interpreter_p
+operator|!
+name|current_interp_display_prompt_p
+argument_list|()
 condition|)
 return|return;
 if|if
@@ -1579,12 +1568,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAVE_SBRK
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|char
 modifier|*
 name|lim
@@ -1600,19 +1583,9 @@ argument_list|)
 decl_stmt|;
 name|space_at_cmd_start
 operator|=
-call|(
-name|long
-call|)
-argument_list|(
 name|lim
 operator|-
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|environ
-argument_list|)
+name|lim_at_start
 expr_stmt|;
 endif|#
 directive|endif
@@ -1765,12 +1738,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAVE_SBRK
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|char
 modifier|*
 name|lim
@@ -1789,12 +1756,7 @@ name|space_now
 init|=
 name|lim
 operator|-
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|environ
+name|lim_at_start
 decl_stmt|;
 name|long
 name|space_diff
@@ -1914,12 +1876,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|HAVE_SBRK
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
 name|char
 modifier|*
 name|lim
@@ -1938,12 +1894,7 @@ name|space_now
 init|=
 name|lim
 operator|-
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|environ
+name|lim_at_start
 decl_stmt|;
 name|long
 name|space_diff
@@ -2008,7 +1959,6 @@ name|linelength
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -2060,7 +2010,7 @@ argument_list|(
 literal|"\n\032\032post-"
 argument_list|)
 expr_stmt|;
-name|printf_unfiltered
+name|puts_unfiltered
 argument_list|(
 name|async_annotation_suffix
 argument_list|)
@@ -2301,6 +2251,10 @@ expr_stmt|;
 comment|/* Allocated in readline.  */
 if|if
 condition|(
+name|p
+operator|>
+name|linebuffer
+operator|&&
 operator|*
 operator|(
 name|p
@@ -2315,14 +2269,6 @@ name|p
 operator|--
 expr_stmt|;
 comment|/* Put on top of '\'.  */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\\'
-condition|)
-block|{
 name|readline_input_state
 operator|.
 name|linebuffer
@@ -2343,7 +2289,7 @@ name|linebuffer_ptr
 operator|=
 name|p
 expr_stmt|;
-comment|/* We will not invoke a execute_command if there is more 	     input expected to complete the command. So, we need to 	     print an empty prompt here. */
+comment|/* We will not invoke a execute_command if there is more 	 input expected to complete the command. So, we need to 	 print an empty prompt here. */
 name|more_to_come
 operator|=
 literal|1
@@ -2363,7 +2309,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -2395,7 +2340,7 @@ operator|>
 name|SERVER_COMMAND_LENGTH
 operator|)
 operator|&&
-name|STREQN
+name|strncmp
 argument_list|(
 name|linebuffer
 argument_list|,
@@ -2403,6 +2348,8 @@ literal|"server "
 argument_list|,
 name|SERVER_COMMAND_LENGTH
 argument_list|)
+operator|==
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3173,18 +3120,9 @@ name|quit_flag
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|REQUEST_QUIT
-name|REQUEST_QUIT
-expr_stmt|;
-else|#
-directive|else
 name|quit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -3564,10 +3502,6 @@ begin_comment
 comment|/* Called by do_setshow_command.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|void
 name|set_async_editing_command
@@ -3595,10 +3529,6 @@ begin_comment
 comment|/* Called by do_setshow_command.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|void
 name|set_async_annotation_level
@@ -3624,10 +3554,6 @@ end_function
 
 begin_comment
 comment|/* Called by do_setshow_command.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -3671,16 +3597,41 @@ end_comment
 
 begin_function
 name|void
-name|_initialize_event_loop
+name|gdb_setup_readline
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* This function is a noop for the sync case.  The assumption is that      the sync setup is ALL done in gdb_init, and we would only mess it up      here.  The sync stuff should really go away over time. */
 if|if
 condition|(
 name|event_loop_p
 condition|)
 block|{
+name|gdb_stdout
+operator|=
+name|stdio_fileopen
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|gdb_stderr
+operator|=
+name|stdio_fileopen
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+name|gdb_stdlog
+operator|=
+name|gdb_stderr
+expr_stmt|;
+comment|/* for moment */
+name|gdb_stdtarg
+operator|=
+name|gdb_stderr
+expr_stmt|;
+comment|/* for moment */
 comment|/* If the input stream is connected to a terminal, turn on          editing.  */
 if|if
 condition|(
@@ -3730,11 +3681,6 @@ argument_list|(
 name|instream
 argument_list|)
 expr_stmt|;
-comment|/* Tell gdb to use the cli_command_loop as the main loop. */
-name|command_loop_hook
-operator|=
-name|cli_command_loop
-expr_stmt|;
 comment|/* Now we need to create the event sources for the input file          descriptor. */
 comment|/* At this point in time, this is the only event source that we          register with the even loop. Another source is going to be          the target program (inferior), but that must be registered          only when it actually exists (I.e. after we say 'run' or          after we connect to a remote target. */
 name|add_file_handler
@@ -3744,6 +3690,41 @@ argument_list|,
 name|stdin_event_handler
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Disable command input through the standard CLI channels.  Used in    the suspend proc for interpreters that use the standard gdb readline    interface, like the cli& the mi.  */
+end_comment
+
+begin_function
+name|void
+name|gdb_disable_readline
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|event_loop_p
+condition|)
+block|{
+comment|/* FIXME - It is too heavyweight to delete and remake these          every time you run an interpreter that needs readline.          It is probably better to have the interpreters cache these,          which in turn means that this needs to be moved into interpreter          specific code. */
+if|#
+directive|if
+literal|0
+block|ui_file_delete (gdb_stdout);       ui_file_delete (gdb_stderr);       gdb_stdlog = NULL;       gdb_stdtarg = NULL;
+endif|#
+directive|endif
+name|rl_callback_handler_remove
+argument_list|()
+expr_stmt|;
+name|delete_file_handler
+argument_list|(
+name|input_fd
 argument_list|)
 expr_stmt|;
 block|}

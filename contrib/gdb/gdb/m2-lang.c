@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Modula 2 language support routines for GDB, the GNU debugger.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Modula 2 language support routines for GDB, the GNU debugger.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -149,7 +149,6 @@ specifier|static
 name|void
 name|m2_emit_char
 parameter_list|(
-specifier|register
 name|int
 name|c
 parameter_list|,
@@ -381,7 +380,6 @@ name|int
 name|force_ellipses
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -401,10 +399,6 @@ name|int
 name|need_comma
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|inspect_it
 decl_stmt|;
 if|if
 condition|(
@@ -686,7 +680,6 @@ name|int
 name|typeid
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -1745,14 +1738,15 @@ name|type_check_on
 block|,
 name|case_sensitive_on
 block|,
+operator|&
+name|exp_descriptor_standard
+block|,
 name|m2_parse
 block|,
 comment|/* parser */
 name|m2_error
 block|,
 comment|/* parser error function */
-name|evaluate_subexp_standard
-block|,
 name|m2_printchar
 block|,
 comment|/* Print character constant */
@@ -1774,6 +1768,21 @@ comment|/* Print a value using appropriate syntax */
 name|c_value_print
 block|,
 comment|/* Print a top-level value */
+name|NULL
+block|,
+comment|/* Language specific skip_trampoline */
+name|value_of_this
+block|,
+comment|/* value_of_this */
+name|basic_lookup_symbol_nonlocal
+block|,
+comment|/* lookup_symbol_nonlocal */
+name|basic_lookup_transparent_type
+block|,
+comment|/* lookup_transparent_type */
+name|NULL
+block|,
+comment|/* Language specific symbol demangler */
 block|{
 literal|""
 block|,
@@ -1831,6 +1840,8 @@ operator|&
 name|builtin_type_m2_char
 block|,
 comment|/* Type of string elements */
+name|default_word_break_characters
+block|,
 name|LANG_MAGIC
 block|}
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Data structures associated with breakpoints in GDB.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Data structures associated with breakpoints in GDB.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -41,6 +41,12 @@ end_include
 begin_struct_decl
 struct_decl|struct
 name|value
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|block
 struct_decl|;
 end_struct_decl
 
@@ -225,6 +231,133 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* GDB maintains two types of information about each breakpoint (or    watchpoint, or other related event).  The first type corresponds    to struct breakpoint; this is a relatively high-level structure    which contains the source location(s), stopping conditions, user    commands to execute when the breakpoint is hit, and so forth.     The second type of information corresponds to struct bp_location.    Each breakpoint has one or (eventually) more locations associated    with it, which represent target-specific and machine-specific    mechanisms for stopping the program.  For instance, a watchpoint    expression may require multiple hardware watchpoints in order to    catch all changes in the value of the expression being watched.  */
+end_comment
+
+begin_enum
+enum|enum
+name|bp_loc_type
+block|{
+name|bp_loc_software_breakpoint
+block|,
+name|bp_loc_hardware_breakpoint
+block|,
+name|bp_loc_hardware_watchpoint
+block|,
+name|bp_loc_other
+comment|/* Miscellaneous...  */
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|bp_location
+block|{
+comment|/* Chain pointer to the next breakpoint location.  */
+name|struct
+name|bp_location
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Type of this breakpoint location.  */
+name|enum
+name|bp_loc_type
+name|loc_type
+decl_stmt|;
+comment|/* Each breakpoint location must belong to exactly one higher-level      breakpoint.  This and the DUPLICATE flag are more straightforward      than reference counting.  */
+name|struct
+name|breakpoint
+modifier|*
+name|owner
+decl_stmt|;
+comment|/* Nonzero if this breakpoint is now inserted.  */
+name|char
+name|inserted
+decl_stmt|;
+comment|/* Nonzero if this is not the first breakpoint in the list      for the given address.  */
+name|char
+name|duplicate
+decl_stmt|;
+comment|/* If we someday support real thread-specific breakpoints, then      the breakpoint location will need a thread identifier.  */
+comment|/* Data for specific breakpoint types.  These could be a union, but      simplicity is more important than memory usage for breakpoints.  */
+comment|/* Note that zero is a perfectly valid code address on some platforms      (for example, the mn10200 (OBSOLETE) and mn10300 simulators).  NULL      is not a special value for this field.  Valid for all types except      bp_loc_other.  */
+name|CORE_ADDR
+name|address
+decl_stmt|;
+comment|/* For any breakpoint type with an address, this is the BFD section      associated with the address.  Used primarily for overlay debugging.  */
+name|asection
+modifier|*
+name|section
+decl_stmt|;
+comment|/* "Real" contents of byte where breakpoint has been inserted.      Valid only when breakpoints are in the program.  Under the complete      control of the target insert_breakpoint and remove_breakpoint routines.      No other code should assume anything about the value(s) here.      Valid only for bp_loc_software_breakpoint.  */
+name|char
+name|shadow_contents
+index|[
+name|BREAKPOINT_MAX
+index|]
+decl_stmt|;
+comment|/* Address at which breakpoint was requested, either by the user or      by GDB for internal breakpoints.  This will usually be the same      as ``address'' (above) except for cases in which      ADJUST_BREAKPOINT_ADDRESS has computed a different address at      which to place the breakpoint in order to comply with a      processor's architectual constraints.  */
+name|CORE_ADDR
+name|requested_address
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* This structure is a collection of function pointers that, if available,    will be called instead of the performing the default action for this    bptype.  */
+end_comment
+
+begin_struct
+struct|struct
+name|breakpoint_ops
+block|{
+comment|/* The normal print routine for this breakpoint, called when we      hit it.  */
+name|enum
+name|print_stop_action
+function_decl|(
+modifier|*
+name|print_it
+function_decl|)
+parameter_list|(
+name|struct
+name|breakpoint
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Display information about this breakpoint, for "info breakpoints".  */
+name|void
+function_decl|(
+modifier|*
+name|print_one
+function_decl|)
+parameter_list|(
+name|struct
+name|breakpoint
+modifier|*
+parameter_list|,
+name|CORE_ADDR
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Display information about this breakpoint after setting it (roughly      speaking; this is called from "mention").  */
+name|void
+function_decl|(
+modifier|*
+name|print_mention
+function_decl|)
+parameter_list|(
+name|struct
+name|breakpoint
+modifier|*
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* Note that the ->silent field is not currently used by any commands    (though the code is in there if it was to be, and set_raw_breakpoint    does set it to 0).  I implemented it because I thought it would be    useful for a hack I had to put in; I'm going to leave it in because    I can see how there might be times when it would indeed be useful */
 end_comment
 
@@ -260,9 +393,11 @@ comment|/* Number assigned to distinguish breakpoints.  */
 name|int
 name|number
 decl_stmt|;
-comment|/* Address to break at.        Note that zero is a perfectly valid code address on some        platforms (for example, the mn10200 and mn10300 simulators).        NULL is not a special value for this field.  */
-name|CORE_ADDR
-name|address
+comment|/* Location(s) associated with this high-level breakpoint.  */
+name|struct
+name|bp_location
+modifier|*
+name|loc
 decl_stmt|;
 comment|/* Line number of this address.  */
 name|int
@@ -282,21 +417,6 @@ comment|/* Number of stops at this breakpoint that should        be continued au
 name|int
 name|ignore_count
 decl_stmt|;
-comment|/* "Real" contents of byte where breakpoint has been inserted.        Valid only when breakpoints are in the program.  Under the complete        control of the target insert_breakpoint and remove_breakpoint routines.        No other code should assume anything about the value(s) here.  */
-name|char
-name|shadow_contents
-index|[
-name|BREAKPOINT_MAX
-index|]
-decl_stmt|;
-comment|/* Nonzero if this breakpoint is now inserted.  */
-name|char
-name|inserted
-decl_stmt|;
-comment|/* Nonzero if this is not the first breakpoint in the list        for the given address.  */
-name|char
-name|duplicate
-decl_stmt|;
 comment|/* Chain of command lines to execute when this breakpoint is hit.  */
 name|struct
 name|command_line
@@ -304,8 +424,9 @@ modifier|*
 name|commands
 decl_stmt|;
 comment|/* Stack depth (address of frame).  If nonzero, break only if fp        equals this.  */
-name|CORE_ADDR
-name|frame
+name|struct
+name|frame_id
+name|frame_id
 decl_stmt|;
 comment|/* Conditional.  Break only if this expression's value is nonzero.  */
 name|struct
@@ -367,8 +488,9 @@ name|breakpoint
 modifier|*
 name|related_breakpoint
 decl_stmt|;
-comment|/* Holds the frame address which identifies the frame this watchpoint        should be evaluated in, or NULL if the watchpoint should be evaluated        on the outermost frame.  */
-name|CORE_ADDR
+comment|/* Holds the frame address which identifies the frame this        watchpoint should be evaluated in, or `null' if the watchpoint        should be evaluated on the outermost frame.  */
+name|struct
+name|frame_id
 name|watchpoint_frame
 decl_stmt|;
 comment|/* Thread number for thread-specific breakpoint, or -1 if don't care */
@@ -398,9 +520,23 @@ name|char
 modifier|*
 name|exec_pathname
 decl_stmt|;
-name|asection
+comment|/* Methods associated with this breakpoint.  */
+name|struct
+name|breakpoint_ops
 modifier|*
-name|section
+name|ops
+decl_stmt|;
+comment|/* Was breakpoint issued from a tty?  Saved for the use of pending breakpoints.  */
+name|int
+name|from_tty
+decl_stmt|;
+comment|/* Flag value for pending breakpoint.        first bit  : 0 non-temporary, 1 temporary.        second bit : 0 normal breakpoint, 1 hardware breakpoint. */
+name|int
+name|flag
+decl_stmt|;
+comment|/* Is breakpoint pending on shlib loads?  */
+name|int
+name|pending
 decl_stmt|;
 block|}
 struct|;
@@ -461,9 +597,10 @@ name|bpstat
 name|bpstat_stop_status
 parameter_list|(
 name|CORE_ADDR
-modifier|*
+name|pc
 parameter_list|,
-name|int
+name|ptid_t
+name|ptid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -835,16 +972,6 @@ begin_comment
 comment|/* Prototypes for breakpoint-related functions.  */
 end_comment
 
-begin_comment
-comment|/* Forward declarations for prototypes */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|frame_info
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 specifier|extern
 name|enum
@@ -869,7 +996,27 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|frame_in_dummy
+name|software_breakpoint_inserted_here_p
+parameter_list|(
+name|CORE_ADDR
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* FIXME: cagney/2002-11-10: The current [generic] dummy-frame code    implements a functional superset of this function.  The only reason    it hasn't been removed is because some architectures still don't    use the new framework.  Once they have been fixed, this can go.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|frame_info
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|deprecated_frame_in_dummy
 parameter_list|(
 name|struct
 name|frame_info
@@ -897,6 +1044,8 @@ name|until_break_command
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -948,8 +1097,7 @@ name|struct
 name|symtab_and_line
 parameter_list|,
 name|struct
-name|frame_info
-modifier|*
+name|frame_id
 parameter_list|,
 name|enum
 name|bptype
@@ -1284,14 +1432,13 @@ parameter_list|(
 name|CORE_ADDR
 parameter_list|,
 name|struct
-name|frame_info
-modifier|*
+name|frame_id
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* These functions respectively disable or reenable all currently    enabled watchpoints.  When disabled, the watchpoints are marked    call_disabled.  When reenabled, they are marked enabled.     The intended client of these functions is infcmd.c\run_stack_dummy.     The inferior must be stopped, and all breakpoints removed, when    these functions are used.     The need for these functions is that on some targets (e.g., HP-UX),    gdb is unable to unwind through the dummy frame that is pushed as    part of the implementation of a call command.  Watchpoints can    cause the inferior to stop in places where this frame is visible,    and that can cause execution control to become very confused.     Note that if a user sets breakpoints in an interactively called    function, the call_disabled watchpoints will have been reenabled    when the first such breakpoint is reached.  However, on targets    that are unable to unwind through the call dummy frame, watches    of stack-based storage may then be deleted, because gdb will    believe that their watched storage is out of scope.  (Sigh.) */
+comment|/* These functions respectively disable or reenable all currently    enabled watchpoints.  When disabled, the watchpoints are marked    call_disabled.  When reenabled, they are marked enabled.     The intended client of these functions is call_function_by_hand.     The inferior must be stopped, and all breakpoints removed, when    these functions are used.     The need for these functions is that on some targets (e.g., HP-UX),    gdb is unable to unwind through the dummy frame that is pushed as    part of the implementation of a call command.  Watchpoints can    cause the inferior to stop in places where this frame is visible,    and that can cause execution control to become very confused.     Note that if a user sets breakpoints in an interactively called    function, the call_disabled watchpoints will have been reenabled    when the first such breakpoint is reached.  However, on targets    that are unable to unwind through the call dummy frame, watches    of stack-based storage may then be deleted, because gdb will    believe that their watched storage is out of scope.  (Sigh.) */
 end_comment
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for FreeBSD/i386.    Copyright 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent code for FreeBSD/i386.     Copyright 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"i386-tdep.h"
 end_include
 
 begin_comment
@@ -105,16 +111,18 @@ operator|!
 name|step
 condition|)
 block|{
-name|unsigned
-name|int
+name|ULONGEST
 name|eflags
 decl_stmt|;
 comment|/* Workaround for a bug in FreeBSD.  Make sure that the trace  	 flag is off when doing a continue.  There is a code path  	 through the kernel which leaves the flag set when it should  	 have been cleared.  If a process has a signal pending (such  	 as SIGALRM) and we do a PT_STEP, the process never really has  	 a chance to run because the kernel needs to notify the  	 debugger that a signal is being sent.  Therefore, the process  	 never goes through the kernel's trap() function which would  	 normally clear it.  */
-name|eflags
-operator|=
-name|read_register
+name|regcache_cooked_read_unsigned
 argument_list|(
-name|PS_REGNUM
+name|current_regcache
+argument_list|,
+name|I386_EFLAGS_REGNUM
+argument_list|,
+operator|&
+name|eflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -123,9 +131,11 @@ name|eflags
 operator|&
 literal|0x0100
 condition|)
-name|write_register
+name|regcache_cooked_write_unsigned
 argument_list|(
-name|PS_REGNUM
+name|current_regcache
+argument_list|,
+name|I386_EFLAGS_REGNUM
 argument_list|,
 name|eflags
 operator|&
@@ -179,7 +189,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* FreeBSD provides a kern.ps_strings sysctl that we can use to      locate the sigtramp.  That way we can still recognize a sigtramp      if it's location is changed in a new kernel.  Of course this is      still based on the assumption that the sigtramp is placed      directly under the location where the program arguments and      environment can be found.  */
+comment|/* FreeBSD provides a kern.ps_strings sysctl that we can use to      locate the sigtramp.  That way we can still recognize a sigtramp      if its location is changed in a new kernel.  Of course this is      still based on the assumption that the sigtramp is placed      directly under the location where the program arguments and      environment can be found.  */
 ifdef|#
 directive|ifdef
 name|KERN_PS_STRINGS
@@ -239,13 +249,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|i386bsd_sigtramp_start
+name|i386fbsd_sigtramp_start_addr
 operator|=
 name|ps_strings
 operator|-
 literal|128
 expr_stmt|;
-name|i386bsd_sigtramp_end
+name|i386fbsd_sigtramp_end_addr
 operator|=
 name|ps_strings
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* environ.c -- library for manipulating environments for GNU.    Copyright 1986, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 2000    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* environ.c -- library for manipulating environments for GNU.     Copyright 1986, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 2000,    2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -61,7 +61,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|environ
 modifier|*
@@ -138,14 +137,12 @@ begin_function
 name|void
 name|free_environ
 parameter_list|(
-specifier|register
 name|struct
 name|environ
 modifier|*
 name|e
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -183,7 +180,6 @@ begin_function
 name|void
 name|init_environ
 parameter_list|(
-specifier|register
 name|struct
 name|environ
 modifier|*
@@ -196,7 +192,6 @@ modifier|*
 modifier|*
 name|environ
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -311,7 +306,6 @@ operator|>=
 literal|0
 condition|)
 block|{
-specifier|register
 name|int
 name|len
 init|=
@@ -325,7 +319,6 @@ name|i
 index|]
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|new
@@ -418,7 +411,6 @@ modifier|*
 name|var
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|len
 init|=
@@ -427,7 +419,6 @@ argument_list|(
 name|var
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -437,7 +428,6 @@ name|e
 operator|->
 name|vector
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -459,7 +449,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|STREQN
+name|strncmp
 argument_list|(
 name|s
 argument_list|,
@@ -467,6 +457,8 @@ name|var
 argument_list|,
 name|len
 argument_list|)
+operator|==
+literal|0
 operator|&&
 name|s
 index|[
@@ -514,11 +506,9 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|len
 init|=
@@ -527,7 +517,6 @@ argument_list|(
 name|var
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -537,7 +526,6 @@ name|e
 operator|->
 name|vector
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -564,7 +552,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|STREQN
+name|strncmp
 argument_list|(
 name|s
 argument_list|,
@@ -572,6 +560,8 @@ name|var
 argument_list|,
 name|len
 argument_list|)
+operator|==
+literal|0
 operator|&&
 name|s
 index|[
@@ -725,7 +715,6 @@ modifier|*
 name|var
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|len
 init|=
@@ -734,7 +723,6 @@ argument_list|(
 name|var
 argument_list|)
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -744,7 +732,6 @@ name|e
 operator|->
 name|vector
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|s
@@ -767,7 +754,7 @@ control|)
 block|{
 if|if
 condition|(
-name|STREQN
+name|DEPRECATED_STREQN
 argument_list|(
 name|s
 argument_list|,

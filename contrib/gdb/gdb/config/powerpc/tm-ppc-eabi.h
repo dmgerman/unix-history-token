@@ -25,41 +25,6 @@ directive|include
 file|"rs6000/tm-rs6000.h"
 end_include
 
-begin_comment
-comment|/* except we want to allow single stepping */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SOFTWARE_SINGLE_STEP_P
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SOFTWARE_SINGLE_STEP_P
-parameter_list|()
-value|0
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEFAULT_LR_SAVE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_LR_SAVE
-value|4
-end_define
-
-begin_comment
-comment|/* eabi saves LR at 4 off of SP */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
@@ -76,17 +41,6 @@ begin_define
 define|#
 directive|define
 name|TEXT_SEGMENT_BASE
-value|1
-end_define
-
-begin_comment
-comment|/* Say that we're using ELF, not XCOFF.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ELF_OBJECT_FORMAT
 value|1
 end_define
 

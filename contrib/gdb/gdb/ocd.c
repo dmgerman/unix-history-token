@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target communications support for Macraigor Systems' On-Chip Debugging     Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Target communications support for Macraigor Systems' On-Chip Debugging     Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2004 Free    Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -132,7 +132,8 @@ specifier|static
 name|int
 name|ocd_start_remote
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 function_decl|;
@@ -145,48 +146,6 @@ name|readchar
 parameter_list|(
 name|int
 name|timeout
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|reset_packet
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|output_packet
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|get_quoted_char
-parameter_list|(
-name|int
-name|timeout
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|put_quoted_char
-parameter_list|(
-name|int
-name|c
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -297,26 +256,6 @@ name|int
 name|last_run_status
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* This was 5 seconds, which is a long time to sit and wait.    Unless this is going though some terminal server or multiplexer or    other form of hairy serial connection, I would think 2 seconds would    be plenty.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* FIXME: Change to allow option to set timeout value on a per target    basis. */
-end_comment
-
-begin_endif
-unit|static int remote_timeout = 2;
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Descriptor for I/O to remote machine.  Initialize it to NULL so that    ocd_open knows that we don't have a file open when the program    starts.  */
@@ -510,6 +449,8 @@ expr_stmt|;
 block|}
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
@@ -539,10 +480,6 @@ end_escape
 
 begin_comment
 comment|/* Clean up connection to a remote debugger.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -578,7 +515,8 @@ specifier|static
 name|int
 name|ocd_start_remote
 parameter_list|(
-name|PTR
+name|void
+modifier|*
 name|dummy
 parameter_list|)
 block|{
@@ -779,14 +717,6 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Reset the target */
-block|ocd_do_command (OCD_RESET_RUN,&status,&pktlen);
-comment|/*  ocd_do_command (OCD_RESET,&status,&pktlen); */
-endif|#
-directive|endif
 comment|/* If processor is still running, stop it.  */
 if|if
 condition|(
@@ -800,9 +730,6 @@ condition|)
 name|ocd_stop
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|1
 comment|/* When using a target box, we want to asynchronously return status when      target stops.  The OCD_SET_CTL_FLAGS command is ignored by Wigglers.dll      when using a parallel Wiggler */
 name|buf
 index|[
@@ -885,8 +812,6 @@ argument_list|,
 name|error_code
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|immediate_quit
 operator|--
 expr_stmt|;
@@ -902,28 +827,10 @@ operator|=
 name|read_pc
 argument_list|()
 expr_stmt|;
-name|set_current_frame
-argument_list|(
-name|create_new_frame
-argument_list|(
-name|read_fp
-argument_list|()
-argument_list|,
-name|stop_pc
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|select_frame
-argument_list|(
-name|get_current_frame
-argument_list|()
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|print_stack_frame
 argument_list|(
-name|selected_frame
+name|get_selected_frame
+argument_list|()
 argument_list|,
 operator|-
 literal|1
@@ -2698,10 +2605,6 @@ begin_comment
 comment|/* Read or write LEN bytes from inferior memory at MEMADDR, transferring    to or from debugger address MYADDR.  Write to inferior if SHOULD_WRITE is    nonzero.  Returns length of data written or read; 0 for error.  TARGET    is ignored.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|ocd_xfer_memory
@@ -2851,42 +2754,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Read a character from the data stream, dequoting as necessary.  SYN is    treated special.  Any SYNs appearing in the data stream are returned as the    distinct value RAW_SYN (which has a value> 8 bits and therefore cannot be    mistaken for real data).  */
-end_comment
-
-begin_comment
-unit|static int get_quoted_char (int timeout) {   int ch;    ch = readchar (timeout);    switch (ch)     {     case SERIAL_TIMEOUT:       error ("Timeout in mid-packet, aborting");     case SYN:       return RAW_SYN;     case DLE:       ch = readchar (timeout);       if (ch == SYN) 	return RAW_SYN;       return ch& ~0100;     default:       return ch;     } }  static unsigned char pkt[256 * 2 + 10], *pktp;
-comment|/* Worst case */
-end_comment
-
-begin_comment
-unit|static void reset_packet (void) {   pktp = pkt; }  static void output_packet (void) {   if (serial_write (ocd_desc, pkt, pktp - pkt))     perror_with_name ("output_packet: write failed");    reset_packet (); }
-comment|/* Output a quoted character.  SYNs and DLEs are quoted.  Everything else goes    through untouched.  */
-end_comment
-
-begin_comment
-unit|static void put_quoted_char (int c) {   switch (c)     {     case SYN:     case DLE:       *pktp++ = DLE;       c |= 0100;     }    *pktp++ = c; }
-comment|/* Send a packet to the OCD device.  The packet framed by a SYN character,    a byte count and a checksum.  The byte count only counts the number of    bytes between the count and the checksum.  A count of zero actually    means 256.  Any SYNs within the packet (including the checksum and    count) must be quoted.  The quote character must be quoted as well.    Quoting is done by replacing the character with the two-character sequence    DLE, {char} | 0100.  Note that the quoting mechanism has no effect on the    byte count. */
-end_comment
-
-begin_comment
-unit|static void stu_put_packet (unsigned char *buf, int len) {   unsigned char checksum;   unsigned char c;    if (len == 0 || len> 256)     internal_error (__FILE__, __LINE__, "failed internal consistency check");
-comment|/* Can't represent 0 length packet */
-end_comment
-
-begin_else
-unit|reset_packet ();    checksum = 0;    put_quoted_char (RAW_SYN);    c = len;    do     {       checksum += c;        put_quoted_char (c);        c = *buf++;     }   while (len--> 0);    put_quoted_char (-checksum& 0xff);    output_packet (); }
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Send a packet to the OCD device.  The packet framed by a SYN character,    a byte count and a checksum.  The byte count only counts the number of    bytes between the count and the checksum.  A count of zero actually    means 256.  Any SYNs within the packet (including the checksum and    count) must be quoted.  The quote character must be quoted as well.    Quoting is done by replacing the character with the two-character sequence    DLE, {char} | 0100.  Note that the quoting mechanism has no effect on the    byte count.  */
 end_comment
@@ -2999,37 +2866,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Get a packet from the OCD device.  Timeout is only enforced for the    first byte of the packet.  Subsequent bytes are expected to arrive in    time<= remote_timeout.  Returns a pointer to a static buffer containing    the payload of the packet.  *LENP contains the length of the packet.  */
-end_comment
-
-begin_comment
-unit|static unsigned char * stu_get_packet (unsigned char cmd, int *lenp, int timeout) {   int ch;   int len;   static unsigned char buf[256 + 10], *p;   unsigned char checksum;  find_packet:    ch = get_quoted_char (timeout);    if (ch< 0)     error ("get_packet (readchar): %d", ch);    if (ch != RAW_SYN)     goto find_packet;  found_syn:
-comment|/* Found the start of a packet */
-end_comment
-
-begin_comment
-unit|p = buf;   checksum = 0;    len = get_quoted_char (remote_timeout);    if (len == RAW_SYN)     goto found_syn;    checksum += len;    if (len == 0)     len = 256;    len++;
-comment|/* Include checksum */
-end_comment
-
-begin_else
-unit|while (len--> 0)     {       ch = get_quoted_char (remote_timeout);       if (ch == RAW_SYN) 	goto found_syn;        *p++ = ch;       checksum += ch;     }    if (checksum != 0)     goto find_packet;    if (cmd != buf[0])     error ("Response phase error.  Got 0x%x, expected 0x%x", buf[0], cmd);    *lenp = p - buf - 1;   return buf; }
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/* Get a packet from the OCD device.  Timeout is only enforced for the    first byte of the packet.  Subsequent bytes are expected to arrive in    time<= remote_timeout.  Returns a pointer to a static buffer containing    the payload of the packet.  *LENP contains the length of the packet.  */
@@ -3562,11 +3398,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Execute a simple (one-byte) command.  Returns a pointer to the data    following the error code.  */
 end_comment
@@ -3959,28 +3790,6 @@ begin_comment
 comment|/* For ppc 8xx */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|BDM_BREAKPOINT
-value|{0x4a,0xfa}
-end_define
-
-begin_comment
-comment|/* BGND insn used for CPU32 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* BDM (at least on CPU32) uses a different breakpoint */
 end_comment
@@ -4353,45 +4162,19 @@ comment|/*  discard_cleanups (old_chain); */
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|bdm_read_register_command
-parameter_list|(
-name|char
-modifier|*
-name|args
-parameter_list|,
-name|int
-name|from_tty
-parameter_list|)
-block|{
-comment|/* XXX repeat should go on to the next register */
-if|if
-condition|(
-operator|!
-name|ocd_desc
-condition|)
-name|error
-argument_list|(
-literal|"Not connected to OCD device."
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|args
-condition|)
-name|error
-argument_list|(
-literal|"Must specify BDM register number."
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_escape
 end_escape
+
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_remote_ocd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
 
 begin_function
 name|void
@@ -4504,7 +4287,6 @@ operator|&
 name|ocd_cmd_list
 argument_list|)
 expr_stmt|;
-comment|/*  add_cmd ("read-register", class_obscure, bdm_read_register_command, "",&ocd_cmd_list); */
 block|}
 end_function
 

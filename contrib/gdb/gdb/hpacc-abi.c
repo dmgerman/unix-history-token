@@ -1086,6 +1086,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_hpacc_abi
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
+
 begin_function
 name|void
 name|_initialize_hpacc_abi
@@ -1128,6 +1139,7 @@ argument_list|)
 expr_stmt|;
 name|register_cp_abi
 argument_list|(
+operator|&
 name|hpacc_abi_ops
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read ELF (Executable and Linking Format) object files for GDB.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Read ELF (Executable and Linking Format) object files for GDB.     Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -136,70 +136,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Various things we might complain about... */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|section_info_complaint
-init|=
-block|{
-literal|"elf/stab section information %s without a preceding file symbol"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|section_info_dup_complaint
-init|=
-block|{
-literal|"duplicated elf/stab section information for %s"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|stab_info_mismatch_complaint
-init|=
-block|{
-literal|"elf/stab section information missing for %s"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|complaint
-name|stab_info_questionable_complaint
-init|=
-block|{
-literal|"elf/stab section information questionable for %s"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -233,7 +169,6 @@ modifier|*
 name|eip
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|elfinfo
 modifier|*
@@ -250,7 +185,7 @@ name|eip
 expr_stmt|;
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|sectp
 operator|->
@@ -258,6 +193,8 @@ name|name
 argument_list|,
 literal|".debug"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ei
@@ -281,7 +218,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|sectp
 operator|->
@@ -289,6 +226,8 @@ name|name
 argument_list|,
 literal|".line"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ei
@@ -312,7 +251,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|sectp
 operator|->
@@ -320,6 +259,8 @@ name|name
 argument_list|,
 literal|".stab"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ei
@@ -332,7 +273,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|sectp
 operator|->
@@ -340,6 +281,8 @@ name|name
 argument_list|,
 literal|".stab.index"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ei
@@ -352,7 +295,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|sectp
 operator|->
@@ -360,6 +303,8 @@ name|name
 argument_list|,
 literal|".mdebug"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|ei
@@ -372,28 +317,12 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Currently unused */
-end_comment
-
-begin_endif
-unit|char * elf_interpreter (bfd *abfd) {   sec_ptr interp_sec;   unsigned size;   char *interp = NULL;    interp_sec = bfd_get_section_by_name (abfd, ".interp");   if (interp_sec)     {       size = bfd_section_size (abfd, interp_sec);       interp = alloca (size);       if (bfd_get_section_contents (abfd, interp_sec, interp, (file_ptr) 0, 				    size)) 	{ 	  interp = savestring (interp, size - 1); 	}       else 	{ 	  interp = NULL; 	}     }   return (interp); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|struct
 name|minimal_symbol
 modifier|*
-name|record_minimal_symbol_and_info
+name|record_minimal_symbol
 parameter_list|(
 name|char
 modifier|*
@@ -406,11 +335,6 @@ name|enum
 name|minimal_symbol_type
 name|ms_type
 parameter_list|,
-name|char
-modifier|*
-name|info
-parameter_list|,
-comment|/* FIXME, is this really char *? */
 name|asection
 modifier|*
 name|bfd_section
@@ -447,7 +371,7 @@ name|address
 argument_list|,
 name|ms_type
 argument_list|,
-name|info
+name|NULL
 argument_list|,
 name|bfd_section
 operator|->
@@ -497,9 +421,6 @@ decl_stmt|;
 name|long
 name|i
 decl_stmt|;
-name|int
-name|index
-decl_stmt|;
 name|struct
 name|cleanup
 modifier|*
@@ -533,7 +454,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SOFUN_ADDRESS_MAYBE_MISSING
-comment|/* Name of filesym, as saved on the symbol_obstack.  */
+comment|/* Name of filesym, as saved on the objfile_obstack.  */
 name|char
 modifier|*
 name|filesymname
@@ -547,7 +468,7 @@ argument_list|,
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|)
 decl_stmt|;
 endif|#
@@ -560,10 +481,6 @@ init|=
 name|objfile
 operator|->
 name|sym_stab_info
-decl_stmt|;
-name|unsigned
-name|long
-name|size
 decl_stmt|;
 name|int
 name|stripped
@@ -817,7 +734,7 @@ name|offset
 expr_stmt|;
 name|msym
 operator|=
-name|record_minimal_symbol_and_info
+name|record_minimal_symbol
 argument_list|(
 operator|(
 name|char
@@ -830,8 +747,6 @@ argument_list|,
 name|symaddr
 argument_list|,
 name|mst_solib_trampoline
-argument_list|,
-name|NULL
 argument_list|,
 name|sym
 operator|->
@@ -933,7 +848,7 @@ argument_list|,
 operator|&
 name|objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1156,38 +1071,8 @@ operator|==
 literal|'L'
 operator|)
 condition|)
-comment|/* Looks like a compiler-generated label.  Skip it. 		       The assembler should be skipping these (to keep 		       executables small), but apparently with gcc on the 		       delta m88k SVR4, it loses.  So to have us check too 		       should be harmless (but I encourage people to fix this 		       in the assembler instead of adding checks here).  */
+comment|/* Looks like a compiler-generated label.  Skip 		       it.  The assembler should be skipping these (to 		       keep executables small), but apparently with 		       gcc on the (deleted) delta m88k SVR4, it loses. 		       So to have us check too should be harmless (but 		       I encourage people to fix this in the assembler 		       instead of adding checks here).  */
 continue|continue;
-ifdef|#
-directive|ifdef
-name|HARRIS_TARGET
-elseif|else
-if|if
-condition|(
-name|sym
-operator|->
-name|name
-index|[
-literal|0
-index|]
-operator|==
-literal|'.'
-operator|&&
-name|sym
-operator|->
-name|name
-index|[
-literal|1
-index|]
-operator|==
-literal|'.'
-condition|)
-block|{
-comment|/* Looks like a Harris compiler generated label for the 		         purpose of marking instructions that are relevant to 		         DWARF dies.  The assembler can't get rid of these  		         because they are relocatable addresses that the 		         linker needs to resolve. */
-continue|continue;
-block|}
-endif|#
-directive|endif
 else|else
 block|{
 name|ms_type
@@ -1255,14 +1140,13 @@ operator|&
 name|BSF_LOCAL
 condition|)
 block|{
-comment|/* Named Local variable in a Data section.  Check its 		         name for stabs-in-elf.  The STREQ macro checks the 		         first character inline, so we only actually do a 		         strcmp function call on names that start with 'B' 		         or 'D' */
-name|index
-operator|=
-name|SECT_OFF_MAX
-expr_stmt|;
+comment|/* Named Local variable in a Data section. 		         Check its name for stabs-in-elf.  */
+name|int
+name|special_local_sect
+decl_stmt|;
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 literal|"Bbss.bss"
 argument_list|,
@@ -1270,20 +1154,20 @@ name|sym
 operator|->
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
-name|index
+name|special_local_sect
 operator|=
 name|SECT_OFF_BSS
 argument_list|(
 name|objfile
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 literal|"Ddata.data"
 argument_list|,
@@ -1291,20 +1175,20 @@ name|sym
 operator|->
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
-name|index
+name|special_local_sect
 operator|=
 name|SECT_OFF_DATA
 argument_list|(
 name|objfile
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 literal|"Drodata.rodata"
 argument_list|,
@@ -1312,21 +1196,27 @@ name|sym
 operator|->
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
-name|index
+name|special_local_sect
 operator|=
 name|SECT_OFF_RODATA
 argument_list|(
 name|objfile
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|special_local_sect
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
-name|index
-operator|!=
-name|SECT_OFF_MAX
+name|special_local_sect
+operator|>=
+literal|0
 condition|)
 block|{
 comment|/* Found a special local symbol.  Allocate a 			     sectinfo, if needed, and fill it in.  */
@@ -1337,6 +1227,55 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|int
+name|max_index
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+name|max_index
+operator|=
+name|max
+argument_list|(
+name|SECT_OFF_BSS
+argument_list|(
+name|objfile
+argument_list|)
+argument_list|,
+name|max
+argument_list|(
+name|SECT_OFF_DATA
+argument_list|(
+name|objfile
+argument_list|)
+argument_list|,
+name|SECT_OFF_RODATA
+argument_list|(
+name|objfile
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* max_index is the largest index we'll                                  use into this array, so we must                                  allocate max_index+1 elements for it.                                  However, 'struct stab_section_info'                                  already includes one element, so we                                  need to allocate max_index aadditional                                  elements.  */
+name|size
+operator|=
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|stab_section_info
+argument_list|)
+operator|+
+operator|(
+sizeof|sizeof
+argument_list|(
+name|CORE_ADDR
+argument_list|)
+operator|*
+name|max_index
+operator|)
+operator|)
+expr_stmt|;
 name|sectinfo
 operator|=
 operator|(
@@ -1350,11 +1289,7 @@ name|objfile
 operator|->
 name|md
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|sectinfo
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1363,12 +1298,14 @@ name|sectinfo
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
+name|size
+argument_list|)
+expr_stmt|;
 name|sectinfo
-argument_list|)
-argument_list|)
+operator|->
+name|num_sections
+operator|=
+name|max_index
 expr_stmt|;
 if|if
 condition|(
@@ -1377,10 +1314,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|section_info_complaint
+name|symfile_complaints
+argument_list|,
+literal|"elf/stab section information %s without a preceding file symbol"
 argument_list|,
 name|sym
 operator|->
@@ -1406,47 +1345,28 @@ block|}
 block|}
 if|if
 condition|(
-name|index
-operator|!=
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
 name|sectinfo
 operator|->
 name|sections
 index|[
-name|index
+name|special_local_sect
 index|]
 operator|!=
 literal|0
 condition|)
-block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|section_info_dup_complaint
+name|symfile_complaints
+argument_list|,
+literal|"duplicated elf/stab section information for %s"
 argument_list|,
 name|sectinfo
 operator|->
 name|filename
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-else|else
-name|internal_error
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"Section index uninitialized."
-argument_list|)
-expr_stmt|;
-comment|/* Bfd symbols are section relative. */
+comment|/* BFD symbols are section relative.  */
 name|symaddr
 operator|=
 name|sym
@@ -1459,7 +1379,7 @@ name|section
 operator|->
 name|vma
 expr_stmt|;
-comment|/* Relocate non-absolute symbols by the section offset. */
+comment|/* Relocate non-absolute symbols by the                              section offset.  */
 if|if
 condition|(
 name|sym
@@ -1469,42 +1389,23 @@ operator|!=
 operator|&
 name|bfd_abs_section
 condition|)
-block|{
 name|symaddr
 operator|+=
 name|offset
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|index
-operator|!=
-operator|-
-literal|1
-condition|)
 name|sectinfo
 operator|->
 name|sections
 index|[
-name|index
+name|special_local_sect
 index|]
 operator|=
 name|symaddr
 expr_stmt|;
-else|else
-name|internal_error
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"Section index uninitialized."
-argument_list|)
-expr_stmt|;
-comment|/* The special local symbols don't go in the 			     minimal symbol table, so ignore this one. */
+comment|/* The special local symbols don't go in the 			     minimal symbol table, so ignore this one.  */
 continue|continue;
 block|}
-comment|/* Not a special stabs-in-elf symbol, do regular 		         symbol processing. */
+comment|/* Not a special stabs-in-elf symbol, do regular 		         symbol processing.  */
 if|if
 condition|(
 name|sym
@@ -1544,24 +1445,9 @@ comment|/* ms_type = mst_unknown; */
 continue|continue;
 comment|/* Skip this symbol. */
 block|}
-comment|/* Pass symbol size field in via BFD.  FIXME!!!  */
-name|size
-operator|=
-operator|(
-operator|(
-name|elf_symbol_type
-operator|*
-operator|)
-name|sym
-operator|)
-operator|->
-name|internal_elf_sym
-operator|.
-name|st_size
-expr_stmt|;
 name|msym
 operator|=
-name|record_minimal_symbol_and_info
+name|record_minimal_symbol
 argument_list|(
 operator|(
 name|char
@@ -1575,12 +1461,6 @@ name|symaddr
 argument_list|,
 name|ms_type
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|size
-argument_list|,
 name|sym
 operator|->
 name|section
@@ -1588,6 +1468,36 @@ argument_list|,
 name|objfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msym
+condition|)
+block|{
+comment|/* Pass symbol size field in via BFD.  FIXME!!!  */
+name|unsigned
+name|long
+name|size
+init|=
+operator|(
+operator|(
+name|elf_symbol_type
+operator|*
+operator|)
+name|sym
+operator|)
+operator|->
+name|internal_elf_sym
+operator|.
+name|st_size
+decl_stmt|;
+name|MSYMBOL_SIZE
+argument_list|(
+name|msym
+argument_list|)
+operator|=
+name|size
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SOFUN_ADDRESS_MAYBE_MISSING
@@ -1755,6 +1665,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Install any minimal symbols that have been collected as the current      minimal symbols for this objfile.  The debug readers below this point      should not generate new minimal symbols; if they do it's their      responsibility to install them.  "mdebug" appears to be the only one      which will do this.  */
+name|install_minimal_symbols
+argument_list|(
+name|objfile
+argument_list|)
+expr_stmt|;
+name|do_cleanups
+argument_list|(
+name|back_to
+argument_list|)
+expr_stmt|;
 comment|/* Now process debugging information, which is contained in      special ELF sections. */
 comment|/* If we are reinitializing, or if we have never loaded syms yet,      set table to empty.  MAINLINE is cleared so that *_read_psymtab      functions do not all also re-initialize the psymbol table. */
 if|if
@@ -1864,17 +1785,6 @@ argument_list|,
 name|ei
 operator|.
 name|stabsect
-operator|->
-name|filepos
-argument_list|,
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
-name|ei
-operator|.
-name|stabsect
-argument_list|)
 argument_list|,
 name|str_sect
 operator|->
@@ -1943,25 +1853,10 @@ name|lnsize
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|DWARF2_BUILD_FRAME_INFO_P
-argument_list|()
-condition|)
-name|DWARF2_BUILD_FRAME_INFO
+comment|/* FIXME: kettenis/20030504: This still needs to be integrated with      dwarf2read.c in a better way.  */
+name|dwarf2_build_frame_info
 argument_list|(
 name|objfile
-argument_list|)
-expr_stmt|;
-comment|/* Install any minimal symbols that have been collected as the current      minimal symbols for this objfile. */
-name|install_minimal_symbols
-argument_list|(
-name|objfile
-argument_list|)
-expr_stmt|;
-name|do_cleanups
-argument_list|(
-name|back_to
 argument_list|)
 expr_stmt|;
 block|}
@@ -2247,7 +2142,7 @@ index|[
 literal|0
 index|]
 operator|&&
-name|STREQ
+name|strcmp
 argument_list|(
 name|filename
 argument_list|,
@@ -2255,6 +2150,8 @@ name|maybe
 operator|->
 name|filename
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* We found a match.  But there might be several source files 	     (from different directories) with the same name.  */
@@ -2285,10 +2182,12 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|stab_info_questionable_complaint
+name|symfile_complaints
+argument_list|,
+literal|"elf/stab section information questionable for %s"
 argument_list|,
 name|filename
 argument_list|)
@@ -2323,9 +2222,14 @@ argument_list|(
 operator|&
 name|objfile
 operator|->
-name|psymbol_obstack
+name|objfile_obstack
 argument_list|,
-name|SIZEOF_SECTION_OFFSETS
+name|SIZEOF_N_SECTION_OFFSETS
+argument_list|(
+name|objfile
+operator|->
+name|num_sections
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -2336,7 +2240,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|SECT_OFF_MAX
+name|maybe
+operator|->
+name|num_sections
 condition|;
 name|i
 operator|++
@@ -2369,10 +2275,12 @@ operator|->
 name|stab_section_info
 condition|)
 comment|/* If there *is* any info, */
-name|complain
+name|complaint
 argument_list|(
 operator|&
-name|stab_info_mismatch_complaint
+name|symfile_complaints
+argument_list|,
+literal|"elf/stab section information missing for %s"
 argument_list|,
 name|filename
 argument_list|)

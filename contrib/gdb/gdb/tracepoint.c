@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Tracing functionality for remote targets in custom GDB protocol     Copyright 1997, 1998, 1999, 2000, 2001, 2002 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Tracing functionality for remote targets in custom GDB protocol     Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -108,6 +108,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"block.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dictionary.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ax.h"
 end_include
 
@@ -124,13 +136,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<readline/readline.h>
+file|"readline/readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<readline/history.h>
+file|"readline/history.h"
 end_include
 
 begin_comment
@@ -255,70 +267,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|registers_info
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|args_info
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|locals_info
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* If this definition isn't overridden by the header files, assume    that isatty and fileno exist on this system.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISATTY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ISATTY
-parameter_list|(
-name|FP
-parameter_list|)
-value|(isatty (fileno (FP)))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*     Tracepoint.c:     This module defines the following debugger commands:    trace            : set a tracepoint on a function, line, or address.    info trace       : list all debugger-defined tracepoints.    delete trace     : delete one or more tracepoints.    enable trace     : enable one or more tracepoints.    disable trace    : disable one or more tracepoints.    actions          : specify actions to be taken at a tracepoint.    passcount        : specify a pass count for a tracepoint.    tstart           : start a trace experiment.    tstop            : stop a trace experiment.    tstatus          : query the status of a trace experiment.    tfind            : find a trace frame in the trace buffer.    tdump            : print everything collected at the current tracepoint.    save-tracepoints : write tracepoint setup into a file.     This module defines the following user-visible debugger variables:    $trace_frame : sequence number of trace frame currently being debugged.    $trace_line  : source line of trace frame currently being debugged.    $trace_file  : source file of trace frame currently being debugged.    $tracepoint  : tracepoint number of trace frame currently being debugged.  */
@@ -863,7 +811,7 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"tracepoint.c: error in outgoing packet at field #%d."
+literal|"tracepoint.c: error in outgoing packet at field #%ld."
 argument_list|,
 name|strtol
 argument_list|(
@@ -1253,7 +1201,7 @@ argument_list|(
 literal|"trace_line"
 argument_list|)
 argument_list|,
-name|value_from_pointer
+name|value_from_longest
 argument_list|(
 name|builtin_type_int
 argument_list|,
@@ -1312,7 +1260,7 @@ name|traceframe_fun
 operator|==
 name|NULL
 operator|||
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|traceframe_fun
 argument_list|)
@@ -1343,7 +1291,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|traceframe_fun
 argument_list|)
@@ -1396,7 +1344,7 @@ argument_list|(
 name|func_val
 argument_list|)
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|traceframe_fun
 argument_list|)
@@ -1561,7 +1509,6 @@ name|symtab_and_line
 name|sal
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|tracepoint
 modifier|*
@@ -1872,6 +1819,8 @@ literal|0
 argument_list|,
 operator|&
 name|canonical
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|addr_end
@@ -2308,7 +2257,7 @@ literal|32
 condition|)
 name|tmp
 operator|=
-name|longest_local_hex_string_custom
+name|local_hex_string_custom
 argument_list|(
 name|t
 operator|->
@@ -2325,7 +2274,7 @@ expr_stmt|;
 else|else
 name|tmp
 operator|=
-name|longest_local_hex_string_custom
+name|local_hex_string_custom
 argument_list|(
 name|t
 operator|->
@@ -2389,7 +2338,7 @@ argument_list|)
 expr_stmt|;
 name|fputs_filtered
 argument_list|(
-name|SYMBOL_SOURCE_NAME
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -3690,7 +3639,7 @@ condition|)
 block|{
 name|line
 operator|=
-name|readline
+name|gdb_readline_wrapper
 argument_list|(
 name|prompt
 argument_list|)
@@ -3931,6 +3880,17 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* if EOF is typed, *line is NULL */
+if|if
+condition|(
+operator|*
+name|line
+operator|==
+name|NULL
+condition|)
+return|return
+name|END
+return|;
 for|for
 control|(
 name|p
@@ -4180,7 +4140,7 @@ name|warning
 argument_list|(
 literal|"constant %s (value %ld) will not be collected."
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|exp
 operator|->
@@ -4231,7 +4191,7 @@ name|warning
 argument_list|(
 literal|"%s is optimized away and cannot be collected."
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|exp
 operator|->
@@ -4910,7 +4870,7 @@ index|]
 operator|.
 name|end
 operator|<=
-name|MAX_REGISTER_VIRTUAL_SIZE
+name|MAX_REGISTER_SIZE
 condition|)
 block|{
 comment|/* memrange b starts before memrange a ends; merge them.  */
@@ -5288,7 +5248,7 @@ name|printf_filtered
 argument_list|(
 literal|"%s: don't know symbol class %d\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5307,7 +5267,7 @@ name|printf_filtered
 argument_list|(
 literal|"constant %s (value %ld) will not be collected.\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5351,7 +5311,7 @@ name|printf_filtered
 argument_list|(
 literal|"LOC_STATIC %s: collect %ld bytes at %s.\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5398,7 +5358,7 @@ name|printf_filtered
 argument_list|(
 literal|"LOC_REG[parm] %s: "
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5427,7 +5387,7 @@ name|TYPE_CODE_FLT
 operator|&&
 name|len
 operator|>
-name|REGISTER_RAW_SIZE
+name|DEPRECATED_REGISTER_RAW_SIZE
 argument_list|(
 name|reg
 argument_list|)
@@ -5454,7 +5414,7 @@ name|printf_filtered
 argument_list|(
 literal|"       (will not collect %s)\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5486,7 +5446,7 @@ name|printf_filtered
 argument_list|(
 literal|"LOC_LOCAL %s: Collect %ld bytes at offset "
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5542,7 +5502,7 @@ name|printf_filtered
 argument_list|(
 literal|"LOC_REGPARM_ADDR %s: Collect %ld bytes at offset "
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5603,7 +5563,7 @@ name|printf_filtered
 argument_list|(
 literal|"LOC_LOCAL %s: Collect %ld bytes at offset "
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5665,7 +5625,7 @@ name|printf_filtered
 argument_list|(
 literal|"LOC_BASEREG %s: collect %ld bytes at offset "
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5705,7 +5665,7 @@ name|printf_filtered
 argument_list|(
 literal|"Don't know LOC_UNRESOLVED %s\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5719,7 +5679,7 @@ name|printf_filtered
 argument_list|(
 literal|"%s has been optimized out of existence.\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -5767,9 +5727,11 @@ name|block
 modifier|*
 name|block
 decl_stmt|;
+name|struct
+name|dict_iterator
+name|iter
+decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|count
 init|=
 literal|0
@@ -5795,7 +5757,7 @@ name|ALL_BLOCK_SYMBOLS
 argument_list|(
 argument|block
 argument_list|,
-argument|i
+argument|iter
 argument_list|,
 argument|sym
 argument_list|)
@@ -5813,7 +5775,7 @@ name|warning
 argument_list|(
 literal|"don't know how to trace local symbol %s"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -8496,7 +8458,7 @@ name|reply
 decl_stmt|;
 name|old_frame_addr
 operator|=
-name|FRAME_FP
+name|get_frame_base
 argument_list|(
 name|get_current_frame
 argument_list|()
@@ -8685,8 +8647,6 @@ name|select_frame
 argument_list|(
 name|get_current_frame
 argument_list|()
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|set_traceframe_num
@@ -8743,7 +8703,7 @@ name|old_frame_addr
 operator|==
 literal|0
 operator|||
-name|FRAME_FP
+name|get_frame_base
 argument_list|(
 name|get_current_frame
 argument_list|()
@@ -8753,7 +8713,7 @@ literal|0
 operator|||
 name|old_frame_addr
 operator|==
-name|FRAME_FP
+name|get_frame_base
 argument_list|(
 name|get_current_frame
 argument_list|()
@@ -8772,9 +8732,12 @@ literal|1
 expr_stmt|;
 name|print_stack_frame
 argument_list|(
-name|selected_frame
+name|deprecated_selected_frame
 argument_list|,
-name|selected_frame_level
+name|frame_relative_level
+argument_list|(
+name|deprecated_selected_frame
+argument_list|)
 argument_list|,
 name|source_only
 argument_list|)
@@ -9179,6 +9142,7 @@ name|args
 operator|==
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|tracepoint_number
@@ -9197,6 +9161,7 @@ operator|=
 name|tracepoint_number
 expr_stmt|;
 comment|/* default is current TDP */
+block|}
 else|else
 name|tdp
 operator|=
@@ -9306,12 +9271,11 @@ name|sal
 operator|=
 name|find_pc_line
 argument_list|(
-operator|(
+name|get_frame_pc
+argument_list|(
 name|get_current_frame
 argument_list|()
-operator|)
-operator|->
-name|pc
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -10129,7 +10093,7 @@ literal|"Unable to open file '%s' for saving tracepoints (%s)"
 argument_list|,
 name|args
 argument_list|,
-name|strerror
+name|safe_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -10413,9 +10377,11 @@ name|save_args
 init|=
 name|args
 decl_stmt|;
+name|struct
+name|dict_iterator
+name|iter
+decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|,
 name|count
@@ -10453,6 +10419,8 @@ literal|0
 argument_list|,
 operator|&
 name|canonical
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -10505,7 +10473,7 @@ name|ALL_BLOCK_SYMBOLS
 argument_list|(
 argument|block
 argument_list|,
-argument|i
+argument|iter
 argument_list|,
 argument|sym
 argument_list|)
@@ -10531,7 +10499,7 @@ operator|++
 expr_stmt|;
 name|symname
 operator|=
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -10878,7 +10846,7 @@ name|msym
 operator|=
 name|lookup_minimal_symbol
 argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -11145,8 +11113,12 @@ name|t
 operator|->
 name|address
 operator|!=
+operator|(
 name|read_pc
 argument_list|()
+operator|-
+name|DECR_PC_AFTER_BREAK
+operator|)
 operator|)
 expr_stmt|;
 for|for
@@ -11817,11 +11789,12 @@ argument_list|,
 literal|"Save current tracepoint definitions as a script.\n\ Use the 'source' command in another debug session to restore them."
 argument_list|)
 expr_stmt|;
+name|set_cmd_completer
+argument_list|(
 name|c
-operator|->
-name|completer
-operator|=
+argument_list|,
 name|filename_completer
+argument_list|)
 expr_stmt|;
 name|add_com
 argument_list|(
@@ -12132,11 +12105,12 @@ argument_list|,
 literal|"Set a tracepoint at a specified line or function or address.\n\ Argument may be a line number, function name, or '*' plus an address.\n\ For a line number or function, trace at the start of its code.\n\ If an address is specified, trace at that exact address.\n\n\ Do \"help tracepoints\" for info on other tracepoint commands."
 argument_list|)
 expr_stmt|;
+name|set_cmd_completer
+argument_list|(
 name|c
-operator|->
-name|completer
-operator|=
+argument_list|,
 name|location_completer
+argument_list|)
 expr_stmt|;
 name|add_com_alias
 argument_list|(

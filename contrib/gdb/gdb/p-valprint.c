@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for printing Pascal values for GDB, the GNU debugger.    Copyright 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for printing Pascal values for GDB, the GNU debugger.    Copyright 2000, 2001, 2003    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -154,7 +154,6 @@ name|val_prettyprint
 name|pretty
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -502,9 +501,10 @@ condition|)
 block|{
 comment|/* Print the unmangled name if desired.  */
 comment|/* Print vtable entry - we only get here if we ARE using 	     -fvtable_thunks.  (Otherwise, look under TYPE_CODE_STRUCT.) */
+comment|/* Extract the address, assume that it is unsigned.  */
 name|print_address_demangle
 argument_list|(
-name|extract_address
+name|extract_unsigned_integer
 argument_list|(
 name|valaddr
 operator|+
@@ -724,6 +724,8 @@ name|string_pos
 argument_list|,
 operator|&
 name|char_size
+argument_list|,
+name|NULL
 argument_list|)
 operator|&&
 name|addr
@@ -845,7 +847,7 @@ argument_list|)
 expr_stmt|;
 name|fputs_filtered
 argument_list|(
-name|SYMBOL_SOURCE_NAME
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|msymbol
 argument_list|)
@@ -891,11 +893,6 @@ modifier|*
 name|wtype
 decl_stmt|;
 name|struct
-name|symtab
-modifier|*
-name|s
-decl_stmt|;
-name|struct
 name|block
 modifier|*
 name|block
@@ -920,20 +917,19 @@ name|wsym
 operator|=
 name|lookup_symbol
 argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|msymbol
 argument_list|)
 argument_list|,
 name|block
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 operator|&
 name|is_this_fld
 argument_list|,
-operator|&
-name|s
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1096,9 +1092,10 @@ argument_list|,
 literal|"@"
 argument_list|)
 expr_stmt|;
+comment|/* Extract the address, assume that it is unsigned.  */
 name|print_address_numeric
 argument_list|(
-name|extract_address
+name|extract_unsigned_integer
 argument_list|(
 name|valaddr
 operator|+
@@ -1248,9 +1245,10 @@ condition|)
 block|{
 comment|/* Print the unmangled name if desired.  */
 comment|/* Print vtable entry - we only get here if NOT using 	     -fvtable_thunks.  (Otherwise, look under TYPE_CODE_PTR.) */
+comment|/* Extract the address, assume that it is unsigned.  */
 name|print_address_demangle
 argument_list|(
-name|extract_address
+name|extract_unsigned_integer
 argument_list|(
 name|valaddr
 operator|+
@@ -1301,6 +1299,8 @@ name|string_pos
 argument_list|,
 operator|&
 name|char_size
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -2259,7 +2259,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|&&
-name|STREQ
+name|strcmp
 argument_list|(
 name|TYPE_NAME
 argument_list|(
@@ -2271,6 +2271,8 @@ argument_list|)
 argument_list|,
 literal|"char"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Print nothing */
@@ -2627,6 +2629,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|check_stub_method_group
+argument_list|(
+name|domain
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -2641,8 +2650,6 @@ name|j
 operator|++
 control|)
 block|{
-name|QUIT
-expr_stmt|;
 if|if
 condition|(
 name|TYPE_FN_FIELD_VOFFSET
@@ -2655,24 +2662,6 @@ operator|==
 name|offset
 condition|)
 block|{
-if|if
-condition|(
-name|TYPE_FN_FIELD_STUB
-argument_list|(
-name|f
-argument_list|,
-name|j
-argument_list|)
-condition|)
-name|check_stub_method
-argument_list|(
-name|domain
-argument_list|,
-name|i
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
 name|kind
 operator|=
 literal|"virtual "
@@ -2745,6 +2734,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|check_stub_method_group
+argument_list|(
+name|domain
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -2759,31 +2755,11 @@ name|j
 operator|++
 control|)
 block|{
-name|QUIT
-expr_stmt|;
 if|if
 condition|(
-name|TYPE_FN_FIELD_STUB
+name|DEPRECATED_STREQ
 argument_list|(
-name|f
-argument_list|,
-name|j
-argument_list|)
-condition|)
-name|check_stub_method
-argument_list|(
-name|domain
-argument_list|,
-name|i
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -2796,11 +2772,9 @@ name|j
 argument_list|)
 argument_list|)
 condition|)
-block|{
 goto|goto
 name|common
 goto|;
-block|}
 block|}
 block|}
 block|}
@@ -2824,11 +2798,11 @@ argument_list|,
 literal|"&"
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|kind
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 name|demangled_name
@@ -2997,14 +2971,14 @@ name|typename
 operator|!=
 name|NULL
 operator|&&
-operator|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|typename
 argument_list|,
 name|pascal_vtbl_ptr_name
 argument_list|)
-operator|)
+operator|==
+literal|0
 operator|)
 return|;
 block|}
@@ -3231,10 +3205,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-specifier|extern
-name|int
-name|inspect_it
-decl_stmt|;
 name|int
 name|fields_seen
 init|=
@@ -4512,7 +4482,6 @@ name|bits
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -4632,11 +4601,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|prefix
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 name|name
@@ -4733,6 +4702,17 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|extern
+name|initialize_file_ftype
+name|_initialize_pascal_valprint
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -Wmissing-prototypes */
+end_comment
 
 begin_function
 name|void

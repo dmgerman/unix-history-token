@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* User Interface Events.    Copyright 1999, 2001 Free Software Foundation, Inc.     Contributed by Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* User Interface Events.     Copyright 1999, 2001, 2002, 2004 Free Software Foundation, Inc.     Contributed by Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -139,6 +139,44 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|gdb_events_target_changed_ftype
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|gdb_events_selected_frame_level_changed_ftype
+function_decl|)
+parameter_list|(
+name|int
+name|level
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|gdb_events_selected_thread_changed_ftype
+function_decl|)
+parameter_list|(
+name|int
+name|thread_num
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/* gdb-events: object. */
 end_comment
@@ -174,6 +212,18 @@ decl_stmt|;
 name|gdb_events_architecture_changed_ftype
 modifier|*
 name|architecture_changed
+decl_stmt|;
+name|gdb_events_target_changed_ftype
+modifier|*
+name|target_changed
+decl_stmt|;
+name|gdb_events_selected_frame_level_changed_ftype
+modifier|*
+name|selected_frame_level_changed
+decl_stmt|;
+name|gdb_events_selected_thread_changed_ftype
+modifier|*
+name|selected_thread_changed
 decl_stmt|;
 block|}
 struct|;
@@ -259,8 +309,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|target_changed_event
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|selected_frame_level_changed_event
+parameter_list|(
+name|int
+name|level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|selected_thread_changed_event
+parameter_list|(
+name|int
+name|thread_num
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/* When GDB_EVENTS are not being used, completly disable them. */
+comment|/* When GDB_EVENTS are not being used, completely disable them. */
 end_comment
 
 begin_if
@@ -338,6 +420,34 @@ parameter_list|()
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|target_changed_event
+parameter_list|()
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|selected_frame_level_changed_event
+parameter_list|(
+name|level
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|selected_thread_changed_event
+parameter_list|(
+name|thread_num
+parameter_list|)
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -375,6 +485,20 @@ name|struct
 name|gdb_events
 modifier|*
 name|vector
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Clear event handlers */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|clear_gdb_event_hooks
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -20,7 +20,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"xm-sysv4.h"
+file|"config/xm-sysv4.h"
 end_include
 
 end_unit

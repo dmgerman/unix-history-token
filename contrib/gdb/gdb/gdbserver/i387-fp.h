@@ -30,6 +30,7 @@ begin_function_decl
 name|void
 name|i387_fsave_to_cache
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|buf
@@ -52,6 +53,7 @@ begin_function_decl
 name|void
 name|i387_fxsave_to_cache
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|buf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Pascal language support routines for GDB, the GNU debugger.    Copyright 2000, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Pascal language support routines for GDB, the GNU debugger.    Copyright 2000, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_string.h"
 end_include
 
 begin_include
@@ -58,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"value.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -99,6 +111,11 @@ parameter_list|,
 name|int
 modifier|*
 name|char_size
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|arrayname
 parameter_list|)
 block|{
 if|if
@@ -157,6 +174,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|length_pos
+condition|)
 operator|*
 name|length_pos
 operator|=
@@ -169,18 +190,27 @@ argument_list|)
 operator|/
 name|TARGET_CHAR_BIT
 expr_stmt|;
+if|if
+condition|(
+name|length_size
+condition|)
 operator|*
 name|length_size
 operator|=
+name|TYPE_LENGTH
+argument_list|(
 name|TYPE_FIELD_TYPE
 argument_list|(
 name|type
 argument_list|,
 literal|0
 argument_list|)
-operator|->
-name|length
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|string_pos
+condition|)
 operator|*
 name|string_pos
 operator|=
@@ -193,13 +223,34 @@ argument_list|)
 operator|/
 name|TARGET_CHAR_BIT
 expr_stmt|;
+if|if
+condition|(
+name|char_size
+condition|)
 operator|*
 name|char_size
 operator|=
 literal|1
 expr_stmt|;
-return|return
+if|if
+condition|(
+name|arrayname
+condition|)
+operator|*
+name|arrayname
+operator|=
+name|TYPE_FIELDS
+argument_list|(
+name|type
+argument_list|)
+index|[
 literal|1
+index|]
+operator|.
+name|name
+expr_stmt|;
+return|return
+literal|2
 return|;
 block|}
 empty_stmt|;
@@ -249,6 +300,10 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|length_pos
+condition|)
 operator|*
 name|length_pos
 operator|=
@@ -261,18 +316,27 @@ argument_list|)
 operator|/
 name|TARGET_CHAR_BIT
 expr_stmt|;
+if|if
+condition|(
+name|length_size
+condition|)
 operator|*
 name|length_size
 operator|=
+name|TYPE_LENGTH
+argument_list|(
 name|TYPE_FIELD_TYPE
 argument_list|(
 name|type
 argument_list|,
 literal|1
 argument_list|)
-operator|->
-name|length
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|string_pos
+condition|)
 operator|*
 name|string_pos
 operator|=
@@ -286,13 +350,34 @@ operator|/
 name|TARGET_CHAR_BIT
 expr_stmt|;
 comment|/* FIXME: how can I detect wide chars in GPC ?? */
+if|if
+condition|(
+name|char_size
+condition|)
 operator|*
 name|char_size
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|arrayname
+condition|)
+operator|*
+name|arrayname
+operator|=
+name|TYPE_FIELDS
+argument_list|(
+name|type
+argument_list|)
+index|[
+literal|2
+index|]
+operator|.
+name|name
+expr_stmt|;
 return|return
-literal|1
+literal|3
 return|;
 block|}
 empty_stmt|;
@@ -329,7 +414,6 @@ specifier|static
 name|void
 name|pascal_one_char
 parameter_list|(
-specifier|register
 name|int
 name|c
 parameter_list|,
@@ -474,7 +558,6 @@ specifier|static
 name|void
 name|pascal_emit_char
 parameter_list|(
-specifier|register
 name|int
 name|c
 parameter_list|,
@@ -586,7 +669,6 @@ name|int
 name|force_ellipses
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -606,10 +688,6 @@ name|int
 name|need_comma
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|inspect_it
 decl_stmt|;
 comment|/* If the string was not truncated due to `set print elements', and      the last byte of it is a null, we don't print that, in traditional C      style.  */
 if|if
@@ -933,7 +1011,6 @@ name|int
 name|typeid
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|type
 modifier|*
@@ -1001,7 +1078,7 @@ name|type
 operator|=
 name|init_type
 argument_list|(
-name|TYPE_CODE_INT
+name|TYPE_CODE_CHAR
 argument_list|,
 name|TARGET_CHAR_BIT
 operator|/
@@ -1755,11 +1832,12 @@ name|type_check_on
 block|,
 name|case_sensitive_on
 block|,
+operator|&
+name|exp_descriptor_standard
+block|,
 name|pascal_parse
 block|,
 name|pascal_error
-block|,
-name|evaluate_subexp_standard
 block|,
 name|pascal_printchar
 block|,
@@ -1782,6 +1860,21 @@ comment|/* Print a value using appropriate syntax */
 name|pascal_value_print
 block|,
 comment|/* Print a top-level value */
+name|NULL
+block|,
+comment|/* Language specific skip_trampoline */
+name|value_of_this
+block|,
+comment|/* value_of_this */
+name|basic_lookup_symbol_nonlocal
+block|,
+comment|/* lookup_symbol_nonlocal */
+name|basic_lookup_transparent_type
+block|,
+comment|/* lookup_transparent_type */
+name|NULL
+block|,
+comment|/* Language specific symbol demangler */
 block|{
 literal|""
 block|,
@@ -1839,6 +1932,8 @@ operator|&
 name|builtin_type_char
 block|,
 comment|/* Type of string elements */
+name|default_word_break_characters
+block|,
 name|LANG_MAGIC
 block|}
 decl_stmt|;

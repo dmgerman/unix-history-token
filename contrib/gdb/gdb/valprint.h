@@ -105,6 +105,17 @@ comment|/* Max # of chars for strings/vectors */
 end_comment
 
 begin_comment
+comment|/* Flag to low-level print routines that this value is being printed    in an epoch window.  We'd like to pass this as a parameter, but    every routine would need to take it.  Perhaps we can encapsulate    this in the I/O stream once we have GNU stdio. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inspect_it
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Print repeat counts if there are more than this many repetitions of an    element in an array.  Referenced by the low level language dependent    print routines. */
 end_comment
 
@@ -228,6 +239,44 @@ begin_function_decl
 specifier|extern
 name|void
 name|print_decimal_chars
+parameter_list|(
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_hex_chars
+parameter_list|(
+name|struct
+name|ui_file
+modifier|*
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|print_char_chars
 parameter_list|(
 name|struct
 name|ui_file

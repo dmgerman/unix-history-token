@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle shared libraries for GDB, the GNU Debugger.    Copyright 2000    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Handle shared libraries for GDB, the GNU Debugger.     Copyright 2000, 2004    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|objfile
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* Critical offsets and sizes which describe struct r_debug and    struct link_map on SVR4-like targets.  All offsets and sizes are    in bytes unless otherwise specified.  */
@@ -92,6 +98,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This function is called by thread_db.c.  Return the address of the    link map for the given objfile.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|svr4_fetch_objfile_link_map
+parameter_list|(
+name|struct
+name|objfile
+modifier|*
+name|objfile
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* legacy_svr4_fetch_link_map_offsets_hook is a pointer to a function    which is used to fetch link map offsets.  It will only be set    by solib-legacy.c, if at all. */
 end_comment
 
@@ -104,6 +127,34 @@ function_decl|(
 modifier|*
 name|legacy_svr4_fetch_link_map_offsets_hook
 function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Fetch (and possibly build) an appropriate `struct link_map_offsets'    for ILP32 and LP64 SVR4 systems.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|struct
+name|link_map_offsets
+modifier|*
+name|svr4_ilp32_fetch_link_map_offsets
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|link_map_offsets
+modifier|*
+name|svr4_lp64_fetch_link_map_offsets
 parameter_list|(
 name|void
 parameter_list|)

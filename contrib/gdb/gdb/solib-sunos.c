@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Handle SunOS shared libraries for GDB, the GNU Debugger.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000,    2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Handle SunOS shared libraries for GDB, the GNU Debugger.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000,    2001, 2004    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -97,6 +97,18 @@ directive|include
 file|"solist.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"bcache.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"regcache.h"
+end_include
+
 begin_comment
 comment|/* Link map info to include in an allocated so_list entry */
 end_comment
@@ -151,7 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Macro to extract an address from a solib structure.    When GDB is configured for some 32-bit targets (e.g. Solaris 2.7    sparc), BFD is configured to handle 64-bit targets, so CORE_ADDR is    64 bits.  We have to extract only the significant bits of addresses    to get the right address when accessing the core file BFD.  */
+comment|/* Macro to extract an address from a solib structure.  When GDB is    configured for some 32-bit targets (e.g. Solaris 2.7 sparc), BFD is    configured to handle 64-bit targets, so CORE_ADDR is 64 bits.  We    have to extract only the significant bits of addresses to get the    right address when accessing the core file BFD.     Assume that the address is unsigned.  */
 end_comment
 
 begin_define
@@ -162,7 +174,7 @@ parameter_list|(
 name|MEMBER
 parameter_list|)
 define|\
-value|extract_address (&(MEMBER), sizeof (MEMBER))
+value|extract_unsigned_integer (&(MEMBER), sizeof (MEMBER))
 end_define
 
 begin_comment
@@ -332,8 +344,9 @@ argument_list|,
 name|lm_next
 argument_list|)
 decl_stmt|;
+comment|/* Assume that the address is unsigned.  */
 return|return
-name|extract_address
+name|extract_unsigned_integer
 argument_list|(
 name|so
 operator|->
@@ -382,8 +395,9 @@ argument_list|,
 name|lm_name
 argument_list|)
 decl_stmt|;
+comment|/* Assume that the address is unsigned.  */
 return|return
-name|extract_address
+name|extract_unsigned_integer
 argument_list|(
 name|so
 operator|->
@@ -482,70 +496,26 @@ name|md
 operator|=
 name|NULL
 expr_stmt|;
-name|obstack_specify_allocation
-argument_list|(
-operator|&
 name|objfile
 operator|->
 name|psymbol_cache
-operator|.
-name|cache
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|xmalloc
-argument_list|,
-name|xfree
-argument_list|)
+operator|=
+name|bcache_xmalloc
+argument_list|()
 expr_stmt|;
-name|obstack_specify_allocation
+name|objfile
+operator|->
+name|macro_cache
+operator|=
+name|bcache_xmalloc
+argument_list|()
+expr_stmt|;
+name|obstack_init
 argument_list|(
 operator|&
 name|objfile
 operator|->
-name|psymbol_obstack
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|xmalloc
-argument_list|,
-name|xfree
-argument_list|)
-expr_stmt|;
-name|obstack_specify_allocation
-argument_list|(
-operator|&
-name|objfile
-operator|->
-name|symbol_obstack
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|xmalloc
-argument_list|,
-name|xfree
-argument_list|)
-expr_stmt|;
-name|obstack_specify_allocation
-argument_list|(
-operator|&
-name|objfile
-operator|->
-name|type_obstack
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|xmalloc
-argument_list|,
-name|xfree
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 name|objfile
@@ -656,25 +626,17 @@ argument_list|(
 operator|&
 name|rt_common_objfile
 operator|->
-name|symbol_obstack
+name|objfile_obstack
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|obstack_specify_allocation
+name|obstack_init
 argument_list|(
 operator|&
 name|rt_common_objfile
 operator|->
-name|symbol_obstack
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|xmalloc
-argument_list|,
-name|xfree
+name|objfile_obstack
 argument_list|)
 expr_stmt|;
 name|rt_common_objfile
@@ -688,6 +650,11 @@ operator|->
 name|msymbols
 operator|=
 name|NULL
+expr_stmt|;
+name|terminate_minimal_symbol_table
+argument_list|(
+name|rt_common_objfile
+argument_list|)
 expr_stmt|;
 block|}
 name|init_minimal_symbol_collection
@@ -2015,9 +1982,9 @@ comment|/* SCO and SunOS need the loop below, other systems should be using the 
 name|clear_proceed_status
 argument_list|()
 expr_stmt|;
-name|stop_soon_quietly
+name|stop_soon
 operator|=
-literal|1
+name|STOP_QUIETLY
 expr_stmt|;
 name|stop_signal
 operator|=
@@ -2049,9 +2016,9 @@ operator|!=
 name|TARGET_SIGNAL_TRAP
 condition|)
 do|;
-name|stop_soon_quietly
+name|stop_soon
 operator|=
-literal|0
+name|NO_STOP_QUIETLY
 expr_stmt|;
 comment|/* We are now either at the "mapping complete" breakpoint (or somewhere      else, a condition we aren't prepared to deal with anyway), so adjust      the PC as necessary after a breakpoint, disable the breakpoint, and      add any shared libraries that were mapped in. */
 if|if

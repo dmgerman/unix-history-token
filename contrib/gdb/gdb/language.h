@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Source-language-related definitions for GDB.    Copyright 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by the Department of Computer Science at the State University    of New York at Buffalo.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Source-language-related definitions for GDB.     Copyright 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2003,    2004 Free Software Foundation, Inc.     Contributed by the Department of Computer Science at the State University    of New York at Buffalo.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -42,6 +42,12 @@ name|expression
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ui_file
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* enum exp_opcode;     ANSI's `wisdom' didn't include forward enum decls. */
 end_comment
@@ -64,12 +70,6 @@ begin_define
 define|#
 directive|define
 name|_LANG_m2
-end_define
-
-begin_define
-define|#
-directive|define
-name|_LANG_chill
 end_define
 
 begin_define
@@ -279,6 +279,13 @@ name|enum
 name|case_sensitivity
 name|la_case_sensitivity
 decl_stmt|;
+comment|/* Definitions related to expression printing, prefixifying, and        dumping */
+specifier|const
+name|struct
+name|exp_descriptor
+modifier|*
+name|la_exp_desc
+decl_stmt|;
 comment|/* Parser function. */
 name|int
 function_decl|(
@@ -298,30 +305,6 @@ function_decl|)
 parameter_list|(
 name|char
 modifier|*
-parameter_list|)
-function_decl|;
-comment|/* Evaluate an expression. */
-name|struct
-name|value
-modifier|*
-function_decl|(
-modifier|*
-name|evaluate_exp
-function_decl|)
-parameter_list|(
-name|struct
-name|type
-modifier|*
-parameter_list|,
-name|struct
-name|expression
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|enum
-name|noside
 parameter_list|)
 function_decl|;
 name|void
@@ -474,6 +457,94 @@ name|enum
 name|val_prettyprint
 parameter_list|)
 function_decl|;
+comment|/* PC is possibly an unknown languages trampoline.        If that PC falls in a trampoline belonging to this language,        return the address of the first pc in the real function, or 0        if it isn't a language tramp for this language.  */
+name|CORE_ADDR
+function_decl|(
+modifier|*
+name|skip_trampoline
+function_decl|)
+parameter_list|(
+name|CORE_ADDR
+name|pc
+parameter_list|)
+function_decl|;
+comment|/* Now come some hooks for lookup_symbol.  */
+comment|/* If this is non-NULL, lookup_symbol will do the 'field_of_this'        check, using this function to find the value of this.  */
+comment|/* FIXME: carlton/2003-05-19: Audit all the language_defn structs        to make sure we're setting this appropriately: I'm sure it        could be NULL in more languages.  */
+name|struct
+name|value
+modifier|*
+function_decl|(
+modifier|*
+name|la_value_of_this
+function_decl|)
+parameter_list|(
+name|int
+name|complain
+parameter_list|)
+function_decl|;
+comment|/* This is a function that lookup_symbol will call when it gets to        the part of symbol lookup where C looks up static and global        variables.  */
+name|struct
+name|symbol
+modifier|*
+function_decl|(
+modifier|*
+name|la_lookup_symbol_nonlocal
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|block
+modifier|*
+parameter_list|,
+specifier|const
+name|domain_enum
+parameter_list|,
+name|struct
+name|symtab
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Find the definition of the type with the given name.  */
+name|struct
+name|type
+modifier|*
+function_decl|(
+modifier|*
+name|la_lookup_transparent_type
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Return demangled language symbol, or NULL.  */
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|la_demangle
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|mangled
+parameter_list|,
+name|int
+name|options
+parameter_list|)
+function_decl|;
 comment|/* Base 2 (binary) formats. */
 name|struct
 name|language_format_info
@@ -516,6 +587,17 @@ modifier|*
 modifier|*
 name|string_char_type
 decl_stmt|;
+comment|/* The list of characters forming word boundaries.  */
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|la_word_break_characters
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/* Add fields above this point, so the magic number is always last. */
 comment|/* Magic number for compat checking */
 name|long
@@ -618,7 +700,7 @@ begin_define
 define|#
 directive|define
 name|CAST_IS_CONVERSION
-value|(current_language->la_language == language_c  || \ 			    current_language->la_language == language_cplus)
+value|(current_language->la_language == language_c  || \ 			    current_language->la_language == language_cplus || \ 			    current_language->la_language == language_objc)
 end_define
 
 begin_function_decl
@@ -1018,22 +1100,6 @@ name|char
 modifier|*
 name|local_hex_string
 parameter_list|(
-name|unsigned
-name|long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* language.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|longest_local_hex_string
-parameter_list|(
 name|LONGEST
 parameter_list|)
 function_decl|;
@@ -1048,25 +1114,6 @@ specifier|extern
 name|char
 modifier|*
 name|local_hex_string_custom
-parameter_list|(
-name|unsigned
-name|long
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* language.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|longest_local_hex_string_custom
 parameter_list|(
 name|LONGEST
 parameter_list|,
@@ -1255,43 +1302,21 @@ specifier|extern
 name|void
 name|op_error
 parameter_list|(
+specifier|const
 name|char
 modifier|*
-name|fmt
+name|lhs
 parameter_list|,
 name|enum
 name|exp_opcode
 parameter_list|,
-name|int
+specifier|const
+name|char
+modifier|*
+name|rhs
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|type_op_error
-parameter_list|(
-name|f
-parameter_list|,
-name|o
-parameter_list|)
-define|\
-value|op_error((f),(o),type_check==type_check_on ? 1 : 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|range_op_error
-parameter_list|(
-name|f
-parameter_list|,
-name|o
-parameter_list|)
-define|\
-value|op_error((f),(o),range_check==range_check_on ? 1 : 0)
-end_define
 
 begin_function_decl
 specifier|extern
@@ -1456,6 +1481,63 @@ end_function_decl
 begin_comment
 comment|/* In stack.c */
 end_comment
+
+begin_comment
+comment|/* Check for a language-specific trampoline. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|CORE_ADDR
+name|skip_language_trampoline
+parameter_list|(
+name|CORE_ADDR
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Return demangled language symbol, or NULL.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|language_demangle
+parameter_list|(
+specifier|const
+name|struct
+name|language_defn
+modifier|*
+name|current_language
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|mangled
+parameter_list|,
+name|int
+name|options
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Splitting strings into words.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|default_word_break_characters
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for GDB maintenance commands.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Support for GDB maintenance commands.     Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001,    2002, 2003, 2004 Free Software Foundation, Inc.     Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cli/cli-decode.h"
 end_include
 
 begin_function_decl
@@ -197,23 +203,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|print_section_table
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|asection
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|maintenance_info_sections
 parameter_list|(
 name|char
@@ -304,10 +293,6 @@ ifndef|#
 directive|ifndef
 name|_WIN32
 end_ifndef
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -400,7 +385,56 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"internal maintenance"
+literal|"%s"
+argument_list|,
+operator|(
+name|args
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|args
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Stimulate the internal error mechanism that GDB uses when an    internal problem is detected.  Allows testing of the mechanism.    Also useful when the user wants to drop a core file but not exit    GDB. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|maintenance_internal_warning
+parameter_list|(
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|int
+name|from_tty
+parameter_list|)
+block|{
+name|internal_warning
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"%s"
+argument_list|,
+operator|(
+name|args
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
+name|args
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -449,8 +483,10 @@ else|else
 block|{
 name|demangled
 operator|=
-name|cplus_demangle
+name|language_demangle
 argument_list|(
+name|current_language
+argument_list|,
 name|args
 argument_list|,
 name|DMGL_ANSI
@@ -590,10 +626,6 @@ end_function
 
 begin_comment
 comment|/* The "maintenance info" command is defined as a prefix, with    allow_unknown 0.  Therefore, its own definition is called only for    "maintenance info" with no args.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -1129,7 +1161,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|print_section_info
+name|maint_print_section_info
 parameter_list|(
 specifier|const
 name|char
@@ -1312,7 +1344,7 @@ argument_list|,
 name|asect
 argument_list|)
 expr_stmt|;
-name|print_section_info
+name|maint_print_section_info
 argument_list|(
 name|name
 argument_list|,
@@ -1402,7 +1434,7 @@ name|flags
 argument_list|)
 condition|)
 block|{
-name|print_section_info
+name|maint_print_section_info
 argument_list|(
 name|name
 argument_list|,
@@ -1426,10 +1458,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -1617,10 +1645,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|void
 name|maintenance_print_statistics
@@ -1643,6 +1667,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|maintenance_print_architecture
 parameter_list|(
@@ -1710,10 +1735,6 @@ end_function
 
 begin_comment
 comment|/* The "maintenance print" command is defined as a prefix, with    allow_unknown 0.  Therefore, its own definition is called only for    "maintenance print" with no args.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -1942,7 +1963,7 @@ name|printf_filtered
 argument_list|(
 literal|"%s+%s\n"
 argument_list|,
-name|SYMBOL_SOURCE_NAME
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -2452,12 +2473,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOTYET
-end_ifdef
-
 begin_comment
 comment|/* Profiling support.  */
 end_comment
@@ -2468,6 +2483,96 @@ name|int
 name|maintenance_profile_p
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_MONSTARTUP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE__MCLEANUP
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE__ETEXT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|_etext
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TEXTEND
+value|&_etext
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|etext
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TEXTEND
+value|&etext
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|profiling_state
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|mcleanup_wrapper
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|extern
+name|void
+name|_mcleanup
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|profiling_state
+condition|)
+name|_mcleanup
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -2487,13 +2592,118 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+if|if
+condition|(
 name|maintenance_profile_p
+operator|==
+name|profiling_state
+condition|)
+return|return;
+name|profiling_state
 operator|=
-literal|0
+name|maintenance_profile_p
 expr_stmt|;
-name|warning
+if|if
+condition|(
+name|maintenance_profile_p
+condition|)
+block|{
+specifier|static
+name|int
+name|profiling_initialized
+decl_stmt|;
+specifier|extern
+name|void
+name|monstartup
 argument_list|(
-literal|"\"maintenance set profile\" command not supported.\n"
+name|unsigned
+name|long
+argument_list|,
+name|unsigned
+name|long
+argument_list|)
+decl_stmt|;
+specifier|extern
+name|int
+name|main
+parameter_list|()
+function_decl|;
+if|if
+condition|(
+operator|!
+name|profiling_initialized
+condition|)
+block|{
+name|atexit
+argument_list|(
+name|mcleanup_wrapper
+argument_list|)
+expr_stmt|;
+name|profiling_initialized
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* "main" is now always the first function in the text segment, so use 	 its address for monstartup.  */
+name|monstartup
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|&
+expr|main
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|TEXTEND
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+specifier|extern
+name|void
+name|_mcleanup
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+name|_mcleanup
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|void
+name|maintenance_set_profile_cmd
+parameter_list|(
+name|char
+modifier|*
+name|args
+parameter_list|,
+name|int
+name|from_tty
+parameter_list|,
+name|struct
+name|cmd_list_element
+modifier|*
+name|c
+parameter_list|)
+block|{
+name|error
+argument_list|(
+literal|"Profiling support is not available on this system."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2524,7 +2734,7 @@ name|class_maintenance
 argument_list|,
 name|maintenance_command
 argument_list|,
-literal|"Commands for use by GDB maintainers.\n\ Includes commands to dump specific internal GDB structures in\n\ a human readable form, to cause GDB to deliberately dump core,\n\ to test internal functions such as the C++ demangler, etc."
+literal|"Commands for use by GDB maintainers.\n\ Includes commands to dump specific internal GDB structures in\n\ a human readable form, to cause GDB to deliberately dump core,\n\ to test internal functions such as the C++/ObjC demangler, etc."
 argument_list|,
 operator|&
 name|maintenancelist
@@ -2673,7 +2883,7 @@ name|class_maintenance
 argument_list|,
 name|maintenance_dump_me
 argument_list|,
-literal|"Get fatal error; make debugger dump its core.\n\ GDB sets it's handling of SIGQUIT back to SIG_DFL and then sends\n\ itself a SIGQUIT signal."
+literal|"Get fatal error; make debugger dump its core.\n\ GDB sets its handling of SIGQUIT back to SIG_DFL and then sends\n\ itself a SIGQUIT signal."
 argument_list|,
 operator|&
 name|maintenancelist
@@ -2697,13 +2907,27 @@ argument_list|)
 expr_stmt|;
 name|add_cmd
 argument_list|(
+literal|"internal-warning"
+argument_list|,
+name|class_maintenance
+argument_list|,
+name|maintenance_internal_warning
+argument_list|,
+literal|"Give GDB an internal warning.\n\ Cause GDB to behave as if an internal warning was reported."
+argument_list|,
+operator|&
+name|maintenancelist
+argument_list|)
+expr_stmt|;
+name|add_cmd
+argument_list|(
 literal|"demangle"
 argument_list|,
 name|class_maintenance
 argument_list|,
 name|maintenance_demangle
 argument_list|,
-literal|"Demangle a C++ mangled name.\n\ Call internal GDB demangler routine to demangle a C++ link name\n\ and prints the result."
+literal|"Demangle a C++/ObjC mangled name.\n\ Call internal GDB demangler routine to demangle a C++ link name\n\ and prints the result."
 argument_list|,
 operator|&
 name|maintenancelist
@@ -2805,6 +3029,34 @@ literal|"Print dump of current object file definitions."
 argument_list|,
 operator|&
 name|maintenanceprintlist
+argument_list|)
+expr_stmt|;
+name|add_cmd
+argument_list|(
+literal|"symtabs"
+argument_list|,
+name|class_maintenance
+argument_list|,
+name|maintenance_info_symtabs
+argument_list|,
+literal|"List the full symbol tables for all object files.\n\ This does not include information about individual symbols, blocks, or\n\ linetables --- just the symbol table structures themselves.\n\ With an argument REGEXP, list the symbol tables whose names that match that."
+argument_list|,
+operator|&
+name|maintenanceinfolist
+argument_list|)
+expr_stmt|;
+name|add_cmd
+argument_list|(
+literal|"psymtabs"
+argument_list|,
+name|class_maintenance
+argument_list|,
+name|maintenance_info_psymtabs
+argument_list|,
+literal|"List the partial symbol tables for all object files.\n\ This does not include information about individual partial symbols,\n\ just the symbol table structures themselves."
+argument_list|,
+operator|&
+name|maintenanceinfolist
 argument_list|)
 expr_stmt|;
 name|add_cmd
@@ -2918,46 +3170,31 @@ operator|&
 name|showlist
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NOTYET
-comment|/* FIXME: cagney/2001-09-24: A patch introducing a      add_set_boolean_cmd() is pending, the below should probably use      it.  A patch implementing profiling is pending, this just sets up      the framework.  */
-name|tmpcmd
-operator|=
-name|add_set_cmd
+name|add_setshow_boolean_cmd
 argument_list|(
 literal|"profile"
 argument_list|,
 name|class_maintenance
 argument_list|,
-name|var_boolean
-argument_list|,
 operator|&
 name|maintenance_profile_p
 argument_list|,
-literal|"Set internal profiling.\n\ When enabled GDB is profiled."
+literal|"Set internal profiling.\n"
+literal|"When enabled GDB is profiled."
+argument_list|,
+literal|"Show internal profiling.\n"
+argument_list|,
+name|maintenance_set_profile_cmd
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|maintenance_set_cmdlist
-argument_list|)
-expr_stmt|;
-name|set_cmd_sfunc
-argument_list|(
-name|tmpcmd
-argument_list|,
-name|maintenance_set_profile_cmd
-argument_list|)
-expr_stmt|;
-name|add_show_from_set
-argument_list|(
-name|tmpcmd
 argument_list|,
 operator|&
 name|maintenance_show_cmdlist
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Basic C++ demangling support for GDB.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Basic C++ demangling support for GDB.     Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000,    2001, 2003 Free Software Foundation, Inc.     Written by Fred Fish at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -159,7 +159,7 @@ control|)
 block|{
 if|if
 condition|(
-name|STREQ
+name|strcmp
 argument_list|(
 name|current_demangling_style_string
 argument_list|,
@@ -167,6 +167,8 @@ name|dem
 operator|->
 name|demangling_style_name
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|current_demangling_style
@@ -381,7 +383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* In order to allow a single demangler executable to demangle strings    using various common values of CPLUS_MARKER, as well as any specific    one set at compile time, we maintain a string containing all the    commonly used ones, and check to see if the marker we are looking for    is in that string.  CPLUS_MARKER is usually '$' on systems where the    assembler can deal with that.  Where the assembler can't, it's usually    '.' (but on many systems '.' is used for other things).  We put the    current defined CPLUS_MARKER first (which defaults to '$'), followed    by the next most common value, followed by an explicit '$' in case    the value of CPLUS_MARKER is not '$'.     We could avoid this if we could just get g++ to tell us what the actual    cplus marker character is as part of the debug information, perhaps by    ensuring that it is the character that terminates the gcc<n>_compiled    marker symbol (FIXME). */
+comment|/* G++ uses a special character to indicate certain internal names.  Which    character it is depends on the platform:    - Usually '$' on systems where the assembler will accept that    - Usually '.' otherwise (this includes most sysv4-like systems and most      ELF targets)    - Occasionally '_' if neither of the above is usable     We check '$' first because it is the safest, and '.' often has another    meaning.  We don't currently try to handle '_' because the precise forms    of the names are different on those targets.  */
 end_comment
 
 begin_decl_stmt
@@ -391,11 +393,9 @@ name|cplus_markers
 index|[]
 init|=
 block|{
-name|CPLUS_MARKER
+literal|'$'
 block|,
 literal|'.'
-block|,
-literal|'$'
 block|,
 literal|'\0'
 block|}
@@ -559,11 +559,6 @@ comment|/* Set the default demangling style chosen at compilation time. */
 name|set_demangling_style
 argument_list|(
 name|DEFAULT_DEMANGLING_STYLE
-argument_list|)
-expr_stmt|;
-name|set_cplus_marker_for_demangling
-argument_list|(
-name|CPLUS_MARKER
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target-struct-independent code to start (run) and stop an inferior    process.     Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994,    1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Target-struct-independent code to start (run) and stop an inferior    process.     Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994,    1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free    Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -123,6 +123,24 @@ directive|include
 file|"value.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"observer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"language.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_assert.h"
+end_include
+
 begin_comment
 comment|/* Prototypes for local functions */
 end_comment
@@ -209,50 +227,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|set_follow_fork_mode_command
-parameter_list|(
-name|char
-modifier|*
-name|arg
-parameter_list|,
-name|int
-name|from_tty
-parameter_list|,
-name|struct
-name|cmd_list_element
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|inferior_status
-modifier|*
-name|xmalloc_inferior_status
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|free_inferior_status
-parameter_list|(
-name|struct
-name|inferior_status
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|restore_selected_frame
 parameter_list|(
@@ -274,48 +248,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|follow_inferior_fork
-parameter_list|(
 name|int
-name|parent_pid
-parameter_list|,
-name|int
-name|child_pid
-parameter_list|,
-name|int
-name|has_forked
-parameter_list|,
-name|int
-name|has_vforked
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|follow_fork
 parameter_list|(
-name|int
-name|parent_pid
-parameter_list|,
-name|int
-name|child_pid
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
-name|follow_vfork
-parameter_list|(
-name|int
-name|parent_pid
-parameter_list|,
-name|int
-name|child_pid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -370,6 +306,16 @@ name|args
 parameter_list|,
 name|int
 name|from_tty
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|prepare_to_proceed
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -466,31 +412,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Dynamic function trampolines are similar to solib trampolines in that they    are between the caller and the callee.  The difference is that when you    enter a dynamic trampoline, you can't determine the callee's address.  Some    (usually complex) code needs to run in the dynamic trampoline to figure out    the callee's address.  This macro is usually called twice.  First, when we    enter the trampoline (looks like a normal function call at that point).  It    should return the PC of a point within the trampoline where the callee's    address is known.  Second, when we hit the breakpoint, this routine returns    the callee's address.  At that point, things proceed as per a step resume    breakpoint.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DYNAMIC_TRAMPOLINE_NEXTPC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DYNAMIC_TRAMPOLINE_NEXTPC
-parameter_list|(
-name|pc
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* If the program uses ELF-style shared libraries, then calls to    functions in shared libraries go through stubs, which live in a    table called the PLT (Procedure Linkage Table).  The first time the    function is called, the stub sends control to the dynamic linker,    which looks up the function's real address, patches the stub so    that future calls will go directly to the function, and then passes    control to the function.     If we are stepping at the source level, we don't want to see any of    this --- we just want to skip over the stub and the dynamic linker.    The simple approach is to single-step until control leaves the    dynamic linker.     However, on some systems (e.g., Red Hat's 5.2 distribution) the    dynamic linker calls functions in the shared C library, so you    can't tell from the PC alone whether the dynamic linker is still    running.  In this case, we use a step-resume breakpoint to get us    past the dynamic linker, as if we were using "next" to step over a    function call.     IN_SOLIB_DYNSYM_RESOLVE_CODE says whether we're in the dynamic    linker code or not.  Normally, this means we single-step.  However,    if SKIP_SOLIB_RESOLVER then returns non-zero, then its value is an    address where we can place a step-resume breakpoint to get past the    linker's symbol resolution function.     IN_SOLIB_DYNSYM_RESOLVE_CODE can generally be implemented in a    pretty portable way, by comparing the PC against the address ranges    of the dynamic linker's sections.     SKIP_SOLIB_RESOLVER is generally going to be system-specific, since    it depends on internal details of the dynamic linker.  It's usually    not too hard to figure out where to put a breakpoint, but it    certainly isn't portable.  SKIP_SOLIB_RESOLVER should do plenty of    sanity checking.  If it can't figure things out, returning zero and    getting the (possibly confusing) stepping behavior is better than    signalling an error, which will obscure the change in the    inferior's state.  */
 end_comment
 
@@ -506,54 +427,6 @@ directive|define
 name|IN_SOLIB_DYNSYM_RESOLVE_CODE
 parameter_list|(
 name|pc
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SKIP_SOLIB_RESOLVER
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SKIP_SOLIB_RESOLVER
-parameter_list|(
-name|pc
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* In some shared library schemes, the return path from a shared library    call may need to go through a trampoline too.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IN_SOLIB_RETURN_TRAMPOLINE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IN_SOLIB_RETURN_TRAMPOLINE
-parameter_list|(
-name|pc
-parameter_list|,
-name|name
 parameter_list|)
 value|0
 end_define
@@ -707,78 +580,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STEPPABLE_WATCHPOINT
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_NONSTEPPABLE_WATCHPOINT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_NONSTEPPABLE_WATCHPOINT
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_NONSTEPPABLE_WATCHPOINT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|HAVE_NONSTEPPABLE_WATCHPOINT
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_CONTINUABLE_WATCHPOINT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_CONTINUABLE_WATCHPOINT
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_CONTINUABLE_WATCHPOINT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|HAVE_CONTINUABLE_WATCHPOINT
 value|1
 end_define
 
@@ -1002,8 +803,9 @@ comment|/* Nonzero means expecting a trap and caller will handle it themselves. 
 end_comment
 
 begin_decl_stmt
-name|int
-name|stop_soon_quietly
+name|enum
+name|stop_kind
+name|stop_soon
 decl_stmt|;
 end_decl_stmt
 
@@ -1022,7 +824,8 @@ comment|/* Save register contents here when about to pop a stack dummy frame,   
 end_comment
 
 begin_decl_stmt
-name|char
+name|struct
+name|regcache
 modifier|*
 name|stop_registers
 decl_stmt|;
@@ -1120,16 +923,7 @@ name|int
 name|parent_pid
 decl_stmt|;
 name|int
-name|saw_parent_fork
-decl_stmt|;
-name|int
 name|child_pid
-decl_stmt|;
-name|int
-name|saw_child_fork
-decl_stmt|;
-name|int
-name|saw_child_exec
 decl_stmt|;
 block|}
 name|fork_event
@@ -1142,39 +936,6 @@ block|}
 name|pending_follow
 struct|;
 end_struct
-
-begin_comment
-comment|/* Some platforms don't allow us to do anything meaningful with a    vforked child until it has exec'd.  Vforked processes on such    platforms can only be followed after they've exec'd.     When this is set to 0, a vfork can be immediately followed,    and an exec can be followed merely as an exec.  When this is    set to 1, a vfork event has been seen, but cannot be followed    until the exec is seen.     (In the latter case, inferior_ptid is still the parent of the    vfork, and pending_follow.fork_event.child_pid is the child.  The    appropriate process is followed, according to the setting of    follow-fork-mode.) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|follow_vfork_when_exec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|follow_fork_mode_ask
-index|[]
-init|=
-literal|"ask"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|follow_fork_mode_both
-index|[]
-init|=
-literal|"both"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1207,10 +968,6 @@ name|follow_fork_mode_kind_names
 index|[]
 init|=
 block|{
-name|follow_fork_mode_ask
-block|,
-comment|/* ??rehrauer: The "both" option is broken, by what may be a 10.20      kernel problem.  It's also not terribly useful without a GUI to      help the user drive two debuggers.  So for now, I'm disabling the      "both" option. */
-comment|/* follow_fork_mode_both, */
 name|follow_fork_mode_child
 block|,
 name|follow_fork_mode_parent
@@ -1236,454 +993,54 @@ end_escape
 
 begin_function
 specifier|static
-name|void
-name|follow_inferior_fork
+name|int
+name|follow_fork
 parameter_list|(
-name|int
-name|parent_pid
-parameter_list|,
-name|int
-name|child_pid
-parameter_list|,
-name|int
-name|has_forked
-parameter_list|,
-name|int
-name|has_vforked
+name|void
 parameter_list|)
 block|{
 name|int
-name|followed_parent
+name|follow_child
 init|=
-literal|0
-decl_stmt|;
-name|int
-name|followed_child
-init|=
-literal|0
-decl_stmt|;
-comment|/* Which process did the user want us to follow? */
-specifier|const
-name|char
-modifier|*
-name|follow_mode
-init|=
+operator|(
 name|follow_fork_mode_string
-decl_stmt|;
-comment|/* Or, did the user not know, and want us to ask? */
-if|if
-condition|(
-name|follow_fork_mode_string
-operator|==
-name|follow_fork_mode_ask
-condition|)
-block|{
-name|internal_error
-argument_list|(
-name|__FILE__
-argument_list|,
-name|__LINE__
-argument_list|,
-literal|"follow_inferior_fork: \"ask\" mode not implemented"
-argument_list|)
-expr_stmt|;
-comment|/* follow_mode = follow_fork_mode_...; */
-block|}
-comment|/* If we're to be following the parent, then detach from child_pid.      We're already following the parent, so need do nothing explicit      for it. */
-if|if
-condition|(
-name|follow_mode
-operator|==
-name|follow_fork_mode_parent
-condition|)
-block|{
-name|followed_parent
-operator|=
-literal|1
-expr_stmt|;
-comment|/* We're already attached to the parent, by default. */
-comment|/* Before detaching from the child, remove all breakpoints from          it.  (This won't actually modify the breakpoint list, but will          physically remove the breakpoints from the child.) */
-if|if
-condition|(
-operator|!
-name|has_vforked
-operator|||
-operator|!
-name|follow_vfork_when_exec
-condition|)
-block|{
-name|detach_breakpoints
-argument_list|(
-name|child_pid
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SOLIB_REMOVE_INFERIOR_HOOK
-name|SOLIB_REMOVE_INFERIOR_HOOK
-argument_list|(
-name|child_pid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-comment|/* Detach from the child. */
-name|dont_repeat
-argument_list|()
-expr_stmt|;
-name|target_require_detach
-argument_list|(
-name|child_pid
-argument_list|,
-literal|""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* If we're to be following the child, then attach to it, detach      from inferior_ptid, and set inferior_ptid to child_pid. */
-elseif|else
-if|if
-condition|(
-name|follow_mode
 operator|==
 name|follow_fork_mode_child
-condition|)
-block|{
-name|char
-name|child_pid_spelling
-index|[
-literal|100
-index|]
+operator|)
 decl_stmt|;
-comment|/* Arbitrary length. */
-name|followed_child
-operator|=
-literal|1
-expr_stmt|;
-comment|/* Before detaching from the parent, detach all breakpoints from          the child.  But only if we're forking, or if we follow vforks          as soon as they happen.  (If we're following vforks only when          the child has exec'd, then it's very wrong to try to write          back the "shadow contents" of inserted breakpoints now -- they          belong to the child's pre-exec'd a.out.) */
-if|if
-condition|(
-operator|!
-name|has_vforked
-operator|||
-operator|!
-name|follow_vfork_when_exec
-condition|)
-block|{
-name|detach_breakpoints
+return|return
+name|target_follow_fork
 argument_list|(
-name|child_pid
+name|follow_child
 argument_list|)
-expr_stmt|;
+return|;
 block|}
-comment|/* Before detaching from the parent, remove all breakpoints from it. */
-name|remove_breakpoints
-argument_list|()
-expr_stmt|;
-comment|/* Also reset the solib inferior hook from the parent. */
-ifdef|#
-directive|ifdef
-name|SOLIB_REMOVE_INFERIOR_HOOK
-name|SOLIB_REMOVE_INFERIOR_HOOK
-argument_list|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Detach from the parent. */
-name|dont_repeat
-argument_list|()
-expr_stmt|;
-name|target_detach
-argument_list|(
-name|NULL
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Attach to the child. */
-name|inferior_ptid
-operator|=
-name|pid_to_ptid
-argument_list|(
-name|child_pid
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|child_pid_spelling
-argument_list|,
-literal|"%d"
-argument_list|,
-name|child_pid
-argument_list|)
-expr_stmt|;
-name|dont_repeat
-argument_list|()
-expr_stmt|;
-name|target_require_attach
-argument_list|(
-name|child_pid_spelling
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Was there a step_resume breakpoint?  (There was if the user          did a "next" at the fork() call.)  If so, explicitly reset its          thread number.           step_resumes are a form of bp that are made to be per-thread.          Since we created the step_resume bp when the parent process          was being debugged, and now are switching to the child process,          from the breakpoint package's viewpoint, that's a switch of          "threads".  We must update the bp's notion of which thread          it is for, or it'll be ignored when it triggers... */
+end_function
+
+begin_function
+name|void
+name|follow_inferior_reset_breakpoints
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Was there a step_resume breakpoint?  (There was if the user      did a "next" at the fork() call.)  If so, explicitly reset its      thread number.       step_resumes are a form of bp that are made to be per-thread.      Since we created the step_resume bp when the parent process      was being debugged, and now are switching to the child process,      from the breakpoint package's viewpoint, that's a switch of      "threads".  We must update the bp's notion of which thread      it is for, or it'll be ignored when it triggers.  */
 if|if
 condition|(
 name|step_resume_breakpoint
-operator|&&
-operator|(
-operator|!
-name|has_vforked
-operator|||
-operator|!
-name|follow_vfork_when_exec
-operator|)
 condition|)
 name|breakpoint_re_set_thread
 argument_list|(
 name|step_resume_breakpoint
 argument_list|)
 expr_stmt|;
-comment|/* Reinsert all breakpoints in the child.  (The user may've set          breakpoints after catching the fork, in which case those          actually didn't get set in the child, but only in the parent.) */
-if|if
-condition|(
-operator|!
-name|has_vforked
-operator|||
-operator|!
-name|follow_vfork_when_exec
-condition|)
-block|{
+comment|/* Reinsert all breakpoints in the child.  The user may have set      breakpoints after catching the fork, in which case those      were never set in the child, but only in the parent.  This makes      sure the inserted breakpoints match the breakpoint list.  */
 name|breakpoint_re_set
 argument_list|()
 expr_stmt|;
 name|insert_breakpoints
 argument_list|()
 expr_stmt|;
-block|}
-block|}
-comment|/* If we're to be following both parent and child, then fork ourselves,      and attach the debugger clone to the child. */
-elseif|else
-if|if
-condition|(
-name|follow_mode
-operator|==
-name|follow_fork_mode_both
-condition|)
-block|{
-name|char
-name|pid_suffix
-index|[
-literal|100
-index|]
-decl_stmt|;
-comment|/* Arbitrary length. */
-comment|/* Clone ourselves to follow the child.  This is the end of our          involvement with child_pid; our clone will take it from here... */
-name|dont_repeat
-argument_list|()
-expr_stmt|;
-name|target_clone_and_follow_inferior
-argument_list|(
-name|child_pid
-argument_list|,
-operator|&
-name|followed_child
-argument_list|)
-expr_stmt|;
-name|followed_parent
-operator|=
-operator|!
-name|followed_child
-expr_stmt|;
-comment|/* We continue to follow the parent.  To help distinguish the two          debuggers, though, both we and our clone will reset our prompts. */
-name|sprintf
-argument_list|(
-name|pid_suffix
-argument_list|,
-literal|"[%d] "
-argument_list|,
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|set_prompt
-argument_list|(
-name|strcat
-argument_list|(
-name|get_prompt
-argument_list|()
-argument_list|,
-name|pid_suffix
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* The parent and child of a vfork share the same address space.      Also, on some targets the order in which vfork and exec events      are received for parent in child requires some delicate handling      of the events.       For instance, on ptrace-based HPUX we receive the child's vfork      event first, at which time the parent has been suspended by the      OS and is essentially untouchable until the child's exit or second      exec event arrives.  At that time, the parent's vfork event is      delivered to us, and that's when we see and decide how to follow      the vfork.  But to get to that point, we must continue the child      until it execs or exits.  To do that smoothly, all breakpoints      must be removed from the child, in case there are any set between      the vfork() and exec() calls.  But removing them from the child      also removes them from the parent, due to the shared-address-space      nature of a vfork'd parent and child.  On HPUX, therefore, we must      take care to restore the bp's to the parent before we continue it.      Else, it's likely that we may not stop in the expected place.  (The      worst scenario is when the user tries to step over a vfork() call;      the step-resume bp must be restored for the step to properly stop      in the parent after the call completes!)       Sequence of events, as reported to gdb from HPUX:       Parent        Child           Action for gdb to take      -------------------------------------------------------      1                VFORK               Continue child      2                EXEC      3                EXEC or EXIT      4  VFORK */
-if|if
-condition|(
-name|has_vforked
-condition|)
-block|{
-name|target_post_follow_vfork
-argument_list|(
-name|parent_pid
-argument_list|,
-name|followed_parent
-argument_list|,
-name|child_pid
-argument_list|,
-name|followed_child
-argument_list|)
-expr_stmt|;
-block|}
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_parent_fork
-operator|=
-literal|0
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_fork
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|follow_fork
-parameter_list|(
-name|int
-name|parent_pid
-parameter_list|,
-name|int
-name|child_pid
-parameter_list|)
-block|{
-name|follow_inferior_fork
-argument_list|(
-name|parent_pid
-argument_list|,
-name|child_pid
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Forward declaration. */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|follow_exec
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|void
-name|follow_vfork
-parameter_list|(
-name|int
-name|parent_pid
-parameter_list|,
-name|int
-name|child_pid
-parameter_list|)
-block|{
-name|follow_inferior_fork
-argument_list|(
-name|parent_pid
-argument_list|,
-name|child_pid
-argument_list|,
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Did we follow the child?  Had it exec'd before we saw the parent vfork? */
-if|if
-condition|(
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_exec
-operator|&&
-operator|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-operator|==
-name|child_pid
-operator|)
-condition|)
-block|{
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_exec
-operator|=
-literal|0
-expr_stmt|;
-name|pending_follow
-operator|.
-name|kind
-operator|=
-name|TARGET_WAITKIND_SPURIOUS
-expr_stmt|;
-name|follow_exec
-argument_list|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-argument_list|,
-name|pending_follow
-operator|.
-name|execd_pathname
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|pending_follow
-operator|.
-name|execd_pathname
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1720,67 +1077,6 @@ operator|!
 name|may_follow_exec
 condition|)
 return|return;
-comment|/* Did this exec() follow a vfork()?  If so, we must follow the      vfork now too.  Do it before following the exec. */
-if|if
-condition|(
-name|follow_vfork_when_exec
-operator|&&
-operator|(
-name|pending_follow
-operator|.
-name|kind
-operator|==
-name|TARGET_WAITKIND_VFORKED
-operator|)
-condition|)
-block|{
-name|pending_follow
-operator|.
-name|kind
-operator|=
-name|TARGET_WAITKIND_SPURIOUS
-expr_stmt|;
-name|follow_vfork
-argument_list|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-argument_list|,
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-argument_list|)
-expr_stmt|;
-name|follow_vfork_when_exec
-operator|=
-literal|0
-expr_stmt|;
-name|saved_pid
-operator|=
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-expr_stmt|;
-comment|/* Did we follow the parent?  If so, we're done.  If we followed          the child then we must also follow its exec(). */
-if|if
-condition|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-operator|==
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|parent_pid
-condition|)
-return|return;
-block|}
 comment|/* This is an exec event that we actually wish to pay attention to.      Refresh our symbol table to the newly exec'd program, remove any      momentary bp's, etc.       If there are breakpoints, they aren't really inserted now,      since the exec() transformed our inferior into a fresh set      of instructions.       We want to preserve symbolic breakpoints on the list, since      we have hopes that they can be reset after the new a.out's      symbol table is read.       However, any "raw" breakpoints must be removed from the list      (e.g., the solib bp's), since their address is probably invalid      now.       And, we DON'T want to call delete_breakpoints() here, since      that may write the bp's "shadow contents" (the instruction      value that was overwritten witha TRAP instruction).  Since      we now have a new a.out, those shadow contents aren't valid. */
 name|update_breakpoints_after_exec
 argument_list|()
@@ -1913,15 +1209,40 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* The thread we inserted single-step breakpoints for.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|ptid_t
+name|singlestep_ptid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If another thread hit the singlestep breakpoint, we save the original    thread here so that we can resume single-stepping it later.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|ptid_t
+name|saved_singlestep_ptid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|stepping_past_singlestep_breakpoint
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
 begin_comment
 comment|/* Things to clean up if we QUIT out of resume ().  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -2022,11 +1343,13 @@ modifier|*
 name|c
 parameter_list|)
 block|{
+comment|/* NOTE: cagney/2002-03-17: The add_show_from_set() function clones      the set command passed as a parameter.  The clone operation will      include (BUG?) any ``set'' command callback, if present.      Commands like ``info set'' call all the ``show'' command      callbacks.  Unfortunately, for ``show'' commands cloned from      ``set'', this includes callbacks belonging to ``set'' commands.      Making this worse, this only occures if add_show_from_set() is      called after add_cmd_sfunc() (BUG?).  */
 if|if
 condition|(
+name|cmd_type
+argument_list|(
 name|c
-operator|->
-name|type
+argument_list|)
 operator|==
 name|set_cmd
 condition|)
@@ -2140,6 +1463,10 @@ name|singlestep_breakpoints_inserted_p
 operator|=
 literal|1
 expr_stmt|;
+name|singlestep_ptid
+operator|=
+name|inferior_ptid
+expr_stmt|;
 block|}
 comment|/* Handle any optimized stores to the inferior NOW...  */
 ifdef|#
@@ -2149,7 +1476,7 @@ name|DO_DEFERRED_STORES
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* If there were any forks/vforks/execs that were caught and are      now to be followed, then do so. */
+comment|/* If there were any forks/vforks/execs that were caught and are      now to be followed, then do so.  */
 switch|switch
 condition|(
 name|pending_follow
@@ -2158,104 +1485,37 @@ name|kind
 condition|)
 block|{
 case|case
-operator|(
 name|TARGET_WAITKIND_FORKED
-operator|)
 case|:
-name|pending_follow
-operator|.
-name|kind
-operator|=
-name|TARGET_WAITKIND_SPURIOUS
-expr_stmt|;
-name|follow_fork
-argument_list|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-argument_list|,
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
-operator|(
 name|TARGET_WAITKIND_VFORKED
-operator|)
 case|:
-block|{
-name|int
-name|saw_child_exec
-init|=
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_exec
-decl_stmt|;
 name|pending_follow
 operator|.
 name|kind
 operator|=
 name|TARGET_WAITKIND_SPURIOUS
 expr_stmt|;
-name|follow_vfork
-argument_list|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-argument_list|,
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-argument_list|)
-expr_stmt|;
-comment|/* Did we follow the child, but not yet see the child's exec event? 	   If so, then it actually ought to be waiting for us; we respond to 	   parent vfork events.  We don't actually want to resume the child 	   in this situation; we want to just get its exec event. */
 if|if
 condition|(
-operator|!
-name|saw_child_exec
-operator|&&
-operator|(
-name|PIDGET
-argument_list|(
-name|inferior_ptid
-argument_list|)
-operator|==
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-operator|)
+name|follow_fork
+argument_list|()
 condition|)
 name|should_resume
 operator|=
 literal|0
 expr_stmt|;
-block|}
 break|break;
 case|case
-operator|(
 name|TARGET_WAITKIND_EXECD
-operator|)
 case|:
-comment|/* If we saw a vfork event but couldn't follow it until we saw          an exec, then now might be the time! */
+comment|/* follow_exec is called as soon as the exec event is seen. */
 name|pending_follow
 operator|.
 name|kind
 operator|=
 name|TARGET_WAITKIND_SPURIOUS
 expr_stmt|;
-comment|/* follow_exec is called as soon as the exec event is seen. */
 break|break;
 default|default:
 break|break;
@@ -2285,6 +1545,10 @@ operator|||
 name|singlestep_breakpoints_inserted_p
 operator|)
 operator|&&
+operator|(
+name|stepping_past_singlestep_breakpoint
+operator|||
+operator|(
 operator|!
 name|breakpoints_inserted
 operator|&&
@@ -2293,6 +1557,8 @@ argument_list|(
 name|read_pc
 argument_list|()
 argument_list|)
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* Stepping past a breakpoint without inserting breakpoints. 	     Make sure only the current thread gets to step, so that 	     other threads don't sneak past breakpoints while they are 	     not inserted. */
@@ -2328,10 +1594,12 @@ operator|=
 name|inferior_ptid
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|if
+condition|(
 name|CANNOT_STEP_BREAKPOINT
-comment|/* Most targets can step a breakpoint instruction, thus executing it 	 normally.  But if this one cannot, just continue and we will hit 	 it anyway.  */
+condition|)
+block|{
+comment|/* Most targets can step a breakpoint instruction, thus 	     executing it normally.  But if this one cannot, just 	     continue and we will hit it anyway.  */
 if|if
 condition|(
 name|step
@@ -2348,8 +1616,7 @@ name|step
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|target_resume
 argument_list|(
 name|resume_ptid
@@ -2394,9 +1661,9 @@ name|step_range_end
 operator|=
 literal|0
 expr_stmt|;
-name|step_frame_address
+name|step_frame_id
 operator|=
-literal|0
+name|null_frame_id
 expr_stmt|;
 name|step_over_calls
 operator|=
@@ -2406,9 +1673,9 @@ name|stop_after_trap
 operator|=
 literal|0
 expr_stmt|;
-name|stop_soon_quietly
+name|stop_soon
 operator|=
-literal|0
+name|NO_STOP_QUIETLY
 expr_stmt|;
 name|proceed_to_finish
 operator|=
@@ -2428,6 +1695,155 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* This should be suitable for any targets that support threads. */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|prepare_to_proceed
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ptid_t
+name|wait_ptid
+decl_stmt|;
+name|struct
+name|target_waitstatus
+name|wait_status
+decl_stmt|;
+comment|/* Get the last target status returned by target_wait().  */
+name|get_last_target_status
+argument_list|(
+operator|&
+name|wait_ptid
+argument_list|,
+operator|&
+name|wait_status
+argument_list|)
+expr_stmt|;
+comment|/* Make sure we were stopped either at a breakpoint, or because      of a Ctrl-C.  */
+if|if
+condition|(
+name|wait_status
+operator|.
+name|kind
+operator|!=
+name|TARGET_WAITKIND_STOPPED
+operator|||
+operator|(
+name|wait_status
+operator|.
+name|value
+operator|.
+name|sig
+operator|!=
+name|TARGET_SIGNAL_TRAP
+operator|&&
+name|wait_status
+operator|.
+name|value
+operator|.
+name|sig
+operator|!=
+name|TARGET_SIGNAL_INT
+operator|)
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|ptid_equal
+argument_list|(
+name|wait_ptid
+argument_list|,
+name|minus_one_ptid
+argument_list|)
+operator|&&
+operator|!
+name|ptid_equal
+argument_list|(
+name|inferior_ptid
+argument_list|,
+name|wait_ptid
+argument_list|)
+condition|)
+block|{
+comment|/* Switched over from WAIT_PID.  */
+name|CORE_ADDR
+name|wait_pc
+init|=
+name|read_pc_pid
+argument_list|(
+name|wait_ptid
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|wait_pc
+operator|!=
+name|read_pc
+argument_list|()
+condition|)
+block|{
+comment|/* Switch back to WAIT_PID thread.  */
+name|inferior_ptid
+operator|=
+name|wait_ptid
+expr_stmt|;
+comment|/* FIXME: This stuff came from switch_to_thread() in 	     thread.c (which should probably be a public function).  */
+name|flush_cached_frames
+argument_list|()
+expr_stmt|;
+name|registers_changed
+argument_list|()
+expr_stmt|;
+name|stop_pc
+operator|=
+name|wait_pc
+expr_stmt|;
+name|select_frame
+argument_list|(
+name|get_current_frame
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* We return 1 to indicate that there is a breakpoint here, 	   so we need to step over it before continuing to avoid 	   hitting it straight away. */
+if|if
+condition|(
+name|breakpoint_here_p
+argument_list|(
+name|wait_pc
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Record the pc of the program the last time it stopped.  This is    just used internally by wait_for_inferior, but need to be preserved    over calls to it and cleared when the inferior is started.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|CORE_ADDR
+name|prev_pc
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Basic routine for continuing the program in various fashions.     ADDR is the address to resume at, or -1 for resume where stopped.    SIGGNAL is the signal to give it, or 0 for none,    or -1 for act according to how it stopped.    STEP is nonzero if should trap after one instruction.    -1 means return after that and print nothing.    You should probably set various step_... variables    before calling here, if you are stepping.     You should call clear_proceed_status before calling proceed.  */
@@ -2554,16 +1970,11 @@ name|addr
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PREPARE_TO_PROCEED
-comment|/* In a multi-threaded task we may select another thread      and then continue or step.       But if the old thread was stopped at a breakpoint, it      will immediately cause another breakpoint stop without      any execution (i.e. it will report a breakpoint hit      incorrectly).  So we must step over it first.       PREPARE_TO_PROCEED checks the current thread against the thread      that reported the most recent event.  If a step-over is required      it returns TRUE and sets the current thread to the old thread. */
+comment|/* In a multi-threaded task we may select another thread      and then continue or step.       But if the old thread was stopped at a breakpoint, it      will immediately cause another breakpoint stop without      any execution (i.e. it will report a breakpoint hit      incorrectly).  So we must step over it first.       prepare_to_proceed checks the current thread against the thread      that reported the most recent event.  If a step-over is required      it returns TRUE and sets the current thread to the old thread. */
 if|if
 condition|(
-name|PREPARE_TO_PROCEED
-argument_list|(
-literal|1
-argument_list|)
+name|prepare_to_proceed
+argument_list|()
 operator|&&
 name|breakpoint_here_p
 argument_list|(
@@ -2571,15 +1982,10 @@ name|read_pc
 argument_list|()
 argument_list|)
 condition|)
-block|{
 name|oneproc
 operator|=
 literal|1
 expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* PREPARE_TO_PROCEED */
 ifdef|#
 directive|ifdef
 name|HP_OS_BUG
@@ -2612,30 +2018,10 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-name|int
-name|temp
-init|=
 name|insert_breakpoints
 argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|temp
-condition|)
-block|{
-name|print_sys_errmsg
-argument_list|(
-literal|"insert_breakpoints"
-argument_list|,
-name|temp
-argument_list|)
 expr_stmt|;
-name|error
-argument_list|(
-literal|"Cannot insert breakpoints.\n\ The same program may be running in another process,\n\ or you may have requested too many hardware\n\ breakpoints and/or watchpoints.\n"
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* If we get here there was no call to error() in  	 insert breakpoints -- so they were inserted.  */
 name|breakpoints_inserted
 operator|=
 literal|1
@@ -2674,6 +2060,12 @@ argument_list|(
 name|gdb_stdout
 argument_list|)
 expr_stmt|;
+comment|/* Refresh prev_pc value just prior to resuming.  This used to be      done in stop_stepping, however, setting prev_pc there did not handle      scenarios such as inferior function calls or returning from      a function via the return command.  In those cases, the prev_pc      value was not set properly for subsequent commands.  The prev_pc value       is used to initialize the starting line number in the ecs.  With an       invalid value, the gdb next command ends up stopping at the position      represented by the next line table entry past our start position.      On platforms that generate one line table entry per line, this      is not a problem.  However, on the ia64, the compiler generates      extraneous line table entries that do not increase the line number.      When we issue the gdb next command on the ia64 after an inferior call      or a return command, we often end up a few instructions forward, still       within the original line we started.       An attempt was made to have init_execution_control_state () refresh      the prev_pc value before calculating the line number.  This approach      did not work because on platforms that use ptrace, the pc register      cannot be read unless the inferior is stopped.  At that point, we      are not guaranteed the inferior is stopped and so the read_pc ()      call can fail.  Setting the prev_pc value here ensures the value is       updated correctly when the inferior is stopped.  */
+name|prev_pc
+operator|=
+name|read_pc
+argument_list|()
+expr_stmt|;
 comment|/* Resume inferior.  */
 name|resume
 argument_list|(
@@ -2709,32 +2101,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Record the pc and sp of the program the last time it stopped.    These are just used internally by wait_for_inferior, but need    to be preserved over calls to it and cleared when the inferior    is started.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|CORE_ADDR
-name|prev_pc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|CORE_ADDR
-name|prev_func_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|prev_func_name
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 
@@ -2755,9 +2121,9 @@ expr_stmt|;
 name|init_wait_for_inferior
 argument_list|()
 expr_stmt|;
-name|stop_soon_quietly
+name|stop_soon
 operator|=
-literal|1
+name|STOP_QUIETLY
 expr_stmt|;
 name|trap_expected
 operator|=
@@ -2791,14 +2157,6 @@ name|prev_pc
 operator|=
 literal|0
 expr_stmt|;
-name|prev_func_start
-operator|=
-literal|0
-expr_stmt|;
-name|prev_func_name
-operator|=
-name|NULL
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HP_OS_BUG
@@ -2830,30 +2188,6 @@ operator|=
 name|TARGET_WAITKIND_SPURIOUS
 expr_stmt|;
 comment|/* I.e., none. */
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_parent_fork
-operator|=
-literal|0
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_fork
-operator|=
-literal|0
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_exec
-operator|=
-literal|0
-expr_stmt|;
 comment|/* See wait_for_inferior's handling of SYSCALL_ENTRY/RETURN events. */
 name|number_of_threads_in_syscalls
 operator|=
@@ -2861,6 +2195,10 @@ literal|0
 expr_stmt|;
 name|clear_proceed_status
 argument_list|()
+expr_stmt|;
+name|stepping_past_singlestep_breakpoint
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -3060,6 +2398,19 @@ end_struct
 begin_function_decl
 name|void
 name|init_execution_control_state
+parameter_list|(
+name|struct
+name|execution_control_state
+modifier|*
+name|ecs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|handle_step_into_function
 parameter_list|(
 name|struct
 name|execution_control_state
@@ -3439,7 +2790,7 @@ operator|->
 name|wait_some_more
 condition|)
 block|{
-comment|/* Do only the cleanups that have been added by this 	 function. Let the continuations for the commands do the rest, 	 if there are any. */
+comment|/* Do only the cleanups that have been added by this          function. Let the continuations for the commands do the rest,          if there are any. */
 name|do_exec_cleanups
 argument_list|(
 name|old_cleanups
@@ -3692,10 +3043,6 @@ name|inferior_ptid
 argument_list|,
 name|prev_pc
 argument_list|,
-name|prev_func_start
-argument_list|,
-name|prev_func_name
-argument_list|,
 name|trap_expected
 argument_list|,
 name|step_resume_breakpoint
@@ -3706,7 +3053,8 @@ name|step_range_start
 argument_list|,
 name|step_range_end
 argument_list|,
-name|step_frame_address
+operator|&
+name|step_frame_id
 argument_list|,
 name|ecs
 operator|->
@@ -3750,12 +3098,6 @@ operator|&
 name|prev_pc
 argument_list|,
 operator|&
-name|prev_func_start
-argument_list|,
-operator|&
-name|prev_func_name
-argument_list|,
-operator|&
 name|trap_expected
 argument_list|,
 operator|&
@@ -3771,7 +3113,7 @@ operator|&
 name|step_range_end
 argument_list|,
 operator|&
-name|step_frame_address
+name|step_frame_id
 argument_list|,
 operator|&
 name|ecs
@@ -3823,6 +3165,386 @@ block|}
 end_function
 
 begin_comment
+comment|/* Wrapper for PC_IN_SIGTRAMP that takes care of the need to find the    function's name.     In a classic example of "left hand VS right hand", "infrun.c" was    trying to improve GDB's performance by caching the result of calls    to calls to find_pc_partial_funtion, while at the same time    find_pc_partial_function was also trying to ramp up performance by    caching its most recent return value.  The below makes the the    function find_pc_partial_function solely responsibile for    performance issues (the local cache that relied on a global    variable - arrrggg - deleted).     Using the testsuite and gcov, it was found that dropping the local    "infrun.c" cache and instead relying on find_pc_partial_function    increased the number of calls to 12000 (from 10000), but the number    of times find_pc_partial_function's cache missed (this is what    matters) was only increased by only 4 (to 3569).  (A quick back of    envelope caculation suggests that the extra 2000 function calls    @1000 extra instructions per call make the 1 MIP VAX testsuite run    take two extra seconds, oops :-)     Long term, this function can be eliminated, replaced by the code:    get_frame_type(current_frame()) == SIGTRAMP_FRAME (for new    architectures this is very cheap).  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|pc_in_sigtramp
+parameter_list|(
+name|CORE_ADDR
+name|pc
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|find_pc_partial_function
+argument_list|(
+name|pc
+argument_list|,
+operator|&
+name|name
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+name|PC_IN_SIGTRAMP
+argument_list|(
+name|pc
+argument_list|,
+name|name
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Handle the inferior event in the cases when we just stepped    into a function.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|handle_step_into_function
+parameter_list|(
+name|struct
+name|execution_control_state
+modifier|*
+name|ecs
+parameter_list|)
+block|{
+name|CORE_ADDR
+name|real_stop_pc
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|step_over_calls
+operator|==
+name|STEP_OVER_NONE
+operator|)
+operator|||
+operator|(
+operator|(
+name|step_range_end
+operator|==
+literal|1
+operator|)
+operator|&&
+name|in_prologue
+argument_list|(
+name|prev_pc
+argument_list|,
+name|ecs
+operator|->
+name|stop_func_start
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* I presume that step_over_calls is only 0 when we're          supposed to be stepping at the assembly language level          ("stepi").  Just stop.  */
+comment|/* Also, maybe we just did a "nexti" inside a prolog,          so we thought it was a subroutine call but it was not.          Stop as well.  FENN */
+name|stop_step
+operator|=
+literal|1
+expr_stmt|;
+name|print_stop_reason
+argument_list|(
+name|END_STEPPING_RANGE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|stop_stepping
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|step_over_calls
+operator|==
+name|STEP_OVER_ALL
+operator|||
+name|IGNORE_HELPER_CALL
+argument_list|(
+name|stop_pc
+argument_list|)
+condition|)
+block|{
+comment|/* We're doing a "next".  */
+if|if
+condition|(
+name|pc_in_sigtramp
+argument_list|(
+name|stop_pc
+argument_list|)
+operator|&&
+name|frame_id_inner
+argument_list|(
+name|step_frame_id
+argument_list|,
+name|frame_id_build
+argument_list|(
+name|read_sp
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+comment|/* We stepped out of a signal handler, and into its            calling trampoline.  This is misdetected as a            subroutine call, but stepping over the signal            trampoline isn't such a bad idea.  In order to do that,            we have to ignore the value in step_frame_id, since            that doesn't represent the frame that'll reach when we            return from the signal trampoline.  Otherwise we'll            probably continue to the end of the program.  */
+name|step_frame_id
+operator|=
+name|null_frame_id
+expr_stmt|;
+name|step_over_function
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+name|keep_going
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* If we are in a function call trampoline (a stub between      the calling routine and the real function), locate the real      function.  That's what tells us (a) whether we want to step      into it at all, and (b) what prologue we want to run to      the end of, if we do step into it.  */
+name|real_stop_pc
+operator|=
+name|skip_language_trampoline
+argument_list|(
+name|stop_pc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|real_stop_pc
+operator|==
+literal|0
+condition|)
+name|real_stop_pc
+operator|=
+name|SKIP_TRAMPOLINE_CODE
+argument_list|(
+name|stop_pc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|real_stop_pc
+operator|!=
+literal|0
+condition|)
+name|ecs
+operator|->
+name|stop_func_start
+operator|=
+name|real_stop_pc
+expr_stmt|;
+comment|/* If we have line number information for the function we      are thinking of stepping into, step into it.       If there are several symtabs at that PC (e.g. with include      files), just want to know whether *any* of them have line      numbers.  find_pc_line handles this.  */
+block|{
+name|struct
+name|symtab_and_line
+name|tmp_sal
+decl_stmt|;
+name|tmp_sal
+operator|=
+name|find_pc_line
+argument_list|(
+name|ecs
+operator|->
+name|stop_func_start
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp_sal
+operator|.
+name|line
+operator|!=
+literal|0
+condition|)
+block|{
+name|step_into_function
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+comment|/* If we have no line number and the step-stop-if-no-debug      is set, we stop the step so that the user has a chance to      switch in assembly mode.  */
+if|if
+condition|(
+name|step_over_calls
+operator|==
+name|STEP_OVER_UNDEBUGGABLE
+operator|&&
+name|step_stop_if_no_debug
+condition|)
+block|{
+name|stop_step
+operator|=
+literal|1
+expr_stmt|;
+name|print_stop_reason
+argument_list|(
+name|END_STEPPING_RANGE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|stop_stepping
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|step_over_function
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+name|keep_going
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|adjust_pc_after_break
+parameter_list|(
+name|struct
+name|execution_control_state
+modifier|*
+name|ecs
+parameter_list|)
+block|{
+name|CORE_ADDR
+name|stop_pc
+decl_stmt|;
+comment|/* If this target does not decrement the PC after breakpoints, then      we have nothing to do.  */
+if|if
+condition|(
+name|DECR_PC_AFTER_BREAK
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* If we've hit a breakpoint, we'll normally be stopped with SIGTRAP.  If      we aren't, just return.       We assume that waitkinds other than TARGET_WAITKIND_STOPPED are not      affected by DECR_PC_AFTER_BREAK.  Other waitkinds which are implemented      by software breakpoints should be handled through the normal breakpoint      layer.            NOTE drow/2004-01-31: On some targets, breakpoints may generate      different signals (SIGILL or SIGEMT for instance), but it is less      clear where the PC is pointing afterwards.  It may not match      DECR_PC_AFTER_BREAK.  I don't know any specific target that generates      these signals at breakpoints (the code has been in GDB since at least      1992) so I can not guess how to handle them here.            In earlier versions of GDB, a target with HAVE_NONSTEPPABLE_WATCHPOINTS      would have the PC after hitting a watchpoint affected by      DECR_PC_AFTER_BREAK.  I haven't found any target with both of these set      in GDB history, and it seems unlikely to be correct, so      HAVE_NONSTEPPABLE_WATCHPOINTS is not checked here.  */
+if|if
+condition|(
+name|ecs
+operator|->
+name|ws
+operator|.
+name|kind
+operator|!=
+name|TARGET_WAITKIND_STOPPED
+condition|)
+return|return;
+if|if
+condition|(
+name|ecs
+operator|->
+name|ws
+operator|.
+name|value
+operator|.
+name|sig
+operator|!=
+name|TARGET_SIGNAL_TRAP
+condition|)
+return|return;
+comment|/* Find the location where (if we've hit a breakpoint) the breakpoint would      be.  */
+name|stop_pc
+operator|=
+name|read_pc_pid
+argument_list|(
+name|ecs
+operator|->
+name|ptid
+argument_list|)
+operator|-
+name|DECR_PC_AFTER_BREAK
+expr_stmt|;
+comment|/* If we're software-single-stepping, then assume this is a breakpoint.      NOTE drow/2004-01-17: This doesn't check that the PC matches, or that      we're even in the right thread.  The software-single-step code needs      some modernization.       If we're not software-single-stepping, then we first check that there      is an enabled software breakpoint at this address.  If there is, and      we weren't using hardware-single-step, then we've hit the breakpoint.       If we were using hardware-single-step, we check prev_pc; if we just      stepped over an inserted software breakpoint, then we should decrement      the PC and eventually report hitting the breakpoint.  The prev_pc check      prevents us from decrementing the PC if we just stepped over a jump      instruction and landed on the instruction after a breakpoint.       The last bit checks that we didn't hit a breakpoint in a signal handler      without an intervening stop in sigtramp, which is detected by a new      stack pointer value below any usual function calling stack adjustments.       NOTE drow/2004-01-17: I'm not sure that this is necessary.  The check      predates checking for software single step at the same time.  Also,      if we've moved into a signal handler we should have seen the      signal.  */
+if|if
+condition|(
+operator|(
+name|SOFTWARE_SINGLE_STEP_P
+argument_list|()
+operator|&&
+name|singlestep_breakpoints_inserted_p
+operator|)
+operator|||
+operator|(
+name|software_breakpoint_inserted_here_p
+argument_list|(
+name|stop_pc
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|currently_stepping
+argument_list|(
+name|ecs
+argument_list|)
+operator|&&
+name|prev_pc
+operator|!=
+name|stop_pc
+operator|&&
+operator|!
+operator|(
+name|step_range_end
+operator|&&
+name|INNER_THAN
+argument_list|(
+name|read_sp
+argument_list|()
+argument_list|,
+operator|(
+name|step_sp
+operator|-
+literal|16
+operator|)
+argument_list|)
+operator|)
+operator|)
+operator|)
+condition|)
+name|write_pc_pid
+argument_list|(
+name|stop_pc
+argument_list|,
+name|ecs
+operator|->
+name|ptid
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Given an execution control state that has been freshly filled in    by an event from the inferior, figure out what it means and take    appropriate action.  */
 end_comment
 
@@ -3836,11 +3558,14 @@ modifier|*
 name|ecs
 parameter_list|)
 block|{
-name|CORE_ADDR
-name|tmp
-decl_stmt|;
+comment|/* NOTE: cagney/2003-03-28: If you're looking at this code and      thinking that the variable stepped_after_stopped_by_watchpoint      isn't used, then you're wrong!  The macro STOPPED_BY_WATCHPOINT,      defined in the file "config/pa/nm-hppah.h", accesses the variable      indirectly.  Mutter something rude about the HP merge.  */
 name|int
 name|stepped_after_stopped_by_watchpoint
+decl_stmt|;
+name|int
+name|sw_single_step_trap_p
+init|=
+literal|0
 decl_stmt|;
 comment|/* Cache the last pid/waitstatus. */
 name|target_last_wait_ptid
@@ -3856,8 +3581,11 @@ name|ecs
 operator|->
 name|wp
 expr_stmt|;
-comment|/* Keep this extra brace for now, minimizes diffs.  */
-block|{
+name|adjust_pc_after_break
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ecs
@@ -3879,11 +3607,38 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Fall thru to the normal_state case. */
+comment|/* See comments where a TARGET_WAITKIND_SYSCALL_RETURN event          is serviced in this loop, below. */
+if|if
+condition|(
+name|ecs
+operator|->
+name|enable_hw_watchpoints_after_wait
+condition|)
+block|{
+name|TARGET_ENABLE_HW_WATCHPOINTS
+argument_list|(
+name|PIDGET
+argument_list|(
+name|inferior_ptid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ecs
+operator|->
+name|enable_hw_watchpoints_after_wait
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|stepped_after_stopped_by_watchpoint
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 name|infwait_normal_state
 case|:
-comment|/* See comments where a TARGET_WAITKIND_SYSCALL_RETURN event 	   is serviced in this loop, below. */
+comment|/* See comments where a TARGET_WAITKIND_SYSCALL_RETURN event          is serviced in this loop, below. */
 if|if
 condition|(
 name|ecs
@@ -3914,6 +3669,10 @@ break|break;
 case|case
 name|infwait_nullified_state
 case|:
+name|stepped_after_stopped_by_watchpoint
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|infwait_nonstep_watch_state
@@ -3921,12 +3680,22 @@ case|:
 name|insert_breakpoints
 argument_list|()
 expr_stmt|;
-comment|/* FIXME-maybe: is this cleaner than setting a flag?  Does it 	   handle things like signals arriving and other things happening 	   in combination correctly?  */
+comment|/* FIXME-maybe: is this cleaner than setting a flag?  Does it          handle things like signals arriving and other things happening          in combination correctly?  */
 name|stepped_after_stopped_by_watchpoint
 operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+name|internal_error
+argument_list|(
+name|__FILE__
+argument_list|,
+name|__LINE__
+argument_list|,
+literal|"bad switch"
+argument_list|)
+expr_stmt|;
 block|}
 name|ecs
 operator|->
@@ -4021,10 +3790,10 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* NOTE: This block is ONLY meant to be invoked in case of a 	   "thread creation event"!  If it is invoked for any other 	   sort of event (such as a new thread landing on a breakpoint), 	   the event will be discarded, which is almost certainly 	   a bad thing!  	   To avoid this, the low-level module (eg. target_wait) 	   should call in_thread_list and add_thread, so that the 	   new thread is known by the time we get here.  */
-comment|/* We may want to consider not doing a resume here in order 	   to give the user a chance to play with the new thread. 	   It might be good to make that a user-settable option.  */
-comment|/* At this point, all threads are stopped (happens 	   automatically in either the OS or the native code). 	   Therefore we need to continue all threads in order to 	   make progress.  */
-block|target_resume (RESUME_ALL, 0, TARGET_SIGNAL_0); 	prepare_to_wait (ecs); 	return;
+comment|/* NOTE: This block is ONLY meant to be invoked in case of a          "thread creation event"!  If it is invoked for any other          sort of event (such as a new thread landing on a breakpoint),          the event will be discarded, which is almost certainly          a bad thing!           To avoid this, the low-level module (eg. target_wait)          should call in_thread_list and add_thread, so that the          new thread is known by the time we get here.  */
+comment|/* We may want to consider not doing a resume here in order          to give the user a chance to play with the new thread.          It might be good to make that a user-settable option.  */
+comment|/* At this point, all threads are stopped (happens          automatically in either the OS or the native code).          Therefore we need to continue all threads in order to          make progress.  */
+block|target_resume (RESUME_ALL, 0, TARGET_SIGNAL_0);       prepare_to_wait (ecs);       return;
 endif|#
 directive|endif
 block|}
@@ -4040,17 +3809,18 @@ block|{
 case|case
 name|TARGET_WAITKIND_LOADED
 case|:
-comment|/* Ignore gracefully during startup of the inferior, as it 	   might be the shell which has just loaded some objects, 	   otherwise add the symbols for the newly loaded objects.  */
+comment|/* Ignore gracefully during startup of the inferior, as it          might be the shell which has just loaded some objects,          otherwise add the symbols for the newly loaded objects.  */
 ifdef|#
 directive|ifdef
 name|SOLIB_ADD
 if|if
 condition|(
-operator|!
-name|stop_soon_quietly
+name|stop_soon
+operator|==
+name|NO_STOP_QUIETLY
 condition|)
 block|{
-comment|/* Remove breakpoints, SOLIB_ADD might adjust 	       breakpoint addresses via breakpoint_re_set.  */
+comment|/* Remove breakpoints, SOLIB_ADD might adjust 	     breakpoint addresses via breakpoint_re_set.  */
 if|if
 condition|(
 name|breakpoints_inserted
@@ -4058,17 +3828,20 @@ condition|)
 name|remove_breakpoints
 argument_list|()
 expr_stmt|;
-comment|/* Check for any newly added shared libraries if we're 	       supposed to be adding them automatically.  Switch 	       terminal for any messages produced by 	       breakpoint_re_set.  */
+comment|/* Check for any newly added shared libraries if we're 	     supposed to be adding them automatically.  Switch 	     terminal for any messages produced by 	     breakpoint_re_set.  */
 name|target_terminal_ours_for_output
 argument_list|()
 expr_stmt|;
+comment|/* NOTE: cagney/2003-11-25: Make certain that the target              stack's section table is kept up-to-date.  Architectures,              (e.g., PPC64), use the section table to perform              operations such as address => section name and hence              require the table to contain all sections (including              those found in shared libraries).  */
+comment|/* NOTE: cagney/2003-11-25: Pass current_target and not              exec_ops to SOLIB_ADD.  This is because current GDB is              only tooled to propagate section_table changes out from              the "current_target" (see target_resize_to_sections), and              not up from the exec stratum.  This, of course, isn't              right.  "infrun.c" should only interact with the              exec/process stratum, instead relying on the target stack              to propagate relevant changes (stop, section table              changed, ...) up to other layers.  */
 name|SOLIB_ADD
 argument_list|(
 name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+operator|&
+name|current_target
 argument_list|,
 name|auto_solib_add
 argument_list|)
@@ -4136,7 +3909,7 @@ operator|.
 name|integer
 argument_list|)
 expr_stmt|;
-comment|/* Record the exit code in the convenience variable $_exitcode, so 	   that the user can inspect this again later.  */
+comment|/* Record the exit code in the convenience variable $_exitcode, so          that the user can inspect this again later.  */
 name|set_internalvar
 argument_list|(
 name|lookup_internalvar
@@ -4205,7 +3978,7 @@ name|target_terminal_ours
 argument_list|()
 expr_stmt|;
 comment|/* Must do this before mourn anyway */
-comment|/* Note: By definition of TARGET_WAITKIND_SIGNALLED, we shouldn't 	   reach here unless the inferior is dead.  However, for years 	   target_kill() was called here, which hints that fatal signals aren't 	   really fatal on some systems.  If that's true, then some changes 	   may be needed. */
+comment|/* Note: By definition of TARGET_WAITKIND_SIGNALLED, we shouldn't          reach here unless the inferior is dead.  However, for years          target_kill() was called here, which hints that fatal signals aren't          really fatal on some systems.  If that's true, then some changes          may be needed. */
 name|target_mourn_inferior
 argument_list|()
 expr_stmt|;
@@ -4227,178 +4000,10 @@ name|ecs
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* The following are the only cases in which we keep going; 	   the above cases end in a continue or goto. */
+comment|/* The following are the only cases in which we keep going;          the above cases end in a continue or goto. */
 case|case
 name|TARGET_WAITKIND_FORKED
 case|:
-name|stop_signal
-operator|=
-name|TARGET_SIGNAL_TRAP
-expr_stmt|;
-name|pending_follow
-operator|.
-name|kind
-operator|=
-name|ecs
-operator|->
-name|ws
-operator|.
-name|kind
-expr_stmt|;
-comment|/* Ignore fork events reported for the parent; we're only 	   interested in reacting to forks of the child.  Note that 	   we expect the child's fork event to be available if we 	   waited for it now. */
-if|if
-condition|(
-name|ptid_equal
-argument_list|(
-name|inferior_ptid
-argument_list|,
-name|ecs
-operator|->
-name|ptid
-argument_list|)
-condition|)
-block|{
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_parent_fork
-operator|=
-literal|1
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|parent_pid
-operator|=
-name|PIDGET
-argument_list|(
-name|ecs
-operator|->
-name|ptid
-argument_list|)
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-operator|=
-name|ecs
-operator|->
-name|ws
-operator|.
-name|value
-operator|.
-name|related_pid
-expr_stmt|;
-name|prepare_to_wait
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-else|else
-block|{
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_fork
-operator|=
-literal|1
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-operator|=
-name|PIDGET
-argument_list|(
-name|ecs
-operator|->
-name|ptid
-argument_list|)
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|parent_pid
-operator|=
-name|ecs
-operator|->
-name|ws
-operator|.
-name|value
-operator|.
-name|related_pid
-expr_stmt|;
-block|}
-name|stop_pc
-operator|=
-name|read_pc_pid
-argument_list|(
-name|ecs
-operator|->
-name|ptid
-argument_list|)
-expr_stmt|;
-name|ecs
-operator|->
-name|saved_inferior_ptid
-operator|=
-name|inferior_ptid
-expr_stmt|;
-name|inferior_ptid
-operator|=
-name|ecs
-operator|->
-name|ptid
-expr_stmt|;
-comment|/* The second argument of bpstat_stop_status is meant to help 	   distinguish between a breakpoint trap and a singlestep trap. 	   This is only important on targets where DECR_PC_AFTER_BREAK 	   is non-zero.  The prev_pc test is meant to distinguish between 	   singlestepping a trap instruction, and singlestepping thru a 	   jump to the instruction following a trap instruction. */
-name|stop_bpstat
-operator|=
-name|bpstat_stop_status
-argument_list|(
-operator|&
-name|stop_pc
-argument_list|,
-name|currently_stepping
-argument_list|(
-name|ecs
-argument_list|)
-operator|&&
-name|prev_pc
-operator|!=
-name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
-argument_list|)
-expr_stmt|;
-name|ecs
-operator|->
-name|random_signal
-operator|=
-operator|!
-name|bpstat_explains_signal
-argument_list|(
-name|stop_bpstat
-argument_list|)
-expr_stmt|;
-name|inferior_ptid
-operator|=
-name|ecs
-operator|->
-name|saved_inferior_ptid
-expr_stmt|;
-goto|goto
-name|process_event_stop_test
-goto|;
-comment|/* If this a platform which doesn't allow a debugger to touch a 	   vfork'd inferior until after it exec's, then we'd best keep 	   our fingers entirely off the inferior, other than continuing 	   it.  This has the unfortunate side-effect that catchpoints 	   of vforks will be ignored.  But since the platform doesn't 	   allow the inferior be touched at vfork time, there's really 	   little choice. */
 case|case
 name|TARGET_WAITKIND_VFORKED
 case|:
@@ -4416,27 +4021,6 @@ name|ws
 operator|.
 name|kind
 expr_stmt|;
-comment|/* Is this a vfork of the parent?  If so, then give any 	   vfork catchpoints a chance to trigger now.  (It's 	   dangerous to do so if the child canot be touched until 	   it execs, and the child has not yet exec'd.  We probably 	   should warn the user to that effect when the catchpoint 	   triggers...) */
-if|if
-condition|(
-name|ptid_equal
-argument_list|(
-name|ecs
-operator|->
-name|ptid
-argument_list|,
-name|inferior_ptid
-argument_list|)
-condition|)
-block|{
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_parent_fork
-operator|=
-literal|1
-expr_stmt|;
 name|pending_follow
 operator|.
 name|fork_event
@@ -4464,110 +4048,20 @@ name|value
 operator|.
 name|related_pid
 expr_stmt|;
-block|}
-comment|/* If we've seen the child's vfork event but cannot really touch 	   the child until it execs, then we must continue the child now. 	   Else, give any vfork catchpoints a chance to trigger now. */
-else|else
-block|{
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_fork
-operator|=
-literal|1
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-operator|=
-name|PIDGET
-argument_list|(
-name|ecs
-operator|->
-name|ptid
-argument_list|)
-expr_stmt|;
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|parent_pid
-operator|=
-name|ecs
-operator|->
-name|ws
-operator|.
-name|value
-operator|.
-name|related_pid
-expr_stmt|;
-name|target_post_startup_inferior
-argument_list|(
-name|pid_to_ptid
-argument_list|(
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|child_pid
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|follow_vfork_when_exec
-operator|=
-operator|!
-name|target_can_follow_vfork_prior_to_exec
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|follow_vfork_when_exec
-condition|)
-block|{
-name|target_resume
-argument_list|(
-name|ecs
-operator|->
-name|ptid
-argument_list|,
-literal|0
-argument_list|,
-name|TARGET_SIGNAL_0
-argument_list|)
-expr_stmt|;
-name|prepare_to_wait
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
 name|stop_pc
 operator|=
 name|read_pc
 argument_list|()
 expr_stmt|;
-comment|/* The second argument of bpstat_stop_status is meant to help 	   distinguish between a breakpoint trap and a singlestep trap. 	   This is only important on targets where DECR_PC_AFTER_BREAK 	   is non-zero.  The prev_pc test is meant to distinguish between 	   singlestepping a trap instruction, and singlestepping thru a 	   jump to the instruction following a trap instruction. */
 name|stop_bpstat
 operator|=
 name|bpstat_stop_status
 argument_list|(
-operator|&
 name|stop_pc
 argument_list|,
-name|currently_stepping
-argument_list|(
 name|ecs
-argument_list|)
-operator|&&
-name|prev_pc
-operator|!=
-name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
+operator|->
+name|ptid
 argument_list|)
 expr_stmt|;
 name|ecs
@@ -4580,6 +4074,25 @@ argument_list|(
 name|stop_bpstat
 argument_list|)
 expr_stmt|;
+comment|/* If no catchpoint triggered for this, then keep going.  */
+if|if
+condition|(
+name|ecs
+operator|->
+name|random_signal
+condition|)
+block|{
+name|stop_signal
+operator|=
+name|TARGET_SIGNAL_0
+expr_stmt|;
+name|keep_going
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 goto|goto
 name|process_event_stop_test
 goto|;
@@ -4590,7 +4103,8 @@ name|stop_signal
 operator|=
 name|TARGET_SIGNAL_TRAP
 expr_stmt|;
-comment|/* Is this a target which reports multiple exec events per actual 	   call to exec()?  (HP-UX using ptrace does, for example.)  If so, 	   ignore all but the last one.  Just resume the exec'r, and wait 	   for the next exec event. */
+comment|/* NOTE drow/2002-12-05: This code should be pushed down into the 	 target_wait function.  Until then following vfork on HP/UX 10.20 	 is probably broken by this.  Of course, it's broken anyway.  */
+comment|/* Is this a target which reports multiple exec events per actual          call to exec()?  (HP-UX using ptrace does, for example.)  If so,          ignore all but the last one.  Just resume the exec'r, and wait          for the next exec event. */
 if|if
 condition|(
 name|inferior_ignoring_leading_exec_events
@@ -4667,50 +4181,7 @@ name|execd_pathname
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Did inferior_ptid exec, or did a (possibly not-yet-followed) 	   child of a vfork exec?  	   ??rehrauer: This is unabashedly an HP-UX specific thing.  On 	   HP-UX, events associated with a vforking inferior come in 	   threes: a vfork event for the child (always first), followed 	   a vfork event for the parent and an exec event for the child. 	   The latter two can come in either order.  	   If we get the parent vfork event first, life's good: We follow 	   either the parent or child, and then the child's exec event is 	   a "don't care".  	   But if we get the child's exec event first, then we delay 	   responding to it until we handle the parent's vfork.  Because, 	   otherwise we can't satisfy a "catch vfork". */
-if|if
-condition|(
-name|pending_follow
-operator|.
-name|kind
-operator|==
-name|TARGET_WAITKIND_VFORKED
-condition|)
-block|{
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_child_exec
-operator|=
-literal|1
-expr_stmt|;
-comment|/* On some targets, the child must be resumed before 	       the parent vfork event is delivered.  A single-step 	       suffices. */
-if|if
-condition|(
-name|RESUME_EXECD_VFORKING_CHILD_TO_GET_PARENT_VFORK
-argument_list|()
-condition|)
-name|target_resume
-argument_list|(
-name|ecs
-operator|->
-name|ptid
-argument_list|,
-literal|1
-argument_list|,
-name|TARGET_SIGNAL_0
-argument_list|)
-expr_stmt|;
-comment|/* We expect the parent vfork event to be available now. */
-name|prepare_to_wait
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* This causes the eventpoints and symbol table to be reset.  Must 	   do this now, before trying to determine whether to stop. */
+comment|/* This causes the eventpoints and symbol table to be reset.  Must          do this now, before trying to determine whether to stop. */
 name|follow_exec
 argument_list|(
 name|PIDGET
@@ -4751,24 +4222,15 @@ name|ecs
 operator|->
 name|ptid
 expr_stmt|;
-comment|/* The second argument of bpstat_stop_status is meant to help 	   distinguish between a breakpoint trap and a singlestep trap. 	   This is only important on targets where DECR_PC_AFTER_BREAK 	   is non-zero.  The prev_pc test is meant to distinguish between 	   singlestepping a trap instruction, and singlestepping thru a 	   jump to the instruction following a trap instruction. */
 name|stop_bpstat
 operator|=
 name|bpstat_stop_status
 argument_list|(
-operator|&
 name|stop_pc
 argument_list|,
-name|currently_stepping
-argument_list|(
 name|ecs
-argument_list|)
-operator|&&
-name|prev_pc
-operator|!=
-name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
+operator|->
+name|ptid
 argument_list|)
 expr_stmt|;
 name|ecs
@@ -4787,10 +4249,29 @@ name|ecs
 operator|->
 name|saved_inferior_ptid
 expr_stmt|;
+comment|/* If no catchpoint triggered for this, then keep going.  */
+if|if
+condition|(
+name|ecs
+operator|->
+name|random_signal
+condition|)
+block|{
+name|stop_signal
+operator|=
+name|TARGET_SIGNAL_0
+expr_stmt|;
+name|keep_going
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 goto|goto
 name|process_event_stop_test
 goto|;
-comment|/* These syscall events are returned on HP-UX, as part of its 	   implementation of page-protection-based "hardware" watchpoints. 	   HP-UX has unfortunate interactions between page-protections and 	   some system calls.  Our solution is to disable hardware watches 	   when a system call is entered, and reenable them when the syscall 	   completes.  The downside of this is that we may miss the precise 	   point at which a watched piece of memory is modified.  "Oh well."  	   Note that we may have multiple threads running, which may each 	   enter syscalls at roughly the same time.  Since we don't have a 	   good notion currently of whether a watched piece of memory is 	   thread-private, we'd best not have any page-protections active 	   when any thread is in a syscall.  Thus, we only want to reenable 	   hardware watches when no threads are in a syscall.  	   Also, be careful not to try to gather much state about a thread 	   that's in a syscall.  It's frequently a losing proposition. */
+comment|/* These syscall events are returned on HP-UX, as part of its          implementation of page-protection-based "hardware" watchpoints.          HP-UX has unfortunate interactions between page-protections and          some system calls.  Our solution is to disable hardware watches          when a system call is entered, and reenable them when the syscall          completes.  The downside of this is that we may miss the precise          point at which a watched piece of memory is modified.  "Oh well."           Note that we may have multiple threads running, which may each          enter syscalls at roughly the same time.  Since we don't have a          good notion currently of whether a watched piece of memory is          thread-private, we'd best not have any page-protections active          when any thread is in a syscall.  Thus, we only want to reenable          hardware watches when no threads are in a syscall.           Also, be careful not to try to gather much state about a thread          that's in a syscall.  It's frequently a losing proposition. */
 case|case
 name|TARGET_WAITKIND_SYSCALL_ENTRY
 case|:
@@ -4826,7 +4307,7 @@ name|ecs
 argument_list|)
 expr_stmt|;
 return|return;
-comment|/* Before examining the threads further, step this thread to 	   get it entirely out of the syscall.  (We get notice of the 	   event when the thread is just on the verge of exiting a 	   syscall.  Stepping one instruction seems to get it back 	   into user code.)  	   Note that although the logical place to reenable h/w watches 	   is here, we cannot.  We cannot reenable them before stepping 	   the thread (this causes the next wait on the thread to hang).  	   Nor can we enable them after stepping until we've done a wait. 	   Thus, we simply set the flag ecs->enable_hw_watchpoints_after_wait 	   here, which will be serviced immediately after the target 	   is waited on. */
+comment|/* Before examining the threads further, step this thread to          get it entirely out of the syscall.  (We get notice of the          event when the thread is just on the verge of exiting a          syscall.  Stepping one instruction seems to get it back          into user code.)           Note that although the logical place to reenable h/w watches          is here, we cannot.  We cannot reenable them before stepping          the thread (this causes the next wait on the thread to hang).           Nor can we enable them after stepping until we've done a wait.          Thus, we simply set the flag ecs->enable_hw_watchpoints_after_wait          here, which will be serviced immediately after the target          is waited on. */
 case|case
 name|TARGET_WAITKIND_SYSCALL_RETURN
 case|:
@@ -4882,20 +4363,19 @@ operator|.
 name|sig
 expr_stmt|;
 break|break;
-comment|/* We had an event in the inferior, but we are not interested 	   in handling it at this level. The lower layers have already 	   done what needs to be done, if anything. This case can 	   occur only when the target is async or extended-async. One 	   of the circumstamces for this to happen is when the 	   inferior produces output for the console. The inferior has 	   not stopped, and we are ignoring the event. */
+comment|/* We had an event in the inferior, but we are not interested          in handling it at this level. The lower layers have already          done what needs to be done, if anything. 	  	 One of the possible circumstances for this is when the 	 inferior produces output for the console. The inferior has 	 not stopped, and we are ignoring the event.  Another possible 	 circumstance is any event which the lower level knows will be 	 reported multiple times without an intervening resume.  */
 case|case
 name|TARGET_WAITKIND_IGNORE
 case|:
+name|prepare_to_wait
+argument_list|(
 name|ecs
-operator|->
-name|wait_some_more
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* We may want to consider not doing a resume here in order to give        the user a chance to play with the new thread.  It might be good        to make that a user-settable option.  */
-comment|/* At this point, all threads are stopped (happens automatically in        either the OS or the native code).  Therefore we need to continue        all threads in order to make progress.  */
+comment|/* We may want to consider not doing a resume here in order to give      the user a chance to play with the new thread.  It might be good      to make that a user-settable option.  */
+comment|/* At this point, all threads are stopped (happens automatically in      either the OS or the native code).  Therefore we need to continue      all threads in order to make progress.  */
 if|if
 condition|(
 name|ecs
@@ -4928,7 +4408,47 @@ operator|->
 name|ptid
 argument_list|)
 expr_stmt|;
-comment|/* See if a thread hit a thread-specific breakpoint that was meant for        another thread.  If so, then step that thread past the breakpoint,        and continue it.  */
+if|if
+condition|(
+name|stepping_past_singlestep_breakpoint
+condition|)
+block|{
+name|gdb_assert
+argument_list|(
+name|SOFTWARE_SINGLE_STEP_P
+argument_list|()
+operator|&&
+name|singlestep_breakpoints_inserted_p
+argument_list|)
+expr_stmt|;
+name|gdb_assert
+argument_list|(
+name|ptid_equal
+argument_list|(
+name|singlestep_ptid
+argument_list|,
+name|ecs
+operator|->
+name|ptid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|gdb_assert
+argument_list|(
+operator|!
+name|ptid_equal
+argument_list|(
+name|singlestep_ptid
+argument_list|,
+name|saved_singlestep_ptid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stepping_past_singlestep_breakpoint
+operator|=
+literal|0
+expr_stmt|;
+comment|/* We've either finished single-stepping past the single-step 	 breakpoint, or stopped for some other reason.  It would be nice if 	 we could tell, but we can't reliably.  */
 if|if
 condition|(
 name|stop_signal
@@ -4936,20 +4456,82 @@ operator|==
 name|TARGET_SIGNAL_TRAP
 condition|)
 block|{
-if|if
-condition|(
-name|SOFTWARE_SINGLE_STEP_P
-argument_list|()
-operator|&&
+comment|/* Pull the single step breakpoints out of the target.  */
+name|SOFTWARE_SINGLE_STEP
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|singlestep_breakpoints_inserted_p
-condition|)
+operator|=
+literal|0
+expr_stmt|;
 name|ecs
 operator|->
 name|random_signal
 operator|=
 literal|0
 expr_stmt|;
-elseif|else
+name|ecs
+operator|->
+name|ptid
+operator|=
+name|saved_singlestep_ptid
+expr_stmt|;
+name|context_switch
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|context_hook
+condition|)
+name|context_hook
+argument_list|(
+name|pid_to_thread_id
+argument_list|(
+name|ecs
+operator|->
+name|ptid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|resume
+argument_list|(
+literal|1
+argument_list|,
+name|TARGET_SIGNAL_0
+argument_list|)
+expr_stmt|;
+name|prepare_to_wait
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+name|stepping_past_singlestep_breakpoint
+operator|=
+literal|0
+expr_stmt|;
+comment|/* See if a thread hit a thread-specific breakpoint that was meant for      another thread.  If so, then step that thread past the breakpoint,      and continue it.  */
+if|if
+condition|(
+name|stop_signal
+operator|==
+name|TARGET_SIGNAL_TRAP
+condition|)
+block|{
+name|int
+name|thread_hop_needed
+init|=
+literal|0
+decl_stmt|;
+comment|/* Check if a regular breakpoint has been hit before checking          for a potential single step breakpoint. Otherwise, GDB will          not see this breakpoint hit when stepping onto breakpoints.  */
 if|if
 condition|(
 name|breakpoints_inserted
@@ -4957,8 +4539,6 @@ operator|&&
 name|breakpoint_here_p
 argument_list|(
 name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
 argument_list|)
 condition|)
 block|{
@@ -4974,40 +4554,101 @@ operator|!
 name|breakpoint_thread_match
 argument_list|(
 name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
 argument_list|,
 name|ecs
 operator|->
 name|ptid
 argument_list|)
+condition|)
+name|thread_hop_needed
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|SOFTWARE_SINGLE_STEP_P
+argument_list|()
+operator|&&
+name|singlestep_breakpoints_inserted_p
+condition|)
+block|{
+name|ecs
+operator|->
+name|random_signal
+operator|=
+literal|0
+expr_stmt|;
+comment|/* The call to in_thread_list is necessary because PTIDs sometimes 	     change when we go from single-threaded to multi-threaded.  If 	     the singlestep_ptid is still in the list, assume that it is 	     really different from ecs->ptid.  */
+if|if
+condition|(
+operator|!
+name|ptid_equal
+argument_list|(
+name|singlestep_ptid
+argument_list|,
+name|ecs
+operator|->
+name|ptid
+argument_list|)
+operator|&&
+name|in_thread_list
+argument_list|(
+name|singlestep_ptid
+argument_list|)
+condition|)
+block|{
+name|thread_hop_needed
+operator|=
+literal|1
+expr_stmt|;
+name|stepping_past_singlestep_breakpoint
+operator|=
+literal|1
+expr_stmt|;
+name|saved_singlestep_ptid
+operator|=
+name|singlestep_ptid
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|thread_hop_needed
 condition|)
 block|{
 name|int
 name|remove_status
 decl_stmt|;
-comment|/* Saw a breakpoint, but it was hit by the wrong thread. 		   Just continue. */
+comment|/* Saw a breakpoint, but it was hit by the wrong thread. 	         Just continue. */
 if|if
 condition|(
-name|DECR_PC_AFTER_BREAK
+name|SOFTWARE_SINGLE_STEP_P
+argument_list|()
+operator|&&
+name|singlestep_breakpoints_inserted_p
 condition|)
-name|write_pc_pid
+block|{
+comment|/* Pull the single step breakpoints out of the target. */
+name|SOFTWARE_SINGLE_STEP
 argument_list|(
-name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
+literal|0
 argument_list|,
-name|ecs
-operator|->
-name|ptid
+literal|0
 argument_list|)
 expr_stmt|;
+name|singlestep_breakpoints_inserted_p
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|remove_status
 operator|=
 name|remove_breakpoints
 argument_list|()
 expr_stmt|;
-comment|/* Did we fail to remove breakpoints?  If so, try 		   to set the PC past the bp.  (There's at least 		   one situation in which we can fail to remove 		   the bp's: On HP-UX's that use ttrace, we can't 		   change the address space of a vforking child 		   process until the child exits (well, okay, not 		   then either :-) or execs. */
+comment|/* Did we fail to remove breakpoints?  If so, try 	         to set the PC past the bp.  (There's at least 	         one situation in which we can fail to remove 	         the bp's: On HP-UX's that use ttrace, we can't 	         change the address space of a vforking child 	         process until the child exits (well, okay, not 	         then either :-) or execs. */
 if|if
 condition|(
 name|remove_status
@@ -5019,8 +4660,6 @@ comment|/* FIXME!  This is obviously non-portable! */
 name|write_pc_pid
 argument_list|(
 name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
 operator|+
 literal|4
 argument_list|,
@@ -5029,7 +4668,7 @@ operator|->
 name|ptid
 argument_list|)
 expr_stmt|;
-comment|/* We need to restart all the threads now, 		     * unles we're running in scheduler-locked mode.  		     * Use currently_stepping to determine whether to  		     * step or continue. 		     */
+comment|/* We need to restart all the threads now, 		   * unles we're running in scheduler-locked mode.  		   * Use currently_stepping to determine whether to  		   * step or continue. 		   */
 comment|/* FIXME MVS: is there any reason not to call resume()? */
 if|if
 condition|(
@@ -5137,6 +4776,25 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|SOFTWARE_SINGLE_STEP_P
+argument_list|()
+operator|&&
+name|singlestep_breakpoints_inserted_p
+condition|)
+block|{
+name|sw_single_step_trap_p
+operator|=
+literal|1
+expr_stmt|;
+name|ecs
+operator|->
+name|random_signal
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -5146,7 +4804,7 @@ name|random_signal
 operator|=
 literal|1
 expr_stmt|;
-comment|/* See if something interesting happened to the non-current thread.  If        so, then switch to that thread, and eventually give control back to        the user.         Note that if there's any kind of pending follow (i.e., of a fork,        vfork or exec), we don't want to do this now.  Rather, we'll let        the next resume handle it. */
+comment|/* See if something interesting happened to the non-current thread.  If      so, then switch to that thread, and eventually give control back to      the user.       Note that if there's any kind of pending follow (i.e., of a fork,      vfork or exec), we don't want to do this now.  Rather, we'll let      the next resume handle it. */
 if|if
 condition|(
 operator|!
@@ -5173,7 +4831,7 @@ name|printed
 init|=
 literal|0
 decl_stmt|;
-comment|/* If it's a random signal for a non-current thread, notify user 	   if he's expressed an interest. */
+comment|/* If it's a random signal for a non-current thread, notify user          if he's expressed an interest. */
 if|if
 condition|(
 name|ecs
@@ -5190,11 +4848,11 @@ comment|/* ??rehrauer: I don't understand the rationale for this code.  If the  
 if|#
 directive|if
 literal|0
-block|printed = 1; 	    target_terminal_ours_for_output (); 	    printf_filtered ("\nProgram received signal %s, %s.\n", 			     target_signal_to_name (stop_signal), 			     target_signal_to_string (stop_signal)); 	    gdb_flush (gdb_stdout);
+block|printed = 1; 	  target_terminal_ours_for_output (); 	  printf_filtered ("\nProgram received signal %s, %s.\n", 			   target_signal_to_name (stop_signal), 			   target_signal_to_string (stop_signal)); 	  gdb_flush (gdb_stdout);
 endif|#
 directive|endif
 block|}
-comment|/* If it's not SIGTRAP and not a signal we want to stop for, then 	   continue the thread. */
+comment|/* If it's not SIGTRAP and not a signal we want to stop for, then          continue the thread. */
 if|if
 condition|(
 name|stop_signal
@@ -5247,7 +4905,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* It's a SIGTRAP or a signal we're interested in.  Switch threads, 	   and fall into the rest of wait_for_inferior().  */
+comment|/* It's a SIGTRAP or a signal we're interested in.  Switch threads,          and fall into the rest of wait_for_inferior().  */
 name|context_switch
 argument_list|(
 name|ecs
@@ -5292,7 +4950,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* If PC is pointing at a nullified instruction, then step beyond        it so that the user won't be confused when GDB appears to be ready        to execute it. */
+comment|/* If PC is pointing at a nullified instruction, then step beyond      it so that the user won't be confused when GDB appears to be ready      to execute it. */
 comment|/*      if (INSTRUCTION_NULLIFIED&& currently_stepping (ecs)) */
 if|if
 condition|(
@@ -5313,7 +4971,7 @@ argument_list|,
 name|TARGET_SIGNAL_0
 argument_list|)
 expr_stmt|;
-comment|/* We may have received a signal that we want to pass to 	   the inferior; therefore, we must not clobber the waitstatus 	   in WS. */
+comment|/* We may have received a signal that we want to pass to          the inferior; therefore, we must not clobber the waitstatus          in WS. */
 name|ecs
 operator|->
 name|infwait_state
@@ -5346,7 +5004,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* It may not be necessary to disable the watchpoint to stop over        it.  For example, the PA can (with some kernel cooperation)        single step over a watchpoint without disabling the watchpoint.  */
+comment|/* It may not be necessary to disable the watchpoint to stop over      it.  For example, the PA can (with some kernel cooperation)      single step over a watchpoint without disabling the watchpoint.  */
 if|if
 condition|(
 name|HAVE_STEPPABLE_WATCHPOINT
@@ -5373,7 +5031,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* It is far more common to need to disable a watchpoint to step        the inferior over it.  FIXME.  What else might a debug        register or page protection watchpoint scheme need here?  */
+comment|/* It is far more common to need to disable a watchpoint to step      the inferior over it.  FIXME.  What else might a debug      register or page protection watchpoint scheme need here?  */
 if|if
 condition|(
 name|HAVE_NONSTEPPABLE_WATCHPOINT
@@ -5386,18 +5044,7 @@ name|ws
 argument_list|)
 condition|)
 block|{
-comment|/* At this point, we are stopped at an instruction which has 	   attempted to write to a piece of memory under control of 	   a watchpoint.  The instruction hasn't actually executed 	   yet.  If we were to evaluate the watchpoint expression 	   now, we would get the old value, and therefore no change 	   would seem to have occurred.  	   In order to make watchpoints work `right', we really need 	   to complete the memory write, and then evaluate the 	   watchpoint expression.  The following code does that by 	   removing the watchpoint (actually, all watchpoints and 	   breakpoints), single-stepping the target, re-inserting 	   watchpoints, and then falling through to let normal 	   single-step processing handle proceed.  Since this 	   includes evaluating watchpoints, things will come to a 	   stop in the correct manner.  */
-if|if
-condition|(
-name|DECR_PC_AFTER_BREAK
-condition|)
-name|write_pc
-argument_list|(
-name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
-argument_list|)
-expr_stmt|;
+comment|/* At this point, we are stopped at an instruction which has          attempted to write to a piece of memory under control of          a watchpoint.  The instruction hasn't actually executed          yet.  If we were to evaluate the watchpoint expression          now, we would get the old value, and therefore no change          would seem to have occurred.           In order to make watchpoints work `right', we really need          to complete the memory write, and then evaluate the          watchpoint expression.  The following code does that by          removing the watchpoint (actually, all watchpoints and          breakpoints), single-stepping the target, re-inserting          watchpoints, and then falling through to let normal          single-step processing handle proceed.  Since this          includes evaluating watchpoints, things will come to a          stop in the correct manner.  */
 name|remove_breakpoints
 argument_list|()
 expr_stmt|;
@@ -5478,7 +5125,7 @@ name|stop_func_name
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Don't care about return value; stop_func_start and stop_func_name        will both be 0 if it doesn't work.  */
+comment|/* Don't care about return value; stop_func_start and stop_func_name      will both be 0 if it doesn't work.  */
 name|find_pc_partial_function
 argument_list|(
 name|stop_pc
@@ -5543,8 +5190,8 @@ name|breakpoints_failed
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Look at the cause of the stop, and decide what to do.        The alternatives are:        1) break; to really stop and return to the debugger,        2) drop through to start up again        (set ecs->another_trap to 1 to single step once)        3) set ecs->random_signal to 1, and the decision between 1 and 2        will be made according to the signal handling tables.  */
-comment|/* First, distinguish signals caused by the debugger from signals        that have to do with the program's own actions.        Note that breakpoint insns may cause SIGTRAP or SIGILL        or SIGEMT, depending on the operating system version.        Here we detect when a SIGILL or SIGEMT is really a breakpoint        and change it to SIGTRAP.  */
+comment|/* Look at the cause of the stop, and decide what to do.      The alternatives are:      1) break; to really stop and return to the debugger,      2) drop through to start up again      (set ecs->another_trap to 1 to single step once)      3) set ecs->random_signal to 1, and the decision between 1 and 2      will be made according to the signal handling tables.  */
+comment|/* First, distinguish signals caused by the debugger from signals      that have to do with the program's own actions.  Note that      breakpoint insns may cause SIGTRAP or SIGILL or SIGEMT, depending      on the operating system version.  Here we detect when a SIGILL or      SIGEMT is really a breakpoint and change it to SIGTRAP.  We do      something similar for SIGSEGV, since a SIGSEGV will be generated      when we're trying to execute a breakpoint instruction on a      non-executable stack.  This happens for call dummy breakpoints      for architectures like SPARC that place call dummies on the      stack.  */
 if|if
 condition|(
 name|stop_signal
@@ -5561,11 +5208,21 @@ name|TARGET_SIGNAL_ILL
 operator|||
 name|stop_signal
 operator|==
+name|TARGET_SIGNAL_SEGV
+operator|||
+name|stop_signal
+operator|==
 name|TARGET_SIGNAL_EMT
 operator|)
 operator|)
 operator|||
-name|stop_soon_quietly
+name|stop_soon
+operator|==
+name|STOP_QUIETLY
+operator|||
+name|stop_soon
+operator|==
+name|STOP_QUIETLY_NO_SIGSTOP
 condition|)
 block|{
 if|if
@@ -5588,9 +5245,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* This is originated from start_remote(), start_inferior() and          shared libraries hook functions.  */
 if|if
 condition|(
-name|stop_soon_quietly
+name|stop_soon
+operator|==
+name|STOP_QUIETLY
 condition|)
 block|{
 name|stop_stepping
@@ -5600,7 +5260,32 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Don't even think about breakpoints 	   if just proceeded over a breakpoint.  	   However, if we are trying to proceed over a breakpoint 	   and end up in sigtramp, then through_sigtramp_breakpoint 	   will be set and we should check whether we've hit the 	   step breakpoint.  */
+comment|/* This originates from attach_command().  We need to overwrite          the stop_signal here, because some kernels don't ignore a          SIGSTOP in a subsequent ptrace(PTRACE_SONT,SOGSTOP) call.          See more comments in inferior.h.  */
+if|if
+condition|(
+name|stop_soon
+operator|==
+name|STOP_QUIETLY_NO_SIGSTOP
+condition|)
+block|{
+name|stop_stepping
+argument_list|(
+name|ecs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stop_signal
+operator|==
+name|TARGET_SIGNAL_STOP
+condition|)
+name|stop_signal
+operator|=
+name|TARGET_SIGNAL_0
+expr_stmt|;
+return|return;
+block|}
+comment|/* Don't even think about breakpoints          if just proceeded over a breakpoint.           However, if we are trying to proceed over a breakpoint          and end up in sigtramp, then through_sigtramp_breakpoint          will be set and we should check whether we've hit the          step breakpoint.  */
 if|if
 condition|(
 name|stop_signal
@@ -5622,52 +5307,24 @@ expr_stmt|;
 else|else
 block|{
 comment|/* See if there is a breakpoint at the current PC.  */
-comment|/* The second argument of bpstat_stop_status is meant to help 	       distinguish between a breakpoint trap and a singlestep trap. 	       This is only important on targets where DECR_PC_AFTER_BREAK 	       is non-zero.  The prev_pc test is meant to distinguish between 	       singlestepping a trap instruction, and singlestepping thru a 	       jump to the instruction following a trap instruction. */
 name|stop_bpstat
 operator|=
 name|bpstat_stop_status
 argument_list|(
-operator|&
 name|stop_pc
 argument_list|,
-comment|/* Pass TRUE if our reason for stopping is something other 	       than hitting a breakpoint.  We do this by checking that 	       1) stepping is going on and 2) we didn't hit a breakpoint 	       in a signal handler without an intervening stop in 	       sigtramp, which is detected by a new stack pointer value 	       below any usual function calling stack adjustments.  */
-operator|(
-name|currently_stepping
-argument_list|(
 name|ecs
-argument_list|)
-operator|&&
-name|prev_pc
-operator|!=
-name|stop_pc
-operator|-
-name|DECR_PC_AFTER_BREAK
-operator|&&
-operator|!
-operator|(
-name|step_range_end
-operator|&&
-name|INNER_THAN
-argument_list|(
-name|read_sp
-argument_list|()
-argument_list|,
-operator|(
-name|step_sp
-operator|-
-literal|16
-operator|)
-argument_list|)
-operator|)
-operator|)
+operator|->
+name|ptid
 argument_list|)
 expr_stmt|;
-comment|/* Following in case break condition called a 	       function.  */
+comment|/* Following in case break condition called a 	     function.  */
 name|stop_print_frame
 operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* NOTE: cagney/2003-03-29: These two checks for a random signal 	 at one stage in the past included checks for an inferior 	 function call's call dummy's return breakpoint.  The original 	 comment, that went with the test, read:  	 ``End of a stack dummy.  Some systems (e.g. Sony news) give 	 another signal besides SIGTRAP, so check here as well as 	 above.''           If someone ever tries to get get call dummys on a          non-executable stack to work (where the target would stop          with something like a SIGSEGV), then those tests might need          to be re-instated.  Given, however, that the tests were only          enabled when momentary breakpoints were not being used, I          suspect that it won't be the case.  	 NOTE: kettenis/2004-02-05: Indeed such checks don't seem to 	 be necessary for call dummies on a non-executable stack on 	 SPARC.  */
 if|if
 condition|(
 name|stop_signal
@@ -5686,25 +5343,6 @@ name|stop_bpstat
 argument_list|)
 operator|||
 name|trap_expected
-operator|||
-operator|(
-operator|!
-name|CALL_DUMMY_BREAKPOINT_OFFSET_P
-operator|&&
-name|PC_IN_CALL_DUMMY
-argument_list|(
-name|stop_pc
-argument_list|,
-name|read_sp
-argument_list|()
-argument_list|,
-name|FRAME_FP
-argument_list|(
-name|get_current_frame
-argument_list|()
-argument_list|)
-argument_list|)
-operator|)
 operator|||
 operator|(
 name|step_range_end
@@ -5722,32 +5360,10 @@ operator|->
 name|random_signal
 operator|=
 operator|!
-operator|(
 name|bpstat_explains_signal
 argument_list|(
 name|stop_bpstat
 argument_list|)
-comment|/* End of a stack dummy.  Some systems (e.g. Sony 	       news) give another signal besides SIGTRAP, so 	       check here as well as above.  */
-operator|||
-operator|(
-operator|!
-name|CALL_DUMMY_BREAKPOINT_OFFSET_P
-operator|&&
-name|PC_IN_CALL_DUMMY
-argument_list|(
-name|stop_pc
-argument_list|,
-name|read_sp
-argument_list|()
-argument_list|,
-name|FRAME_FP
-argument_list|(
-name|get_current_frame
-argument_list|()
-argument_list|)
-argument_list|)
-operator|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -5762,7 +5378,7 @@ name|TARGET_SIGNAL_TRAP
 expr_stmt|;
 block|}
 block|}
-comment|/* When we reach this point, we've pretty much decided        that the reason for stopping must've been a random        (unexpected) signal. */
+comment|/* When we reach this point, we've pretty much decided      that the reason for stopping must've been a random      (unexpected) signal. */
 else|else
 name|ecs
 operator|->
@@ -5770,123 +5386,9 @@ name|random_signal
 operator|=
 literal|1
 expr_stmt|;
-comment|/* If a fork, vfork or exec event was seen, then there are two        possible responses we can make:         1. If a catchpoint triggers for the event (ecs->random_signal == 0),        then we must stop now and issue a prompt.  We will resume        the inferior when the user tells us to.        2. If no catchpoint triggers for the event (ecs->random_signal == 1),        then we must resume the inferior now and keep checking.         In either case, we must take appropriate steps to "follow" the        the fork/vfork/exec when the inferior is resumed.  For example,        if follow-fork-mode is "child", then we must detach from the        parent inferior and follow the new child inferior.         In either case, setting pending_follow causes the next resume()        to take the appropriate following action. */
 name|process_event_stop_test
 label|:
-if|if
-condition|(
-name|ecs
-operator|->
-name|ws
-operator|.
-name|kind
-operator|==
-name|TARGET_WAITKIND_FORKED
-condition|)
-block|{
-if|if
-condition|(
-name|ecs
-operator|->
-name|random_signal
-condition|)
-comment|/* I.e., no catchpoint triggered for this. */
-block|{
-name|trap_expected
-operator|=
-literal|1
-expr_stmt|;
-name|stop_signal
-operator|=
-name|TARGET_SIGNAL_0
-expr_stmt|;
-name|keep_going
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|ecs
-operator|->
-name|ws
-operator|.
-name|kind
-operator|==
-name|TARGET_WAITKIND_VFORKED
-condition|)
-block|{
-if|if
-condition|(
-name|ecs
-operator|->
-name|random_signal
-condition|)
-comment|/* I.e., no catchpoint triggered for this. */
-block|{
-name|stop_signal
-operator|=
-name|TARGET_SIGNAL_0
-expr_stmt|;
-name|keep_going
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|ecs
-operator|->
-name|ws
-operator|.
-name|kind
-operator|==
-name|TARGET_WAITKIND_EXECD
-condition|)
-block|{
-name|pending_follow
-operator|.
-name|kind
-operator|=
-name|ecs
-operator|->
-name|ws
-operator|.
-name|kind
-expr_stmt|;
-if|if
-condition|(
-name|ecs
-operator|->
-name|random_signal
-condition|)
-comment|/* I.e., no catchpoint triggered for this. */
-block|{
-name|trap_expected
-operator|=
-literal|1
-expr_stmt|;
-name|stop_signal
-operator|=
-name|TARGET_SIGNAL_0
-expr_stmt|;
-name|keep_going
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-comment|/* For the program's own signals, act according to        the signal handling tables.  */
+comment|/* For the program's own signals, act according to      the signal handling tables.  */
 if|if
 condition|(
 name|ecs
@@ -5942,7 +5444,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If not going to stop, give terminal back 	   if we took it away.  */
+comment|/* If not going to stop, give terminal back          if we took it away.  */
 elseif|else
 if|if
 condition|(
@@ -5965,7 +5467,7 @@ name|stop_signal
 operator|=
 name|TARGET_SIGNAL_0
 expr_stmt|;
-comment|/* I'm not sure whether this needs to be check_sigtramp2 or 	   whether it could/should be keep_going.  	   This used to jump to step_over_function if we are stepping, 	   which is wrong.  	   Suppose the user does a `next' over a function call, and while 	   that call is in progress, the inferior receives a signal for 	   which GDB does not stop (i.e., signal_stop[SIG] is false).  In 	   that case, when we reach this point, there is already a 	   step-resume breakpoint established, right where it should be: 	   immediately after the function call the user is "next"-ing 	   over.  If we call step_over_function now, two bad things 	   happen:  	   - we'll create a new breakpoint, at wherever the current 	     frame's return address happens to be.  That could be 	     anywhere, depending on what function call happens to be on 	     the top of the stack at that point.  Point is, it's probably 	     not where we need it.             - the existing step-resume breakpoint (which is at the correct 	     address) will get orphaned: step_resume_breakpoint will point 	     to the new breakpoint, and the old step-resume breakpoint 	     will never be cleaned up.             The old behavior was meant to help HP-UX single-step out of            sigtramps.  It would place the new breakpoint at prev_pc, which            was certainly wrong.  I don't know the details there, so fixing            this probably breaks that.  As with anything else, it's up to            the HP-UX maintainer to furnish a fix that doesn't break other            platforms.  --JimB, 20 May 1999 */
+comment|/* I'm not sure whether this needs to be check_sigtramp2 or          whether it could/should be keep_going.           This used to jump to step_over_function if we are stepping,          which is wrong.           Suppose the user does a `next' over a function call, and while          that call is in progress, the inferior receives a signal for          which GDB does not stop (i.e., signal_stop[SIG] is false).  In          that case, when we reach this point, there is already a          step-resume breakpoint established, right where it should be:          immediately after the function call the user is "next"-ing          over.  If we call step_over_function now, two bad things          happen:           - we'll create a new breakpoint, at wherever the current          frame's return address happens to be.  That could be          anywhere, depending on what function call happens to be on          the top of the stack at that point.  Point is, it's probably          not where we need it.           - the existing step-resume breakpoint (which is at the correct          address) will get orphaned: step_resume_breakpoint will point          to the new breakpoint, and the old step-resume breakpoint          will never be cleaned up.           The old behavior was meant to help HP-UX single-step out of          sigtramps.  It would place the new breakpoint at prev_pc, which          was certainly wrong.  I don't know the details there, so fixing          this probably breaks that.  As with anything else, it's up to          the HP-UX maintainer to furnish a fix that doesn't break other          platforms.  --JimB, 20 May 1999 */
 name|check_sigtramp2
 argument_list|(
 name|ecs
@@ -6025,7 +5527,7 @@ block|{
 case|case
 name|BPSTAT_WHAT_SET_LONGJMP_RESUME
 case|:
-comment|/* If we hit the breakpoint at longjmp, disable it for the 	     duration of this command.  Then, install a temporary 	     breakpoint at the target of the jmp_buf. */
+comment|/* If we hit the breakpoint at longjmp, disable it for the 	   duration of this command.  Then, install a temporary 	   breakpoint at the target of the jmp_buf. */
 name|disable_longjmp_breakpoint
 argument_list|()
 expr_stmt|;
@@ -6057,7 +5559,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Need to blow away step-resume breakpoint, as it 	     interferes with us */
+comment|/* Need to blow away step-resume breakpoint, as it 	   interferes with us */
 if|if
 condition|(
 name|step_resume_breakpoint
@@ -6072,7 +5574,7 @@ name|step_resume_breakpoint
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Not sure whether we need to blow this away too, but probably 	     it is like the step-resume breakpoint.  */
+comment|/* Not sure whether we need to blow this away too, but probably 	   it is like the step-resume breakpoint.  */
 if|if
 condition|(
 name|through_sigtramp_breakpoint
@@ -6094,7 +5596,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME - Need to implement nested temporary breakpoints */
-block|if (step_over_calls> 0) 	    set_longjmp_resume_breakpoint (jmp_buf_pc, 					   get_current_frame ()); 	  else
+block|if (step_over_calls> 0) 	  set_longjmp_resume_breakpoint (jmp_buf_pc, get_current_frame ()); 	else
 endif|#
 directive|endif
 comment|/* 0 */
@@ -6102,7 +5604,7 @@ name|set_longjmp_resume_breakpoint
 argument_list|(
 name|jmp_buf_pc
 argument_list|,
-name|NULL
+name|null_frame_id
 argument_list|)
 expr_stmt|;
 name|ecs
@@ -6135,7 +5637,7 @@ if|#
 directive|if
 literal|0
 comment|/* FIXME - Need to implement nested temporary breakpoints */
-block|if (step_over_calls&& (INNER_THAN (FRAME_FP (get_current_frame ()), 			      step_frame_address))) 	    { 	      ecs->another_trap = 1; 	      keep_going (ecs); 	      return; 	    }
+block|if (step_over_calls&& (frame_id_inner (get_frame_id (get_current_frame ()), 				step_frame_id))) 	  { 	    ecs->another_trap = 1; 	    keep_going (ecs); 	    return; 	  }
 endif|#
 directive|endif
 comment|/* 0 */
@@ -6181,7 +5683,7 @@ name|another_trap
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Still need to check other stuff, at least the case 	     where we are stepping and step out of the right range.  */
+comment|/* Still need to check other stuff, at least the case 	   where we are stepping and step out of the right range.  */
 break|break;
 case|case
 name|BPSTAT_WHAT_STOP_NOISY
@@ -6190,7 +5692,7 @@ name|stop_print_frame
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We are about to nuke the step_resume_breakpoint and 	     through_sigtramp_breakpoint via the cleanup chain, so 	     no need to worry about it here.  */
+comment|/* We are about to nuke the step_resume_breakpoint and 	   through_sigtramp_breakpoint via the cleanup chain, so 	   no need to worry about it here.  */
 name|stop_stepping
 argument_list|(
 name|ecs
@@ -6204,7 +5706,7 @@ name|stop_print_frame
 operator|=
 literal|0
 expr_stmt|;
-comment|/* We are about to nuke the step_resume_breakpoint and 	     through_sigtramp_breakpoint via the cleanup chain, so 	     no need to worry about it here.  */
+comment|/* We are about to nuke the step_resume_breakpoint and 	   through_sigtramp_breakpoint via the cleanup chain, so 	   no need to worry about it here.  */
 name|stop_stepping
 argument_list|(
 name|ecs
@@ -6214,7 +5716,7 @@ return|return;
 case|case
 name|BPSTAT_WHAT_STEP_RESUME
 case|:
-comment|/* This proably demands a more elegant solution, but, yeah 	     right...  	     This function's use of the simple variable 	     step_resume_breakpoint doesn't seem to accomodate 	     simultaneously active step-resume bp's, although the 	     breakpoint list certainly can.  	     If we reach here and step_resume_breakpoint is already 	     NULL, then apparently we have multiple active 	     step-resume bp's.  We'll just delete the breakpoint we 	     stopped at, and carry on.    	     Correction: what the code currently does is delete a 	     step-resume bp, but it makes no effort to ensure that 	     the one deleted is the one currently stopped at.  MVS  */
+comment|/* This proably demands a more elegant solution, but, yeah 	   right...  	   This function's use of the simple variable 	   step_resume_breakpoint doesn't seem to accomodate 	   simultaneously active step-resume bp's, although the 	   breakpoint list certainly can.  	   If we reach here and step_resume_breakpoint is already 	   NULL, then apparently we have multiple active 	   step-resume bp's.  We'll just delete the breakpoint we 	   stopped at, and carry on.    	   Correction: what the code currently does is delete a 	   step-resume bp, but it makes no effort to ensure that 	   the one deleted is the one currently stopped at.  MVS  */
 if|if
 condition|(
 name|step_resume_breakpoint
@@ -6253,7 +5755,7 @@ name|through_sigtramp_breakpoint
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* If were waiting for a trap, hitting the step_resume_break 	     doesn't count as getting it.  */
+comment|/* If were waiting for a trap, hitting the step_resume_break 	   doesn't count as getting it.  */
 if|if
 condition|(
 name|trap_expected
@@ -6275,7 +5777,7 @@ ifdef|#
 directive|ifdef
 name|SOLIB_ADD
 block|{
-comment|/* Remove breakpoints, we eventually want to step over the 	       shlib event breakpoint, and SOLIB_ADD might adjust 	       breakpoint addresses via breakpoint_re_set.  */
+comment|/* Remove breakpoints, we eventually want to step over the 	     shlib event breakpoint, and SOLIB_ADD might adjust 	     breakpoint addresses via breakpoint_re_set.  */
 if|if
 condition|(
 name|breakpoints_inserted
@@ -6287,17 +5789,20 @@ name|breakpoints_inserted
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Check for any newly added shared libraries if we're 	       supposed to be adding them automatically.  Switch 	       terminal for any messages produced by 	       breakpoint_re_set.  */
+comment|/* Check for any newly added shared libraries if we're 	     supposed to be adding them automatically.  Switch 	     terminal for any messages produced by 	     breakpoint_re_set.  */
 name|target_terminal_ours_for_output
 argument_list|()
 expr_stmt|;
+comment|/* NOTE: cagney/2003-11-25: Make certain that the target              stack's section table is kept up-to-date.  Architectures,              (e.g., PPC64), use the section table to perform              operations such as address => section name and hence              require the table to contain all sections (including              those found in shared libraries).  */
+comment|/* NOTE: cagney/2003-11-25: Pass current_target and not              exec_ops to SOLIB_ADD.  This is because current GDB is              only tooled to propagate section_table changes out from              the "current_target" (see target_resize_to_sections), and              not up from the exec stratum.  This, of course, isn't              right.  "infrun.c" should only interact with the              exec/process stratum, instead relying on the target stack              to propagate relevant changes (stop, section table              changed, ...) up to other layers.  */
 name|SOLIB_ADD
 argument_list|(
 name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
+operator|&
+name|current_target
 argument_list|,
 name|auto_solib_add
 argument_list|)
@@ -6305,14 +5810,16 @@ expr_stmt|;
 name|target_terminal_inferior
 argument_list|()
 expr_stmt|;
-comment|/* Try to reenable shared library breakpoints, additional 	       code segments in shared libraries might be mapped in now. */
+comment|/* Try to reenable shared library breakpoints, additional 	     code segments in shared libraries might be mapped in now. */
 name|re_enable_breakpoints_in_shlibs
 argument_list|()
 expr_stmt|;
-comment|/* If requested, stop when the dynamic linker notifies 	       gdb of events.  This allows the user to get control 	       and place breakpoints in initializer routines for 	       dynamically loaded objects (among other things).  */
+comment|/* If requested, stop when the dynamic linker notifies 	     gdb of events.  This allows the user to get control 	     and place breakpoints in initializer routines for 	     dynamically loaded objects (among other things).  */
 if|if
 condition|(
 name|stop_on_solib_events
+operator|||
+name|stop_stack_dummy
 condition|)
 block|{
 name|stop_stepping
@@ -6322,7 +5829,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If we stopped due to an explicit catchpoint, then the 	       (see above) call to SOLIB_ADD pulled in any symbols 	       from a newly-loaded library, if appropriate.  	       We do want the inferior to stop, but not where it is 	       now, which is in the dynamic linker callback.  Rather, 	       we would like it stop in the user's program, just after 	       the call that caused this catchpoint to trigger.  That 	       gives the user a more useful vantage from which to 	       examine their program's state. */
+comment|/* If we stopped due to an explicit catchpoint, then the 	     (see above) call to SOLIB_ADD pulled in any symbols 	     from a newly-loaded library, if appropriate.  	     We do want the inferior to stop, but not where it is 	     now, which is in the dynamic linker callback.  Rather, 	     we would like it stop in the user's program, just after 	     the call that caused this catchpoint to trigger.  That 	     gives the user a more useful vantage from which to 	     examine their program's state. */
 elseif|else
 if|if
 condition|(
@@ -6333,7 +5840,7 @@ operator|==
 name|BPSTAT_WHAT_CHECK_SHLIBS_RESUME_FROM_HOOK
 condition|)
 block|{
-comment|/* ??rehrauer: If I could figure out how to get the 		   right return PC from here, we could just set a temp 		   breakpoint and resume.  I'm not sure we can without 		   cracking open the dld's shared libraries and sniffing 		   their unwind tables and text/data ranges, and that's 		   not a terribly portable notion.  		   Until that time, we must step the inferior out of the 		   dld callback, and also out of the dld itself (and any 		   code or stubs in libdld.sl, such as "shl_load" and 		   friends) until we reach non-dld code.  At that point, 		   we can stop stepping. */
+comment|/* ??rehrauer: If I could figure out how to get the 	         right return PC from here, we could just set a temp 	         breakpoint and resume.  I'm not sure we can without 	         cracking open the dld's shared libraries and sniffing 	         their unwind tables and text/data ranges, and that's 	         not a terribly portable notion.  	         Until that time, we must step the inferior out of the 	         dld callback, and also out of the dld itself (and any 	         code or stubs in libdld.sl, such as "shl_load" and 	         friends) until we reach non-dld code.  At that point, 	         we can stop stepping. */
 name|bpstat_get_triggered_catchpoints
 argument_list|(
 name|stop_bpstat
@@ -6350,7 +5857,7 @@ name|stepping_through_solib_after_catch
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Be sure to lift all breakpoints, so the inferior does 		   actually step past this point... */
+comment|/* Be sure to lift all breakpoints, so the inferior does 	         actually step past this point... */
 name|ecs
 operator|->
 name|another_trap
@@ -6384,8 +5891,8 @@ case|:
 break|break;
 block|}
 block|}
-comment|/* We come here if we hit a breakpoint but should not        stop for it.  Possibly we also were stepping        and should stop for that.  So fall through and        test for stepping.  But, if not stepping,        do not stop.  */
-comment|/* Are we stepping to get the inferior out of the dynamic        linker's hook (and possibly the dld itself) after catching        a shlib event? */
+comment|/* We come here if we hit a breakpoint but should not      stop for it.  Possibly we also were stepping      and should stop for that.  So fall through and      test for stepping.  But, if not stepping,      do not stop.  */
+comment|/* Are we stepping to get the inferior out of the dynamic      linker's hook (and possibly the dld itself) after catching      a shlib event? */
 if|if
 condition|(
 name|ecs
@@ -6430,7 +5937,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* Else, stop and report the catchpoint(s) whose triggering 	   caused us to begin stepping. */
+comment|/* Else, stop and report the catchpoint(s) whose triggering          caused us to begin stepping. */
 name|ecs
 operator|->
 name|stepping_through_solib_after_catch
@@ -6473,64 +5980,11 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
-name|CALL_DUMMY_BREAKPOINT_OFFSET_P
-condition|)
-block|{
-comment|/* This is the old way of detecting the end of the stack dummy. 	   An architecture which defines CALL_DUMMY_BREAKPOINT_OFFSET gets 	   handled above.  As soon as we can test it on all of them, all 	   architectures should define it.  */
-comment|/* If this is the breakpoint at the end of a stack dummy, 	   just stop silently, unless the user was doing an si/ni, in which 	   case she'd better know what she's doing.  */
-if|if
-condition|(
-name|CALL_DUMMY_HAS_COMPLETED
-argument_list|(
-name|stop_pc
-argument_list|,
-name|read_sp
-argument_list|()
-argument_list|,
-name|FRAME_FP
-argument_list|(
-name|get_current_frame
-argument_list|()
-argument_list|)
-argument_list|)
-operator|&&
-operator|!
-name|step_range_end
-condition|)
-block|{
-name|stop_print_frame
-operator|=
-literal|0
-expr_stmt|;
-name|stop_stack_dummy
-operator|=
-literal|1
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HP_OS_BUG
-name|trap_expected_after_continue
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-name|stop_stepping
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-if|if
-condition|(
 name|step_resume_breakpoint
 condition|)
 block|{
-comment|/* Having a step-resume breakpoint overrides anything 	   else having to do with stepping commands until 	   that breakpoint is reached.  */
-comment|/* I'm not sure whether this needs to be check_sigtramp2 or 	   whether it could/should be keep_going.  */
+comment|/* Having a step-resume breakpoint overrides anything          else having to do with stepping commands until          that breakpoint is reached.  */
+comment|/* I'm not sure whether this needs to be check_sigtramp2 or          whether it could/should be keep_going.  */
 name|check_sigtramp2
 argument_list|(
 name|ecs
@@ -6551,7 +6005,7 @@ literal|0
 condition|)
 block|{
 comment|/* Likewise if we aren't even stepping.  */
-comment|/* I'm not sure whether this needs to be check_sigtramp2 or 	   whether it could/should be keep_going.  */
+comment|/* I'm not sure whether this needs to be check_sigtramp2 or          whether it could/should be keep_going.  */
 name|check_sigtramp2
 argument_list|(
 name|ecs
@@ -6564,7 +6018,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If stepping through a line, keep going if still within it.         Note that step_range_end is the address of the first instruction        beyond the step range, and NOT the address of the last instruction        within it! */
+comment|/* If stepping through a line, keep going if still within it.       Note that step_range_end is the address of the first instruction      beyond the step range, and NOT the address of the last instruction      within it! */
 if|if
 condition|(
 name|stop_pc
@@ -6576,7 +6030,7 @@ operator|<
 name|step_range_end
 condition|)
 block|{
-comment|/* We might be doing a BPSTAT_WHAT_SINGLE and getting a signal. 	   So definately need to check for sigtramp here.  */
+comment|/* We might be doing a BPSTAT_WHAT_SINGLE and getting a signal.          So definately need to check for sigtramp here.  */
 name|check_sigtramp2
 argument_list|(
 name|ecs
@@ -6590,7 +6044,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* We stepped out of the stepping range.  */
-comment|/* If we are stepping at the source level and entered the runtime        loader dynamic symbol resolution code, we keep on single stepping        until we exit the run time loader code and reach the callee's        address.  */
+comment|/* If we are stepping at the source level and entered the runtime      loader dynamic symbol resolution code, we keep on single stepping      until we exit the run time loader code and reach the callee's      address.  */
 if|if
 condition|(
 name|step_over_calls
@@ -6606,8 +6060,10 @@ block|{
 name|CORE_ADDR
 name|pc_after_resolver
 init|=
-name|SKIP_SOLIB_RESOLVER
+name|gdbarch_skip_solib_resolver
 argument_list|(
+name|current_gdbarch
+argument_list|,
 name|stop_pc
 argument_list|)
 decl_stmt|;
@@ -6616,12 +6072,12 @@ condition|(
 name|pc_after_resolver
 condition|)
 block|{
-comment|/* Set up a step-resume breakpoint at the address 	       indicated by SKIP_SOLIB_RESOLVER.  */
+comment|/* Set up a step-resume breakpoint at the address 	     indicated by SKIP_SOLIB_RESOLVER.  */
 name|struct
 name|symtab_and_line
 name|sr_sal
 decl_stmt|;
-name|INIT_SAL
+name|init_sal
 argument_list|(
 operator|&
 name|sr_sal
@@ -6642,7 +6098,7 @@ name|set_momentary_breakpoint
 argument_list|(
 name|sr_sal
 argument_list|,
-name|NULL
+name|null_frame_id
 argument_list|,
 name|bp_step_resume
 argument_list|)
@@ -6662,7 +6118,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* We can't update step_sp every time through the loop, because        reading the stack pointer would slow down stepping too much.        But we can update it every time we leave the step range.  */
+comment|/* We can't update step_sp every time through the loop, because      reading the stack pointer would slow down stepping too much.      But we can update it every time we leave the step range.  */
 name|ecs
 operator|->
 name|update_step_sp
@@ -6672,21 +6128,15 @@ expr_stmt|;
 comment|/* Did we just take a signal?  */
 if|if
 condition|(
-name|IN_SIGTRAMP
+name|pc_in_sigtramp
 argument_list|(
 name|stop_pc
-argument_list|,
-name|ecs
-operator|->
-name|stop_func_name
 argument_list|)
 operator|&&
 operator|!
-name|IN_SIGTRAMP
+name|pc_in_sigtramp
 argument_list|(
 name|prev_pc
-argument_list|,
-name|prev_func_name
 argument_list|)
 operator|&&
 name|INNER_THAN
@@ -6698,13 +6148,14 @@ name|step_sp
 argument_list|)
 condition|)
 block|{
-comment|/* We've just taken a signal; go until we are back to 	   the point where we took it and one more.  */
-comment|/* Note: The test above succeeds not only when we stepped 	   into a signal handler, but also when we step past the last 	   statement of a signal handler and end up in the return stub 	   of the signal handler trampoline.  To distinguish between 	   these two cases, check that the frame is INNER_THAN the 	   previous one below. pai/1997-09-11 */
+comment|/* We've just taken a signal; go until we are back to          the point where we took it and one more.  */
+comment|/* Note: The test above succeeds not only when we stepped          into a signal handler, but also when we step past the last          statement of a signal handler and end up in the return stub          of the signal handler trampoline.  To distinguish between          these two cases, check that the frame is INNER_THAN the          previous one below. pai/1997-09-11 */
 block|{
-name|CORE_ADDR
+name|struct
+name|frame_id
 name|current_frame
 init|=
-name|FRAME_FP
+name|get_frame_id
 argument_list|(
 name|get_current_frame
 argument_list|()
@@ -6712,22 +6163,22 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|INNER_THAN
+name|frame_id_inner
 argument_list|(
 name|current_frame
 argument_list|,
-name|step_frame_address
+name|step_frame_id
 argument_list|)
 condition|)
 block|{
-comment|/* We have just taken a signal; go until we are back to 	         the point where we took it and one more.  */
-comment|/* This code is needed at least in the following case: 	         The user types "next" and then a signal arrives (before 	         the "next" is done).  */
-comment|/* Note that if we are stopped at a breakpoint, then we need 	         the step_resume breakpoint to override any breakpoints at 	         the same location, so that we will still step over the 	         breakpoint even though the signal happened.  */
+comment|/* We have just taken a signal; go until we are back to 	       the point where we took it and one more.  */
+comment|/* This code is needed at least in the following case: 	       The user types "next" and then a signal arrives (before 	       the "next" is done).  */
+comment|/* Note that if we are stopped at a breakpoint, then we need 	       the step_resume breakpoint to override any breakpoints at 	       the same location, so that we will still step over the 	       breakpoint even though the signal happened.  */
 name|struct
 name|symtab_and_line
 name|sr_sal
 decl_stmt|;
-name|INIT_SAL
+name|init_sal
 argument_list|(
 operator|&
 name|sr_sal
@@ -6751,7 +6202,7 @@ name|pc
 operator|=
 name|prev_pc
 expr_stmt|;
-comment|/* We could probably be setting the frame to 	         step_frame_address; I don't think anyone thought to 	         try it.  */
+comment|/* We could probably be setting the frame to 	       step_frame_id; I don't think anyone thought to try it.  */
 name|check_for_old_step_resume_breakpoint
 argument_list|()
 expr_stmt|;
@@ -6761,7 +6212,7 @@ name|set_momentary_breakpoint
 argument_list|(
 name|sr_sal
 argument_list|,
-name|NULL
+name|null_frame_id
 argument_list|,
 name|bp_step_resume
 argument_list|)
@@ -6776,7 +6227,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We just stepped out of a signal handler and into 	         its calling trampoline.  	         Normally, we'd call step_over_function from 	         here, but for some reason GDB can't unwind the 	         stack correctly to find the real PC for the point 	         user code where the signal trampoline will return 	         -- FRAME_SAVED_PC fails, at least on HP-UX 10.20. 	         But signal trampolines are pretty small stubs of 	         code, anyway, so it's OK instead to just 	         single-step out.  Note: assuming such trampolines 	         don't exhibit recursion on any platform... */
+comment|/* We just stepped out of a signal handler and into 	       its calling trampoline.  	       Normally, we'd call step_over_function from 	       here, but for some reason GDB can't unwind the 	       stack correctly to find the real PC for the point 	       user code where the signal trampoline will return 	       -- FRAME_SAVED_PC fails, at least on HP-UX 10.20. 	       But signal trampolines are pretty small stubs of 	       code, anyway, so it's OK instead to just 	       single-step out.  Note: assuming such trampolines 	       don't exhibit recursion on any platform... */
 name|find_pc_partial_function
 argument_list|(
 name|stop_pc
@@ -6818,14 +6269,14 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* If this is stepi or nexti, make sure that the stepping range 	   gets us past that instruction.  */
+comment|/* If this is stepi or nexti, make sure that the stepping range          gets us past that instruction.  */
 if|if
 condition|(
 name|step_range_end
 operator|==
 literal|1
 condition|)
-comment|/* FIXME: Does this run afoul of the code below which, if 	     we step into the middle of a line, resets the stepping 	     range?  */
+comment|/* FIXME: Does this run afoul of the code below which, if 	   we step into the middle of a line, resets the stepping 	   range?  */
 name|step_range_end
 operator|=
 operator|(
@@ -6851,6 +6302,8 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+operator|(
 name|stop_pc
 operator|==
 name|ecs
@@ -6858,7 +6311,6 @@ operator|->
 name|stop_func_start
 comment|/* Quick test */
 operator|||
-operator|(
 name|in_prologue
 argument_list|(
 name|stop_pc
@@ -6867,6 +6319,7 @@ name|ecs
 operator|->
 name|stop_func_start
 argument_list|)
+operator|)
 operator|&&
 operator|!
 name|IN_SOLIB_RETURN_TRAMPOLINE
@@ -6896,257 +6349,7 @@ literal|0
 condition|)
 block|{
 comment|/* It's a subroutine call.  */
-if|if
-condition|(
-operator|(
-name|step_over_calls
-operator|==
-name|STEP_OVER_NONE
-operator|)
-operator|||
-operator|(
-operator|(
-name|step_range_end
-operator|==
-literal|1
-operator|)
-operator|&&
-name|in_prologue
-argument_list|(
-name|prev_pc
-argument_list|,
-name|ecs
-operator|->
-name|stop_func_start
-argument_list|)
-operator|)
-condition|)
-block|{
-comment|/* I presume that step_over_calls is only 0 when we're 	       supposed to be stepping at the assembly language level 	       ("stepi").  Just stop.  */
-comment|/* Also, maybe we just did a "nexti" inside a prolog,                so we thought it was a subroutine call but it was not.                Stop as well.  FENN */
-name|stop_step
-operator|=
-literal|1
-expr_stmt|;
-name|print_stop_reason
-argument_list|(
-name|END_STEPPING_RANGE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|stop_stepping
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|step_over_calls
-operator|==
-name|STEP_OVER_ALL
-operator|||
-name|IGNORE_HELPER_CALL
-argument_list|(
-name|stop_pc
-argument_list|)
-condition|)
-block|{
-comment|/* We're doing a "next".  */
-if|if
-condition|(
-name|IN_SIGTRAMP
-argument_list|(
-name|stop_pc
-argument_list|,
-name|ecs
-operator|->
-name|stop_func_name
-argument_list|)
-operator|&&
-name|INNER_THAN
-argument_list|(
-name|step_frame_address
-argument_list|,
-name|read_sp
-argument_list|()
-argument_list|)
-condition|)
-comment|/* We stepped out of a signal handler, and into its                  calling trampoline.  This is misdetected as a                  subroutine call, but stepping over the signal                  trampoline isn't such a bad idea.  In order to do                  that, we have to ignore the value in                  step_frame_address, since that doesn't represent the                  frame that'll reach when we return from the signal                  trampoline.  Otherwise we'll probably continue to the                  end of the program.  */
-name|step_frame_address
-operator|=
-literal|0
-expr_stmt|;
-name|step_over_function
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-name|keep_going
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* If we are in a function call trampoline (a stub between 	   the calling routine and the real function), locate the real 	   function.  That's what tells us (a) whether we want to step 	   into it at all, and (b) what prologue we want to run to 	   the end of, if we do step into it.  */
-name|tmp
-operator|=
-name|SKIP_TRAMPOLINE_CODE
-argument_list|(
-name|stop_pc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tmp
-operator|!=
-literal|0
-condition|)
-name|ecs
-operator|->
-name|stop_func_start
-operator|=
-name|tmp
-expr_stmt|;
-else|else
-block|{
-name|tmp
-operator|=
-name|DYNAMIC_TRAMPOLINE_NEXTPC
-argument_list|(
-name|stop_pc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tmp
-condition|)
-block|{
-name|struct
-name|symtab_and_line
-name|xxx
-decl_stmt|;
-comment|/* Why isn't this s_a_l called "sr_sal", like all of the 		   other s_a_l's where this code is duplicated?  */
-name|INIT_SAL
-argument_list|(
-operator|&
-name|xxx
-argument_list|)
-expr_stmt|;
-comment|/* initialize to zeroes */
-name|xxx
-operator|.
-name|pc
-operator|=
-name|tmp
-expr_stmt|;
-name|xxx
-operator|.
-name|section
-operator|=
-name|find_pc_overlay
-argument_list|(
-name|xxx
-operator|.
-name|pc
-argument_list|)
-expr_stmt|;
-name|check_for_old_step_resume_breakpoint
-argument_list|()
-expr_stmt|;
-name|step_resume_breakpoint
-operator|=
-name|set_momentary_breakpoint
-argument_list|(
-name|xxx
-argument_list|,
-name|NULL
-argument_list|,
-name|bp_step_resume
-argument_list|)
-expr_stmt|;
-name|insert_breakpoints
-argument_list|()
-expr_stmt|;
-name|keep_going
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-comment|/* If we have line number information for the function we 	   are thinking of stepping into, step into it.  	   If there are several symtabs at that PC (e.g. with include 	   files), just want to know whether *any* of them have line 	   numbers.  find_pc_line handles this.  */
-block|{
-name|struct
-name|symtab_and_line
-name|tmp_sal
-decl_stmt|;
-name|tmp_sal
-operator|=
-name|find_pc_line
-argument_list|(
-name|ecs
-operator|->
-name|stop_func_start
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tmp_sal
-operator|.
-name|line
-operator|!=
-literal|0
-condition|)
-block|{
-name|step_into_function
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-comment|/* If we have no line number and the step-stop-if-no-debug 	   is set, we stop the step so that the user has a chance to 	   switch in assembly mode.  */
-if|if
-condition|(
-name|step_over_calls
-operator|==
-name|STEP_OVER_UNDEBUGGABLE
-operator|&&
-name|step_stop_if_no_debug
-condition|)
-block|{
-name|stop_step
-operator|=
-literal|1
-expr_stmt|;
-name|print_stop_reason
-argument_list|(
-name|END_STEPPING_RANGE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|stop_stepping
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|step_over_function
-argument_list|(
-name|ecs
-argument_list|)
-expr_stmt|;
-name|keep_going
+name|handle_step_into_function
 argument_list|(
 name|ecs
 argument_list|)
@@ -7172,7 +6375,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* It is stepi or nexti.  We always want to stop stepping after 	   one instruction.  */
+comment|/* It is stepi or nexti.  We always want to stop stepping after          one instruction.  */
 name|stop_step
 operator|=
 literal|1
@@ -7191,7 +6394,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If we're in the return path from a shared library trampoline,        we want to proceed through the trampoline when stepping.  */
+comment|/* If we're in the return path from a shared library trampoline,      we want to proceed through the trampoline when stepping.  */
 if|if
 condition|(
 name|IN_SOLIB_RETURN_TRAMPOLINE
@@ -7204,21 +6407,19 @@ name|stop_func_name
 argument_list|)
 condition|)
 block|{
-name|CORE_ADDR
-name|tmp
-decl_stmt|;
 comment|/* Determine where this trampoline returns.  */
-name|tmp
-operator|=
+name|CORE_ADDR
+name|real_stop_pc
+init|=
 name|SKIP_TRAMPOLINE_CODE
 argument_list|(
 name|stop_pc
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* Only proceed through if we know where it's going.  */
 if|if
 condition|(
-name|tmp
+name|real_stop_pc
 condition|)
 block|{
 comment|/* And put the step-breakpoint there and go until there. */
@@ -7226,7 +6427,7 @@ name|struct
 name|symtab_and_line
 name|sr_sal
 decl_stmt|;
-name|INIT_SAL
+name|init_sal
 argument_list|(
 operator|&
 name|sr_sal
@@ -7237,7 +6438,7 @@ name|sr_sal
 operator|.
 name|pc
 operator|=
-name|tmp
+name|real_stop_pc
 expr_stmt|;
 name|sr_sal
 operator|.
@@ -7250,7 +6451,7 @@ operator|.
 name|pc
 argument_list|)
 expr_stmt|;
-comment|/* Do not specify what the fp should be when we stop 	       since on some machines the prologue 	       is where the new fp value is established.  */
+comment|/* Do not specify what the fp should be when we stop 	     since on some machines the prologue 	     is where the new fp value is established.  */
 name|check_for_old_step_resume_breakpoint
 argument_list|()
 expr_stmt|;
@@ -7260,7 +6461,7 @@ name|set_momentary_breakpoint
 argument_list|(
 name|sr_sal
 argument_list|,
-name|NULL
+name|null_frame_id
 argument_list|,
 name|bp_step_resume
 argument_list|)
@@ -7272,7 +6473,7 @@ condition|)
 name|insert_breakpoints
 argument_list|()
 expr_stmt|;
-comment|/* Restart without fiddling with the step ranges or 	       other state.  */
+comment|/* Restart without fiddling with the step ranges or 	     other state.  */
 name|keep_going
 argument_list|(
 name|ecs
@@ -7292,7 +6493,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* We have no line number information.  That means to stop 	   stepping (does this always happen right after one instruction, 	   when we do "s" in a function with no line numbers, 	   or can this happen as a result of a return or longjmp?).  */
+comment|/* We have no line number information.  That means to stop          stepping (does this always happen right after one instruction,          when we do "s" in a function with no line numbers,          or can this happen as a result of a return or longjmp?).  */
 name|stop_step
 operator|=
 literal|1
@@ -7346,7 +6547,7 @@ name|symtab
 operator|)
 condition|)
 block|{
-comment|/* We are at the start of a different line.  So stop.  Note that 	   we don't stop if we step into the middle of a different line. 	   That is said to make things like for (;;) statements work 	   better.  */
+comment|/* We are at the start of a different line.  So stop.  Note that          we don't stop if we step into the middle of a different line.          That is said to make things like for (;;) statements work          better.  */
 name|stop_step
 operator|=
 literal|1
@@ -7365,7 +6566,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* We aren't done stepping.         Optimize by setting the stepping range to the line.        (We might not be in the original line, but if we entered a        new line in mid-statement, we continue stepping.  This makes        things like for(;;) statements work better.)  */
+comment|/* We aren't done stepping.       Optimize by setting the stepping range to the line.      (We might not be in the original line, but if we entered a      new line in mid-statement, we continue stepping.  This makes      things like for(;;) statements work better.)  */
 if|if
 condition|(
 name|ecs
@@ -7383,7 +6584,7 @@ operator|->
 name|stop_func_end
 condition|)
 block|{
-comment|/* If this is the last line of the function, don't keep stepping 	   (it would probably step us out of the function). 	   This is particularly necessary for a one-line function, 	   in which after skipping the prologue we better stop even though 	   we will be in mid-line.  */
+comment|/* If this is the last line of the function, don't keep stepping          (it would probably step us out of the function).          This is particularly necessary for a one-line function,          in which after skipping the prologue we better stop even though          we will be in mid-line.  */
 name|stop_step
 operator|=
 literal|1
@@ -7418,9 +6619,9 @@ name|sal
 operator|.
 name|end
 expr_stmt|;
-name|step_frame_address
+name|step_frame_id
 operator|=
-name|FRAME_FP
+name|get_frame_id
 argument_list|(
 name|get_current_frame
 argument_list|()
@@ -7446,12 +6647,21 @@ name|sal
 operator|.
 name|symtab
 expr_stmt|;
-comment|/* In the case where we just stepped out of a function into the middle        of a line of the caller, continue stepping, but step_frame_address        must be modified to current frame */
+comment|/* In the case where we just stepped out of a function into the      middle of a line of the caller, continue stepping, but      step_frame_id must be modified to current frame */
+if|#
+directive|if
+literal|0
+comment|/* NOTE: cagney/2003-10-16: I think this frame ID inner test is too      generous.  It will trigger on things like a step into a frameless      stackless leaf function.  I think the logic should instead look      at the unwound frame ID has that should give a more robust      indication of what happened.  */
+block|if (step-ID == current-ID)        still stepping in same function;      else if (step-ID == unwind (current-ID))        stepped into a function;      else        stepped out of a function;
+comment|/* Of course this assumes that the frame ID unwind code is robust         and we're willing to introduce frame unwind logic into this         function.  Fortunately, those days are nearly upon us.  */
+endif|#
+directive|endif
 block|{
-name|CORE_ADDR
+name|struct
+name|frame_id
 name|current_frame
 init|=
-name|FRAME_FP
+name|get_frame_id
 argument_list|(
 name|get_current_frame
 argument_list|()
@@ -7461,15 +6671,15 @@ if|if
 condition|(
 operator|!
 operator|(
-name|INNER_THAN
+name|frame_id_inner
 argument_list|(
 name|current_frame
 argument_list|,
-name|step_frame_address
+name|step_frame_id
 argument_list|)
 operator|)
 condition|)
-name|step_frame_address
+name|step_frame_id
 operator|=
 name|current_frame
 expr_stmt|;
@@ -7479,8 +6689,6 @@ argument_list|(
 name|ecs
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* extra brace, to preserve old indentation */
 block|}
 end_function
 
@@ -7550,21 +6758,15 @@ if|if
 condition|(
 name|trap_expected
 operator|&&
-name|IN_SIGTRAMP
+name|pc_in_sigtramp
 argument_list|(
 name|stop_pc
-argument_list|,
-name|ecs
-operator|->
-name|stop_func_name
 argument_list|)
 operator|&&
 operator|!
-name|IN_SIGTRAMP
+name|pc_in_sigtramp
 argument_list|(
 name|prev_pc
-argument_list|,
-name|prev_func_name
 argument_list|)
 operator|&&
 name|INNER_THAN
@@ -7576,12 +6778,12 @@ name|step_sp
 argument_list|)
 condition|)
 block|{
-comment|/* What has happened here is that we have just stepped the 	 inferior with a signal (because it is a signal which 	 shouldn't make us stop), thus stepping into sigtramp.  	 So we need to set a step_resume_break_address breakpoint and 	 continue until we hit it, and then step.  FIXME: This should 	 be more enduring than a step_resume breakpoint; we should 	 know that we will later need to keep going rather than 	 re-hitting the breakpoint here (see the testsuite, 	 gdb.base/signals.exp where it says "exceedingly difficult").  */
+comment|/* What has happened here is that we have just stepped the          inferior with a signal (because it is a signal which          shouldn't make us stop), thus stepping into sigtramp.           So we need to set a step_resume_break_address breakpoint and          continue until we hit it, and then step.  FIXME: This should          be more enduring than a step_resume breakpoint; we should          know that we will later need to keep going rather than          re-hitting the breakpoint here (see the testsuite,          gdb.base/signals.exp where it says "exceedingly difficult").  */
 name|struct
 name|symtab_and_line
 name|sr_sal
 decl_stmt|;
-name|INIT_SAL
+name|init_sal
 argument_list|(
 operator|&
 name|sr_sal
@@ -7605,14 +6807,14 @@ operator|.
 name|pc
 argument_list|)
 expr_stmt|;
-comment|/* We perhaps could set the frame if we kept track of what the 	 frame corresponding to prev_pc was.  But we don't, so don't.  */
+comment|/* We perhaps could set the frame if we kept track of what the          frame corresponding to prev_pc was.  But we don't, so don't.  */
 name|through_sigtramp_breakpoint
 operator|=
 name|set_momentary_breakpoint
 argument_list|(
 name|sr_sal
 argument_list|,
-name|NULL
+name|null_frame_id
 argument_list|,
 name|bp_through_sigtramp
 argument_list|)
@@ -7707,12 +6909,6 @@ argument_list|)
 expr_stmt|;
 comment|/* Use the step_resume_break to step until the end of the prologue,      even if that involves jumps (as it seems to on the vax under      4.2).  */
 comment|/* If the prologue ends in the middle of a source line, continue to      the end of that source line (if it is still within the function).      Otherwise, just go to end of prologue.  */
-ifdef|#
-directive|ifdef
-name|PROLOGUE_FIRSTLINE_OVERLAP
-comment|/* no, don't either.  It skips any code that's legitimately on the      first line.  */
-else|#
-directive|else
 if|if
 condition|(
 name|ecs
@@ -7751,8 +6947,29 @@ name|sal
 operator|.
 name|end
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* Architectures which require breakpoint adjustment might not be able      to place a breakpoint at the computed address.  If so, the test      ``ecs->stop_func_start == stop_pc'' will never succeed.  Adjust      ecs->stop_func_start to an address at which a breakpoint may be      legitimately placed.            Note:  kevinb/2004-01-19:  On FR-V, if this adjustment is not      made, GDB will enter an infinite loop when stepping through      optimized code consisting of VLIW instructions which contain      subinstructions corresponding to different source lines.  On      FR-V, it's not permitted to place a breakpoint on any but the      first subinstruction of a VLIW instruction.  When a breakpoint is      set, GDB will adjust the breakpoint address to the beginning of      the VLIW instruction.  Thus, we need to make the corresponding      adjustment here when computing the stop address.  */
+if|if
+condition|(
+name|gdbarch_adjust_breakpoint_address_p
+argument_list|(
+name|current_gdbarch
+argument_list|)
+condition|)
+block|{
+name|ecs
+operator|->
+name|stop_func_start
+operator|=
+name|gdbarch_adjust_breakpoint_address
+argument_list|(
+name|current_gdbarch
+argument_list|,
+name|ecs
+operator|->
+name|stop_func_start
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ecs
@@ -7784,7 +7001,7 @@ block|}
 else|else
 block|{
 comment|/* Put the step-breakpoint there and go until there.  */
-name|INIT_SAL
+name|init_sal
 argument_list|(
 operator|&
 name|sr_sal
@@ -7810,7 +7027,7 @@ operator|->
 name|stop_func_start
 argument_list|)
 expr_stmt|;
-comment|/* Do not specify what the fp should be when we stop since on 	 some machines the prologue is where the new fp value is 	 established.  */
+comment|/* Do not specify what the fp should be when we stop since on          some machines the prologue is where the new fp value is          established.  */
 name|check_for_old_step_resume_breakpoint
 argument_list|()
 expr_stmt|;
@@ -7820,7 +7037,7 @@ name|set_momentary_breakpoint
 argument_list|(
 name|sr_sal
 argument_list|,
-name|NULL
+name|null_frame_id
 argument_list|,
 name|bp_step_resume
 argument_list|)
@@ -7847,7 +7064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We've just entered a callee, and we wish to resume until it returns    to the caller.  Setting a step_resume breakpoint on the return    address will catch a return from the callee.          However, if the callee is recursing, we want to be careful not to    catch returns of those recursive calls, but only of THIS instance    of the call.     To do this, we set the step_resume bp's frame to our current    caller's frame (step_frame_address, which is set by the "next" or    "until" command, before execution begins).  */
+comment|/* We've just entered a callee, and we wish to resume until it returns    to the caller.  Setting a step_resume breakpoint on the return    address will catch a return from the callee.          However, if the callee is recursing, we want to be careful not to    catch returns of those recursive calls, but only of THIS instance    of the call.     To do this, we set the step_resume bp's frame to our current    caller's frame (step_frame_id, which is set by the "next" or    "until" command, before execution begins).  */
 end_comment
 
 begin_function
@@ -7865,20 +7082,41 @@ name|struct
 name|symtab_and_line
 name|sr_sal
 decl_stmt|;
-name|INIT_SAL
+name|init_sal
 argument_list|(
 operator|&
 name|sr_sal
 argument_list|)
 expr_stmt|;
 comment|/* initialize to zeros */
+comment|/* NOTE: cagney/2003-04-06:       At this point the equality get_frame_pc() == get_frame_func()      should hold.  This may make it possible for this code to tell the      frame where it's function is, instead of the reverse.  This would      avoid the need to search for the frame's function, which can get      very messy when there is no debug info available (look at the      heuristic find pc start code found in targets like the MIPS).  */
+comment|/* NOTE: cagney/2003-04-06:       The intent of DEPRECATED_SAVED_PC_AFTER_CALL was to:       - provide a very light weight equivalent to frame_unwind_pc()      (nee FRAME_SAVED_PC) that avoids the prologue analyzer       - avoid handling the case where the PC hasn't been saved in the      prologue analyzer       Unfortunately, not five lines further down, is a call to      get_frame_id() and that is guarenteed to trigger the prologue      analyzer.            The `correct fix' is for the prologe analyzer to handle the case      where the prologue is incomplete (PC in prologue) and,      consequently, the return pc has not yet been saved.  It should be      noted that the prologue analyzer needs to handle this case      anyway: frameless leaf functions that don't save the return PC;      single stepping through a prologue.       The d10v handles all this by bailing out of the prologue analsis      when it reaches the current instruction.  */
+if|if
+condition|(
+name|DEPRECATED_SAVED_PC_AFTER_CALL_P
+argument_list|()
+condition|)
 name|sr_sal
 operator|.
 name|pc
 operator|=
 name|ADDR_BITS_REMOVE
 argument_list|(
-name|SAVED_PC_AFTER_CALL
+name|DEPRECATED_SAVED_PC_AFTER_CALL
+argument_list|(
+name|get_current_frame
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|sr_sal
+operator|.
+name|pc
+operator|=
+name|ADDR_BITS_REMOVE
+argument_list|(
+name|frame_pc_unwind
 argument_list|(
 name|get_current_frame
 argument_list|()
@@ -7905,15 +7143,21 @@ name|set_momentary_breakpoint
 argument_list|(
 name|sr_sal
 argument_list|,
+name|get_frame_id
+argument_list|(
 name|get_current_frame
 argument_list|()
+argument_list|)
 argument_list|,
 name|bp_step_resume
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|step_frame_address
+name|frame_id_p
+argument_list|(
+name|step_frame_id
+argument_list|)
 operator|&&
 operator|!
 name|IN_SOLIB_DYNSYM_RESOLVE_CODE
@@ -7925,9 +7169,9 @@ argument_list|)
 condition|)
 name|step_resume_breakpoint
 operator|->
-name|frame
+name|frame_id
 operator|=
-name|step_frame_address
+name|step_frame_id
 expr_stmt|;
 if|if
 condition|(
@@ -7950,108 +7194,6 @@ modifier|*
 name|ecs
 parameter_list|)
 block|{
-if|if
-condition|(
-name|target_has_execution
-condition|)
-block|{
-comment|/* Are we stopping for a vfork event?  We only stop when we see          the child's event.  However, we may not yet have seen the          parent's event.  And, inferior_ptid is still set to the          parent's pid, until we resume again and follow either the          parent or child.           To ensure that we can really touch inferior_ptid (aka, the          parent process) -- which calls to functions like read_pc          implicitly do -- wait on the parent if necessary. */
-if|if
-condition|(
-operator|(
-name|pending_follow
-operator|.
-name|kind
-operator|==
-name|TARGET_WAITKIND_VFORKED
-operator|)
-operator|&&
-operator|!
-name|pending_follow
-operator|.
-name|fork_event
-operator|.
-name|saw_parent_fork
-condition|)
-block|{
-name|ptid_t
-name|parent_ptid
-decl_stmt|;
-do|do
-block|{
-if|if
-condition|(
-name|target_wait_hook
-condition|)
-name|parent_ptid
-operator|=
-name|target_wait_hook
-argument_list|(
-name|pid_to_ptid
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-argument_list|,
-operator|&
-operator|(
-name|ecs
-operator|->
-name|ws
-operator|)
-argument_list|)
-expr_stmt|;
-else|else
-name|parent_ptid
-operator|=
-name|target_wait
-argument_list|(
-name|pid_to_ptid
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-argument_list|,
-operator|&
-operator|(
-name|ecs
-operator|->
-name|ws
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|!
-name|ptid_equal
-argument_list|(
-name|parent_ptid
-argument_list|,
-name|inferior_ptid
-argument_list|)
-condition|)
-do|;
-block|}
-comment|/* Assuming the inferior still exists, set these up for next          time, just like we did above if we didn't break out of the          loop.  */
-name|prev_pc
-operator|=
-name|read_pc
-argument_list|()
-expr_stmt|;
-name|prev_func_start
-operator|=
-name|ecs
-operator|->
-name|stop_func_start
-expr_stmt|;
-name|prev_func_name
-operator|=
-name|ecs
-operator|->
-name|stop_func_name
-expr_stmt|;
-block|}
 comment|/* Let callers know we don't want to wait for the inferior anymore.  */
 name|ecs
 operator|->
@@ -8081,7 +7223,6 @@ modifier|*
 name|ecs
 parameter_list|)
 block|{
-comment|/* ??rehrauer: ttrace on HP-UX theoretically allows one to debug a      vforked child between its creation and subsequent exit or call to      exec().  However, I had big problems in this rather creaky exec      engine, getting that to work.  The fundamental problem is that      I'm trying to debug two processes via an engine that only      understands a single process with possibly multiple threads.       Hence, this spot is known to have problems when      target_can_follow_vfork_prior_to_exec returns 1. */
 comment|/* Save the pc before execution, to compare with pc after stop.  */
 name|prev_pc
 operator|=
@@ -8089,19 +7230,6 @@ name|read_pc
 argument_list|()
 expr_stmt|;
 comment|/* Might have been DECR_AFTER_BREAK */
-name|prev_func_start
-operator|=
-name|ecs
-operator|->
-name|stop_func_start
-expr_stmt|;
-comment|/* Ok, since if DECR_PC_AFTER 						   BREAK is defined, the 						   original pc would not have 						   been at the start of a 						   function. */
-name|prev_func_name
-operator|=
-name|ecs
-operator|->
-name|stop_func_name
-expr_stmt|;
 if|if
 condition|(
 name|ecs
@@ -8129,7 +7257,7 @@ operator|!=
 name|TARGET_SIGNAL_TRAP
 condition|)
 block|{
-comment|/* We took a signal (which we are supposed to pass through to 	 the inferior, else we'd have done a break above) and we 	 haven't yet gotten our trap.  Simply continue.  */
+comment|/* We took a signal (which we are supposed to pass through to          the inferior, else we'd have done a break above) and we          haven't yet gotten our trap.  Simply continue.  */
 name|resume
 argument_list|(
 name|currently_stepping
@@ -8143,8 +7271,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Either the trap was not expected, but we are continuing 	 anyway (the user asked that this signal be passed to the 	 child) 	 -- or -- 	 The signal was SIGTRAP, e.g. it was our signal, but we 	 decided we should resume from it.  	 We're going to run this baby now!  	 Insert breakpoints now, unless we are trying to one-proceed 	 past a breakpoint.  */
-comment|/* If we've just finished a special step resume and we don't 	 want to hit a breakpoint, pull em out.  */
+comment|/* Either the trap was not expected, but we are continuing          anyway (the user asked that this signal be passed to the          child)          -- or --          The signal was SIGTRAP, e.g. it was our signal, but we          decided we should resume from it.           We're going to run this baby now!           Insert breakpoints now, unless we are trying to one-proceed          past a breakpoint.  */
+comment|/* If we've just finished a special step resume and we don't          want to hit a breakpoint, pull em out.  */
 if|if
 condition|(
 name|step_resume_breakpoint
@@ -8220,7 +7348,7 @@ name|ecs
 operator|->
 name|another_trap
 expr_stmt|;
-comment|/* Do not deliver SIGNAL_TRAP (except when the user explicitly 	 specifies that such a signal should be delivered to the 	 target program).  	 Typically, this would occure when a user is debugging a 	 target monitor on a simulator: the target monitor sets a 	 breakpoint; the simulator encounters this break-point and 	 halts the simulation handing control to GDB; GDB, noteing 	 that the break-point isn't valid, returns control back to the 	 simulator; the simulator then delivers the hardware 	 equivalent of a SIGNAL_TRAP to the program being debugged. */
+comment|/* Do not deliver SIGNAL_TRAP (except when the user explicitly          specifies that such a signal should be delivered to the          target program).           Typically, this would occure when a user is debugging a          target monitor on a simulator: the target monitor sets a          breakpoint; the simulator encounters this break-point and          halts the simulation handing control to GDB; GDB, noteing          that the break-point isn't valid, returns control back to the          simulator; the simulator then delivers the hardware          equivalent of a SIGNAL_TRAP to the program being debugged. */
 if|if
 condition|(
 name|stop_signal
@@ -8237,34 +7365,6 @@ name|stop_signal
 operator|=
 name|TARGET_SIGNAL_0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SHIFT_INST_REGS
-comment|/* I'm not sure when this following segment applies.  I do know, 	 now, that we shouldn't rewrite the regs when we were stopped 	 by a random signal from the inferior process.  */
-comment|/* FIXME: Shouldn't this be based on the valid bit of the SXIP? 	 (this is only used on the 88k).  */
-if|if
-condition|(
-operator|!
-name|bpstat_explains_signal
-argument_list|(
-name|stop_bpstat
-argument_list|)
-operator|&&
-operator|(
-name|stop_signal
-operator|!=
-name|TARGET_SIGNAL_CHLD
-operator|)
-operator|&&
-operator|!
-name|stopped_by_random_signal
-condition|)
-name|SHIFT_INST_REGS
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SHIFT_INST_REGS */
 name|resume
 argument_list|(
 name|currently_stepping
@@ -8312,7 +7412,7 @@ name|overlay_cache_invalid
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We have to invalidate the registers BEFORE calling 	 target_wait because they can be loaded from the target while 	 in target_wait.  This makes remote debugging a bit more 	 efficient for those targets that provide critical registers 	 as part of their normal status mechanism. */
+comment|/* We have to invalidate the registers BEFORE calling          target_wait because they can be loaded from the target while          in target_wait.  This makes remote debugging a bit more          efficient for those targets that provide critical registers          as part of their normal status mechanism. */
 name|registers_changed
 argument_list|()
 expr_stmt|;
@@ -8380,7 +7480,7 @@ name|END_STEPPING_RANGE
 case|:
 comment|/* We are done with a step/next/si/ni command. */
 comment|/* For now print nothing. */
-comment|/* Print a message only if not in the middle of doing a "step n" 	 operation for n> 1 */
+comment|/* Print a message only if not in the middle of doing a "step n"          operation for n> 1 */
 if|if
 condition|(
 operator|!
@@ -8697,7 +7797,23 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* As with the notification of thread events, we want to delay      notifying the user that we've switched thread context until      the inferior actually stops.       (Note that there's no point in saying anything if the inferior      has exited!) */
+name|struct
+name|target_waitstatus
+name|last
+decl_stmt|;
+name|ptid_t
+name|last_ptid
+decl_stmt|;
+name|get_last_target_status
+argument_list|(
+operator|&
+name|last_ptid
+argument_list|,
+operator|&
+name|last
+argument_list|)
+expr_stmt|;
+comment|/* As with the notification of thread events, we want to delay      notifying the user that we've switched thread context until      the inferior actually stops.       There's no point in saying anything if the inferior has exited.      Note that SIGNALLED here means "exited with a signal", not      "received a signal".  */
 if|if
 condition|(
 operator|!
@@ -8709,6 +7825,18 @@ name|inferior_ptid
 argument_list|)
 operator|&&
 name|target_has_execution
+operator|&&
+name|last
+operator|.
+name|kind
+operator|!=
+name|TARGET_WAITKIND_SIGNALLED
+operator|&&
+name|last
+operator|.
+name|kind
+operator|!=
+name|TARGET_WAITKIND_EXITED
 condition|)
 block|{
 name|target_terminal_ours_for_output
@@ -8729,45 +7857,22 @@ operator|=
 name|inferior_ptid
 expr_stmt|;
 block|}
+comment|/* NOTE drow/2004-01-17: Is this still necessary?  */
 comment|/* Make sure that the current_frame's pc is correct.  This      is a correction for setting up the frame info before doing      DECR_PC_AFTER_BREAK */
 if|if
 condition|(
 name|target_has_execution
-operator|&&
-name|get_current_frame
-argument_list|()
 condition|)
-operator|(
+comment|/* FIXME: cagney/2002-12-06: Has the PC changed?  Thanks to        DECR_PC_AFTER_BREAK, the program counter can change.  Ask the        frame code to check for this and sort out any resultant mess.        DECR_PC_AFTER_BREAK needs to just go away.  */
+name|deprecated_update_frame_pc_hack
+argument_list|(
 name|get_current_frame
 argument_list|()
-operator|)
-operator|->
-name|pc
-operator|=
+argument_list|,
 name|read_pc
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|breakpoints_failed
-condition|)
-block|{
-name|target_terminal_ours_for_output
-argument_list|()
-expr_stmt|;
-name|print_sys_errmsg
-argument_list|(
-literal|"While inserting breakpoints"
-argument_list|,
-name|breakpoints_failed
 argument_list|)
 expr_stmt|;
-name|printf_filtered
-argument_list|(
-literal|"Stopped; cannot insert breakpoints.\n\ The same program may be running in another process,\n\ or you may have requested too many hardware breakpoints\n\ and/or watchpoints.\n"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|target_has_execution
@@ -8837,30 +7942,22 @@ goto|;
 name|target_terminal_ours
 argument_list|()
 expr_stmt|;
-comment|/* Look up the hook_stop and run it if it exists.  */
+comment|/* Look up the hook_stop and run it (CLI internally handles problem      of stop_command's pre-hook not existing).  */
 if|if
 condition|(
 name|stop_command
-operator|&&
-name|stop_command
-operator|->
-name|hook_pre
 condition|)
-block|{
 name|catch_errors
 argument_list|(
 name|hook_stop_stub
 argument_list|,
 name|stop_command
-operator|->
-name|hook_pre
 argument_list|,
 literal|"Error while running hook_stop:\n"
 argument_list|,
 name|RETURN_MASK_ALL
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -8882,8 +7979,6 @@ name|select_frame
 argument_list|(
 name|get_current_frame
 argument_list|()
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Print current location without a level number, if          we have changed functions or hit a breakpoint.          Print source line if we have one.          bpstat_print() contains the logic deciding in detail          what to print, based on the event(s) that just occurred. */
@@ -8891,7 +7986,7 @@ if|if
 condition|(
 name|stop_print_frame
 operator|&&
-name|selected_frame
+name|deprecated_selected_frame
 condition|)
 block|{
 name|int
@@ -8920,16 +8015,20 @@ block|{
 case|case
 name|PRINT_UNKNOWN
 case|:
+comment|/* FIXME: cagney/2002-12-01: Given that a frame ID does 		 (or should) carry around the function and does (or 		 should) use that when doing a frame comparison.  */
 if|if
 condition|(
 name|stop_step
 operator|&&
-name|step_frame_address
-operator|==
-name|FRAME_FP
+name|frame_id_eq
+argument_list|(
+name|step_frame_id
+argument_list|,
+name|get_frame_id
 argument_list|(
 name|get_current_frame
 argument_list|()
+argument_list|)
 argument_list|)
 operator|&&
 name|step_start_function
@@ -8992,7 +8091,7 @@ literal|"Unknown value."
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* For mi, have the same behavior every time we stop:              print everything but the source line. */
+comment|/* For mi, have the same behavior every time we stop: 	     print everything but the source line. */
 if|if
 condition|(
 name|ui_out_is_mi_like_p
@@ -9028,9 +8127,9 @@ if|if
 condition|(
 name|do_frame_printing
 condition|)
-name|show_and_print_stack_frame
+name|print_stack_frame
 argument_list|(
-name|selected_frame
+name|deprecated_selected_frame
 argument_list|,
 operator|-
 literal|1
@@ -9049,13 +8148,12 @@ if|if
 condition|(
 name|proceed_to_finish
 condition|)
-name|read_register_bytes
+comment|/* NB: The copy goes through to the target picking up the value of        all the registers.  */
+name|regcache_cpy
 argument_list|(
-literal|0
-argument_list|,
 name|stop_registers
 argument_list|,
-name|REGISTER_BYTES
+name|current_regcache
 argument_list|)
 expr_stmt|;
 if|if
@@ -9063,8 +8161,12 @@ condition|(
 name|stop_stack_dummy
 condition|)
 block|{
-comment|/* Pop the empty frame that contains the stack dummy.          POP_FRAME ends with a setting of the current frame, so we          can use that next. */
-name|POP_FRAME
+comment|/* Pop the empty frame that contains the stack dummy.  POP_FRAME          ends with a setting of the current frame, so we can use that          next. */
+name|frame_pop
+argument_list|(
+name|get_current_frame
+argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Set stop_pc to what it was before we called the function.          Can't rely on restore_inferior_status because that only gets          called if we don't stop in the called function.  */
 name|stop_pc
@@ -9076,14 +8178,15 @@ name|select_frame
 argument_list|(
 name|get_current_frame
 argument_list|()
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
 name|done
 label|:
 name|annotate_stopped
+argument_list|()
+expr_stmt|;
+name|observer_notify_normal_stop
 argument_list|()
 expr_stmt|;
 block|}
@@ -9099,7 +8202,7 @@ modifier|*
 name|cmd
 parameter_list|)
 block|{
-name|execute_user_command
+name|execute_cmd_pre_hook
 argument_list|(
 operator|(
 expr|struct
@@ -9107,8 +8210,6 @@ name|cmd_list_element
 operator|*
 operator|)
 name|cmd
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -9177,16 +8278,12 @@ begin_function
 name|int
 name|signal_stop_update
 parameter_list|(
+name|int
 name|signo
 parameter_list|,
+name|int
 name|state
 parameter_list|)
-name|int
-name|signo
-decl_stmt|;
-name|int
-name|state
-decl_stmt|;
 block|{
 name|int
 name|ret
@@ -9213,16 +8310,12 @@ begin_function
 name|int
 name|signal_print_update
 parameter_list|(
+name|int
 name|signo
 parameter_list|,
+name|int
 name|state
 parameter_list|)
-name|int
-name|signo
-decl_stmt|;
-name|int
-name|state
-decl_stmt|;
 block|{
 name|int
 name|ret
@@ -9249,16 +8342,12 @@ begin_function
 name|int
 name|signal_pass_update
 parameter_list|(
+name|int
 name|signo
 parameter_list|,
+name|int
 name|state
 parameter_list|)
-name|int
-name|signo
-decl_stmt|;
-name|int
-name|state
-decl_stmt|;
 block|{
 name|int
 name|ret
@@ -10680,8 +9769,9 @@ decl_stmt|;
 name|CORE_ADDR
 name|step_range_end
 decl_stmt|;
-name|CORE_ADDR
-name|step_frame_address
+name|struct
+name|frame_id
+name|step_frame_id
 decl_stmt|;
 name|enum
 name|step_over_calls_kind
@@ -10694,22 +9784,23 @@ name|int
 name|stop_after_trap
 decl_stmt|;
 name|int
-name|stop_soon_quietly
+name|stop_soon
 decl_stmt|;
-name|CORE_ADDR
-name|selected_frame_address
-decl_stmt|;
-name|char
+name|struct
+name|regcache
 modifier|*
 name|stop_registers
 decl_stmt|;
 comment|/* These are here because if call_function_by_hand has written some      registers and then decides to call error(), we better not have changed      any registers.  */
-name|char
+name|struct
+name|regcache
 modifier|*
 name|registers
 decl_stmt|;
-name|int
-name|selected_level
+comment|/* A frame unique identifier.  */
+name|struct
+name|frame_id
+name|selected_frame_id
 decl_stmt|;
 name|int
 name|breakpoint_proceeded
@@ -10723,89 +9814,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_function
-specifier|static
-name|struct
-name|inferior_status
-modifier|*
-name|xmalloc_inferior_status
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|inferior_status
-modifier|*
-name|inf_status
-decl_stmt|;
-name|inf_status
-operator|=
-name|xmalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|inferior_status
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|inf_status
-operator|->
-name|stop_registers
-operator|=
-name|xmalloc
-argument_list|(
-name|REGISTER_BYTES
-argument_list|)
-expr_stmt|;
-name|inf_status
-operator|->
-name|registers
-operator|=
-name|xmalloc
-argument_list|(
-name|REGISTER_BYTES
-argument_list|)
-expr_stmt|;
-return|return
-name|inf_status
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|free_inferior_status
-parameter_list|(
-name|struct
-name|inferior_status
-modifier|*
-name|inf_status
-parameter_list|)
-block|{
-name|xfree
-argument_list|(
-name|inf_status
-operator|->
-name|registers
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|inf_status
-operator|->
-name|stop_registers
-argument_list|)
-expr_stmt|;
-name|xfree
-argument_list|(
-name|inf_status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 name|void
@@ -10826,7 +9834,7 @@ block|{
 name|int
 name|size
 init|=
-name|REGISTER_RAW_SIZE
+name|DEPRECATED_REGISTER_RAW_SIZE
 argument_list|(
 name|regno
 argument_list|)
@@ -10849,22 +9857,15 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|memcpy
+name|regcache_raw_write
 argument_list|(
-operator|&
 name|inf_status
 operator|->
 name|registers
-index|[
-name|REGISTER_BYTE
-argument_list|(
+argument_list|,
 name|regno
-argument_list|)
-index|]
 argument_list|,
 name|buf
-argument_list|,
-name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -10889,8 +9890,11 @@ name|inferior_status
 modifier|*
 name|inf_status
 init|=
-name|xmalloc_inferior_status
-argument_list|()
+name|XMALLOC
+argument_list|(
+expr|struct
+name|inferior_status
+argument_list|)
 decl_stmt|;
 name|inf_status
 operator|->
@@ -10942,9 +9946,9 @@ name|step_range_end
 expr_stmt|;
 name|inf_status
 operator|->
-name|step_frame_address
+name|step_frame_id
 operator|=
-name|step_frame_address
+name|step_frame_id
 expr_stmt|;
 name|inf_status
 operator|->
@@ -10960,9 +9964,9 @@ name|stop_after_trap
 expr_stmt|;
 name|inf_status
 operator|->
-name|stop_soon_quietly
+name|stop_soon
 operator|=
-name|stop_soon_quietly
+name|stop_soon
 expr_stmt|;
 comment|/* Save original bpstat chain here; replace it with copy of chain.      If caller's caller is walking the chain, they'll be happier if we      hand them back the original chain when restore_inferior_status is      called.  */
 name|inf_status
@@ -10996,43 +10000,31 @@ name|proceed_to_finish
 operator|=
 name|proceed_to_finish
 expr_stmt|;
-name|memcpy
-argument_list|(
 name|inf_status
 operator|->
 name|stop_registers
-argument_list|,
+operator|=
+name|regcache_dup_no_passthrough
+argument_list|(
 name|stop_registers
-argument_list|,
-name|REGISTER_BYTES
 argument_list|)
 expr_stmt|;
-name|read_register_bytes
-argument_list|(
-literal|0
-argument_list|,
 name|inf_status
 operator|->
 name|registers
-argument_list|,
-name|REGISTER_BYTES
+operator|=
+name|regcache_dup
+argument_list|(
+name|current_regcache
 argument_list|)
 expr_stmt|;
-name|record_selected_frame
+name|inf_status
+operator|->
+name|selected_frame_id
+operator|=
+name|get_frame_id
 argument_list|(
-operator|&
-operator|(
-name|inf_status
-operator|->
-name|selected_frame_address
-operator|)
-argument_list|,
-operator|&
-operator|(
-name|inf_status
-operator|->
-name|selected_level
-operator|)
+name|deprecated_selected_frame
 argument_list|)
 expr_stmt|;
 return|return
@@ -11040,20 +10032,6 @@ name|inf_status
 return|;
 block|}
 end_function
-
-begin_struct
-struct|struct
-name|restore_selected_frame_args
-block|{
-name|CORE_ADDR
-name|frame_address
-decl_stmt|;
-name|int
-name|level
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_function
 specifier|static
@@ -11066,13 +10044,13 @@ name|args
 parameter_list|)
 block|{
 name|struct
-name|restore_selected_frame_args
+name|frame_id
 modifier|*
-name|fr
+name|fid
 init|=
 operator|(
 expr|struct
-name|restore_selected_frame_args
+name|frame_id
 operator|*
 operator|)
 name|args
@@ -11082,36 +10060,20 @@ name|frame_info
 modifier|*
 name|frame
 decl_stmt|;
-name|int
-name|level
-init|=
-name|fr
-operator|->
-name|level
-decl_stmt|;
 name|frame
 operator|=
-name|find_relative_frame
+name|frame_find_by_id
 argument_list|(
-name|get_current_frame
-argument_list|()
-argument_list|,
-operator|&
-name|level
+operator|*
+name|fid
 argument_list|)
 expr_stmt|;
-comment|/* If inf_status->selected_frame_address is NULL, there was no      previously selected frame.  */
+comment|/* If inf_status->selected_frame_id is NULL, there was no previously      selected frame.  */
 if|if
 condition|(
 name|frame
 operator|==
 name|NULL
-operator|||
-comment|/*  FRAME_FP (frame) != fr->frame_address || */
-comment|/* elz: deleted this check as a quick fix to the problem that      for function called by hand gdb creates no internal frame      structure and the real stack and gdb's idea of stack are      different if nested calls by hands are made.       mvs: this worries me.  */
-name|level
-operator|!=
-literal|0
 condition|)
 block|{
 name|warning
@@ -11126,10 +10088,6 @@ block|}
 name|select_frame
 argument_list|(
 name|frame
-argument_list|,
-name|fr
-operator|->
-name|level
 argument_list|)
 expr_stmt|;
 return|return
@@ -11198,11 +10156,11 @@ name|inf_status
 operator|->
 name|step_range_end
 expr_stmt|;
-name|step_frame_address
+name|step_frame_id
 operator|=
 name|inf_status
 operator|->
-name|step_frame_address
+name|step_frame_id
 expr_stmt|;
 name|step_over_calls
 operator|=
@@ -11216,11 +10174,11 @@ name|inf_status
 operator|->
 name|stop_after_trap
 expr_stmt|;
-name|stop_soon_quietly
+name|stop_soon
 operator|=
 name|inf_status
 operator|->
-name|stop_soon_quietly
+name|stop_soon
 expr_stmt|;
 name|bpstat_clear
 argument_list|(
@@ -11246,32 +10204,38 @@ name|inf_status
 operator|->
 name|proceed_to_finish
 expr_stmt|;
-comment|/* FIXME: Is the restore of stop_registers always needed */
-name|memcpy
+comment|/* FIXME: Is the restore of stop_registers always needed. */
+name|regcache_xfree
 argument_list|(
 name|stop_registers
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|stop_registers
+operator|=
 name|inf_status
 operator|->
 name|stop_registers
-argument_list|,
-name|REGISTER_BYTES
-argument_list|)
 expr_stmt|;
 comment|/* The inferior can be gone if the user types "print exit(0)"      (and perhaps other times).  */
 if|if
 condition|(
 name|target_has_execution
 condition|)
-name|write_register_bytes
+comment|/* NB: The register write goes through to the target.  */
+name|regcache_cpy
 argument_list|(
-literal|0
+name|current_regcache
 argument_list|,
 name|inf_status
 operator|->
 name|registers
-argument_list|,
-name|REGISTER_BYTES
+argument_list|)
+expr_stmt|;
+name|regcache_xfree
+argument_list|(
+name|inf_status
+operator|->
+name|registers
 argument_list|)
 expr_stmt|;
 comment|/* FIXME: If we are being called after stopping in a function which      is called from gdb, we should not be trying to restore the      selected frame; it just prints a spurious error message (The      message is useful, however, in detecting bugs in gdb (like if gdb      clobbers the stack)).  In fact, should we be restoring the      inferior status at all in that case?  .  */
@@ -11284,27 +10248,7 @@ operator|->
 name|restore_stack_info
 condition|)
 block|{
-name|struct
-name|restore_selected_frame_args
-name|fr
-decl_stmt|;
-name|fr
-operator|.
-name|level
-operator|=
-name|inf_status
-operator|->
-name|selected_level
-expr_stmt|;
-name|fr
-operator|.
-name|frame_address
-operator|=
-name|inf_status
-operator|->
-name|selected_frame_address
-expr_stmt|;
-comment|/* The point of catch_errors is that if the stack is clobbered,          walking the stack might encounter a garbage pointer and error()          trying to dereference it.  */
+comment|/* The point of catch_errors is that if the stack is clobbered,          walking the stack might encounter a garbage pointer and          error() trying to dereference it.  */
 if|if
 condition|(
 name|catch_errors
@@ -11312,7 +10256,9 @@ argument_list|(
 name|restore_selected_frame
 argument_list|,
 operator|&
-name|fr
+name|inf_status
+operator|->
+name|selected_frame_id
 argument_list|,
 literal|"Unable to restore previously selected frame:\n"
 argument_list|,
@@ -11326,12 +10272,10 @@ name|select_frame
 argument_list|(
 name|get_current_frame
 argument_list|()
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|free_inferior_status
+name|xfree
 argument_list|(
 name|inf_status
 argument_list|)
@@ -11399,11 +10343,227 @@ operator|->
 name|stop_bpstat
 argument_list|)
 expr_stmt|;
-name|free_inferior_status
+name|regcache_xfree
+argument_list|(
+name|inf_status
+operator|->
+name|registers
+argument_list|)
+expr_stmt|;
+name|regcache_xfree
+argument_list|(
+name|inf_status
+operator|->
+name|stop_registers
+argument_list|)
+expr_stmt|;
+name|xfree
 argument_list|(
 name|inf_status
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|inferior_has_forked
+parameter_list|(
+name|int
+name|pid
+parameter_list|,
+name|int
+modifier|*
+name|child_pid
+parameter_list|)
+block|{
+name|struct
+name|target_waitstatus
+name|last
+decl_stmt|;
+name|ptid_t
+name|last_ptid
+decl_stmt|;
+name|get_last_target_status
+argument_list|(
+operator|&
+name|last_ptid
+argument_list|,
+operator|&
+name|last
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|last
+operator|.
+name|kind
+operator|!=
+name|TARGET_WAITKIND_FORKED
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|ptid_get_pid
+argument_list|(
+name|last_ptid
+argument_list|)
+operator|!=
+name|pid
+condition|)
+return|return
+literal|0
+return|;
+operator|*
+name|child_pid
+operator|=
+name|last
+operator|.
+name|value
+operator|.
+name|related_pid
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|inferior_has_vforked
+parameter_list|(
+name|int
+name|pid
+parameter_list|,
+name|int
+modifier|*
+name|child_pid
+parameter_list|)
+block|{
+name|struct
+name|target_waitstatus
+name|last
+decl_stmt|;
+name|ptid_t
+name|last_ptid
+decl_stmt|;
+name|get_last_target_status
+argument_list|(
+operator|&
+name|last_ptid
+argument_list|,
+operator|&
+name|last
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|last
+operator|.
+name|kind
+operator|!=
+name|TARGET_WAITKIND_VFORKED
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|ptid_get_pid
+argument_list|(
+name|last_ptid
+argument_list|)
+operator|!=
+name|pid
+condition|)
+return|return
+literal|0
+return|;
+operator|*
+name|child_pid
+operator|=
+name|last
+operator|.
+name|value
+operator|.
+name|related_pid
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|inferior_has_execd
+parameter_list|(
+name|int
+name|pid
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|execd_pathname
+parameter_list|)
+block|{
+name|struct
+name|target_waitstatus
+name|last
+decl_stmt|;
+name|ptid_t
+name|last_ptid
+decl_stmt|;
+name|get_last_target_status
+argument_list|(
+operator|&
+name|last_ptid
+argument_list|,
+operator|&
+name|last
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|last
+operator|.
+name|kind
+operator|!=
+name|TARGET_WAITKIND_EXECD
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|ptid_get_pid
+argument_list|(
+name|last_ptid
+argument_list|)
+operator|!=
+name|pid
+condition|)
+return|return
+literal|0
+return|;
+operator|*
+name|execd_pathname
+operator|=
+name|xstrdup
+argument_list|(
+name|last
+operator|.
+name|value
+operator|.
+name|execd_pathname
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -11687,9 +10847,9 @@ parameter_list|)
 block|{
 name|stop_registers
 operator|=
-name|xmalloc
+name|regcache_xmalloc
 argument_list|(
-name|REGISTER_BYTES
+name|current_gdbarch
 argument_list|)
 expr_stmt|;
 block|}
@@ -11702,11 +10862,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|numsigs
 decl_stmt|;
@@ -11715,23 +10873,12 @@ name|cmd_list_element
 modifier|*
 name|c
 decl_stmt|;
-name|build_infrun
-argument_list|()
-expr_stmt|;
-name|register_gdbarch_swap
-argument_list|(
-operator|&
-name|stop_registers
-argument_list|,
-sizeof|sizeof
+name|DEPRECATED_REGISTER_GDBARCH_SWAP
 argument_list|(
 name|stop_registers
 argument_list|)
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
-name|register_gdbarch_swap
+name|deprecated_register_gdbarch_swap
 argument_list|(
 name|NULL
 argument_list|,
@@ -12151,9 +11298,7 @@ argument_list|,
 operator|&
 name|follow_fork_mode_string
 argument_list|,
-comment|/* ??rehrauer:  The "both" option is broken, by what may be a 10.20    kernel problem.  It's also not terribly useful without a GUI to    help the user drive two debuggers.  So for now, I'm disabling    the "both" option.  */
-comment|/*                      "Set debugger response to a program call of fork \    or vfork.\n\    A fork or vfork creates a new process.  follow-fork-mode can be:\n\    parent  - the original process is debugged after a fork\n\    child   - the new process is debugged after a fork\n\    both    - both the parent and child are debugged after a fork\n\    ask     - the debugger will ask for one of the above choices\n\    For \"both\", another copy of the debugger will be started to follow\n\    the new child process.  The original debugger will continue to follow\n\    the original parent process.  To distinguish their prompts, the\n\    debugger copy's prompt will be changed.\n\    For \"parent\" or \"child\", the unfollowed process will run free.\n\    By default, the debugger will follow the parent process.",  */
-literal|"Set debugger response to a program call of fork \ or vfork.\n\ A fork or vfork creates a new process.  follow-fork-mode can be:\n\   parent  - the original process is debugged after a fork\n\   child   - the new process is debugged after a fork\n\   ask     - the debugger will ask for one of the above choices\n\ For \"parent\" or \"child\", the unfollowed process will run free.\n\ By default, the debugger will follow the parent process."
+literal|"Set debugger response to a program call of fork \ or vfork.\n\ A fork or vfork creates a new process.  follow-fork-mode can be:\n\   parent  - the original process is debugged after a fork\n\   child   - the new process is debugged after a fork\n\ The unfollowed process will continue to run.\n\ By default, the debugger will follow the parent process."
 argument_list|,
 operator|&
 name|setlist

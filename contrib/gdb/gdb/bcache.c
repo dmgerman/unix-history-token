@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implement a cached obstack.    Written by Fred Fish<fnf@cygnus.com>    Rewritten by Jim Blandy<jimb@cygnus.com>     Copyright 1999, 2000, 2002 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Implement a cached obstack.    Written by Fred Fish<fnf@cygnus.com>    Rewritten by Jim Blandy<jimb@cygnus.com>     Copyright 1999, 2000, 2002, 2003 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -34,6 +34,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"gdb_assert.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -42,6 +48,113 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_comment
+comment|/* The type used to hold a single bcache string.  The user data is    stored in d.data.  Since it can be any type, it needs to have the    same alignment as the most strict alignment of any type on the host    machine.  I don't know of any really correct way to do this in    stock ANSI C, so just do it the same way obstack.h does.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bstring
+block|{
+comment|/* Hash chain.  */
+name|struct
+name|bstring
+modifier|*
+name|next
+decl_stmt|;
+comment|/* Assume the data length is no more than 64k.  */
+name|unsigned
+name|short
+name|length
+decl_stmt|;
+comment|/* The half hash hack.  This contains the upper 16 bits of the hash      value and is used as a pre-check when comparing two strings and      avoids the need to do length or memcmp calls.  It proves to be      roughly 100% effective.  */
+name|unsigned
+name|short
+name|half_hash
+decl_stmt|;
+union|union
+block|{
+name|char
+name|data
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|double
+name|dummy
+decl_stmt|;
+block|}
+name|d
+union|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* The structure for a bcache itself.  The bcache is initialized, in    bcache_xmalloc(), by filling it with zeros and then setting the    corresponding obstack's malloc() and free() methods.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bcache
+block|{
+comment|/* All the bstrings are allocated here.  */
+name|struct
+name|obstack
+name|cache
+decl_stmt|;
+comment|/* How many hash buckets we're using.  */
+name|unsigned
+name|int
+name|num_buckets
+decl_stmt|;
+comment|/* Hash buckets.  This table is allocated using malloc, so when we      grow the table we can return the old table to the system.  */
+name|struct
+name|bstring
+modifier|*
+modifier|*
+name|bucket
+decl_stmt|;
+comment|/* Statistics.  */
+name|unsigned
+name|long
+name|unique_count
+decl_stmt|;
+comment|/* number of unique strings */
+name|long
+name|total_count
+decl_stmt|;
+comment|/* total number of strings cached, including dups */
+name|long
+name|unique_size
+decl_stmt|;
+comment|/* size of unique strings, in bytes */
+name|long
+name|total_size
+decl_stmt|;
+comment|/* total number of bytes cached, including dups */
+name|long
+name|structure_size
+decl_stmt|;
+comment|/* total size of bcache, including infrastructure */
+comment|/* Number of times that the hash table is expanded and hence      re-built, and the corresponding number of times that a string is      [re]hashed as part of entering it into the expanded table.  The      total number of hashes can be computed by adding TOTAL_COUNT to      expand_hash_count.  */
+name|unsigned
+name|long
+name|expand_count
+decl_stmt|;
+name|unsigned
+name|long
+name|expand_hash_count
+decl_stmt|;
+comment|/* Number of times that the half-hash compare hit (compare the upper      16 bits of hash values) hit, but the corresponding combined      length/data compare missed.  */
+name|unsigned
+name|long
+name|half_hash_miss_count
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/* The old hash function was stolen from SDBM. This is what DB 3.0 uses now,  * and is better than the old one.   */
@@ -221,6 +334,20 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+comment|/* Count the stats.  Every unique item needs to be re-hashed and      re-entered.  */
+name|bcache
+operator|->
+name|expand_count
+operator|++
+expr_stmt|;
+name|bcache
+operator|->
+name|expand_hash_count
+operator|+=
+name|bcache
+operator|->
+name|unique_count
+expr_stmt|;
 comment|/* Find the next size.  */
 name|new_num_buckets
 operator|=
@@ -489,9 +616,10 @@ comment|/* Find a copy of the LENGTH bytes at ADDR in BCACHE.  If BCACHE has    
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
-name|bcache
+name|bcache_data
 parameter_list|(
 specifier|const
 name|void
@@ -507,6 +635,14 @@ modifier|*
 name|bcache
 parameter_list|)
 block|{
+name|unsigned
+name|long
+name|full_hash
+decl_stmt|;
+name|unsigned
+name|short
+name|half_hash
+decl_stmt|;
 name|int
 name|hash_index
 decl_stmt|;
@@ -544,7 +680,7 @@ name|total_size
 operator|+=
 name|length
 expr_stmt|;
-name|hash_index
+name|full_hash
 operator|=
 name|hash
 argument_list|(
@@ -552,12 +688,24 @@ name|addr
 argument_list|,
 name|length
 argument_list|)
+expr_stmt|;
+name|half_hash
+operator|=
+operator|(
+name|full_hash
+operator|>>
+literal|16
+operator|)
+expr_stmt|;
+name|hash_index
+operator|=
+name|full_hash
 operator|%
 name|bcache
 operator|->
 name|num_buckets
 expr_stmt|;
-comment|/* Search the hash bucket for a string identical to the caller's.  */
+comment|/* Search the hash bucket for a string identical to the caller's.      As a short-circuit first compare the upper part of each hash      values.  */
 for|for
 control|(
 name|s
@@ -577,6 +725,16 @@ name|s
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+name|s
+operator|->
+name|half_hash
+operator|==
+name|half_hash
+condition|)
+block|{
 if|if
 condition|(
 name|s
@@ -608,6 +766,14 @@ name|d
 operator|.
 name|data
 return|;
+else|else
+name|bcache
+operator|->
+name|half_hash_miss_count
+operator|++
+expr_stmt|;
+block|}
+block|}
 comment|/* The user's string isn't in the list.  Insert it after *ps.  */
 block|{
 name|struct
@@ -659,6 +825,12 @@ index|[
 name|hash_index
 index|]
 expr_stmt|;
+name|new
+operator|->
+name|half_hash
+operator|=
+name|half_hash
+expr_stmt|;
 name|bcache
 operator|->
 name|bucket
@@ -700,12 +872,115 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+modifier|*
+name|deprecated_bcache
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|int
+name|length
+parameter_list|,
+name|struct
+name|bcache
+modifier|*
+name|bcache
+parameter_list|)
+block|{
+return|return
+name|bcache_data
+argument_list|(
+name|addr
+argument_list|,
+name|length
+argument_list|,
+name|bcache
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|void
+modifier|*
+name|bcache
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|int
+name|length
+parameter_list|,
+name|struct
+name|bcache
+modifier|*
+name|bcache
+parameter_list|)
+block|{
+return|return
+name|bcache_data
+argument_list|(
+name|addr
+argument_list|,
+name|length
+argument_list|,
+name|bcache
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Freeing bcaches.  */
+comment|/* Allocating and freeing bcaches.  */
 end_comment
+
+begin_function
+name|struct
+name|bcache
+modifier|*
+name|bcache_xmalloc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Allocate the bcache pre-zeroed.  */
+name|struct
+name|bcache
+modifier|*
+name|b
+init|=
+name|XCALLOC
+argument_list|(
+literal|1
+argument_list|,
+expr|struct
+name|bcache
+argument_list|)
+decl_stmt|;
+comment|/* We could use obstack_specify_allocation here instead, but      gdb_obstack.h specifies the allocation/deallocation      functions.  */
+name|obstack_init
+argument_list|(
+operator|&
+name|b
+operator|->
+name|cache
+argument_list|)
+expr_stmt|;
+return|return
+name|b
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Free all the storage associated with BCACHE.  */
@@ -713,7 +988,7 @@ end_comment
 
 begin_function
 name|void
-name|free_bcache
+name|bcache_xfree
 parameter_list|(
 name|struct
 name|bcache
@@ -721,6 +996,13 @@ modifier|*
 name|bcache
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bcache
+operator|==
+name|NULL
+condition|)
+return|return;
 name|obstack_free
 argument_list|(
 operator|&
@@ -731,12 +1013,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bcache
-operator|->
-name|bucket
-condition|)
 name|xfree
 argument_list|(
 name|bcache
@@ -744,18 +1020,9 @@ operator|->
 name|bucket
 argument_list|)
 expr_stmt|;
-comment|/* This isn't necessary, but at least the bcache is always in a      consistent state.  */
-name|memset
+name|xfree
 argument_list|(
 name|bcache
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|bcache
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -868,7 +1135,13 @@ decl_stmt|;
 name|int
 name|median_chain_length
 decl_stmt|;
-comment|/* Count the number of occupied buckets, and measure chain lengths.  */
+name|int
+name|max_entry_size
+decl_stmt|;
+name|int
+name|median_entry_size
+decl_stmt|;
+comment|/* Count the number of occupied buckets, tally the various string      lengths, and measure chain lengths.  */
 block|{
 name|unsigned
 name|int
@@ -878,22 +1151,36 @@ name|int
 modifier|*
 name|chain_length
 init|=
-operator|(
-name|int
-operator|*
-operator|)
-name|alloca
+name|XCALLOC
 argument_list|(
 name|c
 operator|->
 name|num_buckets
-operator|*
-sizeof|sizeof
+operator|+
+literal|1
+argument_list|,
+name|int
+argument_list|)
+decl_stmt|;
+name|int
+modifier|*
+name|entry_size
+init|=
+name|XCALLOC
 argument_list|(
-operator|*
-name|chain_length
+name|c
+operator|->
+name|unique_count
+operator|+
+literal|1
+argument_list|,
+name|int
 argument_list|)
-argument_list|)
+decl_stmt|;
+name|int
+name|stringi
+init|=
+literal|0
 decl_stmt|;
 name|occupied_buckets
 operator|=
@@ -947,11 +1234,39 @@ condition|(
 name|s
 condition|)
 block|{
+name|gdb_assert
+argument_list|(
+name|b
+operator|<
+name|c
+operator|->
+name|num_buckets
+argument_list|)
+expr_stmt|;
 name|chain_length
 index|[
 name|b
 index|]
 operator|++
+expr_stmt|;
+name|gdb_assert
+argument_list|(
+name|stringi
+operator|<
+name|c
+operator|->
+name|unique_count
+argument_list|)
+expr_stmt|;
+name|entry_size
+index|[
+name|stringi
+operator|++
+index|]
+operator|=
+name|s
+operator|->
+name|length
 expr_stmt|;
 name|s
 operator|=
@@ -974,6 +1289,25 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|chain_length
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
+name|compare_ints
+argument_list|)
+expr_stmt|;
+name|qsort
+argument_list|(
+name|entry_size
+argument_list|,
+name|c
+operator|->
+name|unique_count
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|entry_size
 index|[
 literal|0
 index|]
@@ -1025,6 +1359,59 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+operator|->
+name|unique_count
+operator|>
+literal|0
+condition|)
+block|{
+name|max_entry_size
+operator|=
+name|entry_size
+index|[
+name|c
+operator|->
+name|unique_count
+operator|-
+literal|1
+index|]
+expr_stmt|;
+name|median_entry_size
+operator|=
+name|entry_size
+index|[
+name|c
+operator|->
+name|unique_count
+operator|/
+literal|2
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|max_entry_size
+operator|=
+literal|0
+expr_stmt|;
+name|median_entry_size
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|xfree
+argument_list|(
+name|chain_length
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|entry_size
+argument_list|)
+expr_stmt|;
 block|}
 name|printf_filtered
 argument_list|(
@@ -1121,6 +1508,57 @@ argument_list|)
 expr_stmt|;
 name|printf_filtered
 argument_list|(
+literal|"    Max entry size:     %d\n"
+argument_list|,
+name|max_entry_size
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"    Average entry size: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|unique_count
+operator|>
+literal|0
+condition|)
+name|printf_filtered
+argument_list|(
+literal|"%ld\n"
+argument_list|,
+name|c
+operator|->
+name|unique_size
+operator|/
+name|c
+operator|->
+name|unique_count
+argument_list|)
+expr_stmt|;
+else|else
+name|printf_filtered
+argument_list|(
+literal|"(not applicable)\n"
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"    Median entry size:  %d\n"
+argument_list|,
+name|median_entry_size
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
 literal|"    Total memory used by bcache, including overhead: %ld\n"
 argument_list|,
 name|c
@@ -1180,6 +1618,37 @@ argument_list|,
 name|c
 operator|->
 name|num_buckets
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"    Hash table expands:        %lu\n"
+argument_list|,
+name|c
+operator|->
+name|expand_count
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"    Hash table hashes:         %lu\n"
+argument_list|,
+name|c
+operator|->
+name|total_count
+operator|+
+name|c
+operator|->
+name|expand_hash_count
+argument_list|)
+expr_stmt|;
+name|printf_filtered
+argument_list|(
+literal|"    Half hash misses:          %lu\n"
+argument_list|,
+name|c
+operator|->
+name|half_hash_miss_count
 argument_list|)
 expr_stmt|;
 name|printf_filtered
@@ -1247,6 +1716,28 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|bcache_memory_used
+parameter_list|(
+name|struct
+name|bcache
+modifier|*
+name|bcache
+parameter_list|)
+block|{
+return|return
+name|obstack_memory_used
+argument_list|(
+operator|&
+name|bcache
+operator|->
+name|cache
+argument_list|)
+return|;
 block|}
 end_function
 

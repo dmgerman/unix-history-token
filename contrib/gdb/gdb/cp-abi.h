@@ -18,6 +18,18 @@ end_define
 
 begin_struct_decl
 struct_decl|struct
+name|fn_field
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|type
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|value
 struct_decl|;
 end_struct_decl
@@ -387,30 +399,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cp_abi_ops
-modifier|*
-name|cp_abis
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|num_cp_abis
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cp_abi_ops
-name|current_cp_abi
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|extern
 name|int
@@ -418,6 +406,7 @@ name|register_cp_abi
 parameter_list|(
 name|struct
 name|cp_abi_ops
+modifier|*
 name|abi
 parameter_list|)
 function_decl|;
@@ -425,8 +414,8 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|switch_to_cp_abi
+name|void
+name|set_cp_abi_as_auto_default
 parameter_list|(
 specifier|const
 name|char

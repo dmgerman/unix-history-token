@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"nm-sysv4.h"
+file|"config/nm-sysv4.h"
 end_include
 
 begin_ifdef
@@ -43,6 +43,16 @@ parameter_list|)
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|TARGET_REGION_SIZE_OK_FOR_HW_WATCHPOINT
+parameter_list|(
+name|SIZE
+parameter_list|)
+value|1
+end_define
+
 begin_comment
 comment|/* When a hardware watchpoint fires off the PC will be left at the    instruction following the one which caused the watchpoint.      It will *NOT* be necessary for GDB to step over the watchpoint. */
 end_comment
@@ -51,6 +61,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_CONTINUABLE_WATCHPOINT
+value|1
 end_define
 
 begin_comment

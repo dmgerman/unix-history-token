@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Top level stuff for GDB, the GNU debugger.    Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Top level stuff for GDB, the GNU debugger.     Copyright 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994,    1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software    Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -81,6 +81,18 @@ directive|include
 file|"ui-out.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"interps.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"main.h"
+end_include
+
 begin_comment
 comment|/* If nonzero, display time usage both at startup and for each command.  */
 end_comment
@@ -114,25 +126,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Has an interpreter been specified and if so, which. */
+comment|/* The selected interpreter.  This will be used as a set command    variable, so it should always be malloc'ed - since    do_setshow_command will free it. */
 end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
 name|interpreter_p
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Whether this is the command line version or not */
-end_comment
-
-begin_decl_stmt
-name|int
-name|tui_version
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -155,6 +155,19 @@ end_comment
 begin_decl_stmt
 name|int
 name|dbx_commands
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* System root path, used to find libraries etc.  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gdb_sysroot
 init|=
 literal|0
 decl_stmt|;
@@ -188,23 +201,37 @@ begin_decl_stmt
 name|struct
 name|ui_file
 modifier|*
-name|gdb_stdtarg
+name|gdb_stdin
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Used to initialize error() - defined in utils.c */
+comment|/* target IO streams */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|void
-name|error_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|struct
+name|ui_file
+modifier|*
+name|gdb_stdtargin
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ui_file
+modifier|*
+name|gdb_stdtarg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ui_file
+modifier|*
+name|gdb_stdtargerr
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Whether to enable writing into executable and core files */
@@ -255,17 +282,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-if|if
-condition|(
-name|command_loop_hook
-operator|==
-name|NULL
-condition|)
-name|command_loop
-argument_list|()
-expr_stmt|;
-else|else
-name|command_loop_hook
+name|current_interp_command_loop
 argument_list|()
 expr_stmt|;
 comment|/* FIXME: cagney/1999-11-05: A correct command_loop() implementaton      would clean things up (restoring the cleanup chain) to the state      they were just prior to the call.  Technically, this means that      the do_cleanups() below is redundant.  Unfortunately, many FUNCs      are not that well behaved.  do_cleanups should either be replaced      with a do_cleanups call (to cover the problem) or an assertion      check to detect bad FUNCs code. */
@@ -289,22 +306,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_struct
-struct|struct
-name|captured_main_args
-block|{
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_function
 specifier|static
@@ -441,7 +442,6 @@ decl_stmt|,
 modifier|*
 name|homeinit
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -451,35 +451,75 @@ init|=
 name|get_run_time
 argument_list|()
 decl_stmt|;
-name|START_PROGRESS
+if|#
+directive|if
+name|defined
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|HAVE_SETLOCALE
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAVE_LC_MESSAGES
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_MESSAGES
 argument_list|,
-literal|0
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SETLOCALE
+argument_list|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|bindtextdomain
+argument_list|(
+name|PACKAGE
+argument_list|,
+name|LOCALEDIR
+argument_list|)
+expr_stmt|;
+name|textdomain
+argument_list|(
+name|PACKAGE
+argument_list|)
+expr_stmt|;
+comment|/* This needs to happen before the first use of malloc.  */
+name|init_malloc
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|MPW
-comment|/* Do all Mac-specific setup. */
-name|mac_init
-argument_list|()
+name|HAVE_SBRK
+name|lim_at_start
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|sbrk
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* MPW */
-comment|/* This needs to happen before the first use of malloc.  */
-name|init_malloc
-argument_list|(
-operator|(
-name|PTR
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -628,9 +668,138 @@ operator|=
 name|gdb_stderr
 expr_stmt|;
 comment|/* for moment */
+name|gdb_stdin
+operator|=
+name|stdio_fileopen
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
+name|gdb_stdtargerr
+operator|=
+name|gdb_stderr
+expr_stmt|;
+comment|/* for moment */
+name|gdb_stdtargin
+operator|=
+name|gdb_stdin
+expr_stmt|;
+comment|/* for moment */
 comment|/* initialize error() */
 name|error_init
 argument_list|()
+expr_stmt|;
+comment|/* Set the sysroot path.  */
+ifdef|#
+directive|ifdef
+name|TARGET_SYSTEM_ROOT_RELOCATABLE
+name|gdb_sysroot
+operator|=
+name|make_relative_prefix
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|BINDIR
+argument_list|,
+name|TARGET_SYSTEM_ROOT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gdb_sysroot
+condition|)
+block|{
+name|struct
+name|stat
+name|s
+decl_stmt|;
+name|int
+name|res
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|gdb_sysroot
+argument_list|,
+operator|&
+name|s
+argument_list|)
+operator|==
+literal|0
+condition|)
+if|if
+condition|(
+name|S_ISDIR
+argument_list|(
+name|s
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+name|res
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+literal|0
+condition|)
+block|{
+name|xfree
+argument_list|(
+name|gdb_sysroot
+argument_list|)
+expr_stmt|;
+name|gdb_sysroot
+operator|=
+name|TARGET_SYSTEM_ROOT
+expr_stmt|;
+block|}
+block|}
+else|else
+name|gdb_sysroot
+operator|=
+name|TARGET_SYSTEM_ROOT
+expr_stmt|;
+else|#
+directive|else
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TARGET_SYSTEM_ROOT
+argument_list|)
+name|gdb_sysroot
+operator|=
+name|TARGET_SYSTEM_ROOT
+expr_stmt|;
+else|#
+directive|else
+name|gdb_sysroot
+operator|=
+literal|""
+expr_stmt|;
+endif|#
+directive|endif
+endif|#
+directive|endif
+comment|/* There will always be an interpreter.  Either the one passed into      this captured main, or one specified by the user at start up, or      the console.  Initialize the interpreter to the one requested by       the application.  */
+name|interpreter_p
+operator|=
+name|xstrdup
+argument_list|(
+name|context
+operator|->
+name|interpreter_p
+argument_list|)
 expr_stmt|;
 comment|/* Parse arguments and options.  */
 block|{
@@ -638,6 +807,25 @@ name|int
 name|c
 decl_stmt|;
 comment|/* When var field is 0, use flag field to record the equivalent        short option (or arbitrary numbers starting at 10 for those        with no equivalent).  */
+enum|enum
+block|{
+name|OPT_SE
+init|=
+literal|10
+block|,
+name|OPT_CD
+block|,
+name|OPT_ANNOTATE
+block|,
+name|OPT_STATISTICS
+block|,
+name|OPT_TUI
+block|,
+name|OPT_NOWINDOWS
+block|,
+name|OPT_WINDOWS
+block|}
+enum|;
 specifier|static
 name|struct
 name|option
@@ -678,10 +866,9 @@ literal|"tui"
 block|,
 name|no_argument
 block|,
-operator|&
-name|tui_version
+literal|0
 block|,
-literal|1
+name|OPT_TUI
 block|}
 block|,
 endif|#
@@ -726,28 +913,6 @@ name|no_argument
 block|,
 operator|&
 name|readnow_symbol_files
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"mapped"
-block|,
-name|no_argument
-block|,
-operator|&
-name|mapped_symbol_files
-block|,
-literal|1
-block|}
-block|,
-block|{
-literal|"m"
-block|,
-name|no_argument
-block|,
-operator|&
-name|mapped_symbol_files
 block|,
 literal|1
 block|}
@@ -857,7 +1022,7 @@ name|required_argument
 block|,
 literal|0
 block|,
-literal|12
+name|OPT_ANNOTATE
 block|}
 block|,
 block|{
@@ -878,7 +1043,7 @@ name|required_argument
 block|,
 literal|0
 block|,
-literal|10
+name|OPT_SE
 block|}
 block|,
 block|{
@@ -1084,7 +1249,7 @@ name|required_argument
 block|,
 literal|0
 block|,
-literal|11
+name|OPT_CD
 block|}
 block|,
 block|{
@@ -1122,10 +1287,9 @@ literal|"nw"
 block|,
 name|no_argument
 block|,
-operator|&
-name|use_windows
+name|NULL
 block|,
-literal|0
+name|OPT_NOWINDOWS
 block|}
 block|,
 block|{
@@ -1133,10 +1297,9 @@ literal|"nowindows"
 block|,
 name|no_argument
 block|,
-operator|&
-name|use_windows
+name|NULL
 block|,
-literal|0
+name|OPT_NOWINDOWS
 block|}
 block|,
 block|{
@@ -1144,10 +1307,9 @@ literal|"w"
 block|,
 name|no_argument
 block|,
-operator|&
-name|use_windows
+name|NULL
 block|,
-literal|1
+name|OPT_WINDOWS
 block|}
 block|,
 block|{
@@ -1155,10 +1317,9 @@ literal|"windows"
 block|,
 name|no_argument
 block|,
-operator|&
-name|use_windows
+name|NULL
 block|,
-literal|1
+name|OPT_WINDOWS
 block|}
 block|,
 block|{
@@ -1168,7 +1329,7 @@ name|no_argument
 block|,
 literal|0
 block|,
-literal|13
+name|OPT_STATISTICS
 block|}
 block|,
 block|{
@@ -1193,13 +1354,6 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* Allow machine descriptions to add more options... */
-ifdef|#
-directive|ifdef
-name|ADDITIONAL_OPTIONS
-name|ADDITIONAL_OPTIONS
-endif|#
-directive|endif
 block|{
 literal|0
 block|,
@@ -1280,7 +1434,7 @@ case|:
 comment|/* Long option that just sets a flag.  */
 break|break;
 case|case
-literal|10
+name|OPT_SE
 case|:
 name|symarg
 operator|=
@@ -1292,7 +1446,7 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|11
+name|OPT_CD
 case|:
 name|cdarg
 operator|=
@@ -1300,7 +1454,7 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
-literal|12
+name|OPT_ANNOTATE
 case|:
 comment|/* FIXME: what if the syntax is wrong (e.g. not digits)?  */
 name|annotation_level
@@ -1312,7 +1466,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|13
+name|OPT_STATISTICS
 case|:
 comment|/* Enable the display of both time and space usage.  */
 name|display_time
@@ -1322,6 +1476,53 @@ expr_stmt|;
 name|display_space
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPT_TUI
+case|:
+comment|/* --tui is equivalent to -i=tui.  */
+name|xfree
+argument_list|(
+name|interpreter_p
+argument_list|)
+expr_stmt|;
+name|interpreter_p
+operator|=
+name|xstrdup
+argument_list|(
+literal|"tui"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPT_WINDOWS
+case|:
+comment|/* FIXME: cagney/2003-03-01: Not sure if this option is                actually useful, and if it is, what it should do.  */
+name|use_windows
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|OPT_NOWINDOWS
+case|:
+comment|/* -nw is equivalent to -i=console.  */
+name|xfree
+argument_list|(
+name|interpreter_p
+argument_list|)
+expr_stmt|;
+name|interpreter_p
+operator|=
+name|xstrdup
+argument_list|(
+name|INTERP_CONSOLE
+argument_list|)
+expr_stmt|;
+name|use_windows
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1446,7 +1647,10 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: unable to load tclcommand file \"%s\""
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -1488,9 +1692,17 @@ comment|/* GDBTK */
 case|case
 literal|'i'
 case|:
+name|xfree
+argument_list|(
+name|interpreter_p
+argument_list|)
+expr_stmt|;
 name|interpreter_p
 operator|=
+name|xstrdup
+argument_list|(
 name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1595,7 +1807,10 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"warning: could not set baud rate to `%s'.\n"
+argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -1606,6 +1821,7 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+break|break;
 case|case
 literal|'l'
 case|:
@@ -1644,7 +1860,10 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"warning: could not set timeout limit to `%s'.\n"
+argument_list|)
 argument_list|,
 name|optarg
 argument_list|)
@@ -1656,12 +1875,6 @@ name|i
 expr_stmt|;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|ADDITIONAL_OPTION_CASES
-name|ADDITIONAL_OPTION_CASES
-endif|#
-directive|endif
 case|case
 literal|'?'
 case|:
@@ -1669,7 +1882,10 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Use `%s --help' for a complete list of options.\n"
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -1696,31 +1912,7 @@ name|use_windows
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TUI
-comment|/* Disable the TUI as well.  */
-name|tui_version
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
-ifdef|#
-directive|ifdef
-name|TUI
-comment|/* An explicit --tui flag overrides the default UI, which is the        window system.  */
-if|if
-condition|(
-name|tui_version
-condition|)
-name|use_windows
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|set_args
@@ -1738,7 +1930,10 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s: `--args' specified but no program specified\n"
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -1843,7 +2038,10 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"Excess command line arguments ignored. (%s%s)\n"
+argument_list|)
 argument_list|,
 name|argv
 index|[
@@ -1884,7 +2082,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Do these (and anything which might call wrap_here or *_filtered)      after initialize_all_files.  */
+comment|/* Do these (and anything which might call wrap_here or *_filtered)      after initialize_all_files() but before the interpreter has been      installed.  Otherwize the help/version messages will be eaten by      the interpreter's output handler.  */
 if|if
 condition|(
 name|print_version
@@ -1934,10 +2132,112 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* FIXME: cagney/2003-02-03: The big hack (part 1 of 2) that lets      GDB retain the old MI1 interpreter startup behavior.  Output the      copyright message before the interpreter is installed.  That way      it isn't encapsulated in MI output.  */
 if|if
 condition|(
 operator|!
 name|quiet
+operator|&&
+name|strcmp
+argument_list|(
+name|interpreter_p
+argument_list|,
+name|INTERP_MI1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Print all the junk at the top, with trailing "..." if we are about          to read a symbol file (possibly slowly).  */
+name|print_gdb_version
+argument_list|(
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|symarg
+condition|)
+name|printf_filtered
+argument_list|(
+literal|".."
+argument_list|)
+expr_stmt|;
+name|wrap_here
+argument_list|(
+literal|""
+argument_list|)
+expr_stmt|;
+name|gdb_flush
+argument_list|(
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+comment|/* Force to screen during slow operations */
+block|}
+comment|/* Install the default UI.  All the interpreters should have had a      look at things by now.  Initialize the default interpreter. */
+block|{
+comment|/* Find it.  */
+name|struct
+name|interp
+modifier|*
+name|interp
+init|=
+name|interp_lookup
+argument_list|(
+name|interpreter_p
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|interp
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"Interpreter `%s' unrecognized"
+argument_list|,
+name|interpreter_p
+argument_list|)
+expr_stmt|;
+comment|/* Install it.  */
+if|if
+condition|(
+operator|!
+name|interp_set
+argument_list|(
+name|interp
+argument_list|)
+condition|)
+block|{
+name|fprintf_unfiltered
+argument_list|(
+name|gdb_stderr
+argument_list|,
+literal|"Interpreter `%s' failed to initialize.\n"
+argument_list|,
+name|interpreter_p
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* FIXME: cagney/2003-02-03: The big hack (part 2 of 2) that lets      GDB retain the old MI1 interpreter startup behavior.  Output the      copyright message after the interpreter is installed when it is      any sane interpreter.  */
+if|if
+condition|(
+operator|!
+name|quiet
+operator|&&
+operator|!
+name|current_interp_named_p
+argument_list|(
+name|INTERP_MI1
+argument_list|)
 condition|)
 block|{
 comment|/* Print all the junk at the top, with trailing "..." if we are about          to read a symbol file (possibly slowly).  */
@@ -1978,7 +2278,10 @@ expr_stmt|;
 comment|/* We may get more than one warning, don't double space all of them... */
 name|warning_pre_print
 operator|=
+name|_
+argument_list|(
 literal|"\nwarning: "
+argument_list|)
 expr_stmt|;
 comment|/* Read and execute $HOME/.gdbinit file, if it exists.  This is done      *before* all the command line arguments are processed; it sets      global parameters, which are independent of what file you are      debugging or what directory you are in.  */
 name|homedir
@@ -2162,12 +2465,14 @@ name|symarg
 operator|!=
 name|NULL
 operator|&&
-name|STREQ
+name|strcmp
 argument_list|(
 name|execarg
 argument_list|,
 name|symarg
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* The exec file and the symbol-file are the same.  If we can't          open it, better only print one error message.          catch_command_errors returns non-zero on success! */
@@ -2256,7 +2561,10 @@ name|error_pre_print
 expr_stmt|;
 name|warning_pre_print
 operator|=
+name|_
+argument_list|(
 literal|"\nwarning: "
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2339,13 +2647,6 @@ argument_list|,
 name|RETURN_MASK_ALL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ADDITIONAL_OPTION_HANDLER
-name|ADDITIONAL_OPTION_HANDLER
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Error messages should no longer be distinguished with extra output. */
 name|error_pre_print
 operator|=
@@ -2357,7 +2658,10 @@ name|NULL
 expr_stmt|;
 name|warning_pre_print
 operator|=
+name|_
+argument_list|(
 literal|"warning: "
+argument_list|)
 expr_stmt|;
 comment|/* Read the .gdbinit file in the current directory, *if* it isn't      the same as the $HOME/.gdbinit file (it should exist, also).  */
 if|if
@@ -2482,14 +2786,6 @@ name|BEFORE_MAIN_LOOP_HOOK
 expr_stmt|;
 endif|#
 directive|endif
-name|END_PROGRESS
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* Show time and/or space usage.  */
 if|if
 condition|(
@@ -2506,7 +2802,10 @@ name|time_at_startup
 decl_stmt|;
 name|printf_unfiltered
 argument_list|(
+name|_
+argument_list|(
 literal|"Startup time: %ld.%06ld\n"
+argument_list|)
 argument_list|,
 name|init_time
 operator|/
@@ -2547,7 +2846,10 @@ argument_list|)
 decl_stmt|;
 name|printf_unfiltered
 argument_list|(
+name|_
+argument_list|(
 literal|"Startup size: data size %ld\n"
+argument_list|)
 argument_list|,
 call|(
 name|long
@@ -2603,38 +2905,24 @@ end_function
 
 begin_function
 name|int
-name|main
+name|gdb_main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-block|{
 name|struct
 name|captured_main_args
+modifier|*
 name|args
-decl_stmt|;
-name|args
-operator|.
-name|argc
+parameter_list|)
+block|{
+name|use_windows
 operator|=
-name|argc
-expr_stmt|;
 name|args
-operator|.
-name|argv
-operator|=
-name|argv
+operator|->
+name|use_windows
 expr_stmt|;
 name|catch_errors
 argument_list|(
 name|captured_main
 argument_list|,
-operator|&
 name|args
 argument_list|,
 literal|""
@@ -2642,8 +2930,9 @@ argument_list|,
 name|RETURN_MASK_ALL
 argument_list|)
 expr_stmt|;
+comment|/* The only way to end up here is by an error (normal exit is      handled by quit_force()), hence always return an error status.  */
 return|return
-literal|0
+literal|1
 return|;
 block|}
 end_function
@@ -2665,49 +2954,70 @@ parameter_list|)
 block|{
 name|fputs_unfiltered
 argument_list|(
+name|_
+argument_list|(
 literal|"\ This is the GNU debugger.  Usage:\n\n\     gdb [options] [executable-file [core-file or process-id]]\n\     gdb [options] --args executable-file [inferior-arguments ...]\n\n\ Options:\n\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
+argument_list|(
+name|_
 argument_list|(
 literal|"\   --args             Arguments after executable-file are passed to inferior\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
+argument_list|(
+name|_
 argument_list|(
 literal|"\   --[no]async        Enable (disable) asynchronous version of CLI\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
+argument_list|(
+name|_
 argument_list|(
 literal|"\   -b BAUDRATE        Set serial port baud rate used for remote debugging.\n\   --batch            Exit after processing options.\n\   --cd=DIR           Change current directory to DIR.\n\   --command=FILE     Execute GDB commands from FILE.\n\   --core=COREFILE    Analyze the core dump COREFILE.\n\   --pid=PID          Attach to running process PID.\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
+argument_list|(
+name|_
 argument_list|(
 literal|"\   --dbx              DBX compatibility mode.\n\   --directory=DIR    Search for source files in DIR.\n\   --epoch            Output information used by epoch emacs-GDB interface.\n\   --exec=EXECFILE    Use EXECFILE as the executable.\n\   --fullname         Output information used by emacs-GDB interface.\n\   --help             Print this message.\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
+argument_list|(
+name|_
 argument_list|(
 literal|"\   --interpreter=INTERP\n\                      Select a specific interpreter / user interface\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
 argument_list|(
+name|_
+argument_list|(
 literal|"\   --mapped           Use mapped symbol files if supported on this system.\n\   --nw		     Do not use a window interface.\n\   --nx               Do not read "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
@@ -2721,14 +3031,20 @@ argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
 argument_list|(
+name|_
+argument_list|(
 literal|" file.\n\   --quiet            Do not print version number on startup.\n\   --readnow          Fully read symbol files on first access.\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
 name|fputs_unfiltered
 argument_list|(
+name|_
+argument_list|(
 literal|"\   --se=FILE          Use FILE as symbol file and executable file.\n\   --symbols=SYMFILE  Read symbols from SYMFILE.\n\   --tty=TTY          Use TTY for input/output by the program being debugged.\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
@@ -2741,7 +3057,10 @@ name|TUI
 argument_list|)
 name|fputs_unfiltered
 argument_list|(
+name|_
+argument_list|(
 literal|"\   --tui              Use a terminal user interface.\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
@@ -2749,27 +3068,21 @@ expr_stmt|;
 endif|#
 directive|endif
 name|fputs_unfiltered
+argument_list|(
+name|_
 argument_list|(
 literal|"\   --version          Print version information and then exit.\n\   -w                 Use a window interface.\n\   --write            Set writing into executable and core files.\n\   --xdb              XDB compatibility mode.\n\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ADDITIONAL_OPTION_HELP
 name|fputs_unfiltered
 argument_list|(
-name|ADDITIONAL_OPTION_HELP
-argument_list|,
-name|stream
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|fputs_unfiltered
+name|_
 argument_list|(
 literal|"\n\ For more information, type \"help\" from within GDB, or consult the\n\ GDB manual (available as on-line info or a printed manual).\n\ Report bugs to \"bug-gdb@gnu.org\".\ "
+argument_list|)
 argument_list|,
 name|stream
 argument_list|)

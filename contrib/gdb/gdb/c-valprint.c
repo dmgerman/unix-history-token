@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for printing C values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Support for printing C values for GDB, the GNU debugger.     Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_string.h"
 end_include
 
 begin_include
@@ -57,6 +63,12 @@ directive|include
 file|"cp-abi.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
 begin_escape
 end_escape
 
@@ -81,9 +93,14 @@ block|{
 name|CORE_ADDR
 name|func_addr
 init|=
-name|CONVERT_FROM_FUNC_PTR_ADDR
+name|gdbarch_convert_from_func_ptr_addr
 argument_list|(
+name|current_gdbarch
+argument_list|,
 name|address
+argument_list|,
+operator|&
+name|current_target
 argument_list|)
 decl_stmt|;
 comment|/* If the function pointer is represented by a description, print the      address of the description.  */
@@ -174,7 +191,6 @@ name|val_prettyprint
 name|pretty
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -765,7 +781,7 @@ argument_list|)
 expr_stmt|;
 name|fputs_filtered
 argument_list|(
-name|SYMBOL_SOURCE_NAME
+name|SYMBOL_PRINT_NAME
 argument_list|(
 name|msymbol
 argument_list|)
@@ -811,11 +827,6 @@ modifier|*
 name|wtype
 decl_stmt|;
 name|struct
-name|symtab
-modifier|*
-name|s
-decl_stmt|;
-name|struct
 name|block
 modifier|*
 name|block
@@ -840,20 +851,19 @@ name|wsym
 operator|=
 name|lookup_symbol
 argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|msymbol
 argument_list|)
 argument_list|,
 name|block
 argument_list|,
-name|VAR_NAMESPACE
+name|VAR_DOMAIN
 argument_list|,
 operator|&
 name|is_this_fld
 argument_list|,
-operator|&
-name|s
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2025,7 +2035,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|&&
-name|STREQ
+name|strcmp
 argument_list|(
 name|TYPE_NAME
 argument_list|(
@@ -2037,6 +2047,8 @@ argument_list|)
 argument_list|,
 literal|"char"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* Print nothing */
@@ -2409,6 +2421,11 @@ name|val
 argument_list|)
 argument_list|,
 name|VALUE_ADDRESS
+argument_list|(
+name|val
+argument_list|)
+operator|+
+name|VALUE_OFFSET
 argument_list|(
 name|val
 argument_list|)

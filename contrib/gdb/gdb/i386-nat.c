@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Intel x86 (a.k.a. ia32) native-dependent code.    Copyright (C) 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent code for the i386.     Copyright 2001, 2004 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ file|"gdbcmd.h"
 end_include
 
 begin_comment
-comment|/* Support for hardware watchpoints and breakpoints using the x86    debug registers.     This provides several functions for inserting and removing    hardware-assisted breakpoints and watchpoints, testing if    one or more of the watchpoints triggered and at what address,    checking whether a given region can be watched, etc.     A target which wants to use these functions should define    several macros, such as `target_insert_watchpoint' and    `target_stopped_data_address', listed in target.h, to call    the appropriate functions below.  It should also define    I386_USE_GENERIC_WATCHPOINTS in its tm.h file.     In addition, each target should provide several low-level    macros that will be called to insert watchpoints and hardware    breakpoints into the inferior, remove them, and check their    status.  These macros are:        I386_DR_LOW_SET_CONTROL  -- set the debug control (DR7) 				  register to a given value        I386_DR_LOW_SET_ADDR     -- put an address into one debug 				  register        I386_DR_LOW_RESET_ADDR   -- reset the address stored in 				  one debug register        I386_DR_LOW_GET_STATUS   -- return the value of the debug 				  status (DR6) register.     The functions below implement debug registers sharing by    reference counts, and allow to watch regions up to 16 bytes    long.  */
+comment|/* Support for hardware watchpoints and breakpoints using the i386    debug registers.     This provides several functions for inserting and removing    hardware-assisted breakpoints and watchpoints, testing if one or    more of the watchpoints triggered and at what address, checking    whether a given region can be watched, etc.     A target which wants to use these functions should define several    macros, such as `target_insert_watchpoint' and    `target_stopped_data_address', listed in target.h, to call the    appropriate functions below.  It should also define    I386_USE_GENERIC_WATCHPOINTS in its tm.h file.     In addition, each target should provide several low-level macros    that will be called to insert watchpoints and hardware breakpoints    into the inferior, remove them, and check their status.  These    macros are:        I386_DR_LOW_SET_CONTROL  -- set the debug control (DR7) 				  register to a given value        I386_DR_LOW_SET_ADDR     -- put an address into one debug 				  register        I386_DR_LOW_RESET_ADDR   -- reset the address stored in 				  one debug register        I386_DR_LOW_GET_STATUS   -- return the value of the debug 				  status (DR6) register.     The functions below implement debug registers sharing by reference    counts, and allow to watch regions up to 16 bytes long.  */
 end_comment
 
 begin_ifdef
@@ -71,7 +71,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* the number of debug address registers */
+comment|/* The number of debug address registers.  */
 end_comment
 
 begin_define
@@ -82,7 +82,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* index of debug status register (DR6) */
+comment|/* Index of debug status register (DR6).  */
 end_comment
 
 begin_define
@@ -93,7 +93,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* index of debug control register (DR7) */
+comment|/* Index of debug control register (DR7). */
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ value|(0x0)
 end_define
 
 begin_comment
-comment|/* break on instruction execution */
+comment|/* Break on instruction execution.  */
 end_comment
 
 begin_define
@@ -145,7 +145,7 @@ value|(0x1)
 end_define
 
 begin_comment
-comment|/* break on data writes */
+comment|/* Break on data writes.  */
 end_comment
 
 begin_define
@@ -156,11 +156,11 @@ value|(0x3)
 end_define
 
 begin_comment
-comment|/* break on data reads or writes */
+comment|/* Break on data reads or writes.  */
 end_comment
 
 begin_comment
-comment|/* This is here for completeness.  No platform supports this    functionality yet (as of Mar-2001).  Note that the DE flag in the    CR4 register needs to be set to support this.  */
+comment|/* This is here for completeness.  No platform supports this    functionality yet (as of March 2001).  Note that the DE flag in the    CR4 register needs to be set to support this.  */
 end_comment
 
 begin_ifndef
@@ -177,7 +177,7 @@ value|(0x2)
 end_define
 
 begin_comment
-comment|/* break on I/O reads or writes */
+comment|/* Break on I/O reads or writes.  */
 end_comment
 
 begin_endif
@@ -197,7 +197,7 @@ value|(0x0<< 2)
 end_define
 
 begin_comment
-comment|/* 1-byte region watch or breakpt */
+comment|/* 1-byte region watch or breakpoint.  */
 end_comment
 
 begin_define
@@ -208,7 +208,7 @@ value|(0x1<< 2)
 end_define
 
 begin_comment
-comment|/* 2-byte region watch */
+comment|/* 2-byte region watch.  */
 end_comment
 
 begin_define
@@ -219,7 +219,7 @@ value|(0x3<< 2)
 end_define
 
 begin_comment
-comment|/* 4-byte region watch */
+comment|/* 4-byte region watch.  */
 end_comment
 
 begin_define
@@ -230,11 +230,11 @@ value|(0x2<< 2)
 end_define
 
 begin_comment
-comment|/* 8-byte region watch (x86-64) */
+comment|/* 8-byte region watch (AMD64).  */
 end_comment
 
 begin_comment
-comment|/* Local and Global Enable flags in DR7.     When the Local Enable flag is set, the breakpoint/watchpoint is    enabled only for the current task; the processor automatically    clears this flag on every task switch.  When the Global Enable    flag is set, the breakpoint/watchpoint is enabled for all tasks;    the processor never clears this flag.     Currently, all watchpoint are locally enabled.  If you need to    enable them globally, read the comment which pertains to this in    i386_insert_aligned_watchpoint below.  */
+comment|/* Local and Global Enable flags in DR7.     When the Local Enable flag is set, the breakpoint/watchpoint is    enabled only for the current task; the processor automatically    clears this flag on every task switch.  When the Global Enable flag    is set, the breakpoint/watchpoint is enabled for all tasks; the    processor never clears this flag.     Currently, all watchpoint are locally enabled.  If you need to    enable them globally, read the comment which pertains to this in    i386_insert_aligned_watchpoint below.  */
 end_comment
 
 begin_define
@@ -245,7 +245,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* extra shift to the local enable bit */
+comment|/* Extra shift to the local enable bit.  */
 end_comment
 
 begin_define
@@ -256,7 +256,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* extra shift to the global enable bit */
+comment|/* Extra shift to the global enable bit.  */
 end_comment
 
 begin_define
@@ -267,11 +267,11 @@ value|2
 end_define
 
 begin_comment
-comment|/* 2 enable bits per debug register */
+comment|/* Two enable bits per debug register.  */
 end_comment
 
 begin_comment
-comment|/* Local and global exact breakpoint enable flags (a.k.a. slowdown    flags).  These are only required on i386, to allow detection of the    exact instruction which caused a watchpoint to break; i486 and    later processors do that automatically.  We set these flags for    back compatibility.  */
+comment|/* Local and global exact breakpoint enable flags (a.k.a. slowdown    flags).  These are only required on i386, to allow detection of the    exact instruction which caused a watchpoint to break; i486 and    later processors do that automatically.  We set these flags for    backwards compatibility.  */
 end_comment
 
 begin_define
@@ -505,7 +505,7 @@ comment|/* Internal functions.  */
 end_comment
 
 begin_comment
-comment|/* Return the value of a 4-bit field for DR7 suitable for watching a    region of LEN bytes for accesses of type TYPE.  LEN is assumed    to have the value of 1, 2, or 4.  */
+comment|/* Return the value of a 4-bit field for DR7 suitable for watching a    region of LEN bytes for accesses of type TYPE.  LEN is assumed to    have the value of 1, 2, or 4.  */
 end_comment
 
 begin_function_decl
@@ -560,7 +560,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Insert or remove a (possibly non-aligned) watchpoint, or count the    number of debug registers required to watch a region at address    ADDR whose length is LEN for accesses of type TYPE.  Return 0 on    successful insertion or removal, a positive number when queried    about the number of registers, or -1 on failure.  If WHAT is not    a valid value, bombs through internal_error.  */
+comment|/* Insert or remove a (possibly non-aligned) watchpoint, or count the    number of debug registers required to watch a region at address    ADDR whose length is LEN for accesses of type TYPE.  Return 0 on    successful insertion or removal, a positive number when queried    about the number of registers, or -1 on failure.  If WHAT is not a    valid value, bombs through internal_error.  */
 end_comment
 
 begin_function_decl
@@ -589,7 +589,7 @@ comment|/* Implementation.  */
 end_comment
 
 begin_comment
-comment|/* Clear the reference counts and forget everything we knew about    the debug registers.  */
+comment|/* Clear the reference counts and forget everything we knew about the    debug registers.  */
 end_comment
 
 begin_function
@@ -633,8 +633,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINUX_CHILD_POST_STARTUP_INFERIOR
+end_ifndef
+
 begin_comment
-comment|/* Reset all debug registers at each new startup    to avoid missing watchpoints after restart.  */
+comment|/* Reset all debug registers at each new startup to avoid missing    watchpoints after restart.  */
 end_comment
 
 begin_function
@@ -651,8 +657,17 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* Print the values of the mirrored debug registers.    This is called when maint_show_dr is non-zero.  To set that    up, type "maint show-debug-regs" at GDB's prompt.  */
+comment|/* LINUX_CHILD_POST_STARTUP_INFERIOR */
+end_comment
+
+begin_comment
+comment|/* Print the values of the mirrored debug registers.  This is called    when maint_show_dr is non-zero.  To set that up, type "maint    show-debug-regs" at GDB's prompt.  */
 end_comment
 
 begin_function
@@ -758,7 +773,7 @@ argument_list|)
 block|{
 name|printf_unfiltered
 argument_list|(
-literal|"\tDR%d: addr=0x%s, ref.count=%d  DR%d: addr=0x%s, ref.count=%d\n"
+literal|"\ \tDR%d: addr=0x%s, ref.count=%d  DR%d: addr=0x%s, ref.count=%d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -805,7 +820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the value of a 4-bit field for DR7 suitable for watching a    region of LEN bytes for accesses of type TYPE.  LEN is assumed    to have the value of 1, 2, or 4.  */
+comment|/* Return the value of a 4-bit field for DR7 suitable for watching a    region of LEN bytes for accesses of type TYPE.  LEN is assumed to    have the value of 1, 2, or 4.  */
 end_comment
 
 begin_function
@@ -848,7 +863,7 @@ break|break;
 case|case
 name|hw_read
 case|:
-comment|/* x86 doesn't support data-read watchpoints */
+comment|/* The i386 doesn't support data-read watchpoints.  */
 case|case
 name|hw_access
 case|:
@@ -860,9 +875,8 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case hw_io_access:
-comment|/* not yet supported */
-block|rw = DR_RW_IORW; 	break;
+comment|/* Not yet supported.  */
+block|case hw_io_access: 	rw = DR_RW_IORW; 	break;
 endif|#
 directive|endif
 default|default:
@@ -872,7 +886,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"\ Invalid hw breakpoint type %d in i386_length_and_rw_bits.\n"
+literal|"\ Invalid hardware breakpoint type %d in i386_length_and_rw_bits.\n"
 argument_list|,
 operator|(
 name|int
@@ -937,7 +951,7 @@ name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|,
-literal|"\ Invalid hw breakpoint length %d in i386_length_and_rw_bits.\n"
+literal|"\ Invalid hardware breakpoint length %d in i386_length_and_rw_bits.\n"
 argument_list|,
 name|len
 argument_list|)
@@ -1054,7 +1068,7 @@ argument_list|,
 name|len_rw_bits
 argument_list|)
 expr_stmt|;
-comment|/* Note: we only enable the watchpoint locally, i.e. in the current      task.  Currently, no x86 target allows or supports global      watchpoints; however, if any target would want that in the      future, GDB should probably provide a command to control whether      to enable watchpoints globally or locally, and the code below      should use global or local enable and slow-down flags as      appropriate.  */
+comment|/* Note: we only enable the watchpoint locally, i.e. in the current      task.  Currently, no i386 target allows or supports global      watchpoints; however, if any target would want that in the      future, GDB should probably provide a command to control whether      to enable watchpoints globally or locally, and the code below      should use global or local enable and slow-down flags as      appropriate.  */
 name|I386_DR_LOCAL_ENABLE
 argument_list|(
 name|i
@@ -1189,7 +1203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Insert or remove a (possibly non-aligned) watchpoint, or count the    number of debug registers required to watch a region at address    ADDR whose length is LEN for accesses of type TYPE.  Return 0 on    successful insertion or removal, a positive number when queried    about the number of registers, or -1 on failure.  If WHAT is not    a valid value, bombs through internal_error.  */
+comment|/* Insert or remove a (possibly non-aligned) watchpoint, or count the    number of debug registers required to watch a region at address    ADDR whose length is LEN for accesses of type TYPE.  Return 0 on    successful insertion or removal, a positive number when queried    about the number of registers, or -1 on failure.  If WHAT is not a    valid value, bombs through internal_error.  */
 end_comment
 
 begin_function
@@ -1212,13 +1226,7 @@ name|type
 parameter_list|)
 block|{
 name|int
-name|align
-decl_stmt|;
-name|int
-name|size
-decl_stmt|;
-name|int
-name|rv
+name|retval
 init|=
 literal|0
 decl_stmt|,
@@ -1264,7 +1272,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size one */
+comment|/* Trying size one.  */
 block|{
 literal|2
 block|,
@@ -1283,7 +1291,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size two */
+comment|/* Trying size two.  */
 block|{
 literal|2
 block|,
@@ -1302,7 +1310,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size three */
+comment|/* Trying size three.  */
 block|{
 literal|4
 block|,
@@ -1321,7 +1329,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size four */
+comment|/* Trying size four.  */
 block|{
 literal|4
 block|,
@@ -1340,7 +1348,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size five */
+comment|/* Trying size five.  */
 block|{
 literal|4
 block|,
@@ -1359,7 +1367,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size six */
+comment|/* Trying size six.  */
 block|{
 literal|4
 block|,
@@ -1378,7 +1386,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size seven */
+comment|/* Trying size seven.  */
 block|{
 literal|8
 block|,
@@ -1397,7 +1405,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* trying size eight */
+comment|/* Trying size eight.  */
 block|}
 decl_stmt|;
 while|while
@@ -1407,17 +1415,18 @@ operator|>
 literal|0
 condition|)
 block|{
+name|int
 name|align
-operator|=
+init|=
 name|addr
 operator|%
 name|max_wp_len
-expr_stmt|;
-comment|/* Four(eigth on x86_64) is the maximum length an x86 debug register 	 can watch.  */
-name|size
-operator|=
-name|size_try_array
-index|[
+decl_stmt|;
+comment|/* Four (eigth on AMD64) is the maximum length a debug register 	 can watch.  */
+name|int
+name|try
+init|=
+operator|(
 name|len
 operator|>
 name|max_wp_len
@@ -1431,21 +1440,31 @@ else|:
 name|len
 operator|-
 literal|1
+operator|)
+decl_stmt|;
+name|int
+name|size
+init|=
+name|size_try_array
+index|[
+name|try
 index|]
 index|[
 name|align
 index|]
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|what
 operator|==
 name|WP_COUNT
 condition|)
-comment|/* size_try_array[] is defined so that each iteration through 	   the loop is guaranteed to produce an address and a size 	   that can be watched with a single debug register.  Thus, 	   for counting the registers required to watch a region, we 	   simply need to increment the count on each iteration.  */
-name|rv
+block|{
+comment|/* size_try_array[] is defined such that each iteration 	     through the loop is guaranteed to produce an address and a 	     size that can be watched with a single debug register. 	     Thus, for counting the registers required to watch a 	     region, we simply need to increment the count on each 	     iteration.  */
+name|retval
 operator|++
 expr_stmt|;
+block|}
 else|else
 block|{
 name|unsigned
@@ -1509,7 +1528,7 @@ if|if
 condition|(
 name|status
 condition|)
-name|rv
+name|retval
 operator|=
 name|status
 expr_stmt|;
@@ -1524,7 +1543,7 @@ name|size
 expr_stmt|;
 block|}
 return|return
-name|rv
+name|retval
 return|;
 block|}
 end_function
@@ -1764,10 +1783,12 @@ name|int
 name|len
 parameter_list|)
 block|{
-comment|/* Compute how many aligned watchpoints we would need to cover this      region.  */
 name|int
 name|nregs
-init|=
+decl_stmt|;
+comment|/* Compute how many aligned watchpoints we would need to cover this      region.  */
+name|nregs
+operator|=
 name|i386_handle_nonaligned_watchpoint
 argument_list|(
 name|WP_COUNT
@@ -1778,7 +1799,7 @@ name|len
 argument_list|,
 name|hw_write
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 return|return
 name|nregs
 operator|<=
@@ -1792,7 +1813,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If the inferior has some watchpoint that triggered, return the    address associated with that watchpoint.  Otherwise, return    zero.  */
+comment|/* If the inferior has some watchpoint that triggered, return the    address associated with that watchpoint.  Otherwise, return zero.  */
 end_comment
 
 begin_function
@@ -1802,13 +1823,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|CORE_ADDR
-name|ret
+name|addr
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|dr_status_mirror
 operator|=
@@ -1826,7 +1847,7 @@ name|I386_DR_WATCH_HIT
 argument_list|(
 name|i
 argument_list|)
-comment|/* This second condition makes sure DRi is set up for a data 	     watchpoint, not a hardware breakpoint.  The reason is 	     that GDB doesn't call the target_stopped_data_address 	     method except for data watchpoints.  In other words, I'm 	     being paranoiac.  */
+comment|/* This second condition makes sure DRi is set up for a data 	     watchpoint, not a hardware breakpoint.  The reason is 	     that GDB doesn't call the target_stopped_data_address 	     method except for data watchpoints.  In other words, I'm 	     being paranoid.  */
 operator|&&
 name|I386_DR_GET_RW_LEN
 argument_list|(
@@ -1836,7 +1857,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ret
+name|addr
 operator|=
 name|dr_mirror
 index|[
@@ -1851,7 +1872,7 @@ name|i386_show_dr
 argument_list|(
 literal|"watchpoint_hit"
 argument_list|,
-name|ret
+name|addr
 argument_list|,
 operator|-
 literal|1
@@ -1865,7 +1886,7 @@ if|if
 condition|(
 name|maint_show_dr
 operator|&&
-name|ret
+name|addr
 operator|==
 literal|0
 condition|)
@@ -1881,7 +1902,7 @@ name|hw_write
 argument_list|)
 expr_stmt|;
 return|return
-name|ret
+name|addr
 return|;
 block|}
 end_function
@@ -2071,6 +2092,19 @@ end_comment
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* Provide a prototype to silence -Wmissing-prototypes.  */
+end_comment
+
+begin_function_decl
+name|void
+name|_initialize_i386_nat
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

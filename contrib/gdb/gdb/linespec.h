@@ -20,6 +20,12 @@ name|LINESPEC_H
 value|1
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|symtab
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|struct
@@ -47,6 +53,10 @@ modifier|*
 modifier|*
 modifier|*
 name|canonical
+parameter_list|,
+name|int
+modifier|*
+name|not_found_ptr
 parameter_list|)
 function_decl|;
 end_function_decl

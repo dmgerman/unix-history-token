@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for printing Java values for GDB, the GNU debugger.    Copyright 1997, 1998, 1999, 2000 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Support for printing Java values for GDB, the GNU debugger.     Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free    Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"annotate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_string.h"
 end_include
 
 begin_comment
@@ -461,9 +467,10 @@ name|TARGET_PTR_BIT
 operator|/
 name|HOST_CHAR_BIT
 expr_stmt|;
+comment|/* FIXME: cagney/2003-05-24: Bogus or what.  It                      pulls a host sized pointer out of the target and                      then extracts that as an address (while assuming                      that the address is unsigned)!  */
 name|element
 operator|=
-name|extract_address
+name|extract_unsigned_integer
 argument_list|(
 name|buf
 argument_list|,
@@ -508,9 +515,10 @@ name|TARGET_PTR_BIT
 operator|/
 name|HOST_CHAR_BIT
 expr_stmt|;
+comment|/* FIXME: cagney/2003-05-24: Bogus or what.  It                      pulls a host sized pointer out of the target and                      then extracts that as an address (while assuming                      that the address is unsigned)!  */
 name|next_element
 operator|=
-name|extract_address
+name|extract_unsigned_integer
 argument_list|(
 name|buf
 argument_list|,
@@ -878,7 +886,7 @@ argument_list|(
 name|type
 argument_list|)
 operator|&&
-name|TYPE_NAME
+name|TYPE_TAG_NAME
 argument_list|(
 name|TYPE_TARGET_TYPE
 argument_list|(
@@ -888,7 +896,7 @@ argument_list|)
 operator|&&
 name|strcmp
 argument_list|(
-name|TYPE_NAME
+name|TYPE_TAG_NAME
 argument_list|(
 name|TYPE_TARGET_TYPE
 argument_list|(
@@ -1328,9 +1336,6 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-name|flush_it
-label|:
-empty_stmt|;
 block|}
 block|}
 if|if
@@ -1351,10 +1356,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-specifier|extern
-name|int
-name|inspect_it
-decl_stmt|;
 name|int
 name|fields_seen
 init|=
@@ -2058,7 +2059,6 @@ name|val_prettyprint
 name|pretty
 parameter_list|)
 block|{
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -2120,7 +2120,8 @@ literal|0
 block|if (vtblprint&& cp_is_vtbl_ptr_type (type)) 	{
 comment|/* Print the unmangled name if desired.  */
 comment|/* Print vtable entry - we only get here if we ARE using 	     -fvtable_thunks.  (Otherwise, look under TYPE_CODE_STRUCT.) */
-block|print_address_demangle (extract_address (valaddr, TYPE_LENGTH (type)), 				  stream, demangle); 	  break; 	}
+comment|/* Extract an address, assume that it is unsigned.  */
+block|print_address_demangle (extract_unsigned_integer (valaddr, TYPE_LENGTH (type)), 				  stream, demangle); 	  break; 	}
 endif|#
 directive|endif
 name|addr
@@ -2224,6 +2225,10 @@ return|;
 case|case
 name|TYPE_CODE_CHAR
 case|:
+case|case
+name|TYPE_CODE_INT
+case|:
+comment|/* Can't just call c_val_print because that prints bytes as C 	 chars.  */
 name|format
 operator|=
 name|format
@@ -2249,7 +2254,44 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|TYPE_CODE_CHAR
+operator|||
+operator|(
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|TYPE_CODE_INT
+operator|&&
+name|TYPE_LENGTH
+argument_list|(
+name|type
+argument_list|)
+operator|==
+literal|2
+operator|&&
+name|strcmp
+argument_list|(
+name|TYPE_NAME
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+literal|"char"
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
 name|LA_PRINT_CHAR
 argument_list|(
 operator|(
@@ -2261,36 +2303,6 @@ name|type
 argument_list|,
 name|valaddr
 argument_list|)
-argument_list|,
-name|stream
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|TYPE_CODE_INT
-case|:
-comment|/* Can't just call c_val_print because that print bytes as C chars. */
-name|format
-operator|=
-name|format
-condition|?
-name|format
-else|:
-name|output_format
-expr_stmt|;
-if|if
-condition|(
-name|format
-condition|)
-name|print_scalar_formatted
-argument_list|(
-name|valaddr
-argument_list|,
-name|type
-argument_list|,
-name|format
-argument_list|,
-literal|0
 argument_list|,
 name|stream
 argument_list|)

@@ -24,6 +24,12 @@ name|GDBCORE_H
 value|1
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|type
+struct_decl|;
+end_struct_decl
+
 begin_include
 include|#
 directive|include
@@ -191,6 +197,25 @@ name|char
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Read the pointer of type TYPE at ADDR, and return the address it    represents. */
+end_comment
+
+begin_function_decl
+name|CORE_ADDR
+name|read_memory_typed_address
+parameter_list|(
+name|CORE_ADDR
+name|addr
+parameter_list|,
+name|struct
+name|type
+modifier|*
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl

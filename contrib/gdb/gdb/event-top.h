@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions used by GDB event-top.c.    Copyright 1999, 2001 Free Software Foundation, Inc.    Written by Elena Zannoni<ezannoni@cygnus.com> of Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Definitions used by event-top.c, for GDB, the GNU debugger.     Copyright 1999, 2001, 2003 Free Software Foundation, Inc.     Written by Elena Zannoni<ezannoni@cygnus.com> of Cygnus Solutions.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EVENT_TOP_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EVENT_TOP_H
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|cmd_list_element
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* Stack for prompts.  Each prompt is composed as a prefix, a prompt    and a suffix.  The prompt to be displayed at any given time is the    one on top of the stack.  A stack is necessary because of cases in    which the execution of a gdb command requires further input from    the user, like for instance 'commands' for breakpoints and    'actions' for tracepoints.  In these cases, the prompt is '>' and    gdb should process input using the asynchronous readline interface    and the event loop.  In order to achieve this, we need to save    somewhere the state of GDB, i.e. that it is processing user input    as part of a command and not as part of the top level command loop.    The prompt stack represents part of the saved state.  Another part    would be the function that readline would invoke after a whole line    of input has ben entered.  This second piece would be something    like, for instance, where to return within the code for the actions    commands after a line has been read.  This latter portion has not    beeen implemented yet.  The need for a 3-part prompt arises from    the annotation level.  When this is set to 2, the prompt is    actually composed of a prefix, the prompt itself and a suffix.  */
@@ -91,6 +109,24 @@ parameter_list|(
 name|char
 modifier|*
 name|new_prompt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gdb_setup_readline
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gdb_disable_readline
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -418,6 +454,21 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|cli_command_loop
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

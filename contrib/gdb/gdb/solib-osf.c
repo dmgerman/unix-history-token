@@ -812,9 +812,9 @@ comment|/* Now run the target.  It will eventually get a SIGTRAP, at      which 
 name|clear_proceed_status
 argument_list|()
 expr_stmt|;
-name|stop_soon_quietly
+name|stop_soon
 operator|=
-literal|1
+name|STOP_QUIETLY
 expr_stmt|;
 name|stop_signal
 operator|=
@@ -842,7 +842,7 @@ operator|!=
 name|TARGET_SIGNAL_TRAP
 condition|)
 do|;
-comment|/*  solib_add will call reinit_frame_cache.      But we are stopped in the runtime loader and we do not have symbols      for the runtime loader. So heuristic_proc_start will be called      and will put out an annoying warning.      Delaying the resetting of stop_soon_quietly until after symbol loading      suppresses the warning.  */
+comment|/*  solib_add will call reinit_frame_cache.      But we are stopped in the runtime loader and we do not have symbols      for the runtime loader. So heuristic_proc_start will be called      and will put out an annoying warning.      Delaying the resetting of stop_soon until after symbol loading      suppresses the warning.  */
 name|solib_add
 argument_list|(
 operator|(
@@ -863,9 +863,9 @@ argument_list|,
 name|auto_solib_add
 argument_list|)
 expr_stmt|;
-name|stop_soon_quietly
+name|stop_soon
 operator|=
-literal|0
+name|NO_STOP_QUIETLY
 expr_stmt|;
 comment|/* Enable breakpoints disabled (unnecessarily) by clear_solib().  */
 name|re_enable_breakpoints_in_shlibs
@@ -908,12 +908,15 @@ block|{
 ifdef|#
 directive|ifdef
 name|USE_LDR_ROUTINES
+comment|/* Note: As originally written, ldr_my_process() was used to obtain      the value for ctxt->proc.  This is incorrect, however, since      ldr_my_process() retrieves the "unique identifier" associated      with the current process (i.e. GDB) and not the one being      debugged.  Presumably, the pid of the process being debugged is      compatible with the "unique identifier" used by the ldr_      routines, so we use that.  */
 name|ctxt
 operator|->
 name|proc
 operator|=
-name|ldr_my_process
-argument_list|()
+name|ptid_get_pid
+argument_list|(
+name|inferior_ptid
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -15,6 +15,18 @@ directive|define
 name|OCD_H
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|mem_attrib
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|target_ops
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Wiggler serial protocol definitions */
 end_comment

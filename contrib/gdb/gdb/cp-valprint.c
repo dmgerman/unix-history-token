@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for printing C++ values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Support for printing C++ values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"obstack.h"
+file|"gdb_obstack.h"
 end_include
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"cp-abi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"valprint.h"
 end_include
 
 begin_comment
@@ -362,10 +368,7 @@ name|addr
 operator|=
 name|unpack_pointer
 argument_list|(
-name|lookup_pointer_type
-argument_list|(
-name|builtin_type_void
-argument_list|)
+name|type
 argument_list|,
 name|valaddr
 argument_list|)
@@ -424,6 +427,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|check_stub_method_group
+argument_list|(
+name|domain
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -438,8 +448,6 @@ name|j
 operator|++
 control|)
 block|{
-name|QUIT
-expr_stmt|;
 if|if
 condition|(
 name|TYPE_FN_FIELD_VOFFSET
@@ -452,24 +460,6 @@ operator|==
 name|offset
 condition|)
 block|{
-if|if
-condition|(
-name|TYPE_FN_FIELD_STUB
-argument_list|(
-name|f
-argument_list|,
-name|j
-argument_list|)
-condition|)
-name|check_stub_method
-argument_list|(
-name|domain
-argument_list|,
-name|i
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
 name|kind
 operator|=
 literal|"virtual "
@@ -557,6 +547,13 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|check_stub_method_group
+argument_list|(
+name|domain
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -571,31 +568,11 @@ name|j
 operator|++
 control|)
 block|{
-name|QUIT
-expr_stmt|;
 if|if
 condition|(
-name|TYPE_FN_FIELD_STUB
+name|strcmp
 argument_list|(
-name|f
-argument_list|,
-name|j
-argument_list|)
-condition|)
-name|check_stub_method
-argument_list|(
-name|domain
-argument_list|,
-name|i
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|sym
 argument_list|)
@@ -607,12 +584,12 @@ argument_list|,
 name|j
 argument_list|)
 argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
 goto|goto
 name|common
 goto|;
-block|}
 block|}
 block|}
 block|}
@@ -636,11 +613,11 @@ argument_list|,
 literal|"&"
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|kind
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 name|demangled_name
@@ -735,52 +712,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This was what it was for gcc 2.4.5 and earlier.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|vtbl_ptr_name_old
-index|[]
-init|=
-block|{
-name|CPLUS_MARKER
-block|,
-literal|'v'
-block|,
-literal|'t'
-block|,
-literal|'b'
-block|,
-literal|'l'
-block|,
-literal|'_'
-block|,
-literal|'p'
-block|,
-literal|'t'
-block|,
-literal|'r'
-block|,
-literal|'_'
-block|,
-literal|'t'
-block|,
-literal|'y'
-block|,
-literal|'p'
-block|,
-literal|'e'
-block|,
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* It was changed to this after 2.4.5.  */
+comment|/* GCC versions after 2.4.5 use this.  */
 end_comment
 
 begin_decl_stmt
@@ -794,7 +726,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* HP aCC uses different names */
+comment|/* HP aCC uses different names.  */
 end_comment
 
 begin_decl_stmt
@@ -846,21 +778,13 @@ name|typename
 operator|!=
 name|NULL
 operator|&&
-operator|(
-name|STREQ
+operator|!
+name|strcmp
 argument_list|(
 name|typename
 argument_list|,
 name|vtbl_ptr_name
 argument_list|)
-operator|||
-name|STREQ
-argument_list|(
-name|typename
-argument_list|,
-name|vtbl_ptr_name_old
-argument_list|)
-operator|)
 operator|)
 return|;
 block|}
@@ -880,6 +804,7 @@ modifier|*
 name|type
 parameter_list|)
 block|{
+comment|/* With older versions of g++, the vtbl field pointed to an array      of structures.  Nowadays it points directly to the structure. */
 if|if
 condition|(
 name|TYPE_CODE
@@ -941,6 +866,45 @@ name|type
 argument_list|)
 return|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|TYPE_CODE_STRUCT
+condition|)
+comment|/* if not using thunks */
+block|{
+return|return
+name|cp_is_vtbl_ptr_type
+argument_list|(
+name|type
+argument_list|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|TYPE_CODE
+argument_list|(
+name|type
+argument_list|)
+operator|==
+name|TYPE_CODE_PTR
+condition|)
+comment|/* if using thunks */
+block|{
+comment|/* The type name of the thunk pointer is NULL when using dwarf2. 	     We could test for a pointer to a function, but there is 	     no type info for the virtual table either, so it wont help.  */
+return|return
+name|cp_is_vtbl_ptr_type
+argument_list|(
+name|type
+argument_list|)
+return|;
 block|}
 block|}
 return|return
@@ -1110,7 +1074,7 @@ argument_list|(
 name|type
 argument_list|)
 operator|&&
-name|STREQN
+name|strncmp
 argument_list|(
 name|TYPE_FIELD_NAME
 argument_list|(
@@ -1123,6 +1087,8 @@ name|hpacc_vtbl_ptr_name
 argument_list|,
 literal|5
 argument_list|)
+operator|==
+literal|0
 operator|)
 operator|||
 operator|!
@@ -1137,10 +1103,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-specifier|extern
-name|int
-name|inspect_it
-decl_stmt|;
 if|if
 condition|(
 name|dont_print_statmem
@@ -1196,7 +1158,7 @@ argument_list|(
 name|type
 argument_list|)
 operator|&&
-name|STREQN
+name|strncmp
 argument_list|(
 name|TYPE_FIELD_NAME
 argument_list|(
@@ -1209,6 +1171,8 @@ name|hpacc_vtbl_ptr_name
 argument_list|,
 literal|5
 argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -1785,7 +1749,7 @@ argument_list|(
 name|type
 argument_list|)
 operator|&&
-name|STREQN
+name|strncmp
 argument_list|(
 name|TYPE_FIELD_NAME
 argument_list|(
@@ -1798,6 +1762,8 @@ name|hpacc_vtbl_ptr_name
 argument_list|,
 literal|5
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|struct
@@ -2288,8 +2254,6 @@ operator|+
 name|offset
 argument_list|,
 name|address
-operator|+
-name|offset
 argument_list|)
 expr_stmt|;
 name|skip
@@ -2377,8 +2341,6 @@ name|target_read_memory
 argument_list|(
 name|address
 operator|+
-name|offset
-operator|+
 name|boffset
 argument_list|,
 name|base_valaddr
@@ -2394,6 +2356,12 @@ condition|)
 name|skip
 operator|=
 literal|1
+expr_stmt|;
+name|address
+operator|=
+name|address
+operator|+
+name|boffset
 expr_stmt|;
 name|thisoffset
 operator|=
@@ -2496,6 +2464,8 @@ operator|+
 name|boffset
 argument_list|,
 name|address
+operator|+
+name|boffset
 argument_list|,
 name|stream
 argument_list|,
@@ -2797,7 +2767,6 @@ name|bits
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|unsigned
 name|int
 name|i
@@ -2919,11 +2888,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|prefix
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 name|name

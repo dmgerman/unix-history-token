@@ -181,7 +181,10 @@ name|TD_PARTIALREG
 block|,
 comment|/* Not entire register set was read or written.  */
 name|TD_NOXREGS
+block|,
 comment|/* X register set not available for given thread.  */
+name|TD_NOTALLOC
+comment|/* TLS memory not yet allocated.  */
 block|}
 name|td_err_e
 typedef|;
@@ -603,6 +606,38 @@ block|}
 name|td_notify_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Some people still have libc5 or old glibc with no uintptr_t.    They lose.  glibc 2.1.3 was released on 2000-02-25, and it has    uintptr_t, so it's reasonable to force these people to upgrade.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_UINTPTR_T
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|No uintptr_t available; your C library is too old.
+end_error
+
+begin_comment
+comment|/* Inhibit further compilation errors after this error.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uintptr_t
+value|void *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Structure used to report event.  */

@@ -252,11 +252,9 @@ name|int
 name|level
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
@@ -587,7 +585,7 @@ expr_stmt|;
 comment|/* Don't print out virtual function table.  */
 if|if
 condition|(
-name|STREQN
+name|strncmp
 argument_list|(
 name|TYPE_FIELD_NAME
 argument_list|(
@@ -600,6 +598,8 @@ literal|"_vptr"
 argument_list|,
 literal|5
 argument_list|)
+operator|==
+literal|0
 operator|&&
 name|is_cplus_marker
 argument_list|(
@@ -620,7 +620,7 @@ continue|continue;
 comment|/* Don't print the dummy field "class". */
 if|if
 condition|(
-name|STREQN
+name|strncmp
 argument_list|(
 name|TYPE_FIELD_NAME
 argument_list|(
@@ -633,6 +633,8 @@ literal|"class"
 argument_list|,
 literal|5
 argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 name|print_spaces_filtered
@@ -839,12 +841,14 @@ name|is_constructor
 operator|=
 name|name
 operator|&&
-name|STREQ
+name|strcmp
 argument_list|(
 name|method_name
 argument_list|,
 name|name
 argument_list|)
+operator|==
+literal|0
 expr_stmt|;
 for|for
 control|(

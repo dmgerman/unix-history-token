@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Read a symbol table in MIPS' format (Third-Eye).    Copyright 1986, 1987, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Contributed by Alessandro Forin (af@cs.cmu.edu) at CMU.  Major work    by Per Bothner, John Gilmore and Ian Lance Taylor at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Read a symbol table in MIPS' format (Third-Eye).    Copyright 1986, 1987, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1998, 1999, 2000, 2001, 2003, 2004    Free Software Foundation, Inc.    Contributed by Alessandro Forin (af@cs.cmu.edu) at CMU.  Major work    by Per Bothner, John Gilmore and Ian Lance Taylor at Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"symtab.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"symfile.h"
 end_include
 
 begin_include
@@ -373,7 +367,7 @@ name|objfile
 operator|->
 name|ei
 operator|.
-name|entry_file_lowpc
+name|deprecated_entry_file_lowpc
 operator|==
 name|INVALID_ENTRY_LOWPC
 condition|)
@@ -398,7 +392,7 @@ if|if
 condition|(
 name|m
 operator|&&
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|m
 operator|+
@@ -410,7 +404,7 @@ name|objfile
 operator|->
 name|ei
 operator|.
-name|entry_file_lowpc
+name|deprecated_entry_file_lowpc
 operator|=
 name|SYMBOL_VALUE_ADDRESS
 argument_list|(
@@ -421,7 +415,7 @@ name|objfile
 operator|->
 name|ei
 operator|.
-name|entry_file_highpc
+name|deprecated_entry_file_highpc
 operator|=
 name|SYMBOL_VALUE_ADDRESS
 argument_list|(
@@ -634,7 +628,6 @@ modifier|*
 name|sip
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|alphacoff_dynsecinfo
 modifier|*
@@ -651,7 +644,7 @@ name|sip
 expr_stmt|;
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|sectp
 operator|->
@@ -671,7 +664,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|sectp
 operator|->
@@ -691,7 +684,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|sectp
 operator|->
@@ -711,7 +704,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|STREQ
+name|DEPRECATED_STREQ
 argument_list|(
 name|sectp
 operator|->

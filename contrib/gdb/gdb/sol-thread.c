@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface for debugging Solaris threads for GDB, the GNU debugger.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface for debugging Solaris threads for GDB, the GNU debugger.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"gdb_stat.h"
 end_include
 
 begin_include
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"symfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_string.h"
 end_include
 
 begin_decl_stmt
@@ -359,7 +365,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Default definitions: These must be defined in tm.h     if they are to be shared with a process module such as procfs.  */
+comment|/* Default definitions: These must be defined in tm.h    if they are to be shared with a process module such as procfs.  */
 end_comment
 
 begin_define
@@ -1658,10 +1664,6 @@ begin_comment
 comment|/* Most target vector functions from here on actually just pass through to    procfs.c, as they don't need to do anything specific for threads.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2504,34 +2506,18 @@ literal|1
 condition|)
 block|{
 comment|/* Not writing all the regs */
-comment|/* save new register value */
 name|char
-modifier|*
 name|old_value
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|REGISTER_SIZE
-argument_list|)
-decl_stmt|;
-name|memcpy
-argument_list|(
-name|old_value
-argument_list|,
-operator|&
-name|registers
 index|[
-name|REGISTER_BYTE
+name|MAX_REGISTER_SIZE
+index|]
+decl_stmt|;
+comment|/* Save new register value.  */
+name|regcache_collect
 argument_list|(
 name|regno
-argument_list|)
-index|]
 argument_list|,
-name|REGISTER_SIZE
+name|old_value
 argument_list|)
 expr_stmt|;
 name|val
@@ -2587,21 +2573,12 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* restore new register value */
-name|memcpy
-argument_list|(
-operator|&
-name|registers
-index|[
-name|REGISTER_BYTE
+comment|/* Restore new register value.  */
+name|supply_register
 argument_list|(
 name|regno
-argument_list|)
-index|]
 argument_list|,
 name|old_value
-argument_list|,
-name|REGISTER_SIZE
 argument_list|)
 expr_stmt|;
 if|#
@@ -2843,6 +2820,138 @@ block|}
 end_function
 
 begin_comment
+comment|/* Perform partial transfers on OBJECT.  See target_read_partial    and target_write_partial for details of each variant.  One, and    only one, of readbuf or writebuf must be non-NULL.  */
+end_comment
+
+begin_function
+specifier|static
+name|LONGEST
+name|sol_thread_xfer_partial
+parameter_list|(
+name|struct
+name|target_ops
+modifier|*
+name|ops
+parameter_list|,
+name|enum
+name|target_object
+name|object
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|annex
+parameter_list|,
+name|void
+modifier|*
+name|readbuf
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|writebuf
+parameter_list|,
+name|ULONGEST
+name|offset
+parameter_list|,
+name|LONGEST
+name|len
+parameter_list|)
+block|{
+name|int
+name|retval
+decl_stmt|;
+name|struct
+name|cleanup
+modifier|*
+name|old_chain
+decl_stmt|;
+name|old_chain
+operator|=
+name|save_inferior_ptid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|is_thread
+argument_list|(
+name|inferior_ptid
+argument_list|)
+operator|||
+comment|/* A thread */
+operator|!
+name|target_thread_alive
+argument_list|(
+name|inferior_ptid
+argument_list|)
+condition|)
+comment|/* An lwp, but not alive */
+name|inferior_ptid
+operator|=
+name|procfs_first_available
+argument_list|()
+expr_stmt|;
+comment|/* Find any live lwp.  */
+comment|/* Note: don't need to call switch_to_thread; we're just reading memory.  */
+if|if
+condition|(
+name|target_has_execution
+condition|)
+name|retval
+operator|=
+name|procfs_ops
+operator|.
+name|to_xfer_partial
+argument_list|(
+name|ops
+argument_list|,
+name|object
+argument_list|,
+name|annex
+argument_list|,
+name|readbuf
+argument_list|,
+name|writebuf
+argument_list|,
+name|offset
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+else|else
+name|retval
+operator|=
+name|orig_core_ops
+operator|.
+name|to_xfer_partial
+argument_list|(
+name|ops
+argument_list|,
+name|object
+argument_list|,
+name|annex
+argument_list|,
+name|readbuf
+argument_list|,
+name|writebuf
+argument_list|,
+name|offset
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+name|do_cleanups
+argument_list|(
+name|old_chain
+argument_list|)
+expr_stmt|;
+return|return
+name|retval
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Print status information about what we're accessing.  */
 end_comment
 
@@ -3013,7 +3122,7 @@ comment|/* This routine is called whenever a new symbol table is read in, or whe
 end_comment
 
 begin_comment
-comment|/* This new_objfile event is now managed by a chained function pointer.   * It is the callee's responsability to call the next client on the chain.  */
+comment|/* This new_objfile event is now managed by a chained function pointer.  * It is the callee's responsability to call the next client on the chain.  */
 end_comment
 
 begin_comment
@@ -3204,7 +3313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*      LOCAL FUNCTION     sol_thread_alive     - test thread for "aliveness"     SYNOPSIS     static bool sol_thread_alive (ptid_t ptid);     DESCRIPTION     returns true if thread still active in inferior.   */
+comment|/*     LOCAL FUNCTION     sol_thread_alive     - test thread for "aliveness"     SYNOPSIS     static bool sol_thread_alive (ptid_t ptid);     DESCRIPTION     returns true if thread still active in inferior.   */
 end_comment
 
 begin_function
@@ -5036,7 +5145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Worker bee for info sol-thread command.  This is a callback function that    gets called once for each Solaris thread (ie. not kernel thread) in the     inferior.  Print anything interesting that we can think of.  */
+comment|/* Worker bee for info sol-thread command.  This is a callback function that    gets called once for each Solaris thread (ie. not kernel thread) in the    inferior.  Print anything interesting that we can think of.  */
 end_comment
 
 begin_function
@@ -5204,7 +5313,7 @@ name|printf_filtered
 argument_list|(
 literal|"   startfunc: %s\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|msym
 argument_list|)
@@ -5256,7 +5365,7 @@ name|printf_filtered
 argument_list|(
 literal|" - Sleep func: %s\n"
 argument_list|,
-name|SYMBOL_NAME
+name|DEPRECATED_SYMBOL_NAME
 argument_list|(
 name|msym
 argument_list|)
@@ -5472,12 +5581,6 @@ name|sol_thread_open
 expr_stmt|;
 name|sol_thread_ops
 operator|.
-name|to_close
-operator|=
-literal|0
-expr_stmt|;
-name|sol_thread_ops
-operator|.
 name|to_attach
 operator|=
 name|sol_thread_attach
@@ -5526,6 +5629,12 @@ name|sol_thread_xfer_memory
 expr_stmt|;
 name|sol_thread_ops
 operator|.
+name|to_xfer_partial
+operator|=
+name|sol_thread_xfer_partial
+expr_stmt|;
+name|sol_thread_ops
+operator|.
 name|to_files_info
 operator|=
 name|sol_thread_files_info
@@ -5568,6 +5677,12 @@ name|terminal_ours
 expr_stmt|;
 name|sol_thread_ops
 operator|.
+name|to_terminal_save_ours
+operator|=
+name|terminal_save_ours
+expr_stmt|;
+name|sol_thread_ops
+operator|.
 name|to_terminal_info
 operator|=
 name|child_terminal_info
@@ -5577,18 +5692,6 @@ operator|.
 name|to_kill
 operator|=
 name|sol_thread_kill_inferior
-expr_stmt|;
-name|sol_thread_ops
-operator|.
-name|to_load
-operator|=
-literal|0
-expr_stmt|;
-name|sol_thread_ops
-operator|.
-name|to_lookup_symbol
-operator|=
-literal|0
 expr_stmt|;
 name|sol_thread_ops
 operator|.
@@ -5682,18 +5785,6 @@ name|tc_none
 expr_stmt|;
 name|sol_thread_ops
 operator|.
-name|to_sections
-operator|=
-literal|0
-expr_stmt|;
-name|sol_thread_ops
-operator|.
-name|to_sections_end
-operator|=
-literal|0
-expr_stmt|;
-name|sol_thread_ops
-operator|.
 name|to_find_memory_regions
 operator|=
 name|sol_find_memory_regions
@@ -5763,21 +5854,23 @@ name|to_detach
 operator|=
 name|sol_core_detach
 expr_stmt|;
-comment|/* sol_core_ops.to_resume  = 0; */
-comment|/* sol_core_ops.to_wait  = 0;  */
 name|sol_core_ops
 operator|.
 name|to_fetch_registers
 operator|=
 name|sol_thread_fetch_registers
 expr_stmt|;
-comment|/* sol_core_ops.to_store_registers  = 0; */
-comment|/* sol_core_ops.to_prepare_to_store  = 0; */
 name|sol_core_ops
 operator|.
 name|to_xfer_memory
 operator|=
 name|sol_thread_xfer_memory
+expr_stmt|;
+name|sol_core_ops
+operator|.
+name|to_xfer_partial
+operator|=
+name|sol_thread_xfer_partial
 expr_stmt|;
 name|sol_core_ops
 operator|.
@@ -5797,14 +5890,6 @@ name|to_remove_breakpoint
 operator|=
 name|ignore
 expr_stmt|;
-comment|/* sol_core_ops.to_terminal_init  = 0; */
-comment|/* sol_core_ops.to_terminal_inferior  = 0; */
-comment|/* sol_core_ops.to_terminal_ours_for_output  = 0; */
-comment|/* sol_core_ops.to_terminal_ours  = 0; */
-comment|/* sol_core_ops.to_terminal_info  = 0; */
-comment|/* sol_core_ops.to_kill  = 0; */
-comment|/* sol_core_ops.to_load  = 0; */
-comment|/* sol_core_ops.to_lookup_symbol  = 0; */
 name|sol_core_ops
 operator|.
 name|to_create_inferior
@@ -5816,12 +5901,6 @@ operator|.
 name|to_stratum
 operator|=
 name|core_stratum
-expr_stmt|;
-name|sol_core_ops
-operator|.
-name|to_has_all_memory
-operator|=
-literal|0
 expr_stmt|;
 name|sol_core_ops
 operator|.
@@ -5843,12 +5922,6 @@ literal|1
 expr_stmt|;
 name|sol_core_ops
 operator|.
-name|to_has_execution
-operator|=
-literal|0
-expr_stmt|;
-name|sol_core_ops
-operator|.
 name|to_has_thread_control
 operator|=
 name|tc_none
@@ -5867,18 +5940,6 @@ name|solaris_pid_to_str
 expr_stmt|;
 comment|/* On Solaris/x86, when debugging a threaded core file from process<n>,      the following causes "info threads" to produce "procfs: couldn't find pid<n> in procinfo list" where<n> is the pid of the process that produced      the core file.  Disable it for now. */
 comment|/* sol_core_ops.to_find_new_threads = sol_find_new_threads; */
-name|sol_core_ops
-operator|.
-name|to_sections
-operator|=
-literal|0
-expr_stmt|;
-name|sol_core_ops
-operator|.
-name|to_sections_end
-operator|=
-literal|0
-expr_stmt|;
 name|sol_core_ops
 operator|.
 name|to_magic

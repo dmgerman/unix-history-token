@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MI Console code.    Copyright 2000, 2001 Free Software Foundation, Inc.    Contributed by Cygnus Solutions (a Red Hat company).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* MI Console code.     Copyright 2000, 2001, 2002 Free Software Foundation, Inc.     Contributed by Cygnus Solutions (a Red Hat company).     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -20,26 +20,6 @@ include|#
 directive|include
 file|"gdb_string.h"
 end_include
-
-begin_comment
-comment|/* Convenience macro for allocting typesafe memory. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|XMALLOC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|XMALLOC
-parameter_list|(
-name|TYPE
-parameter_list|)
-value|(TYPE*) xmalloc (sizeof (TYPE))
-end_define
 
 begin_comment
 comment|/* MI-console: send output to std-out but correcty encapsulated */
@@ -89,6 +69,9 @@ name|char
 modifier|*
 name|prefix
 decl_stmt|;
+name|char
+name|quote
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -114,6 +97,9 @@ specifier|const
 name|char
 modifier|*
 name|prefix
+parameter_list|,
+name|char
+name|quote
 parameter_list|)
 block|{
 name|struct
@@ -160,6 +146,12 @@ operator|->
 name|prefix
 operator|=
 name|prefix
+expr_stmt|;
+name|mi_console
+operator|->
+name|quote
+operator|=
+name|quote
 expr_stmt|;
 name|set_ui_file_fputs
 argument_list|(
@@ -376,6 +368,13 @@ operator|->
 name|raw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mi_console
+operator|->
+name|quote
+condition|)
+block|{
 name|fputs_unfiltered
 argument_list|(
 literal|"\""
@@ -391,7 +390,9 @@ name|buf
 argument_list|,
 name|length_buf
 argument_list|,
-literal|'"'
+name|mi_console
+operator|->
+name|quote
 argument_list|,
 name|mi_console
 operator|->
@@ -407,6 +408,32 @@ operator|->
 name|raw
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fputstrn_unfiltered
+argument_list|(
+name|buf
+argument_list|,
+name|length_buf
+argument_list|,
+literal|0
+argument_list|,
+name|mi_console
+operator|->
+name|raw
+argument_list|)
+expr_stmt|;
+name|fputs_unfiltered
+argument_list|(
+literal|"\n"
+argument_list|,
+name|mi_console
+operator|->
+name|raw
+argument_list|)
+expr_stmt|;
+block|}
 name|gdb_flush
 argument_list|(
 name|mi_console

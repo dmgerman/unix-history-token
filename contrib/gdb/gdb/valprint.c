@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print values for GDB, the GNU debugger.    Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Print values for GDB, the GNU debugger.     Copyright 1986, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995,    1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation,    Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"target.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"obstack.h"
 end_include
 
 begin_include
@@ -115,25 +109,6 @@ parameter_list|,
 name|int
 modifier|*
 name|errnoptr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|print_hex_chars
-parameter_list|(
-name|struct
-name|ui_file
-modifier|*
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -675,25 +650,6 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|PRINT_TYPELESS_INTEGER
-name|PRINT_TYPELESS_INTEGER
-argument_list|(
-name|stream
-argument_list|,
-name|type
-argument_list|,
-name|unpack_long
-argument_list|(
-name|type
-argument_list|,
-name|valaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|print_longest
 argument_list|(
 name|stream
@@ -717,8 +673,6 @@ name|valaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -1200,6 +1154,10 @@ argument_list|)
 else|:
 literal|"%lld"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|val_long
 argument_list|)
 expr_stmt|;
@@ -1213,6 +1171,10 @@ name|stream
 argument_list|,
 literal|"%llu"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|val_long
 argument_list|)
 expr_stmt|;
@@ -1233,6 +1195,11 @@ argument_list|)
 else|:
 literal|"%llx"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|val_long
 argument_list|)
 expr_stmt|;
@@ -1253,6 +1220,11 @@ argument_list|)
 else|:
 literal|"%llo"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|val_long
 argument_list|)
 expr_stmt|;
@@ -1526,74 +1498,6 @@ comment|/* CC_HAS_LONG_LONG || PRINTF_HAS_LONG_LONG */
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void strcat_longest (int format, int use_local, LONGEST val_long, char *buf, 		int buflen) {
-comment|/* FIXME: Use buflen to avoid buffer overflow.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CC_HAS_LONG_LONG
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PRINTF_HAS_LONG_LONG
-argument_list|)
-end_if
-
-begin_endif
-unit|long vtop, vbot;    vtop = val_long>> (sizeof (long) * HOST_CHAR_BIT);   vbot = (long) val_long;    if ((format == 'd'&& (val_long< INT_MIN || val_long> INT_MAX))       || ((format == 'u' || format == 'x')&& (unsigned long long) val_long> UINT_MAX))     {       sprintf (buf, "0x%lx%08lx", vtop, vbot);       return;     }
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PRINTF_HAS_LONG_LONG
-end_ifdef
-
-begin_else
-unit|switch (format)     {     case 'd':       sprintf (buf, 	       (use_local ? local_decimal_format_custom ("ll") : "%lld"), 	       val_long);       break;     case 'u':       sprintf (buf, "%llu", val_long);       break;     case 'x':       sprintf (buf, 	       (use_local ? local_hex_format_custom ("ll") : "%llx"),  	       val_long);       break;     case 'o':       sprintf (buf, 	       (use_local ? local_octal_format_custom ("ll") : "%llo"), 	       val_long);       break;     case 'b':       sprintf (buf, local_hex_format_custom ("02ll"), val_long);       break;     case 'h':       sprintf (buf, local_hex_format_custom ("04ll"), val_long);       break;     case 'w':       sprintf (buf, local_hex_format_custom ("08ll"), val_long);       break;     case 'g':       sprintf (buf, local_hex_format_custom ("016ll"), val_long);       break;     default:       internal_error (__FILE__, __LINE__, "failed internal consistency check");     }
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !PRINTF_HAS_LONG_LONG */
-end_comment
-
-begin_comment
-comment|/* In the following it is important to coerce (val_long) to a long. It does      nothing if !LONG_LONG, but it will chop off the top half (which we know      we can ignore) if the host supports long longs.  */
-end_comment
-
-begin_endif
-unit|switch (format)     {     case 'd':       sprintf (buf, (use_local ? local_decimal_format_custom ("l") : "%ld"), 	       ((long) val_long));       break;     case 'u':       sprintf (buf, "%lu", ((unsigned long) val_long));       break;     case 'x':       sprintf (buf, (use_local ? local_hex_format_custom ("l") : "%lx"), 	       ((long) val_long));       break;     case 'o':       sprintf (buf, (use_local ? local_octal_format_custom ("l") : "%lo"), 	       ((long) val_long));       break;     case 'b':       sprintf (buf, local_hex_format_custom ("02l"), 	       ((long) val_long));       break;     case 'h':       sprintf (buf, local_hex_format_custom ("04l"), 	       ((long) val_long));       break;     case 'w':       sprintf (buf, local_hex_format_custom ("08l"), 	       ((long) val_long));       break;     case 'g':       sprintf (buf, local_hex_format_custom ("016l"), 	       ((long) val_long));       break;     default:       internal_error (__FILE__, __LINE__, "failed internal consistency check");     }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !PRINTF_HAS_LONG_LONG */
-end_comment
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* This used to be a macro, but I don't think it is called often enough    to merit such treatment.  */
 end_comment
@@ -1754,32 +1658,32 @@ argument_list|,
 literal|"nan("
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_hex_format_prefix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|floatformat_mantissa
 argument_list|(
 name|fmt
 argument_list|,
 name|valaddr
 argument_list|)
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_hex_format_suffix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 name|fprintf_filtered
@@ -1938,12 +1842,12 @@ init|=
 literal|0x080
 decl_stmt|;
 comment|/* FIXME: We should be not printing leading zeroes in most cases.  */
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_binary_format_prefix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 if|if
@@ -2098,12 +2002,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_binary_format_suffix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 block|}
@@ -2210,12 +2114,12 @@ name|carry
 operator|=
 literal|0
 expr_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_octal_format_prefix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 if|if
@@ -2729,12 +2633,12 @@ name|BITS_IN_OCTAL
 expr_stmt|;
 block|}
 block|}
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_octal_format_suffix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 block|}
@@ -2888,12 +2792,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_decimal_format_prefix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 comment|/* Ok, we have an unknown number of bytes of data to be printed in    * decimal.    *    * Given a hex number (in nibbles) as XYZ, we start by taking X and    * decemalizing it as "x1 x2" in two decimal nibbles.  Then we multiply    * the nibbles by 16, add Y and re-decimalize.  Repeat with Z.    *    * The trick is that "digits" holds a base-10 number, but sometimes    * the individual digits are> 10.     *    * Outer loop is per nibble (hex digit) of input, from MSD end to    * LSD end.    */
@@ -3100,12 +3004,12 @@ argument_list|(
 name|digits
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_decimal_format_suffix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 block|}
@@ -3116,7 +3020,6 @@ comment|/* VALADDR points to an integer of LEN bytes.  Print it in hex on stream
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|print_hex_chars
 parameter_list|(
@@ -3140,12 +3043,12 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* FIXME: We should be not printing leading zeroes in most cases.  */
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_hex_format_prefix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
 if|if
@@ -3215,14 +3118,143 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|fprintf_filtered
+name|fputs_filtered
 argument_list|(
-name|stream
-argument_list|,
 name|local_hex_format_suffix
 argument_list|()
+argument_list|,
+name|stream
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* VALADDR points to a char integer of LEN bytes.  Print it out in appropriate language form on stream.      Omit any leading zero chars.  */
+end_comment
+
+begin_function
+name|void
+name|print_char_chars
+parameter_list|(
+name|struct
+name|ui_file
+modifier|*
+name|stream
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|valaddr
+parameter_list|,
+name|unsigned
+name|len
+parameter_list|)
+block|{
+name|unsigned
+name|char
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|TARGET_BYTE_ORDER
+operator|==
+name|BFD_ENDIAN_BIG
+condition|)
+block|{
+name|p
+operator|=
+name|valaddr
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|<
+name|valaddr
+operator|+
+name|len
+operator|-
+literal|1
+operator|&&
+operator|*
+name|p
+operator|==
+literal|0
+condition|)
+operator|++
+name|p
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|<
+name|valaddr
+operator|+
+name|len
+condition|)
+block|{
+name|LA_EMIT_CHAR
+argument_list|(
+operator|*
+name|p
+argument_list|,
+name|stream
+argument_list|,
+literal|'\''
+argument_list|)
+expr_stmt|;
+operator|++
+name|p
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|p
+operator|=
+name|valaddr
+operator|+
+name|len
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|>
+name|valaddr
+operator|&&
+operator|*
+name|p
+operator|==
+literal|0
+condition|)
+operator|--
+name|p
+expr_stmt|;
+while|while
+condition|(
+name|p
+operator|>=
+name|valaddr
+condition|)
+block|{
+name|LA_EMIT_CHAR
+argument_list|(
+operator|*
+name|p
+argument_list|,
+name|stream
+argument_list|,
+literal|'\''
+argument_list|)
+expr_stmt|;
+operator|--
+name|p
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -4341,10 +4373,6 @@ begin_comment
 comment|/* Validate an input or output radix setting, and make sure the user    knows what they really did here.  Radix setting is confusing, e.g.    setting the input radix to "10" never changes it!  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -4367,22 +4395,11 @@ name|set_input_radix_1
 argument_list|(
 name|from_tty
 argument_list|,
-operator|*
-operator|(
-name|unsigned
-operator|*
-operator|)
-name|c
-operator|->
-name|var
+name|input_radix
 argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -4404,6 +4421,7 @@ operator|<
 literal|2
 condition|)
 block|{
+comment|/* FIXME: cagney/2002-03-17: This needs to revert the bad radix          value.  */
 name|error
 argument_list|(
 literal|"Nonsense input radix ``decimal %u''; input radix unchanged."
@@ -4436,10 +4454,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -4462,14 +4476,7 @@ name|set_output_radix_1
 argument_list|(
 name|from_tty
 argument_list|,
-operator|*
-operator|(
-name|unsigned
-operator|*
-operator|)
-name|c
-operator|->
-name|var
+name|output_radix
 argument_list|)
 expr_stmt|;
 block|}
@@ -4521,6 +4528,7 @@ expr_stmt|;
 comment|/* octal */
 break|break;
 default|default:
+comment|/* FIXME: cagney/2002-03-17: This needs to revert the bad radix          value.  */
 name|error
 argument_list|(
 literal|"Unsupported output radix ``decimal %u''; output radix unchanged."
@@ -4626,10 +4634,6 @@ begin_comment
 comment|/* Show both the input and output radices. */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -4699,10 +4703,6 @@ end_function
 begin_escape
 end_escape
 
-begin_comment
-comment|/*ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -4735,10 +4735,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*ARGSUSED */
-end_comment
 
 begin_function
 specifier|static

@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"nm-lynx.h"
+file|"config/nm-lynx.h"
 end_include
 
 begin_endif

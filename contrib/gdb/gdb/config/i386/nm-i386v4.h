@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"nm-sysv4.h"
+file|"config/nm-sysv4.h"
 end_include
 
 begin_comment
