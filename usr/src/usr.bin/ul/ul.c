@@ -3,6 +3,16 @@ begin_comment
 comment|/*	@(#)vcrt.c	3.13	*/
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)ul.c	4.3	(Berkeley)	%G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -2021,6 +2031,22 @@ condition|(
 operator|!
 name|iflag
 condition|)
+block|{
+if|if
+condition|(
+name|curmode
+operator|!=
+name|NORMAL
+operator|&&
+name|newmode
+operator|!=
+name|NORMAL
+condition|)
+name|setmode
+argument_list|(
+name|NORMAL
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|newmode
@@ -2116,6 +2142,7 @@ name|ENTER_STANDOUT
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|curmode
 operator|=
