@@ -64,6 +64,17 @@ value|((((s[0] - '@')& 0x1f)<< 2)		\ 	 | (((s[1] - '@')& 0x18)>> 3)		\ 	 | (((s[
 end_define
 
 begin_function_decl
+name|char
+modifier|*
+name|pnp_eisaformat
+parameter_list|(
+name|u_int32_t
+name|id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pnp_parse_resources
 parameter_list|(
