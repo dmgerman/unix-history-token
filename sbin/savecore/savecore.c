@@ -3221,15 +3221,11 @@ expr_stmt|;
 block|}
 name|kernelsize
 operator|=
-operator|(
 name|st
 operator|.
 name|st_blocks
 operator|*
 name|S_BLKSIZE
-operator|)
-operator|/
-literal|1024
 expr_stmt|;
 if|if
 condition|(
