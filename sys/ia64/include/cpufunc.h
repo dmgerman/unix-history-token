@@ -45,6 +45,13 @@ name|thread
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|IA64_FIXED_BREAK
+value|0x84B5D
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -60,8 +67,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("break 0x80100");
-comment|/* XXX use linux value */
+asm|__asm __volatile("break.m %0" :: "i"(IA64_FIXED_BREAK));
 block|}
 end_function
 
