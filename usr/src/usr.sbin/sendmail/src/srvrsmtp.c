@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.17 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.18 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.17 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.18 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1949,10 +1949,6 @@ name|SmtpPhase
 operator|=
 literal|"collect"
 expr_stmt|;
-name|HoldErrs
-operator|=
-name|TRUE
-expr_stmt|;
 name|collect
 argument_list|(
 name|TRUE
@@ -1961,6 +1957,19 @@ name|doublequeue
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Errors
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|abortmessage
+goto|;
+name|HoldErrs
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
 name|SmtpPhase
