@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookbib.c	4.7 (Berkeley) %G%"
+literal|"@(#)lookbib.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,10 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
 name|strcmp
 argument_list|(
 name|argv
