@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.8 (Berkeley) %G%"
+literal|"@(#)dir.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,7 +147,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|fsck_readdir
 parameter_list|()
@@ -155,7 +156,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|getdirblk
 parameter_list|()
@@ -188,7 +190,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -254,7 +257,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|inumber
 argument_list|,
@@ -288,7 +291,7 @@ operator|<
 name|MINDIRSIZE
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|inumber
 argument_list|,
@@ -429,7 +432,7 @@ operator|<
 literal|2
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|inumber
 argument_list|,
@@ -472,12 +475,14 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dp
 decl_stmt|;
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -559,7 +564,7 @@ name|fs_fsize
 expr_stmt|;
 if|if
 condition|(
-name|outrange
+name|chkrange
 argument_list|(
 name|idesc
 operator|->
@@ -634,7 +639,8 @@ operator|->
 name|id_dirp
 operator|=
 operator|(
-name|DIRECT
+expr|struct
+name|direct
 operator|*
 operator|)
 name|dbuf
@@ -724,7 +730,8 @@ comment|/*  * get next entry in a directory.  */
 end_comment
 
 begin_function
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|fsck_readdir
 parameter_list|(
@@ -738,7 +745,8 @@ name|idesc
 decl_stmt|;
 block|{
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dp
 decl_stmt|,
@@ -746,7 +754,8 @@ modifier|*
 name|ndp
 decl_stmt|;
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -802,7 +811,8 @@ block|{
 name|dp
 operator|=
 operator|(
-name|DIRECT
+expr|struct
+name|direct
 operator|*
 operator|)
 operator|(
@@ -910,7 +920,8 @@ return|;
 name|dp
 operator|=
 operator|(
-name|DIRECT
+expr|struct
+name|direct
 operator|*
 operator|)
 operator|(
@@ -961,7 +972,8 @@ return|;
 name|ndp
 operator|=
 operator|(
-name|DIRECT
+expr|struct
+name|direct
 operator|*
 operator|)
 operator|(
@@ -1076,7 +1088,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dp
 decl_stmt|;
@@ -1121,7 +1134,7 @@ name|dp
 operator|->
 name|d_ino
 operator|<
-name|imax
+name|maxino
 operator|&&
 name|dp
 operator|->
@@ -1240,11 +1253,11 @@ block|}
 end_block
 
 begin_macro
-name|direrr
+name|direrror
 argument_list|(
 argument|ino
 argument_list|,
-argument|s
+argument|errmesg
 argument_list|)
 end_macro
 
@@ -1257,14 +1270,15 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|s
+name|errmesg
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -1272,7 +1286,7 @@ name|pwarn
 argument_list|(
 literal|"%s "
 argument_list|,
-name|s
+name|errmesg
 argument_list|)
 expr_stmt|;
 name|pinode
@@ -1293,7 +1307,7 @@ name|ROOTINO
 operator|||
 name|ino
 operator|>
-name|imax
+name|maxino
 condition|)
 block|{
 name|pfatal
@@ -1323,10 +1337,15 @@ name|pfatal
 argument_list|(
 literal|"%s=%s\n"
 argument_list|,
-name|DIRCT
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
 condition|?
 literal|"DIR"
 else|:
@@ -1370,7 +1389,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -1435,10 +1455,15 @@ condition|?
 name|lfname
 else|:
 operator|(
-name|DIRCT
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
 condition|?
 literal|"DIR"
 else|:
@@ -1541,7 +1566,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dirp
 init|=
@@ -1549,7 +1575,8 @@ name|idesc
 operator|->
 name|id_dirp
 decl_stmt|;
-name|DIRECT
+name|struct
+name|direct
 name|newent
 decl_stmt|;
 name|int
@@ -1679,6 +1706,9 @@ name|dirp
 operator|->
 name|d_name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dirp
 operator|->
 name|d_namlen
@@ -1714,7 +1744,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dirp
 init|=
@@ -1734,6 +1765,9 @@ name|idesc
 operator|->
 name|id_name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dirp
 operator|->
 name|d_namlen
@@ -1754,7 +1788,6 @@ name|idesc
 operator|->
 name|id_parent
 expr_stmt|;
-empty_stmt|;
 return|return
 operator|(
 name|ALTERED
@@ -1770,7 +1803,7 @@ name|linkup
 argument_list|(
 argument|orphan
 argument_list|,
-argument|pdir
+argument|parentdir
 argument_list|)
 end_macro
 
@@ -1782,14 +1815,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ino_t
-name|pdir
+name|parentdir
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -1841,10 +1875,15 @@ argument_list|)
 expr_stmt|;
 name|lostdir
 operator|=
-name|DIRCT
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
 expr_stmt|;
 name|pwarn
 argument_list|(
@@ -2001,6 +2040,9 @@ name|allocdir
 argument_list|(
 name|ROOTINO
 argument_list|,
+operator|(
+name|ino_t
+operator|)
 literal|0
 argument_list|,
 name|lfmode
@@ -2096,11 +2138,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|DIRCT
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|!=
+name|IFDIR
 condition|)
 block|{
 name|pfatal
@@ -2135,6 +2181,9 @@ name|allocdir
 argument_list|(
 name|ROOTINO
 argument_list|,
+operator|(
+name|ino_t
+operator|)
 literal|0
 argument_list|,
 name|lfmode
@@ -2467,7 +2516,7 @@ name|printf
 argument_list|(
 literal|"PARENT WAS I=%u\n"
 argument_list|,
-name|pdir
+name|parentdir
 argument_list|)
 expr_stmt|;
 if|if
@@ -2522,7 +2571,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -2538,7 +2588,7 @@ name|ROOTINO
 operator|||
 name|parent
 operator|>=
-name|imax
+name|maxino
 operator|||
 name|ino
 operator|<
@@ -2546,7 +2596,7 @@ name|ROOTINO
 operator|||
 name|ino
 operator|>=
-name|imax
+name|maxino
 condition|)
 return|return
 operator|(
@@ -2555,6 +2605,10 @@ operator|)
 return|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|idesc
 argument_list|,
@@ -2696,7 +2750,8 @@ argument_list|(
 name|dp
 argument_list|)
 specifier|register
-name|DINODE
+expr|struct
+name|dinode
 operator|*
 name|dp
 expr_stmt|;
@@ -2710,7 +2765,8 @@ decl_stmt|,
 name|newblk
 decl_stmt|;
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -3144,12 +3200,14 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -3429,7 +3487,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -3514,7 +3573,7 @@ for|for
 control|(
 name|in
 operator|=
-name|imax
+name|maxino
 init|;
 name|in
 operator|>
@@ -3585,7 +3644,8 @@ comment|/*  * Get a directory block.  * Insure that it is held until another is 
 end_comment
 
 begin_function
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|getdirblk
 parameter_list|(
@@ -3601,7 +3661,8 @@ name|size
 decl_stmt|;
 block|{
 specifier|static
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|pbp
 init|=

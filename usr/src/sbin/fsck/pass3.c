@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass3.c	5.4 (Berkeley) %G%"
+literal|"@(#)pass3.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,8 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -179,7 +180,7 @@ name|ROOTINO
 operator|||
 name|orphan
 operator|>
-name|imax
+name|maxino
 condition|)
 break|break;
 name|dp

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass4.c	5.5 (Berkeley) %G%"
+literal|"@(#)pass4.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,6 +209,10 @@ name|next
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|zlnp
 argument_list|)
 expr_stmt|;
@@ -335,7 +339,7 @@ control|)
 block|{
 if|if
 condition|(
-name|outrange
+name|chkrange
 argument_list|(
 name|blkno
 argument_list|,
@@ -351,7 +355,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|getbmap
+name|testbmap
 argument_list|(
 name|blkno
 argument_list|)
@@ -401,6 +405,10 @@ name|next
 expr_stmt|;
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|dlp
 argument_list|)
 expr_stmt|;

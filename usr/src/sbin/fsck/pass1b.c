@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1b.c	5.4 (Berkeley) %G%"
+literal|"@(#)pass1b.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,8 @@ decl_stmt|,
 name|i
 decl_stmt|;
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -209,14 +210,9 @@ operator|&
 name|STOP
 operator|)
 condition|)
-goto|goto
-name|out1b
-goto|;
+return|return;
 block|}
 block|}
-name|out1b
-label|:
-empty_stmt|;
 block|}
 end_block
 
@@ -276,7 +272,7 @@ control|)
 block|{
 if|if
 condition|(
-name|outrange
+name|chkrange
 argument_list|(
 name|blkno
 argument_list|,
@@ -311,7 +307,7 @@ operator|==
 name|blkno
 condition|)
 block|{
-name|blkerr
+name|blkerror
 argument_list|(
 name|idesc
 operator|->

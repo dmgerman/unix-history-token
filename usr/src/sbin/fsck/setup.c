@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.23 (Berkeley) %G%"
+literal|"@(#)setup.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,7 +92,8 @@ file|"fsck.h"
 end_include
 
 begin_decl_stmt
-name|BUFAREA
+name|struct
+name|bufarea
 name|asblk
 decl_stmt|;
 end_decl_stmt
@@ -189,8 +190,6 @@ decl_stmt|;
 name|long
 name|cg
 decl_stmt|,
-name|ncg
-decl_stmt|,
 name|size
 decl_stmt|,
 name|asked
@@ -198,6 +197,9 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|j
+decl_stmt|;
+name|long
+name|bmapsize
 decl_stmt|;
 name|struct
 name|disklabel
@@ -270,10 +272,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|rawflg
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -283,13 +281,9 @@ name|st_mode
 operator|&
 name|S_IFMT
 operator|)
-operator|==
+operator|!=
 name|S_IFBLK
-condition|)
-empty_stmt|;
-elseif|else
-if|if
-condition|(
+operator|&&
 operator|(
 name|statb
 operator|.
@@ -297,16 +291,9 @@ name|st_mode
 operator|&
 name|S_IFMT
 operator|)
-operator|==
+operator|!=
 name|S_IFCHR
-condition|)
-name|rawflg
-operator|++
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
+operator|&&
 name|reply
 argument_list|(
 literal|"file is not a block or character device; OK"
@@ -319,7 +306,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|rootdev
@@ -334,9 +320,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|dfile
-operator|.
-name|rfdes
+name|fsreadfd
 operator|=
 name|open
 argument_list|(
@@ -385,9 +369,7 @@ condition|(
 name|nflag
 operator|||
 operator|(
-name|dfile
-operator|.
-name|wfdes
+name|fswritefd
 operator|=
 name|open
 argument_list|(
@@ -400,9 +382,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|dfile
-operator|.
-name|wfdes
+name|fswritefd
 operator|=
 operator|-
 literal|1
@@ -433,9 +413,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|dfile
-operator|.
-name|mod
+name|fsmodified
 operator|=
 literal|0
 expr_stmt|;
@@ -512,9 +490,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-name|dfile
-operator|.
-name|rfdes
+name|fsreadfd
 argument_list|)
 condition|)
 name|dev_bsize
@@ -553,9 +529,7 @@ name|calcsb
 argument_list|(
 name|dev
 argument_list|,
-name|dfile
-operator|.
-name|rfdes
+name|fsreadfd
 argument_list|,
 operator|&
 name|proto
@@ -665,13 +639,13 @@ name|bflag
 argument_list|)
 expr_stmt|;
 block|}
-name|fmax
+name|maxfsblock
 operator|=
 name|sblock
 operator|.
 name|fs_size
 expr_stmt|;
-name|imax
+name|maxino
 operator|=
 name|sblock
 operator|.
@@ -1249,6 +1223,9 @@ operator|)
 operator|&
 name|altsblock
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sblock
 operator|.
 name|fs_sbsize
@@ -1256,8 +1233,7 @@ argument_list|)
 expr_stmt|;
 name|flush
 argument_list|(
-operator|&
-name|dfile
+name|fswritefd
 argument_list|,
 operator|&
 name|asblk
@@ -1352,8 +1328,7 @@ if|if
 condition|(
 name|bread
 argument_list|(
-operator|&
-name|dfile
+name|fsreadfd
 argument_list|,
 operator|(
 name|char
@@ -1422,13 +1397,13 @@ comment|/* 	 * allocate and initialize the necessary maps 	 */
 end_comment
 
 begin_expr_stmt
-name|bmapsz
+name|bmapsize
 operator|=
 name|roundup
 argument_list|(
 name|howmany
 argument_list|(
-name|fmax
+name|maxfsblock
 argument_list|,
 name|NBBY
 argument_list|)
@@ -1449,7 +1424,7 @@ argument_list|(
 operator|(
 name|unsigned
 operator|)
-name|bmapsz
+name|bmapsize
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1471,7 +1446,7 @@ name|printf
 argument_list|(
 literal|"cannot alloc %d bytes for blockmap\n"
 argument_list|,
-name|bmapsz
+name|bmapsize
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1489,7 +1464,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|imax
+name|maxino
 operator|+
 literal|1
 argument_list|)
@@ -1514,7 +1489,7 @@ name|printf
 argument_list|(
 literal|"cannot alloc %d bytes for statemap\n"
 argument_list|,
-name|imax
+name|maxino
 operator|+
 literal|1
 argument_list|)
@@ -1538,7 +1513,7 @@ call|(
 name|unsigned
 call|)
 argument_list|(
-name|imax
+name|maxino
 operator|+
 literal|1
 argument_list|)
@@ -1564,7 +1539,7 @@ argument_list|(
 literal|"cannot alloc %d bytes for lncntp\n"
 argument_list|,
 operator|(
-name|imax
+name|maxino
 operator|+
 literal|1
 operator|)
@@ -1631,9 +1606,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|off_t
-name|sboff
-decl_stmt|;
 name|daddr_t
 name|super
 init|=
@@ -1649,8 +1621,7 @@ if|if
 condition|(
 name|bread
 argument_list|(
-operator|&
-name|dfile
+name|fsreadfd
 argument_list|,
 operator|(
 name|char
@@ -2409,6 +2380,10 @@ return|;
 block|}
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|fs
 argument_list|,
 sizeof|sizeof

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.18 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -168,14 +169,14 @@ end_block
 begin_macro
 name|reply
 argument_list|(
-argument|s
+argument|mesg
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|s
+name|mesg
 decl_stmt|;
 end_decl_stmt
 
@@ -193,7 +194,7 @@ init|=
 operator|(
 name|strcmp
 argument_list|(
-name|s
+name|mesg
 argument_list|,
 literal|"CONTINUE"
 argument_list|)
@@ -214,7 +215,7 @@ name|printf
 argument_list|(
 literal|"\n%s? "
 argument_list|,
-name|s
+name|mesg
 argument_list|)
 expr_stmt|;
 if|if
@@ -225,9 +226,7 @@ operator|&&
 operator|(
 name|nflag
 operator|||
-name|dfile
-operator|.
-name|wfdes
+name|fswritefd
 operator|<
 literal|0
 operator|)
@@ -347,11 +346,18 @@ name|loc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|maxlen
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
+name|long
 name|n
-expr_stmt|;
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -445,7 +451,8 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -462,6 +469,10 @@ name|bufp
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|sblock
 operator|.
 name|fs_bsize
@@ -538,14 +549,16 @@ block|{
 name|bp
 operator|=
 operator|(
-name|BUFAREA
+expr|struct
+name|bufarea
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|BUFAREA
+expr|struct
+name|bufarea
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -553,6 +566,10 @@ name|bufp
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|sblock
 operator|.
 name|fs_bsize
@@ -640,7 +657,8 @@ comment|/*  * Manage a cache of directory blocks.  */
 end_comment
 
 begin_function
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|getdatablk
 parameter_list|(
@@ -656,7 +674,8 @@ name|size
 decl_stmt|;
 block|{
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -819,7 +838,8 @@ block|}
 end_function
 
 begin_function
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|getblk
 parameter_list|(
@@ -830,7 +850,8 @@ parameter_list|,
 name|size
 parameter_list|)
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -841,20 +862,9 @@ name|long
 name|size
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|filecntl
-modifier|*
-name|fcp
-decl_stmt|;
 name|daddr_t
 name|dblk
 decl_stmt|;
-name|fcp
-operator|=
-operator|&
-name|dfile
-expr_stmt|;
 name|dblk
 operator|=
 name|fsbtodb
@@ -880,7 +890,7 @@ operator|)
 return|;
 name|flush
 argument_list|(
-name|fcp
+name|fswritefd
 argument_list|,
 name|bp
 argument_list|)
@@ -894,7 +904,7 @@ name|b_errs
 operator|=
 name|bread
 argument_list|(
-name|fcp
+name|fsreadfd
 argument_list|,
 name|bp
 operator|->
@@ -930,23 +940,22 @@ end_function
 begin_macro
 name|flush
 argument_list|(
-argument|fcp
+argument|fd
 argument_list|,
 argument|bp
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|filecntl
-modifier|*
-name|fcp
+name|int
+name|fd
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -1015,7 +1024,7 @@ literal|0
 expr_stmt|;
 name|bwrite
 argument_list|(
-name|fcp
+name|fd
 argument_list|,
 name|bp
 operator|->
@@ -1071,8 +1080,7 @@ control|)
 block|{
 name|bwrite
 argument_list|(
-operator|&
-name|dfile
+name|fswritefd
 argument_list|,
 operator|(
 name|char
@@ -1127,9 +1135,9 @@ block|}
 end_block
 
 begin_macro
-name|rwerr
+name|rwerror
 argument_list|(
-argument|s
+argument|mesg
 argument_list|,
 argument|blk
 argument_list|)
@@ -1138,7 +1146,7 @@ end_macro
 begin_decl_stmt
 name|char
 modifier|*
-name|s
+name|mesg
 decl_stmt|;
 end_decl_stmt
 
@@ -1165,7 +1173,7 @@ name|pfatal
 argument_list|(
 literal|"CANNOT %s: BLK %ld"
 argument_list|,
-name|s
+name|mesg
 argument_list|,
 name|blk
 argument_list|)
@@ -1195,7 +1203,8 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|,
@@ -1209,8 +1218,7 @@ literal|0
 decl_stmt|;
 name|flush
 argument_list|(
-operator|&
-name|dfile
+name|fswritefd
 argument_list|,
 operator|&
 name|sblk
@@ -1250,8 +1258,7 @@ argument_list|()
 expr_stmt|;
 name|flush
 argument_list|(
-operator|&
-name|dfile
+name|fswritefd
 argument_list|,
 operator|&
 name|sblk
@@ -1260,8 +1267,7 @@ expr_stmt|;
 block|}
 name|flush
 argument_list|(
-operator|&
-name|dfile
+name|fswritefd
 argument_list|,
 operator|&
 name|cgblk
@@ -1299,8 +1305,7 @@ operator|++
 expr_stmt|;
 name|flush
 argument_list|(
-operator|&
-name|dfile
+name|fswritefd
 argument_list|,
 name|bp
 argument_list|)
@@ -1373,9 +1378,7 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|dfile
-operator|.
-name|rfdes
+name|fsreadfd
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1383,32 +1386,30 @@ name|void
 operator|)
 name|close
 argument_list|(
-name|dfile
-operator|.
-name|wfdes
+name|fswritefd
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|bread
 argument_list|(
-name|fcp
+argument|fd
 argument_list|,
-name|buf
+argument|buf
 argument_list|,
-name|blk
+argument|blk
 argument_list|,
-name|size
+argument|size
 argument_list|)
-specifier|register
-expr|struct
-name|filecntl
-operator|*
-name|fcp
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|int
+name|fd
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1444,9 +1445,7 @@ if|if
 condition|(
 name|lseek
 argument_list|(
-name|fcp
-operator|->
-name|rfdes
+name|fd
 argument_list|,
 name|blk
 operator|*
@@ -1457,7 +1456,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|rwerr
+name|rwerror
 argument_list|(
 literal|"SEEK"
 argument_list|,
@@ -1469,9 +1468,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-name|fcp
-operator|->
-name|rfdes
+name|fd
 argument_list|,
 name|buf
 argument_list|,
@@ -1488,7 +1485,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|rwerr
+name|rwerror
 argument_list|(
 literal|"READ"
 argument_list|,
@@ -1499,9 +1496,7 @@ if|if
 condition|(
 name|lseek
 argument_list|(
-name|fcp
-operator|->
-name|rfdes
+name|fd
 argument_list|,
 name|blk
 operator|*
@@ -1512,7 +1507,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|rwerr
+name|rwerror
 argument_list|(
 literal|"SEEK"
 argument_list|,
@@ -1527,6 +1522,9 @@ name|bzero
 argument_list|(
 name|buf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -1562,12 +1560,13 @@ if|if
 condition|(
 name|read
 argument_list|(
-name|fcp
-operator|->
-name|rfdes
+name|fd
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|secsize
 argument_list|)
 operator|<
@@ -1576,9 +1575,7 @@ condition|)
 block|{
 name|lseek
 argument_list|(
-name|fcp
-operator|->
-name|rfdes
+name|fd
 argument_list|,
 name|blk
 operator|*
@@ -1652,24 +1649,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|bwrite
 argument_list|(
-name|fcp
+argument|fd
 argument_list|,
-name|buf
+argument|buf
 argument_list|,
-name|blk
+argument|blk
 argument_list|,
-name|size
+argument|size
 argument_list|)
-specifier|register
-expr|struct
-name|filecntl
-operator|*
-name|fcp
-expr_stmt|;
-end_expr_stmt
+end_macro
+
+begin_decl_stmt
+name|int
+name|fd
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1701,9 +1698,7 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|fcp
-operator|->
-name|wfdes
+name|fd
 operator|<
 literal|0
 condition|)
@@ -1712,9 +1707,7 @@ if|if
 condition|(
 name|lseek
 argument_list|(
-name|fcp
-operator|->
-name|wfdes
+name|fd
 argument_list|,
 name|blk
 operator|*
@@ -1725,7 +1718,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|rwerr
+name|rwerror
 argument_list|(
 literal|"SEEK"
 argument_list|,
@@ -1737,9 +1730,7 @@ if|if
 condition|(
 name|write
 argument_list|(
-name|fcp
-operator|->
-name|wfdes
+name|fd
 argument_list|,
 name|buf
 argument_list|,
@@ -1752,15 +1743,13 @@ operator|==
 name|size
 condition|)
 block|{
-name|fcp
-operator|->
-name|mod
+name|fsmodified
 operator|=
 literal|1
 expr_stmt|;
 return|return;
 block|}
-name|rwerr
+name|rwerror
 argument_list|(
 literal|"WRITE"
 argument_list|,
@@ -1771,9 +1760,7 @@ if|if
 condition|(
 name|lseek
 argument_list|(
-name|fcp
-operator|->
-name|wfdes
+name|fd
 argument_list|,
 name|blk
 operator|*
@@ -1784,7 +1771,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|rwerr
+name|rwerror
 argument_list|(
 literal|"SEEK"
 argument_list|,
@@ -1822,12 +1809,13 @@ if|if
 condition|(
 name|write
 argument_list|(
-name|fcp
-operator|->
-name|wfdes
+name|fd
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dev_bsize
 argument_list|)
 operator|<
@@ -1836,9 +1824,7 @@ condition|)
 block|{
 name|lseek
 argument_list|(
-name|fcp
-operator|->
-name|rfdes
+name|fd
 argument_list|,
 name|blk
 operator|*
@@ -1884,7 +1870,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|long
 name|frags
 decl_stmt|;
 end_decl_stmt
@@ -1924,7 +1910,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|fmax
+name|maxfsblock
 operator|-
 name|sblock
 operator|.
@@ -1957,7 +1943,7 @@ control|)
 block|{
 if|if
 condition|(
-name|getbmap
+name|testbmap
 argument_list|(
 name|i
 operator|+
@@ -1980,7 +1966,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|getbmap
+name|testbmap
 argument_list|(
 name|i
 operator|+
@@ -2066,7 +2052,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|frags
 decl_stmt|;
 end_decl_stmt
@@ -2175,6 +2161,10 @@ return|return;
 block|}
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|idesc
 argument_list|,
@@ -2527,7 +2517,7 @@ name|id_type
 operator|==
 name|DATA
 condition|)
-name|direrr
+name|direrror
 argument_list|(
 name|idesc
 operator|->
@@ -2674,7 +2664,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * An inconsistency occured which shouldn't during normal operations.  * Die if preening, otherwise just printf.  */
+comment|/*  * An unexpected inconsistency occured.  * Die if preening, otherwise just print message and continue.  */
 end_comment
 
 begin_comment
@@ -2759,7 +2749,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Pwarn is like printf when not preening,  * or a warning (preceded by filename) when preening.  */
+comment|/*  * Pwarn just prints a message when not preening,  * or a warning (preceded by filename) when preening.  */
 end_comment
 
 begin_comment

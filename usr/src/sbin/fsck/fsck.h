@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fsck.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fsck.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -35,17 +35,6 @@ end_define
 begin_comment
 comment|/* maximum space to allocate to buffers */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|SIG_TYP
-function_decl|)
-parameter_list|()
-function_decl|;
-end_typedef
 
 begin_ifndef
 ifndef|#
@@ -131,53 +120,6 @@ begin_comment
 comment|/* file is to be cleared */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|dinode
-name|DINODE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|direct
-name|DIRECT
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|ALLOC
-parameter_list|(
-name|dip
-parameter_list|)
-value|(((dip)->di_mode& IFMT) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIRCT
-parameter_list|(
-name|dip
-parameter_list|)
-value|(((dip)->di_mode& IFMT) == IFDIR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPECIAL
-parameter_list|(
-name|dip
-parameter_list|)
-define|\
-value|(((dip)->di_mode& IFMT) == IFBLK || ((dip)->di_mode& IFMT) == IFCHR)
-end_define
-
 begin_comment
 comment|/*  * buffer cache structure.  */
 end_comment
@@ -257,14 +199,6 @@ name|B_INUSE
 value|1
 end_define
 
-begin_typedef
-typedef|typedef
-name|struct
-name|bufarea
-name|BUFAREA
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -277,7 +211,8 @@ comment|/* minimum number of buffers required */
 end_comment
 
 begin_decl_stmt
-name|BUFAREA
+name|struct
+name|bufarea
 name|bufhead
 decl_stmt|;
 end_decl_stmt
@@ -287,7 +222,8 @@ comment|/* head of list of other blks in filesys */
 end_comment
 
 begin_decl_stmt
-name|BUFAREA
+name|struct
+name|bufarea
 name|sblk
 decl_stmt|;
 end_decl_stmt
@@ -297,7 +233,8 @@ comment|/* file system superblock */
 end_comment
 
 begin_decl_stmt
-name|BUFAREA
+name|struct
+name|bufarea
 name|cgblk
 decl_stmt|;
 end_decl_stmt
@@ -307,7 +244,8 @@ comment|/* cylinder group blocks */
 end_comment
 
 begin_function_decl
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|getdatablk
 parameter_list|()
@@ -319,9 +257,9 @@ define|#
 directive|define
 name|dirty
 parameter_list|(
-name|x
+name|bp
 parameter_list|)
-value|(x)->b_dirty = 1
+value|(bp)->b_dirty = 1
 end_define
 
 begin_define
@@ -329,10 +267,10 @@ define|#
 directive|define
 name|initbarea
 parameter_list|(
-name|x
+name|bp
 parameter_list|)
 define|\
-value|(x)->b_dirty = 0; \ 	(x)->b_bno = (daddr_t)-1; \ 	(x)->b_flags = 0;
+value|(bp)->b_dirty = 0; \ 	(bp)->b_bno = (daddr_t)-1; \ 	(bp)->b_flags = 0;
 end_define
 
 begin_define
@@ -364,28 +302,6 @@ directive|define
 name|cgrp
 value|(*cgblk.b_un.b_cg)
 end_define
-
-begin_struct
-struct|struct
-name|filecntl
-block|{
-name|int
-name|rfdes
-decl_stmt|;
-name|int
-name|wfdes
-decl_stmt|;
-name|int
-name|mod
-decl_stmt|;
-block|}
-name|dfile
-struct|;
-end_struct
-
-begin_comment
-comment|/* file descriptors for filesys */
-end_comment
 
 begin_enum
 enum|enum
@@ -445,7 +361,8 @@ name|int
 name|id_entryno
 decl_stmt|;
 comment|/* for DATA nodes, current entry number */
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|id_dirp
 decl_stmt|;
@@ -559,16 +476,14 @@ end_comment
 
 begin_decl_stmt
 name|char
-name|rawflg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 modifier|*
 name|devname
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* name of device being checked */
+end_comment
 
 begin_decl_stmt
 name|long
@@ -671,6 +586,46 @@ comment|/* superblock has been read */
 end_comment
 
 begin_decl_stmt
+name|int
+name|fsmodified
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => write done to file system */
+end_comment
+
+begin_decl_stmt
+name|int
+name|fsreadfd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file descriptor for reading file system */
+end_comment
+
+begin_decl_stmt
+name|int
+name|fswritefd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file descriptor for writing file system */
+end_comment
+
+begin_decl_stmt
+name|daddr_t
+name|maxfsblock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of blocks in the file system */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|blockmap
@@ -679,6 +634,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* ptr to primary blk allocation map */
+end_comment
+
+begin_decl_stmt
+name|ino_t
+name|maxino
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of inodes in file system */
+end_comment
+
+begin_decl_stmt
+name|ino_t
+name|lastino
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last inode in use */
 end_comment
 
 begin_decl_stmt
@@ -724,7 +699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pointer to pathname position */
+comment|/* ptr to current position in pathname */
 end_comment
 
 begin_decl_stmt
@@ -734,34 +709,8 @@ name|endpathname
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|daddr_t
-name|fmax
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* number of blocks in the volume */
-end_comment
-
-begin_decl_stmt
-name|ino_t
-name|imax
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of inodes */
-end_comment
-
-begin_decl_stmt
-name|ino_t
-name|lastino
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hiwater mark of inodes */
+comment|/* ptr to current end of pathname */
 end_comment
 
 begin_decl_stmt
@@ -796,33 +745,13 @@ comment|/* lost& found directory creation mode */
 end_comment
 
 begin_decl_stmt
-name|off_t
-name|maxblk
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* largest logical blk in file */
-end_comment
-
-begin_decl_stmt
-name|off_t
-name|bmapsz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* num chars in blockmap */
-end_comment
-
-begin_decl_stmt
 name|daddr_t
 name|n_blks
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of blocks used */
+comment|/* number of blocks in use */
 end_comment
 
 begin_decl_stmt
@@ -832,17 +761,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of files seen */
+comment|/* number of files in use */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|zapino
+name|clearinode
 parameter_list|(
-name|x
+name|dp
 parameter_list|)
-value|(*(x) = zino)
+value|(*(dp) = zino)
 end_define
 
 begin_decl_stmt
@@ -857,19 +786,19 @@ define|#
 directive|define
 name|setbmap
 parameter_list|(
-name|x
+name|blkno
 parameter_list|)
-value|setbit(blockmap, x)
+value|setbit(blockmap, blkno)
 end_define
 
 begin_define
 define|#
 directive|define
-name|getbmap
+name|testbmap
 parameter_list|(
-name|x
+name|blkno
 parameter_list|)
-value|isset(blockmap, x)
+value|isset(blockmap, blkno)
 end_define
 
 begin_define
@@ -877,44 +806,44 @@ define|#
 directive|define
 name|clrbmap
 parameter_list|(
-name|x
+name|blkno
 parameter_list|)
-value|clrbit(blockmap, x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FOUND
-value|020
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALTERED
-value|010
-end_define
-
-begin_define
-define|#
-directive|define
-name|KEEPON
-value|04
-end_define
-
-begin_define
-define|#
-directive|define
-name|SKIP
-value|02
+value|clrbit(blockmap, blkno)
 end_define
 
 begin_define
 define|#
 directive|define
 name|STOP
-value|01
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SKIP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEEPON
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTERED
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOUND
+value|0x10
 end_define
 
 begin_function_decl
@@ -925,7 +854,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|ginode
 parameter_list|()
@@ -933,9 +863,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|getblk
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ino_t
+name|allocino
 parameter_list|()
 function_decl|;
 end_function_decl

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.7 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,8 @@ decl_stmt|,
 name|j
 decl_stmt|;
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -97,8 +98,6 @@ name|zlnp
 decl_stmt|;
 name|int
 name|ndb
-decl_stmt|,
-name|partial
 decl_stmt|,
 name|cgd
 decl_stmt|;
@@ -284,11 +283,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ALLOC
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -371,7 +374,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|zapino
+name|clearinode
 argument_list|(
 name|dp
 argument_list|)
@@ -516,10 +519,25 @@ goto|;
 block|}
 if|if
 condition|(
-name|SPECIAL
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFBLK
+operator|||
+operator|(
+name|dp
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFCHR
 condition|)
 name|ndb
 operator|++
@@ -735,10 +753,15 @@ index|[
 name|inumber
 index|]
 operator|=
-name|DIRCT
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
 condition|?
 name|DSTATE
 else|:
@@ -747,10 +770,6 @@ expr_stmt|;
 name|badblk
 operator|=
 name|dupblk
-operator|=
-literal|0
-expr_stmt|;
-name|maxblk
 operator|=
 literal|0
 expr_stmt|;
@@ -874,7 +893,7 @@ index|]
 operator|=
 name|USTATE
 expr_stmt|;
-name|zapino
+name|clearinode
 argument_list|(
 name|dp
 argument_list|)
@@ -936,7 +955,7 @@ condition|(
 operator|(
 name|anyout
 operator|=
-name|outrange
+name|chkrange
 argument_list|(
 name|blkno
 argument_list|,
@@ -949,7 +968,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|blkerr
+name|blkerror
 argument_list|(
 name|idesc
 operator|->
@@ -1031,7 +1050,7 @@ if|if
 condition|(
 name|anyout
 operator|&&
-name|outrange
+name|chkrange
 argument_list|(
 name|blkno
 argument_list|,
@@ -1048,7 +1067,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|getbmap
+name|testbmap
 argument_list|(
 name|blkno
 argument_list|)
@@ -1065,7 +1084,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|blkerr
+name|blkerror
 argument_list|(
 name|idesc
 operator|->

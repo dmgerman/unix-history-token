@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.6 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,8 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -400,7 +401,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dirp
 init|=
@@ -421,11 +423,13 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
-name|DIRECT
+name|struct
+name|direct
 name|proto
 decl_stmt|;
 name|char
@@ -477,7 +481,7 @@ operator|->
 name|id_number
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|idesc
 operator|->
@@ -512,7 +516,7 @@ goto|goto
 name|chk1
 goto|;
 block|}
-name|direrr
+name|direrror
 argument_list|(
 name|idesc
 operator|->
@@ -703,7 +707,8 @@ expr_stmt|;
 name|dirp
 operator|=
 operator|(
-name|DIRECT
+expr|struct
+name|direct
 operator|*
 operator|)
 operator|(
@@ -857,7 +862,8 @@ expr_stmt|;
 name|dirp
 operator|=
 operator|(
-name|DIRECT
+expr|struct
+name|direct
 operator|*
 operator|)
 operator|(
@@ -921,7 +927,7 @@ operator|->
 name|id_parent
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|idesc
 operator|->
@@ -956,7 +962,7 @@ goto|goto
 name|chk2
 goto|;
 block|}
-name|direrr
+name|direrror
 argument_list|(
 name|idesc
 operator|->
@@ -1103,7 +1109,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|idesc
 operator|->
@@ -1151,7 +1157,7 @@ operator|==
 literal|'.'
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|idesc
 operator|->
@@ -1234,6 +1240,9 @@ name|d_name
 argument_list|,
 name|pathp
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dirp
 operator|->
 name|d_namlen
@@ -1262,7 +1271,7 @@ name|dirp
 operator|->
 name|d_ino
 operator|>
-name|imax
+name|maxino
 operator|||
 name|dirp
 operator|->
@@ -1271,7 +1280,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|direrr
+name|direrror
 argument_list|(
 name|dirp
 operator|->
@@ -1305,7 +1314,7 @@ block|{
 case|case
 name|USTATE
 case|:
-name|direrr
+name|direrror
 argument_list|(
 name|dirp
 operator|->
@@ -1328,7 +1337,7 @@ case|:
 case|case
 name|FCLEAR
 case|:
-name|direrr
+name|direrror
 argument_list|(
 name|dirp
 operator|->
@@ -1367,10 +1376,15 @@ operator|->
 name|d_ino
 index|]
 operator|=
-name|DIRCT
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
 condition|?
 name|DSTATE
 else|:

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.8 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,9 @@ operator|*
 operator|)
 name|newcg
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_cgsize
@@ -177,6 +180,9 @@ name|fs_ipg
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_postblformat
@@ -1039,7 +1045,7 @@ control|)
 block|{
 if|if
 condition|(
-name|getbmap
+name|testbmap
 argument_list|(
 name|d
 operator|+
@@ -1296,6 +1302,9 @@ operator|*
 operator|)
 name|cg
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_cgsize

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.9 (Berkeley) %G%"
+literal|"@(#)inode.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,8 @@ file|"fsck.h"
 end_include
 
 begin_decl_stmt
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|pbp
 init|=
@@ -80,7 +81,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -102,7 +104,7 @@ name|daddr_t
 modifier|*
 name|ap
 decl_stmt|;
-name|int
+name|long
 name|ret
 decl_stmt|,
 name|n
@@ -111,7 +113,8 @@ name|ndb
 decl_stmt|,
 name|offset
 decl_stmt|;
-name|DINODE
+name|struct
+name|dinode
 name|dino
 decl_stmt|;
 name|idesc
@@ -136,10 +139,25 @@ name|di_size
 expr_stmt|;
 if|if
 condition|(
-name|SPECIAL
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFBLK
+operator|||
+operator|(
+name|dp
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFCHR
 condition|)
 return|return
 operator|(
@@ -402,11 +420,12 @@ name|idesc
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|register
+name|long
 name|ilevel
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|long
@@ -442,7 +461,8 @@ decl_stmt|,
 name|sizepb
 decl_stmt|;
 specifier|register
-name|BUFAREA
+name|struct
+name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
@@ -508,7 +528,7 @@ name|dirscan
 expr_stmt|;
 if|if
 condition|(
-name|outrange
+name|chkrange
 argument_list|(
 name|idesc
 operator|->
@@ -519,7 +539,6 @@ operator|->
 name|id_numfrags
 argument_list|)
 condition|)
-comment|/* protect thyself */
 return|return
 operator|(
 name|SKIP
@@ -695,8 +714,7 @@ block|}
 block|}
 name|flush
 argument_list|(
-operator|&
-name|dfile
+name|fswritefd
 argument_list|,
 name|bp
 argument_list|)
@@ -821,8 +839,12 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Check that a block in a legal block number.  * Return 0 if in range, 1 if out of range.  */
+end_comment
+
 begin_macro
-name|outrange
+name|chkrange
 argument_list|(
 argument|blk
 argument_list|,
@@ -859,7 +881,7 @@ operator|+
 name|cnt
 argument_list|)
 operator|>
-name|fmax
+name|maxfsblock
 condition|)
 return|return
 operator|(
@@ -928,7 +950,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" blk+cnt %d> cgsbase %d\n"
+literal|" blk + cnt %d> cgsbase %d\n"
 argument_list|,
 name|blk
 operator|+
@@ -994,7 +1016,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" blk+cnt %d> sblock.fs_fpg %d\n"
+literal|" blk + cnt %d> sblock.fs_fpg %d\n"
 argument_list|,
 name|blk
 operator|+
@@ -1022,7 +1044,8 @@ block|}
 end_block
 
 begin_function
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|ginode
 parameter_list|(
@@ -1041,7 +1064,6 @@ name|startinum
 init|=
 literal|0
 decl_stmt|;
-comment|/* blk num of first in raw area */
 if|if
 condition|(
 name|inumber
@@ -1050,7 +1072,7 @@ name|ROOTINO
 operator|||
 name|inumber
 operator|>
-name|imax
+name|maxino
 condition|)
 name|errexit
 argument_list|(
@@ -1175,9 +1197,9 @@ name|clri
 argument_list|(
 name|idesc
 argument_list|,
-name|s
+name|type
 argument_list|,
-name|flg
+name|flag
 argument_list|)
 specifier|register
 expr|struct
@@ -1190,20 +1212,21 @@ end_expr_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|s
+name|type
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|flg
+name|flag
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -1218,7 +1241,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flg
+name|flag
 operator|==
 literal|1
 condition|)
@@ -1227,12 +1250,17 @@ name|pwarn
 argument_list|(
 literal|"%s %s"
 argument_list|,
-name|s
+name|type
 argument_list|,
-name|DIRCT
-argument_list|(
+operator|(
 name|dp
-argument_list|)
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
 condition|?
 literal|"DIR"
 else|:
@@ -1281,7 +1309,7 @@ argument_list|,
 name|idesc
 argument_list|)
 expr_stmt|;
-name|zapino
+name|clearinode
 argument_list|(
 name|dp
 argument_list|)
@@ -1320,7 +1348,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dirp
 init|=
@@ -1353,6 +1382,9 @@ name|idesc
 operator|->
 name|id_name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dirp
 operator|->
 name|d_namlen
@@ -1388,7 +1420,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DIRECT
+name|struct
+name|direct
 modifier|*
 name|dirp
 init|=
@@ -1434,7 +1467,7 @@ name|dirp
 operator|->
 name|d_ino
 operator|<=
-name|imax
+name|maxino
 condition|)
 block|{
 name|idesc
@@ -1477,7 +1510,8 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -1511,7 +1545,7 @@ name|ROOTINO
 operator|||
 name|ino
 operator|>
-name|imax
+name|maxino
 condition|)
 return|return;
 name|dp
@@ -1619,11 +1653,11 @@ block|}
 end_block
 
 begin_macro
-name|blkerr
+name|blkerror
 argument_list|(
 argument|ino
 argument_list|,
-argument|s
+argument|type
 argument_list|,
 argument|blk
 argument_list|)
@@ -1638,7 +1672,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|s
+name|type
 decl_stmt|;
 end_decl_stmt
 
@@ -1656,7 +1690,7 @@ literal|"%ld %s I=%u"
 argument_list|,
 name|blk
 argument_list|,
-name|s
+name|type
 argument_list|,
 name|ino
 argument_list|)
@@ -1743,7 +1777,8 @@ name|ino_t
 name|ino
 decl_stmt|;
 specifier|register
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -1780,7 +1815,7 @@ name|request
 init|;
 name|ino
 operator|<
-name|imax
+name|maxino
 condition|;
 name|ino
 operator|++
@@ -1799,7 +1834,7 @@ if|if
 condition|(
 name|ino
 operator|==
-name|imax
+name|maxino
 condition|)
 return|return
 operator|(
@@ -1861,6 +1896,9 @@ index|]
 operator|=
 name|allocblk
 argument_list|(
+operator|(
+name|long
+operator|)
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1976,7 +2014,8 @@ name|int
 name|pass4check
 parameter_list|()
 function_decl|;
-name|DINODE
+name|struct
+name|dinode
 modifier|*
 name|dp
 decl_stmt|;
@@ -2032,7 +2071,7 @@ operator|&
 name|idesc
 argument_list|)
 expr_stmt|;
-name|zapino
+name|clearinode
 argument_list|(
 name|dp
 argument_list|)
