@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: extract.c,v 1.11 1997/02/22 16:09:16 peter Exp $"
+literal|"$Id: extract.c,v 1.12 1997/02/25 07:22:23 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -573,6 +573,21 @@ break|break;
 case|case
 name|PLIST_CMD
 case|:
+if|if
+condition|(
+name|last_file
+operator|==
+name|NULL
+condition|)
+name|barf
+argument_list|(
+literal|"No last file specified for '%s' command."
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|format_cmd
 argument_list|(
 name|cmd
