@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.3 90/01/21$  *  *	@(#)vm_mmap.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_mmap.c 1.3 90/01/21$  *  *	@(#)vm_mmap.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filedesc.h"
 end_include
 
 begin_include
@@ -288,22 +294,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|smmap
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|uap
+argument|uap
 argument_list|,
-name|retval
+argument|retval
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 specifier|register
@@ -343,6 +351,17 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|p
+operator|->
+name|p_fd
+decl_stmt|;
+specifier|register
 name|struct
 name|file
 modifier|*
@@ -506,25 +525,29 @@ block|{
 if|if
 condition|(
 operator|(
+operator|(
 name|unsigned
 operator|)
 name|uap
 operator|->
 name|fd
+operator|)
 operator|>=
-name|NOFILE
+name|fdp
+operator|->
+name|fd_maxfiles
 operator|||
 operator|(
 name|fp
 operator|=
-name|u
-operator|.
-name|u_ofile
-index|[
+name|OFILE
+argument_list|(
+name|fdp
+argument_list|,
 name|uap
 operator|->
 name|fd
-index|]
+argument_list|)
 operator|)
 operator|==
 name|NULL
@@ -1328,12 +1351,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * XXX -- should vm_deallocate any regions mapped to this file 	 */
+name|OFILEFLAGS
+argument_list|(
 name|u
 operator|.
-name|u_pofile
-index|[
+name|u_procp
+operator|->
+name|p_fd
+argument_list|,
 name|fd
-index|]
+argument_list|)
 operator|&=
 operator|~
 name|UF_MAPPED
