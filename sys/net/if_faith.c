@@ -982,6 +982,16 @@ name|if_addrlen
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|ifqmaxlen
+expr_stmt|;
 name|if_attach
 argument_list|(
 operator|&
