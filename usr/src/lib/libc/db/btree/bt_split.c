@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.14 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,7 +130,7 @@ name|PAGE
 operator|*
 operator|*
 operator|,
-name|int
+name|u_int
 operator|*
 operator|,
 name|size_t
@@ -175,7 +175,7 @@ operator|,
 name|PAGE
 operator|*
 operator|,
-name|int
+name|u_int
 operator|*
 operator|,
 name|size_t
@@ -206,7 +206,7 @@ name|PAGE
 operator|*
 operator|*
 operator|,
-name|int
+name|u_int
 operator|*
 operator|,
 name|size_t
@@ -1543,7 +1543,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|int
+name|u_int
 modifier|*
 name|skip
 decl_stmt|;
@@ -1962,7 +1962,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|int
+name|u_int
 modifier|*
 name|skip
 decl_stmt|;
@@ -2713,7 +2713,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|int
+name|u_int
 modifier|*
 name|pskip
 decl_stmt|;
