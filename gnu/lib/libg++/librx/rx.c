@@ -3,6 +3,12 @@ begin_comment
 comment|/*	Copyright (C) 1992, 1993 Free Software Foundation, Inc.  This file is part of the librx library.  Librx is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Librx is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU Library General Public License along with this software; see the file COPYING.LIB.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_RX_C_
+end_define
+
 begin_comment
 comment|/* NOTE!!!  AIX is so losing it requires this to be the first thing in the   * file.   * Do not put ANYTHING before it!    */
 end_comment
@@ -111,6 +117,16 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_comment
+comment|/* for BSD */
+end_comment
 
 begin_undef
 undef|#

@@ -1974,6 +1974,11 @@ name|BSD
 operator|<
 literal|199306
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|_RX_C_
+argument_list|)
 end_if
 
 begin_comment
@@ -2293,6 +2298,29 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* This is the structure we store register match data in.  See    regex.texinfo for a full description of what registers match.  */
+end_comment
+
+begin_struct
+struct|struct
+name|re_registers
+block|{
+name|unsigned
+name|num_regs
+decl_stmt|;
+name|int
+modifier|*
+name|start
+decl_stmt|;
+name|int
+modifier|*
+name|end
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_if
 if|#
 directive|if
@@ -2307,6 +2335,11 @@ name|BSD
 operator|<
 literal|199306
 operator|)
+operator|||
+name|defined
+argument_list|(
+name|_RX_C_
+argument_list|)
 end_if
 
 begin_comment
@@ -2319,29 +2352,6 @@ name|int
 name|regoff_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* This is the structure we store register match data in.  See    regex.texinfo for a full description of what registers match.  */
-end_comment
-
-begin_struct
-struct|struct
-name|re_registers
-block|{
-name|unsigned
-name|num_regs
-decl_stmt|;
-name|regoff_t
-modifier|*
-name|start
-decl_stmt|;
-name|regoff_t
-modifier|*
-name|end
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_typedef
 typedef|typedef
@@ -4507,11 +4517,11 @@ parameter_list|,
 name|unsigned
 name|num_regs
 parameter_list|,
-name|regoff_t
+name|int
 modifier|*
 name|starts
 parameter_list|,
-name|regoff_t
+name|int
 modifier|*
 name|ends
 parameter_list|)
@@ -5040,21 +5050,21 @@ name|unsigned
 name|num_regs
 decl_stmt|;
 comment|/* Includes an element for register zero. */
-name|regoff_t
+name|int
 modifier|*
 name|lparen
 decl_stmt|;
 comment|/* scratch space for register returns */
-name|regoff_t
+name|int
 modifier|*
 name|rparen
 decl_stmt|;
-name|regoff_t
+name|int
 modifier|*
 name|best_lpspace
 decl_stmt|;
 comment|/* in case the user doesn't want these */
-name|regoff_t
+name|int
 modifier|*
 name|best_rpspace
 decl_stmt|;
@@ -6875,7 +6885,7 @@ operator|.
 name|best_lpspace
 operator|=
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|REGEX_ALLOCATE
@@ -6886,7 +6896,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6895,7 +6905,7 @@ operator|.
 name|best_rpspace
 operator|=
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|REGEX_ALLOCATE
@@ -6906,7 +6916,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6961,7 +6971,7 @@ name|start
 operator|=
 operator|(
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|malloc
@@ -6972,7 +6982,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 operator|)
@@ -6983,7 +6993,7 @@ name|end
 operator|=
 operator|(
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|malloc
@@ -6994,7 +7004,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 operator|)
@@ -7063,7 +7073,7 @@ name|start
 operator|=
 operator|(
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|realloc
@@ -7078,7 +7088,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 operator|)
@@ -7089,7 +7099,7 @@ name|end
 operator|=
 operator|(
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|realloc
@@ -7104,7 +7114,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 operator|)
@@ -7159,7 +7169,7 @@ name|best_lpspace
 operator|=
 operator|(
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|REGEX_ALLOCATE
@@ -7170,7 +7180,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 operator|)
@@ -7181,7 +7191,7 @@ name|best_rpspace
 operator|=
 operator|(
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|REGEX_ALLOCATE
@@ -7192,7 +7202,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 operator|)
@@ -7239,7 +7249,7 @@ operator|.
 name|lparen
 operator|=
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|REGEX_ALLOCATE
@@ -7250,7 +7260,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7259,7 +7269,7 @@ operator|.
 name|rparen
 operator|=
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 name|REGEX_ALLOCATE
@@ -7270,7 +7280,7 @@ name|num_regs
 operator|*
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8239,7 +8249,7 @@ name|match_regs_on_stack
 condition|?
 sizeof|sizeof
 argument_list|(
-name|regoff_t
+name|int
 argument_list|)
 operator|*
 operator|(
@@ -10735,12 +10745,12 @@ block|{
 name|int
 name|x
 decl_stmt|;
-name|regoff_t
+name|int
 modifier|*
 name|stk
 init|=
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 operator|(
@@ -11338,12 +11348,12 @@ block|{
 name|int
 name|x
 decl_stmt|;
-name|regoff_t
+name|int
 modifier|*
 name|stk
 init|=
 operator|(
-name|regoff_t
+name|int
 operator|*
 operator|)
 operator|(
@@ -11698,7 +11708,7 @@ operator|.
 name|num_regs
 operator|)
 decl_stmt|;
-name|regoff_t
+name|int
 modifier|*
 name|s
 init|=
@@ -11706,7 +11716,7 @@ name|regs
 operator|->
 name|start
 decl_stmt|;
-name|regoff_t
+name|int
 modifier|*
 name|e
 init|=
