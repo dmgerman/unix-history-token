@@ -263,7 +263,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int
 name|vm_kmem_size
 decl_stmt|;
 end_decl_stmt
@@ -1963,13 +1963,13 @@ specifier|register
 name|long
 name|indx
 decl_stmt|;
-name|int
+name|u_long
 name|npg
 decl_stmt|;
-name|int
+name|u_long
 name|mem_size
 decl_stmt|;
-name|int
+name|u_long
 name|xvm_kmem_size
 decl_stmt|;
 if|#
@@ -2083,12 +2083,15 @@ argument_list|,
 name|vm_kmem_size
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Limit kmem virtual size to twice the physical memory. 	 * This allows for kmem map sparseness, but limits the size 	 * to something sane. Be careful to not overflow the 32bit 	 * ints while doing the check. 	 */
 if|if
 condition|(
+operator|(
 name|vm_kmem_size
-operator|>
+operator|/
 literal|2
-operator|*
+operator|)
+operator|>
 operator|(
 name|cnt
 operator|.
@@ -2101,13 +2104,11 @@ name|vm_kmem_size
 operator|=
 literal|2
 operator|*
-operator|(
 name|cnt
 operator|.
 name|v_page_count
 operator|*
 name|PAGE_SIZE
-operator|)
 expr_stmt|;
 name|npg
 operator|=
