@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,13 +24,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kbdreg.h"
+file|<luna68k/dev/kbdreg.h>
 end_include
 
 begin_decl_stmt
@@ -665,21 +665,21 @@ block|,
 comment|/*  88 [0x58]	 m    */
 name|KC_CODE
 block|,
-literal|0x6B
+literal|0x2C
 block|,
 literal|0x3C
 block|,
 comment|/*  89 [0x59]	 ,    */
 name|KC_CODE
 block|,
-literal|0x6C
+literal|0x2E
 block|,
 literal|0x3E
 block|,
 comment|/*  90 [0x5A]	 .    */
 name|KC_CODE
 block|,
-literal|0x3B
+literal|0x2F
 block|,
 literal|0x3F
 block|,
