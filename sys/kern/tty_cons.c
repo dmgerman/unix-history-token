@@ -1678,12 +1678,6 @@ modifier|*
 name|unused
 parameter_list|)
 block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|cn_cdevsw
-argument_list|)
-expr_stmt|;
 name|condev_t
 operator|=
 name|make_dev
