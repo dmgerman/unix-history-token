@@ -583,9 +583,18 @@ directive|define
 name|DTYPE_DOC2K
 value|13
 comment|/* Msys DiskOnChip */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PC98
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98_ATCOMPAT
+argument_list|)
 define|#
 directive|define
 name|DSTYPE_SEC256
@@ -1075,11 +1084,20 @@ begin_comment
 comment|/* DOS partition table -- located in boot block */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PC98
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PC98_ATCOMPAT
+argument_list|)
+end_if
 
 begin_define
 define|#
