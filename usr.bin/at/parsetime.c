@@ -655,7 +655,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.3 1995/04/12 02:42:35 ache Exp $"
+literal|"$Id: parsetime.c,v 1.4 1995/05/30 06:29:25 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1525,10 +1525,33 @@ name|sc_tokid
 operator|==
 name|PM
 condition|)
+block|{
+if|if
+condition|(
+name|hour
+operator|!=
+literal|12
+condition|)
+comment|/* 12:xx PM is 12:xx, not 24:xx */
 name|hour
 operator|+=
 literal|12
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|hour
+operator|==
+literal|12
+condition|)
+comment|/* 12:xx AM is 00:xx, not 12:xx */
+name|hour
+operator|-=
+literal|12
+expr_stmt|;
+block|}
 name|token
 argument_list|()
 expr_stmt|;
