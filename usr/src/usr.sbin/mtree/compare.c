@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compare.c	5.9 (Berkeley) %G%"
+literal|"@(#)compare.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,6 +475,8 @@ operator|)
 name|printf
 argument_list|(
 literal|"%sgid (%u, %u"
+argument_list|,
+name|tab
 argument_list|,
 name|s
 operator|->
