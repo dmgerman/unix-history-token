@@ -107,6 +107,14 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|uart_ops
+name|uart_i8251_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_ops
 name|uart_ns8250_ops
 decl_stmt|;
 end_decl_stmt
