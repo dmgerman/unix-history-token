@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.16 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,6 +265,8 @@ decl_stmt|,
 name|pid
 decl_stmt|,
 name|rem
+decl_stmt|,
+name|uid
 decl_stmt|;
 specifier|register
 name|char
@@ -596,6 +598,8 @@ name|pw
 operator|=
 name|getpwuid
 argument_list|(
+name|uid
+operator|=
 name|getuid
 argument_list|()
 argument_list|)
@@ -727,7 +731,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"rsh: shell/tcp: unknown service\n"
+literal|"rsh: shell/tcp: unknown service.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1038,11 +1042,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"setsockopt (stdin)"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|setsockopt
@@ -1085,8 +1084,7 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 name|omask
