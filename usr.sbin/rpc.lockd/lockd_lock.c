@@ -8117,10 +8117,6 @@ name|smon_id
 operator|.
 name|mon_name
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|hostname
 expr_stmt|;
 name|smon_id
