@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c	1.10 (Berkeley) %G%"
+literal|"@(#)vax.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2137,16 +2137,34 @@ name|process
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"\"%s\" exits with code %d\n"
-argument_list|,
-name|objname
-argument_list|,
+name|err
+operator|=
 name|exitcode
 argument_list|(
 name|process
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\"%s\" terminated"
+argument_list|,
+name|objname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+name|printf
+argument_list|(
+literal|"abnormally (exit code %d)"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|erecover
@@ -2183,77 +2201,19 @@ argument_list|(
 name|process
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-operator|==
-name|SIGINT
-condition|)
-block|{
-name|printf
+name|putchar
 argument_list|(
-literal|"\n\ninterrupt "
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|printsig
+argument_list|(
+name|err
 argument_list|)
 expr_stmt|;
 name|printloc
 argument_list|()
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|err
-operator|==
-name|SIGTRAP
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\nerror "
-argument_list|)
-expr_stmt|;
-name|printloc
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|err
-operator|<
-literal|0
-name|or
-name|err
-operator|>
-name|sys_nsig
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\nsignal %d "
-argument_list|,
-name|err
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"\n%s "
-argument_list|,
-name|sys_siglist
-index|[
-name|err
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|printloc
-argument_list|()
-expr_stmt|;
-block|}
 name|putchar
 argument_list|(
 literal|'\n'
@@ -2287,6 +2247,173 @@ block|}
 name|erecover
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+name|private
+name|String
+name|illinames
+index|[]
+init|=
+block|{
+literal|"reserved addressing fault"
+block|,
+literal|"priviliged instruction fault"
+block|,
+literal|"reserved operand fault"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|private
+name|String
+name|fpenames
+index|[]
+init|=
+block|{
+name|nil
+block|,
+literal|"integer overflow trap"
+block|,
+literal|"integer divide by zero trap"
+block|,
+literal|"floating overflow trap"
+block|,
+literal|"floating/decimal divide by zero trap"
+block|,
+literal|"floating underflow trap"
+block|,
+literal|"decimal overflow trap"
+block|,
+literal|"subscript out of range trap"
+block|,
+literal|"floating overflow fault"
+block|,
+literal|"floating divide by zero fault"
+block|,
+literal|"floating undeflow fault"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|public
+name|printsig
+parameter_list|(
+name|signo
+parameter_list|)
+name|Integer
+name|signo
+decl_stmt|;
+block|{
+name|Integer
+name|sigcode
+decl_stmt|;
+if|if
+condition|(
+literal|0
+operator|<
+name|signo
+operator|&&
+name|signo
+operator|<
+name|sys_nsig
+condition|)
+name|printf
+argument_list|(
+literal|"%s "
+argument_list|,
+name|sys_siglist
+index|[
+name|signo
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"signal %d "
+argument_list|,
+name|signo
+argument_list|)
+expr_stmt|;
+name|sigcode
+operator|=
+name|errcode
+argument_list|(
+name|process
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|signo
+condition|)
+block|{
+case|case
+name|SIGFPE
+case|:
+if|if
+condition|(
+name|sigcode
+operator|>
+literal|0
+operator|&&
+name|sigcode
+operator|<
+sizeof|sizeof
+name|fpenames
+operator|/
+sizeof|sizeof
+name|fpenames
+index|[
+literal|0
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|"(%s) "
+argument_list|,
+name|fpenames
+index|[
+name|sigcode
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SIGILL
+case|:
+if|if
+condition|(
+name|sigcode
+operator|>=
+literal|0
+operator|&&
+name|sigcode
+operator|<
+sizeof|sizeof
+name|illinames
+operator|/
+sizeof|sizeof
+name|illinames
+index|[
+literal|0
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|"(%s) "
+argument_list|,
+name|illinames
+index|[
+name|sigcode
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
@@ -2326,9 +2453,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nexecution completed, exit code is %d\n"
+literal|"\nexecution completed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|exitcode
+condition|)
+name|printf
+argument_list|(
+literal|" (exit code %d)"
 argument_list|,
 name|exitcode
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|getsrcpos
