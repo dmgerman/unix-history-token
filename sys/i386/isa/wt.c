@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive QIC-02 and Wangtek QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * Placed in the public domain with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  *	from: Version 1.1, Fri Sep 24 02:14:31 MSD 1993  *	$Id$  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id$  *  */
 end_comment
 
 begin_comment
@@ -81,6 +81,23 @@ directive|include
 file|"i386/isa/wtreg.h"
 end_include
 
+begin_comment
+comment|/*  * Uncomment this to enable internal device tracing.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEBUG
+parameter_list|(
+name|s
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* printf s */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -90,17 +107,6 @@ end_define
 
 begin_comment
 comment|/* sleep priority */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKSIZE
-value|512
-end_define
-
-begin_comment
-comment|/* streamer tape block size */
 end_comment
 
 begin_comment
@@ -263,14 +269,11 @@ begin_define
 define|#
 directive|define
 name|WT_IEN
-parameter_list|(
-name|chan
-parameter_list|)
-value|((chan)>2 ? 0x10 : 0x8)
+value|0x08
 end_define
 
 begin_comment
-comment|/* enable intr */
+comment|/* enable dma */
 end_comment
 
 begin_comment
@@ -457,22 +460,24 @@ begin_comment
 comment|/* enable interrupts */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DMA_STATUSREG
-value|0x8
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_DONE
-parameter_list|(
-name|chan
-parameter_list|)
-value|(1<< (chan))
-end_define
+begin_enum
+enum|enum
+name|wttype
+block|{
+name|UNKNOWN
+init|=
+literal|0
+block|,
+comment|/* unknown type, driver disabled */
+name|ARCHIVE
+block|,
+comment|/* Archive Viper SC499, SC402 etc */
+name|WANGTEK
+block|,
+comment|/* Wangtek */
+block|}
+enum|;
+end_enum
 
 begin_typedef
 typedef|typedef
@@ -502,6 +507,11 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|enum
+name|wttype
+name|type
+decl_stmt|;
+comment|/* type of controller */
 name|unsigned
 name|unit
 decl_stmt|;
@@ -522,6 +532,10 @@ name|unsigned
 name|dens
 decl_stmt|;
 comment|/* tape density */
+name|int
+name|bsize
+decl_stmt|;
+comment|/* tape block size */
 name|void
 modifier|*
 name|buf
@@ -725,6 +739,9 @@ modifier|*
 name|t
 parameter_list|,
 name|int
+name|verb
+parameter_list|,
+name|int
 name|ignor
 parameter_list|)
 function_decl|;
@@ -786,6 +803,12 @@ parameter_list|(
 name|wtinfo_t
 modifier|*
 name|t
+parameter_list|,
+name|int
+name|mask
+parameter_list|,
+name|int
+name|bits
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -997,9 +1020,10 @@ name|t
 operator|->
 name|port
 operator|=
-literal|0
+name|id
+operator|->
+name|id_iobase
 expr_stmt|;
-comment|/* Mark it as not configured. */
 if|if
 condition|(
 name|t
@@ -1034,15 +1058,13 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* Try Wangtek. */
 name|t
 operator|->
-name|port
+name|type
 operator|=
-name|id
-operator|->
-name|id_iobase
+name|WANGTEK
 expr_stmt|;
-comment|/* Try Wangtek. */
 name|t
 operator|->
 name|CTLPORT
@@ -1146,11 +1168,6 @@ operator|->
 name|IEN
 operator|=
 name|WT_IEN
-argument_list|(
-name|t
-operator|->
-name|chan
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1165,6 +1182,12 @@ name|WT_NPORT
 operator|)
 return|;
 comment|/* Try Archive. */
+name|t
+operator|->
+name|type
+operator|=
+name|ARCHIVE
+expr_stmt|;
 name|t
 operator|->
 name|CTLPORT
@@ -1294,9 +1317,9 @@ return|;
 comment|/* Tape controller not found. */
 name|t
 operator|->
-name|port
+name|type
 operator|=
-literal|0
+name|UNKNOWN
 expr_stmt|;
 return|return
 operator|(
@@ -1334,7 +1357,9 @@ if|if
 condition|(
 name|t
 operator|->
-name|RDMAPORT
+name|type
+operator|==
+name|ARCHIVE
 condition|)
 block|{
 name|printf
@@ -1382,19 +1407,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* unknown density */
-name|t
-operator|->
-name|buf
-operator|=
-name|malloc
-argument_list|(
-name|BLKSIZE
-argument_list|,
-name|M_TEMP
-argument_list|,
-name|M_NOWAIT
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -1495,10 +1507,11 @@ name|u
 operator|>=
 name|NWT
 operator|||
-operator|!
 name|t
 operator|->
-name|port
+name|type
+operator|==
+name|UNKNOWN
 condition|)
 return|return
 operator|(
@@ -1530,6 +1543,8 @@ name|TPSTART
 condition|)
 block|{
 comment|/* If rewind is going on, wait */
+if|if
+condition|(
 name|error
 operator|=
 name|wtwait
@@ -1540,22 +1555,21 @@ name|PCATCH
 argument_list|,
 literal|"wtrew"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
+comment|/* Check the controller status */
 if|if
 condition|(
 operator|!
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|0
 argument_list|,
 operator|(
 name|flag
@@ -1569,7 +1583,7 @@ name|TP_WRP
 argument_list|)
 condition|)
 block|{
-comment|/* Bad status. Reset the controller. */
+comment|/* Bad status, reset the controller */
 if|if
 condition|(
 operator|!
@@ -1580,7 +1594,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
 if|if
@@ -1589,6 +1603,8 @@ operator|!
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|1
 argument_list|,
 operator|(
 name|flag
@@ -1603,7 +1619,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
 block|}
@@ -1620,12 +1636,14 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_DENSEL
+name|WT_DENSEL
 operator|)
 condition|)
 block|{
 name|int
 name|d
+init|=
+literal|0
 decl_stmt|;
 switch|switch
 condition|(
@@ -1634,30 +1652,26 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_DENSEL
+name|WT_DENSEL
 condition|)
 block|{
+case|case
+name|WT_DENSDFLT
+case|:
 default|default:
-case|case
-name|T_800BPI
-case|:
-name|d
-operator|=
-name|QIC_FMT150
-expr_stmt|;
 break|break;
-comment|/* minor 000 */
+comment|/* default density */
 case|case
-name|T_1600BPI
+name|WT_QIC11
 case|:
 name|d
 operator|=
-name|QIC_FMT120
+name|QIC_FMT11
 expr_stmt|;
 break|break;
 comment|/* minor 010 */
 case|case
-name|T_6250BPI
+name|WT_QIC24
 case|:
 name|d
 operator|=
@@ -1666,15 +1680,48 @@ expr_stmt|;
 break|break;
 comment|/* minor 020 */
 case|case
-name|T_BADBPI
+name|WT_QIC120
 case|:
 name|d
 operator|=
-name|QIC_FMT11
+name|QIC_FMT120
 expr_stmt|;
 break|break;
 comment|/* minor 030 */
+case|case
+name|WT_QIC150
+case|:
+name|d
+operator|=
+name|QIC_FMT150
+expr_stmt|;
+break|break;
+comment|/* minor 040 */
+case|case
+name|WT_QIC300
+case|:
+name|d
+operator|=
+name|QIC_FMT300
+expr_stmt|;
+break|break;
+comment|/* minor 050 */
+case|case
+name|WT_QIC600
+case|:
+name|d
+operator|=
+name|QIC_FMT600
+expr_stmt|;
+break|break;
+comment|/* minor 060 */
 block|}
+if|if
+condition|(
+name|d
+condition|)
+block|{
+comment|/* Change tape density. */
 if|if
 condition|(
 operator|!
@@ -1687,10 +1734,9 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
-comment|/* Check the status of the controller. */
 if|if
 condition|(
 operator|!
@@ -1698,22 +1744,46 @@ name|wtsense
 argument_list|(
 name|t
 argument_list|,
-operator|(
-name|flag
-operator|&
-name|FWRITE
-operator|)
-condition|?
-literal|0
-else|:
+literal|1
+argument_list|,
 name|TP_WRP
+operator||
+name|TP_ILL
 argument_list|)
 condition|)
 return|return
 operator|(
-name|ENXIO
+name|EIO
 operator|)
 return|;
+comment|/* Check the status of the controller. */
+if|if
+condition|(
+name|t
+operator|->
+name|error
+operator|.
+name|err
+operator|&
+name|TP_ILL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"wt%d: invalid tape density\n"
+argument_list|,
+name|t
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+block|}
+block|}
 name|t
 operator|->
 name|dens
@@ -1723,7 +1793,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_DENSEL
+name|WT_DENSEL
 expr_stmt|;
 block|}
 name|t
@@ -1747,12 +1817,56 @@ argument_list|(
 name|dev
 argument_list|)
 operator|&
-name|T_DENSEL
+name|WT_DENSEL
 operator|)
 condition|)
 return|return
 operator|(
 name|ENXIO
+operator|)
+return|;
+name|t
+operator|->
+name|bsize
+operator|=
+operator|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+name|WT_BSIZE
+operator|)
+condition|?
+literal|1024
+else|:
+literal|512
+expr_stmt|;
+name|t
+operator|->
+name|buf
+operator|=
+name|malloc
+argument_list|(
+name|t
+operator|->
+name|bsize
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|t
+operator|->
+name|buf
+condition|)
+return|return
+operator|(
+name|EAGAIN
 operator|)
 return|;
 name|t
@@ -1829,10 +1943,11 @@ name|u
 operator|>=
 name|NWT
 operator|||
-operator|!
 name|t
 operator|->
-name|port
+name|type
+operator|==
+name|UNKNOWN
 condition|)
 return|return
 operator|(
@@ -1854,27 +1969,26 @@ goto|;
 comment|/* If seek forward is pending and no rewind on close, do nothing */
 if|if
 condition|(
-operator|(
 name|t
 operator|->
 name|flags
 operator|&
 name|TPRMARK
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|minor
 argument_list|(
 name|dev
 argument_list|)
 operator|&
 name|T_NOREWIND
-operator|)
 condition|)
 goto|goto
 name|done
 goto|;
-comment|/* If file mark read is going on, wait */
+comment|/* If read file mark is going on, wait */
 name|wtwait
 argument_list|(
 name|t
@@ -1884,6 +1998,7 @@ argument_list|,
 literal|"wtrfm"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|t
@@ -1966,6 +2081,15 @@ name|TPSTART
 operator||
 name|TPTIMER
 expr_stmt|;
+name|free
+argument_list|(
+name|t
+operator|->
+name|buf
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2027,10 +2151,11 @@ name|u
 operator|>=
 name|NWT
 operator|||
-operator|!
 name|t
 operator|->
-name|port
+name|type
+operator|==
+name|UNKNOWN
 condition|)
 return|return
 operator|(
@@ -2236,7 +2361,9 @@ name|mt_type
 operator|=
 name|t
 operator|->
-name|RDMAPORT
+name|type
+operator|==
+name|ARCHIVE
 condition|?
 name|MT_ISVIPER1
 else|:
@@ -2615,10 +2742,11 @@ name|u
 operator|>=
 name|NWT
 operator|||
-operator|!
 name|t
 operator|->
-name|port
+name|type
+operator|==
+name|UNKNOWN
 condition|)
 goto|goto
 name|errxit
@@ -2688,6 +2816,8 @@ name|wtsense
 argument_list|(
 name|t
 argument_list|,
+literal|1
+argument_list|,
 name|TP_WRP
 argument_list|)
 condition|)
@@ -2710,6 +2840,8 @@ comment|/* sed read mode */
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|1
 argument_list|,
 name|TP_WRP
 argument_list|)
@@ -2778,6 +2910,8 @@ name|wtsense
 argument_list|(
 name|t
 argument_list|,
+literal|1
+argument_list|,
 literal|0
 argument_list|)
 condition|)
@@ -2800,6 +2934,8 @@ comment|/* set write mode */
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -2960,12 +3096,22 @@ name|u
 operator|>=
 name|NWT
 operator|||
-operator|!
 name|t
 operator|->
-name|port
+name|type
+operator|==
+name|UNKNOWN
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+operator|(
+literal|"wtintr() -- device not configured\n"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|s
 operator|=
 name|inb
@@ -2976,6 +3122,15 @@ name|STATPORT
 argument_list|)
 expr_stmt|;
 comment|/* get status */
+name|DEBUG
+argument_list|(
+operator|(
+literal|"wtintr() status=0x%x -- "
+operator|,
+name|s
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3002,20 +3157,17 @@ operator|->
 name|NOEXCEP
 operator|)
 condition|)
-return|return;
-comment|/* device is busy */
-name|outb
+block|{
+name|DEBUG
 argument_list|(
-name|t
-operator|->
-name|CTLPORT
-argument_list|,
-name|t
-operator|->
-name|ONLINE
+operator|(
+literal|"busy\n"
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* stop controller */
+return|return;
+comment|/* device is busy */
+block|}
 comment|/* 	 * Check if rewind finished. 	 */
 if|if
 condition|(
@@ -3026,6 +3178,39 @@ operator|&
 name|TPREW
 condition|)
 block|{
+name|DEBUG
+argument_list|(
+operator|(
+operator|(
+name|s
+operator|&
+operator|(
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+operator|)
+operator|)
+operator|==
+operator|(
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+operator|)
+condition|?
+literal|"rewind busy?\n"
+else|:
+literal|"rewind finished\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|t
 operator|->
 name|flags
@@ -3037,6 +3222,8 @@ comment|/* Rewind finished. */
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|1
 argument_list|,
 name|TP_WRP
 argument_list|)
@@ -3062,6 +3249,39 @@ name|TPWMARK
 operator|)
 condition|)
 block|{
+name|DEBUG
+argument_list|(
+operator|(
+operator|(
+name|s
+operator|&
+operator|(
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+operator|)
+operator|)
+operator|==
+operator|(
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+operator|)
+condition|?
+literal|"marker r/w busy?\n"
+else|:
+literal|"marker r/w finished\n"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3073,10 +3293,12 @@ operator|->
 name|NOEXCEP
 operator|)
 condition|)
-comment|/* Operation failed. */
+comment|/* operation failed */
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|1
 argument_list|,
 operator|(
 name|t
@@ -3102,7 +3324,7 @@ operator||
 name|TPWMARK
 operator|)
 expr_stmt|;
-comment|/* Operation finished. */
+comment|/* operation finished */
 name|wakeup
 argument_list|(
 name|t
@@ -3122,7 +3344,16 @@ operator|&
 name|TPACTIVE
 operator|)
 condition|)
+block|{
+name|DEBUG
+argument_list|(
+operator|(
+literal|"unexpected interrupt\n"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 name|t
 operator|->
 name|flags
@@ -3130,26 +3361,13 @@ operator|&=
 operator|~
 name|TPACTIVE
 expr_stmt|;
-if|if
-condition|(
-name|inb
-argument_list|(
-name|DMA_STATUSREG
-argument_list|)
-operator|&
-name|DMA_DONE
-argument_list|(
-name|t
-operator|->
-name|chan
-argument_list|)
-condition|)
-comment|/* if dma finished */
 name|t
 operator|->
 name|dmacount
 operator|+=
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 expr_stmt|;
 comment|/* increment counter */
 comment|/* 	 * Clean up dma. 	 */
@@ -3173,10 +3391,12 @@ operator|->
 name|dmacount
 operator|)
 operator|<
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 condition|)
 block|{
-comment|/* If the address crosses 64-k boundary, or reading short block, 		 * copy the internal buffer to the user memory. */
+comment|/* If reading short block, copy the internal buffer 		 * to the user memory. */
 name|isa_dmadone
 argument_list|(
 name|t
@@ -3187,7 +3407,9 @@ name|t
 operator|->
 name|buf
 argument_list|,
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 argument_list|,
 name|t
 operator|->
@@ -3225,7 +3447,9 @@ name|t
 operator|->
 name|dmavaddr
 argument_list|,
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 argument_list|,
 name|t
 operator|->
@@ -3245,9 +3469,18 @@ name|NOEXCEP
 operator|)
 condition|)
 block|{
+name|DEBUG
+argument_list|(
+operator|(
+literal|"i/o exception\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|1
 argument_list|,
 operator|(
 name|t
@@ -3314,11 +3547,24 @@ name|t
 operator|->
 name|dmavaddr
 operator|+=
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 expr_stmt|;
 name|wtdma
 argument_list|(
 name|t
+argument_list|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+operator|(
+literal|"continue i/o, %d\n"
+operator|,
+name|t
+operator|->
+name|dmacount
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3348,6 +3594,17 @@ name|t
 argument_list|)
 expr_stmt|;
 comment|/* wake up user level */
+name|DEBUG
+argument_list|(
+operator|(
+literal|"i/o finished, %d\n"
+operator|,
+name|t
+operator|->
+name|dmacount
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3365,6 +3622,21 @@ modifier|*
 name|t
 parameter_list|)
 block|{
+name|int
+name|rwmode
+init|=
+operator|(
+name|t
+operator|->
+name|flags
+operator|&
+operator|(
+name|TPRO
+operator||
+name|TPWO
+operator|)
+operator|)
+decl_stmt|;
 name|t
 operator|->
 name|flags
@@ -3378,6 +3650,29 @@ operator||
 name|TPVOL
 operator|)
 expr_stmt|;
+comment|/* 	 * Wangtek strictly follows QIC-02 standard: 	 * clearing ONLINE in read/write modes causes rewind. 	 * REWIND command is not allowed in read/write mode 	 * and gives `illegal command' error. 	 */
+if|if
+condition|(
+name|t
+operator|->
+name|type
+operator|==
+name|WANGTEK
+operator|&&
+name|rwmode
+condition|)
+block|{
+name|outb
+argument_list|(
+name|t
+operator|->
+name|CTLPORT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -3446,6 +3741,8 @@ block|{
 name|wtsense
 argument_list|(
 name|t
+argument_list|,
+literal|1
 argument_list|,
 name|TP_WRP
 argument_list|)
@@ -3530,6 +3827,8 @@ name|wtsense
 argument_list|(
 name|t
 argument_list|,
+literal|1
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -3568,7 +3867,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* wait for controller ready or exception */
+comment|/* while controller status& mask == bits continue waiting */
 end_comment
 
 begin_function
@@ -3579,23 +3878,35 @@ parameter_list|(
 name|wtinfo_t
 modifier|*
 name|t
+parameter_list|,
+name|int
+name|mask
+parameter_list|,
+name|int
+name|bits
 parameter_list|)
 block|{
 name|int
 name|s
 decl_stmt|,
-name|NOTREADY
-init|=
-name|t
-operator|->
-name|BUSY
-operator||
-name|t
-operator|->
-name|NOEXCEP
+name|i
 decl_stmt|;
-comment|/* Poll status port, waiting for ready or exception. */
-do|do
+comment|/* Poll status port, waiting for specified bits. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|1000
+condition|;
+operator|++
+name|i
+control|)
+block|{
+comment|/* up to 1 msec */
 name|s
 operator|=
 name|inb
@@ -3605,22 +3916,116 @@ operator|->
 name|STATPORT
 argument_list|)
 expr_stmt|;
-do|while
+if|if
 condition|(
 operator|(
 name|s
 operator|&
-name|NOTREADY
+name|mask
 operator|)
-operator|==
-name|NOTREADY
+operator|!=
+name|bits
 condition|)
-do|;
 return|return
 operator|(
 name|s
 operator|)
 return|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|100
+condition|;
+operator|++
+name|i
+control|)
+block|{
+comment|/* up to 10 msec */
+name|s
+operator|=
+name|inb
+argument_list|(
+name|t
+operator|->
+name|STATPORT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|&
+name|mask
+operator|)
+operator|!=
+name|bits
+condition|)
+return|return
+operator|(
+name|s
+operator|)
+return|;
+name|DELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* forever */
+name|s
+operator|=
+name|inb
+argument_list|(
+name|t
+operator|->
+name|STATPORT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|&
+name|mask
+operator|)
+operator|!=
+name|bits
+condition|)
+return|return
+operator|(
+name|s
+operator|)
+return|;
+name|tsleep
+argument_list|(
+name|wtpoll
+argument_list|,
+name|WTPRI
+argument_list|,
+literal|"wtpoll"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* timeout: 1 tick */
+block|}
 block|}
 end_function
 
@@ -3641,27 +4046,59 @@ name|int
 name|cmd
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|DEBUG
+argument_list|(
+operator|(
+literal|"wtcmd() cmd=0x%x\n"
+operator|,
+name|cmd
+operator|)
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|wtpoll
+argument_list|(
+name|t
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+argument_list|)
+expr_stmt|;
+comment|/* ready? */
 if|if
 condition|(
 operator|!
 operator|(
-name|wtpoll
-argument_list|(
-name|t
-argument_list|)
+name|s
 operator|&
 name|t
 operator|->
 name|NOEXCEP
 operator|)
 condition|)
-comment|/* wait for ready */
+comment|/* error */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* error */
 name|outb
 argument_list|(
 name|t
@@ -3688,21 +4125,20 @@ name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* set request */
-while|while
-condition|(
-name|inb
+name|wtpoll
 argument_list|(
 name|t
-operator|->
-name|STATPORT
-argument_list|)
-operator|&
+argument_list|,
 name|t
 operator|->
 name|BUSY
-condition|)
+argument_list|,
+name|t
+operator|->
+name|BUSY
+argument_list|)
+expr_stmt|;
 comment|/* wait for ready */
-continue|continue;
 name|outb
 argument_list|(
 name|t
@@ -3719,24 +4155,18 @@ name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* reset request */
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
+name|wtpoll
 argument_list|(
 name|t
-operator|->
-name|STATPORT
-argument_list|)
-operator|&
+argument_list|,
 name|t
 operator|->
 name|BUSY
-operator|)
-condition|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* wait for not ready */
-continue|continue;
 return|return
 operator|(
 literal|1
@@ -3769,6 +4199,15 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|DEBUG
+argument_list|(
+operator|(
+literal|"wtwait() `%s'\n"
+operator|,
+name|msg
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|t
@@ -3844,7 +4283,9 @@ if|if
 condition|(
 name|t
 operator|->
-name|SDMAPORT
+name|type
+operator|==
+name|ARCHIVE
 condition|)
 name|outb
 argument_list|(
@@ -3876,7 +4317,9 @@ operator|->
 name|dmacount
 operator|)
 operator|<
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 condition|)
 comment|/* Reading short block.  Do it through the internal buffer. */
 name|isa_dmastart
@@ -3889,7 +4332,9 @@ name|t
 operator|->
 name|buf
 argument_list|,
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 argument_list|,
 name|t
 operator|->
@@ -3907,26 +4352,13 @@ name|t
 operator|->
 name|dmavaddr
 argument_list|,
-name|BLKSIZE
+name|t
+operator|->
+name|bsize
 argument_list|,
 name|t
 operator|->
 name|chan
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|t
-operator|->
-name|CTLPORT
-argument_list|,
-name|t
-operator|->
-name|IEN
-operator||
-name|t
-operator|->
-name|ONLINE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3956,14 +4388,45 @@ name|unsigned
 name|len
 parameter_list|)
 block|{
+name|int
+name|s
+decl_stmt|;
+name|DEBUG
+argument_list|(
+operator|(
+literal|"wtstart()\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|wtpoll
+argument_list|(
+name|t
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+argument_list|)
+expr_stmt|;
+comment|/* ready? */
 if|if
 condition|(
 operator|!
 operator|(
-name|wtpoll
-argument_list|(
-name|t
-argument_list|)
+name|s
 operator|&
 name|t
 operator|->
@@ -3971,7 +4434,6 @@ name|NOEXCEP
 operator|)
 condition|)
 block|{
-comment|/* wait for ready or error */
 name|t
 operator|->
 name|flags
@@ -4062,12 +4524,23 @@ name|flags
 operator||=
 name|TPTIMER
 expr_stmt|;
+comment|/* Some controllers seem to lose dma interrupts too often. 		 * To make the tape stream we need 1 tick timeout. */
 name|timeout
 argument_list|(
 name|wtimer
 argument_list|,
 name|t
 argument_list|,
+operator|(
+name|t
+operator|->
+name|flags
+operator|&
+name|TPACTIVE
+operator|)
+condition|?
+literal|1
+else|:
 name|hz
 argument_list|)
 expr_stmt|;
@@ -4125,6 +4598,45 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|inb
+argument_list|(
+name|t
+operator|->
+name|STATPORT
+argument_list|)
+operator|&
+operator|(
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+operator|)
+operator|)
+operator|!=
+operator|(
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+operator|)
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+operator|(
+literal|"wtimer() -- "
+operator|)
+argument_list|)
+expr_stmt|;
 name|wtintr
 argument_list|(
 name|t
@@ -4132,6 +4644,7 @@ operator|->
 name|unit
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -4176,6 +4689,13 @@ modifier|*
 name|t
 parameter_list|)
 block|{
+comment|/* Perform QIC-02 and QIC-36 compatible reset sequence. */
+comment|/* Thanks to Mikael Hybsch<micke@dynas.se>. */
+name|int
+name|s
+decl_stmt|,
+name|i
+decl_stmt|;
 name|outb
 argument_list|(
 name|t
@@ -4185,12 +4705,16 @@ argument_list|,
 name|t
 operator|->
 name|RESET
+operator||
+name|t
+operator|->
+name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* send reset */
 name|DELAY
 argument_list|(
-literal|25
+literal|30
 argument_list|)
 expr_stmt|;
 name|outb
@@ -4199,37 +4723,103 @@ name|t
 operator|->
 name|CTLPORT
 argument_list|,
-literal|0
+name|t
+operator|->
+name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* turn off reset */
-if|if
-condition|(
-operator|(
+name|DELAY
+argument_list|(
+literal|30
+argument_list|)
+expr_stmt|;
+comment|/* Read the controller status. */
+name|s
+operator|=
 name|inb
 argument_list|(
 name|t
 operator|->
 name|STATPORT
 argument_list|)
-operator|&
-name|t
-operator|->
-name|RESETMASK
-operator|)
-operator|!=
-name|t
-operator|->
-name|RESETVAL
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+literal|0xff
 condition|)
+comment|/* no port at this address? */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+comment|/* Wait 3 sec for reset to complete. Needed for QIC-36 boards? */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|3000
+condition|;
+operator|++
+name|i
+control|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|s
+operator|&
+name|t
+operator|->
+name|BUSY
+operator|)
+operator|||
+operator|!
+operator|(
+name|s
+operator|&
+name|t
+operator|->
+name|NOEXCEP
+operator|)
+condition|)
+break|break;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|inb
+argument_list|(
+name|t
+operator|->
+name|STATPORT
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
-literal|1
+operator|(
+name|s
+operator|&
+name|t
+operator|->
+name|RESETMASK
+operator|)
+operator|==
+name|t
+operator|->
+name|RESETVAL
 operator|)
 return|;
 block|}
@@ -4253,6 +4843,9 @@ modifier|*
 name|t
 parameter_list|,
 name|int
+name|verb
+parameter_list|,
+name|int
 name|ignor
 parameter_list|)
 block|{
@@ -4265,6 +4858,15 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|DEBUG
+argument_list|(
+operator|(
+literal|"wtsense() ignor=0x%x\n"
+operator|,
+name|ignor
+operator|)
+argument_list|)
+expr_stmt|;
 name|t
 operator|->
 name|flags
@@ -4381,6 +4983,16 @@ condition|)
 return|return
 operator|(
 literal|1
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|verb
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 comment|/* lifted from tdriver.c from Wangtek */
@@ -4547,9 +5159,25 @@ decl_stmt|;
 name|wtpoll
 argument_list|(
 name|t
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
 argument_list|)
 expr_stmt|;
-comment|/* wait for ready or exception */
+comment|/* ready? */
 name|outb
 argument_list|(
 name|t
@@ -4576,21 +5204,20 @@ name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* set request */
-while|while
-condition|(
-name|inb
+name|wtpoll
 argument_list|(
 name|t
-operator|->
-name|STATPORT
-argument_list|)
-operator|&
+argument_list|,
 name|t
 operator|->
 name|BUSY
-condition|)
+argument_list|,
+name|t
+operator|->
+name|BUSY
+argument_list|)
+expr_stmt|;
 comment|/* wait for ready */
-continue|continue;
 name|outb
 argument_list|(
 name|t
@@ -4603,24 +5230,18 @@ name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* reset request */
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
+name|wtpoll
 argument_list|(
 name|t
-operator|->
-name|STATPORT
-argument_list|)
-operator|&
+argument_list|,
 name|t
 operator|->
 name|BUSY
-operator|)
-condition|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* wait for not ready */
-continue|continue;
 name|p
 operator|=
 operator|(
@@ -4648,27 +5269,47 @@ operator|+
 literal|6
 condition|)
 block|{
+name|int
+name|s
+init|=
+name|wtpoll
+argument_list|(
+name|t
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+argument_list|,
+name|t
+operator|->
+name|BUSY
+operator||
+name|t
+operator|->
+name|NOEXCEP
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
-name|wtpoll
-argument_list|(
-name|t
-argument_list|)
+name|s
 operator|&
 name|t
 operator|->
 name|NOEXCEP
 operator|)
 condition|)
-comment|/* wait for ready */
+comment|/* error */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* error */
 operator|*
 name|p
 operator|++
@@ -4690,36 +5331,34 @@ argument_list|,
 name|t
 operator|->
 name|REQUEST
+operator||
+name|t
+operator|->
+name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* set request */
-while|while
-condition|(
-operator|!
-operator|(
-name|inb
+name|wtpoll
 argument_list|(
 name|t
-operator|->
-name|STATPORT
-argument_list|)
-operator|&
+argument_list|,
 name|t
 operator|->
 name|BUSY
-operator|)
-condition|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* wait for not ready */
-continue|continue;
-comment|/* DELAY (50); */
-comment|/* wait 50 usec */
 name|outb
 argument_list|(
 name|t
 operator|->
 name|CTLPORT
 argument_list|,
-literal|0
+name|t
+operator|->
+name|ONLINE
 argument_list|)
 expr_stmt|;
 comment|/* unset request */

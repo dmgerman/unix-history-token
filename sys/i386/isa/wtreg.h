@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive QIC-02 and Wangtek QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * Placed in the public domain with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  *	from: Version 1.1, Fri Sep 24 02:14:42 MSD 1993  *	$Id$  */
+comment|/*  * Streamer tape driver for 386bsd and FreeBSD.  * Supports Archive and Wangtek compatible QIC-02/QIC-36 boards.  *  * Copyright (C) 1993 by:  *      Sergey Ryzhkov<sir@kiae.su>  *      Serge Vakulenko<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * This driver is derived from the old 386bsd Wangtek streamer tape driver,  * made by Robert Baron at CMU, based on Intel sources.  * Authors thank Robert Baron, CMU and Intel and retain here  * the original CMU copyright notice.  *  * Version 1.3, Thu Nov 11 12:09:13 MSK 1993  * $Id$  *  */
 end_comment
 
 begin_comment
@@ -29,12 +29,20 @@ name|QIC_ERASE
 value|0x22
 end_define
 
+begin_comment
+comment|/* erase the tape */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|QIC_RETENS
 value|0x24
 end_define
+
+begin_comment
+comment|/* retension the tape */
+end_comment
 
 begin_comment
 comment|/* internal QIC-02 commands */
@@ -148,6 +156,28 @@ end_define
 
 begin_comment
 comment|/* set format QIC-150 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_FMT300
+value|0x2a
+end_define
+
+begin_comment
+comment|/* set format QIC-300/QIC-2100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIC_FMT600
+value|0x2b
+end_define
+
+begin_comment
+comment|/* set format QIC-600/QIC-2200 */
 end_comment
 
 begin_comment
@@ -447,23 +477,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TP_RES1
+name|TP_ERM
 value|0x0200
 end_define
 
 begin_comment
-comment|/* Reserved for end of media */
+comment|/* Reserved for end of recorded media */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TP_RES2
+name|TP_BPE
 value|0x0400
 end_define
 
 begin_comment
-comment|/* Reserved for bus parity */
+comment|/* Reserved for bus parity error */
 end_comment
 
 begin_define
@@ -547,8 +577,111 @@ begin_define
 define|#
 directive|define
 name|WTER_BITS
-value|"\20\1eof\2bnl\3uda\4eom\5wrp\6usl\7cni\11por\12res1\13res2\14bom\15mbd\16ndt\17ill"
+value|"\20\1eof\2bnl\3uda\4eom\5wrp\6usl\7cni\11por\12erm\13bpe\14bom\15mbd\16ndt\17ill"
 end_define
+
+begin_comment
+comment|/* device minor number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_BSIZE
+value|0100
+end_define
+
+begin_comment
+comment|/* long block flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_DENSEL
+value|0070
+end_define
+
+begin_comment
+comment|/* density select mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_DENSDFLT
+value|0000
+end_define
+
+begin_comment
+comment|/* default density */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_QIC11
+value|0010
+end_define
+
+begin_comment
+comment|/* 11 megabytes? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_QIC24
+value|0020
+end_define
+
+begin_comment
+comment|/* 60 megabytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_QIC120
+value|0030
+end_define
+
+begin_comment
+comment|/* 120 megabytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_QIC150
+value|0040
+end_define
+
+begin_comment
+comment|/* 150 megabytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_QIC300
+value|0050
+end_define
+
+begin_comment
+comment|/* 300 megabytes? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WT_QIC600
+value|0060
+end_define
+
+begin_comment
+comment|/* 600 megabytes? */
+end_comment
 
 end_unit
 
