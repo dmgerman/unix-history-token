@@ -9787,11 +9787,11 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|datalink_Down
+name|datalink_Close
 argument_list|(
 name|choice
 argument_list|,
-name|CLOSE_NORMAL
+name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
 name|mp_StopAutoloadTimer
