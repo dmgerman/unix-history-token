@@ -501,6 +501,8 @@ operator|&
 name|SND_F_BUSY
 condition|)
 block|{
+name|DEB
+argument_list|(
 name|printf
 argument_list|(
 literal|"<%s>%d open: device busy\n"
@@ -510,6 +512,7 @@ operator|->
 name|name
 argument_list|,
 name|unit
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
