@@ -3761,6 +3761,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Failed to read Sparing Table at sector %d\n"

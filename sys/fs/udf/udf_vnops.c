@@ -2158,12 +2158,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|error
 operator|=
 name|uiomove
@@ -2955,6 +2952,21 @@ operator|->
 name|error
 operator|=
 name|error
+expr_stmt|;
+if|if
+condition|(
+name|ds
+operator|->
+name|bp
+operator|!=
+name|NULL
+condition|)
+name|brelse
+argument_list|(
+name|ds
+operator|->
+name|bp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -5116,7 +5128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the block and then set the data pointer to correspond with the  * offset passed in.  Only read in at most 'size' bytes, and then set 'size'  * to the number of bytes pointed to.  If 'size' is zero, try to read in a  * whole extent.  * XXX 'size' is limited to the logical block size for now due to problems  * with udf_read()  */
+comment|/*  * Read the block and then set the data pointer to correspond with the  * offset passed in.  Only read in at most 'size' bytes, and then set 'size'  * to the number of bytes pointed to.  If 'size' is zero, try to read in a  * whole extent.  *  * Note that *bp may be assigned error or not.  *  */
 end_comment
 
 begin_function
@@ -5180,6 +5192,11 @@ name|node
 operator|->
 name|udfmp
 expr_stmt|;
+operator|*
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
 name|error
 operator|=
 name|udf_bmap_internal
@@ -5228,11 +5245,6 @@ operator|=
 name|fentry
 operator|->
 name|l_ad
-expr_stmt|;
-operator|*
-name|bp
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -5309,6 +5321,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+comment|/* note: *bp may be non-NULL */
 return|return
 operator|(
 name|error
