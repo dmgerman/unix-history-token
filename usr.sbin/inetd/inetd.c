@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.7 1995/10/12 16:43:26 wollman Exp $"
+literal|"$Id: inetd.c,v 1.8 1995/10/30 14:03:00 adam Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1310,13 +1310,46 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+if|if
+condition|(
 name|daemon
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"daemon(0,0) failed: %m"
+argument_list|)
 expr_stmt|;
+block|}
+comment|/* 		 * In case somebody has started inetd manually, we need to 		 * clear the logname, so that old servers run as root do not 		 * get the user's logname.. 		 */
+if|if
+condition|(
+name|setlogin
+argument_list|(
+literal|""
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"cannot clear logname: %m"
+argument_list|)
+expr_stmt|;
+comment|/* no big deal if it fails.. */
+block|}
 name|pid
 operator|=
 name|getpid
@@ -2138,15 +2171,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|debug
-operator|&&
-name|dofork
-condition|)
-name|setsid
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|dofork
 condition|)
 block|{
@@ -2319,11 +2343,61 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|setsid
+argument_list|()
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: can't setsid(): %m"
+argument_list|,
+name|sep
+operator|->
+name|se_service
+argument_list|)
+expr_stmt|;
+comment|/* _exit(1); not fatal yet */
+block|}
+if|if
+condition|(
 name|pwd
 operator|->
 name|pw_uid
 condition|)
 block|{
+if|if
+condition|(
+name|setlogin
+argument_list|(
+name|sep
+operator|->
+name|se_user
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: can't setlogin(%s): %m"
+argument_list|,
+name|sep
+operator|->
+name|se_service
+argument_list|,
+name|sep
+operator|->
+name|se_user
+argument_list|)
+expr_stmt|;
+comment|/* _exit(1); not fatal yet */
+block|}
 if|if
 condition|(
 name|setgid
