@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)rtsock.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3541,6 +3541,14 @@ operator|=
 name|ifa
 operator|->
 name|ifa_metric
+expr_stmt|;
+name|ifam
+operator|->
+name|ifam_flags
+operator|=
+name|ifa
+operator|->
+name|ifa_flags
 expr_stmt|;
 name|ifam
 operator|->
