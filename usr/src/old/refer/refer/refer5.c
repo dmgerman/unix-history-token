@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer5.c	4.5 (Berkeley) %G%"
+literal|"@(#)refer5.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,22 +37,41 @@ begin_define
 define|#
 directive|define
 name|NFLAB
-value|2000
+value|3000
 end_define
+
+begin_comment
+comment|/* number of bytes to record all labels */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NLABC
-value|100
+value|1000
 end_define
+
+begin_comment
+comment|/* max number of labels */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MXSIG
+value|200
+end_define
+
+begin_comment
+comment|/* max bytes in aggregate signal */
+end_comment
 
 begin_decl_stmt
 specifier|static
 name|char
 name|sig
 index|[
-name|NLABC
+name|MXSIG
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -160,7 +179,7 @@ index|]
 decl_stmt|,
 name|t1
 index|[
-literal|100
+name|MXSIG
 index|]
 decl_stmt|,
 name|t2
@@ -576,6 +595,29 @@ argument_list|,
 name|sd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|strlen
+argument_list|(
+name|sig
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|t
+argument_list|)
+operator|)
+operator|>
+name|MXSIG
+condition|)
+name|err
+argument_list|(
+literal|"sig overflow (%d)"
+argument_list|,
+name|MXSIG
+argument_list|)
+expr_stmt|;
 name|strcat
 argument_list|(
 name|sig
@@ -706,6 +748,22 @@ argument_list|,
 name|sig
 argument_list|,
 name|endline
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|t1
+argument_list|)
+operator|>
+name|MXSIG
+condition|)
+name|err
+argument_list|(
+literal|"t1 overflow (%d)"
+argument_list|,
+name|MXSIG
 argument_list|)
 expr_stmt|;
 name|append
@@ -1535,11 +1593,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"lbp up to %d of 2000\n"
+literal|"lbp up to %d of %d\n"
 argument_list|,
 name|lbp
 operator|-
 name|bflab
+argument_list|,
+name|NFLAB
 argument_list|)
 expr_stmt|;
 endif|#
