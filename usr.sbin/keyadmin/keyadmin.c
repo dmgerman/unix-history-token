@@ -14,6 +14,20 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -782,7 +796,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These numbers should be defined in a header file somewhere  * and shared with the consuming programs, once someone has  * actually written the support in those programs (rspvd,  * gated, and routed).  Probably<protocols/*>...?  */
+comment|/*  * These numbers should be defined in a header file somewhere  * and shared with the consuming programs, once someone has  * actually written the support in those programs (rspvd,  * gated, and routed).  Probably<protocols/...>...?  */
 end_comment
 
 begin_define
@@ -3827,7 +3841,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"alogrithm=%u(%s) "
+literal|"algorithm=%u(%s) "
 argument_list|,
 name|kmp
 operator|->
