@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.9 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1843,6 +1843,15 @@ block|{
 case|case
 name|USTATE
 case|:
+if|if
+condition|(
+name|idesc
+operator|->
+name|id_entryno
+operator|<=
+literal|2
+condition|)
+break|break;
 name|fileerror
 argument_list|(
 name|idesc
@@ -1870,6 +1879,15 @@ case|:
 case|case
 name|FCLEAR
 case|:
+if|if
+condition|(
+name|idesc
+operator|->
+name|id_entryno
+operator|<=
+literal|2
+condition|)
+break|break;
 name|fileerror
 argument_list|(
 name|idesc
