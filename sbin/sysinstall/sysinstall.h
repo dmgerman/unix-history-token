@@ -181,6 +181,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|EXTERN
+name|char
+name|selection
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|unsigned
 name|char
