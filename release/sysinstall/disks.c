@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.31.2.13 1995/10/14 19:13:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.31.2.14 1995/10/15 15:45:17 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1213,6 +1213,16 @@ literal|"choose No at this dialog."
 argument_list|)
 condition|)
 block|{
+name|variable_set2
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|,
+literal|"yes"
+argument_list|)
+expr_stmt|;
+name|clear
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|diskPartitionWrite
@@ -1225,6 +1235,12 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Disk partition write returned an error status!"
+argument_list|)
+expr_stmt|;
+else|else
+name|msgInfo
+argument_list|(
+literal|"Wrote FDISK partition information out successfully."
 argument_list|)
 expr_stmt|;
 block|}
@@ -1453,6 +1469,15 @@ index|[
 literal|0
 index|]
 operator|->
+name|enabled
+operator|=
+name|TRUE
+expr_stmt|;
+name|devs
+index|[
+literal|0
+index|]
+operator|->
 name|private
 operator|=
 name|diskPartition
@@ -1468,15 +1493,6 @@ index|]
 operator|->
 name|private
 argument_list|)
-expr_stmt|;
-name|devs
-index|[
-literal|0
-index|]
-operator|->
-name|enabled
-operator|=
-name|TRUE
 expr_stmt|;
 name|str
 operator|=
@@ -1617,9 +1633,9 @@ name|msgConfirm
 argument_list|(
 literal|"No devices suitable for installation found!\n\n"
 literal|"Please verify that your disk controller (and attached drives)\n"
-literal|"were detected properly.  This can be done by selecting the\n"
-literal|"``Bootmsg'' option on the main menu and reviewing the boot\n"
-literal|"messages carefully."
+literal|"were detected properly.  This can be done by pressing the\n"
+literal|"[Scroll Lock] key and using the Arrow keys to move back to\n"
+literal|"the boot messages.  Press [Scroll Lock] again to return."
 argument_list|)
 expr_stmt|;
 name|i
@@ -1776,9 +1792,51 @@ modifier|*
 modifier|*
 name|devs
 decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"written"
+argument_list|)
+condition|)
+return|return
+name|RET_SUCCESS
+return|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|cp
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"You must partition the disk(s) before this option can be used."
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
 name|devs
 operator|=
 name|deviceFind
@@ -2022,6 +2080,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|variable_set2
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|,
+literal|"written"
+argument_list|)
+expr_stmt|;
 return|return
 name|RET_SUCCESS
 return|;

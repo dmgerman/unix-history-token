@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.31 1995/10/15 04:37:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.32 1995/10/15 12:41:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1371,12 +1371,13 @@ parameter_list|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"In the next menu, you will need to set up a DOS-style\n"
-literal|"(\"fdisk\") partitioning scheme for your hard disk.  If you\n"
-literal|"don't want to do anything special, just type `A' to use the\n"
-literal|"whole disk and then `Q' to quit.  If you wish to share\n"
-literal|"a disk with multiple operating systems, do NOT use the\n"
-literal|"`A' command."
+literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\")\n"
+literal|"partitioning scheme for your hard disk.    If you simply wish to\n"
+literal|"devote all disk space to FreeBSD (overwritting anything else that might\n"
+literal|"be on the disk(s) selected, use the (A)ll command to select the default\n"
+literal|"partitioning scheme and then (Q)uit.  If you wish to allocate only free\n"
+literal|"space to FreeBSD, move to a partition marked \"unused\" and use the\n"
+literal|"(C)reate command."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1393,10 +1394,12 @@ name|RET_FAIL
 return|;
 name|msgConfirm
 argument_list|(
-literal|"Next, you need to lay out BSD partitions inside of the\n"
-literal|"fdisk partition just created.  If you don't want to\n"
-literal|"do anything special, just type `A' to use the default\n"
-literal|"partitioning scheme and then `Q' to quit."
+literal|"Next, you need to create BSD partitions inside of the fdisk\n"
+literal|"partition(s) just created.  If you have a reasonable amount of disk\n"
+literal|"space (200MB or more) and don't have any special requirements,\n"
+literal|"simply use the (A)uto command to allocate space automatically."
+literal|"If you have more specific needs, or don't care for the layout\n"
+literal|"chosen by (A)uto, press F1 for more information on manual layout."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1417,7 +1420,7 @@ literal|"Now it is time to select an installation subset.  There\n"
 literal|"are many different configurations, ranging from minimal\n"
 literal|"installation sets to full X developer oriented configs.\n"
 literal|"You can also select a custom software set if none of the\n"
-literal|"default configurations are suitable."
+literal|"provided configurations are suitable."
 argument_list|)
 expr_stmt|;
 while|while
@@ -1485,11 +1488,13 @@ name|msgYesNo
 argument_list|(
 literal|"Since you're running the express installation, a few\n"
 literal|"post-configuration questions will be asked at this point.\n\n"
-literal|"Our packages collection contains many useful utilities, from\n"
-literal|"text editors to WEB servers, and is definitely worth browsing\n"
-literal|"through even if you don't install any of it at this time.\n\n"
-literal|"Would you like to browse the selection of packaged\n"
-literal|"software now?"
+literal|"The FreeBSD package collection is a collection of over 300\n"
+literal|"ready-to-run applications, from text editors to WEB servers,\n"
+literal|"and is definitely worth at least looking at.\n\n"
+literal|"Would you like to browse the selection of packaged software"
+literal|"now?\n\n"
+literal|"You can also reach this utility from the Configure menu later\n"
+literal|"if you wish."
 argument_list|)
 condition|)
 name|configPackages
@@ -1502,8 +1507,8 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Would you like to configure any additional network\n"
-literal|"devices or services?"
+literal|"Would you like to configure any additional network devices or\n"
+literal|"services?"
 argument_list|)
 condition|)
 name|dmenuOpenSimple
