@@ -482,6 +482,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"bfe"
+block|,
+literal|"Broadcom BCM440x PCI ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"bge"
 block|,
 literal|"Broadcom BCM570x PCI gigabit ethernet card"

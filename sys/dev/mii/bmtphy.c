@@ -350,6 +350,17 @@ name|MII_STR_BROADCOM_BCM5221
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|MII_MODEL_BROADCOM_BCM4401
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|MII_STR_BROADCOM_BCM4401
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(
