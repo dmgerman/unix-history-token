@@ -1175,7 +1175,7 @@ name|if_snd
 argument_list|,
 name|m
 argument_list|,
-name|NULL
+name|p
 argument_list|)
 condition|)
 block|{
@@ -1496,8 +1496,6 @@ name|u_short
 name|ether_type
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|ft
 init|=
 operator|-
