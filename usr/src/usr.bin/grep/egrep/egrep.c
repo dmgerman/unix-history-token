@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.10 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -709,6 +709,26 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|isolate
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gotamatch
+argument_list|()
+decl_stmt|,
+modifier|*
+name|kanji
+argument_list|()
+decl_stmt|,
+modifier|*
+name|linesave
+argument_list|()
+decl_stmt|,
+modifier|*
+name|submatch
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -1763,23 +1783,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|t
-decl_stmt|;
-name|char
-modifier|*
-name|gotamatch
-argument_list|()
-decl_stmt|,
-modifier|*
-name|kanji
-argument_list|()
-decl_stmt|,
-modifier|*
-name|linesave
-argument_list|()
-decl_stmt|,
-modifier|*
-name|submatch
-argument_list|()
 decl_stmt|;
 name|nleftover
 operator|=
