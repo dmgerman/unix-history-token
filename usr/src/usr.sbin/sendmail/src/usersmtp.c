@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.21 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.22 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.21 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.22 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1564,11 +1564,15 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SMTP MAIL protocol error: %s"
+literal|"%s: %s: SMTP MAIL protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|mci
+operator|->
+name|mci_host
 argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
@@ -1789,11 +1793,15 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SMTP RCPT protocol error: %s"
+literal|"%s: %s: SMTP RCPT protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|mci
+operator|->
+name|mci_host
 argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
@@ -2005,11 +2013,15 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SMTP DATA-1 protocol error: %s"
+literal|"%s: %s: SMTP DATA-1 protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|mci
+operator|->
+name|mci_host
 argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
@@ -2420,11 +2432,15 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SMTP DATA-2 protocol error: %s"
+literal|"%s: %s: SMTP DATA-2 protocol error: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|mci
+operator|->
+name|mci_host
 argument_list|,
 name|SmtpReplyBuffer
 argument_list|)
