@@ -267,11 +267,6 @@ name|unsigned
 name|command
 decl_stmt|;
 name|int
-name|rid
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|err
 init|=
 literal|0
@@ -319,7 +314,9 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|rid
+name|sc
+operator|->
+name|portrid
 operator|=
 name|PCIR_BAR
 argument_list|(
@@ -337,7 +334,9 @@ argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
 operator|&
-name|rid
+name|sc
+operator|->
+name|portrid
 argument_list|,
 literal|0
 argument_list|,
@@ -356,6 +355,7 @@ name|sc
 operator|->
 name|portres
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -363,10 +363,17 @@ argument_list|,
 literal|"Cannot allocate I/O ports\n"
 argument_list|)
 expr_stmt|;
-name|rid
-operator|=
-literal|0
+name|lnc_release_resources
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|irqres
@@ -378,7 +385,9 @@ argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
 operator|&
-name|rid
+name|sc
+operator|->
+name|irqrid
 argument_list|,
 literal|0
 argument_list|,
@@ -399,6 +408,7 @@ name|sc
 operator|->
 name|irqres
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -406,6 +416,17 @@ argument_list|,
 literal|"Cannot allocate irq\n"
 argument_list|)
 expr_stmt|;
+name|lnc_release_resources
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|err
 operator|=
 name|bus_setup_intr
@@ -432,6 +453,7 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -439,6 +461,17 @@ argument_list|,
 literal|"Cannot setup irq handler\n"
 argument_list|)
 expr_stmt|;
+name|lnc_release_resources
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|lnc_btag
@@ -662,7 +695,11 @@ argument_list|,
 literal|"Can't create DMA tag\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX need to free currently allocated resources here */
+name|lnc_release_resources
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -707,7 +744,11 @@ argument_list|,
 literal|"Couldn't allocate memory\n"
 argument_list|)
 expr_stmt|;
-comment|/* XXX need to free currently allocated resources here */
+name|lnc_release_resources
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
@@ -756,6 +797,16 @@ argument_list|,
 literal|"Generic attach code failed\n"
 argument_list|)
 expr_stmt|;
+name|lnc_release_resources
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 return|return
 operator|(
