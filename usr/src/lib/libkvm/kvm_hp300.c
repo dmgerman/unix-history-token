@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_hp300.c	5.10 (Berkeley) %G%"
+literal|"@(#)kvm_hp300.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,7 +1252,7 @@ name|dbname
 argument_list|,
 literal|"%s/kvm_%s"
 argument_list|,
-name|KVMDBDIR
+name|_PATH_VARRUN
 argument_list|,
 name|basename
 argument_list|(
