@@ -512,6 +512,9 @@ operator|&
 literal|2
 operator|)
 operator|&&
+operator|!
+name|aflag
+operator|&&
 name|opiepasscheck
 argument_list|(
 name|secret
