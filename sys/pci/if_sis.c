@@ -800,14 +800,14 @@ begin_define
 define|#
 directive|define
 name|SIS_RES
-value|SYS_RES_IOPORT
+value|SYS_RES_MEMORY
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIS_RID
-value|SIS_PCI_LOIO
+value|SIS_PCI_LOMEM
 end_define
 
 begin_endif

@@ -905,14 +905,14 @@ begin_define
 define|#
 directive|define
 name|DM_RES
-value|SYS_RES_IOPORT
+value|SYS_RES_MEMORY
 end_define
 
 begin_define
 define|#
 directive|define
 name|DM_RID
-value|DM_PCI_LOIO
+value|DM_PCI_LOMEM
 end_define
 
 begin_endif
