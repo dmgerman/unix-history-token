@@ -21,7 +21,7 @@ name|char
 name|serial_rcsid
 index|[]
 init|=
-literal|"$Id: serial.c,v 1.26 1993/01/07 02:31:53 ian Rel $"
+literal|"$Id: serial.c,v 1.2 1993/11/18 01:03:18 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4841,7 +4841,7 @@ index|[
 name|VTIME
 index|]
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4966,7 +4966,7 @@ index|[
 name|VTIME
 index|]
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 operator|(
 name|void
