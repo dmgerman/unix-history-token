@@ -4215,6 +4215,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* 	 * If a vnode is provided, get and return the mount point that 	 * to which it will write. 	 */
 if|if
 condition|(
@@ -4516,6 +4518,8 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|mp
