@@ -2954,14 +2954,10 @@ name|NETISR_ATM
 argument_list|,
 name|m
 argument_list|)
-block|)
-function|;
+expr_stmt|;
+comment|/* mbuf is free'd on failure. */
+block|}
 end_function
 
-begin_comment
-comment|/* mbuf is free'd on failure. */
-end_comment
-
-unit|}
 end_unit
 
