@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.5 1993/12/30 18:06:21 jkh Exp $"
+literal|"$Id: inetd.c,v 1.6 1994/01/14 12:26:19 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|TOOMANY
-value|40
+value|256
 end_define
 
 begin_comment
@@ -1804,6 +1804,13 @@ name|RETRYTIME
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 					 * DON'T fork! 					 */
+name|sigsetmask
+argument_list|(
+literal|0L
+argument_list|)
+expr_stmt|;
+continue|continue;
 block|}
 block|}
 name|pid
