@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)envelope.c	5.4 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -776,33 +776,19 @@ operator|->
 name|e_dfp
 argument_list|)
 expr_stmt|;
+comment|/* now clear out the data */
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|e
-operator|->
-name|e_xfp
-operator|=
+argument_list|,
+sizeof|sizeof
+expr|*
 name|e
-operator|->
-name|e_dfp
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* now expunge names of objects */
-name|e
-operator|->
-name|e_df
-operator|=
-name|e
-operator|->
-name|e_id
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* and the flags which are now meaningless */
-name|e
-operator|->
-name|e_flags
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block

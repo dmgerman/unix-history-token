@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.7 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.8 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.7 (Berkeley) %G%"
+literal|"@(#)queue.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2212,17 +2212,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|closexscript
+name|clearenvelope
 argument_list|(
 name|CurEnv
 argument_list|)
-expr_stmt|;
-name|CurEnv
-operator|->
-name|e_flags
-operator|&=
-operator|~
-name|EF_FATALERRS
 expr_stmt|;
 name|QueueRun
 operator|=
