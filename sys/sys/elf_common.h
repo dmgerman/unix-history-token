@@ -679,6 +679,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_IA_64
+value|50
+end_define
+
+begin_comment
+comment|/* Intel IA-46 Processor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_ALPHA
 value|0x9026
 end_define
