@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.9 1993/09/28 00:01:10 jkh Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.10 1993/10/12 06:32:28 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2853,8 +2853,6 @@ argument_list|(
 name|com
 argument_list|,
 name|MCR_DTR
-operator||
-name|MCR_RTS
 argument_list|,
 name|DMBIC
 argument_list|)
@@ -3532,7 +3530,7 @@ name|commctl
 argument_list|(
 name|com
 argument_list|,
-literal|0
+name|MCR_RTS
 argument_list|,
 name|DMSET
 argument_list|)
@@ -4501,8 +4499,6 @@ argument_list|(
 name|com
 argument_list|,
 name|MCR_DTR
-operator||
-name|MCR_RTS
 argument_list|,
 name|DMBIS
 argument_list|)
@@ -4519,8 +4515,6 @@ argument_list|(
 name|com
 argument_list|,
 name|MCR_DTR
-operator||
-name|MCR_RTS
 argument_list|,
 name|DMBIC
 argument_list|)
@@ -5320,11 +5314,7 @@ operator|->
 name|mcr_image
 operator|&=
 operator|~
-operator|(
 name|MCR_DTR
-operator||
-name|MCR_RTS
-operator|)
 argument_list|)
 expr_stmt|;
 name|enable_intr
@@ -5999,7 +5989,7 @@ name|commctl
 argument_list|(
 name|com
 argument_list|,
-literal|0
+name|MCR_RTS
 argument_list|,
 name|DMSET
 argument_list|)
