@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.242.2.3 2002/12/03 17:06:30 gshapiro Exp $"
+literal|"@(#)$Id: collect.c,v 8.242.2.4 2003/03/28 17:34:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1488,6 +1488,18 @@ name|MD_ARPAFTP
 operator|)
 condition|)
 block|{
+name|SM_ASSERT
+argument_list|(
+name|pbp
+operator|<
+name|peekbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|peekbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|pbp
 operator|++
@@ -1518,6 +1530,18 @@ goto|;
 else|else
 block|{
 comment|/* push back the ".\rx" */
+name|SM_ASSERT
+argument_list|(
+name|pbp
+operator|<
+name|peekbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|peekbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|pbp
 operator|++
@@ -1539,6 +1563,18 @@ operator|!=
 name|MD_ARPAFTP
 condition|)
 block|{
+name|SM_ASSERT
+argument_list|(
+name|pbp
+operator|<
+name|peekbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|peekbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|pbp
 operator|++
@@ -2095,6 +2131,13 @@ comment|/* yep -- defer this */
 continue|continue;
 block|}
 comment|/* trim off trailing CRLF or NL */
+name|SM_ASSERT
+argument_list|(
+name|bp
+operator|>
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|*

@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.919.2.16 2003/01/18 00:41:50 gshapiro Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.919.2.17 2003/03/12 22:42:52 gshapiro Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -12941,6 +12941,32 @@ end_define
 
 begin_comment
 comment|/* non-urgent delivery */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_QUEUERETURN_DSN
+end_if
+
+begin_define
+define|#
+directive|define
+name|TOC_DSN
+value|3
+end_define
+
+begin_comment
+comment|/* DSN delivery */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUEUERETURN_DSN */
 end_comment
 
 begin_comment

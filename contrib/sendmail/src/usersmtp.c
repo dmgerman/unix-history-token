@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.437.2.8 2002/12/12 17:40:07 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.437.2.9 2003/03/15 23:57:52 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -11779,6 +11779,9 @@ name|int
 name|r
 decl_stmt|;
 name|int
+name|off
+decl_stmt|;
+name|int
 name|status
 decl_stmt|,
 name|xstat
@@ -11901,7 +11904,7 @@ name|mci_flags
 argument_list|)
 operator|&&
 operator|(
-name|r
+name|off
 operator|=
 name|isenhsc
 argument_list|(
@@ -11915,12 +11918,12 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|r
+name|off
 operator|+=
 literal|5
 expr_stmt|;
 else|else
-name|r
+name|off
 operator|=
 literal|4
 expr_stmt|;
@@ -11937,7 +11940,7 @@ argument_list|,
 operator|&
 name|SmtpReplyBuffer
 index|[
-name|r
+name|off
 index|]
 argument_list|)
 expr_stmt|;
