@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	3.1 83/08/11"
+literal|"@(#)main.c	3.2 83/08/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,12 @@ modifier|*
 name|p
 decl_stmt|;
 name|char
-name|fast
+name|fflag
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|dflag
 init|=
 literal|0
 decl_stmt|;
@@ -143,7 +148,7 @@ block|{
 case|case
 literal|'f'
 case|:
-name|fast
+name|fflag
 operator|++
 expr_stmt|;
 break|break;
@@ -168,6 +173,13 @@ expr_stmt|;
 break|break;
 case|case
 literal|'d'
+case|:
+name|dflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
 case|:
 name|debug
 operator|++
@@ -418,7 +430,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fast
+name|fflag
 condition|)
 block|{
 if|if
@@ -436,6 +448,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dflag
+operator|||
 name|doconfig
 argument_list|()
 operator|<
@@ -722,7 +736,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"window: [-e escape] [-t] [-f]\n"
+literal|"window: [-e escape-char] [-t] [-f] [-d]\n"
 argument_list|)
 expr_stmt|;
 name|exit
