@@ -1896,7 +1896,9 @@ expr_stmt|;
 name|nfsmout
 label|:
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5392,11 +5394,15 @@ case|case
 name|VDIR
 case|:
 return|return
+operator|(
 name|EISDIR
+operator|)
 return|;
 default|default:
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 block|}
 block|}
@@ -7359,6 +7365,7 @@ name|ap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|nfs_mknodrpc
 argument_list|(
 name|ap
@@ -7377,6 +7384,7 @@ name|ap
 operator|->
 name|a_vap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
