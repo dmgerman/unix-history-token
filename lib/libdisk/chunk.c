@@ -1364,10 +1364,6 @@ case|:
 case|case
 name|freebsd
 case|:
-name|subtype
-operator|=
-literal|0xa5
-expr_stmt|;
 name|c1
 operator|=
 name|Find_Mother_Chunk

@@ -1585,7 +1585,7 @@ name|n
 argument_list|,
 name|freebsd
 argument_list|,
-literal|0
+name|ty
 argument_list|,
 literal|0
 argument_list|,
@@ -1617,7 +1617,7 @@ name|n
 argument_list|,
 name|mbr
 argument_list|,
-literal|0
+name|ty
 argument_list|,
 literal|0
 argument_list|,
