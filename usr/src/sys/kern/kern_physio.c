@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/seg.h>
 end_include
 
 begin_include
@@ -111,7 +105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This routine does device I/O for a user process.  *  * If the user has the proper access privilidges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the pages  * are unlocked.  */
+comment|/*  * This routine does device I/O for a user process.  *  * If the user has the proper access privileges, the process is  * marked 'delayed unlock' and the pages involved in the I/O are  * faulted and locked. After the completion of the I/O, the pages  * are unlocked.  */
 end_comment
 
 begin_macro
