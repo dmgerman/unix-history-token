@@ -2642,25 +2642,6 @@ argument_list|(
 name|VAR_HOSTNAME
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|!
-name|dp
-operator|||
-operator|!
-name|cp
-operator|||
-operator|!
-name|hp
-operator|)
-operator|&&
-name|file_readable
-argument_list|(
-literal|"/etc/hosts"
-argument_list|)
-condition|)
-return|return;
 comment|/* Tack ourselves into /etc/hosts */
 name|fp
 operator|=

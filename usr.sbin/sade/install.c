@@ -2243,29 +2243,9 @@ decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|msgYesNo
-argument_list|(
-literal|"Is this machine's CMOS clock set to local time?\n"
-literal|"If it is set to UTC, please select NO here"
-argument_list|)
-condition|)
-name|system
-argument_list|(
-literal|"touch /etc/wall_cmos_clock"
-argument_list|)
-expr_stmt|;
-else|else
-name|system
-argument_list|(
-literal|"rm -f /etc/wall_cmos_clock"
-argument_list|)
-expr_stmt|;
 name|systemExecute
 argument_list|(
-literal|"rm -f /etc/localtime; tzsetup"
+literal|"rm -f /etc/localtime /etc/wall_cmos_clock; tzsetup"
 argument_list|)
 expr_stmt|;
 name|restorescr
