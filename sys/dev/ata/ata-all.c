@@ -1214,6 +1214,21 @@ argument_list|(
 name|dev
 argument_list|)
 operator|)
+operator|||
+operator|!
+name|ch
+operator|->
+name|r_io
+operator|||
+operator|!
+name|ch
+operator|->
+name|r_altio
+operator|||
+operator|!
+name|ch
+operator|->
+name|r_irq
 condition|)
 return|return
 name|ENXIO
@@ -1790,9 +1805,18 @@ argument_list|,
 name|ATA_ACTIVE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|ata_reinit
+argument_list|(
+name|ch
+argument_list|)
+operator|)
+condition|)
+name|ATA_UNLOCK_CH
 argument_list|(
 name|ch
 argument_list|)
@@ -3082,6 +3106,7 @@ block|}
 endif|#
 directive|endif
 default|default:
+break|break;
 block|}
 return|return
 name|ENOTTY
@@ -4112,6 +4137,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+break|break;
 block|}
 name|ch
 operator|->
@@ -8305,6 +8331,7 @@ operator|->
 name|channel
 argument_list|)
 expr_stmt|;
+comment|/* XXX SOS */
 block|}
 end_function
 
