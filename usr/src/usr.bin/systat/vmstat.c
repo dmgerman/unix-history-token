@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.5 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4673,7 +4673,7 @@ index|]
 block|;
 name|atime
 operator|/=
-literal|60.0
+name|hertz
 block|;
 name|words
 operator|=
