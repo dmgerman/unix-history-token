@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	7.4 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.10 93/04/20 11:16:51 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.c	7.5 (Berkeley) %G%  *  * from: $Header: cpu.c,v 1.11 93/04/27 14:34:42 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -32,6 +32,23 @@ include|#
 directive|include
 file|<machine/reg.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sparc/sparc/cache.h>
+end_include
+
+begin_comment
+comment|/* This is declared here so that you must include a CPU for the cache code. */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|cacheinfo
+name|cacheinfo
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* the following are used externally (sysctl_hw) */
@@ -84,7 +101,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Attach the CPU.  Right now we just print stuff like "Sun 4/65 (25 MHz)".  * Eventually we will need more....  */
+comment|/*  * Attach the CPU.  * Discover interesting goop about the virtual address cache.  */
 end_comment
 
 begin_function
@@ -118,6 +135,10 @@ name|int
 name|node
 decl_stmt|,
 name|clk
+decl_stmt|,
+name|i
+decl_stmt|,
+name|l
 decl_stmt|;
 specifier|register
 name|u_int
@@ -262,6 +283,104 @@ operator|/
 literal|1000000
 expr_stmt|;
 comment|/* XXX */
+comment|/* 	 * Fill in the cache info.  Note, vac-hwflush is spelled 	 * with an underscore on 4/75s. 	 */
+name|cacheinfo
+operator|.
+name|c_totalsize
+operator|=
+name|getpropint
+argument_list|(
+name|node
+argument_list|,
+literal|"vac-size"
+argument_list|,
+literal|65536
+argument_list|)
+expr_stmt|;
+name|cacheinfo
+operator|.
+name|c_hwflush
+operator|=
+name|getpropint
+argument_list|(
+name|node
+argument_list|,
+literal|"vac_hwflush"
+argument_list|,
+literal|0
+argument_list|)
+operator||
+name|getpropint
+argument_list|(
+name|node
+argument_list|,
+literal|"vac-hwflush"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|cacheinfo
+operator|.
+name|c_linesize
+operator|=
+name|l
+operator|=
+name|getpropint
+argument_list|(
+name|node
+argument_list|,
+literal|"vac-linesize"
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|<
+name|l
+condition|;
+name|i
+operator|++
+control|)
+comment|/* void */
+empty_stmt|;
+if|if
+condition|(
+operator|(
+literal|1
+operator|<<
+name|i
+operator|)
+operator|!=
+name|l
+condition|)
+name|panic
+argument_list|(
+literal|"bad cache line size %d"
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+name|cacheinfo
+operator|.
+name|c_l2linesize
+operator|=
+name|i
+expr_stmt|;
+name|vactype
+operator|=
+name|VAC_WRITETHROUGH
+expr_stmt|;
+comment|/* ??? */
 block|}
 end_function
 
