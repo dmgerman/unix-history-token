@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	5.6 (Berkeley) %G%"
+literal|"@(#)shutdown.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,6 +195,13 @@ end_function_decl
 begin_function_decl
 name|time_t
 name|getsdt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|finish
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2338,12 +2345,10 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|finish
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -2369,7 +2374,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|timeout
