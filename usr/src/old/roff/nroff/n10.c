@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n10.c	4.2 %G%"
+literal|"@(#)n10.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1077,6 +1077,36 @@ operator|.
 name|plotoff
 argument_list|)
 expr_stmt|;
+comment|/* 			 * simulate bold font as overstrike if no t.bdon 			 */
+if|if
+condition|(
+name|xfont
+operator|==
+literal|2
+operator|&&
+operator|!
+operator|(
+operator|*
+name|t
+operator|.
+name|bdon
+operator|&
+literal|0377
+operator|)
+condition|)
+block|{
+name|oput
+argument_list|(
+operator|*
+name|codep
+argument_list|)
+expr_stmt|;
+name|oput
+argument_list|(
+literal|'\b'
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|obufp
 operator|++
