@@ -9148,8 +9148,11 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"%04x (M)%x: \t"
+literal|"%04jx (M)%x: \t"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|addr
 argument_list|,
 name|ahd_inb
@@ -9385,8 +9388,11 @@ break|break;
 block|}
 name|db_printf
 argument_list|(
-literal|"%04x (M)%x: \t0x%x\t=\t0x%x"
+literal|"%04jx (M)%x: \t0x%jx\t=\t0x%jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|addr
 argument_list|,
 name|ahd_inb
@@ -9396,8 +9402,14 @@ argument_list|,
 name|MODE_PTR
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|old_value
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|new_value
 argument_list|)
 expr_stmt|;
