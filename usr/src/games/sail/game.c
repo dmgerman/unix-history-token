@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)game.c	1.1 83/03/17"
+literal|"@(#)game.c	1.2 83/05/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|turns
 decl_stmt|;
