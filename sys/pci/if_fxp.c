@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.21.2.6 1997/03/21 08:01:50 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_fxp.c,v 1.21.2.7 1997/04/23 01:49:12 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2320,10 +2320,10 @@ block|}
 if|if
 condition|(
 name|txp
+operator|==
+name|sc
 operator|->
-name|cb_command
-operator|&
-name|FXP_CB_COMMAND_S
+name|cbl_last
 condition|)
 break|break;
 block|}
@@ -2333,13 +2333,13 @@ name|cbl_first
 operator|=
 name|txp
 expr_stmt|;
-comment|/* 			 * Clear watchdog timer. It may or may not be set 			 * again in fxp_start(). 			 */
 name|ifp
 operator|->
 name|if_timer
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 			 * Try to start more packets transmitting. 			 */
 if|if
 condition|(
 name|ifp
@@ -3800,22 +3800,20 @@ name|scb_command
 operator|=
 name|FXP_SCB_COMMAND_RU_START
 expr_stmt|;
-comment|/* 	 * Toggle a few bits in the DP83840 PHY. 	 */
-if|if
+comment|/* 	 * Toggle a few bits in the PHY. 	 */
+switch|switch
 condition|(
 name|sc
 operator|->
 name|phy_primary_device
-operator|==
-name|FXP_PHY_DP83840
-operator|||
-name|sc
-operator|->
-name|phy_primary_device
-operator|==
-name|FXP_PHY_DP83840A
 condition|)
 block|{
+case|case
+name|FXP_PHY_DP83840
+case|:
+case|case
+name|FXP_PHY_DP83840A
+case|:
 name|fxp_mdi_write
 argument_list|(
 name|sc
@@ -3851,6 +3849,10 @@ name|FXP_DP83840_PCR_BIT10
 argument_list|)
 expr_stmt|;
 comment|/* XXX I have no idea */
+comment|/* fall through */
+case|case
+name|FXP_PHY_82555
+case|:
 comment|/* 		 * If link0 is set, disable auto-negotiation and then: 		 *	If link1 is unset = 10Mbps 		 *	If link1 is set = 100Mbps 		 *	If link2 is unset = half duplex 		 *	If link2 is set = full duplex 		 */
 if|if
 condition|(
@@ -3874,7 +3876,7 @@ operator|&
 name|IFF_LINK1
 operator|)
 condition|?
-name|FXP_DP83840_BMCR_SPEED_100M
+name|FXP_PHY_BMCR_SPEED_100M
 else|:
 literal|0
 expr_stmt|;
@@ -3888,7 +3890,7 @@ operator|&
 name|IFF_LINK2
 operator|)
 condition|?
-name|FXP_DP83840_BMCR_FULLDUPLEX
+name|FXP_PHY_BMCR_FULLDUPLEX
 else|:
 literal|0
 expr_stmt|;
@@ -3902,7 +3904,7 @@ name|sc
 operator|->
 name|phy_primary_addr
 argument_list|,
-name|FXP_DP83840_BMCR
+name|FXP_PHY_BMCR
 argument_list|,
 operator|(
 name|fxp_mdi_read
@@ -3915,16 +3917,16 @@ name|sc
 operator|->
 name|phy_primary_addr
 argument_list|,
-name|FXP_DP83840_BMCR
+name|FXP_PHY_BMCR
 argument_list|)
 operator|&
 operator|~
 operator|(
-name|FXP_DP83840_BMCR_AUTOEN
+name|FXP_PHY_BMCR_AUTOEN
 operator||
-name|FXP_DP83840_BMCR_SPEED_100M
+name|FXP_PHY_BMCR_SPEED_100M
 operator||
-name|FXP_DP83840_BMCR_FULLDUPLEX
+name|FXP_PHY_BMCR_FULLDUPLEX
 operator|)
 operator|)
 operator||
@@ -3944,7 +3946,7 @@ name|sc
 operator|->
 name|phy_primary_addr
 argument_list|,
-name|FXP_DP83840_BMCR
+name|FXP_PHY_BMCR
 argument_list|,
 operator|(
 name|fxp_mdi_read
@@ -3957,17 +3959,16 @@ name|sc
 operator|->
 name|phy_primary_addr
 argument_list|,
-name|FXP_DP83840_BMCR
+name|FXP_PHY_BMCR
 argument_list|)
 operator||
-name|FXP_DP83840_BMCR_AUTOEN
+name|FXP_PHY_BMCR_AUTOEN
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-block|{
+break|break;
+default|default:
 name|printf
 argument_list|(
 literal|"fxp%d: warning: unsupported PHY, type = %d, addr = %d\n"
