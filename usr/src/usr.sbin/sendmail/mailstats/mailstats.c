@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)mailstats.c	5.1 (Berkeley) %G%"
+literal|"@(#)mailstats.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,7 +62,7 @@ operator|)
 name|mailstats
 operator|.
 name|c
-literal|5.1
+literal|5.2
 operator|%
 name|G
 operator|%
@@ -165,7 +165,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
