@@ -123,10 +123,6 @@ name|CBB_CARD_OK
 value|0x08000000
 define|#
 directive|define
-name|CBB_KLUDGE_ALLOC
-value|0x10000000
-define|#
-directive|define
 name|CBB_16BIT_CARD
 value|0x20000000
 define|#
