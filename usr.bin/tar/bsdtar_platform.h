@@ -66,6 +66,17 @@ parameter_list|)
 value|(st)->st_mtimespec.tv_nsec
 end_define
 
+begin_comment
+comment|/* nl_langinfo supports D_MD_ORDER (FreeBSD extension) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NL_LANGINFO_D_MD_ORDER
+value|1
+end_define
+
 begin_if
 if|#
 directive|if

@@ -115,6 +115,10 @@ name|char
 name|option_warn_links
 decl_stmt|;
 comment|/* -l */
+name|char
+name|day_first
+decl_stmt|;
+comment|/* show day before month in -tv output */
 comment|/* If>= 0, then close this when done. */
 name|int
 name|fd

@@ -877,6 +877,11 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
 name|time_t
 name|tim
 decl_stmt|;
@@ -1208,34 +1213,42 @@ name|st_mtime
 expr_stmt|;
 if|if
 condition|(
+name|abs
+argument_list|(
 name|tim
-operator|<
-name|now
 operator|-
-literal|6
-operator|*
-literal|30
-operator|*
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60
-operator|||
-name|tim
-operator|>
 name|now
-operator|+
-literal|6
+argument_list|)
+operator|>
+operator|(
+literal|365
+operator|/
+literal|2
+operator|)
 operator|*
-literal|30
-operator|*
-literal|24
-operator|*
-literal|60
-operator|*
-literal|60
+literal|86400
 condition|)
+name|fmt
+operator|=
+name|bsdtar
+operator|->
+name|day_first
+condition|?
+literal|"%e %b  %Y"
+else|:
+literal|"%b %e  %Y"
+expr_stmt|;
+else|else
+name|fmt
+operator|=
+name|bsdtar
+operator|->
+name|day_first
+condition|?
+literal|"%e %b  %R"
+else|:
+literal|"%b %e  %R"
+expr_stmt|;
 name|strftime
 argument_list|(
 name|tmp
@@ -1245,7 +1258,7 @@ argument_list|(
 name|tmp
 argument_list|)
 argument_list|,
-literal|"%b %e  %Y"
+name|fmt
 argument_list|,
 name|localtime
 argument_list|(
@@ -1254,32 +1267,20 @@ name|tim
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
-name|strftime
+name|fprintf
 argument_list|(
+name|out
+argument_list|,
+literal|" %s "
+argument_list|,
 name|tmp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmp
-argument_list|)
-argument_list|,
-literal|"%b %e %R"
-argument_list|,
-name|localtime
-argument_list|(
-operator|&
-name|tim
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|safe_fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|" %s %s"
-argument_list|,
-name|tmp
+literal|"%s"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
