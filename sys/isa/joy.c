@@ -1309,8 +1309,7 @@ name|joydriver
 block|,
 name|IO_GAME
 block|,
-operator|-
-literal|1
+literal|0
 block|,
 operator|-
 literal|1
@@ -1318,8 +1317,7 @@ block|,
 operator|(
 name|caddr_t
 operator|)
-operator|-
-literal|1
+literal|0
 block|,
 literal|0
 block|,
