@@ -1116,13 +1116,13 @@ block|{
 name|char
 name|line
 index|[
-literal|1024
+literal|2048
 index|]
 decl_stmt|;
 name|char
 name|junk
 index|[
-literal|256
+literal|511
 index|]
 decl_stmt|;
 name|char
@@ -1140,7 +1140,8 @@ name|fp
 argument_list|,
 name|line
 argument_list|,
-literal|1024
+sizeof|sizeof
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -1270,7 +1271,7 @@ name|rdeps
 argument_list|,
 name|cp
 argument_list|,
-literal|510
+literal|1023
 argument_list|)
 expr_stmt|;
 return|return
@@ -1329,7 +1330,7 @@ index|]
 decl_stmt|,
 name|deps
 index|[
-literal|511
+literal|1024
 index|]
 decl_stmt|;
 name|PkgNodePtr
@@ -1370,7 +1371,7 @@ name|cp2
 decl_stmt|,
 name|tmp
 index|[
-literal|511
+literal|1024
 index|]
 decl_stmt|;
 name|IndexEntryPtr
