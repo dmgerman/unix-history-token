@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.7	81/11/20	*/
+comment|/*	uipc_syscalls.c	4.8	81/11/21	*/
 end_comment
 
 begin_include
@@ -293,9 +293,9 @@ if|if
 condition|(
 name|piconnect
 argument_list|(
-name|rso
-argument_list|,
 name|wso
+argument_list|,
+name|rso
 argument_list|)
 operator|==
 literal|0
