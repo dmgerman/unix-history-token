@@ -15,12 +15,9 @@ begin_comment
 comment|/* debugging code */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-value|1
-end_define
+begin_comment
+comment|/* #undef DEBUG */
+end_comment
 
 begin_comment
 comment|/* Minutes per DST adjustment */
@@ -257,6 +254,14 @@ end_comment
 
 begin_comment
 comment|/* #undef CLOCK_IRIG */
+end_comment
+
+begin_comment
+comment|/* JJY receiver */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_JJY */
 end_comment
 
 begin_comment
@@ -583,17 +588,52 @@ begin_comment
 comment|/* canonical system (cpu-vendor-os) string */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
 name|STR_SYSTEM
-value|"alpha-unknown-freebsd"
+value|"alpha-undermydesk-freebsd"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"sparc64-undermydesk-freebsd"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|STR_SYSTEM
+value|"ia64-undermydesk-freebsd"
 end_define
 
 begin_else
@@ -605,7 +645,7 @@ begin_define
 define|#
 directive|define
 name|STR_SYSTEM
-value|"i386-unknown-freebsd"
+value|"i386-undermydesk-freebsd"
 end_define
 
 begin_endif
@@ -666,12 +706,9 @@ begin_comment
 comment|/* define if struct clockinfo has tickadj */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_TICKADJ_IN_STRUCT_CLOCKINFO
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_TICKADJ_IN_STRUCT_CLOCKINFO */
+end_comment
 
 begin_comment
 comment|/* define if struct ntptimeval uses time.tv_nsec instead of time.tv_usec */
@@ -1234,6 +1271,14 @@ comment|/* #undef DECL_HSTRERROR_0 */
 end_comment
 
 begin_comment
+comment|/* inet_ntoa()? */
+end_comment
+
+begin_comment
+comment|/* #undef DECL_INET_NTOA_0 */
+end_comment
+
+begin_comment
 comment|/* ioctl()? */
 end_comment
 
@@ -1454,6 +1499,22 @@ name|AUTOKEY
 end_define
 
 begin_comment
+comment|/* TrueTime 560 IRIG-B decoder? */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_TT560 */
+end_comment
+
+begin_comment
+comment|/* Zyfer GPStarplus */
+end_comment
+
+begin_comment
+comment|/* #undef CLOCK_ZYFER */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<arpa/nameser.h> header file. */
 end_comment
 
@@ -1479,6 +1540,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_BSTRING_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the `clock_gettime' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CLOCK_GETTIME
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the `clock_settime' function. */
@@ -1570,17 +1642,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETRUSAGE
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the `gettimeofday' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETTIMEOFDAY
 value|1
 end_define
 
@@ -1750,6 +1811,14 @@ comment|/* #undef HAVE_LIBSOCKET */
 end_comment
 
 begin_comment
+comment|/* Define if you have the `syslog' library (-lsyslog). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBSYSLOG */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<machine/inline.h> header file. */
 end_comment
 
@@ -1884,6 +1953,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<netinet/in_system.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_NETINET_IN_SYSTEM_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<netinet/in_systm.h> header file. */
 end_comment
 
@@ -1891,6 +1968,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_NETINET_IN_SYSTM_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<netinet/ip.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NETINET_IP_H
 value|1
 end_define
 
@@ -2190,6 +2278,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<stdint.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDINT_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<stdlib.h> header file. */
 end_comment
 
@@ -2376,12 +2475,9 @@ begin_comment
 comment|/* Define if you have the<sys/lock.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_LOCK_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_SYS_LOCK_H */
+end_comment
 
 begin_comment
 comment|/* Define if you have the<sys/mman.h> header file. */
@@ -2475,6 +2571,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_SELECT_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/signal.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SIGNAL_H
 value|1
 end_define
 
@@ -2881,11 +2988,24 @@ begin_comment
 comment|/* The size of a `long', as computed by sizeof. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2960,16 +3080,33 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.1.0"
+value|"4.1.1a"
 end_define
 
 begin_comment
 comment|/* Define if your processor stores words with the most significant byte first    (like Motorola and SPARC, unlike Intel and VAX). */
 end_comment
 
-begin_comment
-comment|/* #undef WORDS_BIGENDIAN */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|WORDS_BIGENDIAN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if on AIX 3.    System headers sometimes define this.    We just want to avoid a redefinition error message.  */
