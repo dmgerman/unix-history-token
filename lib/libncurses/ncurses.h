@@ -753,6 +753,9 @@ name|stdscr
 decl_stmt|,
 modifier|*
 name|curscr
+decl_stmt|,
+modifier|*
+name|newscr
 decl_stmt|;
 end_decl_stmt
 
