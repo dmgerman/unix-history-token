@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns_ip.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -645,6 +645,9 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BBNNET
 if|if
 condition|(
 name|ip
@@ -719,6 +722,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Make mbuf data length reflect IDP length. 	 * If not enough data to reflect IDP length, drop. 	 */
 name|m
 operator|->
@@ -2004,6 +2009,18 @@ name|m
 operator|->
 name|m_next
 control|)
+block|{
+name|ifn
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ifnet_en
+operator|*
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifn
@@ -2040,6 +2057,7 @@ name|ro_rt
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
