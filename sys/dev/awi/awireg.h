@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: awireg.h,v 1.3 2000/03/22 11:22:22 onoe Exp $ */
+comment|/* $NetBSD: awireg.h,v 1.8 2003/01/20 05:30:06 simonb Exp $ */
 end_comment
 
 begin_comment
@@ -10,6 +10,18 @@ end_comment
 begin_comment
 comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Bill Sommerfeld  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DEV_IC_AWIREG_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DEV_IC_AWIREG_H
+end_define
 
 begin_comment
 comment|/*  * The firmware typically loaded onto Am79C930-based 802.11 interfaces  * uses a 32k or larger shared memory buffer to communicate with the  * host.  *  * Depending on the exact configuration of the device, this buffer may  * either be mapped into PCMCIA memory space, or accessible a byte at  * a type through PCMCIA I/O space.  *  * This header defines offsets into this shared memory.  */
@@ -134,77 +146,77 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_MIB_TYPE
-value|0x0
+value|(AWI_CMD_PARAMS + 0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_MIB_SIZE
-value|0x1
+value|(AWI_CMD_PARAMS + 0x1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_MIB_INDEX
-value|0x2
+value|(AWI_CMD_PARAMS + 0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_MIB_DATA
-value|0x4
+value|(AWI_CMD_PARAMS + 0x4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_MIB_LOCAL
-value|0x0
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_MIB_ADDR
-value|0x2
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_MIB_MAC
-value|0x3
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_MIB_STAT
-value|0x4
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_MIB_MGT
-value|0x5
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_MIB_DRVR
-value|0x6
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_MIB_PHY
-value|0x7
+value|7
 end_define
 
 begin_define
@@ -218,42 +230,42 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_TX_LEN
-value|0x14
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_TX_DATA
-value|0x0
+value|(AWI_CMD_PARAMS + 0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_TX_MGT
-value|0x4
+value|(AWI_CMD_PARAMS + 0x4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_TX_BCAST
-value|0x8
+value|(AWI_CMD_PARAMS + 0x8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_TX_PS
-value|0xc
+value|(AWI_CMD_PARAMS + 0xc)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_TX_CF
-value|0x10
+value|(AWI_CMD_PARAMS + 0x10)
 end_define
 
 begin_define
@@ -267,42 +279,42 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_FTX_LEN
-value|0x5
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_FTX_DATA
-value|0x0
+value|(AWI_CMD_PARAMS + 0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_FTX_MGT
-value|0x1
+value|(AWI_CMD_PARAMS + 0x1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_FTX_BCAST
-value|0x2
+value|(AWI_CMD_PARAMS + 0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_FTX_PS
-value|0x3
+value|(AWI_CMD_PARAMS + 0x3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_FTX_CF
-value|0x4
+value|(AWI_CMD_PARAMS + 0x4)
 end_define
 
 begin_define
@@ -323,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_IRX_DATA_DESC
-value|0x0
+value|(AWI_CMD_PARAMS + 0x0)
 end_define
 
 begin_comment
@@ -334,7 +346,7 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_IRX_PS_DESC
-value|0x4
+value|(AWI_CMD_PARAMS + 0x4)
 end_define
 
 begin_comment
@@ -359,14 +371,14 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_SLEEP_LEN
-value|0x8
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_WAKEUP
-value|0x0
+value|(AWI_CMD_PARAMS + 0x0)
 end_define
 
 begin_comment
@@ -391,42 +403,42 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_SCAN_LEN
-value|0x6
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SCAN_DURATION
-value|0x0
+value|(AWI_CMD_PARAMS + 0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SCAN_SET
-value|0x2
+value|(AWI_CMD_PARAMS + 0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SCAN_PATTERN
-value|0x3
+value|(AWI_CMD_PARAMS + 0x3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SCAN_IDX
-value|0x4
+value|(AWI_CMD_PARAMS + 0x4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SCAN_SUSP
-value|0x5
+value|(AWI_CMD_PARAMS + 0x5)
 end_define
 
 begin_define
@@ -440,63 +452,63 @@ begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_LEN
-value|0x14
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_SET
-value|0x0
+value|(AWI_CMD_PARAMS + 0x0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_PATTERN
-value|0x1
+value|(AWI_CMD_PARAMS + 0x1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_IDX
-value|0x2
+value|(AWI_CMD_PARAMS + 0x2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_STARTBSS
-value|0x3
+value|(AWI_CMD_PARAMS + 0x3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_DWELL
-value|0x4
+value|(AWI_CMD_PARAMS + 0x4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_MBZ
-value|0x6
+value|(AWI_CMD_PARAMS + 0x6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_TIMESTAMP
-value|0x8
+value|(AWI_CMD_PARAMS + 0x8)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AWI_CA_SYNC_REFTIME
-value|0x10
+value|(AWI_CMD_PARAMS + 0x10)
 end_define
 
 begin_define
@@ -915,7 +927,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* mgt/ps recieved */
+comment|/* mgt/ps received */
 end_comment
 
 begin_define
@@ -1183,13 +1195,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|AWI_VBM
+name|AWI_VBM_OFFSET
 value|0x500
 end_define
 
 begin_comment
 comment|/* Virtual Bit Map */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AWI_VBM_LENGTH
+value|0x501
+end_define
+
+begin_define
+define|#
+directive|define
+name|AWI_VBM_BITMAP
+value|0x502
+end_define
 
 begin_define
 define|#
@@ -1739,6 +1765,12 @@ name|u_int8_t
 name|Fill_CFP
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1849,6 +1881,12 @@ name|AWI_ESS_ID_SIZE
 index|]
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -1971,6 +2009,12 @@ literal|4
 index|]
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2011,6 +2055,14 @@ decl_stmt|;
 name|u_int8_t
 name|Wep_Required
 decl_stmt|;
+define|#
+directive|define
+name|AWI_WEP_ON
+value|0x10
+define|#
+directive|define
+name|AWI_WEP_OFF
+value|0x00
 name|u_int8_t
 name|_Reserved1
 decl_stmt|;
@@ -2075,6 +2127,12 @@ name|AWI_ESS_ID_SIZE
 index|]
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2111,6 +2169,12 @@ name|u_int8_t
 name|_Reserved1
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -2219,8 +2283,23 @@ literal|8
 index|]
 decl_stmt|;
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _DEV_IC_AWIREG_H */
+end_comment
 
 end_unit
 

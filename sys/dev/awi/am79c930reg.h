@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: am79c930reg.h,v 1.3 2000/03/22 11:22:22 onoe Exp $ */
+comment|/* $NetBSD: am79c930reg.h,v 1.4 2003/11/02 11:07:45 wiz Exp $ */
 end_comment
 
 begin_comment
@@ -261,7 +261,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/*  * mmm, inconsistancy in chip documentation:  * According to page 79--80, all four of the following are equivalent  * and address the single byte pointed at by BSS_{FS,MBS} | LMA_{HI,LO}  * According to tables on p63 and p67, they're the LSB through MSB  * of a 32-bit word.  */
+comment|/*  * mmm, inconsistency in chip documentation:  * According to page 79--80, all four of the following are equivalent  * and address the single byte pointed at by BSS_{FS,MBS} | LMA_{HI,LO}  * According to tables on p63 and p67, they're the LSB through MSB  * of a 32-bit word.  */
 end_comment
 
 begin_define
