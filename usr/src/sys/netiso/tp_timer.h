@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_timer.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -33,53 +33,29 @@ end_comment
 
 begin_struct
 struct|struct
+name|Ecallarg
+block|{
+name|u_int
+name|c_arg1
+decl_stmt|;
+name|u_int
+name|c_arg2
+decl_stmt|;
+name|int
+name|c_arg3
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|Ccallout
 block|{
 name|int
 name|c_time
 decl_stmt|;
 comment|/* incremental time */
-name|int
-name|c_active
-decl_stmt|;
-comment|/* this timer is active? */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* E timers - generally expire or there must be> 1 active per tpcb */
-end_comment
-
-begin_struct
-struct|struct
-name|Ecallout
-block|{
-name|int
-name|c_time
-decl_stmt|;
-comment|/* incremental time */
-name|int
-name|c_func
-decl_stmt|;
-comment|/* function to call */
-name|u_int
-name|c_arg1
-decl_stmt|;
-comment|/* argument to routine */
-name|u_int
-name|c_arg2
-decl_stmt|;
-comment|/* argument to routine */
-name|int
-name|c_arg3
-decl_stmt|;
-comment|/* argument to routine */
-name|struct
-name|Ecallout
-modifier|*
-name|c_next
-decl_stmt|;
 block|}
 struct|;
 end_struct

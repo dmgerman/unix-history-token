@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3438,7 +3438,7 @@ name|CHECK
 argument_list|(
 argument|((int)dref<=
 literal|0
-argument||| dref>= N_TPREF ||  			(tpcb = tp_ref[dref].tpr_pcb ) == (struct tp_pcb *)
+argument||| dref>= tp_refinfo.tpr_size ||  			(tpcb = tp_ref[dref].tpr_pcb ) == (struct tp_pcb *)
 literal|0
 argument||| 			tpcb->tp_refp->tpr_state == REF_FREE || 			tpcb->tp_refp->tpr_state == REF_FROZEN)
 argument_list|,
@@ -3575,7 +3575,7 @@ name|CHECK
 argument_list|(
 argument|((int)dref<=
 literal|0
-argument||| dref>= N_TPREF)
+argument||| dref>= tp_refinfo.tpr_size)
 argument_list|,
 argument|E_TP_MISM_REFS
 argument_list|,

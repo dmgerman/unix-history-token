@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -115,37 +115,28 @@ begin_define
 define|#
 directive|define
 name|N_CTIMERS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_ETIMERS
-value|2
+value|6
 end_define
 
 begin_struct
 struct|struct
 name|tp_ref
 block|{
-name|u_char
+comment|/*	u_char	 			tpr_state; /* values REF_FROZEN, etc. above */
+comment|/*	struct Ccallout 	tpr_callout[N_CTIMERS]; /* C timers */
+comment|/*	struct Ecallout		tpr_calltodo;			/* list of active E timers */
+define|#
+directive|define
 name|tpr_state
-decl_stmt|;
-comment|/* values REF_FROZEN, etc. above */
-name|struct
-name|Ccallout
+value|tpr_pcb->tp_refstate
+define|#
+directive|define
 name|tpr_callout
-index|[
-name|N_CTIMERS
-index|]
-decl_stmt|;
-comment|/* C timers */
-name|struct
-name|Ecallout
+value|tpr_pcb->tp_refcallout
+define|#
+directive|define
 name|tpr_calltodo
-decl_stmt|;
-comment|/* list of active E timers */
+value|tpr_pcb->tp_refcalltodo
 name|struct
 name|tp_pcb
 modifier|*
@@ -167,6 +158,12 @@ name|tpr_base
 decl_stmt|;
 name|int
 name|tpr_size
+decl_stmt|;
+name|int
+name|tpr_maxopen
+decl_stmt|;
+name|int
+name|tpr_numopen
 decl_stmt|;
 block|}
 struct|;
@@ -714,6 +711,14 @@ name|TPF_GENERAL_ADDR
 value|TPFLAG_GENERAL_ADDR
 define|#
 directive|define
+name|TPF_DELACK
+value|0x8
+define|#
+directive|define
+name|TPF_ACKNOW
+value|0x10
+define|#
+directive|define
 name|PEER_IS_LOCAL
 parameter_list|(
 name|t
@@ -797,6 +802,7 @@ parameter_list|(
 name|tpcb
 parameter_list|)
 value|((short *)((tpcb)->tp_fsuffix))
+comment|/* Timer stuff */
 name|u_char
 name|tp_vers
 decl_stmt|;
@@ -804,7 +810,30 @@ comment|/* protocol version */
 name|u_char
 name|tp_peer_acktime
 decl_stmt|;
-comment|/* used to compute DT retrans time */
+comment|/* used for DT retrans time */
+name|u_char
+name|tp_refstate
+decl_stmt|;
+comment|/* values REF_FROZEN, etc. above */
+name|struct
+name|tp_pcb
+modifier|*
+name|tp_fasttimeo
+decl_stmt|;
+comment|/* limit pcbs to examine */
+name|struct
+name|Ccallout
+name|tp_refcallout
+index|[
+name|N_CTIMERS
+index|]
+decl_stmt|;
+comment|/* C timers */
+name|struct
+name|Ecallarg
+name|tp_retransargs
+decl_stmt|;
+comment|/* dunt ask ... */
 name|struct
 name|sockbuf
 name|tp_Xsnd
@@ -963,7 +992,7 @@ specifier|extern
 name|struct
 name|tp_pcb
 modifier|*
-name|tp_intercepts
+name|tp_ftimeolist
 decl_stmt|;
 end_decl_stmt
 
