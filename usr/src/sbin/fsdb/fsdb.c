@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	8.4 (Berkeley) %G%"
+literal|"@(#)fsdb.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -16067,8 +16067,6 @@ operator|&
 name|ip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16082,8 +16080,6 @@ operator|&
 name|ip
 operator|->
 name|di_mtime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -16097,8 +16093,6 @@ operator|&
 name|ip
 operator|->
 name|di_ctime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;

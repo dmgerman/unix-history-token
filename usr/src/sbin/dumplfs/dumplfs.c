@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	8.3 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1811,8 +1811,6 @@ operator|&
 name|dip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|,
 literal|"mtime "
@@ -1823,8 +1821,6 @@ operator|&
 name|dip
 operator|->
 name|di_mtime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|,
 literal|"ctime "
@@ -1835,8 +1831,6 @@ operator|&
 name|dip
 operator|->
 name|di_ctime
-operator|.
-name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
