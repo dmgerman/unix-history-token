@@ -9739,6 +9739,8 @@ name|f
 decl_stmt|;
 name|dq_t
 name|q
+decl_stmt|,
+name|next
 decl_stmt|;
 name|now
 operator|=
@@ -9869,13 +9871,18 @@ name|NULL
 condition|;
 name|q
 operator|=
+name|next
+control|)
+block|{
+name|next
+operator|=
 name|TAILQ_NEXT
 argument_list|(
 name|q
 argument_list|,
 name|dq_entries
 argument_list|)
-control|)
+expr_stmt|;
 switch|switch
 condition|(
 name|q
@@ -9945,6 +9952,7 @@ operator|->
 name|dq_timeout
 operator|--
 expr_stmt|;
+block|}
 block|}
 name|MarkSet
 operator|=
