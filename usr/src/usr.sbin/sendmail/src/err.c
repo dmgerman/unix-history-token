@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.8 (Berkeley) %G%"
+literal|"@(#)err.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -823,7 +823,7 @@ name|OutChannel
 argument_list|)
 condition|)
 return|return;
-comment|/* error on output -- if reporting lost channel, just ignore it */
+comment|/* 	**  Error on output -- if reporting lost channel, just ignore it. 	**  Also, ignore errors from QUIT response (221 message) -- some 	**	rude servers don't read result. 	*/
 if|if
 condition|(
 name|feof
@@ -835,6 +835,17 @@ name|ferror
 argument_list|(
 name|InChannel
 argument_list|)
+operator|||
+name|strncmp
+argument_list|(
+name|msg
+argument_list|,
+literal|"221"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return;
 comment|/* can't call syserr, 'cause we are using MsgBuf */
@@ -855,7 +866,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\""
+literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %m"
 argument_list|,
 name|CurEnv
 operator|->
