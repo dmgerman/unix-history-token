@@ -6661,7 +6661,6 @@ name|sc
 operator|->
 name|inputbytes
 return|;
-empty_stmt|;
 block|}
 end_function
 
