@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csfix.c	5.1 (Berkeley) %G%"
+literal|"@(#)csfix.c	6.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,6 +245,10 @@ name|flagee
 index|[
 literal|160
 index|]
+decl_stmt|,
+modifier|*
+name|digitty
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -477,8 +481,7 @@ operator|==
 literal|'|'
 condition|)
 name|cp
-operator|=
-operator|-
+operator|-=
 literal|2
 expr_stmt|;
 name|c
@@ -742,20 +745,16 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|digitty
-argument_list|(
-argument|yup
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|yup
+parameter_list|)
 name|char
 name|yup
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -858,7 +857,7 @@ name|flagee
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|fixdigits
