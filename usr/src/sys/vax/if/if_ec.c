@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.1	82/04/11	*/
+comment|/*	if_ec.c	4.2	82/04/11	*/
 end_comment
 
 begin_include
@@ -3042,9 +3042,12 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|dest
 operator|&
-literal|0xffffff00
+operator|~
+literal|0xff
+operator|)
 operator|==
 literal|0
 condition|)
