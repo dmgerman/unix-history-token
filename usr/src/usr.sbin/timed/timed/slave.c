@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slave.c	2.4 (Berkeley) %G%"
+literal|"@(#)slave.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,9 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MEASURE
+name|int
+name|tempstat
+decl_stmt|;
 specifier|extern
 name|FILE
 modifier|*
@@ -539,9 +542,55 @@ name|IGNORE
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|MEASURE
+name|tempstat
+operator|=
+name|status
+expr_stmt|;
+endif|#
+directive|endif
 name|setstatus
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MEASURE
+comment|/* 		 * Check to see if we just became master 		 */
+if|if
+condition|(
+operator|(
+name|status
+operator|&
+name|MASTER
+operator|)
+operator|&&
+operator|!
+operator|(
+name|tempstat
+operator|&
+name|MASTER
+operator|)
+condition|)
+block|{
+name|fp
+operator|=
+name|fopen
+argument_list|(
+literal|"/usr/adm/timed.masterlog"
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|nignorednets
@@ -574,6 +623,11 @@ operator|+
 name|delay2
 expr_stmt|;
 block|}
+else|else
+name|looktime
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|wait
 operator|.
