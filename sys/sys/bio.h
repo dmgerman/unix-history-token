@@ -2563,6 +2563,8 @@ name|buf
 operator|*
 operator|,
 name|u_quad_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

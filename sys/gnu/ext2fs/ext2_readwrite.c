@@ -701,6 +701,9 @@ name|off_t
 name|osize
 decl_stmt|;
 name|int
+name|seqcount
+decl_stmt|;
+name|int
 name|blkoffset
 decl_stmt|,
 name|error
@@ -720,6 +723,14 @@ operator|=
 name|ap
 operator|->
 name|a_ioflag
+expr_stmt|;
+name|seqcount
+operator|=
+name|ap
+operator|->
+name|a_ioflag
+operator|>>
+literal|16
 expr_stmt|;
 name|uio
 operator|=
@@ -1204,6 +1215,8 @@ argument_list|,
 name|ip
 operator|->
 name|i_size
+argument_list|,
+name|seqcount
 argument_list|)
 expr_stmt|;
 block|}
