@@ -159,6 +159,17 @@ begin_comment
 comment|/* maxdepth vs. mindepth */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_DEPTH
+value|F_TIME_A
+end_define
+
+begin_comment
+comment|/* -depth n vs. -d */
+end_comment
+
 begin_comment
 comment|/* command line function modifiers */
 end_comment
@@ -335,6 +346,10 @@ name|nlink_t
 name|_l_data
 decl_stmt|;
 comment|/* link count */
+name|short
+name|_d_data
+decl_stmt|;
+comment|/* level depth (-1 to N) */
 name|off_t
 name|_o_data
 decl_stmt|;
@@ -445,6 +460,13 @@ define|#
 directive|define
 name|c_data
 value|p_un._c_data
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_data
+value|p_un._d_data
 end_define
 
 begin_define
