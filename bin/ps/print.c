@@ -649,14 +649,7 @@ else|else
 operator|*
 name|cp
 operator|=
-operator|(
-name|flag
-operator|&
-name|SPAGE
-operator|)
-condition|?
-literal|'P'
-else|:
+comment|/* (flag& SPAGE) ? 'P' : */
 literal|'D'
 expr_stmt|;
 break|break;
@@ -883,6 +876,18 @@ name|cp
 operator|++
 operator|=
 literal|'L'
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|SUGID
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'U'
 expr_stmt|;
 if|if
 condition|(
