@@ -6366,6 +6366,14 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|sc
 operator|=
 name|xsc
@@ -6395,6 +6403,11 @@ argument_list|,
 name|sc
 argument_list|,
 name|hz
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
