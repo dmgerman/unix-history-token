@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krb_passwd.c	8.1 (Berkeley) %G%"
+literal|"@(#)krb_passwd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,19 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -103,13 +91,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kpasswd_proto.h"
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -121,7 +127,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kpasswd_proto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_define
@@ -130,6 +148,64 @@ directive|define
 name|PROTO
 value|"tcp"
 end_define
+
+begin_decl_stmt
+specifier|static
+name|void
+name|send_update
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|recv_ack
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|cleanup
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|finish
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -168,24 +244,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|KTEXT_ST
 name|ticket
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|Key_schedule
 name|random_schedule
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|long
 name|authopts
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|realm
 index|[
@@ -200,17 +280,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sock
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|krb_passwd
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|servent
@@ -305,19 +384,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: setrlimit: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"setrlimit"
 argument_list|)
 expr_stmt|;
 return|return
@@ -342,14 +411,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: couldn't find entry for service %s/%s\n"
+literal|"couldn't find entry for service %s/%s"
 argument_list|,
 name|SERVICE
 argument_list|,
@@ -378,14 +442,9 @@ operator|!=
 name|KSUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: couldn't get local Kerberos realm: %s\n"
+literal|"couldn't get local Kerberos realm: %s"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -417,14 +476,9 @@ operator|!=
 name|KSUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: couldn't get Kerberos host: %s\n"
+literal|"couldn't get Kerberos host: %s"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -452,14 +506,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: couldn't get host entry for krb host %s\n"
+literal|"couldn't get host entry for krb host %s"
 argument_list|,
 name|krbhst
 argument_list|)
@@ -478,12 +527,8 @@ name|host
 operator|->
 name|h_addrtype
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|host
-operator|->
-name|h_addr
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -492,6 +537,10 @@ operator|&
 name|sin
 operator|.
 name|sin_addr
+argument_list|,
+name|host
+operator|->
+name|h_addr
 argument_list|,
 name|host
 operator|->
@@ -524,19 +573,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: socket: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"socket"
 argument_list|)
 expr_stmt|;
 return|return
@@ -568,19 +607,9 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: connect: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"connect"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -650,14 +679,9 @@ operator|!=
 name|KSUCCESS
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: Kerberos sendauth error: %s\n"
+literal|"Kerberos sendauth error: %s"
 argument_list|,
 name|krb_err_txt
 index|[
@@ -720,14 +744,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: error reading old Kerberos password\n"
+literal|"error reading old Kerberos password"
 argument_list|)
 expr_stmt|;
 return|return
@@ -833,14 +852,9 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: timed out (aborted)\n"
+literal|"timed out (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -852,14 +866,9 @@ literal|1
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: select failed (aborted)\n"
+literal|"select failed (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -893,14 +902,9 @@ name|proto_data
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: couldn't read verification string (aborted)\n"
+literal|"couldn't read verification string (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1010,9 +1014,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bzero
+name|memset
 argument_list|(
 name|pass
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1039,14 +1045,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: error reading new Kerberos password (aborted)\n"
+literal|"error reading new Kerberos password (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1077,14 +1078,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: error reading new Kerberos password (aborted)\n"
+literal|"error reading new Kerberos password (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1108,14 +1104,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: password mismatch (aborted)\n"
+literal|"password mismatch (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1220,14 +1211,9 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: timed out reading ACK (aborted)\n"
+literal|"timed out reading ACK (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1239,14 +1225,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: select failed (aborted)\n"
+literal|"select failed (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1266,40 +1247,36 @@ expr_stmt|;
 name|cleanup
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|send_update
-argument_list|(
-argument|dest
-argument_list|,
-argument|pwd
-argument_list|,
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dest
+parameter_list|,
+name|pwd
+parameter_list|,
+name|str
+parameter_list|)
 name|int
 name|dest
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|pwd
 decl_stmt|,
-modifier|*
+decl|*
 name|str
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1362,17 +1339,12 @@ name|ud
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: couldn't write pw update (abort)\n"
+literal|"couldn't write pw update (abort)"
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1380,6 +1352,8 @@ operator|*
 operator|)
 operator|&
 name|ud
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1399,20 +1373,16 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|recv_ack
-argument_list|(
-argument|remote
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|remote
+parameter_list|)
 name|int
 name|remote
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|cc
@@ -1444,14 +1414,9 @@ operator|<=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: error reading acknowledgement (aborted)\n"
+literal|"error reading acknowledgement (aborted)"
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -1474,19 +1439,18 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|cleanup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
 operator|)
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1495,6 +1459,8 @@ operator|)
 operator|&
 name|proto_data
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|proto_data
@@ -1504,13 +1470,15 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|okey
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1521,13 +1489,15 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|osched
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1538,13 +1508,15 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 name|random_schedule
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1553,7 +1525,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	8.1 (Berkeley) %G%"
+literal|"@(#)passwd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -68,8 +74,32 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -91,6 +121,7 @@ directive|endif
 end_endif
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -106,11 +137,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|register
 name|int
 name|ch
 decl_stmt|;
@@ -118,9 +144,6 @@ name|char
 modifier|*
 name|uname
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KERBEROS
 while|while
 condition|(
 operator|(
@@ -143,6 +166,9 @@ condition|(
 name|ch
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KERBEROS
 case|case
 literal|'l'
 case|:
@@ -152,30 +178,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-else|#
-directive|else
-while|while
-condition|(
-operator|(
-name|ch
-operator|=
-name|getopt
-argument_list|(
-name|argc
-argument_list|,
-name|argv
-argument_list|,
-literal|""
-argument_list|)
-operator|)
-operator|!=
-name|EOF
-condition|)
-switch|switch
-condition|(
-name|ch
-condition|)
-block|{
 endif|#
 directive|endif
 default|default:
@@ -184,11 +186,6 @@ literal|'?'
 case|:
 name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 name|argc
@@ -210,28 +207,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: getlogin: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"getlogin"
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|argc
@@ -261,15 +243,11 @@ argument_list|,
 name|uname
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"passwd: %s\n\t%s\n%s\n"
+literal|"%s\n\t%s\n%s\n"
 argument_list|,
 literal|"to change another user's Kerberos password, do"
 argument_list|,
@@ -278,12 +256,6 @@ argument_list|,
 literal|"to change a user's local passwd, use \"passwd -l user\""
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|uname
@@ -297,11 +269,6 @@ break|break;
 default|default:
 name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -328,8 +295,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+name|void
 name|usage
-argument_list|()
+parameter_list|()
 block|{
 ifdef|#
 directive|ifdef
@@ -358,6 +329,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
