@@ -3946,7 +3946,7 @@ name|ad_wait_init
 argument_list|(
 name|mss
 argument_list|,
-literal|201
+literal|201000
 argument_list|)
 expr_stmt|;
 name|x
@@ -4033,7 +4033,7 @@ name|ad_wait_init
 argument_list|(
 name|mss
 argument_list|,
-literal|1002
+literal|1002000
 argument_list|)
 expr_stmt|;
 name|x
@@ -4149,7 +4149,7 @@ name|ad_wait_init
 argument_list|(
 name|mss
 argument_list|,
-literal|1000
+literal|1000000
 argument_list|)
 expr_stmt|;
 if|if
@@ -4344,7 +4344,7 @@ name|ad_wait_init
 argument_list|(
 name|mss
 argument_list|,
-literal|203
+literal|203000
 argument_list|)
 expr_stmt|;
 name|prev
@@ -4419,7 +4419,7 @@ name|ad_wait_init
 argument_list|(
 name|mss
 argument_list|,
-literal|1000
+literal|1000000
 argument_list|)
 expr_stmt|;
 name|flags
