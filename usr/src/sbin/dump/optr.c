@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.2 (Berkeley) %G%"
+literal|"@(#)optr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"dump.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
