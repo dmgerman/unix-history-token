@@ -2764,9 +2764,6 @@ operator|->
 name|lun_id
 argument_list|)
 expr_stmt|;
-name|free_path_on_return
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|status
@@ -2785,6 +2782,9 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|free_path_on_return
+operator|++
+expr_stmt|;
 name|xpt_setup_ccb
 argument_list|(
 operator|&
