@@ -74,7 +74,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|long
 name|alpha_syscall_exit
 parameter_list|(
 name|struct
@@ -113,7 +113,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|long
 name|i386_syscall_exit
 parameter_list|(
 name|struct
@@ -141,7 +141,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|long
 name|i386_linux_syscall_exit
 parameter_list|(
 name|struct
@@ -180,7 +180,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|long
 name|ia64_syscall_exit
 parameter_list|(
 name|struct
@@ -219,7 +219,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|long
 name|sparc64_syscall_exit
 parameter_list|(
 name|struct

@@ -1306,7 +1306,7 @@ comment|/*  * And when the system call is done, we handle it here.  * Currently,
 end_comment
 
 begin_function
-name|int
+name|long
 name|sparc64_syscall_exit
 parameter_list|(
 name|struct
@@ -1329,7 +1329,7 @@ name|struct
 name|reg
 name|regs
 decl_stmt|;
-name|int
+name|long
 name|retval
 decl_stmt|;
 name|int
@@ -1503,21 +1503,9 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|fsc
-operator|.
-name|s_args
-index|[
-name|i
-index|]
-operator|=
-name|malloc
+name|asprintf
 argument_list|(
-literal|12
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
+operator|&
 name|fsc
 operator|.
 name|s_args
@@ -1535,7 +1523,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -1579,16 +1566,9 @@ if|if
 condition|(
 name|errorp
 condition|)
-block|{
-name|temp
-operator|=
-name|malloc
+name|asprintf
 argument_list|(
-literal|12
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
+operator|&
 name|temp
 argument_list|,
 literal|"0x%lx"
@@ -1608,9 +1588,7 @@ name|offset
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|temp
 operator|=
 name|print_arg
@@ -1630,7 +1608,6 @@ operator|.
 name|args
 argument_list|)
 expr_stmt|;
-block|}
 name|fsc
 operator|.
 name|s_args
