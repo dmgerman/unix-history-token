@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	4.29	83/01/04	*/
+comment|/*	tcp_timer.c	4.30	83/01/17	*/
 end_comment
 
 begin_include
@@ -536,28 +536,25 @@ begin_comment
 comment|/*  * TCP timer processing.  */
 end_comment
 
-begin_expr_stmt
-name|tcp_timers
-argument_list|(
-name|tp
-argument_list|,
-name|timer
-argument_list|)
-specifier|register
-expr|struct
+begin_function
+name|struct
 name|tcpcb
-operator|*
+modifier|*
+name|tcp_timers
+parameter_list|(
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|timer
+parameter_list|)
+specifier|register
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+decl_stmt|;
 name|int
 name|timer
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -568,12 +565,14 @@ comment|/* 	 * 2 MSL timeout in shutdown went off.  Delete connection 	 * contro
 case|case
 name|TCPT_2MSL
 case|:
+name|tp
+operator|=
 name|tcp_close
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 comment|/* 	 * Retransmission timer went off.  Message has not 	 * been acked within retransmit interval.  Back off 	 * to a longer retransmit interval and retransmit all 	 * unacknowledged messages in the window. 	 */
 case|case
 name|TCPT_REXMT
@@ -592,6 +591,8 @@ operator|>
 name|TCP_MAXRXTSHIFT
 condition|)
 block|{
+name|tp
+operator|=
 name|tcp_drop
 argument_list|(
 name|tp
@@ -599,7 +600,7 @@ argument_list|,
 name|ETIMEDOUT
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 name|TCPT_RANGESET
 argument_list|(
@@ -703,7 +704,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 comment|/* 	 * Persistance timer into zero window. 	 * Force a byte to be output, if possible. 	 */
 case|case
 name|TCPT_PERSIST
@@ -733,7 +734,7 @@ name|t_force
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+break|break;
 comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection if idle for too long. 	 */
 case|case
 name|TCPT_KEEP
@@ -814,9 +815,11 @@ index|]
 operator|=
 name|TCPTV_KEEP
 expr_stmt|;
-return|return;
+break|break;
 name|dropit
 label|:
+name|tp
+operator|=
 name|tcp_drop
 argument_list|(
 name|tp
@@ -824,10 +827,15 @@ argument_list|,
 name|ETIMEDOUT
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
+return|return
+operator|(
+name|tp
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

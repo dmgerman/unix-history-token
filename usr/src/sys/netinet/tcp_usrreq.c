@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.72	83/01/13	*/
+comment|/*	tcp_usrreq.c	1.73	83/01/17	*/
 end_comment
 
 begin_include
@@ -329,11 +329,13 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_options
 operator|&
 name|SO_LINGER
+operator|)
 operator|&&
 name|so
 operator|->
@@ -367,23 +369,21 @@ name|t_state
 operator|>
 name|TCPS_LISTEN
 condition|)
+name|tp
+operator|=
 name|tcp_disconnect
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
 else|else
-block|{
+name|tp
+operator|=
 name|tcp_close
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tp
-operator|=
-literal|0
-expr_stmt|;
-block|}
 break|break;
 comment|/* 	 * Give the socket an address. 	 */
 case|case
@@ -568,6 +568,8 @@ comment|/* 	 * Initiate disconnect from peer. 	 * If connection never passed emb
 case|case
 name|PRU_DISCONNECT
 case|:
+name|tp
+operator|=
 name|tcp_disconnect
 argument_list|(
 name|tp
@@ -636,11 +638,17 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
 name|tcp_usrclosed
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+condition|)
 name|error
 operator|=
 name|tcp_output
@@ -715,6 +723,8 @@ comment|/* 	 * Abort the TCP. 	 */
 case|case
 name|PRU_ABORT
 case|:
+name|tp
+operator|=
 name|tcp_drop
 argument_list|(
 name|tp
@@ -891,6 +901,8 @@ comment|/* 	 * TCP slow timer went off; going through this 	 * routine for traci
 case|case
 name|PRU_SLOWTIMO
 case|:
+name|tp
+operator|=
 name|tcp_timers
 argument_list|(
 name|tp
@@ -1113,22 +1125,20 @@ begin_comment
 comment|/*  * Initiate (or continue) disconnect.  * If embryonic state, just send reset (once).  * If not in ``let data drain'' option, just drop.  * Otherwise (hard), mark socket disconnecting and drop  * current input data; switch states based on user close, and  * send segment to peer (with FIN).  */
 end_comment
 
-begin_macro
+begin_function
+name|struct
+name|tcpcb
+modifier|*
 name|tcp_disconnect
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
+specifier|register
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|socket
@@ -1149,6 +1159,8 @@ name|t_state
 operator|<
 name|TCPS_ESTABLISHED
 condition|)
+name|tp
+operator|=
 name|tcp_close
 argument_list|(
 name|tp
@@ -1163,6 +1175,8 @@ name|so_linger
 operator|==
 literal|0
 condition|)
+name|tp
+operator|=
 name|tcp_drop
 argument_list|(
 name|tp
@@ -1185,11 +1199,17 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
 name|tcp_usrclosed
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+condition|)
 operator|(
 name|void
 operator|)
@@ -1199,29 +1219,32 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|tp
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * User issued close, and wish to trail through shutdown states:  * if never received SYN, just forget it.  If got a SYN from peer,  * but haven't sent FIN, then go to FIN_WAIT_1 state to send peer a FIN.  * If already got a FIN from peer, then almost done; go to LAST_ACK  * state.  In all other cases, have already sent FIN to peer (e.g.  * after PRU_SHUTDOWN), and just have to play tedious game waiting  * for peer to send FIN or not respond to keep-alives, etc.  * We can let the user exit from the close as soon as the FIN is acked.  */
 end_comment
 
-begin_macro
+begin_function
+name|struct
+name|tcpcb
+modifier|*
 name|tcp_usrclosed
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
+specifier|register
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -1242,6 +1265,8 @@ name|t_state
 operator|=
 name|TCPS_CLOSED
 expr_stmt|;
+name|tp
+operator|=
 name|tcp_close
 argument_list|(
 name|tp
@@ -1275,6 +1300,8 @@ block|}
 if|if
 condition|(
 name|tp
+operator|&&
+name|tp
 operator|->
 name|t_state
 operator|>=
@@ -1289,8 +1316,13 @@ operator|->
 name|inp_socket
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|tp
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

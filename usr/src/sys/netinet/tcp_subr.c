@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.38	83/01/04	*/
+comment|/*	tcp_subr.c	4.39	83/01/17	*/
 end_comment
 
 begin_include
@@ -939,30 +939,25 @@ begin_comment
 comment|/*  * Drop a TCP connection, reporting  * the specified error.  If connection is synchronized,  * then send a RST to peer.  */
 end_comment
 
-begin_macro
+begin_function
+name|struct
+name|tcpcb
+modifier|*
 name|tcp_drop
-argument_list|(
-argument|tp
-argument_list|,
-argument|errno
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|,
+name|errno
+parameter_list|)
+specifier|register
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|errno
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|socket
@@ -1006,13 +1001,16 @@ name|so_error
 operator|=
 name|errno
 expr_stmt|;
+return|return
+operator|(
 name|tcp_close
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|tcp_abort
@@ -1031,6 +1029,9 @@ end_decl_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|tcp_close
 argument_list|(
 operator|(
@@ -1050,20 +1051,20 @@ begin_comment
 comment|/*  * Close a TCP control block:  *	discard all space held by the tcp  *	discard internet protocol block  *	wake up any sleepers  */
 end_comment
 
-begin_expr_stmt
-name|tcp_close
-argument_list|(
-name|tp
-argument_list|)
-specifier|register
-expr|struct
+begin_function
+name|struct
 name|tcpcb
-operator|*
+modifier|*
+name|tcp_close
+parameter_list|(
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+specifier|register
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1210,8 +1211,18 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|(
+expr|struct
+name|tcpcb
+operator|*
+operator|)
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|tcp_drain

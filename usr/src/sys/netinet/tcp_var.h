@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.17	82/12/20	*/
+comment|/*	tcp_var.h	4.18	83/01/17	*/
 end_comment
 
 begin_comment
@@ -267,6 +267,36 @@ name|tcp_template
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|struct
+name|tcpcb
+modifier|*
+name|tcp_close
+argument_list|()
+decl_stmt|,
+modifier|*
+name|tcp_drop
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tcpcb
+modifier|*
+name|tcp_timers
+argument_list|()
+decl_stmt|,
+modifier|*
+name|tcp_disconnect
+argument_list|()
+decl_stmt|,
+modifier|*
+name|tcp_usrclosed
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
