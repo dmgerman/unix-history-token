@@ -1,4 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)ps.c	4.3 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * ps; VAX 4BSD version  */
 end_comment
@@ -81,6 +91,12 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
 begin_decl_stmt
 name|struct
 name|nlist
@@ -136,6 +152,14 @@ define|#
 directive|define
 name|X_MAXSLP
 value|5
+block|{
+literal|"_ccpu"
+block|}
+block|,
+define|#
+directive|define
+name|X_CCPU
+value|6
 block|{
 literal|0
 block|}
@@ -238,7 +262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	     F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN S  TT  TIME */
+comment|/*	     F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN ST TT  TIME */
 end_comment
 
 begin_struct
@@ -269,7 +293,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	USER       PID %CPU NICE  SZ  RSS TT F  TIME */
+comment|/*	USER       PID %CPU NI   SZ  RSS TT ST TIME */
 end_comment
 
 begin_decl_stmt
@@ -280,7 +304,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	SSIZ   PID TT S  TIME */
+comment|/*	SSIZ   PID TT ST TIME */
 end_comment
 
 begin_decl_stmt
@@ -291,7 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	F     PID TT  TIME RES SL  MINFLT  MAJFLT SIZE  RSS  SRS TSIZ TRS PF*/
+comment|/*	   PID TT ST    TIME RES SL MINFLT MAJFLT SIZE  RSS  SRS TSIZ TRS %CP*/
 end_comment
 
 begin_struct
@@ -316,7 +340,7 @@ name|short
 name|v_xccount
 decl_stmt|;
 name|short
-name|v_aveflt
+name|v_pctcpu
 decl_stmt|;
 block|}
 struct|;
@@ -456,6 +480,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|double
+name|pcpu
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pscomp
 parameter_list|()
@@ -467,6 +498,12 @@ name|int
 name|nswap
 decl_stmt|,
 name|maxslp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|double
+name|ccpu
 decl_stmt|;
 end_decl_stmt
 
@@ -1696,6 +1733,57 @@ block|{
 name|cantread
 argument_list|(
 literal|"maxslp"
+argument_list|,
+name|kmemf
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|lseek
+argument_list|(
+name|kmem
+argument_list|,
+operator|(
+name|long
+operator|)
+name|nl
+index|[
+name|X_CCPU
+index|]
+operator|.
+name|n_value
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|read
+argument_list|(
+name|kmem
+argument_list|,
+operator|&
+name|ccpu
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ccpu
+argument_list|)
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|ccpu
+argument_list|)
+condition|)
+block|{
+name|cantread
+argument_list|(
+literal|"ccpu"
 argument_list|,
 name|kmemf
 argument_list|)
@@ -3351,13 +3439,6 @@ argument_list|,
 name|p_swrss
 argument_list|)
 expr_stmt|;
-name|e
-argument_list|(
-name|v_aveflt
-argument_list|,
-name|p_aveflt
-argument_list|)
-expr_stmt|;
 name|vp
 operator|->
 name|v_minflt
@@ -3441,6 +3522,13 @@ name|x_ccount
 expr_stmt|;
 block|}
 block|}
+name|vp
+operator|->
+name|v_pctcpu
+operator|=
+name|pcpu
+argument_list|()
+expr_stmt|;
 undef|#
 directive|undef
 name|e
@@ -3459,7 +3547,8 @@ name|sun
 operator|.
 name|u_pctcpu
 operator|=
-literal|0.0
+name|pcpu
+argument_list|()
 expr_stmt|;
 end_elseif
 
@@ -3543,33 +3632,95 @@ operator|++
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-unit|}  getu
+begin_macro
+unit|}  double
+name|pcpu
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|mproc
+operator|->
+name|p_time
+operator|==
+literal|0
+operator|||
 operator|(
+name|mproc
+operator|->
+name|p_flag
+operator|&
+name|SLOAD
 operator|)
-block|{ 	struct
-name|pte
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0.0
+operator|)
+return|;
+return|return
+operator|(
+literal|100.0
 operator|*
+name|mproc
+operator|->
+name|p_pctcpu
+operator|/
+operator|(
+literal|1.0
+operator|-
+name|exp
+argument_list|(
+name|mproc
+operator|->
+name|p_time
+operator|*
+name|log
+argument_list|(
+name|ccpu
+argument_list|)
+argument_list|)
+operator|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_macro
+name|getu
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|struct
+name|pte
+modifier|*
 name|pteaddr
-block|,
+decl_stmt|,
 name|apte
-block|,
+decl_stmt|,
 name|arguutl
 index|[
 name|UPAGES
 operator|+
 name|CLSIZE
 index|]
-block|;
+decl_stmt|;
 specifier|register
 name|int
 name|i
-block|;
+decl_stmt|;
 name|int
 name|ncl
-block|,
+decl_stmt|,
 name|size
-block|;
+decl_stmt|;
 name|size
 operator|=
 name|sflg
@@ -3584,7 +3735,7 @@ argument_list|(
 expr|struct
 name|user
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3656,25 +3807,17 @@ name|pcbpf
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|argaddr
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-end_return
-
-begin_expr_stmt
-unit|} 	pteaddr
+block|}
+name|pteaddr
 operator|=
 operator|&
 name|Usrptma
@@ -3693,9 +3836,6 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|lseek
 argument_list|(
 name|kmem
@@ -3715,9 +3855,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|read
@@ -3760,9 +3897,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_if
-
-begin_expr_stmt
 name|lseek
 argument_list|(
 name|mem
@@ -3791,9 +3925,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|read
@@ -3835,9 +3966,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|arguutl
@@ -3873,9 +4001,6 @@ name|argaddr
 operator|=
 literal|0
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|pcbpf
 operator|=
 name|arguutl
@@ -3885,9 +4010,6 @@ index|]
 operator|.
 name|pg_pfnum
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ncl
 operator|=
 operator|(
@@ -3906,9 +4028,6 @@ operator|*
 name|CLSIZE
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|--
@@ -3992,29 +4111,27 @@ operator|)
 return|;
 block|}
 block|}
-end_while
-
-begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-end_return
+block|}
+end_block
 
-begin_expr_stmt
-unit|}  char
-operator|*
+begin_function
+name|char
+modifier|*
 name|getcmd
-argument_list|()
+parameter_list|()
 block|{
 name|char
 name|cmdbuf
 index|[
 name|BUFSIZ
 index|]
-block|;
-expr|union
+decl_stmt|;
+union|union
 block|{
 name|char
 name|argc
@@ -4023,7 +4140,7 @@ name|CLSIZE
 operator|*
 name|NBPG
 index|]
-block|;
+decl_stmt|;
 name|int
 name|argi
 index|[
@@ -4036,28 +4153,30 @@ argument_list|(
 name|int
 argument_list|)
 index|]
-block|; 	}
+decl_stmt|;
+block|}
 name|argspac
-block|;
+union|;
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-block|;
+decl_stmt|;
 specifier|register
 name|int
-operator|*
+modifier|*
 name|ip
-block|;
+decl_stmt|;
 name|char
 name|c
-block|;
+decl_stmt|;
 name|int
 name|nbad
-block|; 	struct
+decl_stmt|;
+name|struct
 name|dblock
 name|db
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|mproc
@@ -4081,9 +4200,6 @@ operator|(
 literal|""
 operator|)
 return|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|cflg
@@ -4114,9 +4230,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -4232,9 +4345,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|ip
 operator|=
 operator|&
@@ -4252,20 +4362,11 @@ name|int
 argument_list|)
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ip
 operator|-=
 literal|2
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* last arg word and .long 0 */
-end_comment
-
-begin_while
 while|while
 condition|(
 operator|*
@@ -4283,9 +4384,6 @@ condition|)
 goto|goto
 name|retucomm
 goto|;
-end_while
-
-begin_expr_stmt
 operator|*
 operator|(
 name|char
@@ -4295,22 +4393,13 @@ name|ip
 operator|=
 literal|' '
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ip
 operator|++
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|nbad
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|cp
@@ -4429,17 +4518,11 @@ break|break;
 break|break;
 block|}
 block|}
-end_for
-
-begin_expr_stmt
 operator|*
 name|cp
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|*
@@ -4453,9 +4536,6 @@ name|cp
 operator|=
 literal|0
 expr_stmt|;
-end_while
-
-begin_expr_stmt
 name|cp
 operator|=
 operator|(
@@ -4464,9 +4544,6 @@ operator|*
 operator|)
 name|ip
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strncpy
 argument_list|(
 name|cmdbuf
@@ -4486,9 +4563,6 @@ operator|-
 name|cp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|cp
@@ -4544,13 +4618,7 @@ literal|")"
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* 	if (xflg == 0&& gflg == 0&& tptr == 0&& cp[0] == '-') 		return (0); */
-end_comment
-
-begin_return
 return|return
 operator|(
 name|savestr
@@ -4559,14 +4627,8 @@ name|cmdbuf
 argument_list|)
 operator|)
 return|;
-end_return
-
-begin_label
 name|bad
 label|:
-end_label
-
-begin_expr_stmt
 name|fprintf
 argument_list|(
 name|stderr
@@ -4578,14 +4640,8 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|retucomm
 label|:
-end_label
-
-begin_expr_stmt
 name|strcpy
 argument_list|(
 name|cmdbuf
@@ -4593,9 +4649,6 @@ argument_list|,
 literal|" ("
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strncat
 argument_list|(
 name|cmdbuf
@@ -4612,9 +4665,6 @@ name|u_comm
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strcat
 argument_list|(
 name|cmdbuf
@@ -4622,9 +4672,6 @@ argument_list|,
 literal|")"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|savestr
@@ -4633,16 +4680,17 @@ name|cmdbuf
 argument_list|)
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  char
-operator|*
+begin_decl_stmt
+name|char
+modifier|*
 name|lhdr
-operator|=
-literal|"     F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN S  TT  TIME"
-expr_stmt|;
-end_expr_stmt
+init|=
+literal|"     F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN ST TT  TIME"
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|lpr
@@ -4851,7 +4899,7 @@ name|char
 modifier|*
 name|uhdr
 init|=
-literal|"USER       PID %CPU NICE  SZ  RSS TT F   TIME"
+literal|"USER       PID %CPU NI   SZ  RSS TT ST  TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -4884,7 +4932,7 @@ name|ap
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%-8.8s %5u%5.1f%5d%4d%5d"
+literal|"%-8.8s %5u%5.1f%3d%5d%5d"
 argument_list|,
 name|getname
 argument_list|(
@@ -4957,7 +5005,7 @@ name|char
 modifier|*
 name|vhdr
 init|=
-literal|"   PID TT S     TIME RES SL MINFLT MAJFLT SIZE  RSS  SRS TSIZ TRS PF"
+literal|"   PID TT ST    TIME RES SL MINFLT MAJFLT SIZE  RSS  SRS TSIZ TRS %CP"
 decl_stmt|;
 end_decl_stmt
 
@@ -5033,7 +5081,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4d%3d%7d%7d%5d%5d%5d%5d%4d%3d"
+literal|"%4d%3d%7d%7d%5d%5d%5d%5d%4d%4d"
 argument_list|,
 name|ap
 operator|->
@@ -5083,7 +5131,7 @@ literal|2
 argument_list|,
 name|vp
 operator|->
-name|v_aveflt
+name|v_pctcpu
 argument_list|)
 expr_stmt|;
 block|}
@@ -5094,7 +5142,7 @@ name|char
 modifier|*
 name|shdr
 init|=
-literal|"SSIZ   PID TT S   TIME"
+literal|"SSIZ   PID TT ST  TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -5626,6 +5674,30 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|uflg
+condition|)
+return|return
+operator|(
+name|s2
+operator|->
+name|sun
+operator|.
+name|u_pctcpu
+operator|>
+name|s1
+operator|->
+name|sun
+operator|.
+name|u_pctcpu
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|vflg
