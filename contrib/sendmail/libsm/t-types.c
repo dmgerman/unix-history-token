@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: t-types.c,v 1.18 2002/03/13 17:29:53 gshapiro Exp $"
+literal|"@(#)$Id: t-types.c,v 1.1.1.2 2002/04/10 03:04:56 gshapiro Exp $"
 argument_list|)
 end_macro
 

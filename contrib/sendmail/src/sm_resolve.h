@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska Högs
 end_comment
 
 begin_comment
-comment|/* $Id: sm_resolve.h,v 8.8 2001/09/01 00:06:02 gshapiro Exp $ */
+comment|/* $Id: sm_resolve.h,v 1.1.1.1 2002/02/17 21:56:41 gshapiro Exp $ */
 end_comment
 
 begin_if

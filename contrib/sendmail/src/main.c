@@ -58,7 +58,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.876 2002/02/27 23:49:52 ca Exp $"
+literal|"@(#)$Id: main.c,v 1.1.1.11 2002/04/10 03:04:49 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2528,6 +2528,19 @@ operator|=
 name|getextenv
 argument_list|(
 literal|"NAME"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|FullName
+operator|!=
+name|NULL
+condition|)
+name|FullName
+operator|=
+name|newstr
+argument_list|(
+name|FullName
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Initialize name server if it is going to be used. 	*/

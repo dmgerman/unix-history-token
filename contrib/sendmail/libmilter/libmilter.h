@@ -53,7 +53,7 @@ name|SM_IDSTR
 argument_list|(
 argument|MilterlId
 argument_list|,
-literal|"@(#)$Id: libmilter.h,v 8.32 2001/11/29 02:21:02 ca Exp $"
+literal|"@(#)$Id: libmilter.h,v 1.1.1.6 2002/02/17 21:56:45 gshapiro Exp $"
 argument_list|)
 end_macro
 

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.359 2002/03/29 16:20:47 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 1.1.1.10 2002/04/10 03:04:50 gshapiro Exp $"
 argument_list|)
 end_macro
 

@@ -80,7 +80,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: t_pathconf.c,v 8.6 2001/09/23 03:35:41 ca Exp $"
+literal|"@(#)$Id: t_pathconf.c,v 1.1.1.3 2002/02/17 21:56:43 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
