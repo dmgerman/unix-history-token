@@ -1,28 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumutil.c,v 1.11 1999/03/19 06:50:44 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumutil.c,v 1.12 1999/08/07 08:14:44 grog Exp $  */
 end_comment
 
 begin_comment
 comment|/* This file contains utility routines used both in kernel and user context */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -39,7 +22,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|REALLYKERNEL
+name|KERNEL
 end_ifndef
 
 begin_include
@@ -620,7 +603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Take a number with an optional scale factor and convert  * it to a number of bytes.  *  * The scale factors are:  *  * b    blocks (of 512 bytes)  * k    kilobytes (1024 bytes)  * m    megabytes (of 1024 * 1024 bytes)  * g    gigabytes (of 1024 * 1024 * 1024 bytes)  */
+comment|/*  * Take a number with an optional scale factor and convert  * it to a number of bytes.  *  * The scale factors are:  *  * s    sectors (of 512 bytes)  * b    blocks (of 512 bytes).  This unit is deprecated,  *      because it's confusing, but maintained to avoid  *      confusing Veritas users.  * k    kilobytes (1024 bytes)  * m    megabytes (of 1024 * 1024 bytes)  * g    gigabytes (of 1024 * 1024 * 1024 bytes)  */
 end_comment
 
 begin_function
@@ -810,7 +793,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|REALLYKERNEL
+name|KERNEL
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
@@ -844,7 +827,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|REALLYKERNEL
+name|KERNEL
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
@@ -891,17 +874,12 @@ name|dev_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|x
-init|=
-operator|(
-name|int
-operator|)
-name|dev
-decl_stmt|;
 return|return
 operator|(
-name|x
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 operator|&
 name|MASK
 argument_list|(
@@ -926,14 +904,6 @@ name|dev_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|x
-init|=
-operator|(
-name|int
-operator|)
-name|dev
-decl_stmt|;
 switch|switch
 condition|(
 name|DEVTYPE
@@ -970,14 +940,17 @@ name|VOL
 index|[
 name|Volno
 argument_list|(
-name|x
+name|dev
 argument_list|)
 index|]
 operator|.
 name|plex
 index|[
 operator|(
-name|x
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 operator|>>
 name|VINUM_PLEX_SHIFT
 operator|)
@@ -996,7 +969,10 @@ case|:
 return|return
 operator|(
 operator|(
-name|x
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 operator|&
 name|MASK
 argument_list|(
@@ -1010,7 +986,10 @@ comment|/* low order 8 bits */
 operator||
 operator|(
 operator|(
-name|x
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 operator|>>
 name|VINUM_RAWPLEX_SHIFT
 operator|)
@@ -1050,14 +1029,6 @@ name|dev_t
 name|dev
 parameter_list|)
 block|{
-name|int
-name|x
-init|=
-operator|(
-name|int
-operator|)
-name|dev
-decl_stmt|;
 switch|switch
 condition|(
 name|DEVTYPE
@@ -1094,14 +1065,17 @@ name|PLEX
 index|[
 name|Plexno
 argument_list|(
-name|x
+name|dev
 argument_list|)
 index|]
 operator|.
 name|sdnos
 index|[
 operator|(
-name|x
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 operator|>>
 name|VINUM_SD_SHIFT
 operator|)
@@ -1120,7 +1094,10 @@ case|:
 return|return
 operator|(
 operator|(
-name|x
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 operator|&
 name|MASK
 argument_list|(
@@ -1134,7 +1111,10 @@ comment|/* low order 8 bits */
 operator||
 operator|(
 operator|(
-name|x
+name|minor
+argument_list|(
+name|dev
+argument_list|)
 operator|>>
 name|VINUM_RAWPLEX_SHIFT
 operator|)

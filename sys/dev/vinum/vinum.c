@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.24 1999/03/19 05:35:25 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.7.2.3 1999/05/05 05:15:37 grog Exp $  */
 end_comment
 
 begin_define
@@ -1179,20 +1179,16 @@ name|sd
 modifier|*
 name|sd
 decl_stmt|;
-name|struct
-name|devcode
-modifier|*
-name|device
+name|int
+name|devminor
 decl_stmt|;
-name|device
+comment|/* minor number */
+name|devminor
 operator|=
-operator|(
-expr|struct
-name|devcode
-operator|*
-operator|)
-operator|&
+name|minor
+argument_list|(
 name|dev
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1201,9 +1197,10 @@ expr_stmt|;
 comment|/* First, decide what we're looking at */
 switch|switch
 condition|(
-name|device
-operator|->
-name|type
+name|DEVTYPE
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1293,6 +1290,10 @@ condition|)
 return|return
 name|ENXIO
 return|;
+comment|/* FALLTHROUGH */
+case|case
+name|VINUM_RAWPLEX_TYPE
+case|:
 name|index
 operator|=
 name|Plexno
@@ -1382,6 +1383,10 @@ return|return
 name|ENXIO
 return|;
 comment|/* no such device */
+comment|/* FALLTHROUGH */
+case|case
+name|VINUM_RAWSD_TYPE
+case|:
 name|index
 operator|=
 name|Sdno
@@ -1454,15 +1459,6 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Vinum drives are disks.  We already have a disk 	 * driver, so don't handle them here */
-case|case
-name|VINUM_DRIVE_TYPE
-case|:
-default|default:
-return|return
-name|ENODEV
-return|;
-comment|/* don't know what to do with these */
 case|case
 name|VINUM_SUPERDEV_TYPE
 case|:
@@ -1491,7 +1487,7 @@ block|{
 comment|/* yes, can do */
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_DAEMON_DEV
 condition|)
@@ -1506,7 +1502,7 @@ comment|/* we're open */
 elseif|else
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_SUPERDEV
 condition|)
@@ -1527,6 +1523,15 @@ block|}
 return|return
 name|error
 return|;
+comment|/* Vinum drives are disks.  We already have a disk 	 * driver, so don't handle them here */
+case|case
+name|VINUM_DRIVE_TYPE
+case|:
+default|default:
+return|return
+name|ENODEV
+return|;
+comment|/* don't know what to do with these */
 block|}
 block|}
 end_function
@@ -1563,19 +1568,16 @@ name|volume
 modifier|*
 name|vol
 decl_stmt|;
-name|struct
-name|devcode
-modifier|*
-name|device
-init|=
-operator|(
-expr|struct
-name|devcode
-operator|*
-operator|)
-operator|&
-name|dev
+name|int
+name|devminor
 decl_stmt|;
+name|devminor
+operator|=
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|index
 operator|=
 name|Volno
@@ -1586,9 +1588,10 @@ expr_stmt|;
 comment|/* First, decide what we're looking at */
 switch|switch
 condition|(
-name|device
-operator|->
-name|type
+name|DEVTYPE
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1672,6 +1675,10 @@ condition|)
 return|return
 name|ENXIO
 return|;
+comment|/* FALLTHROUGH */
+case|case
+name|VINUM_RAWPLEX_TYPE
+case|:
 name|index
 operator|=
 name|Plexno
@@ -1739,6 +1746,10 @@ return|return
 name|ENXIO
 return|;
 comment|/* no such device */
+comment|/* FALLTHROUGH */
+case|case
+name|VINUM_RAWSD_TYPE
+case|:
 name|index
 operator|=
 name|Sdno
@@ -1779,7 +1790,7 @@ case|:
 comment|/* 	 * don't worry about whether we're root: 	 * nobody else would get this far. 	 */
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_SUPERDEV
 condition|)
@@ -1795,7 +1806,7 @@ comment|/* no longer open */
 elseif|else
 if|if
 condition|(
-name|dev
+name|devminor
 operator|==
 name|VINUM_DAEMON_DEV
 condition|)

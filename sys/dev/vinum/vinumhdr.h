@@ -8,25 +8,8 @@ comment|/* Header files used by all modules */
 end_comment
 
 begin_comment
-comment|/* $Id: vinumhdr.h,v 1.12 1999/01/28 08:58:33 grog Exp grog $ */
+comment|/* $Id: vinumhdr.h,v 1.10 1999/05/07 08:08:02 grog Exp $ */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -37,8 +20,14 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|REALLYKERNEL
+name|KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_vinum.h"
+end_include
 
 begin_include
 include|#
@@ -162,39 +151,6 @@ directive|include
 file|<sys/device.h>
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|KERNEL
-end_undef
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/disk.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REALLYKERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -308,7 +264,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|REALLYKERNEL
+name|KERNEL
 end_ifdef
 
 begin_ifdef

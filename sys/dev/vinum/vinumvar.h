@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.19 1999/03/23 02:48:20 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumvar.h,v 1.24 1999/08/15 02:29:14 grog Exp $  */
 end_comment
 
 begin_include
@@ -33,7 +33,6 @@ init|=
 literal|1024
 block|,
 comment|/* maximum size of a single config line */
-comment|/* XXX Do we still need this? */
 name|MINVINUMSLICE
 init|=
 literal|1048576
@@ -166,7 +165,21 @@ init|=
 literal|64
 block|,
 comment|/* maximum length of any name */
-comment|/* Create a block device number */
+comment|/*  * Define a minor device number.  * This is not used directly; instead, it's  * called by the other macros.  */
+define|#
+directive|define
+name|VINUMMINOR
+parameter_list|(
+name|v
+parameter_list|,
+name|p
+parameter_list|,
+name|s
+parameter_list|,
+name|t
+parameter_list|)
+value|( (v<< VINUM_VOL_SHIFT)		\ 			     | (p<< VINUM_PLEX_SHIFT)		\ 			     | (s<< VINUM_SD_SHIFT) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
+comment|/* Create block and character device minor numbers */
 define|#
 directive|define
 name|VINUMBDEV
@@ -179,26 +192,7 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|((BDEV_MAJOR<< MAJORDEV_SHIFT)	\ 			     | (v<< VINUM_VOL_SHIFT)		\ 			     | (p<< VINUM_PLEX_SHIFT)		\ 			     | (s<< VINUM_SD_SHIFT) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
-comment|/* Create a bit mask for x bits */
-define|#
-directive|define
-name|MASK
-parameter_list|(
-name|x
-parameter_list|)
-value|((1<< (x)) - 1)
-comment|/* Create a raw block device number */
-define|#
-directive|define
-name|VINUMRBDEV
-parameter_list|(
-name|d
-parameter_list|,
-name|t
-parameter_list|)
-value|((BDEV_MAJOR<< MAJORDEV_SHIFT)				\ 			     | ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			     | ((d& ~MASK (VINUM_VOL_WIDTH))				\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH)) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
-comment|/* And a character device number */
+value|makedev (BDEV_MAJOR, VINUMMINOR (v, p, s, t))
 define|#
 directive|define
 name|VINUMCDEV
@@ -211,7 +205,62 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|((CDEV_MAJOR<< MAJORDEV_SHIFT)	\ 			     | (v<< VINUM_VOL_SHIFT)		\ 			     | (p<< VINUM_PLEX_SHIFT)		\ 			     | (s<< VINUM_SD_SHIFT) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
+value|makedev (CDEV_MAJOR, VINUMMINOR (v, p, s, t))
+define|#
+directive|define
+name|VINUM_BLOCK_PLEX
+parameter_list|(
+name|p
+parameter_list|)
+value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
+define|#
+directive|define
+name|VINUM_CHAR_PLEX
+parameter_list|(
+name|p
+parameter_list|)
+value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
+define|#
+directive|define
+name|VINUM_BLOCK_SD
+parameter_list|(
+name|s
+parameter_list|)
+value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
+define|#
+directive|define
+name|VINUM_CHAR_SD
+parameter_list|(
+name|s
+parameter_list|)
+value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWSD_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (s& 0xff)				\ 					 | ((s& ~0xff)<< 8) )
+comment|/* Create a bit mask for x bits */
+define|#
+directive|define
+name|MASK
+parameter_list|(
+name|x
+parameter_list|)
+value|((1<< (x)) - 1)
+comment|/* Create a raw block device minor number */
+define|#
+directive|define
+name|VINUMRMINOR
+parameter_list|(
+name|d
+parameter_list|,
+name|t
+parameter_list|)
+value|( ((d& MASK (VINUM_VOL_WIDTH))<< VINUM_VOL_SHIFT)	\ 			     | ((d& ~MASK (VINUM_VOL_WIDTH))				\<< (VINUM_PLEX_SHIFT + VINUM_VOL_WIDTH)) 		\ 			     | (t<< VINUM_TYPE_SHIFT) )
+define|#
+directive|define
+name|VINUMRBDEV
+parameter_list|(
+name|d
+parameter_list|,
+name|t
+parameter_list|)
+value|makedev (BDEV_MAJOR, VINUMRMINOR (d, t))
 comment|/* extract device type */
 define|#
 directive|define
@@ -219,84 +268,39 @@ name|DEVTYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x>> VINUM_TYPE_SHIFT)& 7)
+value|((minor (x)>> VINUM_TYPE_SHIFT)& 7)
 comment|/*  * This mess is used to catch people who compile  * a debug vinum(8) and non-debug kernel module,  * or the other way round.  */
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
+define|#
+directive|define
 name|VINUM_SUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMMINOR (1, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* superdevice number */
+define|#
+directive|define
 name|VINUM_WRONGSUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|2
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMMINOR (2, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* non-debug superdevice number */
 else|#
 directive|else
+define|#
+directive|define
 name|VINUM_SUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|2
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMMINOR (2, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* superdevice number */
+define|#
+directive|define
 name|VINUM_WRONGSUPERDEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMMINOR (1, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* debug superdevice number */
 endif|#
 directive|endif
+define|#
+directive|define
 name|VINUM_DAEMON_DEV
-init|=
-name|VINUMBDEV
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_SUPERDEV_TYPE
-argument_list|)
-block|,
+value|VINUMMINOR (0, 0, 0, VINUM_SUPERDEV_TYPE)
 comment|/* daemon superdevice number */
 comment|/*  * the number of object entries to cater for initially, and also the  * value by which they are incremented.  It doesn't take long  * to extend them, so theoretically we could start with 1 of each, but  * it's untidy to allocate such small areas.  These values are  * probably too small.  */
 name|INITIAL_DRIVES
@@ -337,9 +341,9 @@ block|,
 comment|/* number of entries in plex region tables */
 name|INITIAL_LOCKS
 init|=
-literal|8
+literal|64
 block|,
-comment|/* number of locks to allocate to a volume */
+comment|/* number of locks to allocate to a plex */
 name|DEFAULT_REVIVE_BLOCKSIZE
 init|=
 literal|65536
@@ -360,6 +364,10 @@ end_comment
 
 begin_comment
 comment|/*  *  31 30   28  27                  20  19 18    16  15                 8    7                   0  * |-----------------------------------------------------------------------------------------------|  * |X |  Type  |    Subdisk number     | X| Plex   |      Major number     |  volume number        |  * |-----------------------------------------------------------------------------------------------|  *  *    0x2                 03                 1           19                      06  *  * The fields in the minor number are interpreted as follows:  *  * Volume:              Only type and volume number are relevant  * Plex in volume:      type, plex number in volume and volume number are relevant  * raw plex:            type, plex number is made of bits 27-16 and 7-0  * raw subdisk:         type, subdisk number is made of bits 27-16 and 7-0  */
+end_comment
+
+begin_comment
+comment|/* This doesn't get used.  Consider removing it. */
 end_comment
 
 begin_struct
@@ -616,6 +624,11 @@ init|=
 literal|0x100000
 block|,
 comment|/* for volumes: freshly created, more then new */
+name|VF_HOTSPARE
+init|=
+literal|0x200000
+block|,
+comment|/* for drives: use as hot spare */
 block|}
 enum|;
 end_enum
@@ -813,10 +826,10 @@ name|timeval
 name|last_update
 decl_stmt|;
 comment|/* and the time of last update */
+comment|/*      * total size in bytes of the drive.  This value      * includes the headers.      */
 name|off_t
 name|drive_size
 decl_stmt|;
-comment|/* total size in bytes of the drive. 							    * This value includes the headers */
 block|}
 struct|;
 end_struct
@@ -830,7 +843,6 @@ name|long
 name|magic
 decl_stmt|;
 comment|/* we're long on magic numbers */
-comment|/* XXX Get these right for big-endian */
 define|#
 directive|define
 name|VINUM_MAGIC
@@ -841,10 +853,10 @@ directive|define
 name|VINUM_NOMAGIC
 value|22322600044678990LL
 comment|/* becomes this after obliteration */
+comment|/*      * Size in bytes of each copy of the      * configuration info.  This must be a multiple      * of the sector size.      */
 name|int
 name|config_length
 decl_stmt|;
-comment|/* size in bytes of each copy of the 							    * configuration info. 							    * This must be a multiple of the sector size. */
 name|struct
 name|vinum_label
 name|label
@@ -885,7 +897,7 @@ comment|/*** Drive definitions ***/
 end_comment
 
 begin_comment
-comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theroretically be a complete, unpartitioned disk   */
+comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theoretically be a complete, unpartitioned disk  */
 end_comment
 
 begin_struct
@@ -999,9 +1011,11 @@ comment|/* sorted list of free space on drive */
 name|u_int64_t
 name|offset
 decl_stmt|;
-name|long
+comment|/* offset of entry */
+name|u_int64_t
 name|sectors
 decl_stmt|;
+comment|/* and length in sectors */
 block|}
 modifier|*
 name|freelist
@@ -1075,7 +1089,8 @@ comment|/* our index in vinum_conf */
 name|int
 name|plexsdno
 decl_stmt|;
-comment|/* and our number in our plex 							    * (undefined if no plex) */
+comment|/* and our number in our plex */
+comment|/* (undefined if no plex) */
 name|u_int64_t
 name|reads
 decl_stmt|;
@@ -1166,7 +1181,7 @@ comment|/* and current state */
 name|u_int64_t
 name|length
 decl_stmt|;
-comment|/* total length of plex (max offset, in blocks) */
+comment|/* total length of plex (sectors) */
 name|int
 name|flags
 decl_stmt|;
@@ -1201,13 +1216,17 @@ decl_stmt|;
 comment|/* number of plex in volume */
 comment|/* Lock information */
 name|int
-name|locks
-decl_stmt|;
-comment|/* number of locks used */
-name|int
 name|alloclocks
 decl_stmt|;
 comment|/* number of locks allocated */
+name|int
+name|usedlocks
+decl_stmt|;
+comment|/* number currently in use */
+name|int
+name|lockwaits
+decl_stmt|;
+comment|/* and number of waits for locks */
 name|struct
 name|rangelock
 modifier|*
@@ -1231,6 +1250,18 @@ name|u_int64_t
 name|bytes_written
 decl_stmt|;
 comment|/* number of bytes written */
+name|u_int64_t
+name|recovered_reads
+decl_stmt|;
+comment|/* number of recovered read operations */
+name|u_int64_t
+name|degraded_writes
+decl_stmt|;
+comment|/* number of degraded writes */
+name|u_int64_t
+name|parityless_writes
+decl_stmt|;
+comment|/* number of parityless writes */
 name|u_int64_t
 name|multiblock
 decl_stmt|;
@@ -1258,6 +1289,32 @@ begin_comment
 comment|/*** Volume definitions ***/
 end_comment
 
+begin_comment
+comment|/* Address range definitions, for locking volumes */
+end_comment
+
+begin_struct
+struct|struct
+name|rangelock
+block|{
+name|daddr_t
+name|stripe
+decl_stmt|;
+comment|/* address + 1 of the range being locked  */
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* user's buffer pointer */
+name|int
+name|plexno
+decl_stmt|;
+comment|/* and number of plex it affects */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|volume
@@ -1275,14 +1332,14 @@ name|int
 name|preferred_plex
 decl_stmt|;
 comment|/* plex to read from, -1 for round-robin */
+comment|/*      * index of plex used for last read, for      * round-robin.      */
 name|int
 name|last_plex_read
 decl_stmt|;
-comment|/* index of plex used for last read, 							    * for round-robin */
-name|dev_t
-name|devno
+name|int
+name|volno
 decl_stmt|;
-comment|/* device number */
+comment|/* volume number */
 name|int
 name|flags
 decl_stmt|;
@@ -1328,7 +1385,7 @@ name|u_int64_t
 name|recovered_reads
 decl_stmt|;
 comment|/* reads recovered from another plex */
-comment|/* Unlike subdisks in the plex, space for the plex pointers is static */
+comment|/*      * Unlike subdisks in the plex, space for the      * plex pointers is static.      */
 name|int
 name|plex
 index|[
@@ -1486,41 +1543,47 @@ name|sd_downstate
 init|=
 literal|2
 block|,
-comment|/* found an SD which is down */
+comment|/* SD is down */
 name|sd_crashedstate
 init|=
 literal|4
 block|,
-comment|/* found an SD which is crashed */
+comment|/* SD is crashed */
 name|sd_obsoletestate
 init|=
 literal|8
 block|,
-comment|/* found an SD which is obsolete */
+comment|/* SD is obsolete */
 name|sd_stalestate
 init|=
 literal|16
 block|,
-comment|/* found an SD which is stale */
+comment|/* SD is stale */
 name|sd_rebornstate
 init|=
 literal|32
 block|,
-comment|/* found an SD which is reborn */
+comment|/* SD is reborn */
 name|sd_upstate
 init|=
 literal|64
 block|,
-comment|/* found an SD which is up */
+comment|/* SD is up */
 name|sd_initstate
 init|=
 literal|128
 block|,
-comment|/* found an SD which is init */
-name|sd_otherstate
+comment|/* SD is initializing */
+name|sd_initializedstate
 init|=
 literal|256
-comment|/* found an SD in some other state */
+block|,
+comment|/* SD is initialized */
+name|sd_otherstate
+init|=
+literal|512
+block|,
+comment|/* SD is in some other state */
 block|}
 enum|;
 end_enum
@@ -1646,6 +1709,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 

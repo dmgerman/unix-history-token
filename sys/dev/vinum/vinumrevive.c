@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.7 1999/02/28 02:12:18 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.15 1999/08/07 08:11:22 grog Exp $  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
 
 begin_include
 include|#
@@ -28,7 +16,7 @@ file|<dev/vinum/request.h>
 end_include
 
 begin_comment
-comment|/*  * revive a block of a subdisk.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  EINVAL means  * that the subdisk isn't associated with a plex (which  * means a programming error if we get here at all;  * FIXME)  * XXX We should specify a block size here.  At the moment,  * just take a default value.  FIXME   */
+comment|/*  * Revive a block of a subdisk.  Return an error  * indication.  EAGAIN means successful copy, but  * that more blocks remain to be copied.  EINVAL  * means that the subdisk isn't associated with a  * plex (which means a programming error if we get  * here at all; FIXME).  */
 end_comment
 
 begin_function
@@ -76,6 +64,26 @@ name|daddr_t
 name|plexblkno
 decl_stmt|;
 comment|/* lblkno in plex */
+name|int
+name|psd
+decl_stmt|;
+comment|/* parity subdisk number */
+name|int
+name|stripe
+decl_stmt|;
+comment|/* stripe number */
+name|int
+name|isparity
+init|=
+literal|0
+decl_stmt|;
+comment|/* set if this is the parity stripe */
+name|struct
+name|rangelock
+modifier|*
+name|lock
+decl_stmt|;
+comment|/* for locking */
 name|plexblkno
 operator|=
 literal|0
@@ -88,6 +96,10 @@ name|SD
 index|[
 name|sdno
 index|]
+expr_stmt|;
+name|lock
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -338,15 +350,389 @@ operator|->
 name|stripesize
 expr_stmt|;
 comment|/* offset from beginning of stripe */
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|plexblkno
+operator|<<
+name|DEV_BSHIFT
+argument_list|,
+name|bp
+argument_list|,
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* lock it */
 break|break;
 case|case
 name|plex_raid5
 case|:
+name|stripeoffset
+operator|=
+name|sd
+operator|->
+name|revived
+operator|%
+name|plex
+operator|->
+name|stripesize
+expr_stmt|;
+comment|/* offset from beginning of stripe */
+name|plexblkno
+operator|=
+name|sd
+operator|->
+name|plexoffset
+comment|/* base */
+operator|+
+operator|(
+name|sd
+operator|->
+name|revived
+operator|-
+name|stripeoffset
+operator|)
+operator|*
+operator|(
+name|plex
+operator|->
+name|subdisks
+operator|-
+literal|1
+operator|)
+comment|/* offset to beginning of stripe */
+operator|+
+name|sd
+operator|->
+name|revived
+operator|%
+name|plex
+operator|->
+name|stripesize
+expr_stmt|;
+comment|/* offset from beginning of stripe */
+name|stripe
+operator|=
+operator|(
+name|sd
+operator|->
+name|revived
+operator|/
+name|plex
+operator|->
+name|stripesize
+operator|)
+expr_stmt|;
+comment|/* stripe number */
+name|psd
+operator|=
+name|plex
+operator|->
+name|subdisks
+operator|-
+literal|1
+operator|-
+name|stripe
+operator|%
+name|plex
+operator|->
+name|subdisks
+expr_stmt|;
+comment|/* parity subdisk for this stripe */
+name|isparity
+operator|=
+name|plex
+operator|->
+name|sdnos
+index|[
+name|psd
+index|]
+operator|==
+name|sdno
+expr_stmt|;
+comment|/* note if it's the parity subdisk */
+comment|/* 	 * Now adjust for the strangenesses  	 * in RAID-5 striping. 	 */
+if|if
+condition|(
+name|sd
+operator|->
+name|plexsdno
+operator|>
+name|psd
+condition|)
+comment|/* beyond the parity stripe, */
+name|plexblkno
+operator|-=
+name|plex
+operator|->
+name|stripesize
+expr_stmt|;
+comment|/* one stripe less */
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|plexblkno
+operator|<<
+name|DEV_BSHIFT
+argument_list|,
+name|bp
+argument_list|,
+name|plex
+argument_list|)
+expr_stmt|;
+comment|/* lock it */
+break|break;
 case|case
 name|plex_disorg
 case|:
 comment|/* to keep the compiler happy */
 block|}
+if|if
+condition|(
+name|isparity
+condition|)
+block|{
+comment|/* we're reviving a parity block, */
+name|int
+name|mysdno
+decl_stmt|;
+name|int
+modifier|*
+name|tbuf
+decl_stmt|;
+comment|/* temporary buffer to read the stuff in to */
+name|caddr_t
+name|parity_buf
+decl_stmt|;
+comment|/* the address supplied by geteblk */
+name|int
+name|isize
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|tbuf
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|Malloc
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
+name|isize
+operator|=
+name|size
+operator|/
+operator|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|)
+expr_stmt|;
+comment|/* number of ints in the buffer */
+comment|/* 	 * We have calculated plexblkno assuming it 	 * was a data block.  Go back to the beginning 	 * of the band. 	 */
+name|plexblkno
+operator|-=
+name|plex
+operator|->
+name|stripesize
+operator|*
+name|sd
+operator|->
+name|plexsdno
+expr_stmt|;
+comment|/* 	 * Read each subdisk in turn, except for this 	 * one, and xor them together. 	 */
+name|parity_buf
+operator|=
+name|bp
+operator|->
+name|b_data
+expr_stmt|;
+comment|/* save the buffer getblk gave us */
+name|bzero
+argument_list|(
+name|parity_buf
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+comment|/* start with nothing */
+name|bp
+operator|->
+name|b_data
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|tbuf
+expr_stmt|;
+comment|/* read into here */
+for|for
+control|(
+name|mysdno
+operator|=
+literal|0
+init|;
+name|mysdno
+operator|<
+name|plex
+operator|->
+name|subdisks
+condition|;
+name|mysdno
+operator|++
+control|)
+block|{
+comment|/* for each subdisk */
+if|if
+condition|(
+name|mysdno
+operator|!=
+name|sdno
+condition|)
+block|{
+comment|/* not our subdisk */
+if|if
+condition|(
+name|vol
+operator|!=
+name|NULL
+condition|)
+comment|/* it's part of a volume, */
+comment|/* 		       * First, read the data from the volume. 		       * We don't care which plex, that's the 		       * driver's job. 		     */
+name|bp
+operator|->
+name|b_dev
+operator|=
+name|VINUMBDEV
+argument_list|(
+name|plex
+operator|->
+name|volno
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_VOLUME_TYPE
+argument_list|)
+expr_stmt|;
+comment|/* create the device number */
+else|else
+comment|/* it's an unattached plex */
+name|bp
+operator|->
+name|b_dev
+operator|=
+name|VINUMRBDEV
+argument_list|(
+name|sd
+operator|->
+name|plexno
+argument_list|,
+name|VINUM_RAWPLEX_TYPE
+argument_list|)
+expr_stmt|;
+comment|/* create the device number */
+name|bp
+operator|->
+name|b_blkno
+operator|=
+name|plexblkno
+expr_stmt|;
+comment|/* read from here */
+name|bp
+operator|->
+name|b_flags
+operator|=
+name|B_BUSY
+operator||
+name|B_READ
+expr_stmt|;
+comment|/* either way, read it */
+name|vinumstart
+argument_list|(
+name|bp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|biowait
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_ERROR
+condition|)
+comment|/* can't read, */
+comment|/* 		       * If we have a read error, there's 		       * nothing we can do.  By this time, the 		       * daemon has already run out of magic. 		     */
+break|break;
+comment|/* 		 * To save time, we do the XOR wordwise. 		 * This requires sectors to be a multiple 		 * of the length of an int, which is 		 * currently always the case. 		 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|isize
+condition|;
+name|i
+operator|++
+control|)
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
+name|parity_buf
+operator|)
+index|[
+name|i
+index|]
+operator|^=
+name|tbuf
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|/* xor in the buffer */
+name|plexblkno
+operator|+=
+name|plex
+operator|->
+name|stripesize
+expr_stmt|;
+comment|/* move on to the next subdisk */
+block|}
+block|}
+name|bp
+operator|->
+name|b_data
+operator|=
+name|parity_buf
+expr_stmt|;
+comment|/* put the buf header back the way it was */
+name|Free
+argument_list|(
+name|tbuf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|bp
 operator|->
@@ -362,7 +748,7 @@ operator|!=
 name|NULL
 condition|)
 comment|/* it's part of a volume, */
-comment|/* 	       * First, read the data from the volume.  We don't 	       * care which plex, that's bre's job  	     */
+comment|/* 	       * First, read the data from the volume.  We 	       * don't care which plex, that's bre's job. 	     */
 name|bp
 operator|->
 name|b_dev
@@ -592,6 +978,21 @@ expr_stmt|;
 comment|/* we're done */
 block|}
 block|}
+if|if
+condition|(
+name|lock
+condition|)
+comment|/* we took a lock, */
+name|unlockrange
+argument_list|(
+name|sd
+operator|->
+name|plexno
+argument_list|,
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* give it back */
 while|while
 condition|(
 name|sd
@@ -622,7 +1023,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Relaunch revive conflict sd %d: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+literal|"Relaunch revive conflict sd %d: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 name|rq
 operator|->
@@ -645,11 +1046,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|rq
 operator|->
 name|bp
 operator|->
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|rq
 operator|->
@@ -709,6 +1122,18 @@ name|error
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 

@@ -4,14 +4,8 @@ comment|/* daemon.c: kernel part of Vinum daemon */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.4 1999/03/16 03:40:59 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.13 1999/08/15 02:31:19 grog Exp $  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
 
 begin_include
 include|#
@@ -250,7 +244,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"vinumd: recovering I/O request: %x\n%s dev 0x%x, offset 0x%x, length %ld\n"
+literal|"vinumd: recovering I/O request: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 operator|(
 name|u_int
@@ -269,11 +263,23 @@ literal|"Read"
 else|:
 literal|"Write"
 argument_list|,
+name|major
+argument_list|(
 name|rq
 operator|->
 name|bp
 operator|->
 name|b_dev
+argument_list|)
+argument_list|,
+name|minor
+argument_list|(
+name|rq
+operator|->
+name|bp
+operator|->
+name|b_dev
+argument_list|)
 argument_list|,
 name|rq
 operator|->
@@ -459,6 +465,21 @@ expr_stmt|;
 comment|/* wake up the caller */
 break|break;
 case|case
+name|daemonrq_closedrive
+case|:
+comment|/* close a drive */
+name|close_drive
+argument_list|(
+name|request
+operator|->
+name|info
+operator|.
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* do it */
+break|break;
+case|case
 name|daemonrq_init
 case|:
 comment|/* initialize a plex */
@@ -468,6 +489,7 @@ name|daemonrq_revive
 case|:
 comment|/* revive a subdisk */
 comment|/* XXX */
+comment|/* FALLTHROUGH */
 default|default:
 name|log
 argument_list|(
@@ -478,6 +500,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|Free
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
+comment|/* done with the request */
 block|}
 block|}
 block|}

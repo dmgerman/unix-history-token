@@ -4,7 +4,7 @@ comment|/*  * To do:  *  * Don't store drive configuration on the config DB: rea
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.25 1999/03/23 03:28:11 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.25 1999/08/15 02:30:34 grog Exp $  */
 end_comment
 
 begin_define
@@ -13,18 +13,6 @@ directive|define
 name|STATIC
 value|static
 end_define
-
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
 
 begin_include
 include|#
@@ -61,9 +49,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|current_drive
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -75,9 +60,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|current_plex
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -89,9 +71,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|current_volume
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -684,43 +663,6 @@ operator|-
 literal|1
 return|;
 comment|/* not found */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Check that this operation is being done from the config  * saved on disk.  * longjmp out if not.  op is the name of the operation.  */
-end_comment
-
-begin_function
-name|void
-name|checkdiskconfig
-parameter_list|(
-name|char
-modifier|*
-name|op
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|(
-name|vinum_conf
-operator|.
-name|flags
-operator|&
-name|VF_READING_CONFIG
-operator|)
-operator|==
-literal|0
-condition|)
-name|throw_rude_remark
-argument_list|(
-name|EPERM
-argument_list|,
-literal|"Can't perform '%s' from config file"
-argument_list|,
-name|op
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1342,6 +1284,32 @@ return|return;
 block|}
 if|if
 condition|(
+name|drive
+operator|->
+name|flags
+operator|&
+name|VF_HOTSPARE
+condition|)
+comment|/* the drive is a hot spare, */
+name|throw_rude_remark
+argument_list|(
+name|ENOSPC
+argument_list|,
+literal|"Can't place %s on hot spare drive %s"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|drive
 operator|->
@@ -1371,13 +1339,13 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* don't be confusing */
+name|free_sd
+argument_list|(
 name|sd
 operator|->
-name|state
-operator|=
-name|sd_down
+name|sdno
+argument_list|)
 expr_stmt|;
-comment|/* make it down */
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1494,7 +1462,23 @@ name|sectors
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* no luck, */
+name|sd
+operator|->
+name|driveoffset
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* don't be confusing */
+name|free_sd
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|)
+expr_stmt|;
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1513,6 +1497,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sfe
@@ -1758,6 +1743,14 @@ operator|<
 literal|0
 condition|)
 comment|/* 	     * Didn't find anything.  Although the drive has 	     * enough space, it's too fragmented 	     */
+block|{
+name|free_sd
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|)
+expr_stmt|;
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1775,6 +1768,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1853,7 +1847,23 @@ name|sd
 operator|->
 name|driveoffset
 condition|)
+block|{
 comment|/* starts after the beginning of sd area */
+name|sd
+operator|->
+name|driveoffset
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* don't be confusing */
+name|free_sd
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|)
+expr_stmt|;
 name|throw_rude_remark
 argument_list|(
 name|ENOSPC
@@ -1871,6 +1881,7 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * We've found the space, and we can allocate it. 		 * We don't need to say that to the subdisk, which 		 * already knows about it.  We need to tell it to 		 * the free list, though.  We have four possibilities: 		 * 		 * 1.  The subdisk exactly eats up the entry.  That's the 		 *     same as above. 		 * 2.  The subdisk starts at the beginning and leaves space 		 *     at the end. 		 * 3.  The subdisk starts after the beginning and leaves 		 *     space at the end as well: we end up with another 		 *     fragment. 		 * 4.  The subdisk leaves space at the beginning and finishes 		 *     at the end. 		 */
 name|drive
 operator|->
@@ -2698,12 +2709,20 @@ expr_stmt|;
 comment|/* no plex */
 name|sd
 operator|->
+name|sectors
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* no space */
+name|sd
+operator|->
 name|driveno
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* and no drive */
+comment|/* no drive */
 name|sd
 operator|->
 name|plexoffset
@@ -2742,14 +2761,23 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|drive
 operator|->
 name|state
 operator|>
 name|drive_referenced
+operator|)
+comment|/* real drive */
+operator|||
+operator|(
+name|drive
+operator|->
+name|vp
+operator|)
 condition|)
 block|{
-comment|/* real drive */
+comment|/* how can it be open without a state? */
 name|LOCKDRIVE
 argument_list|(
 name|drive
@@ -2760,27 +2788,23 @@ condition|(
 name|drive
 operator|->
 name|vp
-operator|!=
-name|NULL
 condition|)
-comment|/* device open */
-name|vn_close
+block|{
+comment|/* it's open, */
+name|close_locked_drive
 argument_list|(
 name|drive
-operator|->
-name|vp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|,
-name|FSCRED
-argument_list|,
-name|drive
-operator|->
-name|p
 argument_list|)
 expr_stmt|;
+comment|/* close it */
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_down
+expr_stmt|;
+comment|/* and note the fact */
+block|}
 if|if
 condition|(
 name|drive
@@ -3108,6 +3132,7 @@ operator|-
 literal|1
 operator|)
 comment|/* we're not the last block in the free list */
+comment|/* and the subdisk ends at the start of the next block */
 operator|&&
 operator|(
 name|sdend
@@ -3125,7 +3150,6 @@ name|offset
 operator|)
 condition|)
 block|{
-comment|/* and the subdisk ends at the start of the 																			   * next block */
 name|drive
 operator|->
 name|freelist
@@ -3134,6 +3158,7 @@ name|fe
 index|]
 operator|.
 name|sectors
+comment|/* 1a: merge all three blocks */
 operator|=
 name|drive
 operator|->
@@ -3146,7 +3171,6 @@ index|]
 operator|.
 name|sectors
 expr_stmt|;
-comment|/* 1a: merge all three blocks */
 if|if
 condition|(
 name|fe
@@ -3243,6 +3267,7 @@ operator|->
 name|freelist_entries
 operator|)
 comment|/* we're not the last block in the free list */
+comment|/* and the subdisk ends at the start of this block: case 4 */
 operator|&&
 operator|(
 name|sdend
@@ -3258,7 +3283,6 @@ name|offset
 operator|)
 condition|)
 block|{
-comment|/* and the subdisk ends at the start of 																		   * this block: case 4 */
 name|drive
 operator|->
 name|freelist
@@ -3435,6 +3459,25 @@ operator|->
 name|sectors
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|->
+name|plexno
+operator|>=
+literal|0
+condition|)
+name|PLEX
+index|[
+name|sd
+operator|->
+name|plexno
+index|]
+operator|.
+name|subdisks
+operator|--
+expr_stmt|;
+comment|/* one less subdisk */
 name|bzero
 argument_list|(
 name|sd
@@ -4153,6 +4196,10 @@ modifier|*
 name|drive
 decl_stmt|;
 comment|/* and pointer to it */
+name|int
+name|otherdriveno
+decl_stmt|;
+comment|/* index of possible second drive */
 if|if
 condition|(
 name|tokens
@@ -4265,6 +4312,57 @@ case|:
 name|parameter
 operator|++
 expr_stmt|;
+name|otherdriveno
+operator|=
+name|find_drive_by_dev
+argument_list|(
+name|token
+index|[
+name|parameter
+index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* see if it exists already */
+if|if
+condition|(
+name|otherdriveno
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* yup, */
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_unallocated
+expr_stmt|;
+comment|/* deallocate the drive */
+name|throw_rude_remark
+argument_list|(
+name|EEXIST
+argument_list|,
+comment|/* and complain */
+literal|"Drive %s would have same device as drive %s"
+argument_list|,
+name|token
+index|[
+literal|1
+index|]
+argument_list|,
+name|DRIVE
+index|[
+name|otherdriveno
+index|]
+operator|.
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|drive
@@ -4522,16 +4620,18 @@ break|break;
 case|case
 name|kw_state
 case|:
-name|checkdiskconfig
-argument_list|(
-name|token
-index|[
-operator|++
 name|parameter
-index|]
-argument_list|)
+operator|++
 expr_stmt|;
-comment|/* must be reading from disk */
+comment|/* skip the keyword */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_READING_CONFIG
+condition|)
 name|drive
 operator|->
 name|state
@@ -4545,6 +4645,17 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* set the state */
+break|break;
+case|case
+name|kw_hotspare
+case|:
+comment|/* this drive is a hot spare */
+name|drive
+operator|->
+name|flags
+operator||=
+name|VF_HOTSPARE
+expr_stmt|;
 break|break;
 default|default:
 name|close_drive
@@ -4686,14 +4797,6 @@ name|sdno
 index|]
 expr_stmt|;
 comment|/* and get a pointer */
-name|sd
-operator|->
-name|sectors
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* to distinguish from 0 */
 for|for
 control|(
 name|parameter
@@ -5186,16 +5289,18 @@ comment|/* 	     * Set the state.  We can't do this directly, 	     * because gi
 case|case
 name|kw_state
 case|:
-name|checkdiskconfig
-argument_list|(
-name|token
-index|[
-operator|++
 name|parameter
-index|]
-argument_list|)
+operator|++
 expr_stmt|;
-comment|/* must be reading from disk */
+comment|/* skip the keyword */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_READING_CONFIG
+condition|)
 name|state
 operator|=
 name|SdState
@@ -6039,16 +6144,18 @@ block|}
 case|case
 name|kw_state
 case|:
-name|checkdiskconfig
-argument_list|(
-name|token
-index|[
-operator|++
 name|parameter
-index|]
-argument_list|)
+operator|++
 expr_stmt|;
-comment|/* must be a kernel user */
+comment|/* skip the keyword */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_READING_CONFIG
+condition|)
 name|state
 operator|=
 name|PlexState
@@ -6200,6 +6307,61 @@ name|plexsuffix
 argument_list|)
 expr_stmt|;
 comment|/* and add it to the name */
+block|}
+if|if
+condition|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_raid5
+condition|)
+block|{
+comment|/* RAID-5 plex, */
+name|plex
+operator|->
+name|lock
+operator|=
+operator|(
+expr|struct
+name|rangelock
+operator|*
+operator|)
+name|Malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rangelock
+argument_list|)
+operator|*
+name|INITIAL_LOCKS
+argument_list|)
+expr_stmt|;
+comment|/* allocate lock table */
+name|bzero
+argument_list|(
+name|plex
+operator|->
+name|lock
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rangelock
+argument_list|)
+operator|*
+name|INITIAL_LOCKS
+argument_list|)
+expr_stmt|;
+comment|/* zero it */
+name|plex
+operator|->
+name|alloclocks
+operator|=
+name|INITIAL_LOCKS
+expr_stmt|;
+comment|/* and note how many there are */
 block|}
 comment|/* Note the last plex we configured */
 name|current_plex
@@ -6629,16 +6791,18 @@ break|break;
 case|case
 name|kw_state
 case|:
-name|checkdiskconfig
-argument_list|(
-name|token
-index|[
-operator|++
 name|parameter
-index|]
-argument_list|)
+operator|++
 expr_stmt|;
-comment|/* must be on disk */
+comment|/* skip the keyword */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_READING_CONFIG
+condition|)
 name|vol
 operator|->
 name|state
@@ -6714,20 +6878,11 @@ expr_stmt|;
 comment|/* note last referred volume */
 name|vol
 operator|->
-name|devno
-operator|=
-name|VINUMBDEV
-argument_list|(
 name|volno
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|VINUM_VOLUME_TYPE
-argument_list|)
+operator|=
+name|volno
 expr_stmt|;
-comment|/* also note device number */
+comment|/* also note in volume */
 comment|/*      * Before we can actually use the volume, we need      * a volume label.  We could start to fake one here,      * but it will be a lot easier when we have some      * to copy from the drives, so defer it until we      * set up the configuration. XXX      */
 if|if
 condition|(
@@ -7625,8 +7780,15 @@ operator|->
 name|subdisks
 operator|--
 expr_stmt|;
-comment|/* 	     * removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out 	     * of the structure, and it needs to be 	     * reinitialized 	     */
-comment|/* 	     * XXX Think about this.  Maybe we should just 	     * leave a hole 	     */
+name|sd
+operator|->
+name|plexno
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* disown the subdisk */
+comment|/* 	     * removing a subdisk from a striped or 	     * RAID-5 plex really tears the hell out of 	     * the structure, and it needs to be 	     * reinitialized. 	     */
 if|if
 condition|(
 name|plex
@@ -8220,16 +8382,16 @@ for|for
 control|(
 name|plexno
 operator|=
-literal|0
-init|;
-name|plexno
-operator|<
 name|vol
 operator|->
 name|plexes
+init|;
+name|plexno
+operator|>
+literal|0
 condition|;
 name|plexno
-operator|++
+operator|--
 control|)
 block|{
 name|plexmsg
@@ -8240,7 +8402,7 @@ name|vol
 operator|->
 name|plex
 index|[
-name|plexno
+literal|0
 index|]
 expr_stmt|;
 comment|/* plex number */
@@ -8448,6 +8610,7 @@ operator|->
 name|volno
 index|]
 expr_stmt|;
+comment|/* 	 * If we're newly born, 	 * and the volume isn't, 	 * and it has other plexes, 	 * and we didn't read this mess from disk, 	 * we were added later. 	 */
 if|if
 condition|(
 operator|(
@@ -8457,7 +8620,6 @@ name|flags
 operator|&
 name|VF_NEWBORN
 operator|)
-comment|/* we're newly born */
 operator|&&
 operator|(
 operator|(
@@ -8470,7 +8632,6 @@ operator|)
 operator|==
 literal|0
 operator|)
-comment|/* and the volume isn't */
 operator|&&
 operator|(
 name|vol
@@ -8479,7 +8640,6 @@ name|plexes
 operator|>
 literal|0
 operator|)
-comment|/* and it has other plexes, */
 operator|&&
 operator|(
 name|diskconfig
@@ -8488,12 +8648,10 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* and we didn't read this mess from disk */
 name|added_plex
 operator|=
 literal|1
 expr_stmt|;
-comment|/* we were added later */
 name|state
 operator|=
 name|plex_down
@@ -8620,6 +8778,7 @@ argument_list|(
 name|plex
 operator|->
 name|length
+comment|/* are we exact? */
 operator|%
 operator|(
 operator|(
@@ -8633,7 +8792,6 @@ name|data_sds
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* are we exact? */
 if|if
 condition|(
 name|remainder
@@ -9192,6 +9350,24 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|current_drive
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* note the last drive we mention, for 							    * some defaults */
+name|current_plex
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* and the same for the last plex */
+name|current_volume
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* and the last volme */
 while|while
 condition|(
 operator|(
@@ -9361,6 +9537,18 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 

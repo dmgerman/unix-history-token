@@ -4,30 +4,8 @@ comment|/*  * XXX replace all the checks on object validity with  * calls to val
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.6.2.3 1999/04/06 09:05:57 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.19 1999/08/14 06:27:25 grog Exp $  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|STATIC
-end_define
-
-begin_comment
-comment|/* nothing while we're testing XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REALLYKERNEL
-end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_vinum.h"
-end_include
 
 begin_include
 include|#
@@ -119,6 +97,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* return on a failed command */
+end_comment
+
+begin_comment
 comment|/* ioctl routine */
 end_comment
 
@@ -154,6 +136,16 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
+name|sd
+modifier|*
+name|sd
+decl_stmt|;
+name|struct
+name|plex
+modifier|*
+name|plex
+decl_stmt|;
+name|struct
 name|volume
 modifier|*
 name|vol
@@ -185,25 +177,13 @@ operator|)
 name|data
 decl_stmt|;
 comment|/* struct to return */
-name|struct
-name|devcode
-modifier|*
-name|device
-init|=
-operator|(
-expr|struct
-name|devcode
-operator|*
-operator|)
-operator|&
-name|dev
-decl_stmt|;
 comment|/* First, decide what we're looking at */
 switch|switch
 condition|(
-name|device
-operator|->
-name|type
+name|DEVTYPE
+argument_list|(
+name|dev
+argument_list|)
 condition|)
 block|{
 case|case
@@ -897,6 +877,24 @@ comment|/* set an object state */
 return|return
 literal|0
 return|;
+comment|/* 	     * Set state by force, without changing 	     * anything else. 	     */
+case|case
+name|VINUM_SETSTATE_FORCE
+case|:
+name|setstate_by_force
+argument_list|(
+operator|(
+expr|struct
+name|vinum_ioctl_msg
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+comment|/* set an object state */
+return|return
+literal|0
+return|;
 ifdef|#
 directive|ifdef
 name|VINUMDEBUG
@@ -1216,6 +1214,9 @@ return|;
 default|default:
 comment|/* FALLTHROUGH */
 block|}
+case|case
+name|VINUM_DRIVE_TYPE
+case|:
 default|default:
 name|log
 argument_list|(
@@ -1238,17 +1239,10 @@ return|return
 name|EINVAL
 return|;
 case|case
-name|VINUM_DRIVE_TYPE
-case|:
-case|case
-name|VINUM_PLEX_TYPE
-case|:
-return|return
-name|EAGAIN
-return|;
-comment|/* try again next week */
-case|case
 name|VINUM_SD_TYPE
+case|:
+case|case
+name|VINUM_RAWSD_TYPE
 case|:
 name|objno
 operator|=
@@ -1256,6 +1250,14 @@ name|Sdno
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|objno
+index|]
 expr_stmt|;
 switch|switch
 condition|(
@@ -1272,12 +1274,128 @@ argument_list|(
 name|objno
 argument_list|)
 return|;
+case|case
+name|DIOCGDINFO
+case|:
+comment|/* get disk label */
+name|get_volume_label
+argument_list|(
+name|sd
+operator|->
+name|name
+argument_list|,
+literal|1
+argument_list|,
+name|sd
+operator|->
+name|sectors
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* 	     * We don't have this stuff on hardware, 	     * so just pretend to do it so that 	     * utilities don't get upset. 	     */
+case|case
+name|DIOCWDINFO
+case|:
+comment|/* write partition info */
+case|case
+name|DIOCSDINFO
+case|:
+comment|/* set partition info */
+return|return
+literal|0
+return|;
+comment|/* not a titty */
 default|default:
 return|return
-name|EINVAL
+name|ENOTTY
 return|;
+comment|/* not my kind of ioctl */
 block|}
+return|return
+literal|0
+return|;
+comment|/* pretend we did it */
+case|case
+name|VINUM_RAWPLEX_TYPE
+case|:
+case|case
+name|VINUM_PLEX_TYPE
+case|:
+name|objno
+operator|=
+name|Plexno
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|plex
+operator|=
+operator|&
+name|PLEX
+index|[
+name|objno
+index|]
+expr_stmt|;
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+case|case
+name|DIOCGDINFO
+case|:
+comment|/* get disk label */
+name|get_volume_label
+argument_list|(
+name|plex
+operator|->
+name|name
+argument_list|,
+literal|1
+argument_list|,
+name|plex
+operator|->
+name|length
+argument_list|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+name|data
+argument_list|)
+expr_stmt|;
 break|break;
+comment|/* 	     * We don't have this stuff on hardware, 	     * so just pretend to do it so that 	     * utilities don't get upset. 	     */
+case|case
+name|DIOCWDINFO
+case|:
+comment|/* write partition info */
+case|case
+name|DIOCSDINFO
+case|:
+comment|/* set partition info */
+return|return
+literal|0
+return|;
+comment|/* not a titty */
+default|default:
+return|return
+name|ENOTTY
+return|;
+comment|/* not my kind of ioctl */
+block|}
+return|return
+literal|0
+return|;
+comment|/* pretend we did it */
 case|case
 name|VINUM_VOLUME_TYPE
 case|:
@@ -1339,6 +1457,16 @@ comment|/* get disk label */
 name|get_volume_label
 argument_list|(
 name|vol
+operator|->
+name|name
+argument_list|,
+name|vol
+operator|->
+name|plexes
+argument_list|,
+name|vol
+operator|->
+name|size
 argument_list|,
 operator|(
 expr|struct
@@ -1349,7 +1477,7 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it. 	     */
+comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap 	     * as well.  And yes, we need it. 	     */
 case|case
 name|DIOCGPART
 case|:
@@ -1357,6 +1485,16 @@ comment|/* get partition information */
 name|get_volume_label
 argument_list|(
 name|vol
+operator|->
+name|name
+argument_list|,
+name|vol
+operator|->
+name|plexes
+argument_list|,
+name|vol
+operator|->
+name|size
 argument_list|,
 operator|&
 name|vol
@@ -1997,6 +2135,27 @@ expr_stmt|;
 comment|/* number of bytes written */
 name|plex
 operator|->
+name|recovered_reads
+operator|=
+literal|0
+expr_stmt|;
+comment|/* number of recovered read operations */
+name|plex
+operator|->
+name|degraded_writes
+operator|=
+literal|0
+expr_stmt|;
+comment|/* number of degraded writes */
+name|plex
+operator|->
+name|parityless_writes
+operator|=
+literal|0
+expr_stmt|;
+comment|/* number of parityless writes */
+name|plex
+operator|->
 name|multiblock
 operator|=
 literal|0
@@ -2246,6 +2405,45 @@ condition|(
 name|plex
 condition|)
 block|{
+comment|/* 	     * We should be more intelligent about this. 	     * We should be able to reattach a dead 	     * subdisk, but if we want to increase the total 	     * number of subdisks, we have a lot of reshuffling 	     * to do. XXX 	     */
+if|if
+condition|(
+operator|(
+name|plex
+operator|->
+name|organization
+operator|!=
+name|plex_concat
+operator|)
+comment|/* can't attach to striped and raid-5 */
+operator|&&
+operator|(
+operator|!
+name|msg
+operator|->
+name|force
+operator|)
+condition|)
+block|{
+comment|/* without using force */
+name|reply
+operator|->
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+comment|/* no message, the user should check */
+name|strcpy
+argument_list|(
+name|reply
+operator|->
+name|msg
+argument_list|,
+literal|"Can't attach to this plex organization"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|sd
@@ -2371,34 +2569,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|if
-condition|(
-name|plex
-operator|->
-name|organization
-operator|!=
-name|plex_concat
-condition|)
-block|{
-comment|/* can't attach to striped and raid-5 */
-name|reply
-operator|->
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* no message, the user should check */
-name|reply
-operator|->
-name|msg
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return;
-block|}
 name|vol
 operator|=
 name|validvol
@@ -2998,15 +3168,6 @@ operator||
 name|setstate_configuring
 argument_list|)
 expr_stmt|;
-name|update_sd_config
-argument_list|(
-name|sd
-operator|->
-name|sdno
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|save_config
 argument_list|()
 expr_stmt|;
@@ -3171,6 +3332,8 @@ name|bcopy
 argument_list|(
 operator|&
 name|vol
+operator|->
+name|plex
 index|[
 name|plexno
 operator|+
@@ -3179,6 +3342,8 @@ index|]
 argument_list|,
 operator|&
 name|vol
+operator|->
+name|plex
 index|[
 name|plexno
 index|]
@@ -3204,6 +3369,13 @@ operator|->
 name|plexes
 operator|--
 expr_stmt|;
+name|vol
+operator|->
+name|last_plex_read
+operator|=
+literal|0
+expr_stmt|;
+comment|/* don't go beyond the end */
 if|if
 condition|(
 operator|!
@@ -3399,15 +3571,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-name|update_plex_config
-argument_list|(
-name|plex
-operator|->
-name|plexno
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|update_volume_config
 argument_list|(
 name|volno
@@ -3852,7 +4015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Replace one object with another */
+comment|/*  * Replace one object with another.  * Currently only for drives.  * message->index is the drive number of the old drive  * message->otherobject is the drive number of the new drive  */
 end_comment
 
 begin_function
@@ -3896,6 +4059,18 @@ expr_stmt|;
 comment|/*      save_config (); */
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/*      list.c: vinum interface program, list routines  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: list.c,v 1.18 1999/03/10 09:26:46 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: list.c,v 1.19 1999/08/24 02:32:57 grog Exp $  */
 end_comment
 
 begin_include
@@ -248,7 +248,7 @@ name|type
 decl_stmt|;
 if|if
 condition|(
-name|stats
+name|sflag
 operator|&
 operator|(
 operator|!
@@ -728,7 +728,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%9qd\t%9ld\n"
+literal|"\t\t%9qd\t%9lld\n"
 argument_list|,
 name|freelist
 operator|.
@@ -746,7 +746,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|stats
+name|sflag
 condition|)
 block|{
 name|printf
@@ -824,18 +824,26 @@ operator|*
 name|DEV_BSIZE
 operator|)
 operator|/
+operator|(
 name|drive
 operator|.
 name|label
 operator|.
 name|drive_size
+operator|-
+operator|(
+name|DATASTART
+operator|*
+name|DEV_BSIZE
+operator|)
+operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|stats
+name|sflag
 condition|)
 block|{
 if|if
@@ -1336,7 +1344,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|stats
+name|sflag
 condition|)
 comment|/* brief */
 name|printf
@@ -1372,7 +1380,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|stats
+name|sflag
 condition|)
 block|{
 if|if
@@ -2095,7 +2103,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|stats
+name|sflag
 condition|)
 block|{
 name|char
@@ -2185,7 +2193,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|stats
+name|sflag
 condition|)
 block|{
 if|if
@@ -2371,6 +2379,51 @@ operator|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|plex
+operator|.
+name|recovered_reads
+condition|)
+name|printf
+argument_list|(
+literal|"\t\tRecovered reads:%16qd\n"
+argument_list|,
+name|plex
+operator|.
+name|recovered_reads
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|plex
+operator|.
+name|degraded_writes
+condition|)
+name|printf
+argument_list|(
+literal|"\t\tDegraded writes:%16qd\n"
+argument_list|,
+name|plex
+operator|.
+name|degraded_writes
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|plex
+operator|.
+name|parityless_writes
+condition|)
+name|printf
+argument_list|(
+literal|"\t\tParityless writes:%14qd\n"
+argument_list|,
+name|plex
+operator|.
+name|parityless_writes
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2401,7 +2454,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\t\t"
+literal|"%7qd\t"
 argument_list|,
 name|plex
 operator|.
@@ -2415,7 +2468,16 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\t\t"
+literal|"\t"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%7qd\t"
+argument_list|,
+name|plex
+operator|.
+name|recovered_reads
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3045,13 +3107,13 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|stats
+name|sflag
 condition|)
 block|{
 comment|/* brief listing, no stats */
 name|printf
 argument_list|(
-literal|"S %-21s State: %s\tPO: %s "
+literal|"S %-21s State: %s\t"
 argument_list|,
 name|sd
 operator|.
@@ -3063,6 +3125,26 @@ name|sd
 operator|.
 name|state
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|.
+name|plexno
+operator|==
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"(detached)\t"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"PO: %s "
 argument_list|,
 operator|&
 operator|(
@@ -3102,7 +3184,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|stats
+name|sflag
 condition|)
 block|{
 if|if
@@ -3497,7 +3579,7 @@ name|verbose
 operator|||
 operator|(
 operator|!
-name|stats
+name|sflag
 operator|)
 condition|)
 block|{
@@ -3911,7 +3993,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nTime\t\t Event\t     Buf\tDev\tOffset\t\tBytes\tSD\tSDoff\tDoffset\tGoffset\n\n"
+literal|"\nTime\t\t Event\t     Buf\tDev\t  Offset\tBytes\tSD\tSDoff\tDoffset\tGoffset\n\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3981,9 +4063,13 @@ case|case
 name|loginfo_user_bp
 case|:
 comment|/* this is the bp when strategy is called */
+case|case
+name|loginfo_sdio
+case|:
+comment|/* subdisk I/O */
 name|printf
 argument_list|(
-literal|"%s 1VS %s %p\t0x%x\t0x%-9x\t%ld\n"
+literal|"%s %dVS %s %p\t%d.%-6d 0x%-9x\t%ld\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -3992,6 +4078,10 @@ name|rq
 operator|.
 name|timestamp
 argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|type
 argument_list|,
 name|rq
 operator|.
@@ -4013,11 +4103,11 @@ name|bp
 argument_list|,
 name|rq
 operator|.
-name|info
+name|devmajor
+argument_list|,
+name|rq
 operator|.
-name|b
-operator|.
-name|b_dev
+name|devminor
 argument_list|,
 name|rq
 operator|.
@@ -4041,9 +4131,13 @@ case|case
 name|loginfo_user_bpl
 case|:
 comment|/* and this is the bp at launch time */
+case|case
+name|loginfo_sdiol
+case|:
+comment|/* subdisk I/O launch */
 name|printf
 argument_list|(
-literal|"%s 2LR %s %p\t0x%x\t0x%-9x\t%ld\n"
+literal|"%s %dLR %s %p\t%d.%-6d 0x%-9x\t%ld\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4052,6 +4146,10 @@ name|rq
 operator|.
 name|timestamp
 argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|type
 argument_list|,
 name|rq
 operator|.
@@ -4073,11 +4171,11 @@ name|bp
 argument_list|,
 name|rq
 operator|.
-name|info
+name|devmajor
+argument_list|,
+name|rq
 operator|.
-name|b
-operator|.
-name|b_dev
+name|devminor
 argument_list|,
 name|rq
 operator|.
@@ -4103,7 +4201,7 @@ case|:
 comment|/* user RQE */
 name|printf
 argument_list|(
-literal|"%s 3RQ %s %p\t0x%x\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 3RQ %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4135,13 +4233,11 @@ name|bp
 argument_list|,
 name|rq
 operator|.
-name|info
+name|devmajor
+argument_list|,
+name|rq
 operator|.
-name|rqe
-operator|.
-name|b
-operator|.
-name|b_dev
+name|devminor
 argument_list|,
 name|rq
 operator|.
@@ -4203,7 +4299,7 @@ case|:
 comment|/* iodone called */
 name|printf
 argument_list|(
-literal|"%s 4DN %s %p\t0x%x\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 4DN %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4235,13 +4331,11 @@ name|bp
 argument_list|,
 name|rq
 operator|.
-name|info
+name|devmajor
+argument_list|,
+name|rq
 operator|.
-name|rqe
-operator|.
-name|b
-operator|.
-name|b_dev
+name|devminor
 argument_list|,
 name|rq
 operator|.
@@ -4303,7 +4397,7 @@ case|:
 comment|/* RAID-5 write data block */
 name|printf
 argument_list|(
-literal|"%s 5RD %s %p\t0x%x\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 5RD %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4335,13 +4429,11 @@ name|bp
 argument_list|,
 name|rq
 operator|.
-name|info
+name|devmajor
+argument_list|,
+name|rq
 operator|.
-name|rqe
-operator|.
-name|b
-operator|.
-name|b_dev
+name|devminor
 argument_list|,
 name|rq
 operator|.
@@ -4403,7 +4495,7 @@ case|:
 comment|/* RAID-5 write parity block */
 name|printf
 argument_list|(
-literal|"%s 6RP %s %p\t0x%x\t0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
+literal|"%s 6RP %s %p\t%d.%-6d 0x%-9x\t%ld\t%d\t%x\t%x\t%x\n"
 argument_list|,
 name|timetext
 argument_list|(
@@ -4435,13 +4527,11 @@ name|bp
 argument_list|,
 name|rq
 operator|.
-name|info
+name|devmajor
+argument_list|,
+name|rq
 operator|.
-name|rqe
-operator|.
-name|b
-operator|.
-name|b_dev
+name|devminor
 argument_list|,
 name|rq
 operator|.
@@ -4494,6 +4584,117 @@ operator|.
 name|rqe
 operator|.
 name|groupoffset
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|loginfo_lockwait
+case|:
+name|printf
+argument_list|(
+literal|"%s Lockwait  %p\t%d\t  0x%x\n"
+argument_list|,
+name|timetext
+argument_list|(
+operator|&
+name|rq
+operator|.
+name|timestamp
+argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|bp
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|plexno
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|stripe
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|loginfo_lock
+case|:
+name|printf
+argument_list|(
+literal|"%s Lock      %p\t%d\t  0x%x\n"
+argument_list|,
+name|timetext
+argument_list|(
+operator|&
+name|rq
+operator|.
+name|timestamp
+argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|bp
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|plexno
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|stripe
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|loginfo_unlock
+case|:
+name|printf
+argument_list|(
+literal|"%s Unlock\t  %p\t%d\t  0x%x\n"
+argument_list|,
+name|timetext
+argument_list|(
+operator|&
+name|rq
+operator|.
+name|timestamp
+argument_list|)
+argument_list|,
+name|rq
+operator|.
+name|bp
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|plexno
+argument_list|,
+name|rq
+operator|.
+name|info
+operator|.
+name|lockinfo
+operator|.
+name|stripe
 argument_list|)
 expr_stmt|;
 block|}
@@ -4945,7 +5146,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"%db "
+literal|"%ds "
 argument_list|,
 operator|(
 name|int
@@ -4988,6 +5189,14 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|fprintf
+argument_list|(
+name|of
+argument_list|,
+literal|"detached "
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|of
@@ -5041,6 +5250,15 @@ operator|.
 name|driveno
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|.
+name|plexno
+operator|>=
+literal|0
+condition|)
+block|{
 name|get_plex_info
 argument_list|(
 operator|&
@@ -5055,7 +5273,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"%ssd name %s drive %s plex %s len %qdb driveoffset %qdb plexoffset %qdb\n"
+literal|"%ssd name %s drive %s plex %s len %qds driveoffset %qds plexoffset %qds\n"
 argument_list|,
 name|comment
 argument_list|,
@@ -5086,6 +5304,354 @@ operator|.
 name|plexoffset
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|of
+argument_list|,
+literal|"%ssd name %s drive %s detached len %qds driveoffset %qds\n"
+argument_list|,
+name|comment
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|,
+name|drive
+operator|.
+name|label
+operator|.
+name|name
+argument_list|,
+name|sd
+operator|.
+name|sectors
+argument_list|,
+name|sd
+operator|.
+name|driveoffset
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|list_defective_objects
+parameter_list|()
+block|{
+name|int
+name|o
+decl_stmt|;
+comment|/* object */
+name|int
+name|heading_needed
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_GETCONFIG
+argument_list|,
+operator|&
+name|vinum_conf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Can't get vinum config"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+for|for
+control|(
+name|o
+operator|=
+literal|0
+init|;
+name|o
+operator|<
+name|vinum_conf
+operator|.
+name|drives_allocated
+condition|;
+name|o
+operator|++
+control|)
+block|{
+name|get_drive_info
+argument_list|(
+operator|&
+name|drive
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|drive
+operator|.
+name|state
+operator|!=
+name|drive_unallocated
+operator|)
+comment|/* drive exists */
+operator|&&
+operator|(
+name|drive
+operator|.
+name|state
+operator|!=
+name|drive_up
+operator|)
+condition|)
+block|{
+comment|/* but it's not up */
+if|if
+condition|(
+name|heading_needed
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: defective objects\n\n"
+argument_list|)
+expr_stmt|;
+name|heading_needed
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|vinum_ldi
+argument_list|(
+name|o
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* print info */
+block|}
+block|}
+for|for
+control|(
+name|o
+operator|=
+literal|0
+init|;
+name|o
+operator|<
+name|vinum_conf
+operator|.
+name|volumes_allocated
+condition|;
+name|o
+operator|++
+control|)
+block|{
+name|get_volume_info
+argument_list|(
+operator|&
+name|vol
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|vol
+operator|.
+name|state
+operator|!=
+name|volume_unallocated
+operator|)
+comment|/* volume exists */
+operator|&&
+operator|(
+name|vol
+operator|.
+name|state
+operator|!=
+name|volume_up
+operator|)
+condition|)
+block|{
+comment|/* but it's not up */
+if|if
+condition|(
+name|heading_needed
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: defective objects\n\n"
+argument_list|)
+expr_stmt|;
+name|heading_needed
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|vinum_lvi
+argument_list|(
+name|o
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* print info */
+block|}
+block|}
+for|for
+control|(
+name|o
+operator|=
+literal|0
+init|;
+name|o
+operator|<
+name|vinum_conf
+operator|.
+name|plexes_allocated
+condition|;
+name|o
+operator|++
+control|)
+block|{
+name|get_plex_info
+argument_list|(
+operator|&
+name|plex
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|plex
+operator|.
+name|state
+operator|!=
+name|plex_unallocated
+operator|)
+comment|/* plex exists */
+operator|&&
+operator|(
+name|plex
+operator|.
+name|state
+operator|!=
+name|plex_up
+operator|)
+condition|)
+block|{
+comment|/* but it's not up */
+if|if
+condition|(
+name|heading_needed
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: defective objects\n\n"
+argument_list|)
+expr_stmt|;
+name|heading_needed
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|vinum_lpi
+argument_list|(
+name|o
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* print info */
+block|}
+block|}
+for|for
+control|(
+name|o
+operator|=
+literal|0
+init|;
+name|o
+operator|<
+name|vinum_conf
+operator|.
+name|subdisks_allocated
+condition|;
+name|o
+operator|++
+control|)
+block|{
+name|get_sd_info
+argument_list|(
+operator|&
+name|sd
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sd
+operator|.
+name|state
+operator|!=
+name|sd_unallocated
+operator|)
+comment|/* sd exists */
+operator|&&
+operator|(
+name|sd
+operator|.
+name|state
+operator|!=
+name|sd_up
+operator|)
+condition|)
+block|{
+comment|/* but it's not up */
+if|if
+condition|(
+name|heading_needed
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: defective objects\n\n"
+argument_list|)
+expr_stmt|;
+name|heading_needed
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|vinum_lsi
+argument_list|(
+name|o
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* print info */
 block|}
 block|}
 block|}
