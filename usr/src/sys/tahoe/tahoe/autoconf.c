@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.14	87/06/22	*/
+comment|/*	autoconf.c	1.15	87/06/30	*/
 end_comment
 
 begin_comment
@@ -1769,18 +1769,18 @@ operator|+
 name|npf
 operator|*
 name|NBPG
-operator|>=
+operator|>
 operator|(
 name|caddr_t
 operator|)
 operator|&
 name|vbend
 condition|)
-name|panic
-argument_list|(
-literal|"vbmapalloc"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 operator|*
 name|ppte
 operator|=
@@ -1805,6 +1805,11 @@ name|npf
 operator|*
 name|NBPG
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -1882,18 +1887,18 @@ operator|+
 name|npf
 operator|*
 name|NBPG
-operator|>=
+operator|>
 operator|(
 name|caddr_t
 operator|)
 operator|&
 name|vmemend
 condition|)
-name|panic
-argument_list|(
-literal|"vbmemalloc"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 operator|*
 name|ppte
 operator|=
@@ -1929,6 +1934,11 @@ name|npf
 argument_list|)
 expr_stmt|;
 comment|/* map i/o space */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
