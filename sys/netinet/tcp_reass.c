@@ -3188,7 +3188,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* 				 * This is what would have happened in 				 * tcp_ouput() when the SYN,ACK was sent. 				 */
+comment|/* 				 * This is what would have happened in 				 * tcp_output() when the SYN,ACK was sent. 				 */
 name|tp
 operator|->
 name|snd_up
