@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -59,8 +59,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_long
 name|pgno_t
 typedef|;
 end_typedef
@@ -78,8 +77,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|u_short
 name|index_t
 typedef|;
 end_typedef
@@ -97,8 +95,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_long
 name|recno_t
 typedef|;
 end_typedef
@@ -284,8 +281,7 @@ specifier|const
 name|DBT
 operator|*
 operator|,
-name|unsigned
-name|int
+name|u_int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -308,8 +304,7 @@ operator|,
 name|DBT
 operator|*
 operator|,
-name|unsigned
-name|int
+name|u_int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -333,8 +328,7 @@ specifier|const
 name|DBT
 operator|*
 operator|,
-name|unsigned
-name|int
+name|u_int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -356,8 +350,7 @@ operator|,
 name|DBT
 operator|*
 operator|,
-name|unsigned
-name|int
+name|u_int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -412,8 +405,7 @@ directive|define
 name|R_DUP
 value|0x01
 comment|/* duplicate keys */
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 name|int
@@ -554,8 +546,7 @@ directive|define
 name|R_SNAPSHOT
 value|0x04
 comment|/* snapshot the input */
-name|unsigned
-name|long
+name|u_long
 name|flags
 decl_stmt|;
 name|int
@@ -570,8 +561,7 @@ name|size_t
 name|reclen
 decl_stmt|;
 comment|/* record length (fixed-length records) */
-name|unsigned
-name|char
+name|u_char
 name|bval
 decl_stmt|;
 comment|/* delimiting byte (variable-length records */
@@ -588,16 +578,13 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|unsigned
-name|long
+name|u_long
 name|number
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|offset
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|length
 decl_stmt|;
 define|#
@@ -615,8 +602,7 @@ directive|define
 name|R_OFFSET
 value|0x04
 comment|/* offset is valid */
-name|unsigned
-name|char
+name|u_char
 name|valid
 decl_stmt|;
 block|}
@@ -635,7 +621,7 @@ name|BLSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	unsigned long _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[3]; \ 	((char *)&a)[1] = ((char *)&_tmp)[2]; \ 	((char *)&a)[2] = ((char *)&_tmp)[1]; \ 	((char *)&a)[3] = ((char *)&_tmp)[0]; \ }
+value|{ \ 	u_long _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[3]; \ 	((char *)&a)[1] = ((char *)&_tmp)[2]; \ 	((char *)&a)[2] = ((char *)&_tmp)[1]; \ 	((char *)&a)[3] = ((char *)&_tmp)[0]; \ }
 end_define
 
 begin_define
@@ -645,7 +631,7 @@ name|BLPSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	unsigned long _tmp = *(unsigned long *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[3]; \ 	((char *)a)[1] = ((char *)&_tmp)[2]; \ 	((char *)a)[2] = ((char *)&_tmp)[1]; \ 	((char *)a)[3] = ((char *)&_tmp)[0]; \ }
+value|{ \ 	u_long _tmp = *(u_long *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[3]; \ 	((char *)a)[1] = ((char *)&_tmp)[2]; \ 	((char *)a)[2] = ((char *)&_tmp)[1]; \ 	((char *)a)[3] = ((char *)&_tmp)[0]; \ }
 end_define
 
 begin_define
@@ -671,7 +657,7 @@ name|BSSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	unsigned short _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[1]; \ 	((char *)&a)[1] = ((char *)&_tmp)[0]; \ }
+value|{ \ 	u_short _tmp = a; \ 	((char *)&a)[0] = ((char *)&_tmp)[1]; \ 	((char *)&a)[1] = ((char *)&_tmp)[0]; \ }
 end_define
 
 begin_define
@@ -681,7 +667,7 @@ name|BSPSWAP
 parameter_list|(
 name|a
 parameter_list|)
-value|{ \ 	unsigned short _tmp = *(unsigned short *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[1]; \ 	((char *)a)[1] = ((char *)&_tmp)[0]; \ }
+value|{ \ 	u_short _tmp = *(u_short *)a; \ 	((char *)a)[0] = ((char *)&_tmp)[1]; \ 	((char *)a)[1] = ((char *)&_tmp)[0]; \ }
 end_define
 
 begin_define
