@@ -7615,7 +7615,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"SetModemSpeed: Too many arguments"
+literal|"SetModemSpeed: Too many arguments\n"
 argument_list|)
 expr_stmt|;
 return|return
