@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyget.c	5.1 (Berkeley) %G%"
+literal|"@(#)yyget.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"0.h"
+file|<0.h>
 end_include
 
 begin_include
