@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id$ */
-end_comment
-
-begin_comment
-comment|/*  *	$Author: root $  *	$Log: ypxfr.c,v $  * Revision 2.0  1994/01/06  16:58:08  root  * Version 2.0  *  * Revision 0.20  1994/01/02  21:59:08  root  * Strict prototypes  *  * Revision 0.19  1994/01/02  20:10:08  root  * Added GPL notice  *  * Revision 0.18  1994/01/02  18:00:38  root  * New arguments for -C flag.  *  * Revision 0.17  1993/12/30  22:21:49  root  * Switch to GDBM  *  * Revision 0.16  1993/12/27  23:43:26  root  * Use dbm directly instead of makedbm  *  * Revision 0.15  1993/12/27  21:21:00  root  * This host should be the default master  *  * Revision 0.14  1993/12/19  12:41:55  root  * *** empty log message ***  *  * Revision 0.13  1993/06/12  10:49:35  root  * Align with include-4.4  *  */
+comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: ypxfr.c,v 1.1 1995/01/31 09:28:47 wpaul Exp $ */
 end_comment
 
 begin_include
@@ -79,6 +75,24 @@ modifier|*
 name|db
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_YP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_YP
+value|"/var/yp"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -295,10 +309,6 @@ init|=
 literal|0
 decl_stmt|,
 name|PortNumber
-init|=
-literal|0
-decl_stmt|,
-name|Secure
 init|=
 literal|0
 decl_stmt|;
@@ -1381,6 +1391,29 @@ end_function
 
 begin_function
 name|void
+name|usage
+parameter_list|(
+name|progname
+parameter_list|)
+name|char
+modifier|*
+name|progname
+decl_stmt|;
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: %s [-f] [-c] [-d target domain] \ [-h source host]\n	[-s source domain] \ [-C taskid program-number ipaddr port] mapname\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|main
 parameter_list|(
 name|int
@@ -1392,6 +1425,27 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 literal|1
@@ -1505,13 +1559,20 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'S'
-case|:
-name|Secure
-operator|++
+default|default:
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
-break|break;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 name|argc
