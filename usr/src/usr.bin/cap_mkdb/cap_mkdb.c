@@ -1148,7 +1148,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkcapdb [-f outfile] file1 [file2 ...]\n"
+literal|"usage: cap_mkdb [-f outfile] file1 [file2 ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
