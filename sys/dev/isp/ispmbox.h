@@ -2499,7 +2499,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICBOPT_USE_PORTNAME
+name|ICBOPT_BOTH_WWNS
 value|0x4000
 end_define
 
