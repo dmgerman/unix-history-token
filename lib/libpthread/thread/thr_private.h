@@ -4099,47 +4099,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #include<sys/capability.h> */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_SYS_CAPABILITY_H
-end_ifdef
-
-begin_function_decl
-name|int
-name|__sys___cap_get_fd
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|cap
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__sys___cap_set_fd
-parameter_list|(
-name|int
-parameter_list|,
-name|struct
-name|cap
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* #include<sys/event.h> */
 end_comment
 
