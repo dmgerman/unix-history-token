@@ -445,6 +445,10 @@ literal|"trap instruction 30"
 block|,
 literal|"trap instruction 31"
 block|,
+literal|"fast instruction access mmu miss"
+block|,
+literal|"fast data access mmu miss"
+block|,
 literal|"interrupt"
 block|,
 literal|"physical address watchpoint"
@@ -452,10 +456,6 @@ block|,
 literal|"virtual address watchpoint"
 block|,
 literal|"corrected ecc error"
-block|,
-literal|"fast instruction access mmu miss"
-block|,
-literal|"fast data access mmu miss"
 block|,
 literal|"spill"
 block|,
@@ -593,6 +593,12 @@ comment|/* trap instruction 30 */
 name|SIGILL
 block|,
 comment|/* trap instruction 31 */
+name|SIGSEGV
+block|,
+comment|/* fast instruction access mmu miss */
+name|SIGSEGV
+block|,
+comment|/* fast data access mmu miss */
 operator|-
 literal|1
 block|,
@@ -609,12 +615,6 @@ operator|-
 literal|1
 block|,
 comment|/* corrected ecc error */
-name|SIGSEGV
-block|,
-comment|/* fast instruction access mmu miss */
-name|SIGSEGV
-block|,
-comment|/* fast data access mmu miss */
 name|SIGILL
 block|,
 comment|/* spill */
