@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.75	83/02/11	*/
+comment|/*	machdep.c	4.76	83/02/21	*/
 end_comment
 
 begin_include
@@ -3096,6 +3096,30 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|dumpmag
+init|=
+literal|0x8fca0101
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* magic number for savecore */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dumpsize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* also for savecore */
+end_comment
+
 begin_comment
 comment|/*  * Doadump comes here after turning off memory management and  * getting on the dump stack, either when called above, or by  * the auto-restart code.  */
 end_comment
@@ -3127,6 +3151,10 @@ operator|!=
 literal|1
 condition|)
 return|return;
+name|dumpsize
+operator|=
+name|physmem
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\ndumping to dev %x, offset %d\n"
