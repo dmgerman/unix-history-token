@@ -239,6 +239,16 @@ name|O_ARGVP
 block|}
 block|,
 block|{
+literal|"-flags"
+block|,
+name|N_FLAGS
+block|,
+name|c_flags
+block|,
+name|O_ARGV
+block|}
+block|,
+block|{
 literal|"-follow"
 block|,
 name|N_FOLLOW
