@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id$  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.h,v 1.2 1997/08/05 22:24:31 dyson Exp $  */
 end_comment
 
 begin_if
@@ -89,6 +89,14 @@ name|zpagemax
 decl_stmt|;
 comment|/* Max address space */
 name|int
+name|zmax
+decl_stmt|;
+comment|/* Max number of entries allocated */
+name|int
+name|ztotal
+decl_stmt|;
+comment|/* Total entries allocated now */
+name|int
 name|zsize
 decl_stmt|;
 comment|/* size of each entry */
@@ -115,6 +123,12 @@ modifier|*
 name|zname
 decl_stmt|;
 comment|/* name for diags */
+name|struct
+name|vm_zone
+modifier|*
+name|znext
+decl_stmt|;
+comment|/* list of zones for sysctl */
 block|}
 typedef|*
 name|vm_zone_t
