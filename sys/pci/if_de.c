@@ -17282,6 +17282,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|tulip_media_print
 argument_list|(
 name|sc
