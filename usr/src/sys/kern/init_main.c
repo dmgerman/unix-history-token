@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.39 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -258,12 +258,7 @@ end_comment
 
 begin_function
 name|main
-parameter_list|(
-name|firstaddr
-parameter_list|)
-name|int
-name|firstaddr
-decl_stmt|;
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -314,10 +309,8 @@ expr_stmt|;
 name|kmeminit
 argument_list|()
 expr_stmt|;
-name|startup
-argument_list|(
-name|firstaddr
-argument_list|)
+name|cpu_startup
+argument_list|()
 expr_stmt|;
 comment|/* 	 * set up system process 0 (swapper) 	 */
 name|p
