@@ -175,7 +175,6 @@ argument_list|,
 name|acphy_probe
 argument_list|)
 block|,
-name|A
 name|DEVMETHOD
 argument_list|(
 name|device_attach
