@@ -7751,6 +7751,13 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
+comment|/* tcp_timer_2msl_reset(). */
 name|INP_LOCK_ASSERT
 argument_list|(
 name|tp
@@ -8149,6 +8156,13 @@ name|tw
 operator|->
 name|tw_inpcb
 expr_stmt|;
+name|INP_INFO_WLOCK_ASSERT
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
+comment|/* tcp_timer_2msl_stop(). */
 name|INP_LOCK_ASSERT
 argument_list|(
 name|inp
