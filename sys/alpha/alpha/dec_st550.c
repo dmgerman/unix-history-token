@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -449,8 +449,7 @@ literal|2
 case|:
 comment|/* serial console ... */
 comment|/* XXX */
-block|{
-comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
+comment|/* 		 * Delay to allow PROM putchars to complete. 		 * FIFO depth * character time, 		 * character time = (1000000 / (defaultrate / 10)) 		 */
 name|DELAY
 argument_list|(
 literal|160000000
@@ -481,7 +480,6 @@ operator||=
 name|RB_SERIAL
 expr_stmt|;
 break|break;
-block|}
 case|case
 literal|3
 case|:
@@ -600,14 +598,16 @@ block|{
 name|pcicfgregs
 modifier|*
 name|cfg
-init|=
+decl_stmt|;
+name|cfg
+operator|=
 operator|(
 name|pcicfgregs
 operator|*
 operator|)
 name|arg
-decl_stmt|;
-comment|/* There are two main variants of Miata: Miata 1 (Intel SIO)          * and Miata {1.5,2} (Cypress).          *          * The Miata 1 has a CMD PCI IDE wired to compatibility mode at          * slot 4 of bus 0.  This variant  has the Pyxis DMA bug.          *          * On the Miata 1.5 and Miata 2, the Cypress PCI-ISA bridge lives          * on device 7 of bus 0.  This device has PCI IDE wired to          * compatibility mode on functions 1 and 2.          *          * There will be no interrupt mapping for these devices, so just          * bail out now.          */
+expr_stmt|;
+comment|/* There are two main variants of Miata: Miata 1 (Intel SIO) 	 * and Miata {1.5,2} (Cypress). 	 * 	 * The Miata 1 has a CMD PCI IDE wired to compatibility mode at 	 * slot 4 of bus 0.  This variant  has the Pyxis DMA bug. 	 * 	 * On the Miata 1.5 and Miata 2, the Cypress PCI-ISA bridge lives 	 * on device 7 of bus 0.  This device has PCI IDE wired to 	 * compatibility mode on functions 1 and 2. 	 * 	 * There will be no interrupt mapping for these devices, so just 	 * bail out now. 	 */
 if|if
 condition|(
 name|cfg
@@ -683,7 +683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The functions below were written based on a draft copy of the   * 21174 TRM.   */
+comment|/*  * The functions below were written based on a draft copy of the  * 21174 TRM.  */
 end_comment
 
 begin_function
@@ -742,7 +742,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("pyxis_intr_enable: enabling %d, current mask= ", irq);         {                 int i;                 for ( i = 0; i< 61; i++)                         if (temp& (1<< i)){                                 printf("%d " ,i);                         }                        printf("\n");         }
+block|printf("pyxis_intr_enable: enabling %d, current mask= ", irq); 	{ 		int i; 		for ( i = 0; i< 61; i++) 			if (temp& (1<< i)) { 				printf("%d " , i); 			} 		printf("\n"); 	}
 endif|#
 directive|endif
 block|}
@@ -802,7 +802,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("pyxis_intr_disable: disabled %d, current mask ", irq);         {                 int i;                 for ( i = 0; i< 61; i++)                         if (temp& (1<< i)){                                 printf("%d ",i);                         }                 printf("\n");         }
+block|printf("pyxis_intr_disable: disabled %d, current mask ", irq); 	{ 		int i; 		for ( i = 0; i< 61; i++) 			if (temp& (1<< i)) { 				printf("%d ", i); 			} 	printf("\n"); 	}
 endif|#
 directive|endif
 block|}

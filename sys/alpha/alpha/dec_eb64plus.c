@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Additional Copyright (c) 1997 by Matthew Jacob for NASA/Ames Resea
 end_comment
 
 begin_comment
-comment|/*   * Port to based on NetBSD/axp by Wilko Bulte<wilko@freebsd.org>   * FreeBSD version based on:   *     NetBSD: dec_eb64plus.c,v 1.15 1998/11/19 02:20:07 ross Exp  *  * Some info on the Aspen Alpine as this might be hard to come by:  * - Hardware is close enough to the DEC EB64+ design to allow it to run   *   the EB64+ SRM console f/w  * - 3 PCI slots, closest to the SIMMs: Alpine calls this slot C  *                the middle one Alpine calls this slot B  *		  the 3rd one is Alpine calls this slot A  *	(A, B, C is silkscreened on the PCB)  * - embedded NCR810, located at PCI slot 5  * - 3 ISA slots, hanging off an Intel 82378IB PCI-ISA bridge at PCI slot 8  * - embedded floppy, PC keyboard interface, PS/2 mouse interface, 2x serial  *   ports and a parallel port. All of this hiding after the ISA bridge  */
+comment|/*  * Port to based on NetBSD/axp by Wilko Bulte<wilko@freebsd.org>  * FreeBSD version based on:  *     NetBSD: dec_eb64plus.c,v 1.15 1998/11/19 02:20:07 ross Exp  *  * Some info on the Aspen Alpine as this might be hard to come by:  * - Hardware is close enough to the DEC EB64+ design to allow it to run  *   the EB64+ SRM console f/w  * - 3 PCI slots, closest to the SIMMs: Alpine calls this slot C  *                the middle one Alpine calls this slot B  *		  the 3rd one is Alpine calls this slot A  *	(A, B, C is silkscreened on the PCB)  * - embedded NCR810, located at PCI slot 5  * - 3 ISA slots, hanging off an Intel 82378IB PCI-ISA bridge at PCI slot 8  * - embedded floppy, PC keyboard interface, PS/2 mouse interface, 2x serial  *   ports and a parallel port. All of this hiding after the ISA bridge  */
 end_comment
 
 begin_include
@@ -369,16 +369,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|comconsole
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
 
 begin_comment
 comment|/* init the console, serial or graphics */
@@ -439,7 +439,7 @@ operator|/
 name|comcnrate
 argument_list|)
 expr_stmt|;
-comment|/*                           * force a comconsole on com1 if the SRM has a serial 			 * console                          */
+comment|/* 			 * force a comconsole on com1 if the SRM has a serial 			 * console. 			 */
 name|comconsole
 operator|=
 literal|0
@@ -522,7 +522,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * The SRM console may have left some some interrupts enabled.  */
+comment|/*  * The SRM console may have left some some interrupts enabled.  */
 end_comment
 
 begin_function

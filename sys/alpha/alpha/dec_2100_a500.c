@@ -223,7 +223,7 @@ parameter_list|(
 name|cputype
 parameter_list|)
 block|{
-comment|/*       * see if we're a Sable or a Lynx      */
+comment|/* 	 * See if we're a `Sable' or a `Lynx'. 	 */
 if|if
 condition|(
 name|cputype
@@ -326,16 +326,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|comconsole
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
 
 begin_function
 specifier|static
@@ -395,7 +395,7 @@ literal|2
 case|:
 comment|/* serial console ... */
 comment|/* XXX */
-comment|/* 	 * Delay to allow PROM putchars to complete. 	 * FIFO depth * character time, 	 * character time = (1000000 / (defaultrate / 10)) 	 */
+comment|/* 		 * Delay to allow PROM putchars to complete. 		 * FIFO depth * character time, 		 * character time = (1000000 / (defaultrate / 10)) 		 */
 name|DELAY
 argument_list|(
 literal|160000000
@@ -403,7 +403,7 @@ operator|/
 name|comcnrate
 argument_list|)
 expr_stmt|;
-comment|/* 	 * force a comconsole on com1 if the SRM has a serial console 	 */
+comment|/* 		 * force a comconsole on com1 if the SRM has a serial console 		 */
 name|comconsole
 operator|=
 literal|0
@@ -481,13 +481,15 @@ block|{
 name|pcicfgregs
 modifier|*
 name|cfg
-init|=
+decl_stmt|;
+name|cfg
+operator|=
 operator|(
 name|pcicfgregs
 operator|*
 operator|)
 name|arg
-decl_stmt|;
+expr_stmt|;
 name|cfg
 operator|->
 name|intline

@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Chris G. Demetriou  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|/*  * Additional Copyright (c) 1997 by Matthew Jacob for NASA/Ames Resea
 end_comment
 
 begin_comment
-comment|/*  * Additional Copyright (c) 1999 by Andrew Gallatin   *  * $FreeBSD$  */
+comment|/*  * Additional Copyright (c) 1999 by Andrew Gallatin  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -509,16 +509,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX for forcing comconsole when srm serial console is used */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|comconsole
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX for forcing comconsole when srm serial console is used */
-end_comment
 
 begin_function
 specifier|static
@@ -600,7 +600,7 @@ case|:
 comment|/* serial console ... */
 comment|/* XXX */
 block|{
-comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)) 			 */
+comment|/* 			 * Delay to allow PROM putchars to complete. 			 * FIFO depth * character time, 			 * character time = (1000000 / (defaultrate / 10)). 			 */
 name|DELAY
 argument_list|(
 literal|160000000
@@ -608,7 +608,7 @@ operator|/
 name|comcnrate
 argument_list|)
 expr_stmt|;
-comment|/*                           * force a comconsole on com1 if the SRM has a serial 			 * console                          */
+comment|/*                          * Force a comconsole on com1 if the SRM has a serial 			 * console.                          */
 name|comconsole
 operator|=
 literal|0
@@ -706,13 +706,15 @@ block|{
 name|pcicfgregs
 modifier|*
 name|cfg
-init|=
+decl_stmt|;
+name|cfg
+operator|=
 operator|(
 name|pcicfgregs
 operator|*
 operator|)
 name|arg
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|cfg
@@ -822,7 +824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read and write the mystery ICU IMR registers  * on the AlphaServer 1000  */
+comment|/*  * Read and write the mystery ICU IMR registers  * on the AlphaServer 1000.  */
 end_comment
 
 begin_define
@@ -844,7 +846,7 @@ value|outw(0x536, (x))
 end_define
 
 begin_comment
-comment|/*  * Enable and disable interrupts at the ICU level  */
+comment|/*  * Enable and disable interrupts at the ICU level.  */
 end_comment
 
 begin_function
@@ -904,14 +906,14 @@ name|void
 name|dec_1000_intr_init
 parameter_list|()
 block|{
-comment|/*  * Initialize mystery ICU  */
+comment|/*  	 * Initialize mystery ICU.  	 */
 name|IW
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX ?? */
-comment|/*  * Enable cascade interrupt.  */
+comment|/*  	 * Enable cascade interrupt.  	 */
 name|dec_1000_intr_enable
 argument_list|(
 literal|2
@@ -921,7 +923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read and write the mystery ICU IMR registers  * on the AlphaServer 1000a  */
+comment|/*  * Read and write the mystery ICU IMR registers  * on the AlphaServer 1000a.  */
 end_comment
 
 begin_define
@@ -981,24 +983,13 @@ block|{
 name|pcicfgregs
 modifier|*
 name|cfg
-init|=
-operator|(
-name|pcicfgregs
-operator|*
-operator|)
-name|arg
 decl_stmt|;
 name|int
 name|device
-init|=
-name|cfg
-operator|->
-name|slot
-decl_stmt|;
-name|int
+decl_stmt|,
 name|imrbit
 decl_stmt|;
-comment|/* 	 * Get bit number in mystery ICU imr 	 */
+comment|/* 	 * Get bit number in mystery ICU imr. 	 */
 specifier|static
 specifier|const
 name|signed
@@ -1128,6 +1119,20 @@ argument_list|)
 comment|/* Corelle */
 block|}
 decl_stmt|;
+name|cfg
+operator|=
+operator|(
+name|pcicfgregs
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+name|device
+operator|=
+name|cfg
+operator|->
+name|slot
+expr_stmt|;
 if|if
 condition|(
 name|cfg
@@ -1236,19 +1241,22 @@ decl_stmt|;
 block|{
 name|int
 name|imrval
-init|=
+decl_stmt|,
+name|i
+decl_stmt|;
+name|imrval
+operator|=
 name|IRQ2IMR
 argument_list|(
 name|irq
 argument_list|)
-decl_stmt|;
-name|int
+expr_stmt|;
 name|i
-init|=
+operator|=
 name|imrval
 operator|>=
 literal|16
-decl_stmt|;
+expr_stmt|;
 name|IWA
 argument_list|(
 name|i
@@ -1283,19 +1291,22 @@ decl_stmt|;
 block|{
 name|int
 name|imrval
-init|=
+decl_stmt|,
+name|i
+decl_stmt|;
+name|imrval
+operator|=
 name|IRQ2IMR
 argument_list|(
 name|irq
 argument_list|)
-decl_stmt|;
-name|int
+expr_stmt|;
 name|i
-init|=
+operator|=
 name|imrval
 operator|>=
 literal|16
-decl_stmt|;
+expr_stmt|;
 name|IWA
 argument_list|(
 name|i
@@ -1326,7 +1337,7 @@ name|void
 name|dec_1000a_intr_init
 parameter_list|()
 block|{
-comment|/*  * Initialize mystery ICU  */
+comment|/*  * Initialize mystery ICU.  */
 name|IWA
 argument_list|(
 literal|0
