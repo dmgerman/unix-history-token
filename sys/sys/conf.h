@@ -596,8 +596,8 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
-name|d_spare1_t
+name|void
+name|d_purge_t
 parameter_list|(
 name|struct
 name|cdev
@@ -876,9 +876,9 @@ name|d_kqfilter_t
 modifier|*
 name|d_kqfilter
 decl_stmt|;
-name|d_spare1_t
+name|d_purge_t
 modifier|*
-name|d_spare1
+name|d_purge
 decl_stmt|;
 name|d_spare2_t
 modifier|*
