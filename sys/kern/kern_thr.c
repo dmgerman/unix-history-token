@@ -281,12 +281,12 @@ name|td_state
 operator|=
 name|TDS_INACTIVE
 expr_stmt|;
-name|td
-operator|->
-name|td_proc
-operator|=
-name|NULL
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|td->td_proc = NULL;
+endif|#
+directive|endif
 name|td
 operator|->
 name|td_ksegrp
