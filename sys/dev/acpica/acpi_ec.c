@@ -2389,7 +2389,19 @@ operator|)
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/*      * Just pass the context through, there's nothing to do here.      */
+comment|/*      * If deactivating a region, always set the output to NULL.  Otherwise,      * just pass the context through.      */
+if|if
+condition|(
+name|Function
+operator|==
+name|ACPI_REGION_DEACTIVATE
+condition|)
+operator|*
+name|RegionContext
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 operator|*
 name|RegionContext
 operator|=
