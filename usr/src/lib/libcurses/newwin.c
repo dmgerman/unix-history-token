@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	8.2 (Berkeley) %G%"
+literal|"@(#)newwin.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1148,8 +1148,6 @@ operator|~
 operator|(
 name|__ENDLINE
 operator||
-name|__FULLLINE
-operator||
 name|__FULLWIN
 operator||
 name|__SCROLLWIN
@@ -1183,22 +1181,7 @@ operator|->
 name|begx
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|AL
 operator|&&
-name|DL
-condition|)
-name|win
-operator|->
-name|flags
-operator||=
-name|__FULLLINE
-expr_stmt|;
-if|if
-condition|(
 name|win
 operator|->
 name|maxy
@@ -1217,7 +1200,6 @@ name|flags
 operator||=
 name|__FULLWIN
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|win
