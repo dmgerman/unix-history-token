@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shutdown.c	8.3 (Berkeley) %G%"
+literal|"@(#)shutdown.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -753,12 +753,12 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|p
 argument_list|,
 name|arglen
 argument_list|)
