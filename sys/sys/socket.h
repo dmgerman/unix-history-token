@@ -382,6 +382,28 @@ begin_comment
 comment|/* get socket type */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_LABEL
+value|0x1009
+end_define
+
+begin_comment
+comment|/* socket's MAC label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_PEERLABEL
+value|0x1010
+end_define
+
+begin_comment
+comment|/* socket's peer's MAC label */
+end_comment
+
 begin_comment
 comment|/*  * Structure used for manipulating linger option.  */
 end_comment
