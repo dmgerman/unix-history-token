@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccdconfig.c,v 1.6 1997/02/22 14:32:10 peter Exp $ */
+comment|/* $Id: ccdconfig.c,v 1.7 1997/06/10 11:04:50 charnier Exp $ */
 end_comment
 
 begin_comment
@@ -659,6 +659,35 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|core
+operator|!=
+name|NULL
+operator|||
+name|kernel
+operator|!=
+name|NULL
+operator|||
+name|action
+operator|!=
+name|CCD_DUMP
+condition|)
+block|{
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|action
@@ -1390,6 +1419,20 @@ name|argc
 decl_stmt|,
 name|rval
 decl_stmt|;
+name|gid_t
+name|egid
+decl_stmt|;
+name|egid
+operator|=
+name|getegid
+argument_list|()
+expr_stmt|;
+name|setegid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1406,6 +1449,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|setegid
+argument_list|(
+name|egid
+argument_list|)
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"fopen: %s"
@@ -1419,6 +1467,11 @@ literal|1
 operator|)
 return|;
 block|}
+name|setegid
+argument_list|(
+name|egid
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|fgets
