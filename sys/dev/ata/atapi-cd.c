@@ -3109,7 +3109,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acd%s: %s%s<%.40s> at ata%d-%s using %s\n"
+literal|"acd%s: %s%s<%.40s> at ata%d-%s %s\n"
 argument_list|,
 name|devnum
 argument_list|,

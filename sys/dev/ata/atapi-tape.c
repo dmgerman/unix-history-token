@@ -1533,7 +1533,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"ast%d: TAPE<%.40s> at ata%d-%s using %s\n"
+literal|"ast%d: TAPE<%.40s> at ata%d-%s %s\n"
 argument_list|,
 name|stp
 operator|->

@@ -1181,7 +1181,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"afd%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s using %s\n"
+literal|"afd%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s %s\n"
 argument_list|,
 name|fdp
 operator|->
