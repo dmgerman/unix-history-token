@@ -59,6 +59,18 @@ directive|include
 file|<sys/uio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/devconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa.h>
+end_include
+
 begin_comment
 comment|/* #include "sys/ioctl.h" */
 end_comment
