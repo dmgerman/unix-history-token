@@ -300,6 +300,10 @@ block|,
 name|DA_Q_NO_6_BYTE
 init|=
 literal|0x02
+block|,
+name|DA_Q_NO_PREVENT
+init|=
+literal|0x04
 block|}
 name|da_quirks
 typedef|;
@@ -656,7 +660,7 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
-comment|/* 		 * See above. 		 */
+comment|/* See above. */
 block|{
 name|T_DIRECT
 block|,
@@ -1020,6 +1024,26 @@ block|}
 block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/*  		 * Creative Nomad MUVO mp3 player (USB)  		 * PR: kern/53094  		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"CREATIVE"
+block|,
+literal|"NOMAD_MUVO"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_NO_PREVENT
 block|}
 block|, }
 decl_stmt|;
@@ -1712,6 +1736,16 @@ name|DA_FLAG_PACK_REMOVABLE
 operator|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_PREVENT
+operator|)
+operator|==
+literal|0
 condition|)
 name|daprevent
 argument_list|(
@@ -2070,6 +2104,18 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|softc
+operator|->
+name|quirks
+operator|&
+name|DA_Q_NO_PREVENT
+operator|)
+operator|==
+literal|0
+condition|)
 name|daprevent
 argument_list|(
 name|periph
