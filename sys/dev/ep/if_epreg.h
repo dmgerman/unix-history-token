@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.21 1997/10/14 06:56:09 itojun Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.22 1997/10/27 06:15:10 joerg Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -206,7 +206,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * This `ID' port is a mere hack.  There's currently no chance to register  * it with config's idea of the ports that are in use.  *  * "After the automatic configuration is completed, the IDS is in it's initial  * state (ID-WAIT), and it monitors all write access to I/O port 01x0h, where  * 'x' is any hex digit.  If a zero is written to any one of these ports, then  * that address is remembered and becomes the ID port.  A second zero written  * to that port resets the ID sequence to its initial state.  The IDS watches  * for the ID sequence to be written to the ID port."  *  * We prefer 0x110 over 0x100 so to not conflict with the Plaque&Pray  * ports.  */
+comment|/*  * This `ID' port is a mere hack.  There's currently no chance to register  * it with config's idea of the ports that are in use.  *  * "After the automatic configuration is completed, the IDS is in its initial  * state (ID-WAIT), and it monitors all write access to I/O port 01x0h, where  * 'x' is any hex digit.  If a zero is written to any one of these ports, then  * that address is remembered and becomes the ID port.  A second zero written  * to that port resets the ID sequence to its initial state.  The IDS watches  * for the ID sequence to be written to the ID port."  *  * We prefer 0x110 over 0x100 so to not conflict with the Plaque&Pray  * ports.  */
 end_comment
 
 begin_define

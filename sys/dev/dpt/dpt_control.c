@@ -8,7 +8,7 @@ comment|/**  * dpt_control.c: Control Functions and /dev entry points for /dev/d
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_control.c,v 1.2 1998/02/10 17:36:43 eivind Exp $"
+empty|#ident "$Id: dpt_control.c,v 1.3 1998/02/20 13:11:44 bde Exp $"
 end_empty
 
 begin_include
@@ -664,7 +664,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Given a minor device number,  * return the pointer to it's softc structure  */
+comment|/**  * Given a minor device number,  * return the pointer to its softc structure  */
 end_comment
 
 begin_function

@@ -5262,7 +5262,7 @@ name|osp
 operator|=
 name|osp
 expr_stmt|;
-comment|/*      * Check that the I/O address is in use.      *       * The bit 0x80 of the base I/O port is known to be 0 after the chip has      * performed it's power on initialization. Just assume this has      * happened before the OS is starting.      *       * If the I/O address is unused, it typically returns 0xff.      */
+comment|/*      * Check that the I/O address is in use.      *       * The bit 0x80 of the base I/O port is known to be 0 after the chip has      * performed its power on initialization. Just assume this has      * happened before the OS is starting.      *       * If the I/O address is unused, it typically returns 0xff.      */
 name|DDB
 argument_list|(
 name|printf

@@ -4,7 +4,7 @@ comment|/*#define SPLIT_DEVS 1*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_tree.c,v 1.49 1998/01/02 07:31:06 julian Exp $  */
+comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_tree.c,v 1.50 1998/03/26 20:52:05 phk Exp $  */
 end_comment
 
 begin_include
@@ -1101,7 +1101,7 @@ name|myname
 operator|=
 name|devnmp
 expr_stmt|;
-comment|/* 		 * If we are unlinking from an old dir, decrement it's links 		 * as we point our '..' elsewhere 		 * Note: it's up to the calling code to remove the  		 * us from the original directory's list 		 */
+comment|/* 		 * If we are unlinking from an old dir, decrement its links 		 * as we point our '..' elsewhere 		 * Note: it's up to the calling code to remove the  		 * us from the original directory's list 		 */
 if|if
 condition|(
 name|dnp
@@ -1694,7 +1694,7 @@ break|break;
 case|case
 name|DEV_SLNK
 case|:
-comment|/* 		 * As it's a symlink allocate and store the link info 		 * Symlinks should only ever be created by the user, 		 * so they are not on the back plane and should not be  		 * propogated forward.. a bit like directories in that way.. 		 * A symlink only exists on one plane and has it's own 		 * node.. therefore we might be on any random plane. 		 */
+comment|/* 		 * As it's a symlink allocate and store the link info 		 * Symlinks should only ever be created by the user, 		 * so they are not on the back plane and should not be  		 * propogated forward.. a bit like directories in that way.. 		 * A symlink only exists on one plane and has its own 		 * node.. therefore we might be on any random plane. 		 */
 name|dnp
 operator|->
 name|by
@@ -2883,7 +2883,7 @@ operator|+
 literal|8
 expr_stmt|;
 block|}
-comment|/***************************************************************\ 	* If the front node has it's own devnode structure,		* 	* then free it.							* 	\***************************************************************/
+comment|/***************************************************************\ 	* If the front node has its own devnode structure,		* 	* then free it.							* 	\***************************************************************/
 name|free
 argument_list|(
 name|devnmp

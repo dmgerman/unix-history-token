@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_tun.c,v 1.14 1994/06/29 06:36:25 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have it's wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/poll mode of  * operation though.  */
+comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have its wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/poll mode of  * operation though.  */
 end_comment
 
 begin_include

@@ -4276,7 +4276,7 @@ operator||=
 name|IN_CHANGE
 expr_stmt|;
 block|}
-comment|/* Directory set up, now install it's entry in the parent directory. */
+comment|/* Directory set up, now install its entry in the parent directory. */
 name|error
 operator|=
 name|ext2_direnter

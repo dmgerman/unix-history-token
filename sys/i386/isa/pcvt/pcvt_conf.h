@@ -1557,7 +1557,7 @@ value|(hz/10)
 end_define
 
 begin_comment
-comment|/* gets updated with it's new position	*/
+comment|/* gets updated with its new position	*/
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.54 1998/02/20 13:37:39 bde Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.55 1998/04/16 11:15:23 peter Exp $  */
 end_comment
 
 begin_include
@@ -1579,7 +1579,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If the device has it's own done routine, call it first. 	 * If it returns a legit error value, return that, otherwise 	 * it wants us to continue with normal processing. 	 */
+comment|/* 	 * If the device has its own done routine, call it first. 	 * If it returns a legit error value, return that, otherwise 	 * it wants us to continue with normal processing. 	 */
 if|if
 condition|(
 name|sc_link
@@ -4010,7 +4010,7 @@ block|}
 endif|#
 directive|endif
 comment|/*SCSIDEBUG */
-comment|/* 	 * If the device has it's own sense handler, call it first. 	 * If it returns a legit errno value, return that, otherwise 	 * it should return either DO_RETRY or CONTINUE to either 	 * request a retry or continue with default sense handling. 	 */
+comment|/* 	 * If the device has its own sense handler, call it first. 	 * If it returns a legit errno value, return that, otherwise 	 * it should return either DO_RETRY or CONTINUE to either 	 * request a retry or continue with default sense handling. 	 */
 if|if
 condition|(
 name|sc_link
@@ -5028,7 +5028,7 @@ name|SCSIDEBUG
 end_ifdef
 
 begin_comment
-comment|/*  * Given a scsi_xfer, dump the request, in all it's glory  */
+comment|/*  * Given a scsi_xfer, dump the request, in all its glory  */
 end_comment
 
 begin_function

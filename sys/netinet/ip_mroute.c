@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.44 1998/02/06 12:13:52 eivind Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.45 1998/02/09 06:10:17 eivind Exp $  */
 end_comment
 
 begin_include
@@ -7535,7 +7535,7 @@ name|ip
 operator|->
 name|ip_len
 decl_stmt|;
-comment|/*      * copy the old packet& pullup it's IP header into the      * new mbuf so we can modify it.  Try to fill the new      * mbuf since if we don't the ethernet driver will.      */
+comment|/*      * copy the old packet& pullup its IP header into the      * new mbuf so we can modify it.  Try to fill the new      * mbuf since if we don't the ethernet driver will.      */
 name|MGETHDR
 argument_list|(
 name|mb_copy

@@ -2589,7 +2589,7 @@ value|(ChP)->TxRxData
 end_define
 
 begin_comment
-comment|/*************************************************************************** Function: sInitChanDefaults Purpose:  Initialize a channel structure to it's default state. Call:	  sInitChanDefaults(ChP) 	  CHANNEL_T *ChP; Ptr to the channel structure Comments: This function must be called once for every channel structure 	  that exists before any other SSCI calls can be made.  */
+comment|/*************************************************************************** Function: sInitChanDefaults Purpose:  Initialize a channel structure to its default state. Call:	  sInitChanDefaults(ChP) 	  CHANNEL_T *ChP; Ptr to the channel structure Comments: This function must be called once for every channel structure 	  that exists before any other SSCI calls can be made.  */
 end_comment
 
 begin_define

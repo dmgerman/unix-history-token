@@ -1877,7 +1877,7 @@ index|[
 name|tmp
 index|]
 return|;
-comment|/* else let's fall back to the blocknr, or, if there is none, 	   follow the rule that a block should be allocated near it's inode 	*/
+comment|/* else let's fall back to the blocknr, or, if there is none, 	   follow the rule that a block should be allocated near its inode 	*/
 return|return
 name|blocknr
 condition|?

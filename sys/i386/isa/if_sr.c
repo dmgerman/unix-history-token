@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John Hay.  * Copyright (c) 1996 SDL Communications, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_sr.c,v 1.10 1998/01/08 23:41:02 eivind Exp $  */
+comment|/*  * Copyright (c) 1996 John Hay.  * Copyright (c) 1996 SDL Communications, Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_sr.c,v 1.11 1998/01/30 19:49:54 jhay Exp $  */
 end_comment
 
 begin_comment
@@ -4347,7 +4347,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function will be called from the upper level when a user add a  * packet to be send, and from the interrupt handler after a finished  * transmit.  *  * NOTE: it should run at spl_imp().  *  * This function only place the data in the oncard buffers. It does not  * start the transmition. sr_xmit() does that.  *  * Transmitter idle state is indicated by the IFF_OACTIVE flag.  * The function that clears that should ensure that the transmitter  * and it's DMA is in a "good" idle state.  */
+comment|/*  * This function will be called from the upper level when a user add a  * packet to be send, and from the interrupt handler after a finished  * transmit.  *  * NOTE: it should run at spl_imp().  *  * This function only place the data in the oncard buffers. It does not  * start the transmition. sr_xmit() does that.  *  * Transmitter idle state is indicated by the IFF_OACTIVE flag.  * The function that clears that should ensure that the transmitter  * and its DMA is in a "good" idle state.  */
 end_comment
 
 begin_function
@@ -12133,7 +12133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform timeout on an FR channel   *  * Establish a periodic check of open N2 ports;  If  * a port is open/active, it's DCD state is checked  * and a loss of DCD is recognized (and eventually  * processed).  */
+comment|/*  * Perform timeout on an FR channel   *  * Establish a periodic check of open N2 ports;  If  * a port is open/active, its DCD state is checked  * and a loss of DCD is recognized (and eventually  * processed).  */
 end_comment
 
 begin_function

@@ -1898,7 +1898,7 @@ name|EBUSY
 operator|)
 return|;
 block|}
-comment|/*      * Verify that the device is really running. Some devices (such as      * Ensoniq SoundScape don't work before the on board processor (OBP)      * is initialized by downloadin it's microcode.      */
+comment|/*      * Verify that the device is really running. Some devices (such as      * Ensoniq SoundScape don't work before the on board processor (OBP)      * is initialized by downloading its microcode.      */
 if|if
 condition|(
 operator|!
@@ -3301,7 +3301,7 @@ index|[
 name|midi_dev
 index|]
 expr_stmt|;
-comment|/*      * Verify that the device is really running. Some devices (such as      * Ensoniq SoundScape don't work before the on board processor (OBP)      * is initialized by downloadin it's microcode.      */
+comment|/*      * Verify that the device is really running. Some devices (such as      * Ensoniq SoundScape don't work before the on board processor (OBP)      * is initialized by downloading its microcode.      */
 if|if
 condition|(
 operator|!
@@ -3779,7 +3779,7 @@ operator|)
 operator|>
 literal|0x20
 condition|)
-comment|/* Why it's larger than 2.x ??? */
+comment|/* Why is it larger than 2.x ??? */
 return|return;
 name|devc
 operator|->
@@ -5079,7 +5079,7 @@ name|u_long
 name|clocks
 parameter_list|)
 block|{
-comment|/*      * The MPU-401 supports just a limited set of possible timebase      * values. Since the applications require more choices, the driver      * has to program the HW to do it's best and to convert between the      * HW and actual timebases.      */
+comment|/*      * The MPU-401 supports just a limited set of possible timebase      * values. Since the applications require more choices, the driver      * has to program the HW to do its best and to convert between the      * HW and actual timebases.      */
 return|return
 operator|(
 operator|(

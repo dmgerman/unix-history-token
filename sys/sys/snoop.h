@@ -202,7 +202,7 @@ comment|/* KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * Theese are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from it's current tty.  */
+comment|/*  * Theese are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from its current tty.  */
 end_comment
 
 begin_define
