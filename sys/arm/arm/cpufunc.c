@@ -6711,6 +6711,16 @@ name|CPU_CONTROL_BEND_ENABLE
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|vector_page
+operator|==
+name|ARM_VECTORS_HIGH
+condition|)
+name|cpuctrl
+operator||=
+name|CPU_CONTROL_VECRELOC
+expr_stmt|;
 comment|/* Clear out the cache */
 name|cpu_idcache_wbinv_all
 argument_list|()
