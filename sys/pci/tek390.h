@@ -2728,7 +2728,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIAGNOSTIC
+name|DMA_DIAGNOSTIC
 value|BIT4
 end_define
 
