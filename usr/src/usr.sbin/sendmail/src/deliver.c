@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.77 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1710,11 +1710,27 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
+block|{
 name|message
 argument_list|(
-literal|"deliverable"
+literal|"deliverable: mailer %s, host %s, user %s"
+argument_list|,
+name|q
+operator|->
+name|q_mailer
+operator|->
+name|m_name
+argument_list|,
+name|q
+operator|->
+name|q_host
+argument_list|,
+name|q
+operator|->
+name|q_user
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
