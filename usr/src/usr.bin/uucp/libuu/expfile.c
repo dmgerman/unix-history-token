@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expfile.c	5.4 (Berkeley) %G%"
+literal|"@(#)expfile.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,10 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	expand file name  *  *	return codes: 0 - Ordinary spool area file  *		      1 - Other normal file  *		      FAIL - no Wrkdir name available  */
@@ -116,17 +120,6 @@ operator|*
 name|fpart
 operator|!=
 literal|'/'
-operator|&&
-name|up
-operator|<
-name|user
-operator|+
-sizeof|sizeof
-argument_list|(
-name|user
-argument_list|)
-operator|-
-literal|1
 condition|;
 name|fpart
 operator|++
