@@ -227,8 +227,10 @@ name|ie
 operator|->
 name|ie_next
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|unisig_ie_zone
+argument_list|,
 name|ie
 argument_list|)
 expr_stmt|;
@@ -239,8 +241,10 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Finally, free the message structure itself 	 */
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|unisig_msg_zone
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;

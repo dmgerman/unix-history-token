@@ -181,6 +181,12 @@ directive|include
 file|<netatm/uni/uniip_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -314,27 +320,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|uniarp_pool
-init|=
-block|{
-literal|"uni arp pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|uniarp
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|200
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|uniarp_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -381,6 +368,49 @@ block|{
 name|int
 name|err
 decl_stmt|;
+name|uniarp_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"uni arp"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|uniarp
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uniarp_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"uniarp_start: uma_zcreate"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|uniarp_zone
+argument_list|,
+literal|200
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Register our endpoint 	 */
 name|err
 operator|=
@@ -461,10 +491,9 @@ name|uniarp_endpt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free our storage pools 	 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|uniarp_pool
+name|uniarp_zone
 argument_list|)
 expr_stmt|;
 block|}
@@ -701,11 +730,10 @@ argument_list|(
 name|uap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;
@@ -771,11 +799,10 @@ argument_list|,
 name|ua_next
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;
@@ -1277,11 +1304,10 @@ argument_list|(
 name|uap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;
@@ -1704,11 +1730,10 @@ argument_list|(
 name|uap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;
@@ -2080,15 +2105,13 @@ name|UIAS_CLIENT_POPEN
 expr_stmt|;
 name|uap
 operator|=
-operator|(
-expr|struct
-name|uniarp
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|uniarp_pool
+name|uniarp_zone
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2141,11 +2164,10 @@ name|ivp
 argument_list|)
 condition|)
 block|{
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;
@@ -2765,11 +2787,10 @@ argument_list|(
 name|uap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;

@@ -499,11 +499,10 @@ argument_list|(
 name|uap
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;

@@ -50,6 +50,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_comment
 comment|/*  * Structure containing state information for each UNI protocol  * instance.  There will be one instance for each ATM device interface  * using the UNI signalling manager.  */
 end_comment
@@ -1741,25 +1747,22 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|unisig_vcpool
+name|uma_zone_t
+name|unisig_vc_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|unisig_msgpool
+name|uma_zone_t
+name|unisig_msg_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|unisig_iepool
+name|uma_zone_t
+name|unisig_ie_zone
 decl_stmt|;
 end_decl_stmt
 

@@ -950,9 +950,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|uniarp_pool
+name|uma_zone_t
+name|uniarp_zone
 decl_stmt|;
 end_decl_stmt
 

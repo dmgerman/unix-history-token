@@ -139,6 +139,12 @@ directive|include
 file|<netatm/uni/sscf_uni_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -157,6 +163,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|unisig_vc_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Local variables  */
@@ -484,11 +497,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|unisig_vc_zone
+argument_list|,
 name|uvp
 argument_list|)
 expr_stmt|;

@@ -139,6 +139,12 @@ directive|include
 file|<netatm/uni/sscf_uni_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -196,27 +202,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|sp_info
-name|sscf_uni_pool
-init|=
-block|{
-literal|"sscf uni pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|univcc
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|5
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|sscf_uni_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -284,10 +271,50 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Register stack service 	 */
+name|sscf_uni_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"sscf uni"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|univcc
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
+name|sscf_uni_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"sscf_uni_start: uma_zcreate"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|sscf_uni_zone
+argument_list|,
+literal|100
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Register stack service 	 */
 name|err
 operator|=
 name|atm_stack_register
@@ -295,15 +322,7 @@ argument_list|(
 operator|&
 name|sscf_uni_service
 argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|done
-goto|;
-name|done
-label|:
+expr_stmt|;
 return|return
 operator|(
 name|err
@@ -344,11 +363,9 @@ operator|&
 name|sscf_uni_service
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Free our storage pools 	 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|sscf_uni_pool
+name|sscf_uni_zone
 argument_list|)
 expr_stmt|;
 return|return
@@ -443,15 +460,11 @@ return|;
 comment|/* 	 * Allocate our control block 	 */
 name|uvp
 operator|=
-operator|(
-expr|struct
-name|univcc
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|sscf_uni_pool
+name|sscf_uni_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -540,11 +553,10 @@ name|err
 condition|)
 block|{
 comment|/* 		 * Lower layer instantiation failed, free our resources 		 */
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|sscf_uni_zone
+argument_list|,
 name|uvp
 argument_list|)
 expr_stmt|;

@@ -145,6 +145,12 @@ directive|include
 file|<netatm/uni/uniip_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -163,6 +169,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|uma_zone_t
+name|unisig_vc_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Local variables  */
@@ -320,15 +333,13 @@ return|;
 comment|/* 	 * Get an arp map entry 	 */
 name|uap
 operator|=
-operator|(
-expr|struct
-name|uniarp
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|uniarp_pool
+name|uniarp_zone
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -398,11 +409,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;
@@ -754,15 +764,11 @@ block|}
 comment|/* 	 * We're a client with an open VCC to the server, get a new arp entry 	 */
 name|uap
 operator|=
-operator|(
-expr|struct
-name|uniarp
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|uniarp_pool
+name|uniarp_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1288,15 +1294,13 @@ block|}
 comment|/* 	 * No info in the cache - get a new arp entry 	 */
 name|uap
 operator|=
-operator|(
-expr|struct
-name|uniarp
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|uniarp_pool
+name|uniarp_zone
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1934,11 +1938,10 @@ name|uap
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finally, free the entry 	 */
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|uniarp_zone
+argument_list|,
 name|uap
 argument_list|)
 expr_stmt|;
@@ -2031,11 +2034,10 @@ name|iv_state
 operator|==
 name|IPVCC_FREE
 condition|)
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|unisig_vc_zone
+argument_list|,
 name|ivp
 argument_list|)
 expr_stmt|;

@@ -834,11 +834,10 @@ argument_list|,
 name|so_next
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|sscop_zone
+argument_list|,
 name|sop
 argument_list|)
 expr_stmt|;

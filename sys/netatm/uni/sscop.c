@@ -151,6 +151,12 @@ directive|include
 file|<netatm/uni/sscop_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -217,27 +223,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|sscop_pool
-init|=
-block|{
-literal|"sscop pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sscop
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|5
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|sscop_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -416,6 +403,49 @@ name|err
 init|=
 literal|0
 decl_stmt|;
+name|sscop_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"sscop"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sscop
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sscop_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"sscop_start: uma_zcreate"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|sscop_zone
+argument_list|,
+literal|100
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Register stack service 	 */
 if|if
 condition|(
@@ -471,19 +501,16 @@ name|err
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Any connections still exist?? 	 */
+comment|/* 	 * Any connections still exist??  If so, we can't bail just yet. 	 */
 if|if
 condition|(
 name|sscop_vccnt
 condition|)
-block|{
-comment|/* 		 * Yes, can't stop yet 		 */
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-block|}
 comment|/* 	 * Stop our timer 	 */
 operator|(
 name|void
@@ -504,11 +531,9 @@ operator|&
 name|sscop_service
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Free our storage pools 	 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|sscop_pool
+name|sscop_zone
 argument_list|)
 expr_stmt|;
 return|return
@@ -607,15 +632,11 @@ return|;
 comment|/* 	 * Allocate our control block 	 */
 name|sop
 operator|=
-operator|(
-expr|struct
-name|sscop
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|sscop_pool
+name|sscop_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -699,11 +720,10 @@ name|err
 condition|)
 block|{
 comment|/* 		 * Lower layer instantiation failed, free our resources 		 */
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|sscop_zone
+argument_list|,
 name|sop
 argument_list|)
 expr_stmt|;

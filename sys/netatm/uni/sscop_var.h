@@ -487,6 +487,12 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_comment
 comment|/*  * Global function declarations  */
 end_comment
@@ -1887,9 +1893,8 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|sscop_pool
+name|uma_zone_t
+name|sscop_zone
 decl_stmt|;
 end_decl_stmt
 

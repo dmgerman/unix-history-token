@@ -187,6 +187,12 @@ directive|include
 file|<netatm/uni/unisig_msg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -211,77 +217,20 @@ comment|/*  * Global variables  */
 end_comment
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|unisig_vcpool
-init|=
-block|{
-literal|"unisig vcc pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|unisig_vccb
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|50
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|unisig_vc_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|unisig_msgpool
-init|=
-block|{
-literal|"unisig message pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|unisig_msg
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|50
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|unisig_msg_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|unisig_iepool
-init|=
-block|{
-literal|"unisig ie pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ie_generic
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|50
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|unisig_ie_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -525,6 +474,136 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* 	 * Atleast ensure the versioning prior to creating our 	 * UMA zone. 	 */
+name|unisig_vc_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"unisig vcc"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|unisig_vccb
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unisig_vc_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"unisig_start: uma_zcreate failed to create vcc zone"
+argument_list|)
+expr_stmt|;
+name|unisig_msg_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"unisig msg"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|unisig_msg
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unisig_msg_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"unisig_start: uma_zcreate failed to create msg zone"
+argument_list|)
+expr_stmt|;
+name|unisig_ie_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"unisig ie"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ie_generic
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unisig_ie_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"unisig_start: uma_zcreate failed to create ie zone"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|unisig_vc_zone
+argument_list|,
+literal|50
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|unisig_msg_zone
+argument_list|,
+literal|50
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|unisig_ie_zone
+argument_list|,
+literal|50
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Register ourselves with system 	 */
 name|err
 operator|=
@@ -628,22 +707,19 @@ name|unisig_mgr31
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free up our storage pools 	 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|unisig_vcpool
+name|unisig_vc_zone
 argument_list|)
 expr_stmt|;
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|unisig_msgpool
+name|unisig_msg_zone
 argument_list|)
 expr_stmt|;
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|unisig_iepool
+name|unisig_ie_zone
 argument_list|)
 expr_stmt|;
 name|done
@@ -1932,11 +2008,10 @@ name|vc_sstate
 operator|=
 name|UNI_NULL
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|unisig_vc_zone
+argument_list|,
 name|vcp
 argument_list|)
 expr_stmt|;

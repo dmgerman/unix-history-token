@@ -183,8 +183,7 @@ name|ALLOC_IE
 parameter_list|(
 name|ie
 parameter_list|)
-define|\
-value|(ie) = (struct ie_generic *) atm_allocate(&unisig_iepool); \ 	if (!ie)						\ 		return(ENOMEM);
+value|do {						\ 	(ie) = uma_zalloc(unisig_ie_zone, M_WAITOK | M_ZERO);		\ 	if ((ie) == NULL)						\ 		return (ENOMEM);					\ } while (0)
 end_define
 
 begin_comment
@@ -3305,8 +3304,10 @@ condition|(
 name|rc
 condition|)
 block|{
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|unisig_ie_zone
+argument_list|,
 name|ie
 argument_list|)
 expr_stmt|;
@@ -3599,8 +3600,10 @@ operator|->
 name|ie_length
 condition|)
 block|{
-name|atm_free
+name|uma_zfree
 argument_list|(
+name|unisig_ie_zone
+argument_list|,
 name|ie
 argument_list|)
 expr_stmt|;
