@@ -66,7 +66,7 @@ name|itype
 parameter_list|(
 name|sz
 parameter_list|)
-value|u_int ## sz ## _t
+value|uint ## sz ## _t
 end_define
 
 begin_define
