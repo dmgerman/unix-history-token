@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"quad.h"
+file|<libkern/quad.h>
 end_include
 
 begin_comment
