@@ -9,14 +9,6 @@ directive|include
 file|"crd.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NCRD
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -80,6 +72,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/slot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa.h>
 end_include
 
@@ -93,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_decl_stmt
@@ -157,47 +161,6 @@ comment|/* class */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_include
-include|#
-directive|include
-file|"apm.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<machine/apm_bios.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NAPM> 0 */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<pccard/card.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pccard/slot.h>
-end_include
 
 begin_define
 define|#
@@ -305,88 +268,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-end_if
-
-begin_comment
-comment|/*  *	For the APM stuff, the apmhook structure is kept  *	separate from the slot structure so that the slot  *	drivers do not need to know about the hooks (or the  *	data structures).  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|slot_suspend
-parameter_list|(
-name|void
-modifier|*
-name|vsp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|slot_resume
-parameter_list|(
-name|void
-modifier|*
-name|vsp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|apmhook
-name|s_hook
-index|[
-name|MAXSLOT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* APM suspend */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|apmhook
-name|r_hook
-index|[
-name|MAXSLOT
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* APM resume */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NAPM> 0 */
-end_comment
-
-begin_function_decl
-name|void
-name|pcic_probe
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -415,7 +296,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 name|cont_list
 decl_stmt|;
@@ -473,7 +354,7 @@ name|pccard_configure
 parameter_list|()
 block|{
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 name|cp
 decl_stmt|;
@@ -496,9 +377,17 @@ directive|if
 name|NPCIC
 operator|>
 literal|0
+block|{
+specifier|extern
+name|void
+name|pcic_probe
+parameter_list|()
+function_decl|;
+comment|/* XXX Should be linker set */
 name|pcic_probe
 argument_list|()
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}
@@ -518,7 +407,7 @@ modifier|*
 name|dp
 parameter_list|)
 block|{
-comment|/*  *	If already loaded, then reject the driver.  */
+comment|/* 	 *	If already loaded, then reject the driver. 	 */
 if|if
 condition|(
 name|find_driver
@@ -634,7 +523,7 @@ name|devp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *	Once all the devices belonging to this driver have been  *	freed, then remove the driver from the list  *	of registered drivers.  */
+comment|/* 	 *	Once all the devices belonging to this driver have been 	 *	freed, then remove the driver from the list 	 *	of registered drivers. 	 */
 if|if
 condition|(
 name|drivers
@@ -695,7 +584,7 @@ name|void
 name|pccard_remove_controller
 parameter_list|(
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 name|cp
 parameter_list|)
@@ -714,7 +603,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 name|cl
 decl_stmt|;
@@ -742,12 +631,12 @@ name|sp
 operator|->
 name|next
 expr_stmt|;
-comment|/*  *	If this slot belongs to this controller,  *	remove this slot.  */
+comment|/* 		 *	If this slot belongs to this controller, 		 *	remove this slot. 		 */
 if|if
 condition|(
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|==
 name|cp
 condition|)
@@ -765,7 +654,7 @@ if|if
 condition|(
 name|sp
 operator|->
-name|insert_timeout
+name|insert_seq
 condition|)
 name|untimeout
 argument_list|(
@@ -778,7 +667,7 @@ operator|)
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/*  *	Unload the drivers attached to this slot.  */
+comment|/* 			 * Unload the drivers attached to this slot. 			 */
 while|while
 condition|(
 name|dp
@@ -792,7 +681,7 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-comment|/*  *	Disable the slot and unlink the slot from the slot list.  */
+comment|/* 			 * Disable the slot and unlink the slot from the  			 * slot list. 			 */
 name|disable_slot
 argument_list|(
 name|sp
@@ -813,39 +702,6 @@ name|slot_list
 operator|=
 name|next
 expr_stmt|;
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-name|apm_hook_disestablish
-argument_list|(
-name|APM_HOOK_SUSPEND
-argument_list|,
-operator|&
-name|s_hook
-index|[
-name|sp
-operator|->
-name|slot
-index|]
-argument_list|)
-expr_stmt|;
-name|apm_hook_disestablish
-argument_list|(
-name|APM_HOOK_RESUME
-argument_list|,
-operator|&
-name|r_hook
-index|[
-name|sp
-operator|->
-name|slot
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|cp
@@ -872,15 +728,17 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-comment|/*  *	xx Can't use sp after we have freed it.  */
+comment|/* 			 *	xx Can't use sp after we have freed it. 			 */
 block|}
 else|else
+block|{
 name|last
 operator|=
 name|sp
 expr_stmt|;
 block|}
-comment|/*  *	Unlink controller structure from controller list.  */
+block|}
+comment|/* 	 *	Unlink controller structure from controller list. 	 */
 if|if
 condition|(
 name|cont_list
@@ -955,7 +813,7 @@ name|pccard_dev
 modifier|*
 name|devp
 decl_stmt|;
-comment|/*  *	Unload all the drivers on this slot. Note we can't  *	call remove_device from here, because this may be called  *	from the event routine, which is called from the slot  *	controller's ISR, and this could remove the device  *	structure out in the middle of some driver activity.  *  *	Note that a race condition is possible here; if a  *	driver is accessing the device and it is removed, then  *	all bets are off...  */
+comment|/* 	 * Unload all the drivers on this slot. Note we can't 	 * call remove_device from here, because this may be called 	 * from the event routine, which is called from the slot 	 * controller's ISR, and this could remove the device 	 * structure out in the middle of some driver activity. 	 * 	 * Note that a race condition is possible here; if a 	 * driver is accessing the device and it is removed, then 	 * all bets are off... 	 */
 for|for
 control|(
 name|devp
@@ -980,6 +838,12 @@ operator|->
 name|running
 condition|)
 block|{
+name|int
+name|s
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 name|devp
 operator|->
 name|drv
@@ -995,19 +859,111 @@ name|running
 operator|=
 literal|0
 expr_stmt|;
-block|}
-block|}
-comment|/*  *	Power off the slot.  */
+if|if
+condition|(
+name|devp
+operator|->
+name|isahd
+operator|.
+name|id_irq
+operator|&&
+operator|--
 name|sp
 operator|->
-name|cinfo
+name|irqref
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Return IRQ=%d\n"
+argument_list|,
+name|sp
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|ctrl
+operator|->
+name|mapirq
+argument_list|(
+name|sp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|INTRDIS
+argument_list|(
+literal|1
+operator|<<
+name|sp
+operator|->
+name|irq
+argument_list|)
+expr_stmt|;
+name|unregister_intr
+argument_list|(
+name|sp
+operator|->
+name|irq
+argument_list|,
+name|slot_irq_handler
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|devp
+operator|->
+name|drv
+operator|->
+name|imask
+condition|)
+name|INTRUNMASK
+argument_list|(
+operator|*
+name|devp
+operator|->
+name|drv
+operator|->
+name|imask
+argument_list|,
+operator|(
+literal|1
+operator|<<
+name|sp
+operator|->
+name|irq
+operator|)
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|irq
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Power off the slot. */
+name|sp
+operator|->
+name|ctrl
 operator|->
 name|disable
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/*  *	De-activate all contexts.  */
+comment|/* De-activate all contexts.  */
 for|for
 control|(
 name|i
@@ -1018,7 +974,7 @@ name|i
 operator|<
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 condition|;
@@ -1055,7 +1011,7 @@ name|void
 operator|)
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapmem
 argument_list|(
@@ -1075,7 +1031,7 @@ name|i
 operator|<
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxio
 condition|;
@@ -1112,7 +1068,7 @@ name|void
 operator|)
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapio
 argument_list|(
@@ -1126,182 +1082,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	APM hooks for suspending and resuming.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-end_if
-
-begin_function
-specifier|static
-name|int
-name|slot_suspend
-parameter_list|(
-name|void
-modifier|*
-name|vsp
-parameter_list|)
-block|{
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-decl_stmt|;
-name|struct
-name|slot
-modifier|*
-name|sp
-init|=
-name|vsp
-decl_stmt|;
-for|for
-control|(
-name|dp
-operator|=
-name|sp
-operator|->
-name|devices
-init|;
-name|dp
-condition|;
-name|dp
-operator|=
-name|dp
-operator|->
-name|next
-control|)
-operator|(
-name|void
-operator|)
-name|dp
-operator|->
-name|drv
-operator|->
-name|suspend
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-name|sp
-operator|->
-name|cinfo
-operator|->
-name|disable
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|slot_resume
-parameter_list|(
-name|void
-modifier|*
-name|vsp
-parameter_list|)
-block|{
-name|struct
-name|pccard_dev
-modifier|*
-name|dp
-decl_stmt|;
-name|struct
-name|slot
-modifier|*
-name|sp
-init|=
-name|vsp
-decl_stmt|;
-name|sp
-operator|->
-name|cinfo
-operator|->
-name|power
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sp
-operator|->
-name|irq
-condition|)
-name|sp
-operator|->
-name|cinfo
-operator|->
-name|mapirq
-argument_list|(
-name|sp
-argument_list|,
-name|sp
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|dp
-operator|=
-name|sp
-operator|->
-name|devices
-init|;
-name|dp
-condition|;
-name|dp
-operator|=
-name|dp
-operator|->
-name|next
-control|)
-operator|(
-name|void
-operator|)
-name|dp
-operator|->
-name|drv
-operator|->
-name|init
-argument_list|(
-name|dp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NAPM> 0 */
-end_comment
-
-begin_comment
 comment|/*  *	pccard_alloc_slot - Called from controller probe  *	routine, this function allocates a new PC-CARD slot  *	and initialises the data structures using the data provided.  *	It returns the allocated structure to the probe routine  *	to allow the controller specific data to be initialised.  */
 end_comment
 
@@ -1312,7 +1092,7 @@ modifier|*
 name|pccard_alloc_slot
 parameter_list|(
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 name|cp
 parameter_list|)
@@ -1434,7 +1214,7 @@ expr_stmt|;
 block|}
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|=
 name|cp
 expr_stmt|;
@@ -1461,7 +1241,7 @@ name|slot_list
 operator|=
 name|sp
 expr_stmt|;
-comment|/*  *	If this controller hasn't been seen before, then  *	link it into the list of controllers.  */
+comment|/* 	 *	If this controller hasn't been seen before, then 	 *	link it into the list of controllers. 	 */
 if|if
 condition|(
 name|cp
@@ -1528,115 +1308,6 @@ name|maxio
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NAPM
-operator|>
-literal|0
-block|{
-name|struct
-name|apmhook
-modifier|*
-name|ap
-decl_stmt|;
-name|ap
-operator|=
-operator|&
-name|s_hook
-index|[
-name|sp
-operator|->
-name|slot
-index|]
-expr_stmt|;
-name|ap
-operator|->
-name|ah_fun
-operator|=
-name|slot_suspend
-expr_stmt|;
-name|ap
-operator|->
-name|ah_arg
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|sp
-expr_stmt|;
-name|ap
-operator|->
-name|ah_name
-operator|=
-name|cp
-operator|->
-name|name
-expr_stmt|;
-name|ap
-operator|->
-name|ah_order
-operator|=
-name|APM_MID_ORDER
-expr_stmt|;
-name|apm_hook_establish
-argument_list|(
-name|APM_HOOK_SUSPEND
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|ap
-operator|=
-operator|&
-name|r_hook
-index|[
-name|sp
-operator|->
-name|slot
-index|]
-expr_stmt|;
-name|ap
-operator|->
-name|ah_fun
-operator|=
-name|slot_resume
-expr_stmt|;
-name|ap
-operator|->
-name|ah_arg
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|sp
-expr_stmt|;
-name|ap
-operator|->
-name|ah_name
-operator|=
-name|cp
-operator|->
-name|name
-expr_stmt|;
-name|ap
-operator|->
-name|ah_order
-operator|=
-name|APM_MID_ORDER
-expr_stmt|;
-name|apm_hook_establish
-argument_list|(
-name|APM_HOOK_RESUME
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* NAPM> 0 */
 return|return
 operator|(
 name|sp
@@ -1677,6 +1348,36 @@ name|unsigned
 name|int
 name|mask
 decl_stmt|;
+name|imask
+operator|=
+literal|1
+operator|<<
+literal|3
+expr_stmt|;
+name|imask
+operator||=
+literal|1
+operator|<<
+literal|5
+expr_stmt|;
+name|imask
+operator||=
+literal|1
+operator|<<
+literal|9
+expr_stmt|;
+name|imask
+operator||=
+literal|1
+operator|<<
+literal|11
+expr_stmt|;
+name|imask
+operator||=
+literal|1
+operator|<<
+literal|15
+expr_stmt|;
 for|for
 control|(
 name|irq
@@ -1707,13 +1408,6 @@ name|imask
 operator|)
 condition|)
 continue|continue;
-name|printf
-argument_list|(
-literal|"IRQ=%d\n"
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|maskp
@@ -1746,18 +1440,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"IRQ=%d yes!\n"
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
 name|INTREN
 argument_list|(
-literal|1
-operator|<<
-name|irq
+name|mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -1766,6 +1451,19 @@ name|irq
 operator|)
 return|;
 block|}
+comment|/* Well no luck, remove from mask again... */
+if|if
+condition|(
+name|maskp
+condition|)
+name|INTRUNMASK
+argument_list|(
+operator|*
+name|maskp
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1835,7 +1533,7 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/*  *	If an instance of this driver is already installed,  *	but not running, then remove it. If it is running,  *	then reject the request.  */
+comment|/* 	 *	If an instance of this driver is already installed, 	 *	but not running, then remove it. If it is running, 	 *	then reject the request. 	 */
 for|for
 control|(
 name|devp
@@ -1889,7 +1587,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*  *	If an interrupt mask has been given, then check it  *	against the slot interrupt (if one has been allocated).  */
+comment|/* 	 *	If an interrupt mask has been given, then check it 	 *	against the slot interrupt (if one has been allocated). 	 */
 if|if
 condition|(
 name|drvp
@@ -1906,7 +1604,7 @@ condition|(
 operator|(
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|irqs
 operator|&
@@ -1964,9 +1662,9 @@ operator|->
 name|irq
 expr_stmt|;
 block|}
-comment|/*  *	Attempt to allocate an interrupt.  XXX We lose at the moment  *	if the second device relies on a different interrupt mask.  */
 else|else
 block|{
+comment|/* 			 * Attempt to allocate an interrupt. 			 * XXX We lose at the moment if the second  			 * device relies on a different interrupt mask. 			 */
 name|irq
 operator|=
 name|pccard_alloc_intr
@@ -2012,7 +1710,7 @@ literal|1
 expr_stmt|;
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapirq
 argument_list|(
@@ -2055,7 +1753,7 @@ name|devp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  *	Create an entry for the device under this slot.  */
+comment|/* 	 *	Create an entry for the device under this slot. 	 */
 name|devp
 operator|->
 name|drv
@@ -2067,6 +1765,14 @@ operator|->
 name|sp
 operator|=
 name|sp
+expr_stmt|;
+name|devp
+operator|->
+name|isahd
+operator|.
+name|id_irq
+operator|=
+name|irq
 expr_stmt|;
 name|devp
 operator|->
@@ -2138,7 +1844,7 @@ name|drvp
 operator|->
 name|flags
 expr_stmt|;
-comment|/*  *	Convert the memory to kernel space.  */
+comment|/* 	 *	Convert the memory to kernel space. 	 */
 if|if
 condition|(
 name|drvp
@@ -2208,7 +1914,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*  *	If the init functions returns no error, then the  *	device has been successfully installed. If so, then  *	attach it to the slot, otherwise free it and return  *	the error.  */
+comment|/* 	 *	If the init functions returns no error, then the 	 *	device has been successfully installed. If so, then 	 *	attach it to the slot, otherwise free it and return 	 *	the error. 	 */
 if|if
 condition|(
 name|err
@@ -2241,7 +1947,7 @@ parameter_list|(
 name|struct
 name|pccard_dev
 modifier|*
-name|dp
+name|devp
 parameter_list|)
 block|{
 name|struct
@@ -2249,7 +1955,7 @@ name|slot
 modifier|*
 name|sp
 init|=
-name|dp
+name|devp
 operator|->
 name|sp
 decl_stmt|;
@@ -2261,7 +1967,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/*  *	If an interrupt is enabled on this slot,  *	then unregister it if no-one else is using it.  */
+comment|/* 	 *	If an interrupt is enabled on this slot, 	 *	then unregister it if no-one else is using it. 	 */
 name|s
 operator|=
 name|splhigh
@@ -2269,21 +1975,21 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|dp
+name|devp
 operator|->
 name|running
 condition|)
 block|{
-name|dp
+name|devp
 operator|->
 name|drv
 operator|->
 name|unload
 argument_list|(
-name|dp
+name|devp
 argument_list|)
 expr_stmt|;
-name|dp
+name|devp
 operator|->
 name|running
 operator|=
@@ -2292,7 +1998,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|dp
+name|devp
 operator|->
 name|isahd
 operator|.
@@ -2306,9 +2012,18 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Return IRQ=%d\n"
+argument_list|,
 name|sp
 operator|->
-name|cinfo
+name|irq
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|ctrl
 operator|->
 name|mapirq
 argument_list|(
@@ -2337,7 +2052,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dp
+name|devp
 operator|->
 name|drv
 operator|->
@@ -2346,7 +2061,7 @@ condition|)
 name|INTRUNMASK
 argument_list|(
 operator|*
-name|dp
+name|devp
 operator|->
 name|drv
 operator|->
@@ -2373,20 +2088,20 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*  *	Remove from device list on this slot.  */
+comment|/* 	 *	Remove from device list on this slot. 	 */
 if|if
 condition|(
 name|sp
 operator|->
 name|devices
 operator|==
-name|dp
+name|devp
 condition|)
 name|sp
 operator|->
 name|devices
 operator|=
-name|dp
+name|devp
 operator|->
 name|next
 expr_stmt|;
@@ -2415,23 +2130,23 @@ name|list
 operator|->
 name|next
 operator|==
-name|dp
+name|devp
 condition|)
 block|{
 name|list
 operator|->
 name|next
 operator|=
-name|dp
+name|devp
 operator|->
 name|next
 expr_stmt|;
 break|break;
 block|}
-comment|/*  *	Finally, free the memory space.  */
+comment|/* 	 *	Finally, free the memory space. 	 */
 name|FREE
 argument_list|(
-name|dp
+name|devp
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -2462,17 +2177,11 @@ name|arg
 decl_stmt|;
 name|sp
 operator|->
-name|insert_timeout
-operator|=
-literal|0
-expr_stmt|;
-name|sp
-operator|->
 name|state
 operator|=
 name|filled
 expr_stmt|;
-comment|/*  *	Enable 5V to the card so that the CIS can be read.  */
+comment|/* 	 *	Enable 5V to the card so that the CIS can be read. 	 */
 name|sp
 operator|->
 name|pwr
@@ -2491,7 +2200,7 @@ literal|0
 expr_stmt|;
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|power
 argument_list|(
@@ -2507,22 +2216,14 @@ operator|->
 name|slot
 argument_list|)
 expr_stmt|;
-comment|/*  *	Now reset the card.  */
+comment|/* 	 *	Now start resetting the card. 	 */
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|reset
 argument_list|(
 name|sp
-argument_list|)
-expr_stmt|;
-name|selwakeup
-argument_list|(
-operator|&
-name|sp
-operator|->
-name|selp
 argument_list|)
 expr_stmt|;
 block|}
@@ -2553,12 +2254,12 @@ if|if
 condition|(
 name|sp
 operator|->
-name|insert_timeout
+name|insert_seq
 condition|)
 block|{
 name|sp
 operator|->
-name|insert_timeout
+name|insert_seq
 operator|=
 literal|0
 expr_stmt|;
@@ -2579,10 +2280,10 @@ condition|(
 name|event
 condition|)
 block|{
-comment|/*  *	The slot and devices are disabled, but the  *	data structures are not unlinked.  */
 case|case
 name|card_removed
 case|:
+comment|/* 		 *	The slot and devices are disabled, but the 		 *	data structures are not unlinked. 		 */
 if|if
 condition|(
 name|sp
@@ -2637,7 +2338,7 @@ name|card_inserted
 case|:
 name|sp
 operator|->
-name|insert_timeout
+name|insert_seq
 operator|=
 literal|1
 expr_stmt|;
@@ -2679,7 +2380,7 @@ name|pccard_dev
 modifier|*
 name|dp
 decl_stmt|;
-comment|/*  *	For each device that has the shared interrupt,  *	call the interrupt handler. If the interrupt was  *	caught, the handler returns true.  */
+comment|/* 	 *	For each device that has the shared interrupt, 	 *	call the interrupt handler. If the interrupt was 	 *	caught, the handler returns true. 	 */
 for|for
 control|(
 name|dp
@@ -2756,7 +2457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Device driver interface.  */
+comment|/* 	 *	Device driver interface. 	 */
 end_comment
 
 begin_function
@@ -2967,7 +2668,7 @@ name|win
 operator|<
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 condition|;
@@ -2998,7 +2699,7 @@ name|win
 operator|>=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 condition|)
@@ -3078,7 +2779,7 @@ name|error
 operator|=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapmem
 argument_list|(
@@ -3135,7 +2836,7 @@ name|uio
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *	Restore original map.  */
+comment|/* 	 *	Restore original map. 	 */
 operator|*
 name|mp
 operator|=
@@ -3143,7 +2844,7 @@ name|oldmap
 expr_stmt|;
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapmem
 argument_list|(
@@ -3258,7 +2959,7 @@ name|win
 operator|<
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 condition|;
@@ -3289,7 +2990,7 @@ name|win
 operator|>=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 condition|)
@@ -3369,7 +3070,7 @@ name|error
 operator|=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapmem
 argument_list|(
@@ -3432,7 +3133,7 @@ name|uio
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *	Restore original map.  */
+comment|/* 	 *	Restore original map. 	 */
 operator|*
 name|mp
 operator|=
@@ -3440,7 +3141,7 @@ name|oldmap
 expr_stmt|;
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapmem
 argument_list|(
@@ -3534,7 +3235,7 @@ if|if
 condition|(
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|ioctl
 condition|)
@@ -3542,7 +3243,7 @@ return|return
 operator|(
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|ioctl
 argument_list|(
@@ -3608,7 +3309,7 @@ name|maxmem
 operator|=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 expr_stmt|;
@@ -3625,7 +3326,7 @@ name|maxio
 operator|=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxio
 expr_stmt|;
@@ -3642,12 +3343,12 @@ name|irqs
 operator|=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|irqs
 expr_stmt|;
 break|break;
-comment|/*  * Get memory context.  */
+comment|/* 	 * Get memory context. 	 */
 case|case
 name|PIOCGMEM
 case|:
@@ -3674,7 +3375,7 @@ name|s
 operator|>=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 condition|)
@@ -3754,7 +3455,7 @@ operator|->
 name|card
 expr_stmt|;
 break|break;
-comment|/*  * Set memory context. If context already active, then unmap it.  * It is hard to see how the parameters can be checked.  * At the very least, we only allow root to set the context.  */
+comment|/* 	 * Set memory context. If context already active, then unmap it. 	 * It is hard to see how the parameters can be checked. 	 * At the very least, we only allow root to set the context. 	 */
 case|case
 name|PIOCSMEM
 case|:
@@ -3813,7 +3514,7 @@ name|s
 operator|>=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxmem
 condition|)
@@ -3843,7 +3544,7 @@ return|return
 operator|(
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapmem
 argument_list|(
@@ -3853,7 +3554,7 @@ name|s
 argument_list|)
 operator|)
 return|;
-comment|/*  * Get I/O port context.  */
+comment|/* 	 * Get I/O port context. 	 */
 case|case
 name|PIOCGIO
 case|:
@@ -3880,7 +3581,7 @@ name|s
 operator|>=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxio
 condition|)
@@ -3945,7 +3646,7 @@ operator|->
 name|size
 expr_stmt|;
 break|break;
-comment|/*  * Set I/O port context.  */
+comment|/* 	 * Set I/O port context. 	 */
 case|case
 name|PIOCSIO
 case|:
@@ -4004,7 +3705,7 @@ name|s
 operator|>=
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|maxio
 condition|)
@@ -4034,7 +3735,7 @@ return|return
 operator|(
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|mapio
 argument_list|(
@@ -4045,7 +3746,7 @@ argument_list|)
 operator|)
 return|;
 break|break;
-comment|/*  *	Set memory window flags for read/write interface.  */
+comment|/* 	 *	Set memory window flags for read/write interface. 	 */
 case|case
 name|PIOCRWFLAG
 case|:
@@ -4061,7 +3762,7 @@ operator|)
 name|data
 expr_stmt|;
 break|break;
-comment|/*  *	Set the memory window to be used for the read/write  *	interface.  */
+comment|/* 	 *	Set the memory window to be used for the read/write 	 *	interface. 	 */
 case|case
 name|PIOCRWMEM
 case|:
@@ -4113,7 +3814,7 @@ operator|(
 name|EPERM
 operator|)
 return|;
-comment|/*  *	Validate the memory by checking it against the  *	I/O memory range. It must also start on an aligned block size.  */
+comment|/* 		 * Validate the memory by checking it against the I/O 		 * memory range. It must also start on an aligned block size. 		 */
 if|if
 condition|(
 name|invalid_io_memory
@@ -4155,7 +3856,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*  *	Map it to kernel VM.  */
+comment|/* 		 *	Map it to kernel VM. 		 */
 name|pccard_mem
 operator|=
 operator|*
@@ -4182,7 +3883,7 @@ literal|0xA0000
 operator|)
 expr_stmt|;
 break|break;
-comment|/*  *	Set power values  */
+comment|/* 	 *	Set power values 	 */
 case|case
 name|PIOCSPOW
 case|:
@@ -4202,7 +3903,7 @@ return|return
 operator|(
 name|sp
 operator|->
-name|cinfo
+name|ctrl
 operator|->
 name|power
 argument_list|(
@@ -4210,7 +3911,7 @@ name|sp
 argument_list|)
 operator|)
 return|;
-comment|/*  *	Allocate a driver to this slot.  */
+comment|/* 	 *	Allocate a driver to this slot. 	 */
 case|case
 name|PIOCSDRV
 case|:
@@ -4310,7 +4011,7 @@ case|:
 return|return
 literal|1
 return|;
-comment|/*  *	select for exception - card event.  */
+comment|/* 	 *	select for exception - card event. 	 */
 case|case
 literal|0
 case|:
@@ -4469,15 +4170,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NCRD */
-end_comment
 
 end_unit
 

@@ -9,7 +9,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|slot_cont
+name|slot_ctrl
 block|{
 name|int
 function_decl|(
@@ -88,9 +88,9 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* controller name */
-comment|/*  *	The rest is maintained by the mainline PC-CARD code.  */
+comment|/* 	 *	The rest is maintained by the mainline PC-CARD code. 	 */
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 name|next
 decl_stmt|;
@@ -285,14 +285,12 @@ modifier|*
 name|devices
 decl_stmt|;
 comment|/* List of drivers attached */
-comment|/*  *	flags.  */
+comment|/* 	 *	flags. 	 */
 name|unsigned
 name|int
-name|insert_timeout
-range|:
-literal|1
+name|insert_seq
 decl_stmt|;
-comment|/* Insert timeout active */
+comment|/* Firing up under the card */
 name|enum
 name|cardstate
 name|state
@@ -327,9 +325,9 @@ name|pwr
 decl_stmt|;
 comment|/* Power values */
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
-name|cinfo
+name|ctrl
 decl_stmt|;
 comment|/* Per-controller data */
 name|void
@@ -359,7 +357,7 @@ modifier|*
 name|pccard_alloc_slot
 parameter_list|(
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 parameter_list|)
 function_decl|;
@@ -384,7 +382,7 @@ name|void
 name|pccard_remove_controller
 parameter_list|(
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 parameter_list|)
 function_decl|;
