@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)courier.c	5.7 (Berkeley) %G%"
+literal|"@(#)courier.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,7 +235,7 @@ name|VERBOSE
 argument_list|)
 argument_list|)
 condition|)
-name|verbose_read
+name|cour_verbose_read
 argument_list|()
 expr_stmt|;
 endif|#
@@ -679,6 +679,14 @@ literal|" 2400"
 block|,
 name|B2400
 block|,
+literal|" 9600"
+block|,
+name|B9600
+block|,
+literal|" 9600/ARQ"
+block|,
+name|B9600
+block|,
 literal|0
 block|,
 literal|0
@@ -935,6 +943,8 @@ operator|=
 name|baud_msg
 init|;
 name|bm
+operator|->
+name|msg
 condition|;
 name|bm
 operator|++
@@ -1455,7 +1465,7 @@ name|DEBUG
 end_ifdef
 
 begin_macro
-name|verbose_read
+name|cour_verbose_read
 argument_list|()
 end_macro
 
