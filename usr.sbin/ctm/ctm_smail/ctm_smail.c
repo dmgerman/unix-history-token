@@ -435,7 +435,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(((x)+((y)-1))/(y))
+value|(((x) + ((y) - 1)) / (y))
 comment|/*      * Work out how many pieces we need, bearing in mind that each piece      * grows by 4/3 when encoded.  We count the newlines too, but ignore      * all mail headers and piece headers.  They are a "small" (almost      * constant) per message overhead that we make the user worry about. :-)      */
 name|exp_size
 operator|=
