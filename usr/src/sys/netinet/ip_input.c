@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.2 81/10/14 */
+comment|/* ip_input.c 1.3 81/10/16 */
 end_comment
 
 begin_include
@@ -1869,6 +1869,12 @@ name|ipq
 modifier|*
 name|fp
 decl_stmt|;
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
 name|COUNT
 argument_list|(
 name|IP_TIMEO
@@ -1890,8 +1896,15 @@ name|netcb
 operator|.
 name|n_ip_lock
 condition|)
+block|{
 comment|/* reass.q must not be in use */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* search through reass.q */
 for|for
 control|(
@@ -1969,6 +1982,11 @@ argument_list|)
 expr_stmt|;
 comment|/* free header */
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
