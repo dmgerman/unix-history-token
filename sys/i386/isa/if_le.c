@@ -1424,17 +1424,11 @@ name|if_mtu
 operator|=
 name|ETHERMTU
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: %s ethernet address %6D\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_name
 argument_list|,
-name|ifp
-operator|->
-name|if_unit
+literal|"%s ethernet address %6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -3227,21 +3221,14 @@ operator|->
 name|le_irq
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: lemac configuration error: expected IRQ 0x%x actual 0x%x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"lemac configuration error: expected IRQ 0x%x actual 0x%x\n"
 argument_list|,
 name|sc
 operator|->
@@ -3318,21 +3305,14 @@ operator|->
 name|lemac_membase
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: lemac configuration error: expected iomem 0x%x actual 0x%x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"lemac configuration error: expected iomem 0x%x actual 0x%x\n"
 argument_list|,
 name|vtophys
 argument_list|(
@@ -3480,21 +3460,14 @@ operator|!=
 name|LEMAC_EEP_CKSUM
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: reset: EEPROM checksum failed (0x%x)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"reset: EEPROM checksum failed (0x%x)\n"
 argument_list|,
 name|cksum
 argument_list|)
@@ -4322,21 +4295,14 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: fatal RXD error, attempting recovery\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"fatal RXD error, attempting recovery\n"
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4363,21 +4329,14 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*      *  Error during initializion.  Mark card as disabled.      */
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: recovery failed -- board disabled\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"recovery failed -- board disabled\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6906,21 +6865,14 @@ modifier|*
 name|id
 parameter_list|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: %s: nicsr=%04x"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"%s: nicsr=%04x"
 argument_list|,
 name|id
 argument_list|,
@@ -8036,21 +7988,14 @@ operator||
 name|LN_CSR0_TXON
 operator|)
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: lance_intr: stray interrupt\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"lance_intr: stray interrupt\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9227,21 +9172,14 @@ name|tdr
 operator|*=
 literal|100
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"%s%d: lance: warning: excessive collisions: TDR %dns (%d-%dm)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|le_if
-operator|.
-name|if_name
 argument_list|,
-name|sc
-operator|->
-name|le_if
-operator|.
-name|if_unit
+literal|"lance: warning: excessive collisions: TDR %dns (%d-%dm)\n"
 argument_list|,
 name|tdr
 argument_list|,
