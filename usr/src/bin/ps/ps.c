@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.27 (Berkeley) %G%"
+literal|"@(#)ps.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5988,7 +5988,7 @@ name|char
 modifier|*
 name|lhdr
 init|=
-literal|"      F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN STAT TT  TIME"
+literal|"      F UID   PID  PPID CP PRI NI ADDR  SZ  RSS WCHAN  STAT TT  TIME"
 decl_stmt|;
 end_decl_stmt
 
@@ -6094,9 +6094,9 @@ name|lp
 operator|->
 name|l_wchan
 condition|?
-literal|" %5x"
+literal|" %6x"
 else|:
-literal|"      "
+literal|"       "
 argument_list|,
 operator|(
 name|int
@@ -6105,7 +6105,7 @@ name|lp
 operator|->
 name|l_wchan
 operator|&
-literal|0xfffff
+literal|0xffffff
 argument_list|)
 expr_stmt|;
 name|printf
