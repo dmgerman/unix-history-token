@@ -1063,6 +1063,16 @@ parameter_list|)
 value|((m)->mtx_recurse != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|mtx_name
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->mtx_object.lo_name)
+end_define
+
 begin_comment
 comment|/*  * Global locks.  */
 end_comment
