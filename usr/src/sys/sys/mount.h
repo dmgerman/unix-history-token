@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -174,12 +174,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|MOUNT_LFS
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|MOUNT_MAXTYPE
-value|4
+value|5
 end_define
 
 begin_comment
-comment|/*  * Structure per mounted file system.  * Each mounted file system has an array of  * operations and an instance record.  * The file systems are put on a doubly linked list.  */
+comment|/*  * Structure per mounted file system.  Each mounted file system has an  * array of operations and an instance record.  The file systems are  * put on a doubly linked list.  */
 end_comment
 
 begin_struct
@@ -676,6 +683,7 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 expr_stmt|;
@@ -883,7 +891,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Arguments to mount UFS  */
+comment|/*  * Arguments to mount LFS/UFS  */
 end_comment
 
 begin_struct
@@ -941,8 +949,11 @@ end_struct
 begin_endif
 endif|#
 directive|endif
-endif|MFS
 end_endif
+
+begin_comment
+comment|/* MFS */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1181,8 +1192,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|NFS
 end_endif
+
+begin_comment
+comment|/* NFS */
+end_comment
 
 begin_ifdef
 ifdef|#
