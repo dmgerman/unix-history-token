@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2003 Andre Oppermann, Internet Business Solutions AG
 end_comment
 
 begin_comment
-comment|/*  * ip_fastforward gets its speed from processing the forwarded packet to  * completion (if_output on the other side) without any queues or netisr's.  * The receiving interface DMAs the packet into memory, the upper half of  * driver calls ip_fastforward, we do our routing table lookup and directly  * send it off to the outgoing interface which DMAs the packet to the  * network card. The only part of the packet we touch with the CPU is the  * IP header. We are essentially limited by bus bandwidth and how fast the  * network card/driver can set up receives and transmits.  *  * We handle basic errors, ip header errors, checksum errors,  * destination unreachable, fragmentation and fragmentation needed and  * report them via icmp to the sender.  *  * Else if something is not pure IPv4 unicast forwarding we fall back to  * the normal ip_input processing path. We should only be called from  * interfaces connected to the outside world.  *  * Firewalling is fully supported including divert, ipfw fwd and ipfilter  * ipnat and address rewrite.  *  * IPSEC is not supported if this host is a tunnel broker. IPSEC is  * supported for connections to/from local host.  *  * We try to do the least expensive (in CPU ops) checks and operations  * first to catch junk with as little overhead as possible.  *   * We take full advantage of hardware support for ip checksum and  * fragmentation offloading.  *  * We don't do ICMP redirect in the fast forwarding path. I have had my own  * cases where two core routers with Zebra routing suite would send millions  * ICMP redirects to connected hosts if the router to dest was not the default  * gateway. In one case it was filling the routing table of a host with close  * 300'000 cloned redirect entries until it ran out of kernel memory. However  * the networking code proved very robust and it didn't crash or went ill  * otherwise.  */
+comment|/*  * ip_fastforward gets its speed from processing the forwarded packet to  * completion (if_output on the other side) without any queues or netisr's.  * The receiving interface DMAs the packet into memory, the upper half of  * driver calls ip_fastforward, we do our routing table lookup and directly  * send it off to the outgoing interface which DMAs the packet to the  * network card. The only part of the packet we touch with the CPU is the  * IP header (unless there are complex firewall rules touching other parts  * of the packet, but that is up to you). We are essentially limited by bus  * bandwidth and how fast the network card/driver can set up receives and  * transmits.  *  * We handle basic errors, ip header errors, checksum errors,  * destination unreachable, fragmentation and fragmentation needed and  * report them via icmp to the sender.  *  * Else if something is not pure IPv4 unicast forwarding we fall back to  * the normal ip_input processing path. We should only be called from  * interfaces connected to the outside world.  *  * Firewalling is fully supported including divert, ipfw fwd and ipfilter  * ipnat and address rewrite.  *  * IPSEC is not supported if this host is a tunnel broker. IPSEC is  * supported for connections to/from local host.  *  * We try to do the least expensive (in CPU ops) checks and operations  * first to catch junk with as little overhead as possible.  *   * We take full advantage of hardware support for ip checksum and  * fragmentation offloading.  *  * We don't do ICMP redirect in the fast forwarding path. I have had my own  * cases where two core routers with Zebra routing suite would send millions  * ICMP redirects to connected hosts if the router to dest was not the default  * gateway. In one case it was filling the routing table of a host with close  * 300'000 cloned redirect entries until it ran out of kernel memory. However  * the networking code proved very robust and it didn't crash or went ill  * otherwise.  */
 end_comment
 
 begin_comment
@@ -1131,10 +1131,6 @@ name|m
 expr_stmt|;
 name|ipfw
 operator|=
-literal|0
-expr_stmt|;
-name|ipfw
-operator|=
 name|ip_fw_chk_ptr
 argument_list|(
 operator|&
@@ -1903,10 +1899,6 @@ name|ifp
 expr_stmt|;
 name|ipfw
 operator|=
-literal|0
-expr_stmt|;
-name|ipfw
-operator|=
 name|ip_fw_chk_ptr
 argument_list|(
 operator|&
@@ -2079,7 +2071,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|(
-name|u_int32_t
+name|u_long
 operator|)
 name|args
 operator|.
