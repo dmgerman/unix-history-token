@@ -962,7 +962,7 @@ operator|&&
 operator|(
 name|strchr
 argument_list|(
-literal|"#0- +"
+literal|"#'0- +"
 argument_list|,
 operator|*
 name|f
