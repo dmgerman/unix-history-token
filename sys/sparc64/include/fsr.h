@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|FSR_EXC_MASK
-value|((1<< FSR_EXC_BITS) - 1)
+value|((1UL<< FSR_EXC_BITS) - 1)
 end_define
 
 begin_define
@@ -71,7 +71,7 @@ name|FSR_CEXC
 parameter_list|(
 name|b
 parameter_list|)
-value|((b)<< FSR_CEXC_SHIFT)
+value|((u_long)(b)<< FSR_CEXC_SHIFT)
 end_define
 
 begin_define
@@ -95,21 +95,21 @@ name|FSR_AEXC
 parameter_list|(
 name|b
 parameter_list|)
-value|((b)<< FSR_AEXC_SHIFT)
+value|((u_long)(b)<< FSR_AEXC_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FSR_QNE
-value|(1<< 13)
+value|(1UL<< 13)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FSR_NS
-value|(1<< 22)
+value|(1UL<< 22)
 end_define
 
 begin_define
@@ -133,7 +133,7 @@ name|FSR_TEM
 parameter_list|(
 name|b
 parameter_list|)
-value|((b)<< FSR_TEM_SHIFT)
+value|((u_long)(b)<< FSR_TEM_SHIFT)
 end_define
 
 begin_define
@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|FSR_FCC0_MASK
-value|(((1<< FSR_FCC0_BITS) - 1)<< FSR_FCC0_SHIFT)
+value|(((1UL<< FSR_FCC0_BITS) - 1)<< FSR_FCC0_SHIFT)
 end_define
 
 begin_define
@@ -164,7 +164,7 @@ name|FSR_FCC0
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< FSR_FCC0_SHIFT)
+value|((u_long)(x)<< FSR_FCC0_SHIFT)
 end_define
 
 begin_define
@@ -195,7 +195,7 @@ begin_define
 define|#
 directive|define
 name|FSR_FTT_MASK
-value|(((1<< FSR_FTT_BITS) - 1)<< FSR_FTT_SHIFT)
+value|(((1UL<< FSR_FTT_BITS) - 1)<< FSR_FTT_SHIFT)
 end_define
 
 begin_define
@@ -205,7 +205,7 @@ name|FSR_FTT
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< FSR_FTT_SHIFT)
+value|((u_long)(x)<< FSR_FTT_SHIFT)
 end_define
 
 begin_define
@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|FSR_RD_MASK
-value|(((1<< FSR_RD_BITS) - 1)<< FSR_RD_SHIFT)
+value|(((1UL<< FSR_RD_BITS) - 1)<< FSR_RD_SHIFT)
 end_define
 
 begin_define
@@ -263,7 +263,7 @@ name|FSR_RD
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< FSR_RD_SHIFT)
+value|((u_long)(x)<< FSR_RD_SHIFT)
 end_define
 
 begin_define
@@ -294,7 +294,7 @@ begin_define
 define|#
 directive|define
 name|FSR_FCC1_MASK
-value|(((1<< FSR_FCC1_BITS) - 1)<< FSR_FCC1_SHIFT)
+value|(((1UL<< FSR_FCC1_BITS) - 1)<< FSR_FCC1_SHIFT)
 end_define
 
 begin_define
@@ -304,7 +304,7 @@ name|FSR_FCC1
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< FSR_FCC1_SHIFT)
+value|((u_long)(x)<< FSR_FCC1_SHIFT)
 end_define
 
 begin_define
@@ -335,7 +335,7 @@ begin_define
 define|#
 directive|define
 name|FSR_FCC2_MASK
-value|(((1<< FSR_FCC2_BITS) - 1)<< FSR_FCC2_SHIFT)
+value|(((1UL<< FSR_FCC2_BITS) - 1)<< FSR_FCC2_SHIFT)
 end_define
 
 begin_define
@@ -345,7 +345,7 @@ name|FSR_FCC2
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< FSR_FCC2_SHIFT)
+value|((u_long)(x)<< FSR_FCC2_SHIFT)
 end_define
 
 begin_define
@@ -376,7 +376,7 @@ begin_define
 define|#
 directive|define
 name|FSR_FCC3_MASK
-value|(((1<< FSR_FCC3_BITS) - 1)<< FSR_FCC3_SHIFT)
+value|(((1UL<< FSR_FCC3_BITS) - 1)<< FSR_FCC3_SHIFT)
 end_define
 
 begin_define
@@ -386,7 +386,7 @@ name|FSR_FCC3
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< FSR_FCC3_SHIFT)
+value|((u_long)(x)<< FSR_FCC3_SHIFT)
 end_define
 
 begin_define
