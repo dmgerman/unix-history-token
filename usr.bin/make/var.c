@@ -2914,7 +2914,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2...?).  *	A Boolean in *freePtr telling whether the returned string should  *	be freed by the caller.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2 to skip the '$' and the following letter, or 1 if '$' was the  *	last character in the string).  *	A Boolean in *freePtr telling whether the returned string should  *	be freed by the caller.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -3070,10 +3070,25 @@ operator|)
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|str
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
 operator|*
 name|lengthPtr
 operator|=
 literal|2
+expr_stmt|;
+else|else
+operator|*
+name|lengthPtr
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
