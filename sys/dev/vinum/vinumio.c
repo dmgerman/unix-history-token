@@ -840,7 +840,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Close a drive if it's open.  No errors */
+comment|/* Close a drive if it's open. */
 end_comment
 
 begin_function
@@ -866,7 +866,36 @@ name|drive
 argument_list|)
 expr_stmt|;
 comment|/* keep the daemon out */
-comment|/* 	 * If we can't access the drive, we can't flush  	 * the queues, which spec_close() will try to 	 * do.  Get rid of them here first 	 */
+name|close_locked_drive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* and close it */
+name|unlockdrive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Real drive close code, called with drive already locked.  We have  * also checked that the drive is open.  No errors.  */
+end_comment
+
+begin_function
+name|void
+name|close_locked_drive
+parameter_list|(
+name|struct
+name|drive
+modifier|*
+name|drive
+parameter_list|)
+block|{
+comment|/*      * If we can't access the drive, we can't flush       * the queues, which spec_close() will try to      * do.  Get rid of them here first.      */
 if|if
 condition|(
 name|drive
@@ -988,12 +1017,6 @@ name|vp
 operator|=
 name|NULL
 expr_stmt|;
-name|unlockdrive
-argument_list|(
-name|drive
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
