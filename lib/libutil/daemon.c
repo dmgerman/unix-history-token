@@ -195,6 +195,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_block
 
