@@ -168,6 +168,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
