@@ -3277,12 +3277,9 @@ name|b_ioflags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|biodone
+name|bufdone
 argument_list|(
-operator|&
 name|bp
-operator|->
-name|b_io
 argument_list|)
 expr_stmt|;
 return|return
@@ -3322,12 +3319,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|biodone
+name|bufdone
 argument_list|(
-operator|&
 name|bp
-operator|->
-name|b_io
 argument_list|)
 expr_stmt|;
 return|return
