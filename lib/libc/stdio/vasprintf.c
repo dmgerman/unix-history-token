@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vasprintf.c,v 1.6 1997/07/06 07:54:56 peter Exp $"
+literal|"$Id: vasprintf.c,v 1.7 1997/07/06 08:42:37 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_if
