@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	5.5 (Berkeley) %G%"
+literal|"@(#)fstab.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -171,7 +177,11 @@ condition|(
 name|_fs_fstab
 operator|.
 name|fs_type
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|_fs_fstab
@@ -181,11 +191,9 @@ argument_list|,
 name|FSTAB_XX
 argument_list|)
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
-operator|!
-operator|(
 name|cp
 operator|=
 name|strsep
@@ -198,9 +206,8 @@ name|NULL
 argument_list|,
 literal|":\n"
 argument_list|)
-operator|)
 condition|)
-continue|continue;
+block|{
 name|_fs_fstab
 operator|.
 name|fs_freq
@@ -212,8 +219,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|cp
 operator|=
 name|strsep
@@ -226,9 +231,8 @@ name|NULL
 argument_list|,
 literal|":\n"
 argument_list|)
-operator|)
 condition|)
-continue|continue;
+block|{
 name|_fs_fstab
 operator|.
 name|fs_passno
@@ -244,6 +248,61 @@ literal|1
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+unit|} 		}
+comment|/* no way to distinguish between EOF and syntax error */
+end_comment
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|"fstab: "
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+name|_PATH_FSTAB
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|_PATH_FSTAB
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|": syntax error.\n"
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -431,7 +490,7 @@ name|_fs_fp
 operator|=
 name|fopen
 argument_list|(
-name|FSTAB
+name|_PATH_FSTAB
 argument_list|,
 literal|"r"
 argument_list|)
