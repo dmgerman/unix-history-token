@@ -18,27 +18,89 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MK48TXX_X0
+name|MK48TXX_FLAGS
 value|0
 end_define
 
 begin_comment
-comment|/* find out later */
-end_comment
-
-begin_comment
-comment|/* ... */
+comment|/* flags register */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MK48TXX_X7
+name|MK48TXX_UNUSED
+value|1
+end_define
+
+begin_comment
+comment|/* unused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_ASEC
+value|2
+end_define
+
+begin_comment
+comment|/* alarm seconds (0..59; BCD) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_AMIN
+value|3
+end_define
+
+begin_comment
+comment|/* alarm minutes (0..59; BCD) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_AHOUR
+value|4
+end_define
+
+begin_comment
+comment|/* alarm hours (0..23; BCD) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_ADAY
+value|5
+end_define
+
+begin_comment
+comment|/* alarm day in month (1..31; BCD) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_INTR
+value|6
+end_define
+
+begin_comment
+comment|/* interrupts register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDOG
 value|7
 end_define
 
 begin_comment
-comment|/* find out later */
+comment|/* watchdog register */
 end_comment
 
 begin_define
@@ -82,7 +144,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* hour (0..23; BCD) */
+comment|/* hours (0..23; BCD) */
 end_comment
 
 begin_define
@@ -130,7 +192,281 @@ comment|/* year (0..99; BCD) */
 end_comment
 
 begin_comment
+comment|/*  * Note that some of the bits below that are not in the first eight  * registers are also only available on models with an extended  * register set.  */
+end_comment
+
+begin_comment
+comment|/* Bits in the flags register (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_FLAGS_BL
+value|0x10
+end_define
+
+begin_comment
+comment|/* battery low (read only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_FLAGS_AF
+value|0x40
+end_define
+
+begin_comment
+comment|/* alarm flag (read only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_FLAGS_WDF
+value|0x80
+end_define
+
+begin_comment
+comment|/* watchdog flag (read only) */
+end_comment
+
+begin_comment
+comment|/* Bits in the alarm seconds register (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_ASEC_MASK
+value|0x7f
+end_define
+
+begin_comment
+comment|/* mask for alarm seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_ASEC_RPT1
+value|0x80
+end_define
+
+begin_comment
+comment|/* alarm repeat mode bit 1 */
+end_comment
+
+begin_comment
+comment|/* Bits in the alarm minutes register (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_AMIN_MASK
+value|0x7f
+end_define
+
+begin_comment
+comment|/* mask for alarm minutes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_AMIN_RPT2
+value|0x80
+end_define
+
+begin_comment
+comment|/* alarm repeat mode bit 2 */
+end_comment
+
+begin_comment
+comment|/* Bits in the alarm hours register (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_AHOUR_MASK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* mask for alarm hours */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_AHOUR_RPT3
+value|0x80
+end_define
+
+begin_comment
+comment|/* alarm repeat mode bit 3 */
+end_comment
+
+begin_comment
+comment|/* Bits in the alarm day in month register (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_ADAY_MASK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* mask for alarm day in month */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_ADAY_RPT4
+value|0x80
+end_define
+
+begin_comment
+comment|/* alarm repeat mode bit 4 */
+end_comment
+
+begin_comment
+comment|/* Bits in the interrupts register (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_INTR_ABE
+value|0x20
+end_define
+
+begin_comment
+comment|/* alarm in battery back-up mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_INTR_AFE
+value|0x80
+end_define
+
+begin_comment
+comment|/* alarm flag enable */
+end_comment
+
+begin_comment
+comment|/* Bits in the watchdog register (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDOG_RB_1_16
+value|0x00
+end_define
+
+begin_comment
+comment|/* watchdog resolution 1/16 second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDOG_RB_1_4
+value|0x01
+end_define
+
+begin_comment
+comment|/* watchdog resolution 1/4 second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDOG_RB_1
+value|0x02
+end_define
+
+begin_comment
+comment|/* watchdog resolution 1 second */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDOG_RB_4
+value|0x03
+end_define
+
+begin_comment
+comment|/* watchdog resolution 4 seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDOG_BMB_MASK
+value|0x7c
+end_define
+
+begin_comment
+comment|/* mask for watchdog multiplier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDOG_WDS
+value|0x80
+end_define
+
+begin_comment
+comment|/* watchdog steering bit */
+end_comment
+
+begin_comment
 comment|/* Bits in the control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_CSR_CALIB_MASK
+value|0x1f
+end_define
+
+begin_comment
+comment|/* mask for calibration step width */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_CSR_SIGN
+value|0x20
+end_define
+
+begin_comment
+comment|/* sign of above calibration witdh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_CSR_READ
+value|0x40
+end_define
+
+begin_comment
+comment|/* want to read (freeze clock) */
 end_comment
 
 begin_define
@@ -144,15 +480,157 @@ begin_comment
 comment|/* want to write */
 end_comment
 
+begin_comment
+comment|/* Bits in the seconds register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MK48TXX_CSR_READ
-value|0x40
+name|MK48TXX_SEC_MASK
+value|0x7f
 end_define
 
 begin_comment
-comment|/* want to read (freeze clock) */
+comment|/* mask for seconds */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_SEC_ST
+value|0x80
+end_define
+
+begin_comment
+comment|/* stop oscillator */
+end_comment
+
+begin_comment
+comment|/* Bits in the minutes register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_MIN_MASK
+value|0x7f
+end_define
+
+begin_comment
+comment|/* mask for minutes */
+end_comment
+
+begin_comment
+comment|/* Bits in the hours register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_HOUR_MASK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* mask for hours */
+end_comment
+
+begin_comment
+comment|/* Bits in the century/weekday register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDAY_MASK
+value|0x07
+end_define
+
+begin_comment
+comment|/* mask for weekday */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDAY_CB
+value|0x10
+end_define
+
+begin_comment
+comment|/* century bit (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDAY_CEB
+value|0x20
+end_define
+
+begin_comment
+comment|/* century enable bit (extended only) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_WDAY_FT
+value|0x30
+end_define
+
+begin_comment
+comment|/* frequency bit */
+end_comment
+
+begin_comment
+comment|/* Bits in the day in month register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_DAY_MASK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* mask for day in month */
+end_comment
+
+begin_comment
+comment|/* Bits in the month register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_MON_MASK
+value|0x1f
+end_define
+
+begin_comment
+comment|/* mask for month */
+end_comment
+
+begin_comment
+comment|/* Bits in the year register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MK48TXX_YEAR_MASK
+value|0xff
+end_define
+
+begin_comment
+comment|/* mask for year */
+end_comment
+
+begin_comment
+comment|/* Model specific NVRAM sizes and clock offsets */
 end_comment
 
 begin_define
