@@ -1288,7 +1288,8 @@ name|group_from_gid
 name|__P
 argument_list|(
 operator|(
-name|gid_t
+name|unsigned
+name|long
 operator|,
 name|int
 operator|)
@@ -1721,7 +1722,8 @@ name|user_from_uid
 name|__P
 argument_list|(
 operator|(
-name|uid_t
+name|unsigned
+name|long
 operator|,
 name|int
 operator|)
