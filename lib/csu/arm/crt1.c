@@ -292,6 +292,11 @@ modifier|*
 modifier|*
 name|env
 parameter_list|,
+name|struct
+name|ps_strings
+modifier|*
+name|ps_strings
+parameter_list|,
 specifier|const
 name|struct
 name|Struct_Obj_Entry
@@ -307,11 +312,6 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
-parameter_list|,
-name|struct
-name|ps_strings
-modifier|*
-name|ps_strings
 parameter_list|)
 block|{
 specifier|const
