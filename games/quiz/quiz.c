@@ -223,8 +223,22 @@ begin_function_decl
 name|void
 name|get_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|main
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -271,6 +285,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|main
@@ -291,6 +314,7 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|indexfile
@@ -422,6 +446,7 @@ name|get_file
 parameter_list|(
 name|file
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
