@@ -5587,6 +5587,15 @@ operator|(
 literal|"Cyrix Cx5530 PCI-ISA bridge"
 operator|)
 return|;
+comment|/* OPTi -- vendor 0x1045 */
+case|case
+literal|0xc7001045
+case|:
+return|return
+operator|(
+literal|"OPTi 82C700 (FireStar) PCI-ISA bridge"
+operator|)
+return|;
 comment|/* NEC -- vendor 0x1033 */
 comment|/* The "C-bus" is 16-bits bus on PC98. */
 case|case
@@ -6313,6 +6322,15 @@ operator|(
 literal|"HighPoint HPT366 ATA controller"
 operator|)
 return|;
+comment|/* OPTi -- vendor 0x1045 */
+case|case
+literal|0xd5681045
+case|:
+return|return
+operator|(
+literal|"OPTi 82C700 (FireStar) ATA controller(generic mode):"
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -6844,6 +6862,14 @@ literal|"AcerLabs M15x3 Power Management Unit"
 operator|)
 return|;
 comment|/* OPTi -- vendor 0x1045 */
+case|case
+literal|0xc7011045
+case|:
+return|return
+operator|(
+literal|"OPTi 82C700 host to PCI bridge"
+operator|)
+return|;
 case|case
 literal|0xc8221045
 case|:

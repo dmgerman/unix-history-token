@@ -1958,6 +1958,14 @@ expr_stmt|;
 break|break;
 comment|/* OPTi -- vendor 0x1045 */
 case|case
+literal|0xc7011045
+case|:
+name|s
+operator|=
+literal|"OPTi 82C700 host to PCI bridge"
+expr_stmt|;
+break|break;
+case|case
 literal|0xc8221045
 case|:
 name|s
