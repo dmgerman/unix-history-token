@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syscalls.c,v 1.4 1998/01/05 07:30:25 charnier Exp $"
+literal|"$Id: syscalls.c,v 1.5 1998/07/06 21:01:48 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +290,32 @@ block|}
 block|,
 block|{
 literal|"stat"
+block|,
+literal|1
+block|,
+literal|2
+block|,
+block|{
+block|{
+name|String
+operator||
+name|IN
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|Ptr
+operator||
+name|OUT
+block|,
+literal|1
+block|}
+block|}
+block|}
+block|,
+block|{
+literal|"lstat"
 block|,
 literal|1
 block|,
