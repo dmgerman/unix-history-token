@@ -458,9 +458,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong module loaded: %s.  Starting %s.\n"
+literal|"Wrong module loaded: %s.  Starting %s(8).\n"
 argument_list|,
-name|VINUMMOD
+name|WRONGMOD
 argument_list|,
 name|WRONGMOD
 argument_list|)
@@ -2023,7 +2023,7 @@ name|volno
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|volno
 operator|++
@@ -2811,7 +2811,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|driveno
 operator|++
@@ -2954,7 +2954,7 @@ name|object
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|;
 name|object
 operator|++
@@ -3005,7 +3005,7 @@ name|object
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|;
 name|object
 operator|++
@@ -3054,7 +3054,7 @@ name|object
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|;
 name|object
 operator|++
@@ -3103,7 +3103,7 @@ name|object
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|;
 name|object
 operator|++
