@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.51 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.52 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.51 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.52 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2464,6 +2464,14 @@ name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
+name|int
+name|njobs
+decl_stmt|;
+name|int
+name|sequenceno
+init|=
+literal|0
+decl_stmt|;
 specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
@@ -2708,9 +2716,8 @@ argument_list|)
 expr_stmt|;
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
 comment|/* order the existing work requests */
-operator|(
-name|void
-operator|)
+name|njobs
+operator|=
 name|orderq
 argument_list|(
 name|FALSE
@@ -2737,6 +2744,9 @@ operator|->
 name|w_next
 expr_stmt|;
 comment|/* 		**  Ignore jobs that are too expensive for the moment. 		*/
+name|sequenceno
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|shouldqueue
@@ -2757,13 +2767,17 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\nSkipping %s\n"
+literal|"\nSkipping %s (sequence %d of %d)\n"
 argument_list|,
 name|w
 operator|->
 name|w_name
 operator|+
 literal|2
+argument_list|,
+name|sequenceno
+argument_list|,
+name|njobs
 argument_list|)
 expr_stmt|;
 block|}
@@ -2777,6 +2791,25 @@ name|pid_t
 name|dowork
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"\nRunning %s (sequence %d of %d)\n"
+argument_list|,
+name|w
+operator|->
+name|w_name
+operator|+
+literal|2
+argument_list|,
+name|sequenceno
+argument_list|,
+name|njobs
+argument_list|)
+expr_stmt|;
 name|pid
 operator|=
 name|dowork
@@ -5394,19 +5427,6 @@ expr_stmt|;
 name|OpMode
 operator|=
 name|MD_DELIVER
-expr_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"\nRunning %s\n"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|)
 expr_stmt|;
 name|ctladdr
 operator|=
