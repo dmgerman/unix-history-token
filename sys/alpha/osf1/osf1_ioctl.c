@@ -222,6 +222,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|osf1_ioctl_m
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|,
+expr|struct
+name|ioctl_args
+operator|*
+name|nuap
+operator|,
+name|int
+name|cmd
+operator|,
+name|int
+name|dir
+operator|,
+name|int
+name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|osf1_ioctl
@@ -476,6 +505,24 @@ literal|'f'
 case|:
 return|return
 name|osf1_ioctl_f
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|a
+argument_list|,
+name|cmd
+argument_list|,
+name|dir
+argument_list|,
+name|len
+argument_list|)
+return|;
+case|case
+literal|'m'
+case|:
+return|return
+name|osf1_ioctl_m
 argument_list|(
 name|p
 argument_list|,
@@ -1086,7 +1133,7 @@ case|case
 literal|119
 case|:
 comment|/* OSF/1 TIOCGPGRP */
-comment|/* same as in NetBSD */
+comment|/* same as in FreeBSD */
 break|break;
 default|default:
 name|printf
@@ -1122,6 +1169,10 @@ name|retval
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * file locking ioctl's  */
+end_comment
 
 begin_function
 name|int
@@ -1197,6 +1248,85 @@ default|default:
 name|printf
 argument_list|(
 literal|"osf1_ioctl_f: cmd = %d\n"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOTTY
+operator|)
+return|;
+block|}
+return|return
+name|ioctl
+argument_list|(
+name|p
+argument_list|,
+name|uap
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * mag tape ioctl's  */
+end_comment
+
+begin_function
+name|int
+name|osf1_ioctl_m
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|cmd
+parameter_list|,
+name|dir
+parameter_list|,
+name|len
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|ioctl_args
+comment|/* { 		syscallarg(int) fd; 		syscallarg(int) com; 		syscallarg(caddr_t) data; 	} */
+modifier|*
+name|uap
+decl_stmt|;
+name|int
+name|cmd
+decl_stmt|;
+name|int
+name|dir
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|cmd
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* OSF/1 MTIOCTOP (XXX) */
+case|case
+literal|2
+case|:
+comment|/* OSF/1 MTIOCGET (XXX) */
+comment|/* same as in FreeBSD */
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"osf1_ioctl_m: cmd = %d\n"
 argument_list|,
 name|cmd
 argument_list|)
