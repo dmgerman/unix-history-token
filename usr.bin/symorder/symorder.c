@@ -306,6 +306,7 @@ name|missing
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
