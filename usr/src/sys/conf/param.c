@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.8	81/11/07	*/
+comment|/*	param.c	4.9	81/11/08	*/
 end_comment
 
 begin_include
@@ -18,38 +18,38 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BBNNET
+name|INET
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/imp.h"
+file|"../net/imp.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|INET
+end_endif
 
 begin_include
 include|#
 directive|include
 file|"../h/socket.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|BBNNET
-end_endif
 
 begin_include
 include|#
@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/port.h"
+file|"../h/mbuf.h"
 end_include
 
 begin_comment
@@ -232,19 +232,19 @@ literal|2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|nmbpages
+init|=
+name|NMBPAGES
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BBNNET
+name|INET
 end_ifdef
-
-begin_decl_stmt
-name|int
-name|nnetpages
-init|=
-name|NNETPAGES
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -265,7 +265,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|BBNNET
+endif|INET
 end_endif
 
 begin_comment
@@ -390,19 +390,8 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BBNNET
+name|INET
 end_ifdef
-
-begin_decl_stmt
-name|struct
-name|ucb
-modifier|*
-name|contab
-decl_stmt|,
-modifier|*
-name|conNCON
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -432,7 +421,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|BBNNET
+endif|INET
 end_endif
 
 end_unit
