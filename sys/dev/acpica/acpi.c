@@ -5811,14 +5811,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Always probe/attach immediately if we're debugging. */
-name|ACPI_DEBUG_EXEC
-argument_list|(
-name|ret
-operator|=
-literal|1
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
