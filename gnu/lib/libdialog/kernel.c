@@ -1825,6 +1825,10 @@ parameter_list|)
 block|{
 name|int
 name|i
+decl_stmt|,
+name|sx
+decl_stmt|,
+name|sy
 decl_stmt|;
 if|if
 condition|(
@@ -1833,12 +1837,21 @@ argument_list|()
 condition|)
 block|{
 comment|/* Whether terminal supports color? */
-comment|/* small touchwin */
+name|getbegyx
+argument_list|(
+name|win
+argument_list|,
+name|sy
+argument_list|,
+name|sx
+argument_list|)
+expr_stmt|;
+comment|/* small touch */
 name|wattrset
 argument_list|(
 name|win
 argument_list|,
-name|A_NORMAL
+name|A_INVIS
 argument_list|)
 expr_stmt|;
 name|wmove
@@ -1871,14 +1884,10 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
-name|winch
-argument_list|(
-name|win
-argument_list|)
-operator|&
-name|A_CHARTEXT
+literal|' '
 argument_list|)
 expr_stmt|;
+comment|/* end touch */
 name|wattrset
 argument_list|(
 name|win
@@ -1916,9 +1925,23 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
-name|winch
+name|mvwinch
 argument_list|(
-name|win
+name|curscr
+argument_list|,
+name|sy
+operator|+
+name|y
+operator|+
+name|height
+argument_list|,
+name|sx
+operator|+
+name|x
+operator|+
+literal|2
+operator|+
+name|i
 argument_list|)
 operator|&
 name|A_CHARTEXT
@@ -1944,12 +1967,12 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* small touchwin */
+comment|/* small touch */
 name|wattrset
 argument_list|(
 name|win
 argument_list|,
-name|A_NORMAL
+name|A_INVIS
 argument_list|)
 expr_stmt|;
 name|wmove
@@ -1963,30 +1986,14 @@ operator|+
 name|width
 argument_list|)
 expr_stmt|;
-name|waddch
+name|waddstr
 argument_list|(
 name|win
 argument_list|,
-name|winch
-argument_list|(
-name|win
-argument_list|)
-operator|&
-name|A_CHARTEXT
+literal|"  "
 argument_list|)
 expr_stmt|;
-name|waddch
-argument_list|(
-name|win
-argument_list|,
-name|winch
-argument_list|(
-name|win
-argument_list|)
-operator|&
-name|A_CHARTEXT
-argument_list|)
-expr_stmt|;
+comment|/* end touch */
 name|wattrset
 argument_list|(
 name|win
@@ -2009,9 +2016,19 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
-name|winch
+name|mvwinch
 argument_list|(
-name|win
+name|curscr
+argument_list|,
+name|sy
+operator|+
+name|i
+argument_list|,
+name|sx
+operator|+
+name|x
+operator|+
+name|width
 argument_list|)
 operator|&
 name|A_CHARTEXT
@@ -2021,9 +2038,21 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
-name|winch
+name|mvwinch
 argument_list|(
-name|win
+name|curscr
+argument_list|,
+name|sy
+operator|+
+name|i
+argument_list|,
+name|sx
+operator|+
+name|x
+operator|+
+name|width
+operator|+
+literal|1
 argument_list|)
 operator|&
 name|A_CHARTEXT
