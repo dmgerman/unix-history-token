@@ -1143,7 +1143,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int bus = tsunami_bus_within_hose(h, b);		\ 	vm_offset_t va = TSUNAMI_CFGADDR(bus, s, f, r, h);	\ 	type data;						\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) {			\ 		tsunami_check_abort();				\ 		return ~0;					\ 	}							\ 	data = ##op##(va);					\ 	if (tsunami_check_abort())				\ 		return ~0;					\ 	return data;
+value|int bus = tsunami_bus_within_hose(h, b) ? b : 0;	\ 	vm_offset_t va = TSUNAMI_CFGADDR(bus, s, f, r, h);	\ 	type data;						\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) {			\ 		tsunami_check_abort();				\ 		return ~0;					\ 	}							\ 	data = ##op##(va);					\ 	if (tsunami_check_abort())				\ 		return ~0;					\ 	return data;
 end_define
 
 begin_define
@@ -1168,7 +1168,7 @@ parameter_list|,
 name|width
 parameter_list|)
 define|\
-value|int bus = tsunami_bus_within_hose(h, b);		\ 	vm_offset_t va = TSUNAMI_CFGADDR(bus, s, f, r, h);	\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) 			\ 		return;						\ 	##op##(va, data);					\ 	tsunami_check_abort();
+value|int bus = tsunami_bus_within_hose(h, b) ? b : 0;	\ 	vm_offset_t va = TSUNAMI_CFGADDR(bus, s, f, r, h);	\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) 			\ 		return;						\ 	##op##(va, data);					\ 	tsunami_check_abort();
 end_define
 
 begin_function
