@@ -7008,11 +7008,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Only turning off any previous options. 		 */
-if|if
-condition|(
-name|opt
-condition|)
+comment|/* 		 * Only turning off any previous options, regardless of 		 * whether the opt is just created or given. 		 */
 name|free
 argument_list|(
 name|opt
@@ -7072,6 +7068,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* XXX: discard all options */
+name|free
+argument_list|(
+name|opt
+argument_list|,
+name|M_IP6OPT
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -7477,9 +7480,11 @@ name|canwait
 operator|==
 name|M_NOWAIT
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|bzero
 argument_list|(
 name|dst
@@ -7636,11 +7641,6 @@ operator|)
 return|;
 name|bad
 label|:
-name|printf
-argument_list|(
-literal|"ip6_copypktopts: copy failed"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dst
@@ -7727,6 +7727,13 @@ argument_list|(
 name|dst
 operator|->
 name|ip6po_rthdr
+argument_list|,
+name|M_IP6OPT
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|dst
 argument_list|,
 name|M_IP6OPT
 argument_list|)
