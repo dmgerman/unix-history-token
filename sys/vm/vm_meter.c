@@ -241,7 +241,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|SRUN
 case|:

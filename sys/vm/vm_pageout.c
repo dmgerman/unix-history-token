@@ -3440,7 +3440,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * This is a consistancy check, and should likely be a panic 		 * or warning. 		 */
+comment|/* 		 * This is a consistency check, and should likely be a panic 		 * or warning. 		 */
 if|if
 condition|(
 name|m
@@ -3535,7 +3535,7 @@ name|next
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * The count for pagedaemon pages is done after checking the 		 * page for eligbility... 		 */
+comment|/* 		 * The count for pagedaemon pages is done after checking the 		 * page for eligibility... 		 */
 name|cnt
 operator|.
 name|v_pdpages
@@ -4191,7 +4191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine tries to maintain the pseudo LRU active queue,  * so that during long periods of time where there is no paging,  * that some statistic accumlation still occurs.  This code  * helps the situation where paging just starts to occur.  */
+comment|/*  * This routine tries to maintain the pseudo LRU active queue,  * so that during long periods of time where there is no paging,  * that some statistic accumulation still occurs.  This code  * helps the situation where paging just starts to occur.  */
 end_comment
 
 begin_function

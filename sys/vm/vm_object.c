@@ -3089,7 +3089,7 @@ argument_list|(
 literal|"vm_object_shadow: no object for shadowing"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The new object shadows the source object, adding a reference to it. 	 * Our caller changes his reference to point to the new object, 	 * removing a reference to the source object.  Net result: no change 	 * of reference count. 	 * 	 * Try to optimize the result object's page color when shadowing 	 * in order to maintain page coloring consistancy in the combined  	 * shadowed object. 	 */
+comment|/* 	 * The new object shadows the source object, adding a reference to it. 	 * Our caller changes his reference to point to the new object, 	 * removing a reference to the source object.  Net result: no change 	 * of reference count. 	 * 	 * Try to optimize the result object's page color when shadowing 	 * in order to maintain page coloring consistency in the combined  	 * shadowed object. 	 */
 name|result
 operator|->
 name|backing_object
@@ -3243,7 +3243,7 @@ operator|&
 name|OBSC_TEST_ALL_SHADOWED
 condition|)
 block|{
-comment|/* 		 * We do not want to have to test for the existance of 		 * swap pages in the backing object.  XXX but with the 		 * new swapper this would be pretty easy to do. 		 * 		 * XXX what about anonymous MAP_SHARED memory that hasn't 		 * been ZFOD faulted yet?  If we do not test for this, the 		 * shadow test may succeed! XXX 		 */
+comment|/* 		 * We do not want to have to test for the existence of 		 * swap pages in the backing object.  XXX but with the 		 * new swapper this would be pretty easy to do. 		 * 		 * XXX what about anonymous MAP_SHARED memory that hasn't 		 * been ZFOD faulted yet?  If we do not test for this, the 		 * shadow test may succeed! XXX 		 */
 if|if
 condition|(
 name|backing_object

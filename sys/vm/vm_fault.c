@@ -403,7 +403,7 @@ value|(fs.object->type != OBJT_DEFAULT&& \ 			(((fault_flags& VM_FAULT_WIRE_MASK
 end_define
 
 begin_comment
-comment|/*  *	vm_fault:  *  *	Handle a page fault occuring at the given address,  *	requiring the given permissions, in the map specified.  *	If successful, the page is inserted into the  *	associated physical map.  *  *	NOTE: the given address should be truncated to the  *	proper page address.  *  *	KERN_SUCCESS is returned if the page fault is handled; otherwise,  *	a standard error specifying why the fault is fatal is returned.  *  *  *	The map in question must be referenced, and remains so.  *	Caller may hold no locks.  */
+comment|/*  *	vm_fault:  *  *	Handle a page fault occurring at the given address,  *	requiring the given permissions, in the map specified.  *	If successful, the page is inserted into the  *	associated physical map.  *  *	NOTE: the given address should be truncated to the  *	proper page address.  *  *	KERN_SUCCESS is returned if the page fault is handled; otherwise,  *	a standard error specifying why the fault is fatal is returned.  *  *  *	The map in question must be referenced, and remains so.  *	Caller may hold no locks.  */
 end_comment
 
 begin_function
@@ -806,7 +806,7 @@ name|queue
 decl_stmt|,
 name|s
 decl_stmt|;
-comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is busy via either PG_BUSY or  			 * vm_page_t->busy because the vm_pager may be using 			 * vm_page_t->busy for pageouts ( and even pageins if 			 * it is the vnode pager ), and we could end up trying 			 * to pagein and pageout the same page simultaniously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a vm_page_t->busy page except, perhaps, 			 * to pmap it. 			 */
+comment|/* 			 * Wait/Retry if the page is busy.  We have to do this 			 * if the page is busy via either PG_BUSY or  			 * vm_page_t->busy because the vm_pager may be using 			 * vm_page_t->busy for pageouts ( and even pageins if 			 * it is the vnode pager ), and we could end up trying 			 * to pagein and pageout the same page simultaneously. 			 * 			 * We can theoretically allow the busy case on a read 			 * fault if the page is marked valid, but since such 			 * pages are typically already pmap'd, putting that 			 * special case in might be more effort then it is  			 * worth.  We cannot under any circumstances mess 			 * around with a vm_page_t->busy page except, perhaps, 			 * to pmap it. 			 */
 if|if
 condition|(
 operator|(
@@ -1868,7 +1868,7 @@ operator|==
 literal|1
 operator|)
 operator|&&
-comment|/* 				 * Noone else can look this object up 				 */
+comment|/* 				 * No one else can look this object up 				 */
 operator|(
 name|fs
 operator|.

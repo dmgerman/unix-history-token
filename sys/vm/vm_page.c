@@ -1415,7 +1415,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	NOTE: the code below does not lock.  It will operate properly if  *	an interrupt makes a change, but the generation algorithm will not   *	operate properly in an SMP environment where both cpu's are able to run  *	kernel code simultaniously.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
+comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	NOTE: the code below does not lock.  It will operate properly if  *	an interrupt makes a change, but the generation algorithm will not   *	operate properly in an SMP environment where both cpu's are able to run  *	kernel code simultaneously.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  *	This is a critical path routine  */
 end_comment
 
 begin_function
@@ -1800,7 +1800,7 @@ literal|1
 end_if
 
 begin_comment
-comment|/*  *	vm_page_list_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L1 or L2 caches.  We need this optmization because   *	cpu caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	This routine must be called at splvm().  *	This routine may not block.  *  *	This routine may only be called from the vm_page_list_find() macro  *	in vm_page.h  */
+comment|/*  *	vm_page_list_find:  *  *	Find a page on the specified queue with color optimization.  *  *	The page coloring optimization attempts to locate a page  *	that does not overload other nearby pages in the object in  *	the cpu's L1 or L2 caches.  We need this optimization because   *	cpu caches tend to be physical caches, while object spaces tend   *	to be virtual.  *  *	This routine must be called at splvm().  *	This routine may not block.  *  *	This routine may only be called from the vm_page_list_find() macro  *	in vm_page.h  */
 end_comment
 
 begin_function
@@ -2234,7 +2234,7 @@ operator|!=
 name|VM_ALLOC_INTERRUPT
 condition|)
 block|{
-comment|/* 		 * Allocateable from cache (non-interrupt only).  On success, 		 * we must free the page and try again, thus ensuring that 		 * cnt.v_*_free_min counters are replenished. 		 */
+comment|/* 		 * Allocatable from cache (non-interrupt only).  On success, 		 * we must free the page and try again, thus ensuring that 		 * cnt.v_*_free_min counters are replenished. 		 */
 name|m
 operator|=
 name|vm_page_select_cache
@@ -2331,7 +2331,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 		 * Not allocateable from cache from interrupt, give up. 		 */
+comment|/* 		 * Not allocatable from cache from interrupt, give up. 		 */
 name|splx
 argument_list|(
 name|s
@@ -3327,7 +3327,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	A number of routines use vm_page_unwire() to guarentee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page queues must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	A number of routines use vm_page_unwire() to guarantee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page queues must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -4620,7 +4620,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * setvalid is TRUE when we can safely set the zero'd areas 	 * as being valid.  We can do this if there are no cache consistancy 	 * issues.  e.g. it is ok to do with UFS, but not ok to do with NFS. 	 */
+comment|/* 	 * setvalid is TRUE when we can safely set the zero'd areas 	 * as being valid.  We can do this if there are no cache consistency 	 * issues.  e.g. it is ok to do with UFS, but not ok to do with NFS. 	 */
 if|if
 condition|(
 name|setvalid

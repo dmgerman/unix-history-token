@@ -3259,7 +3259,7 @@ operator|!=
 name|reqpage
 condition|)
 block|{
-comment|/* 			 * whether or not to leave the page activated is up in 			 * the air, but we should put the page on a page queue 			 * somewhere. (it already is in the object). Result: 			 * It appears that emperical results show that 			 * deactivating pages is best. 			 */
+comment|/* 			 * whether or not to leave the page activated is up in 			 * the air, but we should put the page on a page queue 			 * somewhere. (it already is in the object). Result: 			 * It appears that empirical results show that 			 * deactivating pages is best. 			 */
 comment|/* 			 * just in case someone was asking for this page we 			 * now tell them that it is ok to use 			 */
 if|if
 condition|(
