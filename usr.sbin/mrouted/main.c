@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: main.c,v 3.8 1995/11/29 22:36:34 fenner Rel $  */
+comment|/*  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE".  Use of the mrouted program represents acceptance of  * the terms and conditions listed in that file.  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  *  * $Id: main.c,v 1.7 1996/01/06 21:09:51 peter Exp $  */
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: main.c,v 3.8 1995/11/29 22:36:34 fenner Rel $"
+literal|"@(#) $Id: main.c,v 1.7 1996/01/06 21:09:51 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -543,7 +543,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"must be root\n"
+literal|"mrouted: must be root\n"
 argument_list|)
 expr_stmt|;
 name|exit

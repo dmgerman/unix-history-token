@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mtrace.c,v 3.8 1995/11/29 22:36:34 fenner Rel $"
+literal|"@(#) $Id: mtrace.c,v 1.7 1996/01/06 21:10:05 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3101,9 +3101,6 @@ decl_stmt|;
 name|u_int32
 name|smask
 decl_stmt|;
-name|init_igmp
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|raddr
@@ -6428,6 +6425,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|init_igmp
+argument_list|()
+expr_stmt|;
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|argv
 operator|++
 operator|,
@@ -7242,9 +7248,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|init_igmp
-argument_list|()
-expr_stmt|;
 comment|/*      * Set useful defaults for as many parameters as possible.      */
 name|defgrp
 operator|=

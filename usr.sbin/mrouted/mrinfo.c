@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mrinfo.c,v 3.8 1995/11/29 22:36:34 fenner Rel $"
+literal|"@(#) $Id: mrinfo.c,v 1.8 1996/01/06 21:09:56 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1424,11 +1424,6 @@ decl_stmt|;
 name|int
 name|curaddr
 decl_stmt|;
-name|setlinebuf
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|geteuid
@@ -1450,6 +1445,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|init_igmp
+argument_list|()
+expr_stmt|;
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setlinebuf
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 name|argv
 operator|++
 operator|,
@@ -1739,9 +1748,6 @@ literal|"Debug level %u\n"
 argument_list|,
 name|debug
 argument_list|)
-expr_stmt|;
-name|init_igmp
-argument_list|()
 expr_stmt|;
 comment|/* Check all addresses; mrouters often have unreachable interfaces */
 for|for
