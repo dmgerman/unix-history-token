@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3402,20 +3402,6 @@ name|inm_ia
 operator|=
 name|ia
 expr_stmt|;
-name|inm
-operator|->
-name|inm_next
-operator|=
-name|ia
-operator|->
-name|ia_multiaddrs
-expr_stmt|;
-name|ia
-operator|->
-name|ia_multiaddrs
-operator|=
-name|inm
-expr_stmt|;
 comment|/* 		 * Ask the network driver to update its multicast reception 		 * filter appropriately for the new address. 		 */
 operator|(
 operator|(
@@ -3522,6 +3508,20 @@ name|NULL
 operator|)
 return|;
 block|}
+name|inm
+operator|->
+name|inm_next
+operator|=
+name|ia
+operator|->
+name|ia_multiaddrs
+expr_stmt|;
+name|ia
+operator|->
+name|ia_multiaddrs
+operator|=
+name|inm
+expr_stmt|;
 comment|/* 		 * Let IGMP know that we have joined a new IP multicast group. 		 */
 name|igmp_joingroup
 argument_list|(
