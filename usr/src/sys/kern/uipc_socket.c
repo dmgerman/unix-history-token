@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_socket.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1403,6 +1403,16 @@ return|;
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|SBLOCKWAIT
+parameter_list|(
+name|f
+parameter_list|)
+value|(((f)& MSG_DONTWAIT) ? M_NOWAIT : M_WAITOK)
+end_define
+
 begin_comment
 comment|/*  * Send on a socket.  * If send must go all at once and message is larger than  * send buffering, then hard error.  * Lock against other senders.  * If must go all at once and not enough room now, then  * inform user that this would block and do nothing.  * Otherwise, if nonblocking, send as much as possible.  * The data to be sent is described by "uio" if nonzero,  * otherwise by the mbuf chain "top" (which must be null  * if uio is not).  Data provided in mbuf chain must be small  * enough to send all at once.  *  * Returns nonzero on error, timeout or signal; callers  * must check for short counts if EINTR/ERESTART are returned.  * Data and control buffers are freed on return.  */
 end_comment
@@ -1606,6 +1616,11 @@ operator|&
 name|so
 operator|->
 name|so_snd
+argument_list|,
+name|SBLOCKWAIT
+argument_list|(
+name|flags
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -1732,31 +1747,6 @@ literal|1024
 expr_stmt|;
 if|if
 condition|(
-name|space
-operator|<
-name|resid
-operator|+
-name|clen
-operator|&&
-operator|(
-name|atomic
-operator|||
-name|space
-operator|<
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_lowat
-operator|||
-name|space
-operator|<
-name|clen
-operator|)
-condition|)
-block|{
-if|if
-condition|(
 name|atomic
 operator|&&
 name|resid
@@ -1780,6 +1770,33 @@ argument_list|(
 name|EMSGSIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|space
+operator|<
+name|resid
+operator|+
+name|clen
+operator|&&
+name|uio
+operator|&&
+operator|(
+name|atomic
+operator|||
+name|space
+operator|<
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_lowat
+operator|||
+name|space
+operator|<
+name|clen
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|so
@@ -2649,6 +2666,11 @@ operator|&
 name|so
 operator|->
 name|so_rcv
+argument_list|,
+name|SBLOCKWAIT
+argument_list|(
+name|flags
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -2669,13 +2691,22 @@ name|so_rcv
 operator|.
 name|sb_mb
 expr_stmt|;
-comment|/* 	 * If we have less data than requested, block awaiting more 	 * (subject to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning 	 * a short count if a timeout or signal occurs after we start. 	 */
+comment|/* 	 * If we have less data than requested, block awaiting more 	 * (subject to any timeout) if: 	 *   1. the current count is less than the low water mark, or 	 *   2. MSG_WAITALL is set, and it is possible to do the entire 	 *	receive operation at once if we block (resid<= hiwat). 	 *   3. MSG_DONTWAIT is not set 	 * If MSG_WAITALL is set but resid is larger than the receive buffer, 	 * we have to do the receive in sections, and thus risk returning 	 * a short count if a timeout or signal occurs after we start. 	 */
 if|if
 condition|(
 name|m
 operator|==
 literal|0
 operator|||
+operator|(
+operator|(
+name|flags
+operator|&
+name|MSG_DONTWAIT
+operator|)
+operator|==
+literal|0
+operator|&&
 name|so
 operator|->
 name|so_rcv
@@ -2685,6 +2716,7 @@ operator|<
 name|uio
 operator|->
 name|uio_resid
+operator|)
 operator|&&
 operator|(
 name|so
@@ -2880,11 +2912,19 @@ name|release
 goto|;
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_state
 operator|&
 name|SS_NBIO
+operator|)
+operator|||
+operator|(
+name|flags
+operator|&
+name|MSG_DONTWAIT
+operator|)
 condition|)
 block|{
 name|error
@@ -4140,6 +4180,8 @@ operator|)
 name|sblock
 argument_list|(
 name|sb
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|s

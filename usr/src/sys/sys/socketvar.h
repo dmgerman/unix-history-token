@@ -181,6 +181,19 @@ name|caddr_t
 name|so_tpcb
 decl_stmt|;
 comment|/* Wisc. protocol control block XXX */
+name|void
+function_decl|(
+modifier|*
+name|so_upcall
+function_decl|)
+parameter_list|(
+comment|/* so, so->so_upcallarg, waitf */
+parameter_list|)
+function_decl|;
+name|caddr_t
+name|so_upcallarg
+decl_stmt|;
+comment|/* Arg for above */
 block|}
 struct|;
 end_struct
@@ -416,8 +429,10 @@ directive|define
 name|sblock
 parameter_list|(
 name|sb
+parameter_list|,
+name|wf
 parameter_list|)
-value|((sb)->sb_flags& SB_LOCK ? sb_lock(sb) : \ 		((sb)->sb_flags |= SB_LOCK, 0))
+value|((sb)->sb_flags& SB_LOCK ? \ 		(((wf) == M_WAITOK) ? sb_lock(sb) : EWOULDBLOCK) : \ 		((sb)->sb_flags |= SB_LOCK), 0)
 end_define
 
 begin_comment
@@ -441,7 +456,7 @@ name|sorwakeup
 parameter_list|(
 name|so
 parameter_list|)
-value|sowakeup((so),&(so)->so_rcv)
+value|{ sowakeup((so),&(so)->so_rcv); \ 			  if ((so)->so_upcall) \ 			    (*((so)->so_upcall))((so), (so)->so_upcallarg, M_DONTWAIT); \ 			}
 end_define
 
 begin_define
