@@ -3315,12 +3315,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|AAC_LOCK_ACQUIRE
 argument_list|(
 operator|&
@@ -3347,12 +3341,6 @@ operator|&
 name|sc
 operator|->
 name|aac_io_lock
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
