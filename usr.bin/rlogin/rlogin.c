@@ -376,6 +376,10 @@ block|,
 literal|"57600"
 block|,
 literal|"115200"
+define|#
+directive|define
+name|MAX_SPEED_LENGTH
+value|(sizeof("115200") - 1)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1210,6 +1214,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+define|#
+directive|define
+name|MAX_TERM_LENGTH
+value|(sizeof(term) - 1 - MAX_SPEED_LENGTH - 1)
 operator|(
 name|void
 operator|)
@@ -1230,11 +1238,15 @@ name|p
 else|:
 literal|"network"
 argument_list|,
-sizeof|sizeof
-argument_list|(
+name|MAX_TERM_LENGTH
+argument_list|)
+expr_stmt|;
 name|term
-argument_list|)
-argument_list|)
+index|[
+name|MAX_TERM_LENGTH
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
