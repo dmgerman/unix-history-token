@@ -10381,7 +10381,7 @@ literal|"%s"
 argument_list|,
 name|piaddr
 argument_list|(
-name|subnet
+name|broadcast
 argument_list|)
 argument_list|)
 expr_stmt|;
