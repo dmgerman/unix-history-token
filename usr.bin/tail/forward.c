@@ -564,6 +564,7 @@ condition|)
 return|return;
 break|break;
 default|default:
+break|break;
 block|}
 if|if
 condition|(
