@@ -38,15 +38,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)finger.c	8.2 (Berkeley) 9/30/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)finger.c	8.2 (Berkeley) 9/30/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -89,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -177,6 +201,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|loginlist
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
 name|__P
 argument_list|(
 operator|(
@@ -317,6 +354,22 @@ case|case
 literal|'?'
 case|:
 default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|optind
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
 operator|(
 name|void
 operator|)
@@ -333,13 +386,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-name|optind
-return|;
-block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -356,8 +406,6 @@ name|argv
 decl_stmt|;
 block|{
 name|int
-name|ch
-decl_stmt|,
 name|envargc
 decl_stmt|,
 name|argcnt
@@ -593,14 +641,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_PATH_UTMP
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|name
@@ -608,7 +653,7 @@ index|[
 name|UT_NAMESIZE
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 while|while
 condition|(
@@ -758,12 +803,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if
@@ -898,12 +940,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Pull out all network requests. */
@@ -1012,14 +1051,9 @@ name|pw
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"finger: %s: no such user\n"
+literal|"%s: no such user"
 argument_list|,
 operator|*
 name|p
@@ -1108,14 +1142,9 @@ operator|!
 operator|*
 name|ip
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"finger: %s: no such user\n"
+literal|"%s: no such user"
 argument_list|,
 operator|*
 name|p
@@ -1178,14 +1207,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_PATH_UTMP
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -1293,12 +1319,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if

@@ -9,15 +9,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)sprint.c	8.1 (Berkeley) 6/6/93";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)sprint.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -56,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -225,12 +249,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if
