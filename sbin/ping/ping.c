@@ -6572,7 +6572,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\r%ld/%ld packets received (%.0f%%) %.3f min / %.3f avg / %.3f max\n"
+literal|"\r%ld/%ld packets received (%.0f%%)"
 argument_list|,
 name|nreceived
 argument_list|,
@@ -6587,17 +6587,25 @@ operator|/
 name|ntransmitted
 else|:
 literal|0.0
-argument_list|,
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|nreceived
-condition|?
+operator|&&
+name|timing
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" %.3f min / %.3f avg / %.3f max"
+argument_list|,
 name|tmin
-else|:
-literal|0.0
 argument_list|,
-name|nreceived
-operator|+
-name|nrepeats
-condition|?
 name|tsum
 operator|/
 operator|(
@@ -6605,10 +6613,18 @@ name|nreceived
 operator|+
 name|nrepeats
 operator|)
-else|:
-name|tsum
 argument_list|,
 name|tmax
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
