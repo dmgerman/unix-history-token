@@ -4439,7 +4439,7 @@ operator|(
 name|EIO
 operator|)
 return|;
-comment|/* 		 * When doing an update, we can't change from or to 		 * v3, or change cookie translation 		 */
+comment|/* 		 * When doing an update, we can't change from or to 		 * v3, switch lockd strategies or change cookie translation 		 */
 name|args
 operator|.
 name|flags
@@ -4452,6 +4452,8 @@ operator|&
 operator|~
 operator|(
 name|NFSMNT_NFSV3
+operator||
+name|NFSMNT_NOLOCKD
 comment|/*|NFSMNT_XLATECOOKIE*/
 operator|)
 operator|)
@@ -4463,6 +4465,8 @@ name|nm_flag
 operator|&
 operator|(
 name|NFSMNT_NFSV3
+operator||
+name|NFSMNT_NOLOCKD
 comment|/*|NFSMNT_XLATECOOKIE*/
 operator|)
 operator|)

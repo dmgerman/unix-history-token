@@ -339,6 +339,17 @@ name|NFSMNT_ACDIRMAX
 value|0x00200000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSMNT_NOLOCKD
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Locks are local */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
