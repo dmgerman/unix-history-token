@@ -924,7 +924,9 @@ end_function
 begin_function
 name|void
 name|_thr_rtld_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|RtldLockInfo
@@ -990,7 +992,9 @@ end_function
 begin_function
 name|void
 name|_thr_rtld_fini
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|_rtld_thread_init
 argument_list|(
