@@ -506,7 +506,6 @@ operator|!=
 literal|1
 condition|)
 return|return;
-comment|/* XXX: minor encoding if u> 255 */
 operator|*
 name|dev
 operator|=
@@ -515,7 +514,10 @@ argument_list|(
 operator|&
 name|tun_cdevsw
 argument_list|,
+name|unit2minor
+argument_list|(
 name|u
+argument_list|)
 argument_list|,
 name|UID_UUCP
 argument_list|,
