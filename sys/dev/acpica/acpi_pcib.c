@@ -385,10 +385,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-operator|(
-name|device_t
-operator|)
-name|arg
+name|pcib
 argument_list|,
 literal|"failed to force attach of %s\n"
 argument_list|,
