@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.39 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,8 +40,14 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
-comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. **		Vversioncode	Version level of configuration syntax. **		Kmapname mapclass arguments.... **				Define keyed lookup of a given class. **				Arguments are class dependent. ** **	Parameters: **		cfname -- control file name. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
+comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. **		Vversioncode	Version level of configuration syntax. **		Kmapname mapclass arguments.... **				Define keyed lookup of a given class. **				Arguments are class dependent. ** **	Parameters: **		cfname -- control file name. **		safe -- TRUE if this is the system config file; **			FALSE otherwise. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
 
 begin_macro
@@ -55,6 +61,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|cfname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|safe
 decl_stmt|;
 end_decl_stmt
 
@@ -926,6 +938,8 @@ literal|2
 index|]
 argument_list|,
 name|p
+argument_list|,
+name|safe
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1410,6 +1424,8 @@ argument_list|,
 argument|filename
 argument_list|,
 argument|fmt
+argument_list|,
+argument|safe
 argument_list|)
 end_macro
 
@@ -1433,11 +1449,21 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|safe
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|FILE
 modifier|*
 name|f
+decl_stmt|;
+name|struct
+name|stat
+name|stbuf
 decl_stmt|;
 name|char
 name|buf
@@ -1447,25 +1473,70 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|filename
-index|[
-literal|0
-index|]
-operator|==
-literal|'|'
-condition|)
-name|f
-operator|=
-name|popen
+name|stat
 argument_list|(
 name|filename
-operator|+
-literal|1
 argument_list|,
-literal|"r"
+operator|&
+name|stbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"fileclass: cannot stat %s"
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
-else|else
+return|return;
+block|}
+if|if
+condition|(
+operator|!
+name|S_ISREG
+argument_list|(
+name|stbuf
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"fileclass: %s not a regular file"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|!
+name|safe
+operator|&&
+name|access
+argument_list|(
+name|filename
+argument_list|,
+name|R_OK
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"fileclass: access denied on %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|f
 operator|=
 name|fopen
@@ -1484,7 +1555,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"cannot open %s"
+literal|"fileclass: cannot open %s"
 argument_list|,
 name|filename
 argument_list|)
@@ -1647,24 +1718,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|filename
-index|[
-literal|0
-index|]
-operator|==
-literal|'|'
-condition|)
-operator|(
-name|void
-operator|)
-name|pclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
-else|else
 operator|(
 name|void
 operator|)

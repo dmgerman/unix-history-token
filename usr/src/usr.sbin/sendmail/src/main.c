@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.50 (Berkeley) %G%"
+literal|"@(#)main.c	5.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,6 +377,11 @@ comment|/* process queue requests */
 name|bool
 name|nothaw
 decl_stmt|;
+name|bool
+name|safecf
+init|=
+name|TRUE
+decl_stmt|;
 specifier|static
 name|bool
 name|reenter
@@ -633,21 +638,39 @@ argument_list|)
 expr_stmt|;
 end_while
 
-begin_for
-for|for
-control|(
+begin_expr_stmt
 name|i
 operator|=
 name|getdtablesize
 argument_list|()
-init|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* in 4.4BSD, the table can be huge; impose a reasonable limit */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|i
+operator|>
+literal|256
+condition|)
+name|i
+operator|=
+literal|256
+expr_stmt|;
+end_if
+
+begin_while
+while|while
+condition|(
+operator|--
 name|i
 operator|>
 literal|2
-condition|;
-operator|--
-name|i
-control|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -656,7 +679,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-end_for
+end_while
 
 begin_expr_stmt
 name|errno
@@ -868,6 +891,10 @@ argument_list|(
 name|getruid
 argument_list|()
 argument_list|)
+expr_stmt|;
+name|safecf
+operator|=
+name|FALSE
 expr_stmt|;
 name|nothaw
 operator|=
@@ -2243,6 +2270,8 @@ condition|)
 name|readcf
 argument_list|(
 name|ConfFile
+argument_list|,
+name|safecf
 argument_list|)
 expr_stmt|;
 end_if
