@@ -319,11 +319,11 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES - 2)
+value|(KVA_PAGES - (NPGPTD + 1))
 end_define
 
 begin_comment
-comment|/* addressable number of page tables/pde's */
+comment|/* number of page tables/pde's */
 end_comment
 
 begin_else
@@ -335,11 +335,11 @@ begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES - 1)
+value|(KVA_PAGES - NPGPTD)
 end_define
 
 begin_comment
-comment|/* addressable number of page tables/pde's */
+comment|/* number of page tables/pde's */
 end_comment
 
 begin_endif
@@ -360,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|APTDPTDI
-value|(NPDEPG-1)
+value|(NPDEPG-NPGPTD)
 end_define
 
 begin_comment
@@ -424,7 +424,7 @@ begin_define
 define|#
 directive|define
 name|PTDPTDI
-value|(KPTDI-1)
+value|(KPTDI-NPGPTD)
 end_define
 
 begin_comment

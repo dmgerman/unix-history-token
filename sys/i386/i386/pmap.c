@@ -4897,7 +4897,7 @@ name|kmem_alloc_pageable
 argument_list|(
 name|kernel_map
 argument_list|,
-name|PAGE_SIZE
+name|NBPTD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * allocate object for the ptes 	 */
@@ -4919,7 +4919,7 @@ name|OBJT_DEFAULT
 argument_list|,
 name|PTDPTDI
 operator|+
-literal|1
+name|NPGPTD
 argument_list|)
 expr_stmt|;
 comment|/* 	 * allocate the page directory page 	 */
@@ -4973,7 +4973,7 @@ argument_list|,
 operator|&
 name|ptdpg
 argument_list|,
-literal|1
+name|NPGPTD
 argument_list|)
 expr_stmt|;
 if|if
@@ -13010,7 +13010,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NPDEPG
+name|NPDEPTD
 condition|;
 name|i
 operator|++
@@ -13295,7 +13295,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NPDEPG
+name|NPDEPTD
 condition|;
 name|i
 operator|++

@@ -1773,7 +1773,7 @@ name|caddr_t
 operator|)
 name|PTD
 argument_list|,
-name|PAGE_SIZE
+name|NBPTD
 argument_list|)
 expr_stmt|;
 comment|/* "good night, sweet prince ....<THUNK!>" */

@@ -237,8 +237,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|NPDEPG
-value|(PAGE_SIZE/(sizeof (pd_entry_t)))
+name|NPGPTD
+value|1
 end_define
 
 begin_define
@@ -251,6 +251,27 @@ end_define
 begin_comment
 comment|/* LOG2(NBPDR) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NBPTD
+value|(NPGPTD<<PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPDEPTD
+value|(NBPTD/(sizeof (pd_entry_t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NPDEPG
+value|(PAGE_SIZE/(sizeof (pd_entry_t)))
+end_define
 
 begin_define
 define|#
