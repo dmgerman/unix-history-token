@@ -246,12 +246,6 @@ begin_comment
 comment|/* max interval between updates (s) */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PPS_SYNC
-end_ifdef
-
 begin_comment
 comment|/*  * The following defines are used only if a pulse-per-second (PPS)  * signal is available and connected via a modem control lead, such as  * produced by the optional ppsclock feature incorporated in the Sun  * asynch driver. They establish the design parameters of the frequency-  * lock loop used to discipline the CPU clock oscillator to the PPS  * signal.  *  * PPS_AVG is the averaging factor for the frequency loop, as well as  * the time and frequency dispersion.  *  * PPS_SHIFT and PPS_SHIFTMAX specify the minimum and maximum  * calibration intervals, respectively, in seconds as a power of two.  *  * PPS_VALID is the maximum interval before the PPS signal is considered  * invalid and protocol updates used directly instead.  *  * MAXGLITCH is the maximum interval before a time offset of more than  * MAXTIME is believed.  */
 end_comment
@@ -309,15 +303,6 @@ end_define
 
 begin_comment
 comment|/* pps signal glitch max (s) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PPS_SYNC */
 end_comment
 
 begin_comment
