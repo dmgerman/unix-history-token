@@ -4414,14 +4414,22 @@ condition|(
 name|dp
 operator|->
 name|d_portn
-operator|>=
-literal|0
+operator|==
+operator|-
+literal|1
+operator|||
+name|dp
+operator|->
+name|d_portn
+operator|==
+operator|-
+literal|2
 condition|)
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"   0x%04x,"
+literal|"       %2d,"
 argument_list|,
 name|dp
 operator|->
@@ -4433,7 +4441,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"       %d,"
+literal|"   0x%04x,"
 argument_list|,
 name|dp
 operator|->
