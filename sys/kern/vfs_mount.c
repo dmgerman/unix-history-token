@@ -3716,6 +3716,8 @@ name|VFS_ROOT
 argument_list|(
 name|mp
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|newdp
 argument_list|,
@@ -4469,6 +4471,8 @@ name|VFS_ROOT
 argument_list|(
 name|mp
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|fsrootvp
 argument_list|,
@@ -4586,6 +4590,8 @@ operator|&&
 name|VFS_ROOT
 argument_list|(
 name|mp
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|fsrootvp
@@ -4826,6 +4832,8 @@ argument_list|(
 operator|&
 name|mountlist
 argument_list|)
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|rootvnode
@@ -5201,6 +5209,8 @@ expr_stmt|;
 name|VFS_ROOT
 argument_list|(
 name|mp
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|dvp

@@ -3551,6 +3551,8 @@ name|VFS_ROOT
 argument_list|(
 name|mp
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|tdp
 argument_list|,
