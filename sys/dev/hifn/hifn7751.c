@@ -1453,7 +1453,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"crypto driver"
+literal|"hifn driver"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -2228,6 +2228,8 @@ operator|->
 name|sc_irq
 argument_list|,
 name|INTR_TYPE_NET
+operator||
+name|INTR_MPSAFE
 argument_list|,
 name|hifn_intr
 argument_list|,
@@ -2786,9 +2788,14 @@ literal|"hifn_detach: null software carrier!"
 operator|)
 argument_list|)
 expr_stmt|;
-name|HIFN_LOCK
+comment|/* disable interrupts */
+name|WRITE_REG_1
 argument_list|(
 name|sc
+argument_list|,
+name|HIFN_1_DMA_IER
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/*XXX other resources */
@@ -2930,11 +2937,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_bar0res
-argument_list|)
-expr_stmt|;
-name|HIFN_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -8766,6 +8768,11 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * need 1 cmd, and 1 res 	 * 	 * NB: check this first since it's easy. 	 */
+name|HIFN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -8822,6 +8829,11 @@ operator|.
 name|hst_nomem_cr
 operator|++
 expr_stmt|;
+name|HIFN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ERESTART
@@ -8849,6 +8861,11 @@ name|hifnstats
 operator|.
 name|hst_nomem_map
 operator|++
+expr_stmt|;
+name|HIFN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -10252,6 +10269,11 @@ name|sc_active
 operator|=
 literal|5
 expr_stmt|;
+name|HIFN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|err
@@ -10368,6 +10390,11 @@ argument_list|,
 name|cmd
 operator|->
 name|src_map
+argument_list|)
+expr_stmt|;
+name|HIFN_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -10593,6 +10620,29 @@ name|i
 decl_stmt|,
 name|u
 decl_stmt|;
+name|dmacsr
+operator|=
+name|READ_REG_1
+argument_list|(
+name|sc
+argument_list|,
+name|HIFN_1_DMA_CSR
+argument_list|)
+expr_stmt|;
+comment|/* Nothing in the DMA unit interrupted */
+if|if
+condition|(
+operator|(
+name|dmacsr
+operator|&
+name|sc
+operator|->
+name|sc_dmaier
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|HIFN_LOCK
 argument_list|(
 name|sc
@@ -10603,15 +10653,6 @@ operator|=
 name|sc
 operator|->
 name|sc_dma
-expr_stmt|;
-name|dmacsr
-operator|=
-name|READ_REG_1
-argument_list|(
-name|sc
-argument_list|,
-name|HIFN_1_DMA_CSR
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -10694,32 +10735,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Nothing in the DMA unit interrupted */
-if|if
-condition|(
-operator|(
-name|dmacsr
-operator|&
-name|sc
-operator|->
-name|sc_dmaier
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|hifnstats
-operator|.
-name|hst_noirq
-operator|++
-expr_stmt|;
-name|HIFN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|WRITE_REG_1
 argument_list|(
 name|sc
@@ -11297,6 +11312,11 @@ name|cmdu
 operator|=
 name|u
 expr_stmt|;
+name|HIFN_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -11373,11 +11393,6 @@ name|wakeup
 argument_list|)
 expr_stmt|;
 block|}
-name|HIFN_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
