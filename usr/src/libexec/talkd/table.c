@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	5.1 (Berkeley) %G%"
+literal|"@(#)table.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ctl.h"
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
 end_include
 
 begin_define
@@ -161,19 +167,16 @@ name|find_match
 parameter_list|(
 name|request
 parameter_list|)
+specifier|register
 name|CTL_MSG
 modifier|*
 name|request
 decl_stmt|;
 block|{
+specifier|register
 name|TABLE_ENTRY
 modifier|*
 name|ptr
-decl_stmt|;
-specifier|extern
-name|FILE
-modifier|*
-name|debugout
 decl_stmt|;
 name|long
 name|current_time
@@ -197,20 +200,13 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|debugout
-argument_list|,
-literal|"Entering Look-Up with : \n"
-argument_list|)
-expr_stmt|;
 name|print_request
 argument_list|(
+literal|"find_match"
+argument_list|,
 name|request
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|ptr
@@ -246,23 +242,16 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|debugout
-argument_list|,
-literal|"Deleting expired entry : \n"
-argument_list|)
-expr_stmt|;
 name|print_request
 argument_list|(
+literal|"deleting expired entry"
+argument_list|,
 operator|&
 name|ptr
 operator|->
 name|request
 argument_list|)
 expr_stmt|;
-block|}
 name|delete
 argument_list|(
 name|ptr
@@ -276,6 +265,8 @@ name|debug
 condition|)
 name|print_request
 argument_list|(
+literal|""
+argument_list|,
 operator|&
 name|ptr
 operator|->
@@ -354,19 +345,16 @@ name|find_request
 parameter_list|(
 name|request
 parameter_list|)
+specifier|register
 name|CTL_MSG
 modifier|*
 name|request
 decl_stmt|;
 block|{
+specifier|register
 name|TABLE_ENTRY
 modifier|*
 name|ptr
-decl_stmt|;
-specifier|extern
-name|FILE
-modifier|*
-name|debugout
 decl_stmt|;
 name|long
 name|current_time
@@ -391,20 +379,13 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|debugout
-argument_list|,
-literal|"Entering find_request with : \n"
-argument_list|)
-expr_stmt|;
 name|print_request
 argument_list|(
+literal|"find_request"
+argument_list|,
 name|request
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|ptr
@@ -440,23 +421,16 @@ if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|debugout
-argument_list|,
-literal|"Deleting expired entry : \n"
-argument_list|)
-expr_stmt|;
 name|print_request
 argument_list|(
+literal|"deleting expired entry"
+argument_list|,
 operator|&
 name|ptr
 operator|->
 name|request
 argument_list|)
 expr_stmt|;
-block|}
 name|delete
 argument_list|(
 name|ptr
@@ -470,6 +444,8 @@ name|debug
 condition|)
 name|print_request
 argument_list|(
+literal|""
+argument_list|,
 operator|&
 name|ptr
 operator|->
@@ -583,6 +559,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|TABLE_ENTRY
 modifier|*
 name|ptr
@@ -605,16 +582,23 @@ name|tp
 operator|.
 name|tv_sec
 expr_stmt|;
-name|response
-operator|->
-name|id_num
-operator|=
 name|request
 operator|->
 name|id_num
 operator|=
 name|new_id
 argument_list|()
+expr_stmt|;
+name|response
+operator|->
+name|id_num
+operator|=
+name|htonl
+argument_list|(
+name|request
+operator|->
+name|id_num
+argument_list|)
 expr_stmt|;
 comment|/* insert a new entry into the top of the list */
 name|ptr
@@ -638,14 +622,14 @@ operator|==
 name|NIL
 condition|)
 block|{
-name|fprintf
+name|syslog
 argument_list|(
-name|stderr
+name|LOG_ERR
 argument_list|,
-literal|"malloc in insert_table"
+literal|"insert_table: Out of memory"
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 literal|1
 argument_list|)
@@ -764,14 +748,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|TABLE_ENTRY
 modifier|*
 name|ptr
-decl_stmt|;
-specifier|extern
-name|FILE
-modifier|*
-name|debugout
 decl_stmt|;
 name|ptr
 operator|=
@@ -781,11 +761,11 @@ if|if
 condition|(
 name|debug
 condition|)
-name|fprintf
+name|syslog
 argument_list|(
-name|debugout
+name|LOG_DEBUG
 argument_list|,
-literal|"Entering delete_invite with %d\n"
+literal|"delete_invite(%d)"
 argument_list|,
 name|id_num
 argument_list|)
@@ -824,6 +804,8 @@ name|debug
 condition|)
 name|print_request
 argument_list|(
+literal|""
+argument_list|,
 operator|&
 name|ptr
 operator|->
@@ -861,48 +843,34 @@ begin_comment
 comment|/*  * Classic delete from a double-linked list  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|delete
 argument_list|(
-argument|ptr
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|TABLE_ENTRY
-modifier|*
 name|ptr
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+name|TABLE_ENTRY
+operator|*
+name|ptr
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
-specifier|extern
-name|FILE
-modifier|*
-name|debugout
-decl_stmt|;
 if|if
 condition|(
 name|debug
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|debugout
-argument_list|,
-literal|"Deleting : "
-argument_list|)
-expr_stmt|;
 name|print_request
 argument_list|(
+literal|"delete"
+argument_list|,
 operator|&
 name|ptr
 operator|->
 name|request
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|table

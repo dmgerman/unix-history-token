@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	5.1 (Berkeley) %G%"
+literal|"@(#)announce.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ctl.h"
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -73,13 +73,17 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/talkd.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -96,20 +100,8 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|nofork
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* to be set from the debugger */
-end_comment
-
-begin_comment
-comment|/*  * Because the tty driver insists on attaching a terminal-less  * process to any terminal that it writes on, we must fork a child  * to protect ourselves  */
+comment|/*  * Announce an invitation to talk.  *  * Because the tty driver insists on attaching a terminal-less  * process to any terminal that it writes on, we must fork a child  * to protect ourselves  */
 end_comment
 
 begin_macro
@@ -144,20 +136,6 @@ name|val
 decl_stmt|,
 name|status
 decl_stmt|;
-if|if
-condition|(
-name|nofork
-condition|)
-return|return
-operator|(
-name|announce_proc
-argument_list|(
-name|request
-argument_list|,
-name|remote_machine
-argument_list|)
-operator|)
-return|;
 if|if
 condition|(
 name|pid
@@ -206,9 +184,11 @@ name|EINTR
 condition|)
 continue|continue;
 comment|/* shouldn't happen */
-name|perror
+name|syslog
 argument_list|(
-literal|"wait"
+name|LOG_WARNING
+argument_list|,
+literal|"announce: wait: %m"
 argument_list|)
 expr_stmt|;
 return|return
@@ -314,9 +294,6 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|full_tty
@@ -364,7 +341,7 @@ operator|(
 name|PERMISSION_DENIED
 operator|)
 return|;
-comment|/* 	 * Open gratuitously attaches the talkd to 	 * any tty it opens, so disconnect us from the 	 * tty before we catch a signal 	 */
+comment|/* 	 * On first tty open, the server will have 	 * it's pgrp set, so disconnect us from the 	 * tty before we catch a signal. 	 */
 name|ioctl
 argument_list|(
 name|fileno
@@ -805,29 +782,23 @@ operator|=
 name|big_buf
 expr_stmt|;
 operator|*
-operator|(
 name|bptr
 operator|++
-operator|)
 operator|=
 literal|'
 literal|'
 expr_stmt|;
 comment|/* send something to wake them up */
 operator|*
-operator|(
 name|bptr
 operator|++
-operator|)
 operator|=
 literal|'\r'
 expr_stmt|;
 comment|/* add a \r in case of raw mode */
 operator|*
-operator|(
 name|bptr
 operator|++
-operator|)
 operator|=
 literal|'\n'
 expr_stmt|;
