@@ -1301,12 +1301,18 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|dosigwinch
+operator|==
+literal|0
+condition|)
+name|sendwindow
+argument_list|()
+expr_stmt|;
 name|dosigwinch
 operator|=
 literal|1
-expr_stmt|;
-name|sendwindow
-argument_list|()
 expr_stmt|;
 block|}
 end_block
@@ -1979,6 +1985,12 @@ name|struct
 name|sgttyb
 name|sb
 decl_stmt|;
+specifier|static
+name|int
+name|didnotify
+init|=
+literal|0
+decl_stmt|;
 name|ioctl
 argument_list|(
 literal|1
@@ -2065,9 +2077,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|didnotify
+operator|==
+literal|0
+operator|&&
+operator|(
 name|mark
 operator|&
 name|TIOCPKT_WINDOW
+operator|)
 condition|)
 block|{
 comment|/* 		 * Let server know about window size changes 		 */
@@ -2078,6 +2096,10 @@ argument_list|()
 argument_list|,
 name|SIGURG
 argument_list|)
+expr_stmt|;
+name|didnotify
+operator|=
+literal|1
 expr_stmt|;
 block|}
 if|if
