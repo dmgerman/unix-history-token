@@ -2174,13 +2174,12 @@ name|__FreeBSD_version
 operator|>=
 literal|501108
 operator|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|<net/pfil.h>
-end_include
 
 begin_function
 specifier|static
