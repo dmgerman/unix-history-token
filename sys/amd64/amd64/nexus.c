@@ -1416,7 +1416,7 @@ name|I386_BUS_SPACE_MEM
 operator|)
 operator|&&
 operator|(
-name|rv
+name|r
 operator|->
 name|r_end
 operator|>=
