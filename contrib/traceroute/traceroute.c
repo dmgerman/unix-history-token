@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.3 1996/10/05 01:43:13 sef Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/contrib/traceroute/traceroute.c,v 1.4 1996/10/08 02:44:26 sef Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2714,7 +2714,7 @@ argument_list|(
 literal|" (%d%% loss)"
 argument_list|,
 operator|(
-name|lost
+name|loss
 operator|*
 literal|100
 operator|)
