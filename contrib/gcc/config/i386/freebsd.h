@@ -781,7 +781,7 @@ parameter_list|,
 name|FILENAME
 parameter_list|)
 define|\
-value|do {									\     if (TARGET_ELF) {							\       fprintf ((FILE), "\t.text\n\t.stabs \"\",%d,0,0,%LLetext\n%LLetext:\n", \ 		N_SO);							\     }									\   } while (0)
+value|do {									\     if (TARGET_ELF) {							\       asm_fprintf ((FILE),						\ 		   "\t.text\n\t.stabs \"\",%d,0,0,%LLetext\n%LLetext:\n",\ 		   N_SO);						\     }									\   } while (0)
 end_define
 
 begin_comment
