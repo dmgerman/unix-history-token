@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tar.c	4.9 (Berkeley) 82/05/07"
+literal|"@(#)tar.c	4.10 (Berkeley) 82/09/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -1733,7 +1739,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|stat
+name|lstat
 argument_list|(
 name|shortname
 argument_list|,
@@ -2885,6 +2891,10 @@ operator|.
 name|linkname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* ignore alien orders */
 name|chown
 argument_list|(
 name|dblock
@@ -2965,6 +2975,8 @@ operator|&
 literal|07777
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
