@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.9 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1015,10 +1015,6 @@ literal|"usage: egrep [-bchilnosv] {-f patfile | [-e] pattern} [file ...]"
 argument_list|)
 expr_stmt|;
 block|}
-name|patind
-operator|=
-name|optind
-expr_stmt|;
 if|if
 condition|(
 name|fflag
@@ -1029,10 +1025,6 @@ name|pfile
 argument_list|(
 name|patfile
 argument_list|)
-operator|,
-name|patind
-operator|=
-literal|0
 expr_stmt|;
 elseif|else
 if|if
@@ -1040,6 +1032,11 @@ condition|(
 operator|!
 name|eflag
 condition|)
+block|{
+name|patind
+operator|=
+name|optind
+expr_stmt|;
 name|pattern
 operator|=
 name|argv
@@ -1048,6 +1045,7 @@ name|optind
 operator|++
 index|]
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
