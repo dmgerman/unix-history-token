@@ -709,9 +709,6 @@ name|lun
 argument_list|)
 expr_stmt|;
 comment|/* use DMA if drive& controller supports it */
-if|if
-condition|(
-operator|!
 name|ata_dmainit
 argument_list|(
 name|adp
@@ -737,12 +734,6 @@ argument_list|(
 name|AD_PARAM
 argument_list|)
 argument_list|)
-condition|)
-name|adp
-operator|->
-name|flags
-operator||=
-name|AD_F_DMA_ENABLED
 expr_stmt|;
 comment|/* use tagged queueing if supported (not yet) */
 if|if
@@ -1381,19 +1372,29 @@ condition|)
 return|return
 name|ENXIO
 return|;
+comment|/* force PIO mode for dumps */
+name|adp
+operator|->
+name|controller
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|adp
+operator|->
+name|unit
+argument_list|)
+index|]
+operator|=
+name|ATA_PIO
+expr_stmt|;
 name|ata_reinit
 argument_list|(
 name|adp
 operator|->
 name|controller
 argument_list|)
-expr_stmt|;
-name|adp
-operator|->
-name|flags
-operator|&=
-operator|~
-name|AD_F_DMA_ENABLED
 expr_stmt|;
 while|while
 condition|(
@@ -2070,9 +2071,19 @@ condition|(
 operator|(
 name|adp
 operator|->
-name|flags
-operator|&
-name|AD_F_DMA_ENABLED
+name|controller
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|adp
+operator|->
+name|unit
+argument_list|)
+index|]
+operator|>=
+name|ATA_DMA
 operator|)
 operator|&&
 operator|!
@@ -2198,6 +2209,7 @@ argument_list|,
 name|ATA_IMMEDIATE
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ad%d: wouldn't take transfer command\n"
@@ -2207,6 +2219,8 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* if this is a DMA transfer, start it, return and wait for interrupt */
 if|if
 condition|(
@@ -2606,13 +2620,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|adp
-operator|->
-name|flags
-operator|&=
-operator|~
-name|AD_F_DMA_ENABLED
-expr_stmt|;
 name|printf
 argument_list|(
 literal|" falling back to PIO mode\n"
@@ -2689,13 +2696,6 @@ operator|->
 name|flags
 operator||=
 name|AR_F_FORCE_PIO
-expr_stmt|;
-name|adp
-operator|->
-name|flags
-operator|&=
-operator|~
-name|AD_F_DMA_ENABLED
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -3109,9 +3109,19 @@ if|if
 condition|(
 name|adp
 operator|->
-name|flags
-operator|&
-name|AD_F_DMA_ENABLED
+name|controller
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|adp
+operator|->
+name|unit
+argument_list|)
+index|]
+operator|>=
+name|ATA_DMA
 condition|)
 name|ata_dmainit
 argument_list|(
@@ -3254,13 +3264,6 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
-name|adp
-operator|->
-name|flags
-operator|&=
-operator|~
-name|AD_F_DMA_ENABLED
 expr_stmt|;
 name|printf
 argument_list|(

@@ -61,12 +61,8 @@ name|AD_F_32B_ENABLED
 value|0x0004
 define|#
 directive|define
-name|AD_F_DMA_ENABLED
-value|0x0008
-define|#
-directive|define
 name|AD_F_TAG_ENABLED
-value|0x0010
+value|0x0008
 name|struct
 name|buf_queue_head
 name|queue

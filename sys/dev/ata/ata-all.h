@@ -1326,6 +1326,10 @@ decl_stmt|;
 comment|/* transfer mode for devices */
 define|#
 directive|define
+name|ATA_PIO
+value|0x00
+define|#
+directive|define
 name|ATA_PIO0
 value|0x08
 define|#
@@ -1346,6 +1350,10 @@ name|ATA_PIO4
 value|0x0c
 define|#
 directive|define
+name|ATA_DMA
+value|0x10
+define|#
+directive|define
 name|ATA_WDMA2
 value|0x22
 define|#
@@ -1356,10 +1364,6 @@ define|#
 directive|define
 name|ATA_UDMA4
 value|0x44
-define|#
-directive|define
-name|ATA_DMA
-value|0xff
 name|int32_t
 name|flags
 decl_stmt|;
@@ -1426,16 +1430,20 @@ name|ATA_WAIT_READY
 value|0x3
 define|#
 directive|define
-name|ATA_ACTIVE_ATA
+name|ATA_ACTIVE
 value|0x4
 define|#
 directive|define
-name|ATA_ACTIVE_ATAPI
+name|ATA_ACTIVE_ATA
 value|0x5
 define|#
 directive|define
-name|ATA_REINITING
+name|ATA_ACTIVE_ATAPI
 value|0x6
+define|#
+directive|define
+name|ATA_REINITING
+value|0x7
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,

@@ -911,20 +911,16 @@ decl_stmt|;
 comment|/* drive flags */
 define|#
 directive|define
-name|ATAPI_F_DMA_ENABLED
+name|ATAPI_F_DMA_USED
 value|0x0001
 define|#
 directive|define
-name|ATAPI_F_DMA_USED
+name|ATAPI_F_DSC_USED
 value|0x0002
 define|#
 directive|define
-name|ATAPI_F_DSC_USED
-value|0x0004
-define|#
-directive|define
 name|ATAPI_F_MEDIA_CHANGED
-value|0x0008
+value|0x0004
 block|}
 struct|;
 end_struct
