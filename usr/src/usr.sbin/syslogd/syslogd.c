@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.13 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4245,20 +4245,25 @@ name|f
 operator|++
 control|)
 block|{
-if|if
+switch|switch
 condition|(
 name|f
 operator|->
 name|f_type
-operator|==
-name|F_FILE
-operator|||
-name|f
-operator|->
-name|f_type
-operator|==
-name|F_TTY
 condition|)
+block|{
+case|case
+name|F_FILE
+case|:
+case|case
+name|F_TTY
+case|:
+case|case
+name|F_FORW
+case|:
+case|case
+name|F_CONSOLE
+case|:
 operator|(
 name|void
 operator|)
@@ -4275,6 +4280,8 @@ name|f_type
 operator|=
 name|F_UNUSED
 expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* open the configuration file */
 if|if
