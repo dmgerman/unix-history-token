@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_put.c	5.11 (Berkeley) %G%"
+literal|"@(#)rec_put.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ file|"recno.h"
 end_include
 
 begin_comment
-comment|/*  * __REC_PUT -- Add a recno item to the tree.  *  * Parameters:  *	dbp:	pointer to access method  *	key:	key  *	data:	data  *	flag:	R_CURSORLOG, R_CURSOR, R_IAFTER, R_IBEFORE, R_NOOVERWRITE  *  * Returns:  *	RET_ERROR, RET_SUCCESS and RET_SPECIAL if the key is already in the  *	tree and R_NOOVERWRITE specified.  */
+comment|/*  * __REC_PUT -- Add a recno item to the tree.  *  * Parameters:  *	dbp:	pointer to access method  *	key:	key  *	data:	data  *	flag:	R_CURSOR, R_IAFTER, R_IBEFORE, R_NOOVERWRITE  *  * Returns:  *	RET_ERROR, RET_SUCCESS and RET_SPECIAL if the key is  *	already in the tree and R_NOOVERWRITE specified.  */
 end_comment
 
 begin_function
@@ -158,25 +158,6 @@ operator|=
 name|t
 operator|->
 name|bt_rcursor
-expr_stmt|;
-break|break;
-case|case
-name|R_CURSORLOG
-case|:
-name|nrec
-operator|=
-name|t
-operator|->
-name|bt_rcursor
-operator|+
-literal|1
-expr_stmt|;
-name|SET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_SEQINIT
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -440,31 +421,18 @@ argument_list|,
 name|BTF_MODIFIED
 argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
 name|flags
-condition|)
-block|{
-case|case
-name|R_CURSORLOG
-case|:
-operator|++
-name|t
-operator|->
-name|bt_rcursor
-expr_stmt|;
-break|break;
-case|case
+operator|==
 name|R_SETCURSOR
-case|:
+condition|)
 name|t
 operator|->
 name|bt_rcursor
 operator|=
 name|nrec
 expr_stmt|;
-break|break;
-block|}
 return|return
 operator|(
 name|__rec_ret
