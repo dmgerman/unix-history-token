@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.22.1.4 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,24 +419,12 @@ operator|&&
 name|vacuous
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: only one of -k and -v allowed\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
+name|fatal
 argument_list|(
-literal|1
+literal|"only one of -k and -v allowed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1051,8 +1039,6 @@ literal|"Permission denied"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|write
 argument_list|(
 name|f
@@ -1098,7 +1084,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 for|for
 control|(
