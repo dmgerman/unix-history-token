@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.3 (Berkeley) %G%"
+literal|"@(#)main.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,8 +530,14 @@ operator|*
 name|argv
 operator|++
 init|;
+name|cp
+operator|!=
+name|NULL
+operator|&&
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 condition|;
 name|cp
 operator|++
