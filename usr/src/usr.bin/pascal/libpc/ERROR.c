@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ERROR.c 1.9 %G%"
+literal|"@(#)ERROR.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_comment
@@ -64,8 +70,13 @@ argument_list|,
 name|d2
 argument_list|)
 expr_stmt|;
-name|SETRACE
+name|kill
+argument_list|(
+name|getpid
 argument_list|()
+argument_list|,
+name|SIGTRAP
+argument_list|)
 expr_stmt|;
 return|return
 name|d1

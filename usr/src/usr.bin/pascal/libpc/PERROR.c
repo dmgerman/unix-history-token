@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)PERROR.c 1.1 %G%"
+literal|"@(#)PERROR.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h00vars.h"
 end_include
 
 begin_comment
@@ -64,9 +58,6 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|SETRACE
-argument_list|()
-expr_stmt|;
 name|fputs
 argument_list|(
 name|msg
@@ -77,6 +68,14 @@ expr_stmt|;
 name|perror
 argument_list|(
 name|fname
+argument_list|)
+expr_stmt|;
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+name|SIGTRAP
 argument_list|)
 expr_stmt|;
 return|return
