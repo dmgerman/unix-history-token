@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.27	82/08/22	*/
+comment|/*	lp.c	4.28	82/10/10	*/
 end_comment
 
 begin_include
@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/ioctl.h"
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"../h/tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_define

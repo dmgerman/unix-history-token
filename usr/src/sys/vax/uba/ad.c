@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ad.c	4.4	82/08/22	*/
+comment|/*	ad.c	4.5	82/10/10	*/
 end_comment
 
 begin_include
@@ -66,19 +66,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ubavar.h"
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/adreg.h"
+file|"../vaxuba/adreg.h"
 end_include
 
 begin_define

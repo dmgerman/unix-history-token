@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.9	82/09/12	*/
+comment|/*	uda.c	4.10	82/10/10	*/
 end_comment
 
 begin_include
@@ -78,25 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ubavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/dk.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/cpu.h"
 end_include
 
 begin_include
@@ -109,6 +91,30 @@ begin_include
 include|#
 directive|include
 file|"../h/uio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vax/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/ubavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxuba/udareg.h"
 end_include
 
 begin_decl_stmt
@@ -179,13 +185,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../h/udareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mscp.h"
+file|"../vax/mscp.h"
 end_include
 
 begin_struct
