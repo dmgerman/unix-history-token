@@ -2024,14 +2024,14 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|PCB_FP
+name|PCB_SP
 argument_list|,
 name|offsetof
 argument_list|(
 expr|struct
 name|pcb
 argument_list|,
-name|pcb_fp
+name|pcb_sp
 argument_list|)
 argument_list|)
 expr_stmt|;

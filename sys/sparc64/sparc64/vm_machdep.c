@@ -942,7 +942,7 @@ name|tf
 expr_stmt|;
 name|pcb2
 operator|->
-name|pcb_fp
+name|pcb_sp
 operator|=
 operator|(
 name|u_long
@@ -1135,7 +1135,7 @@ operator|)
 operator|(
 name|pcb
 operator|->
-name|pcb_fp
+name|pcb_sp
 operator|+
 name|SPOFF
 operator|)

@@ -47,7 +47,7 @@ name|fpstate
 name|pcb_fpstate
 decl_stmt|;
 name|u_long
-name|pcb_fp
+name|pcb_sp
 decl_stmt|;
 name|u_long
 name|pcb_pc

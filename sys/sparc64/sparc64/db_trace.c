@@ -733,7 +733,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_fp
+name|pcb_sp
 expr_stmt|;
 block|}
 block|}
