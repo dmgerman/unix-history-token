@@ -28,9 +28,11 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * printw and friends.  *  * These routines make nonportable assumptions about varargs if __STDC__  * is not in effect.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
 
 begin_if
 if|#
@@ -60,14 +62,32 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"curses.ext"
-end_include
+begin_comment
+comment|/*  * printw and friends.  *  * These routines make nonportable assumptions about varargs if __STDC__  * is not in effect.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|__winwrite
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/*  *	This routine implements a printf on the standard screen.  */
+comment|/*  * printw --  *	Printf on the standard screen.  */
 end_comment
 
 begin_if
@@ -167,7 +187,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	This routine implements a printf on the given window.  */
+comment|/*  * wprintw --  *	Printf on the given window.  */
 end_comment
 
 begin_if
@@ -179,7 +199,7 @@ end_if
 begin_macro
 name|wprintw
 argument_list|(
-argument|WINDOW *win
+argument|WINDOW * win
 argument_list|,
 argument|const char *fmt
 argument_list|,
@@ -278,13 +298,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	Internal write-buffer-to-window function.  */
+comment|/*  * Internal write-buffer-to-window function.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|_winwrite
+name|__winwrite
 parameter_list|(
 name|cookie
 parameter_list|,
@@ -297,6 +317,7 @@ modifier|*
 name|cookie
 decl_stmt|;
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -309,27 +330,27 @@ specifier|register
 name|WINDOW
 modifier|*
 name|win
-init|=
-operator|(
-name|WINDOW
-operator|*
-operator|)
-name|cookie
 decl_stmt|;
 specifier|register
 name|int
 name|c
-init|=
-name|n
 decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|c
+operator|=
+name|n
+operator|,
+name|win
+operator|=
+name|cookie
+init|;
 operator|--
 name|c
 operator|>=
 literal|0
-condition|)
-block|{
+condition|;
+control|)
 if|if
 condition|(
 name|waddch
@@ -349,19 +370,20 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
 return|return
+operator|(
 name|n
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  *	This routine actually executes the printf and adds it to the window.  *	It must not be declared static as it is used in mvprintw.c.  *	THIS SHOULD BE RENAMED vwprintw AND EXPORTED  */
+comment|/*  * __sprintw --  *	This routine actually executes the printf and adds it to the window.  *	It must not be declared static as it is used in mvprintw.c.  *	THIS SHOULD BE RENAMED vwprintw AND EXPORTED  */
 end_comment
 
 begin_macro
-name|_sprintw
+name|__sprintw
 argument_list|(
 argument|win
 argument_list|,
@@ -426,22 +448,26 @@ condition|(
 operator|(
 name|f
 operator|=
-name|fwopen
+name|funopen
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|win
 argument_list|,
-name|_winwrite
+name|NULL
+argument_list|,
+name|__winwrite
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ERR
+operator|)
 return|;
 operator|(
 name|void
@@ -456,6 +482,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|fclose
 argument_list|(
 name|f
@@ -464,6 +491,7 @@ condition|?
 name|ERR
 else|:
 name|OK
+operator|)
 return|;
 block|}
 end_block

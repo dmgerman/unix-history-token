@@ -31,78 +31,48 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"curses.ext"
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<curses.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a< b ? a : b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|max
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(a> b ? a : b)
-end_define
-
 begin_comment
-comment|/*  *	This routine writes win1 on win2 non-destructively.  *  */
+comment|/*  * overlay --  *	Writes win1 on win2 non-destructively.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|overlay
-argument_list|(
-argument|win1
-argument_list|,
-argument|win2
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|reg
+parameter_list|(
+name|win1
+parameter_list|,
+name|win2
+parameter_list|)
+specifier|register
 name|WINDOW
 modifier|*
 name|win1
 decl_stmt|,
-modifier|*
+decl|*
 name|win2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
-name|reg
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-modifier|*
-name|end
-decl_stmt|;
-name|reg
+specifier|register
 name|int
 name|x
 decl_stmt|,
 name|y
+decl_stmt|,
+name|y1
+decl_stmt|,
+name|y2
 decl_stmt|,
 name|endy
 decl_stmt|,
@@ -112,20 +82,20 @@ name|starty
 decl_stmt|,
 name|startx
 decl_stmt|;
-name|reg
-name|int
-name|y1
+specifier|register
+name|char
+modifier|*
+name|sp
 decl_stmt|,
-name|y2
+modifier|*
+name|end
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"OVERLAY(%0.2o, %0.2o);\n"
+literal|"overlay: (%0.2o, %0.2o);\n"
 argument_list|,
 name|win1
 argument_list|,
@@ -205,11 +175,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|__TRACE
 argument_list|(
-name|outf
-argument_list|,
-literal|"OVERLAY:from (%d,%d) to (%d,%d)\n"
+literal|"overlay: from (%d,%d) to (%d,%d)\n"
 argument_list|,
 name|starty
 argument_list|,
@@ -232,7 +200,11 @@ name|startx
 operator|>=
 name|endx
 condition|)
-return|return;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 name|y1
 operator|=
 name|starty
@@ -347,6 +319,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|OK
+operator|)
+return|;
 block|}
 end_block
 
