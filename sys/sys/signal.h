@@ -24,14 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/_posix.h>
+file|<sys/_sigset.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/_sigset.h>
+file|<machine/signal.h>
 end_include
+
+begin_comment
+comment|/* sig_atomic_t; trap codes; sigcontext */
+end_comment
 
 begin_comment
 comment|/*  * System defined signals.  */
@@ -81,12 +85,6 @@ begin_comment
 comment|/* illegal instr. (not reset when caught) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -98,11 +96,6 @@ begin_comment
 comment|/* trace trap (not reset when caught) */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -113,12 +106,6 @@ end_define
 begin_comment
 comment|/* abort() */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
 
 begin_define
 define|#
@@ -142,11 +129,6 @@ begin_comment
 comment|/* EMT instruction */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -169,12 +151,6 @@ begin_comment
 comment|/* kill (cannot be caught or ignored) */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -185,11 +161,6 @@ end_define
 begin_comment
 comment|/* bus error */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -202,12 +173,6 @@ begin_comment
 comment|/* segmentation violation */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -218,11 +183,6 @@ end_define
 begin_comment
 comment|/* non-existent system call invoked */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -257,12 +217,6 @@ begin_comment
 comment|/* software termination signal from kill */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -273,11 +227,6 @@ end_define
 begin_comment
 comment|/* urgent condition on IO channel */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -344,12 +293,6 @@ end_define
 begin_comment
 comment|/* like TTIN if (tp->t_local&LTOSTOP) */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SOURCE
-end_ifndef
 
 begin_define
 define|#
@@ -428,11 +371,6 @@ begin_comment
 comment|/* information request */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -456,8 +394,30 @@ comment|/* user defined signal 2 */
 end_comment
 
 begin_comment
-comment|/* XXX needs namespace conditional. */
+comment|/*  * XXX missing SIGRTMIN, SIGRTMAX.  */
 end_comment
+
+begin_comment
+comment|/*-  * Type of a signal handling function.  *  * Language spec sez signal handlers take exactly one arg, even though we  * actually supply three.  Ugh!  *  * We don't try to hide the difference by leaving out the args because  * that would cause warnings about conformant programs.  Nonconformant  * programs can avoid the warnings by casting to (__sighandler_t *) or  * sig_t before calling signal() or assigning to sa_handler or sv_handler.  *  * The kernel should reverse the cast before calling the function.  It  * has no way to do this, but on most machines 1-arg and 3-arg functions  * have the same calling protocol so there is no problem in practice.  * A bit in sa_flags could be used to specify the number of args.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+name|__sighandler_t
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_ifndef
 ifndef|#
@@ -483,19 +443,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*-  * Type of a signal handling function.  *  * Language spec sez signal handlers take exactly one arg, even though we  * actually supply three.  Ugh!  *  * We don't try to hide the difference by leaving out the args because  * that would cause warnings about conformant programs.  Nonconformant  * programs can avoid the warnings by casting to (__sighandler_t *) or  * sig_t before calling signal() or assigning to sa_handler or sv_handler.  *  * The kernel should reverse the cast before calling the function.  It  * has no way to do this, but on most machines 1-arg and 3-arg functions  * have the same calling protocol so there is no problem in practice.  * A bit in sa_flags could be used to specify the number of args.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|void
-name|__sighandler_t
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -518,18 +469,20 @@ name|SIG_ERR
 value|((__sighandler_t *)-1)
 end_define
 
+begin_comment
+comment|/*  * XXX missing SIG_HOLD.  */
+end_comment
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|_P1003_1B_VISIBLE
-argument_list|)
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
 operator|||
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
+name|__XSI_VISIBLE
+operator|>=
+literal|500
 end_if
 
 begin_union
@@ -547,6 +500,19 @@ decl_stmt|;
 block|}
 union|;
 end_union
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
+end_if
 
 begin_struct
 struct|struct
@@ -573,6 +539,7 @@ name|sigval
 name|sigev_value
 decl_stmt|;
 comment|/* Signal value */
+comment|/*  * XXX missing sigev_notify_function, sigev_notify_attributes.  */
 block|}
 struct|;
 end_struct
@@ -584,12 +551,23 @@ name|sigev_signo
 value|__sigev_u.__sigev_signo
 end_define
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
 name|sigev_notify_kqueue
 value|__sigev_u.__sigev_notify_kqueue
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -613,6 +591,12 @@ begin_comment
 comment|/* Generate a queued signal */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -623,6 +607,34 @@ end_define
 begin_comment
 comment|/* Generate a kevent */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * XXX missing SIGEV_THREAD.  */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __POSIX_VISIBLE>= 199309 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|199309
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_typedef
 typedef|typedef
@@ -642,12 +654,11 @@ name|int
 name|si_code
 decl_stmt|;
 comment|/* signal code */
-name|int
+name|__pid_t
 name|si_pid
 decl_stmt|;
 comment|/* sending process */
-name|unsigned
-name|int
+name|__uid_t
 name|si_uid
 decl_stmt|;
 comment|/* sender's ruid */
@@ -686,39 +697,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* _P1003_1B_VISIBLE */
-end_comment
-
-begin_comment
-comment|/*  * XXX - there are some nasty dependencies on include file order.  *<sys/_sigset.h> must be included before<machine/signal.h>.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/signal.h>
-end_include
-
-begin_comment
-comment|/* sig_atomic_t; trap codes; sigcontext */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|__siginfo
 struct_decl|;
 end_struct_decl
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Signal vector "template" used in sigaction call.  */
@@ -771,6 +762,17 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
+
 begin_comment
 comment|/* if SA_SIGINFO is set, sa_sigaction is to be used instead of sa_handler. */
 end_comment
@@ -785,6 +787,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|sa_sigaction
+value|__sigaction_u.__sa_sigaction
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
 name|SA_NOCLDSTOP
 value|0x0008
 end_define
@@ -793,22 +815,20 @@ begin_comment
 comment|/* do not generate SIGCHLD on child stop */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __POSIX_VISIBLE || __XSI_VISIBLE */
+end_comment
+
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
+name|__XSI_VISIBLE
 end_if
-
-begin_define
-define|#
-directive|define
-name|sa_sigaction
-value|__sigaction_u.__sa_sigaction
-end_define
 
 begin_define
 define|#
@@ -876,6 +896,17 @@ begin_comment
 comment|/* signal handler with SA_SIGINFO args */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -898,6 +929,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_define
 define|#
 directive|define
@@ -909,9 +951,18 @@ begin_comment
 comment|/* number of old signals (counting 0) */
 end_comment
 
-begin_comment
-comment|/* POSIX 1003.1b required values. */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -948,9 +999,16 @@ name|SI_MESGQ
 value|0x10005
 end_define
 
-begin_comment
-comment|/* Additional FreeBSD values. */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -958,6 +1016,11 @@ directive|define
 name|SI_UNDEFINED
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -988,45 +1051,40 @@ begin_comment
 comment|/* type of pointer to a signal function */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SIZE_T_DECLARED
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|__size_t
-name|size_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_SIZE_T_DECLARED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_if
+if|#
+directive|if
+name|__XSI_VISIBLE
+end_if
 
 begin_comment
 comment|/*  * Structure used in sigaltstack call.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|sigaltstack
 block|{
+else|#
+directive|else
+typedef|typedef
+struct|struct
+block|{
+endif|#
+directive|endif
 name|char
 modifier|*
 name|ss_sp
 decl_stmt|;
 comment|/* signal stack base */
-name|size_t
+name|__size_t
 name|ss_size
 decl_stmt|;
 comment|/* signal stack length */
@@ -1037,56 +1095,31 @@ comment|/* SS_DISABLE and/or SS_ONSTACK */
 block|}
 name|stack_t
 typedef|;
-end_typedef
-
-begin_define
 define|#
 directive|define
 name|SS_ONSTACK
 value|0x0001
-end_define
-
-begin_comment
 comment|/* take signal on alternate stack */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SS_DISABLE
 value|0x0004
-end_define
-
-begin_comment
 comment|/* disable taking signals on alternate stack */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SIGSTKSZ
 value|(MINSIGSTKSZ + 32768)
-end_define
-
-begin_comment
 comment|/* recommended stack size */
-end_comment
-
-begin_comment
-comment|/*  * Forward declaration for __ucontext so that sigreturn can use it  * without having to include<ucontext.h>.  */
-end_comment
-
-begin_struct_decl
+endif|#
+directive|endif
+comment|/*  * Forward declaration for __ucontext so that sigreturn can use it  * without having to include<ucontext.h>.  *  * XXX the specification requires all of ucontext_t, mcontext_t.  */
 struct_decl|struct
 name|__ucontext
 struct_decl|;
-end_struct_decl
-
-begin_comment
+if|#
+directive|if
+name|__BSD_VISIBLE
 comment|/*  * 4.3 compatibility:  * Signal vector "template" used in sigvec call.  */
-end_comment
-
-begin_struct
 struct|struct
 name|sigvec
 block|{
@@ -1105,73 +1138,46 @@ decl_stmt|;
 comment|/* see signal options below */
 block|}
 struct|;
-end_struct
-
-begin_define
 define|#
 directive|define
 name|SV_ONSTACK
 value|SA_ONSTACK
-end_define
-
-begin_define
 define|#
 directive|define
 name|SV_INTERRUPT
 value|SA_RESTART
-end_define
-
-begin_comment
 comment|/* same bit, opposite sense */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SV_RESETHAND
 value|SA_RESETHAND
-end_define
-
-begin_define
 define|#
 directive|define
 name|SV_NODEFER
 value|SA_NODEFER
-end_define
-
-begin_define
 define|#
 directive|define
 name|SV_NOCLDSTOP
 value|SA_NOCLDSTOP
-end_define
-
-begin_define
 define|#
 directive|define
 name|SV_SIGINFO
 value|SA_SIGINFO
-end_define
-
-begin_define
 define|#
 directive|define
 name|sv_onstack
 value|sv_flags
-end_define
-
-begin_comment
 comment|/* isn't compatibility wonderful! */
-end_comment
-
-begin_comment
+endif|#
+directive|endif
+if|#
+directive|if
+name|__XSI_VISIBLE
 comment|/*  * Structure used in sigstack call.  */
-end_comment
-
-begin_struct
 struct|struct
 name|sigstack
 block|{
+comment|/* XXX ss_sp's type should be `void *'. */
 name|char
 modifier|*
 name|ss_sp
@@ -1183,13 +1189,20 @@ decl_stmt|;
 comment|/* current status */
 block|}
 struct|;
-end_struct
-
-begin_comment
+endif|#
+directive|endif
+if|#
+directive|if
+name|__BSD_VISIBLE
+operator|||
+name|__POSIX_VISIBLE
+operator|>
+literal|0
+operator|&&
+name|__POSIX_VISIBLE
+operator|<=
+literal|200112
 comment|/*  * Macro for converting signal number to a mask suitable for  * sigblock().  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|sigmask
@@ -1197,75 +1210,41 @@ parameter_list|(
 name|m
 parameter_list|)
 value|(1<< ((m)-1))
-end_define
-
-begin_define
+endif|#
+directive|endif
+if|#
+directive|if
+name|__BSD_VISIBLE
 define|#
 directive|define
 name|BADSIG
 value|SIG_ERR
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* !_POSIX_SOURCE */
-end_comment
-
-begin_comment
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
 comment|/*  * Flags for sigprocmask:  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SIG_BLOCK
 value|1
-end_define
-
-begin_comment
 comment|/* block specified signal set */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SIG_UNBLOCK
 value|2
-end_define
-
-begin_comment
 comment|/* unblock specified signal set */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SIG_SETMASK
 value|3
-end_define
-
-begin_comment
 comment|/* set specified signal set */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* !_ANSI_SOURCE */
-end_comment
-
-begin_comment
 comment|/*  * For historical reasons; programs expect signal's return value to be  * defined by<sys/signal.h>.  */
-end_comment
-
-begin_function_decl
 name|__BEGIN_DECLS
 name|__sighandler_t
 modifier|*
@@ -1277,11 +1256,8 @@ name|__sighandler_t
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_macro
 name|__END_DECLS
-end_macro
+end_typedef
 
 begin_endif
 endif|#
