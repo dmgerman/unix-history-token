@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.75 (Berkeley) %G%"
+literal|"@(#)login.c	5.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -975,6 +975,10 @@ name|getloginname
 argument_list|()
 expr_stmt|;
 block|}
+name|rootlogin
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KERBEROS
@@ -1008,7 +1012,8 @@ operator|==
 literal|0
 condition|)
 name|rootlogin
-operator|++
+operator|=
+literal|1
 expr_stmt|;
 operator|*
 name|instance
@@ -1018,16 +1023,10 @@ literal|'\0'
 expr_stmt|;
 block|}
 else|else
-block|{
-name|rootlogin
-operator|=
-literal|0
-expr_stmt|;
 name|instance
 operator|=
 literal|""
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -1158,11 +1157,6 @@ name|rootlogin
 operator|=
 literal|1
 expr_stmt|;
-else|else
-name|rootlogin
-operator|=
-literal|0
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1221,19 +1215,6 @@ name|rval
 operator|==
 literal|1
 condition|)
-block|{
-if|if
-condition|(
-name|pwd
-operator|->
-name|pw_uid
-operator|!=
-literal|0
-condition|)
-name|rootlogin
-operator|=
-literal|0
-expr_stmt|;
 name|rval
 operator|=
 name|strcmp
@@ -1250,7 +1231,6 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
-block|}
 else|#
 directive|else
 name|rval
@@ -2394,7 +2374,7 @@ argument_list|,
 literal|"setlogin() failure: %m"
 argument_list|)
 expr_stmt|;
-comment|/* discard permissions last so can't get killed and drop core */
+comment|/* Discard permissions last so can't get killed and drop core. */
 if|if
 condition|(
 name|rootlogin
