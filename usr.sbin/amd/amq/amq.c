@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)amq.c	8.1 (Berkeley) 6/7/93  *  * $Id: amq.c,v 1.5 1997/03/22 23:12:08 joerg Exp $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -37,23 +37,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)amq.c	8.1 (Berkeley) 6/7/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: amq.c,v 1.5 1997/03/22 23:12:08 joerg Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)amq.c	8.1 (Berkeley) 6/7/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -94,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_function_decl
@@ -105,9 +114,15 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|char
-modifier|*
-name|progname
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -195,21 +210,6 @@ modifier|*
 name|def_server
 init|=
 name|localhost
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
 decl_stmt|;
 end_decl_stmt
 
@@ -1298,57 +1298,6 @@ name|nodefault
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Compute program name 	 */
-if|if
-condition|(
-name|argv
-index|[
-literal|0
-index|]
-condition|)
-block|{
-name|progname
-operator|=
-name|strrchr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|progname
-operator|&&
-name|progname
-index|[
-literal|1
-index|]
-condition|)
-name|progname
-operator|++
-expr_stmt|;
-else|else
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|progname
-condition|)
-name|progname
-operator|=
-literal|"amq"
-expr_stmt|;
 comment|/* 	 * Parse arguments 	 */
 while|while
 condition|(
@@ -1516,24 +1465,9 @@ if|if
 condition|(
 name|errs
 condition|)
-block|{
-name|show_usage
-label|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\ Usage: %s [-h host] [[-f] [-m] [-v] [-s]] | [[-u] directory ...]] |\n\ \t[-l logfile|\"syslog\"] [-x log_flags] [-D dbg_opts] [-M mapent]\n"
-argument_list|,
-name|progname
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|hpux
@@ -1580,24 +1514,15 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: Can't get address of %s\n"
-argument_list|,
-name|progname
+literal|"can't get address of %s"
 argument_list|,
 name|server
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|&
@@ -1726,27 +1651,18 @@ name|clnt
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: "
+literal|"%s"
 argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|clnt_pcreateerror
+name|clnt_spcreateerror
 argument_list|(
 name|server
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Control debugging 	 */
 if|if
 condition|(
@@ -1792,13 +1708,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: daemon not compiled for debug"
-argument_list|,
-name|progname
+literal|"daemon not compiled for debug"
 argument_list|)
 expr_stmt|;
 name|errs
@@ -1818,13 +1730,9 @@ operator|>
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: debug setting for \"%s\" failed\n"
-argument_list|,
-name|progname
+literal|"debug setting for \"%s\" failed"
 argument_list|,
 name|debug_opts
 argument_list|)
@@ -1879,13 +1787,9 @@ operator|*
 name|rc
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: setting log level to \"%s\" failed\n"
-argument_list|,
-name|progname
+literal|"setting log level to \"%s\" failed"
 argument_list|,
 name|xlog_optstr
 argument_list|)
@@ -1940,13 +1844,9 @@ operator|*
 name|rc
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: setting logfile to \"%s\" failed\n"
-argument_list|,
-name|progname
+literal|"setting logfile to \"%s\" failed"
 argument_list|,
 name|logfile
 argument_list|)
@@ -2001,13 +1901,9 @@ operator|*
 name|rc
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: amd on %s cannot flush the map cache\n"
-argument_list|,
-name|progname
+literal|"amd on %s cannot flush the map cache"
 argument_list|,
 name|server
 argument_list|)
@@ -2101,13 +1997,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: amd on %s cannot provide mount info\n"
-argument_list|,
-name|progname
+literal|"amd on %s cannot provide mount info"
 argument_list|,
 name|server
 argument_list|)
@@ -2172,18 +2064,9 @@ name|errno
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: could not start new "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"autmount point"
+literal|"could not start new autmount point"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2233,13 +2116,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: failed to get version information\n"
-argument_list|,
-name|progname
+literal|"failed to get version information"
 argument_list|)
 expr_stmt|;
 name|errs
@@ -2383,13 +2262,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s not automounted\n"
-argument_list|,
-name|progname
+literal|"%s not automounted"
 argument_list|,
 name|fs
 argument_list|)
@@ -2408,20 +2283,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|clnt_perror
+name|clnt_sperror
 argument_list|(
 name|clnt
 argument_list|,
 name|server
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errs
@@ -2445,9 +2316,9 @@ condition|(
 name|unmount_flag
 condition|)
 block|{
-goto|goto
-name|show_usage
-goto|;
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2482,20 +2353,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|clnt_perror
+name|clnt_sperror
 argument_list|(
 name|clnt
 argument_list|,
 name|server
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errs
@@ -2631,20 +2498,16 @@ block|}
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|clnt_perror
+name|clnt_sperror
 argument_list|(
 name|clnt
 argument_list|,
 name|server
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errs
@@ -2656,6 +2519,31 @@ block|}
 name|exit
 argument_list|(
 name|errs
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: amq [-h host] [[-f] [-m] [-v] [-s]] | [[-u] directory ...]] |"
+argument_list|,
+literal|"           [-l logfile|\"syslog\"] [-x log_flags] [-D dbg_opts] [-M mapent]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

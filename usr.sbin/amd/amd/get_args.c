@@ -1,11 +1,55 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)get_args.c	8.1 (Berkeley) 6/6/93  *  * $Id: get_args.c,v 1.3 1997/02/22 16:01:28 peter Exp $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)get_args.c  8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
 end_comment
 
 begin_comment
 comment|/*  * Argument decode  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -39,21 +83,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
 
 begin_if
 if|#
@@ -348,6 +377,19 @@ begin_comment
 comment|/* DEBUG */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|get_args
@@ -369,7 +411,7 @@ name|int
 name|opt_ch
 decl_stmt|;
 name|int
-name|usage
+name|usageflg
 init|=
 literal|0
 decl_stmt|;
@@ -418,22 +460,13 @@ name|optarg
 operator|!=
 literal|'/'
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: -a option must begin with a '/'\n"
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"-a option must begin with a '/'"
 argument_list|)
 expr_stmt|;
-block|}
 name|auto_dir
 operator|=
 name|optarg
@@ -704,7 +737,7 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|usage
+name|usageflg
 operator|+=
 name|switch_option
 argument_list|(
@@ -749,7 +782,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|usage
+name|usageflg
 operator|+=
 name|debug_option
 argument_list|(
@@ -758,13 +791,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: not compiled with DEBUG option -- sorry.\n"
-argument_list|,
-name|progname
+literal|"not compiled with DEBUG option -- sorry"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -772,7 +801,7 @@ directive|endif
 comment|/* DEBUG */
 break|break;
 default|default:
-name|usage
+name|usageflg
 operator|=
 literal|1
 expr_stmt|;
@@ -797,7 +826,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|usage
+name|usageflg
 operator|+=
 name|switch_option
 argument_list|(
@@ -813,7 +842,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|usage
+name|usageflg
 operator|+=
 name|switch_option
 argument_list|(
@@ -826,11 +855,11 @@ comment|/* DEBUG */
 block|}
 if|if
 condition|(
-name|usage
+name|usageflg
 condition|)
-goto|goto
-name|show_usage
-goto|;
+name|usage
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|optind
@@ -1081,15 +1110,29 @@ expr_stmt|;
 comment|/* XXX */
 return|return;
 block|}
-name|show_usage
-label|:
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-mnprv] [-a mnt_point] [-c cache_time] [-d domain]\n\ \t[-k kernel_arch] [-l logfile|\"syslog\"] [-t afs_timeout]\n\ \t[-w wait_timeout] [-C cluster_name]"
+literal|"%s\n%s\n%s"
 argument_list|,
-name|progname
+literal|"usage: amd [-mnprv] [-a mnt_point] [-c cache_time] [-d domain]"
+argument_list|,
+literal|"           [-k kernel_arch] [-l logfile|\"syslog\"] [-t afs_timeout]"
+argument_list|,
+literal|"           [-w wait_timeout] [-C cluster_name]"
 argument_list|)
 expr_stmt|;
 if|#
@@ -1105,7 +1148,7 @@ name|HOST_EXEC
 argument_list|)
 name|fputs
 argument_list|(
-literal|" [-h host_helper]\n"
+literal|" [-h host_helper]"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1159,7 +1202,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t{directory mapname [-map_options]} ...\n"
+literal|"           {directory mapname [-map_options]} ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
