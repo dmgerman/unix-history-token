@@ -2242,6 +2242,26 @@ operator|->
 name|m_type
 argument_list|)
 expr_stmt|;
+name|n0len
+operator|=
+name|n0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+comment|/* save for use below */
+if|if
+condition|(
+name|n
+condition|)
+name|M_MOVE_PKTHDR
+argument_list|(
+name|n
+argument_list|,
+name|n0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|n
@@ -2297,22 +2317,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|n0len
-operator|=
-name|n0
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
-comment|/* save for use below */
-name|M_MOVE_PKTHDR
-argument_list|(
-name|n
-argument_list|,
-name|n0
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Copy IPv6 and ICMPv6 only. 			 */
 name|nip6
 operator|=
