@@ -91,6 +91,13 @@ name|GEOM_CTL
 value|_IOW('G', GEOM_CTL_VERSION, struct geom_ctl_req)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PATH_GEOM_CTL
+value|"geom.ctl"
+end_define
+
 begin_endif
 endif|#
 directive|endif
