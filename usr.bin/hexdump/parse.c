@@ -1957,6 +1957,7 @@ name|fs
 operator|->
 name|nextfu
 init|;
+name|fu
 condition|;
 name|fu
 operator|=
@@ -2080,14 +2081,6 @@ operator|=
 name|p2
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|fu
-operator|->
-name|nextfu
-condition|)
-break|break;
 block|}
 ifdef|#
 directive|ifdef
