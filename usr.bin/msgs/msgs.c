@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: msgs.c,v 1.12 1998/07/09 14:06:54 ghelmer Exp $"
+literal|"$Id: msgs.c,v 1.13 1998/07/14 19:07:30 ghelmer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1098,6 +1098,14 @@ argument_list|,
 name|BOUNDS
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Test access rights to the bounds file 	 * This can be a little tricky.  if(send_msg), then 	 * we will create it.  We assume that if(send_msg),	 	 * then you have write permission there. 	 * Else, it better be there, or we bail. 	 */
+if|if
+condition|(
+name|send_msg
+operator|!=
+name|YES
+condition|)
+block|{
 if|if
 condition|(
 name|stat
@@ -1110,6 +1118,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|hush
+operator|!=
+name|YES
+condition|)
+block|{
 name|err
 argument_list|(
 name|errno
@@ -1119,6 +1135,17 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
 name|bounds
 operator|=
 name|fopen
