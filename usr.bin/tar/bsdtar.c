@@ -502,6 +502,16 @@ literal|'n'
 block|}
 block|,
 block|{
+literal|"no-same-owner"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'o'
+block|}
+block|,
+block|{
 literal|"preserve-permissions"
 block|,
 name|no_argument
