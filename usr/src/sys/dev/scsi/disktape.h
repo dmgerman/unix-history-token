@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)disktape.h	5.3 (Berkeley) %G%  *  * from: $Header: disktape.h,v 1.3 92/12/02 03:44:07 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)disktape.h	5.4 (Berkeley) %G%  *  * from: $Header: disktape.h,v 1.4 93/04/30 00:02:16 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ comment|/* save mode pages */
 end_comment
 
 begin_comment
-comment|/*  * Structure of MODE SENSE command (i.e., the cdb; 6& 10 byte flavors).  * Again, the 10-byte version merely allows more parameter bytes.  */
+comment|/*  * Structure of MODE SENSE command (i.e., the cdb; 6& 10 byte flavors).  * Again, the 10-byte version merely allows more parameter bytes.  * Note that these lengths include the MODE SENSE headers, while those  * for individual mode pages do not.  (Consistency?  What's that?)  */
 end_comment
 
 begin_struct
@@ -288,7 +288,7 @@ comment|/* return saved parameters */
 end_comment
 
 begin_comment
-comment|/*  * Both MODE_SENSE and MODE_SELECT use a Mode Parameter Header,  * followed by an array of Block Descriptors, followed by an array  * of Pages.  We define structures for the Block Descriptor and Page  * first, then the two (6 and 10 byte) headers.  */
+comment|/*  * Both MODE_SENSE and MODE_SELECT use a Mode Parameter Header,  * followed by an array of Block Descriptors, followed by an array  * of Pages.  We define structures for the Block Descriptor and Page  * header first, then the two (6 and 10 byte) Mode Parameter headers  * (not including the Block Descriptor(s) and any mode pages themselves).  */
 end_comment
 
 begin_struct
@@ -327,22 +327,17 @@ end_struct
 
 begin_struct
 struct|struct
-name|scsi_ms_page
+name|scsi_ms_page_hdr
 block|{
-comment|/* mode sense/select page */
+comment|/* mode sense/select page header */
 name|u_char
 name|mp_psc
 decl_stmt|,
 comment|/* saveable flag + code */
 name|mp_len
-decl_stmt|,
-comment|/* parameter length */
-name|mp_parm
-index|[
-literal|1
-index|]
 decl_stmt|;
-comment|/* parameters (actual size mp_len) */
+comment|/* parameter length (excludes this header) */
+comment|/* followed by parameters */
 block|}
 struct|;
 end_struct
@@ -394,14 +389,7 @@ comment|/* device specific parameter */
 name|ms_bdl
 decl_stmt|;
 comment|/* block descriptor length (bytes) */
-name|struct
-name|scsi_ms_bd
-name|ms_bd
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* actually varies */
+comment|/* followed by block descriptors, if any */
 comment|/* followed by pages, if any */
 block|}
 struct|;
@@ -440,14 +428,7 @@ comment|/* block descriptor length (bytes) (MSB) */
 name|ms_bdll
 decl_stmt|;
 comment|/* block descriptor length (bytes) (LSB) */
-name|struct
-name|scsi_ms_bd
-name|ms_bd
-index|[
-literal|1
-index|]
-decl_stmt|;
-comment|/* actually varies */
+comment|/* followed by block descriptors, if any */
 comment|/* followed by pages, if any */
 block|}
 struct|;
@@ -939,12 +920,6 @@ struct|struct
 name|scsi_page_dr
 block|{
 name|u_char
-name|dr_psc
-decl_stmt|,
-comment|/* saveable flag + code (0x02) */
-name|dr_len
-decl_stmt|,
-comment|/* length (0x0e) */
 name|dr_full
 decl_stmt|,
 comment|/* buffer full ratio */
