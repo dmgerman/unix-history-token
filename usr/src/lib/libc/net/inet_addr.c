@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_addr.c	5.10 (Berkeley) %G%"
+literal|"@(#)inet_addr.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,29 +111,26 @@ begin_comment
 comment|/*   * Check whether "cp" is a valid ascii representation  * of an Internet address and convert to a binary address.  * Returns 1 if the address is valid, 0 if not.  * This replaces inet_addr, the return value from which  * cannot distinguish between failure and a local broadcast address.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|unsigned
+name|long
 name|inet_aton
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|,
+parameter_list|,
 name|addr
-argument_list|)
+parameter_list|)
 specifier|register
+specifier|const
 name|char
-operator|*
+modifier|*
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|in_addr
 modifier|*
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_long
@@ -511,7 +508,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
