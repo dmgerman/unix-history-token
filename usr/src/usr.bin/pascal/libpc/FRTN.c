@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)FRTN.c 1.1 %G%"
+literal|"@(#)FRTN.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,8 +23,6 @@ begin_expr_stmt
 name|FRTN
 argument_list|(
 name|frtn
-argument_list|,
-name|result
 argument_list|)
 specifier|register
 expr|struct
@@ -33,12 +31,6 @@ operator|*
 name|frtn
 expr_stmt|;
 end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|result
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -108,9 +100,6 @@ operator|*
 name|ds
 operator|++
 expr_stmt|;
-return|return
-name|result
-return|;
 block|}
 end_block
 
