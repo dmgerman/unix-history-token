@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.48
+literal|3.49
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.48
+literal|3.49
 operator|%
 name|G
 operator|%
@@ -561,6 +561,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|settime
+argument_list|()
+expr_stmt|;
 name|expand
 argument_list|(
 literal|"$e"
@@ -1880,6 +1883,10 @@ name|NULL
 condition|)
 block|{
 comment|/* no help */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|message
 argument_list|(
 literal|"502"
