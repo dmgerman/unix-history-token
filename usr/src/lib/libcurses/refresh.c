@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * %G% (Berkeley) @(#)refresh.c	1.4  */
+comment|/*  * make the current screen look like "win" over the area coverd by  * win.  *  * %G% (Berkeley) @(#)refresh.c	1.5  */
 end_comment
 
 begin_include
@@ -1167,6 +1167,39 @@ expr_stmt|;
 block|}
 name|nsp
 operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|MS
+operator|&&
+operator|(
+operator|*
+name|nsp
+operator|&
+name|_STANDOUT
+operator|)
+operator|&&
+operator|(
+operator|*
+name|csp
+operator|&
+name|_STANDOUT
+operator|)
+condition|)
+block|{
+name|_puts
+argument_list|(
+name|SE
+argument_list|)
+expr_stmt|;
+name|win
+operator|->
+name|_flags
+operator|&=
+operator|~
+name|_STANDOUT
 expr_stmt|;
 block|}
 ifdef|#
