@@ -10313,6 +10313,33 @@ modifier|*
 name|mcp
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+comment|/* XXX: tmp hack to restore ability to run releng4 binaries */
+comment|/* For now, always store the FP state in the PCB. */
+operator|(
+name|void
+operator|)
+name|npxgetregs
+argument_list|(
+name|td
+argument_list|,
+operator|(
+expr|union
+name|savefpu
+operator|*
+operator|)
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 ifndef|#
 directive|ifndef
 name|DEV_NPX
@@ -10478,6 +10505,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* tmp hack to restore ability to run releng4 binaries */
 block|}
 end_function
 
@@ -10497,6 +10527,30 @@ modifier|*
 name|mcp
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+comment|/* XXX: tmp hack to restore ability to run releng4 binaries */
+comment|/* For now, the FP state is always stored in the PCB. */
+name|npxsetregs
+argument_list|(
+name|td
+argument_list|,
+operator|(
+expr|union
+name|savefpu
+operator|*
+operator|)
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|union
 name|savefpu
 modifier|*
@@ -10679,6 +10733,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+endif|#
+directive|endif
+comment|/* tmp hack to restore ability to run releng4 binaries */
 return|return
 operator|(
 literal|0
