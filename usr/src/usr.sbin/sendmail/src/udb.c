@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.12 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.13 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.12 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.13 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,17 +398,6 @@ name|a
 operator|->
 name|q_flags
 argument_list|)
-operator|||
-name|UdbSpec
-operator|==
-name|NULL
-operator|||
-name|UdbSpec
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
 condition|)
 return|return;
 name|CurEnv
@@ -438,6 +427,21 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+comment|/* short circuit the process if no chance of a match */
+if|if
+condition|(
+name|UdbSpec
+operator|==
+name|NULL
+operator|||
+name|UdbSpec
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return;
 comment|/* if name is too long, assume it won't match */
 if|if
 condition|(
