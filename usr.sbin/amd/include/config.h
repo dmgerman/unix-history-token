@@ -1256,6 +1256,14 @@ value|0x40
 end_define
 
 begin_comment
+comment|/* automounter filesystem (ignore) flag, used in bsdi-4.1 */
+end_comment
+
+begin_comment
+comment|/* #undef MNT2_GEN_OPT_AUTOMNTFS */
+end_comment
+
+begin_comment
 comment|/* cache (what?) */
 end_comment
 
@@ -2741,11 +2749,11 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"6.0.1"
+value|"6.0.2s2"
 end_define
 
 begin_comment
-comment|/* We pick some parameters from our local config file */
+comment|/* We [FREEBSD-NATIVE] pick some parameters from our local config file */
 end_comment
 
 begin_include
@@ -3682,6 +3690,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the setitimer function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETITIMER
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the setresuid function.  */
 end_comment
 
@@ -3926,6 +3945,17 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_VMOUNT */
 end_comment
+
+begin_comment
+comment|/* Define if you have the vsnprintf function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VSNPRINTF
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the wait3 function.  */
@@ -6066,6 +6096,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_EXTERN_SETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* does setitimer() exist? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_EXTERN_SETITIMER
 value|1
 end_define
 
