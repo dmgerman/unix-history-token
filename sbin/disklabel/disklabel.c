@@ -3050,7 +3050,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* i386 */
+comment|/* __i386__ */
 if|if
 condition|(
 name|read
@@ -3168,7 +3168,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* i386 */
+comment|/* __i386__ */
 name|b
 operator|=
 name|open
