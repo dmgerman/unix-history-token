@@ -472,6 +472,7 @@ name|DSM_SKIP
 block|,
 name|DEVSTAT_ARG_SKIP
 block|}
+block|,
 block|{
 name|DSM_TOTAL_BYTES_FREE
 block|,
