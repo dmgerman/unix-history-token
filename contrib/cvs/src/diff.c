@@ -1588,6 +1588,11 @@ argument_list|(
 name|diff_date2
 argument_list|)
 expr_stmt|;
+name|send_arg
+argument_list|(
+literal|"--"
+argument_list|)
+expr_stmt|;
 comment|/* Send the current files unless diffing two revs from the archive */
 if|if
 condition|(
@@ -1754,7 +1759,7 @@ name|which
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+name|LOCK_READ
 argument_list|,
 operator|(
 name|char

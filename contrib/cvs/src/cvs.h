@@ -7,14 +7,29 @@ begin_comment
 comment|/*  * basic information used in all source files  *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|<config.h>
 end_include
 
 begin_comment
 comment|/* this is stuff found via autoconf */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_H */
 end_comment
 
 begin_include
@@ -256,6 +271,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FNMATCH
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -264,6 +285,34 @@ end_include
 
 begin_comment
 comment|/* This is supposed to be available on Posix systems */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_FNMATCH */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"fnmatch.h"
+end_include
+
+begin_comment
+comment|/* Our substitute */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FNMATCH */
 end_comment
 
 begin_include
@@ -1520,6 +1569,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Recursion processor lock types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_READ
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_WRITE
+value|2
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -1879,41 +1953,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|diff_exec
-name|PROTO
-argument_list|(
-operator|(
-name|char
-operator|*
-name|file1
-operator|,
-name|char
-operator|*
-name|file2
-operator|,
-name|char
-operator|*
-name|label1
-operator|,
-name|char
-operator|*
-name|label2
-operator|,
-name|char
-operator|*
-name|options
-operator|,
-name|char
-operator|*
-name|out
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|diff_execv
 name|PROTO
 argument_list|(
 operator|(
@@ -2781,6 +2820,25 @@ name|PROTO
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|strcat_filename_onto_homedir
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4216,7 +4274,7 @@ name|int
 name|aflag
 operator|,
 name|int
-name|readlock
+name|locktype
 operator|,
 name|char
 operator|*
@@ -5591,6 +5649,54 @@ directive|ifdef
 name|AUTH_CLIENT_SUPPORT
 end_ifdef
 
+begin_comment
+comment|/* Some systems (namely Mac OS X) have conflicting definitions for these  * functions.  Avoid them.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LOGIN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|login
+value|cvs_login
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LOGIN */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LOGOUT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|logout
+value|cvs_logout
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_LOGOUT */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -5611,6 +5717,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|logout
 name|PROTO

@@ -31,11 +31,49 @@ directive|include
 file|"getopt.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_FNMATCH
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fnmatch.h>
+end_include
+
+begin_comment
+comment|/* This is supposed to be available on Posix systems */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_FNMATCH */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|"fnmatch.h"
 end_include
+
+begin_comment
+comment|/* Our substitute */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_FNMATCH */
+end_comment
 
 begin_ifndef
 ifndef|#

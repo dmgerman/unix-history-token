@@ -2034,7 +2034,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"\ Copyright (c) 1989-2001 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
+literal|"\ Copyright (c) 1989-2002 Brian Berliner, david d `zoo' zuhn, \n\                         Jeff Polk, and other authors\n"
 argument_list|,
 name|stdout
 argument_list|)
@@ -2486,17 +2486,12 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_KERBEROS
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|SERVER_SUPPORT
-argument_list|)
+ifdef|#
+directive|ifdef
+name|HAVE_KERBEROS
 comment|/* If we are invoked with a single argument "kserver", then we are 	   running as Kerberos server as root.  Do the authentication as 	   the very first thing, to minimize the amount of time we are 	   running as root.  */
 if|if
 condition|(
@@ -2524,7 +2519,6 @@ directive|endif
 comment|/* HAVE_KERBEROS */
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
 name|AUTH_SERVER_SUPPORT
@@ -2533,12 +2527,6 @@ operator|||
 name|defined
 argument_list|(
 name|HAVE_GSSAPI
-argument_list|)
-operator|)
-operator|&&
-name|defined
-argument_list|(
-name|SERVER_SUPPORT
 argument_list|)
 if|if
 condition|(
@@ -2565,10 +2553,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* (AUTH_SERVER_SUPPORT || HAVE_GSSAPI)&& SERVER_SUPPORT */
-ifdef|#
-directive|ifdef
-name|SERVER_SUPPORT
+comment|/* AUTH_SERVER_SUPPORT || HAVE_GSSAPI */
 name|server_active
 operator|=
 name|strcmp
@@ -2582,6 +2567,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SERVER_SUPPORT */
 comment|/* This is only used for writing into the history file.  For 	   remote connections, it might be nice to have hostname 	   and/or remote path, on the other hand I'm not sure whether 	   it is worth the trouble.  */
 ifdef|#
 directive|ifdef
@@ -3513,7 +3499,13 @@ if|if
 condition|(
 name|server_active
 condition|)
+block|{
+name|server_active
+operator|=
+literal|0
+expr_stmt|;
 break|break;
+block|}
 endif|#
 directive|endif
 block|}

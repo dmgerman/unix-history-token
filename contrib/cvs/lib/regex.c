@@ -4729,14 +4729,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|reg_errcode_t
-name|compile_range
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Fetch the next character in the uncompiled pattern---translating it    if necessary.  Also cast from a signed character in the constant    string passed to us by the user to an unsigned char that we can use    as an array index (in, e.g., `translate').  */
 end_comment

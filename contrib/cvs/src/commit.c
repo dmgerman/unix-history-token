@@ -1296,6 +1296,16 @@ name|vn_user
 operator|!=
 name|NULL
 operator|&&
+operator|(
+name|vers
+operator|->
+name|vn_user
+index|[
+literal|0
+index|]
+operator|==
+literal|'0'
+operator|||
 name|vers
 operator|->
 name|vn_user
@@ -1304,12 +1314,36 @@ literal|0
 index|]
 operator|==
 literal|'-'
+operator|)
 condition|)
-comment|/* FIXME: If vn_user is starts with "-" but ts_user is 	   non-NULL, what classify_file does is print "%s should be 	   removed and is still there".  I'm not sure what it does 	   then.  We probably should do the same.  */
+block|{
+if|if
+condition|(
+name|vers
+operator|->
+name|vn_user
+index|[
+literal|0
+index|]
+operator|==
+literal|'0'
+condition|)
+block|{
+comment|/* This happens when one has `cvs add'ed a file, but it no 	       longer exists in the working directory at commit time.  */
+name|status
+operator|=
+name|T_ADDED
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* FIXME: If vn_user is starts with "-" but ts_user is 	       non-NULL, what classify_file does is print "%s should be 	       removed and is still there".  I'm not sure what it does 	       then.  We probably should do the same.  */
 name|status
 operator|=
 name|T_REMOVED
 expr_stmt|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -1391,7 +1425,7 @@ index|]
 operator|==
 literal|'0'
 condition|)
-comment|/* FIXME: If vn_user is "0" but ts_user is NULL, what classify_file 	   does is print "new-born %s has disappeared" and removes the entry. 	   We probably should do the same.  */
+comment|/* FIXME: If vn_user is "0" but ts_user is NULL, what classify_file 	   does is print "new-born %s has disappeared" and removes the entry. 	   We probably should do the same.  No!  Not here.  Otherwise, a commit 	   would succeed in some cases when it should fail.  See above.  */
 name|status
 operator|=
 name|T_ADDED
@@ -2116,7 +2150,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|LOCK_NONE
 argument_list|,
 operator|(
 name|char
@@ -2232,12 +2266,15 @@ name|ulist
 argument_list|)
 expr_stmt|;
 comment|/* We always send some sort of message, even if empty.  */
-comment|/* FIXME: is that true?  There seems to be some code in do_editor 	   which can leave the message NULL.  */
 name|option_with_arg
 argument_list|(
 literal|"-m"
 argument_list|,
 name|saved_message
+condition|?
+name|saved_message
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* OK, now process all the questionable files we have been saving 	   up.  */
@@ -2476,6 +2513,11 @@ argument_list|(
 literal|"-r"
 argument_list|,
 name|saved_tag
+argument_list|)
+expr_stmt|;
+name|send_arg
+argument_list|(
+literal|"--"
 argument_list|)
 expr_stmt|;
 comment|/* FIXME: This whole find_args.force/SEND_FORCE business is a 	   kludge.  It would seem to be a server bug that we have to 	   say that files are modified when they are not.  This makes 	   "cvs commit -r 2" across a whole bunch of files a very slow 	   operation (and it isn't documented in cvsclient.texi).  I 	   haven't looked at the server code carefully enough to be 	   _sure_ why this is needed, but if it is because the "ci" 	   program, which we used to call, wanted the file to exist, 	   then it would be relatively simple to fix in the server.  */
@@ -2769,7 +2811,7 @@ name|W_LOCAL
 argument_list|,
 name|aflag
 argument_list|,
-literal|0
+name|LOCK_NONE
 argument_list|,
 operator|(
 name|char
@@ -2833,7 +2875,7 @@ name|W_LOCAL
 argument_list|,
 name|aflag
 argument_list|,
-literal|0
+name|LOCK_NONE
 argument_list|,
 operator|(
 name|char
@@ -5277,9 +5319,7 @@ comment|/*      * At this point, we should have the commit message unless we wer
 if|if
 condition|(
 operator|!
-operator|(
 name|got_message
-operator|)
 condition|)
 block|{
 name|got_message
@@ -5288,6 +5328,14 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+operator|!
+name|server_active
+operator|&&
+endif|#
+directive|endif
 name|use_editor
 condition|)
 name|do_editor
@@ -6745,6 +6793,14 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+operator|!
+name|server_active
+operator|&&
+endif|#
+directive|endif
 name|use_editor
 condition|)
 name|do_editor

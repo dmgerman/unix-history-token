@@ -3,11 +3,26 @@ begin_comment
 comment|/* Extended support for using errno values.    Copyright (C) 1992 Free Software Foundation, Inc.    Written by Fred Fish.  fnf@cygnus.com  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|<config.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_CONFIG_H */
+end_comment
 
 begin_ifndef
 ifndef|#

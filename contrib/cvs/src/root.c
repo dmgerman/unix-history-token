@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Mark D. Baushke  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  */
+comment|/*  * Copyright (c) 1992, Mark D. Baushke  * Copyright (c) 2002, Derek R. Price  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Name of Root  *   * Determine the path to the CVSROOT and set "Root" accordingly.  */
 end_comment
 
 begin_include
@@ -779,20 +779,8 @@ argument_list|(
 literal|"E Fatal server error, aborting.\n\ error ENOMEM Virtual memory exhausted.\n"
 argument_list|)
 expr_stmt|;
-comment|/* I'm doing this manually rather than via error_exit () 	       because I'm not sure whether we want to call server_cleanup. 	       Needs more investigation....  */
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket 	       subsystems on NT and OS2 or dealing with windows 	       and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -941,7 +929,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Parse a CVSROOT variable into its constituent parts -- method,  * username, hostname, directory.  The prototypical CVSROOT variable  * looks like:  *  * :method:user@host:path  *  * Some methods may omit fields; local, for example, doesn't need user  * and host.  *  * Returns pointer to new cvsroot_t on success, NULL on failure. */
+comment|/* FIXME - Deglobalize this. */
 end_comment
 
 begin_decl_stmt
@@ -1157,7 +1145,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * parse a CVSROOT string to allocate and return a new cvsroot_t structure  */
+comment|/*  * Parse a CVSROOT string to allocate and return a new cvsroot_t structure.  * Valid specifications are:  *  *	:(gserver|kserver|pserver):[[user][:password]@]host[:[port]]/path  *	[:(ext|server):][[user]@]host[:]/path  *	[:local:[e:]]/path  *	:fork:/path  *  * INPUTS  *	root_in		C String containing the CVSROOT to be parsed.  *  * RETURNS  *	A pointer to a newly allocated cvsroot_t structure upon success and  *	NULL upon failure.  The caller is responsible for disposing of  *	new structures with a call to free_cvsroot_t().  *  * NOTES  * 	This would have been a lot easier to write in Perl.  *  * SEE ALSO  * 	free_cvsroot_t()  */
 end_comment
 
 begin_function
@@ -1269,11 +1257,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"No closing `:' on method in CVSROOT."
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|cvsroot_save
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1429,11 +1412,6 @@ argument_list|,
 name|method
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|cvsroot_save
-argument_list|)
-expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -1441,7 +1419,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* If the method isn't specified, assume 	   SERVER_METHOD/EXT_METHOD if the string looks like a relative path or 	   LOCAL_METHOD otherwise.  */
+comment|/* If the method isn't specified, assume EXT_METHOD if the string looks 	   like a relative path and LOCAL_METHOD otherwise.  */
 name|newroot
 operator|->
 name|method
@@ -1460,10 +1438,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 operator|)
-comment|/*#ifdef RSH_NOT_TRANSPARENT 			  ? server_method #else*/
 condition|?
 name|ext_method
-comment|/*#endif*/
 else|:
 name|local_method
 operator|)
@@ -1550,11 +1526,6 @@ argument_list|,
 literal|"[:(ext|server):][[user]@]host[:]/path"
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|cvsroot_save
-argument_list|)
-expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -1623,7 +1594,7 @@ operator|++
 name|q
 argument_list|)
 expr_stmt|;
-comment|/* Don't check for *newroot->password == '\0' since 		 * a user could conceivably wish to specify a blank password 		 * (newroot->password == NULL means to use the 		 * password from .cvspass) 		 */
+comment|/* Don't check for *newroot->password == '\0' since 		 * a user could conceivably wish to specify a blank password 		 * 		 * (newroot->password == NULL means to use the 		 * password from .cvspass) 		 */
 block|}
 comment|/* copy the username */
 if|if
@@ -1732,11 +1703,6 @@ argument_list|,
 literal|"Perhaps you entered a relative pathname?"
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|cvsroot_save
-argument_list|)
-expr_stmt|;
 goto|goto
 name|error_exit
 goto|;
@@ -1776,11 +1742,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Perhaps you entered a relative pathname?"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|cvsroot_save
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1826,11 +1787,6 @@ operator|=
 name|xstrdup
 argument_list|(
 name|cvsroot_copy
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|cvsroot_save
 argument_list|)
 expr_stmt|;
 comment|/*      * Do various sanity checks.      */
@@ -2355,11 +2311,21 @@ name|error_exit
 goto|;
 block|}
 comment|/* Hooray!  We finally parsed it! */
+name|free
+argument_list|(
+name|cvsroot_save
+argument_list|)
+expr_stmt|;
 return|return
 name|newroot
 return|;
 name|error_exit
 label|:
+name|free
+argument_list|(
+name|cvsroot_save
+argument_list|)
+expr_stmt|;
 name|free_cvsroot_t
 argument_list|(
 name|newroot
@@ -2831,6 +2797,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* vim:tabstop=8:shiftwidth=4  */
+end_comment
 
 end_unit
 
