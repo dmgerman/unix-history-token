@@ -11,6 +11,10 @@ begin_comment
 comment|/*  *	lib_trace.c - Tracing/Debugging routines  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -106,7 +110,7 @@ end_endif
 
 begin_function
 name|void
-name|trace
+name|_nc_trace
 parameter_list|(
 specifier|const
 name|unsigned
