@@ -101,7 +101,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/tcp.h>
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -473,7 +479,7 @@ name|int
 name|size
 decl_stmt|;
 name|int
-name|maxseg
+name|throughput
 decl_stmt|;
 if|if
 condition|(
@@ -643,6 +649,13 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rmtape
+operator|<
+literal|0
+condition|)
+return|return;
 name|size
 operator|=
 name|ntrec
@@ -720,9 +733,9 @@ name|size
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|maxseg
+name|throughput
 operator|=
-literal|1024
+name|IPTOS_THROUGHPUT
 expr_stmt|;
 if|if
 condition|(
@@ -730,16 +743,16 @@ name|setsockopt
 argument_list|(
 name|rmtape
 argument_list|,
-name|IPPROTO_TCP
+name|IPPROTO_IP
 argument_list|,
-name|TCP_MAXSEG
+name|IP_TOS
 argument_list|,
 operator|&
-name|maxseg
+name|throughput
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|maxseg
+name|throughput
 argument_list|)
 argument_list|)
 operator|<
@@ -747,7 +760,7 @@ literal|0
 condition|)
 name|perror
 argument_list|(
-literal|"TCP_MAXSEG setsockopt"
+literal|"IP_TOS:IPTOS_THROUGHPUT setsockopt"
 argument_list|)
 expr_stmt|;
 ifdef|#
