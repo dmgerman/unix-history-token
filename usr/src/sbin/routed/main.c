@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.18 (Berkeley) %G%"
+literal|"@(#)main.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,6 +222,14 @@ decl_stmt|;
 name|struct
 name|itimerval
 name|itval
+decl_stmt|;
+specifier|register
+name|struct
+name|rip
+modifier|*
+name|query
+init|=
+name|msg
 decl_stmt|;
 name|fd_set
 name|ibits
@@ -669,13 +677,13 @@ name|supplier
 operator|=
 literal|0
 expr_stmt|;
-name|msg
+name|query
 operator|->
 name|rip_cmd
 operator|=
 name|RIPCMD_REQUEST
 expr_stmt|;
-name|msg
+name|query
 operator|->
 name|rip_vers
 operator|=
@@ -685,7 +693,7 @@ if|if
 condition|(
 sizeof|sizeof
 argument_list|(
-name|msg
+name|query
 operator|->
 name|rip_nets
 index|[
@@ -700,7 +708,7 @@ operator|>
 literal|1
 condition|)
 comment|/* XXX */
-name|msg
+name|query
 operator|->
 name|rip_nets
 index|[
@@ -720,7 +728,7 @@ name|AF_UNSPEC
 argument_list|)
 expr_stmt|;
 else|else
-name|msg
+name|query
 operator|->
 name|rip_nets
 index|[
@@ -733,7 +741,7 @@ name|sa_family
 operator|=
 name|AF_UNSPEC
 expr_stmt|;
-name|msg
+name|query
 operator|->
 name|rip_nets
 index|[
