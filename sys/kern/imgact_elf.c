@@ -3892,7 +3892,7 @@ name|VM_PROT_WRITE
 operator|)
 condition|)
 continue|continue;
-comment|/* 		** Dont include mmapped data in the coredump if MAP_NOCORE  		** is set in mmap(2). 		*/
+comment|/* 		** Dont include memory segment in the coredump if 		** MAP_NOCORE is set in mmap(2) or MADV_NOCORE in 		** madvise(2). 		*/
 if|if
 condition|(
 name|entry
