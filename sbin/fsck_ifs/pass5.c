@@ -2165,9 +2165,9 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|cg_inosused
+name|cg_blksfree
 argument_list|(
-name|cg
+name|newcg
 argument_list|)
 index|[
 name|i
