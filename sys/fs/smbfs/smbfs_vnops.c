@@ -1507,7 +1507,7 @@ name|struct
 name|smb_cred
 name|scred
 decl_stmt|;
-name|u_int32_t
+name|u_quad_t
 name|oldsize
 decl_stmt|;
 name|int
