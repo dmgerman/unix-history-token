@@ -1527,7 +1527,9 @@ argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask] [-M mask]"
+argument_list|,
 literal|"                     [-s] [-l] [-9] [-L locale] [-D dos-codepage] [-W table]"
+argument_list|,
 literal|"                     bdev dir"
 argument_list|)
 expr_stmt|;
