@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.1.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1407,6 +1407,10 @@ decl_stmt|,
 name|op
 decl_stmt|,
 name|s
+decl_stmt|,
+name|completed
+init|=
+literal|0
 decl_stmt|;
 name|myaddr
 operator|=
@@ -1652,6 +1656,22 @@ name|arp_sha
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|at
+operator|->
+name|at_flags
+operator|&
+name|ATF_COM
+operator|)
+operator|==
+literal|0
+condition|)
+name|completed
+operator|=
+literal|1
+expr_stmt|;
 name|at
 operator|->
 name|at_flags
@@ -1763,6 +1783,10 @@ name|arp_sha
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|completed
+operator|=
+literal|1
+expr_stmt|;
 name|at
 operator|->
 name|at_flags
@@ -1824,13 +1848,18 @@ break|break;
 case|case
 name|ETHERTYPE_IP
 case|:
-comment|/* 		 * Reply if this is an IP request, or if we want to send 		 * a trailer response. 		 */
+comment|/* 		 * Reply if this is an IP request, 		 * or if we want to send a trailer response. 		 * Send the latter only to the IP response 		 * that completes the current ARP entry. 		 */
 if|if
 condition|(
 name|op
 operator|!=
 name|ARPOP_REQUEST
 operator|&&
+operator|(
+name|completed
+operator|==
+literal|0
+operator|||
 name|ac
 operator|->
 name|ac_if
@@ -1838,6 +1867,7 @@ operator|.
 name|if_flags
 operator|&
 name|IFF_NOTRAILERS
+operator|)
 condition|)
 goto|goto
 name|out
