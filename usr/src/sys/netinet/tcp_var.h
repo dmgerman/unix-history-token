@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	6.1	83/07/29	*/
+comment|/*	tcp_var.h	6.2	84/11/14	*/
 end_comment
 
 begin_comment
@@ -153,7 +153,12 @@ comment|/* retransmit variables */
 name|tcp_seq
 name|snd_max
 decl_stmt|;
-comment|/* highest sequence number sent 					   used to recognize retransmits */
+comment|/* highest sequence number sent 					 * used to recognize retransmits 					 */
+comment|/* congestion control (for source quench) */
+name|u_short
+name|snd_cwnd
+decl_stmt|;
+comment|/* congestion-controlled window */
 comment|/* transmit timing stuff */
 name|short
 name|t_idle
