@@ -178,9 +178,6 @@ init|=
 operator|*
 name|p
 decl_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -216,9 +213,6 @@ init|=
 operator|*
 name|p
 decl_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -254,9 +248,6 @@ init|=
 operator|*
 name|p
 decl_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -414,9 +405,6 @@ name|p
 operator|=
 name|data
 expr_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -451,9 +439,6 @@ name|p
 operator|=
 name|data
 expr_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -487,9 +472,6 @@ operator|*
 name|p
 operator|=
 name|data
-expr_stmt|;
-name|ia64_mf_a
-argument_list|()
 expr_stmt|;
 name|ia64_mf
 argument_list|()
@@ -649,9 +631,6 @@ init|=
 operator|*
 name|p
 decl_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -687,9 +666,6 @@ init|=
 operator|*
 name|p
 decl_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -725,9 +701,6 @@ init|=
 operator|*
 name|p
 decl_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -765,9 +738,6 @@ name|p
 operator|=
 name|data
 expr_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -802,9 +772,6 @@ name|p
 operator|=
 name|data
 expr_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
@@ -838,9 +805,6 @@ operator|*
 name|p
 operator|=
 name|data
-expr_stmt|;
-name|ia64_mf_a
-argument_list|()
 expr_stmt|;
 name|ia64_mf
 argument_list|()
