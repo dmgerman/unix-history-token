@@ -576,9 +576,6 @@ modifier|*
 name|slt
 parameter_list|)
 block|{
-name|int
-name|wasinactive
-decl_stmt|;
 name|disable_slot
 argument_list|(
 name|slt
@@ -3334,6 +3331,11 @@ argument_list|(
 name|slt
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

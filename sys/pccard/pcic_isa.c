@@ -1598,8 +1598,7 @@ name|slot
 decl_stmt|,
 name|s
 decl_stmt|;
-name|unsigned
-name|char
+name|u_int8_t
 name|chg
 decl_stmt|;
 name|struct

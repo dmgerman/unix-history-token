@@ -1654,6 +1654,7 @@ literal|0xffffffff
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Now call children interrupts if any */
 name|stat
 operator|=
 name|bus_space_read_4
@@ -1669,7 +1670,6 @@ argument_list|,
 name|CB_SOCKET_STATE
 argument_list|)
 expr_stmt|;
-comment|/* Now call children interrupts if any */
 if|if
 condition|(
 name|sp
@@ -1850,8 +1850,8 @@ expr_stmt|;
 if|#
 directive|if
 name|__FreeBSD_version
-operator|>
-literal|500000
+operator|>=
+literal|430002
 comment|/* 	 * Take us out of power down mode. 	 */
 if|if
 condition|(
