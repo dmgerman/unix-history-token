@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: xutil.c,v 1.1.1.1.8.1 1997/09/03 06:27:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -707,7 +707,7 @@ comment|/* DEBUG_MEM */
 end_comment
 
 begin_comment
-comment|/*  * Take a log format string and expand occurences of %m  * with the current error code take from errno.  */
+comment|/*  * Take a log format string and expand occurences of %m  * with the current error code taken from errno.  Make sure  * 'e' never gets longer than maxlen characters.  */
 end_comment
 
 begin_function
@@ -719,6 +719,8 @@ parameter_list|(
 name|f
 parameter_list|,
 name|e
+parameter_list|,
+name|maxlen
 parameter_list|)
 name|char
 modifier|*
@@ -727,6 +729,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|e
+decl_stmt|;
+name|int
+name|maxlen
 decl_stmt|;
 block|{
 ifndef|#
@@ -747,25 +752,46 @@ directive|endif
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
 name|int
 name|error
 init|=
 name|errno
 decl_stmt|;
+name|int
+name|len
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|p
 operator|=
 name|f
-init|;
-operator|*
+operator|,
+name|q
+operator|=
 name|e
+init|;
+operator|(
+operator|*
+name|q
 operator|=
 operator|*
 name|p
+operator|)
+operator|&&
+name|len
+operator|<
+name|maxlen
 condition|;
-name|e
+name|len
+operator|++
+operator|,
+name|q
 operator|++
 operator|,
 name|p
@@ -835,7 +861,7 @@ name|errstr
 condition|)
 name|strcpy
 argument_list|(
-name|e
+name|q
 argument_list|,
 name|errstr
 argument_list|)
@@ -843,18 +869,27 @@ expr_stmt|;
 else|else
 name|sprintf
 argument_list|(
-name|e
+name|q
 argument_list|,
 literal|"Error %d"
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|e
+name|len
 operator|+=
 name|strlen
 argument_list|(
-name|e
+name|q
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|q
+operator|+=
+name|strlen
+argument_list|(
+name|q
 argument_list|)
 operator|-
 literal|1
@@ -864,6 +899,16 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|e
+index|[
+name|maxlen
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate, to be sure */
 block|}
 end_function
 
@@ -1288,8 +1333,11 @@ argument_list|(
 name|fmt
 argument_list|,
 name|efmt
+argument_list|,
+literal|1024
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: ptr is 1024 bytes long.  It is possible to write into it 	 * more than 1024 bytes, if efmt is already large, and vargs expand 	 * as well. 	 */
 name|sprintf
 argument_list|(
 name|ptr
@@ -1315,6 +1363,14 @@ argument_list|,
 name|y
 argument_list|)
 expr_stmt|;
+name|msg
+index|[
+literal|1023
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* null terminate, to be sure */
 name|ptr
 operator|+=
 name|strlen
