@@ -915,14 +915,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|size_t
 name|compress_prefix_list
 parameter_list|(
 name|struct
 name|in_addr
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

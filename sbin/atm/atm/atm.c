@@ -2298,9 +2298,10 @@ decl_stmt|;
 name|u_long
 name|v
 decl_stmt|;
-name|int
+name|ssize_t
 name|buf_len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|s
 decl_stmt|;
 comment|/* 	 * Initialize opcode and flags 	 */
@@ -2378,14 +2379,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|buf_len
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|air_int_rsp
-argument_list|)
-expr_stmt|;
 name|air
 operator|.
 name|air_opcode
@@ -2399,25 +2392,21 @@ argument_list|(
 operator|&
 name|air
 argument_list|,
-name|buf_len
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|air_int_rsp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|buf_len
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|errno
@@ -2429,20 +2418,21 @@ case|:
 case|case
 name|EOPNOTSUPP
 case|:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"Internal error"
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 name|ENXIO
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s is not an ATM device\n"
+literal|"%s is not an ATM device"
 argument_list|,
 name|argv
 index|[
@@ -2450,20 +2440,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-break|break;
 default|default:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl (AIOCINFO)"
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|int_info
 operator|=
@@ -3584,15 +3569,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|errno
@@ -3604,91 +3580,87 @@ case|:
 case|case
 name|ENOPROTOOPT
 case|:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"Internal error"
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 name|EINVAL
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Invalid parameter\n"
+literal|"Invalid parameter"
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 name|EEXIST
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"PVC already exists\n"
+literal|"PVC already exists"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ENETDOWN
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"ATM network is inoperable\n"
+literal|"ATM network is inoperable"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ENOMEM
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Kernel memory exhausted\n"
+literal|"Kernel memory exhausted"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|EPERM
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Must be super user to use add subcommand\n"
+literal|"Must be super user to use add subcommand"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|ERANGE
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"Invalid VPI or VCI value\n"
+literal|"Invalid VPI or VCI value"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl (AIOCADD) add PVC"
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 operator|(
 name|void

@@ -171,7 +171,7 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|netif_no
 decl_stmt|;
 name|u_int
@@ -283,9 +283,16 @@ index|]
 expr_stmt|;
 name|netif_no
 operator|=
-name|atoi
+operator|(
+name|u_int
+operator|)
+name|strtoul
 argument_list|(
 name|cp
+argument_list|,
+name|NULL
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 for|for
@@ -332,7 +339,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
 name|strlen
 argument_list|(
 name|argv
@@ -349,30 +355,19 @@ name|aar_pvc_intf
 argument_list|)
 operator|-
 literal|1
-operator|)
-operator|||
-operator|(
-name|netif_no
-operator|<
-literal|0
-operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Illegal network interface name\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Illegal network interface name '%s'"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|strncasecmp
@@ -400,21 +395,17 @@ operator|<=
 name|netif_pref_len
 operator|||
 name|netif_no
-operator|>
+operator|>=
 name|intp
 operator|->
 name|anp_nif_cnt
-operator|-
-literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: network interface %s is not associated with interface %s\n"
-argument_list|,
-name|prog
+literal|"network interface %s is not associated with "
+literal|"interface %s"
 argument_list|,
 name|argv
 index|[
@@ -426,12 +417,6 @@ operator|->
 name|anp_intf
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|app

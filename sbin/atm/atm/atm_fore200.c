@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"atm.h"
 end_include
 
@@ -385,9 +391,10 @@ name|argv
 decl_stmt|;
 block|{
 name|int
-name|buf_len
-decl_stmt|,
 name|stats_type
+decl_stmt|;
+name|ssize_t
+name|buf_len
 decl_stmt|;
 name|struct
 name|air_cfg_rsp
@@ -545,18 +552,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Illegal statistics type\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Illegal statistics type"
 argument_list|)
 expr_stmt|;
 block|}
@@ -610,19 +610,11 @@ expr_stmt|;
 if|if
 condition|(
 name|buf_len
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|errno
@@ -634,38 +626,34 @@ case|:
 case|case
 name|EOPNOTSUPP
 case|:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"Internal error"
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 name|ENXIO
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s is not an ATM device\n"
+literal|"%s is not an ATM device"
 argument_list|,
 name|intf
 argument_list|)
 expr_stmt|;
-break|break;
 default|default:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl (AIOCINFO)"
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|cfg
 operator|=
@@ -728,19 +716,11 @@ expr_stmt|;
 if|if
 condition|(
 name|buf_len
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|errno
@@ -752,38 +732,34 @@ case|:
 case|case
 name|EOPNOTSUPP
 case|:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"Internal error"
 argument_list|)
 expr_stmt|;
-break|break;
 case|case
 name|ENXIO
 case|:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s is not an ATM device\n"
+literal|"%s is not an ATM device"
 argument_list|,
 name|intf
 argument_list|)
 expr_stmt|;
-break|break;
 default|default:
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl (AIOCINFO)"
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 name|stats
 operator|=

@@ -739,7 +739,7 @@ modifier|*
 name|intf
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|buf_len
 decl_stmt|;
 name|struct
@@ -812,9 +812,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|size_t
-operator|)
 name|buf_len
 operator|<
 sizeof|sizeof
@@ -1279,7 +1276,7 @@ comment|/*  * Compress a list of IP network prefixes  *  * Arguments:  *	ipp	poi
 end_comment
 
 begin_function
-name|int
+name|size_t
 name|compress_prefix_list
 parameter_list|(
 name|struct
@@ -1287,11 +1284,11 @@ name|in_addr
 modifier|*
 name|ipp
 parameter_list|,
-name|int
+name|size_t
 name|ilen
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|,
 name|j
@@ -1683,16 +1680,9 @@ name|rc
 operator|=
 name|verify_nif_name
 argument_list|(
-name|__DECONST
-argument_list|(
-name|char
-operator|*
-argument_list|,
 name|nif
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* XXX */
 comment|/* 	 * Check the result 	 */
 if|if
 condition|(
