@@ -51,6 +51,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|NG_ABI_VERSION
+value|NG_VERSION
+end_define
+
 begin_comment
 comment|/*  * Structure of a hook  */
 end_comment
@@ -123,6 +130,178 @@ end_define
 begin_comment
 comment|/* don't trust it! */
 end_comment
+
+begin_function_decl
+name|void
+name|ng_unref_hook
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* don't move this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_REF
+parameter_list|(
+name|hook
+parameter_list|)
+value|atomic_add_int(&(hook)->refs, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_NAME
+parameter_list|(
+name|hook
+parameter_list|)
+value|((hook)->name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_UNREF
+parameter_list|(
+name|hook
+parameter_list|)
+value|ng_unref_hook(hook)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_SET_PRIVATE
+parameter_list|(
+name|hook
+parameter_list|,
+name|val
+parameter_list|)
+value|do {(hook)->private = val;} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_SET_RCVMSG
+parameter_list|(
+name|hook
+parameter_list|,
+name|val
+parameter_list|)
+value|do {(hook)->rcvmsg = val;} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_SET_RCVDATA
+parameter_list|(
+name|hook
+parameter_list|,
+name|val
+parameter_list|)
+value|do {(hook)->rcvdata = val;} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_PRIVATE
+parameter_list|(
+name|hook
+parameter_list|)
+value|((hook)->private)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_NOT_VALID
+parameter_list|(
+name|hook
+parameter_list|)
+value|((hook)->flags& HK_INVALID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_IS_VALID
+parameter_list|(
+name|hook
+parameter_list|)
+value|(!((hook)->flags& HK_INVALID))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_NODE
+parameter_list|(
+name|hook
+parameter_list|)
+value|((hook)->node)
+end_define
+
+begin_comment
+comment|/* only rvalue! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_HOOK_PEER
+parameter_list|(
+name|hook
+parameter_list|)
+value|((hook)->peer)
+end_define
+
+begin_comment
+comment|/* only rvalue! */
+end_comment
+
+begin_comment
+comment|/* Some shortcuts */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PEER_NODE
+parameter_list|(
+name|hook
+parameter_list|)
+value|NG_HOOK_NODE(NG_HOOK_PEER(hook))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_PEER_HOOK_NAME
+parameter_list|(
+name|hook
+parameter_list|)
+value|NG_HOOK_NAME(NG_HOOK_PEER(hook))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_PEER_NODE_NAME
+parameter_list|(
+name|hook
+parameter_list|)
+value|NG_NODE_NAME(NG_PEER_NODE(hook))
+end_define
 
 begin_comment
 comment|/*  * Structure of a node  */
@@ -287,6 +466,126 @@ end_define
 
 begin_comment
 comment|/* reserved for type specific storage */
+end_comment
+
+begin_function_decl
+name|void
+name|ng_unref_node
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* don't move this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_NAME
+parameter_list|(
+name|node
+parameter_list|)
+value|((node)->name + 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_HAS_NAME
+parameter_list|(
+name|node
+parameter_list|)
+value|((node)->name[0] + 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_ID
+parameter_list|(
+name|node
+parameter_list|)
+value|((node)->ID + 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_REF
+parameter_list|(
+name|node
+parameter_list|)
+value|atomic_add_int(&(node)->refs, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_UNREF
+parameter_list|(
+name|node
+parameter_list|)
+value|ng_unref_node(node)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_SET_PRIVATE
+parameter_list|(
+name|node
+parameter_list|,
+name|val
+parameter_list|)
+value|do {(node)->private = val;} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_PRIVATE
+parameter_list|(
+name|node
+parameter_list|)
+value|((node)->private)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_IS_VALID
+parameter_list|(
+name|node
+parameter_list|)
+value|(!((node)->flags& NG_INVALID))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_NOT_VALID
+parameter_list|(
+name|node
+parameter_list|)
+value|((node)->flags& NG_INVALID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_NODE_NUMHOOKS
+parameter_list|(
+name|node
+parameter_list|)
+value|((node)->numhooks + 0)
+end_define
+
+begin_comment
+comment|/* rvalue */
 end_comment
 
 begin_comment
@@ -708,9 +1007,35 @@ define|\
 value|do {								\ 		(error) = ng_send_dataq((hook), (m), (a));		\ 		(m) = NULL;						\ 		(a) = NULL;						\ 	} while (0)
 end_define
 
-begin_comment
-comment|/* Free metadata */
-end_comment
+begin_define
+define|#
+directive|define
+name|NG_RESPOND_MSG
+parameter_list|(
+name|error
+parameter_list|,
+name|here
+parameter_list|,
+name|retaddr
+parameter_list|,
+name|resp
+parameter_list|,
+name|rptr
+parameter_list|)
+define|\
+value|do {								\ 		if (rptr) {						\ 			*rptr = resp;					\ 		} else if (resp) {					\ 			if (retaddr) {					\ 				error = ng_queue_msg(here, resp, retaddr); \ 			} else {					\ 				FREE(resp, M_NETGRAPH);			\ 			}						\ 		}							\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_FREE_MSG
+parameter_list|(
+name|msg
+parameter_list|)
+define|\
+value|do {								\ 		if ((msg)) {						\ 			FREE((msg), M_NETGRAPH);			\ 			(msg) = NULL;					\ 		}	 						\ 	} while (0)
+end_define
 
 begin_define
 define|#
@@ -720,7 +1045,18 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|do {								\ 		if ((a)) {						\ 			FREE((a), M_NETGRAPH);				\ 			a = NULL;					\ 		}							\ 	} while (0)
+value|do {								\ 		if ((a)) {						\ 			FREE((a), M_NETGRAPH);				\ 			(a) = NULL;					\ 		}							\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_FREE_M
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|do {								\ 		if ((m)) {						\ 			m_freem((m));					\ 			(m) = NULL;					\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -737,7 +1073,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|do {								\ 		if ((m)) {						\ 			m_freem((m));					\ 			m = NULL;					\ 		}							\ 		NG_FREE_META((a));					\ 	} while (0)
+value|do {								\ 		NG_FREE_M((m));						\ 		NG_FREE_META((a));					\ 	} while (0)
 end_define
 
 begin_comment
