@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c  8.8 (Berkeley) 5/22/95  * $Id: nfs_subs.c,v 1.74 1999/05/11 19:54:46 phk Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_subs.c  8.8 (Berkeley) 5/22/95  * $Id: nfs_subs.c,v 1.75 1999/06/05 05:35:00 peter Exp $  */
 end_comment
 
 begin_comment
@@ -6594,7 +6594,7 @@ name|NFS_NOSERVER
 end_ifndef
 
 begin_comment
-comment|/*  * Set up nameidata for a lookup() call and do it.  *  * If pubflag is set, this call is done for a lookup operation on the  * public filehandle. In that case we allow crossing mountpoints and  * absolute pathnames. However, the caller is expected to check that  * the lookup result is within the public fs, and deny access if  * it is not.  */
+comment|/*  * Set up nameidata for a lookup() call and do it.  *  * If pubflag is set, this call is done for a lookup operation on the  * public filehandle. In that case we allow crossing mountpoints and  * absolute pathnames. However, the caller is expected to check that  * the lookup result is within the public fs, and deny access if  * it is not.  *  * nfs_namei() clears out garbage fields that namei() might leave garbage.  * This is mainly ni_vp and ni_dvp when an error occurs, and ni_dvp when no  * error occurs but the parent was not requested.  *  * dirp may be set whether an error is returned or not, and must be   * released by the caller.  */
 end_comment
 
 begin_function
@@ -7025,6 +7025,7 @@ name|cn_flags
 operator||=
 name|RDONLY
 expr_stmt|;
+comment|/* 	 * Set return directory.  Reference to dp is implicitly transfered  	 * to the returned pointer 	 */
 operator|*
 name|retdirp
 operator|=
@@ -7264,6 +7265,7 @@ operator||=
 name|NOCROSSMOUNT
 expr_stmt|;
 block|}
+comment|/* 	 * Initialize for scan, set ni_startdir and bump ref on dp again 	 * becuase lookup() will dereference ni_startdir. 	 */
 name|cnp
 operator|->
 name|cn_proc
@@ -7274,6 +7276,12 @@ name|VREF
 argument_list|(
 name|dp
 argument_list|)
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_startdir
+operator|=
+name|dp
 expr_stmt|;
 for|for
 control|(
@@ -7289,13 +7297,7 @@ name|cnp
 operator|->
 name|cn_pnbuf
 expr_stmt|;
-name|ndp
-operator|->
-name|ni_startdir
-operator|=
-name|dp
-expr_stmt|;
-comment|/* 	 * And call lookup() to do the real work 	 */
+comment|/* 		 * Call lookup() to do the real work.  If an error occurs, 		 * ndp->ni_vp and ni_dvp are left uninitialized or NULL and 		 * we do not have to dereference anything before returning. 		 * In either case ni_startdir will be dereferenced and NULLed 		 * out. 		 */
 name|error
 operator|=
 name|lookup
@@ -7308,7 +7310,7 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|/* 	 * Check for encountering a symbolic link 	 */
+comment|/* 		 * Check for encountering a symbolic link.  Trivial  		 * termination occurs if no symlink encountered. 		 * Note: zfree is safe because error is 0, so we will 		 * not zfree it again when we break. 		 */
 if|if
 condition|(
 operator|(
@@ -7341,23 +7343,25 @@ operator||
 name|SAVESTART
 operator|)
 condition|)
-block|{
 name|cnp
 operator|->
 name|cn_flags
 operator||=
 name|HASBUF
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+else|else
+name|zfree
+argument_list|(
+name|namei_zone
+argument_list|,
+name|cnp
+operator|->
+name|cn_pnbuf
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
+comment|/* 		 * Validate symlink 		 */
 if|if
 condition|(
 operator|(
@@ -7391,31 +7395,13 @@ operator|!
 name|pubflag
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|ndp
-operator|->
-name|ni_dvp
-argument_list|)
-expr_stmt|;
-name|vput
-argument_list|(
-name|ndp
-operator|->
-name|ni_vp
-argument_list|)
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_vp
-operator|=
-name|NULL
-expr_stmt|;
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-break|break;
+goto|goto
+name|badlink2
+goto|;
 block|}
 if|if
 condition|(
@@ -7431,7 +7417,9 @@ name|error
 operator|=
 name|ELOOP
 expr_stmt|;
-break|break;
+goto|goto
+name|badlink2
+goto|;
 block|}
 if|if
 condition|(
@@ -7536,7 +7524,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|badlink
+name|badlink1
 label|:
 if|if
 condition|(
@@ -7551,6 +7539,22 @@ argument_list|(
 name|namei_zone
 argument_list|,
 name|cp
+argument_list|)
+expr_stmt|;
+name|badlink2
+label|:
+name|vrele
+argument_list|(
+name|ndp
+operator|->
+name|ni_dvp
+argument_list|)
+expr_stmt|;
+name|vput
+argument_list|(
+name|ndp
+operator|->
+name|ni_vp
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7575,7 +7579,7 @@ operator|=
 name|ENOENT
 expr_stmt|;
 goto|goto
-name|badlink
+name|badlink1
 goto|;
 block|}
 if|if
@@ -7594,9 +7598,10 @@ operator|=
 name|ENAMETOOLONG
 expr_stmt|;
 goto|goto
-name|badlink
+name|badlink1
 goto|;
 block|}
+comment|/* 		 * Adjust or replace path 		 */
 if|if
 condition|(
 name|ndp
@@ -7653,6 +7658,7 @@ name|ni_pathlen
 operator|+=
 name|linklen
 expr_stmt|;
+comment|/* 		 * Cleanup refs for next loop and check if root directory  		 * should replace current directory.  Normally ni_dvp  		 * becomes the new base directory and is cleaned up when 		 * we loop.  Explicitly null pointers after invalidation 		 * to clarify operation. 		 */
 name|vput
 argument_list|(
 name|ndp
@@ -7660,13 +7666,12 @@ operator|->
 name|ni_vp
 argument_list|)
 expr_stmt|;
-name|dp
-operator|=
 name|ndp
 operator|->
-name|ni_dvp
+name|ni_vp
+operator|=
+name|NULL
 expr_stmt|;
-comment|/* 		 * Check if root directory should replace current directory. 		 */
 if|if
 condition|(
 name|cnp
@@ -7681,10 +7686,14 @@ condition|)
 block|{
 name|vrele
 argument_list|(
-name|dp
+name|ndp
+operator|->
+name|ni_dvp
 argument_list|)
 expr_stmt|;
-name|dp
+name|ndp
+operator|->
+name|ni_dvp
 operator|=
 name|ndp
 operator|->
@@ -7692,14 +7701,35 @@ name|ni_rootdir
 expr_stmt|;
 name|VREF
 argument_list|(
-name|dp
+name|ndp
+operator|->
+name|ni_dvp
 argument_list|)
 expr_stmt|;
 block|}
+name|ndp
+operator|->
+name|ni_startdir
+operator|=
+name|ndp
+operator|->
+name|ni_dvp
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_dvp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
-block|}
+comment|/* 	 * nfs_namei() guarentees that fields will not contain garbage 	 * whether an error occurs or not.  This allows the caller to track 	 * cleanup state trivially. 	 */
 name|out
 label|:
+if|if
+condition|(
+name|error
+condition|)
+block|{
 name|zfree
 argument_list|(
 name|namei_zone
@@ -7709,6 +7739,59 @@ operator|->
 name|cn_pnbuf
 argument_list|)
 expr_stmt|;
+name|ndp
+operator|->
+name|ni_vp
+operator|=
+name|NULL
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_dvp
+operator|=
+name|NULL
+expr_stmt|;
+name|ndp
+operator|->
+name|ni_startdir
+operator|=
+name|NULL
+expr_stmt|;
+name|cnp
+operator|->
+name|cn_flags
+operator|&=
+operator|~
+name|HASBUF
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|ndp
+operator|->
+name|ni_cnd
+operator|.
+name|cn_flags
+operator|&
+operator|(
+name|WANTPARENT
+operator||
+name|LOCKPARENT
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|ndp
+operator|->
+name|ni_dvp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
