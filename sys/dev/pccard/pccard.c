@@ -5698,7 +5698,6 @@ decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
-comment|/* 	 * If we go to resetting a card, we may need a null interrupt hanlder 	 * to work (since the system may call it before the device can 	 * establish an ISR) due to interrupt sharing at a higher level. 	 */
 if|if
 condition|(
 name|pf
@@ -5707,11 +5706,7 @@ name|intr_handler
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"Null interrupt handler?\n"
-argument_list|)
-expr_stmt|;
+return|return;
 comment|/* 	 * XXX The CCR_STATUS register bits used here are  	 * only valid for multi function cards. 	 */
 name|reg
 operator|=
