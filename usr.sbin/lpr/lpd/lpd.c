@@ -1031,7 +1031,7 @@ name|errno
 operator|==
 name|EWOULDBLOCK
 condition|)
-comment|/* active deamon present */
+comment|/* active daemon present */
 name|exit
 argument_list|(
 literal|0
