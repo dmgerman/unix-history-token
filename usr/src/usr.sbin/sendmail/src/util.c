@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.33 (Berkeley) %G%"
+literal|"@(#)util.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3288,6 +3288,24 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|fp
+operator|==
+name|NULL
+condition|)
+block|{
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 comment|/* set the timeout */
 if|if
 condition|(
