@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.6 1996/06/10 23:07:36 gpalmer Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.7 1996/06/12 19:24:03 gpalmer Exp $ */
 end_comment
 
 begin_comment
@@ -678,6 +678,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"new masks: bio %x, tty %x, net %x\n"
