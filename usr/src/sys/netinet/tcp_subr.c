@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.18	82/03/15	*/
+comment|/*	tcp_subr.c	4.19	82/03/24	*/
 end_comment
 
 begin_include
@@ -785,6 +785,8 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
+operator|+
+name|tlen
 argument_list|)
 expr_stmt|;
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.17 82/03/19 */
+comment|/* tcp_timer.c 4.18 82/03/24 */
 end_comment
 
 begin_include
@@ -709,23 +709,10 @@ operator|->
 name|t_state
 operator|<
 name|TCPS_ESTABLISHED
-operator|||
-name|tp
-operator|->
-name|t_idle
-operator|>=
-name|TCPTV_MAXIDLE
 condition|)
-block|{
-name|tcp_drop
-argument_list|(
-name|tp
-argument_list|,
-name|ETIMEDOUT
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+goto|goto
+name|dropit
+goto|;
 if|if
 condition|(
 name|tp
@@ -739,6 +726,17 @@ operator|&
 name|SO_KEEPALIVE
 condition|)
 block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|t_idle
+operator|>=
+name|TCPTV_MAXIDLE
+condition|)
+goto|goto
+name|dropit
+goto|;
 comment|/* 			 * Saying tp->rcv_nxt-1 lies about what 			 * we have received, and by the protocol spec 			 * requires the correspondent TCP to respond. 			 * Saying tp->snd_una-1 causes the transmitted 			 * byte to lie outside the receive window; this 			 * is important because we don't necessarily 			 * have a byte in the window to send (consider 			 * a one-way stream!) 			 */
 name|tcp_respond
 argument_list|(
@@ -779,6 +777,16 @@ name|TCPT_KEEP
 index|]
 operator|=
 name|TCPTV_KEEP
+expr_stmt|;
+return|return;
+name|dropit
+label|:
+name|tcp_drop
+argument_list|(
+name|tp
+argument_list|,
+name|ETIMEDOUT
+argument_list|)
 expr_stmt|;
 return|return;
 ifdef|#

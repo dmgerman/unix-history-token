@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.62	82/03/19	*/
+comment|/*	tcp_input.c	1.63	82/03/24	*/
 end_comment
 
 begin_include
@@ -2854,6 +2854,32 @@ condition|)
 goto|goto
 name|drop
 goto|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_socket
+operator|->
+name|so_options
+operator|&
+name|SO_DEBUG
+condition|)
+name|tcp_trace
+argument_list|(
+name|TA_RESPOND
+argument_list|,
+name|ostate
+argument_list|,
+name|tp
+argument_list|,
+operator|&
+name|tcp_saveti
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|tcp_respond
 argument_list|(
 name|tp
@@ -2962,6 +2988,36 @@ return|return;
 name|drop
 label|:
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
+if|if
+condition|(
+name|tp
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_socket
+operator|->
+name|so_options
+operator|&
+name|SO_DEBUG
+operator|)
+condition|)
+name|tcp_trace
+argument_list|(
+name|TA_DROP
+argument_list|,
+name|ostate
+argument_list|,
+name|tp
+argument_list|,
+operator|&
+name|tcp_saveti
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m

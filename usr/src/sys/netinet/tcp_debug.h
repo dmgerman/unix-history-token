@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_debug.h	4.1	81/12/22	*/
+comment|/*	tcp_debug.h	4.2	82/03/24	*/
 end_comment
 
 begin_struct
@@ -55,6 +55,20 @@ name|TA_USER
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|TA_RESPOND
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TA_DROP
+value|4
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -73,6 +87,10 @@ block|,
 literal|"output"
 block|,
 literal|"user"
+block|,
+literal|"respond"
+block|,
+literal|"drop"
 block|}
 decl_stmt|;
 end_decl_stmt
