@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mbuf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -51,6 +45,14 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501102
+end_if
+
 begin_include
 include|#
 directive|include
@@ -62,6 +64,11 @@ include|#
 directive|include
 file|<sys/mutex.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -126,18 +133,6 @@ begin_include
 include|#
 directive|include
 file|<cam/scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_message.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsi_da.h>
 end_include
 
 begin_include
