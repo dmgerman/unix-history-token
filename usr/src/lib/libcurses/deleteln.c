@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.5 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,9 +58,6 @@ name|y
 decl_stmt|;
 specifier|register
 name|char
-modifier|*
-name|end
-decl_stmt|,
 modifier|*
 name|temp
 decl_stmt|;
@@ -198,10 +195,15 @@ index|[
 name|y
 index|]
 expr_stmt|;
-for|for
-control|(
-name|end
-operator|=
+operator|(
+name|void
+operator|)
+name|memset
+argument_list|(
+name|temp
+argument_list|,
+literal|' '
+argument_list|,
 operator|&
 name|temp
 index|[
@@ -209,17 +211,9 @@ name|win
 operator|->
 name|_maxx
 index|]
-init|;
+operator|-
 name|temp
-operator|<
-name|end
-condition|;
-control|)
-operator|*
-name|temp
-operator|++
-operator|=
-literal|' '
+argument_list|)
 expr_stmt|;
 name|touchline
 argument_list|(
