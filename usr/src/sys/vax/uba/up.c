@@ -1,21 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.15	%G%	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|spl5
-value|spl6
-end_define
-
-begin_comment
-comment|/* block clock, for delay loop's sake */
+comment|/*	%H%	3.16	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Emulex UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * NB: This device is very sensitive: be aware that the code is the way  *     it is for good reason and that there are delay loops here which may  *     have to be lengthened if your processor is faster and which should  *     probably be shortened if your processor is slower.  *  * This driver has been tested on a SC-11B Controller, configured  * with the following internal switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(off=open, disable)  *	SW2-4	unused		(off=open)  *  * The controller transfers data much more rapidly with SW2-3 set,  * but we have previously experienced problems with it set this way.  * We intend to try this again in the near future.  *  * NB: OUR SYSTEM CURRENTLY GETS UBA ERRORS WHEN RUNNING THIS DRIVER  *     AND THE BUS OCCASIONALLY HANGS, NECESSITATING THE DEVIE RESET  *     CODE WHICH RE-INITS THE UNIBUS.  YECHHH.  */
+comment|/*  * Emulex UNIBUS disk driver with overlapped seeks and ECC recovery.  *  * NB: This driver works reliably only on an SC-11B controller with  *     rev. level at least J (in particular rev. level H will not work well).  *     If you have an older controller you may be able to get by if you  *		#define	OLDUCODE  *     which implements larger delays for slow ucode.  *  * Controller switch settings:  *	SW1-1	5/19 surfaces	(off, 19 surfaces on Ampex 9300)  *	SW1-2	chksum enable	(off, checksum disabled)  *	SW1-3	volume select	(off, 815 cylinders)  *	SW1-4	sector select	(on, 32 sectors)  *	SW1-5	unused		(off)  *	SW1-6	port select	(on, single port)  *	SW1-7	npr delay	(off, disable)  *	SW1-8	ecc test mode	(off, disable)  * and top mounted switches:  *	SW2-1	extend opcodes	(off=open, disable)  *	SW2-2	extend diag	(off=open, disable)  *	SW2-3	4 wd dma burst	(on=closed, enable)  *	SW2-4	unused		(off=open)  */
 end_comment
 
 begin_include
@@ -215,7 +204,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|softas
+name|upsoftas
 decl_stmt|;
 end_decl_stmt
 
@@ -334,7 +323,7 @@ block|,
 literal|27
 block|,
 comment|/* B=cyl 27 thru 81 */
-literal|494912
+literal|495520
 block|,
 literal|0
 block|,
@@ -370,7 +359,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The following defines are used in offset positioning  * when trying to recover disk errors, with the constants being  * +/- microinches.  Note that header compare inhibit (HCI) is not  * tried (this makes sense only during read, in any case.)  *  * ARE ALL THESE IMPLEMENTED ON 9300?  */
+comment|/*  * The following defines are used in offset positioning  * when trying to recover disk errors, with the constants being  * +/- microinches.  Note that header compare inhibit (HCI) is not  * tried (this makes sense only during read, in any case.)  *  * NOT ALL OF THESE ARE IMPLEMENTED ON 9300!?!  */
 end_comment
 
 begin_define
@@ -803,7 +792,7 @@ comment|/* Information about UBA usage saved here */
 end_comment
 
 begin_comment
-comment|/*  * The EMULEX controller balks if accessed quickly after  * certain operations.  The exact timing has not yet been  * determined, but delays are known to be needed when changing  * the selected drive (by writing in upcs2), and thought to be  * needed after operations like PRESET and DCLR.  The following  * variables control the delay, DELAY(n) is approximately n usec.  */
+comment|/*  * The EMULEX controller balks if accessed quickly after  * certain operations.  With rev J delays seem to be needed only  * when selecting a new unit, and in drive initialization type  * like PRESET and DCLR.  The following variables control the delay  * DELAY(n) is approximately n usec.  */
 end_comment
 
 begin_decl_stmt
@@ -817,6 +806,12 @@ end_decl_stmt
 begin_comment
 comment|/* Delay after PRESET or DCLR */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OLDUCODE
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -854,17 +849,23 @@ begin_comment
 comment|/* Delay after clearing bit in upas */
 end_comment
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
-name|csdel2
+name|sdelay
 init|=
-literal|0
+literal|25
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* ??? Delay in upstart ??? */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1277,7 +1278,7 @@ operator|.
 name|b_active
 condition|)
 block|{
-name|softas
+name|upsoftas
 operator||=
 literal|1
 operator|<<
@@ -1385,27 +1386,6 @@ operator|->
 name|upof
 operator|=
 name|FMT22
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"VV done ds %o, er? %o %o %o\n"
-argument_list|,
-name|upaddr
-operator|->
-name|upds
-argument_list|,
-name|upaddr
-operator|->
-name|uper1
-argument_list|,
-name|upaddr
-operator|->
-name|uper2
-argument_list|,
-name|upaddr
-operator|->
-name|uper3
-argument_list|)
 expr_stmt|;
 name|didie
 operator|=
@@ -1597,11 +1577,16 @@ index|]
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|OLDUCODE
 name|DELAY
 argument_list|(
 name|rdelay
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|out
 goto|;
@@ -1698,15 +1683,6 @@ name|cmd
 decl_stmt|;
 name|loop
 label|:
-if|if
-condition|(
-name|csdel2
-condition|)
-name|DELAY
-argument_list|(
-name|csdel2
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Pick a drive off the queue of ready drives, and 	 * perform the first transfer on its queue. 	 * 	 * Looping here is completely for the sake of drives which 	 * are not present and on-line, for which we completely clear the 	 * request queue. 	 */
 if|if
 condition|(
@@ -2183,19 +2159,24 @@ operator|&
 literal|0377
 decl_stmt|;
 name|int
-name|osoftas
+name|oupsoftas
 decl_stmt|;
 name|int
 name|needie
 init|=
 literal|1
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OLDUCODE
 operator|(
 name|void
 operator|)
 name|spl6
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|up_wticks
 operator|=
 literal|0
@@ -2696,7 +2677,7 @@ operator|<<
 name|unit
 operator|)
 expr_stmt|;
-name|softas
+name|upsoftas
 operator|&=
 operator|~
 operator|(
@@ -2742,13 +2723,13 @@ block|}
 comment|/* 	 * If we have a unit with an outstanding SEARCH, 	 * and the hardware indicates the unit requires attention, 	 * the bring the drive to the ready queue. 	 * Finally, if the controller is not transferring 	 * start it if any drives are now ready to transfer. 	 */
 name|as
 operator||=
-name|softas
+name|upsoftas
 expr_stmt|;
-name|osoftas
+name|oupsoftas
 operator|=
-name|softas
+name|upsoftas
 expr_stmt|;
-name|softas
+name|upsoftas
 operator|=
 literal|0
 expr_stmt|;
@@ -2770,7 +2751,7 @@ condition|(
 operator|(
 name|as
 operator||
-name|osoftas
+name|oupsoftas
 operator|)
 operator|&
 operator|(
@@ -2799,15 +2780,16 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
-if|if
-condition|(
-name|asdel
-condition|)
+ifdef|#
+directive|ifdef
+name|OLDUCODE
 name|DELAY
 argument_list|(
 name|asdel
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

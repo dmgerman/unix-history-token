@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	3.8	%G%	*/
+comment|/*	tty.c	3.9	%G%	*/
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|"../h/buf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/dk.h"
 end_include
 
 begin_decl_stmt
@@ -1865,13 +1871,41 @@ case|:
 block|{
 name|off_t
 name|nread
-init|=
+decl_stmt|;
+switch|switch
+condition|(
+name|tp
+operator|->
+name|t_line
+condition|)
+block|{
+case|case
+name|NETLDISC
+case|:
+name|nread
+operator|=
+name|tp
+operator|->
+name|t_rec
+condition|?
+name|tp
+operator|->
+name|t_inbuf
+else|:
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|NTTYDISC
+case|:
+name|nread
+operator|=
 name|tp
 operator|->
 name|t_canq
 operator|.
 name|c_cc
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -1892,6 +1926,13 @@ name|t_rawq
 operator|.
 name|c_cc
 expr_stmt|;
+break|break;
+case|case
+literal|0
+case|:
+comment|/* do something here ... */
+empty_stmt|;
+block|}
 if|if
 condition|(
 name|copyout
@@ -2195,6 +2236,15 @@ block|{
 specifier|register
 name|s
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_line
+operator|==
+name|NETLDISC
+condition|)
+return|return;
 name|s
 operator|=
 name|spl6
