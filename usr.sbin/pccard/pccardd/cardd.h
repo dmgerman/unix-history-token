@@ -152,6 +152,14 @@ name|char
 modifier|*
 name|version
 decl_stmt|;
+name|char
+modifier|*
+name|add_info1
+decl_stmt|;
+name|char
+modifier|*
+name|add_info2
+decl_stmt|;
 name|u_char
 name|func_id
 decl_stmt|;
