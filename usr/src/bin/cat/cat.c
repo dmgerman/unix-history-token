@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|Sccsid
 init|=
-literal|"@(#)cat.c	4.3 (Berkeley) %G%"
+literal|"@(#)cat.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -371,6 +371,16 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|statb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFREG
+operator|&&
 name|statb
 operator|.
 name|st_dev
