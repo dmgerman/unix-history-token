@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.16	%G%	*/
+comment|/*	dz.c	4.17	%G%	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NDZ11
+name|NDZ
 operator|>
 literal|0
 end_if
@@ -144,7 +144,7 @@ name|uba_dinfo
 modifier|*
 name|dzinfo
 index|[
-name|NDZ11
+name|NDZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -186,8 +186,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|NDZ
-value|(NDZ11*8)
+name|NDZLINE
+value|(NDZ*8)
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ name|struct
 name|tty
 name|dz_tty
 index|[
-name|NDZ
+name|NDZLINE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -377,7 +377,7 @@ name|int
 name|dz_cnt
 init|=
 block|{
-name|NDZ
+name|NDZLINE
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -438,7 +438,7 @@ begin_decl_stmt
 name|char
 name|dz_brk
 index|[
-name|NDZ11
+name|NDZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -447,7 +447,7 @@ begin_decl_stmt
 name|char
 name|dzsoftCAR
 index|[
-name|NDZ11
+name|NDZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -475,7 +475,7 @@ name|struct
 name|pdma
 name|dzpdma
 index|[
-name|NDZ
+name|NDZLINE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -670,6 +670,15 @@ specifier|register
 name|int
 name|cntr
 decl_stmt|;
+extern|extern dzscan(
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_for
 for|for
 control|(
 name|cntr
@@ -719,6 +728,9 @@ name|tp
 operator|++
 expr_stmt|;
 block|}
+end_for
+
+begin_expr_stmt
 name|dzsoftCAR
 index|[
 name|ui
@@ -730,6 +742,9 @@ name|ui
 operator|->
 name|ui_flags
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|dz_timer
@@ -753,32 +768,32 @@ name|HZ
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_return
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
-name|dzopen
-argument_list|(
-argument|dev
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|dzopen
+operator|(
+name|dev
+operator|,
+name|flag
+operator|)
 name|dev_t
 name|dev
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -792,15 +807,6 @@ specifier|register
 name|int
 name|unit
 decl_stmt|;
-extern|extern dzscan(
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|unit
 operator|=
 name|minor
@@ -808,9 +814,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|unit
@@ -835,9 +838,6 @@ name|ENXIO
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|tp
 operator|=
 operator|&
@@ -846,9 +846,6 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tp
 operator|->
 name|t_addr
@@ -862,36 +859,24 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tp
 operator|->
 name|t_oproc
 operator|=
 name|dzstart
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tp
 operator|->
 name|t_iproc
 operator|=
 name|NULL
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tp
 operator|->
 name|t_state
 operator||=
 name|WOPEN
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -961,9 +946,6 @@ name|EBUSY
 expr_stmt|;
 return|return;
 block|}
-end_if
-
-begin_expr_stmt
 name|dzmodem
 argument_list|(
 name|unit
@@ -971,18 +953,12 @@ argument_list|,
 name|DZ_ON
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
 name|spl5
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|(
@@ -1016,18 +992,12 @@ name|TTIPRI
 argument_list|)
 expr_stmt|;
 block|}
-end_while
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 operator|*
 name|linesw
@@ -1045,24 +1015,27 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
-unit|dzclose
-operator|(
-name|dev
-operator|,
-name|flag
-operator|)
+begin_macro
+name|dzclose
+argument_list|(
+argument|dev
+argument_list|,
+argument|flag
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|dev_t
 name|dev
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2788,7 +2761,7 @@ literal|0
 init|;
 name|dz
 operator|<
-name|NDZ11
+name|NDZ
 condition|;
 name|dz
 operator|++
@@ -2849,7 +2822,7 @@ literal|0
 init|;
 name|unit
 operator|<
-name|NDZ
+name|NDZLINE
 condition|;
 name|unit
 operator|++

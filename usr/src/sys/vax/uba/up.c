@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.20	81/02/23	*/
+comment|/*	up.c	4.21	81/02/23	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_if
 if|#
 directive|if
-name|NSC21
+name|NSC
 operator|>
 literal|0
 end_if
@@ -149,7 +149,7 @@ decl_stmt|;
 block|}
 name|up_softc
 index|[
-name|NSC21
+name|NSC
 index|]
 struct|;
 end_struct
@@ -330,7 +330,7 @@ name|uba_minfo
 modifier|*
 name|upminfo
 index|[
-name|NSC21
+name|NSC
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -352,7 +352,7 @@ name|uba_dinfo
 modifier|*
 name|upip
 index|[
-name|NSC21
+name|NSC
 index|]
 index|[
 literal|4
@@ -3486,7 +3486,7 @@ literal|0
 init|;
 name|sc21
 operator|<
-name|NSC21
+name|NSC
 condition|;
 name|sc21
 operator|++
@@ -3722,7 +3722,7 @@ literal|0
 init|;
 name|sc21
 operator|<
-name|NSC21
+name|NSC
 condition|;
 name|sc21
 operator|++
@@ -3833,20 +3833,14 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LOST INTERRUPT RESET"
+literal|"LOST upintr "
 argument_list|)
 expr_stmt|;
-comment|/* SHOULD JUST RESET ONE CTLR, NOT ALL ON UBA */
-name|upreset
+name|ubareset
 argument_list|(
 name|um
 operator|->
 name|um_ubanum
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
