@@ -4438,6 +4438,10 @@ condition|)
 return|return
 name|error
 return|;
+name|tmpstat
+operator|&=
+literal|0xffff
+expr_stmt|;
 if|if
 condition|(
 name|WIFSIGNALED
@@ -4695,6 +4699,10 @@ condition|)
 return|return
 name|error
 return|;
+name|tmpstat
+operator|&=
+literal|0xffff
+expr_stmt|;
 if|if
 condition|(
 name|WIFSIGNALED
