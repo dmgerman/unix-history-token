@@ -3264,9 +3264,6 @@ operator|->
 name|a_reqpage
 index|]
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|MAX_PERF
 name|printf
 argument_list|(
 literal|"spec_getpages:(%s) I/O read failure: (error=%d) bp %p vp %p\n"
@@ -3326,8 +3323,6 @@ argument_list|,
 name|pcount
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Free the buffer header back to the swap buffer pool. 		 */
 name|relpbuf
 argument_list|(

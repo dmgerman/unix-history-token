@@ -1277,13 +1277,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -1303,8 +1296,6 @@ literal|"vm_page_remove: page not busy"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Basically destroy the page. 	 */
 name|vm_page_wakeup
 argument_list|(
@@ -1350,13 +1341,6 @@ operator|!=
 name|m
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|*
@@ -1369,8 +1353,6 @@ argument_list|(
 literal|"vm_page_remove(): page not found in hash"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bucket
 operator|=
 operator|&
@@ -2927,13 +2909,6 @@ operator|.
 name|v_tfree
 operator|++
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|m
@@ -3021,8 +2996,6 @@ literal|"vm_page_free: freeing busy page"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * unqueue, then remove page.  Note that we cannot destroy 	 * the page here because we do not want to call the pager's 	 * callback routine until after we've put the page on the 	 * appropriate free queue. 	 */
 name|vm_page_unqueue_nowakeup
 argument_list|(
@@ -3075,13 +3048,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|m
@@ -3108,8 +3074,6 @@ name|pindex
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"vm_page_free: freeing wired page\n"
@@ -3499,13 +3463,6 @@ block|}
 block|}
 else|else
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 name|panic
 argument_list|(
 literal|"vm_page_unwire: invalid wire count: %d\n"
@@ -3515,8 +3472,6 @@ operator|->
 name|wire_count
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|splx
 argument_list|(
@@ -3693,13 +3648,6 @@ block|{
 name|int
 name|s
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -3726,8 +3674,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -3751,13 +3697,6 @@ argument_list|,
 name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|m
@@ -3780,8 +3719,6 @@ name|pindex
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|s
 operator|=
 name|splvm
@@ -4888,13 +4825,6 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|size
@@ -4944,8 +4874,6 @@ argument_list|(
 literal|"contigmalloc1: boundary must be a power of 2"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|start
 operator|=
 literal|0

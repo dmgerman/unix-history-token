@@ -1839,13 +1839,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|BUF_REFCNT
@@ -1860,8 +1853,6 @@ argument_list|(
 literal|"bremfree: removing a buffer not on a queue"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Fixup numfreebuffers count.  If the buffer is invalid or not 	 * delayed-write, and it was on the EMPTY, LRU, or AGE queues, 	 * the buffer was free and we must decrement numfreebuffers. 	 */
 if|if
@@ -2489,13 +2480,6 @@ name|bp
 operator|->
 name|b_flags
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|BUF_REFCNT
@@ -2510,8 +2494,6 @@ argument_list|(
 literal|"bwrite: buffer is not busy???"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splbio
@@ -3088,13 +3070,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|BUF_REFCNT
@@ -3109,8 +3084,6 @@ argument_list|(
 literal|"bdwrite: buffer is not busy"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|bp
@@ -3950,13 +3923,6 @@ operator|+
 name|j
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -3969,8 +3935,6 @@ literal|"brelse: page missing\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_pages
@@ -4146,13 +4110,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|bp
@@ -4166,8 +4123,6 @@ argument_list|(
 literal|"brelse: free buffer onto another queue???"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|BUF_REFCNT
@@ -4725,13 +4680,6 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|bp
@@ -4745,8 +4693,6 @@ argument_list|(
 literal|"bqrelse: free buffer onto another queue???"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|BUF_REFCNT
@@ -7889,13 +7835,6 @@ name|bufhashhdr
 modifier|*
 name|bh
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|size
@@ -7911,8 +7850,6 @@ argument_list|,
 name|MAXBSIZE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|s
 operator|=
 name|splbio
@@ -8698,13 +8635,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|BUF_REFCNT
@@ -8732,8 +8662,6 @@ argument_list|(
 literal|"allocbuf: buffer too small"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -10309,13 +10237,6 @@ literal|"biodone: no buffer offset"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -10328,8 +10249,6 @@ literal|"biodone: no object"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -10630,13 +10549,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 name|printf
 argument_list|(
 literal|"biodone: page busy< 0, "
@@ -10671,8 +10583,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
@@ -10683,13 +10593,6 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 name|printf
 argument_list|(
 literal|" iosize: %ld, lblkno: %d, flags: 0x%lx, npages: %d\n"
@@ -10758,8 +10661,6 @@ operator|->
 name|wire_count
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"biodone: page busy< 0\n"
@@ -10948,13 +10849,6 @@ operator|+
 name|i
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -10967,8 +10861,6 @@ literal|"vfs_unbusy_pages: page missing\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_pages
@@ -12396,13 +12288,6 @@ name|b_npages
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|p
@@ -12424,8 +12309,6 @@ name|b_lblkno
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_pages

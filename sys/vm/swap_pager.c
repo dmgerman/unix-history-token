@@ -2648,13 +2648,6 @@ index|[
 name|reqpage
 index|]
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|mreq
@@ -2676,8 +2669,6 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Calculate range to retrieve.  The pages have already been assigned 	 * their swapblks.  We require a *contiguous* range that falls entirely 	 * within a single device stripe.   If we do not supply it, bad things 	 * happen.  Note that blk, iblk& jblk can be SWAPBLK_NONE, but the  	 * loops are set up such that the case(s) are handled implicitly. 	 * 	 * The swp_*() calls must be made at splvm().  vm_page_free() does 	 * not need to be, but it will go a little faster if it is. 	 */
 name|s
 operator|=
@@ -3286,13 +3277,6 @@ name|n
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|count
@@ -3322,8 +3306,6 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Step 1 	 * 	 * Turn object into OBJT_SWAP 	 * check for bogus sysops 	 * force sync if not pageout process 	 */
 if|if
 condition|(
@@ -5047,20 +5029,11 @@ operator|!=
 name|SWAPBLK_NONE
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 operator|--
 name|swap
 operator|->
 name|swb_count
 expr_stmt|;
-endif|#
-directive|endif
 name|swp_pager_freeswapspace
 argument_list|(
 name|v
@@ -5070,13 +5043,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|swap
@@ -5090,8 +5056,6 @@ argument_list|(
 literal|"swap_pager_meta_free_all: swb_count != 0"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|pswap
 operator|=
@@ -5120,13 +5084,6 @@ name|index
 operator|+=
 name|SWAP_META_PAGES
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|MAX_PERF
-argument_list|)
 if|if
 condition|(
 name|index
@@ -5138,8 +5095,6 @@ argument_list|(
 literal|"swp_pager_meta_free_all: failed to locate all swap meta blocks"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
