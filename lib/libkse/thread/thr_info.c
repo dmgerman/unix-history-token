@@ -486,7 +486,7 @@ name|s
 argument_list|)
 argument_list|,
 literal|"--------------------\n"
-literal|"Thread %p (%s) prio %3d, blocked %s, state %s [%s:%d]\n"
+literal|"Thread %p (%s), scope %s, prio %3d, blocked %s, state %s [%s:%d]\n"
 argument_list|,
 name|pthread
 argument_list|,
@@ -503,6 +503,18 @@ else|:
 name|pthread
 operator|->
 name|name
+argument_list|,
+name|pthread
+operator|->
+name|attr
+operator|.
+name|flags
+operator|&
+name|PTHREAD_SCOPE_SYSTEM
+condition|?
+literal|"system"
+else|:
+literal|"process"
 argument_list|,
 name|pthread
 operator|->
@@ -613,46 +625,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check if this is the signal daemon thread: */
-if|if
-condition|(
-name|pthread
-operator|==
-name|_thr_sig_daemon
-condition|)
-block|{
-comment|/* Output a record for the signal thread: */
-name|strcpy
-argument_list|(
-name|s
-argument_list|,
-literal|"This is the signal daemon thread\n"
-argument_list|)
-expr_stmt|;
-name|__sys_write
-argument_list|(
-name|fd
-argument_list|,
-name|s
-argument_list|,
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Process according to thread state: */
-switch|switch
-condition|(
-name|pthread
-operator|->
-name|state
-condition|)
-block|{
-case|case
-name|PS_SIGWAIT
-case|:
 name|snprintf
 argument_list|(
 name|s
@@ -662,7 +634,7 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|,
-literal|"sigmask (hi)"
+literal|"sigmask (hi) "
 argument_list|)
 expr_stmt|;
 name|__sys_write
@@ -702,7 +674,7 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|,
-literal|"%08x\n"
+literal|"%08x "
 argument_list|,
 name|pthread
 operator|->
@@ -751,6 +723,17 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Process according to thread state: */
+switch|switch
+condition|(
+name|pthread
+operator|->
+name|state
+condition|)
+block|{
+case|case
+name|PS_SIGWAIT
+case|:
 name|snprintf
 argument_list|(
 name|s
@@ -760,7 +743,7 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|,
-literal|"waitset (hi)"
+literal|"waitset (hi) "
 argument_list|)
 expr_stmt|;
 name|__sys_write
@@ -800,8 +783,9 @@ argument_list|(
 name|s
 argument_list|)
 argument_list|,
-literal|"%08x\n"
+literal|"%08x "
 argument_list|,
+operator|~
 name|pthread
 operator|->
 name|sigmask
