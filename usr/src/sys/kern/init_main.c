@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	3.2	%H%	*/
+comment|/*	init_main.c	3.3	%H%	*/
 end_comment
 
 begin_include
@@ -700,8 +700,6 @@ name|NBUF
 index|]
 index|[
 name|BSIZE
-operator|+
-name|BSLOP
 index|]
 decl_stmt|;
 end_decl_stmt
