@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_sysvipc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -647,12 +641,6 @@ return|return;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVMSG
-end_ifdef
-
 begin_function
 name|int
 name|ibcs2_msgsys
@@ -984,11 +972,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * iBCS2 semsys call  */
 end_comment
@@ -1242,12 +1225,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVSEM
-end_ifdef
 
 begin_function
 name|int
@@ -1624,11 +1601,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * iBCS2 shmsys call  */
 end_comment
@@ -1826,12 +1798,6 @@ comment|/* ignored anyway */
 return|return;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SYSVSHM
-end_ifdef
 
 begin_function
 name|int
@@ -2226,11 +2192,6 @@ name|EINVAL
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
