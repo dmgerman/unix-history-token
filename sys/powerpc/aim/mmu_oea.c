@@ -3358,30 +3358,24 @@ name|i
 operator|++
 control|)
 block|{
-asm|__asm __volatile("mtsrin %0,%1"
-operator|::
-literal|"r"
-operator|(
-name|EMPTY_SEGMENT
-operator|)
-operator|,
-literal|"r"
-operator|(
+name|mtsrin
+argument_list|(
 name|i
 operator|<<
 name|ADDR_SR_SHFT
-operator|)
-block|)
-empty_stmt|;
+argument_list|,
+name|EMPTY_SEGMENT
+argument_list|)
+expr_stmt|;
+block|}
 end_for
 
 begin_asm
-unit|}
 asm|__asm __volatile ("mtsr %0,%1"
 end_asm
 
 begin_expr_stmt
-unit|::
+operator|::
 literal|"n"
 operator|(
 name|KERNEL_SR
@@ -7710,7 +7704,13 @@ decl_stmt|;
 name|pmap_pte_spills
 operator|++
 expr_stmt|;
-asm|__asm __volatile("mfsrin %0,%1" : "=r"(sr) : "r"(addr));
+name|sr
+operator|=
+name|mfsrin
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
 name|ptegidx
 operator|=
 name|va_to_pteg
