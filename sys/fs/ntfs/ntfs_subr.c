@@ -10495,6 +10495,8 @@ name|outbuf
 index|[
 literal|0
 index|]
+operator|&
+literal|0xFF
 argument_list|)
 operator|)
 return|;
@@ -10574,6 +10576,8 @@ name|wc
 operator|&
 literal|0xFF
 index|]
+operator|&
+literal|0xFF
 operator|)
 return|;
 block|}
