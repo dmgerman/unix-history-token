@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.14 2000/11/18 03:58:04 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.20 2001/06/26 10:43:15 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -123,12 +123,29 @@ begin_comment
 comment|/* define this if you're setting up a system to NAT 			 * LARGE numbers of networks/hosts - i.e. in the 			 * hundreds or thousands.  In such a case, you should 			 * also change the RDR_SIZE and NAT_SIZE below to more 			 * appropriate sizes.  The figures below were used for 			 * a setup with 1000-2000 networks to NAT. 			 */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAT_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NAT_SIZE
 value|127
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RDR_SIZE
+end_ifndef
 
 begin_define
 define|#
@@ -137,6 +154,17 @@ name|RDR_SIZE
 value|127
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HOSTMAP_SIZE
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -144,12 +172,28 @@ name|HOSTMAP_SIZE
 value|127
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NAT_TABLE_SZ
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NAT_TABLE_SZ
 value|127
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -897,6 +941,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|hostmap_t
+modifier|*
+modifier|*
+name|ns_maptable
+decl_stmt|;
 name|ipnat_t
 modifier|*
 name|ns_list
@@ -913,6 +962,9 @@ name|ns_rultab_sz
 decl_stmt|;
 name|u_int
 name|ns_rdrtab_sz
+decl_stmt|;
+name|u_int
+name|ns_hostmap_sz
 decl_stmt|;
 name|nat_t
 modifier|*
@@ -993,7 +1045,7 @@ begin_define
 define|#
 directive|define
 name|IPN_USERFLAGS
-value|(IPN_TCPUDP|IPN_AUTOPORTMAP|IPN_IPRANGE|IPN_SPLIT|\ 			 IPN_ROUNDR|IPN_FILTER|IPN_NOTSRC|IPN_NOTDST)
+value|(IPN_TCPUDP|IPN_AUTOPORTMAP|IPN_IPRANGE|IPN_SPLIT|\ 			 IPN_ROUNDR|IPN_FILTER|IPN_NOTSRC|IPN_NOTDST|IPN_FRAG)
 end_define
 
 begin_define
@@ -1029,6 +1081,13 @@ define|#
 directive|define
 name|IPN_NOTDST
 value|0x100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPN_FRAG
+value|0x200000
 end_define
 
 begin_typedef
@@ -1596,6 +1655,9 @@ name|fix_incksum
 name|__P
 argument_list|(
 operator|(
+name|fr_info_t
+operator|*
+operator|,
 name|u_short
 operator|*
 operator|,
@@ -1612,6 +1674,9 @@ name|fix_outcksum
 name|__P
 argument_list|(
 operator|(
+name|fr_info_t
+operator|*
+operator|,
 name|u_short
 operator|*
 operator|,

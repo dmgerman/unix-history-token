@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * (C)opyright 1995-1998 Darren Reed. (from tcplog)  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * (C)opyright 1995-1998 Darren Reed. (from tcplog)  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -242,7 +242,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: sbpf.c,v 2.1 1999/08/04 17:31:13 darrenr Exp $"
+literal|"@(#)$Id: sbpf.c,v 2.1.4.1 2001/06/26 10:43:22 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_ifdef
@@ -9,11 +9,46 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_cc_version
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<osreldate.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_cc_version
+operator|<
+literal|430000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -250,7 +285,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.10.2.5 2000/10/25 10:37:11 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.10 2001/07/18 11:34:19 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -551,7 +586,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|int
 name|showversion
 name|__P
 argument_list|(
@@ -575,6 +610,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|SOLARIS
+end_if
+
+begin_define
+define|#
+directive|define
+name|OPTS
+value|"6AdDEf:F:Il:noPrsUvVyzZ"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OPTS
+value|"6AdDEf:F:Il:noPrsvVyzZ"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -585,7 +650,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ipf [-6AdDEInoPrsUvVyzZ] %s %s %s\n"
+literal|"usage: ipf [-%s] %s %s %s\n"
+argument_list|,
+name|OPTS
 argument_list|,
 literal|"[-l block|pass|nomatch]"
 argument_list|,
@@ -633,7 +700,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"6AdDEf:F:Il:noPrsUvVyzZ"
+name|OPTS
 argument_list|)
 operator|)
 operator|!=
@@ -646,12 +713,6 @@ condition|(
 name|c
 condition|)
 block|{
-case|case
-literal|'?'
-case|:
-name|usage
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_INET6
@@ -797,15 +858,22 @@ case|case
 literal|'v'
 case|:
 name|opts
-operator||=
+operator|+=
 name|OPT_VERBOSE
 expr_stmt|;
 break|break;
 case|case
 literal|'V'
 case|:
+if|if
+condition|(
 name|showversion
 argument_list|()
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -827,6 +895,11 @@ case|case
 literal|'Z'
 case|:
 name|zerostats
+argument_list|()
+expr_stmt|;
+break|break;
+default|default :
+name|usage
 argument_list|()
 expr_stmt|;
 break|break;
@@ -2917,7 +2990,7 @@ end_endif
 
 begin_function
 specifier|static
-name|void
+name|int
 name|showversion
 parameter_list|()
 block|{
@@ -2980,7 +3053,9 @@ argument_list|(
 literal|"open device"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 if|if
 condition|(
@@ -3005,7 +3080,9 @@ argument_list|(
 name|vfd
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|1
+return|;
 block|}
 name|close
 argument_list|(
@@ -3219,6 +3296,9 @@ operator|.
 name|f_active
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_include
@@ -339,7 +339,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: natparse.c,v 1.17.2.6 2000/07/08 02:14:40 darrenr Exp $"
+literal|"@(#)$Id: natparse.c,v 1.17.2.11 2001/07/17 14:33:09 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1045,6 +1045,19 @@ argument_list|(
 literal|" round-robin"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_FRAG
+condition|)
+name|printf
+argument_list|(
+literal|" frag"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
@@ -1584,6 +1597,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_FRAG
+condition|)
+name|printf
+argument_list|(
+literal|" frag"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
@@ -1855,6 +1881,10 @@ name|i
 decl_stmt|,
 name|cnt
 decl_stmt|;
+name|proto
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3492,6 +3522,10 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+operator|*
+name|cpp
+operator|||
 name|strrchr
 argument_list|(
 operator|*
@@ -3929,6 +3963,31 @@ if|if
 condition|(
 operator|*
 name|cpp
+operator|&&
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"frag"
+argument_list|)
+condition|)
+block|{
+name|cpp
+operator|++
+expr_stmt|;
+name|ipn
+operator|.
+name|in_flags
+operator||=
+name|IPN_FRAG
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|cpp
 condition|)
 block|{
 name|fprintf
@@ -4014,6 +4073,31 @@ operator|&
 name|ipn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cpp
+operator|&&
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|cpp
+argument_list|,
+literal|"frag"
+argument_list|)
+condition|)
+block|{
+name|cpp
+operator|++
+expr_stmt|;
+name|ipn
+operator|.
+name|in_flags
+operator||=
+name|IPN_FRAG
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

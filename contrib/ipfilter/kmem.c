@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
 begin_comment
@@ -49,6 +49,23 @@ directive|include
 file|"kmem.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -77,7 +94,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: kmem.c,v 2.2 2000/03/13 22:10:25 darrenr Exp $"
+literal|"@(#)$Id: kmem.c,v 2.2.2.3 2001/07/15 22:06:16 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,8 +116,24 @@ end_decl_stmt
 begin_function
 name|int
 name|openkmem
-parameter_list|()
+parameter_list|(
+name|core
+parameter_list|)
+name|char
+modifier|*
+name|core
+decl_stmt|;
 block|{
+if|if
+condition|(
+name|core
+operator|==
+name|NULL
+condition|)
+name|core
+operator|=
+name|KMEM
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -108,7 +141,7 @@ name|kmemfd
 operator|=
 name|open
 argument_list|(
-name|KMEM
+name|core
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -179,7 +212,9 @@ condition|)
 if|if
 condition|(
 name|openkmem
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 operator|==
 operator|-
 literal|1
@@ -309,7 +344,9 @@ condition|)
 if|if
 condition|(
 name|openkmem
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 operator|==
 operator|-
 literal|1

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * I hate legaleese, don't you ?  */
+comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * I hate legaleese, don't you ?  */
 end_comment
 
 begin_if
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.23.2.9 2000/11/12 11:55:17 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.23.2.12 2001/07/18 14:57:09 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1086,6 +1086,8 @@ operator|(
 name|caddr_t
 operator|)
 name|data
+argument_list|,
+name|mode
 argument_list|,
 name|cmd
 argument_list|,
@@ -2491,6 +2493,12 @@ name|fp
 operator|->
 name|fr_dif
 expr_stmt|;
+name|fdp
+operator|->
+name|fd_mp
+operator|=
+name|NULL
+expr_stmt|;
 name|fp
 operator|->
 name|fr_flags
@@ -2700,6 +2708,12 @@ operator|&
 name|fp
 operator|->
 name|fr_tif
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_mp
+operator|=
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3183,30 +3197,6 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-name|unit
-operator|==
-name|IPL_LOGAUTH
-condition|)
-block|{
-name|error
-operator|=
-name|fr_auth_ioctl
-argument_list|(
-name|data
-argument_list|,
-name|req
-argument_list|,
-name|fp
-argument_list|,
-name|ftail
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
 name|f
 operator|->
 name|fr_grhead
@@ -3278,30 +3268,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|unit
-operator|==
-name|IPL_LOGAUTH
-condition|)
-block|{
-name|error
-operator|=
-name|fr_auth_ioctl
-argument_list|(
-name|data
-argument_list|,
-name|req
-argument_list|,
-name|fp
-argument_list|,
-name|ftail
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|KMALLOC
 argument_list|(
 name|f

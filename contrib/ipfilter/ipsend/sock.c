@@ -4,45 +4,8 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * sock.c (C) 1995-1998 Darren Reed  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  */
+comment|/*  * sock.c (C) 1995-1998 Darren Reed  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|lint
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)sock.c	1.2 1/11/96 (C)1995 Darren Reed"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"@(#)$Id: sock.c,v 2.1.4.1 2000/12/16 21:05:44 darrenr Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -388,6 +351,43 @@ include|#
 directive|include
 file|"ipsend.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)sock.c	1.2 1/11/96 (C)1995 Darren Reed"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$Id: sock.c,v 2.1.4.3 2001/07/15 22:00:14 darrenr Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
