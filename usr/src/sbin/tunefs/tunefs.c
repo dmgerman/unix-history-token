@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	5.14 (Berkeley) %G%"
+literal|"@(#)tunefs.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -924,6 +924,9 @@ name|usage
 goto|;
 name|bwrite
 argument_list|(
+operator|(
+name|daddr_t
+operator|)
 name|SBOFF
 operator|/
 name|dev_bsize
@@ -1116,6 +1119,9 @@ if|if
 condition|(
 name|bread
 argument_list|(
+operator|(
+name|daddr_t
+operator|)
 name|SBOFF
 argument_list|,
 operator|(
