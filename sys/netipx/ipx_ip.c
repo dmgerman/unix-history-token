@@ -1064,7 +1064,7 @@ condition|(
 literal|3
 operator|&
 operator|(
-name|int
+name|intptr_t
 operator|)
 name|m
 operator|->
