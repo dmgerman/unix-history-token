@@ -48,7 +48,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _POSIX_SOURCE */
+comment|/* !_POSIX_SOURCE */
 end_comment
 
 begin_define
@@ -117,6 +117,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -160,6 +164,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
@@ -205,6 +213,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -237,6 +249,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
@@ -292,6 +308,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
@@ -447,6 +467,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -500,6 +524,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -713,6 +741,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
 
 begin_define
 define|#
@@ -972,26 +1004,19 @@ parameter_list|)
 value|(1<< ((m)-1))
 end_define
 
-begin_define
-define|#
-directive|define
-name|SIG_ERR
-value|((__sighandler_t) -1)
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _POSIX_SOURCE */
+comment|/* !_POSIX_SOURCE */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BADSIG
+name|SIG_ERR
 value|((__sighandler_t) -1)
 end_define
 
