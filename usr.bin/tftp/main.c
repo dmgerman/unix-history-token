@@ -1378,7 +1378,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: %s host-name [port]\n"
+literal|"usage: %s [host [port]]\n"
 argument_list|,
 name|argv
 index|[
@@ -2189,14 +2189,14 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"usage: %s file ... host:target, or\n"
+literal|"usage: %s file [[host:]remotename]\n"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       %s file ... target (when already connected)\n"
+literal|"       %s file1 file2 ... fileN [[host:]remote-directory]\n"
 argument_list|,
 name|s
 argument_list|)
@@ -2617,14 +2617,14 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"usage: %s host:file host:file ... file, or\n"
+literal|"usage: %s [host:]file [localname]\n"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"       %s file file ... file if connected\n"
+literal|"       %s [host1:]file1 [host2:]file2 ... [hostN:]fileN\n"
 argument_list|,
 name|s
 argument_list|)
