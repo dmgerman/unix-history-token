@@ -7,31 +7,19 @@ begin_comment
 comment|/*  * This is the traditional Berkeley MP library implemented in terms of  * the OpenSSL BIGNUM library.  It was written to replace libgmp, and  * is meant to be as compatible with the latter as feasible.  *  * There seems to be a lack of documentation for the Berkeley MP  * interface.  All I could find was libgmp documentation (which didn't  * talk about the semantics of the functions) and an old SunOS 4.1  * manual page from 1989.  The latter wasn't very detailed, either,  * but at least described what the function's arguments were.  In  * general the interface seems to be archaic, somewhat poorly  * designed, and poorly, if at all, documented.  It is considered  * harmful.  *  * Miscellaneous notes on this implementation:  *  *  - The SunOS manual page mentioned above indicates that if an error  *  occurs, the library should "produce messages and core images."  *  Given that most of the functions don't have return values (and  *  thus no sane way of alerting the caller to an error), this seems  *  reasonable.  The MPERR and MPERRX macros call warn and warnx,  *  respectively, then abort().  *  *  - All the functions which take an argument to be "filled in"  *  assume that the argument has been initialized by one of the *tom()  *  routines before being passed to it.  I never saw this documented  *  anywhere, but this seems to be consistent with the way this  *  library is used.  *  *  - msqrt() is the only routine which had to be implemented which  *  doesn't have a close counterpart in the OpenSSL BIGNUM library.  *  It was implemented by hand using Newton's recursive formula.  *  Doing it this way, although more error-prone, has the positive  *  sideaffect of testing a lot of other functions; if msqrt()  *  produces the correct results, most of the other routines will as  *  well.  *  *  - Internal-use-only routines (i.e., those defined here statically  *  and not in mp.h) have an underscore prepended to their name (this  *  is more for aesthetical reasons than technical).  All such  *  routines take an extra argument, 'msg', that denotes what they  *  should call themselves in an error message.  This is so a user  *  doesn't get an error message from a function they didn't call.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
