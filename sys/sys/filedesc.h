@@ -123,6 +123,14 @@ modifier|*
 name|fd_knhash
 decl_stmt|;
 comment|/* hash table for attached knotes */
+name|int
+name|fd_holdleaderscount
+decl_stmt|;
+comment|/* block fdfree() for shared close() */
+name|int
+name|fd_holdleaderswakeup
+decl_stmt|;
+comment|/* fdfree() needs wakeup */
 block|}
 struct|;
 end_struct
@@ -153,6 +161,47 @@ name|fd_dfileflags
 index|[
 name|NDFILE
 index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure to keep track of (process leader, struct fildedesc) tuples.  * Each process has a pointer to such a structure when detailed tracking  * is needed. e.g. when rfork(RFPROC | RFMEM) causes a file descriptor  * table to be shared by processes having different "p_leader" pointers  * and thus distinct POSIX style locks.  */
+end_comment
+
+begin_struct
+struct|struct
+name|filedesc_to_leader
+block|{
+name|int
+name|fdl_refcount
+decl_stmt|;
+comment|/* references from struct proc */
+name|int
+name|fdl_holdcount
+decl_stmt|;
+comment|/* temporary hold during closef */
+name|int
+name|fdl_wakeup
+decl_stmt|;
+comment|/* fdfree() waits on closef() */
+name|struct
+name|proc
+modifier|*
+name|fdl_leader
+decl_stmt|;
+comment|/* owner of POSIX locks */
+comment|/* Circular list */
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|fdl_prev
+decl_stmt|;
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|fdl_next
 decl_stmt|;
 block|}
 struct|;
@@ -668,6 +717,25 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|filedesc_to_leader_alloc
+parameter_list|(
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|old
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|leader
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

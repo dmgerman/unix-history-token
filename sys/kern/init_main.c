@@ -1166,6 +1166,12 @@ name|fdp
 operator|->
 name|fd_fd
 expr_stmt|;
+name|p
+operator|->
+name|p_fdtol
+operator|=
+name|NULL
+expr_stmt|;
 name|fdp
 operator|->
 name|fd_fd
