@@ -961,7 +961,13 @@ name|vm_page_t
 name|mem
 parameter_list|)
 block|{
-name|GIANT_REQUIRED
+name|mtx_assert
+argument_list|(
+operator|&
+name|vm_page_queue_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|mem
 operator|->
