@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: upap.c,v 1.3 1995/05/30 03:51:17 rgrimes Exp $"
+literal|"$Id: upap.c,v 1.3.4.1 1996/03/01 19:35:00 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1220,6 +1220,35 @@ operator|==
 name|UPAP_AUTHACK
 condition|)
 block|{
+name|memcpy
+argument_list|(
+name|peername
+argument_list|,
+literal|"PAP:"
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|peername
+operator|+
+literal|4
+argument_list|,
+name|ruser
+argument_list|,
+name|ruserlen
+argument_list|)
+expr_stmt|;
+name|peername
+index|[
+literal|4
+operator|+
+name|ruserlen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|u
 operator|->
 name|us_serverstate

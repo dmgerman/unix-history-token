@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap.c,v 1.3 1995/05/30 03:51:05 rgrimes Exp $"
+literal|"$Id: chap.c,v 1.3.4.1 1996/03/01 19:34:45 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2029,6 +2029,16 @@ expr_stmt|;
 comment|/* compare local and remote MDs and send the appropriate status */
 if|if
 condition|(
+name|secret_len
+operator|<
+literal|1
+condition|)
+name|code
+operator|=
+name|CHAP_SUCCESS
+expr_stmt|;
+if|if
+condition|(
 name|memcmp
 argument_list|(
 name|digest
@@ -2076,6 +2086,20 @@ operator|==
 name|CHAP_SUCCESS
 condition|)
 block|{
+name|strcpy
+argument_list|(
+name|peername
+argument_list|,
+literal|"CHAP:"
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|peername
+argument_list|,
+name|rhostname
+argument_list|)
+expr_stmt|;
 name|old_state
 operator|=
 name|cstate

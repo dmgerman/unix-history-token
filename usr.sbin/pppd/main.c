@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.4 1995/05/30 03:51:13 rgrimes Exp $"
+literal|"$Id: main.c,v 1.4.4.1 1996/03/01 19:34:53 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,6 +436,23 @@ name|pidfilename
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|peername
+index|[
+name|MAXNAMELEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|time_t
+name|t1
+decl_stmt|,
+name|t2
 decl_stmt|;
 end_decl_stmt
 
@@ -1296,6 +1313,19 @@ name|passwd
 modifier|*
 name|pw
 decl_stmt|;
+name|time
+argument_list|(
+operator|&
+name|t1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|peername
+argument_list|,
+literal|"[startup]"
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 name|ttyname
@@ -3509,11 +3539,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|t2
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Exit."
+literal|"Exit User %s Peer %s %d seconds"
+argument_list|,
+name|username
+argument_list|,
+name|peername
+argument_list|,
+name|t2
+operator|-
+name|t1
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4833,7 +4877,7 @@ literal|"End of file on fd!"
 operator|)
 argument_list|)
 expr_stmt|;
-name|lcp_lowerdown
+name|hup
 argument_list|(
 literal|0
 argument_list|)
