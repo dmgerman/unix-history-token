@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -114,6 +114,38 @@ name|usec
 parameter_list|)
 value|{ \ 	register struct timeval *tp = (t); \  \ 	tp->tv_usec += (usec); \ 	if (tp->tv_usec>= 1000000) { \ 		tp->tv_usec -= 1000000; \ 		tp->tv_sec++; \ 	} \ }
 end_define
+
+begin_decl_stmt
+name|int
+name|ticks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|phz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|profhz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeval
+name|time
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|timeval
+name|mono_time
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * The hz hardware interval timer.  * We update the events relating to real time.  * If this timer is also being used to gather statistics,  * we run through the statistics gathering routine as well.  */
@@ -568,6 +600,12 @@ else|#
 directive|else
 end_else
 
+begin_expr_stmt
+name|ticks
+operator|++
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|if
 condition|(
@@ -575,12 +613,20 @@ name|timedelta
 operator|==
 literal|0
 condition|)
+block|{
 name|BUMPTIME
 argument_list|(
 argument|&time
 argument_list|,
 argument|tick
 argument_list|)
+name|BUMPTIME
+argument_list|(
+argument|&mono_time
+argument_list|,
+argument|tick
+argument_list|)
+block|}
 else|else
 block|{
 specifier|register
@@ -625,6 +671,12 @@ argument_list|,
 name|delta
 argument_list|)
 expr_stmt|;
+name|BUMPTIME
+argument_list|(
+argument|&mono_time
+argument_list|,
+argument|delta
+argument_list|)
 block|}
 end_if
 
