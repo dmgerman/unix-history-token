@@ -69,6 +69,11 @@ directive|define
 name|SI_ALIAS
 value|0x0002
 comment|/* carrier of alias name */
+define|#
+directive|define
+name|SI_NAMED
+value|0x0004
+comment|/* make_dev{_alias} has been called */
 name|struct
 name|timespec
 name|si_atime
