@@ -573,7 +573,23 @@ argument_list|(
 name|saveintr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ktr_mask
+operator|&
+name|KTR_LOCK
+condition|)
+comment|/* 		 * We can't use nanotime with KTR_LOCK, it would cause 		 * endless recursion, at least under the Intel 		 * architecture. 		 */
 name|getnanotime
+argument_list|(
+operator|&
+name|entry
+operator|->
+name|ktr_tv
+argument_list|)
+expr_stmt|;
+else|else
+name|nanotime
 argument_list|(
 operator|&
 name|entry
