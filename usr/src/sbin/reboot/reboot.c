@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reboot.c	5.2 (Berkeley) %G%"
+literal|"@(#)reboot.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -89,7 +95,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
+file|<sys/syslog.h>
 end_include
 
 begin_function
@@ -129,6 +135,23 @@ name|qflag
 operator|=
 literal|0
 expr_stmt|;
+name|char
+modifier|*
+name|user
+decl_stmt|,
+modifier|*
+name|getlogin
+argument_list|()
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|,
+modifier|*
+name|getpwuid
+argument_list|()
+decl_stmt|;
 name|openlog
 argument_list|(
 literal|"reboot"
@@ -207,6 +230,60 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+name|user
+operator|=
+name|getlogin
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|user
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+operator|&&
+operator|(
+name|pw
+operator|=
+name|getpwuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+operator|)
+condition|)
+name|user
+operator|=
+name|pw
+operator|->
+name|pw_name
+expr_stmt|;
+if|if
+condition|(
+name|user
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+condition|)
+name|user
+operator|=
+literal|"root"
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"halted by %s"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGHUP
@@ -241,6 +318,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -329,6 +411,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|qflag
+operator|&&
 operator|(
 name|howto
 operator|&
@@ -337,28 +422,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|syslog
-argument_list|(
-name|LOG_CRIT
-argument_list|,
-literal|"halted for reboot"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|qflag
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|howto
-operator|&
-name|RB_NOSYNC
-operator|)
-condition|)
 block|{
 name|markdown
 argument_list|()
@@ -366,10 +429,6 @@ expr_stmt|;
 name|sync
 argument_list|()
 expr_stmt|;
-name|sync
-argument_list|()
-expr_stmt|;
-block|}
 name|setalarm
 argument_list|(
 literal|5
