@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)vs.c	7.6 (MIT) %G% */
+comment|/* @(#)vs.c	7.7 (MIT) %G% */
 end_comment
 
 begin_comment
@@ -4355,9 +4355,7 @@ operator|(
 literal|0
 operator|)
 return|;
-case|case
-name|FWRITE
-case|:
+default|default:
 name|splx
 argument_list|(
 name|s
@@ -4365,9 +4363,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EACCES
+literal|0
 operator|)
 return|;
+comment|/* can never write */
 block|}
 block|}
 end_block
