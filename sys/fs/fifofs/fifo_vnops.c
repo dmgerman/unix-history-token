@@ -2638,7 +2638,6 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-comment|/* Unlocked read. */
 if|if
 condition|(
 name|so
