@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.13 1997/04/13 01:06:56 brian Exp $"
+literal|"$Id: auth.c,v 1.14 1997/04/15 07:00:32 danny Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2063,12 +2063,12 @@ name|UPAP_AUTHNAK
 operator|)
 return|;
 block|}
-comment|/*  * Check that the user is not listed in /etc/ppp/ppp.disabled  * and that the user's shell is listed in /etc/ppp/ppp.shells  * if /etc/ppp/ppp.shells exists.  */
+comment|/*  * Check that the user is not listed in /etc/ppp/ppp.deny  * and that the user's shell is listed in /etc/ppp/ppp.shells  * if /etc/ppp/ppp.shells exists.  */
 if|if
 condition|(
 name|checkfile
 argument_list|(
-name|_PATH_PPPDISABLED
+name|_PATH_PPPDENY
 argument_list|,
 name|user
 argument_list|)
@@ -2080,11 +2080,11 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"upap user %s: account disabled in %s"
+literal|"upap user %s: login denied in %s"
 argument_list|,
 name|user
 argument_list|,
-name|_PATH_PPPDISABLED
+name|_PATH_PPPDENY
 argument_list|)
 expr_stmt|;
 return|return
