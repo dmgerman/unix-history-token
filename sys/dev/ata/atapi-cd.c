@@ -325,7 +325,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|acd_contruct_label
+name|acd_construct_label
 parameter_list|(
 name|struct
 name|acd_softc
@@ -3163,7 +3163,7 @@ name|atp
 argument_list|)
 expr_stmt|;
 block|}
-name|acd_contruct_label
+name|acd_construct_label
 argument_list|(
 name|cdp
 argument_list|)
@@ -7704,7 +7704,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|acd_contruct_label
+name|acd_construct_label
 parameter_list|(
 name|struct
 name|acd_softc
