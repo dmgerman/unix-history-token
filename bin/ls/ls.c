@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.21 1998/04/24 20:15:42 des Exp $"
+literal|"$Id: ls.c,v 1.22 1998/07/29 00:46:09 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1938,6 +1938,7 @@ name|maxsize
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|initmax
