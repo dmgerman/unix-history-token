@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.6 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.7 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.6 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.7 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,14 +471,19 @@ name|DBM
 name|int
 name|atcnt
 decl_stmt|;
+name|time_t
+name|modtime
+decl_stmt|;
+name|bool
+name|automatic
+init|=
+name|FALSE
+decl_stmt|;
 name|char
 name|buf
 index|[
 name|MAXNAME
 index|]
-decl_stmt|;
-name|time_t
-name|modtime
 decl_stmt|;
 endif|#
 directive|endif
@@ -504,6 +509,21 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|aliasfile
+operator|!=
+name|NULL
+operator|&&
+name|init
+condition|)
+name|syserr
+argument_list|(
+literal|"Cannot open %s"
+argument_list|,
+name|aliasfile
+argument_list|)
+expr_stmt|;
 name|NoAlias
 operator|=
 name|TRUE
@@ -663,6 +683,10 @@ name|init
 operator|=
 name|TRUE
 expr_stmt|;
+name|automatic
+operator|=
+name|TRUE
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_Info
@@ -726,6 +750,42 @@ condition|(
 name|init
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|6
+condition|)
+block|{
+specifier|extern
+name|char
+modifier|*
+name|username
+parameter_list|()
+function_decl|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"alias database %srebuilt by %s"
+argument_list|,
+name|automatic
+condition|?
+literal|"auto"
+else|:
+literal|""
+argument_list|,
+name|username
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|LOG
 name|readaliases
 argument_list|(
 name|aliasfile
