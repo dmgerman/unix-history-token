@@ -75,6 +75,10 @@ name|sysarch
 argument_list|(
 name|SPARC_SIGTRAMP_INSTALL
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|sia
 argument_list|)
