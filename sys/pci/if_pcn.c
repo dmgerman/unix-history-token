@@ -2837,10 +2837,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* 	 * Do MII setup. 	 */
-name|bootverbose
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|mii_phy_probe
