@@ -495,18 +495,16 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|doword
