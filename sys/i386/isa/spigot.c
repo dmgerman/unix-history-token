@@ -218,13 +218,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_rdwr_t
-name|spigot_rw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_read_t
 name|spigot_read
 decl_stmt|;

@@ -234,14 +234,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_rdwr_t
+name|d_read_t
 name|pcread
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_rdwr_t
+name|d_write_t
 name|pcwrite
 decl_stmt|;
 end_decl_stmt
@@ -255,7 +255,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_ttycv_t
+name|d_devtotty_t
 name|pcdevtotty
 decl_stmt|;
 end_decl_stmt

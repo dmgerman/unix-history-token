@@ -398,7 +398,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_ttycv_t
+name|d_devtotty_t
 name|rcdevtotty
 decl_stmt|;
 end_decl_stmt

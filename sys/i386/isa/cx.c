@@ -472,15 +472,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|cxselect
+name|d_devtotty_t
+name|cxdevtotty
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_ttycv_t
-name|cxdevtotty
+name|d_select_t
+name|cxselect
 decl_stmt|;
 end_decl_stmt
 
