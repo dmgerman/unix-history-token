@@ -401,7 +401,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 name|db_printf
 argument_list|(
@@ -487,7 +487,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 name|db_printf
 argument_list|(
@@ -714,7 +714,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 block|{
 if|if

@@ -2293,12 +2293,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_THREADED
+name|P_SA
 value|0x08000
 end_define
 
 begin_comment
-comment|/* Process is using threads. */
+comment|/* Using scheduler activations. */
 end_comment
 
 begin_define

@@ -293,7 +293,7 @@ name|td_proc
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 block|{
 if|if
@@ -644,7 +644,7 @@ comment|/* 	 * If it is not a threaded process, take the shortcut. 	 */
 end_comment
 
 begin_comment
-unit|if ((td->td_proc->p_flag& P_THREADED) == 0) {
+unit|if ((td->td_proc->p_flag& P_SA) == 0) {
 comment|/* Bring its kse with it, leave the thread attached */
 end_comment
 
@@ -733,7 +733,7 @@ name|td_proc
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|)
 operator|==
 literal|0
@@ -940,7 +940,7 @@ name|td_proc
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|)
 operator|==
 literal|0
@@ -2134,7 +2134,7 @@ literal|0
 end_if
 
 begin_if
-unit|void panc(char *string1, char *string2) { 	printf("%s", string1); 	Debugger(string2); }  void thread_sanity_check(struct thread *td, char *string) { 	struct proc *p; 	struct ksegrp *kg; 	struct kse *ke; 	struct thread *td2 = NULL; 	unsigned int prevpri; 	int	saw_lastassigned = 0; 	int unassigned = 0; 	int assigned = 0;  	p = td->td_proc; 	kg = td->td_ksegrp; 	ke = td->td_kse;   	if (ke) { 		if (p != ke->ke_proc) { 			panc(string, "wrong proc"); 		} 		if (ke->ke_thread != td) { 			panc(string, "wrong thread"); 		} 	} 	 	if ((p->p_flag& P_THREADED) == 0) { 		if (ke == NULL) { 			panc(string, "non KSE thread lost kse"); 		} 	} else { 		prevpri = 0; 		saw_lastassigned = 0; 		unassigned = 0; 		assigned = 0; 		TAILQ_FOREACH(td2,&kg->kg_runq, td_runq) { 			if (td2->td_priority< prevpri) { 				panc(string, "thread runqueue unosorted"); 			} 			if ((td2->td_state == TDS_RUNQ)&& 			    td2->td_kse&& 			    (td2->td_kse->ke_state != KES_ONRUNQ)) { 				panc(string, "KSE wrong state"); 			} 			prevpri = td2->td_priority; 			if (td2->td_kse) { 				assigned++; 				if (unassigned) { 					panc(string, "unassigned before assigned"); 				}  				if  (kg->kg_last_assigned == NULL) { 					panc(string, "lastassigned corrupt"); 				} 				if (saw_lastassigned) { 					panc(string, "last assigned not last"); 				} 				if (td2->td_kse->ke_thread != td2) { 					panc(string, "mismatched kse/thread"); 				} 			} else { 				unassigned++; 			} 			if (td2 == kg->kg_last_assigned) { 				saw_lastassigned = 1; 				if (td2->td_kse == NULL) { 					panc(string, "last assigned not assigned"); 				} 			} 		} 		if (kg->kg_last_assigned&& (saw_lastassigned == 0)) { 			panc(string, "where on earth does lastassigned point?"); 		}
+unit|void panc(char *string1, char *string2) { 	printf("%s", string1); 	Debugger(string2); }  void thread_sanity_check(struct thread *td, char *string) { 	struct proc *p; 	struct ksegrp *kg; 	struct kse *ke; 	struct thread *td2 = NULL; 	unsigned int prevpri; 	int	saw_lastassigned = 0; 	int unassigned = 0; 	int assigned = 0;  	p = td->td_proc; 	kg = td->td_ksegrp; 	ke = td->td_kse;   	if (ke) { 		if (p != ke->ke_proc) { 			panc(string, "wrong proc"); 		} 		if (ke->ke_thread != td) { 			panc(string, "wrong thread"); 		} 	} 	 	if ((p->p_flag& P_SA) == 0) { 		if (ke == NULL) { 			panc(string, "non KSE thread lost kse"); 		} 	} else { 		prevpri = 0; 		saw_lastassigned = 0; 		unassigned = 0; 		assigned = 0; 		TAILQ_FOREACH(td2,&kg->kg_runq, td_runq) { 			if (td2->td_priority< prevpri) { 				panc(string, "thread runqueue unosorted"); 			} 			if ((td2->td_state == TDS_RUNQ)&& 			    td2->td_kse&& 			    (td2->td_kse->ke_state != KES_ONRUNQ)) { 				panc(string, "KSE wrong state"); 			} 			prevpri = td2->td_priority; 			if (td2->td_kse) { 				assigned++; 				if (unassigned) { 					panc(string, "unassigned before assigned"); 				}  				if  (kg->kg_last_assigned == NULL) { 					panc(string, "lastassigned corrupt"); 				} 				if (saw_lastassigned) { 					panc(string, "last assigned not last"); 				} 				if (td2->td_kse->ke_thread != td2) { 					panc(string, "mismatched kse/thread"); 				} 			} else { 				unassigned++; 			} 			if (td2 == kg->kg_last_assigned) { 				saw_lastassigned = 1; 				if (td2->td_kse == NULL) { 					panc(string, "last assigned not assigned"); 				} 			} 		} 		if (kg->kg_last_assigned&& (saw_lastassigned == 0)) { 			panc(string, "where on earth does lastassigned point?"); 		}
 if|#
 directive|if
 literal|0

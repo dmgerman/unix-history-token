@@ -575,7 +575,7 @@ name|td_proc
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|)
 operator|==
 literal|0

@@ -892,7 +892,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|||
 name|p
 operator|->
@@ -927,7 +927,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_THREADED
+name|P_SA
 expr_stmt|;
 name|td
 operator|->

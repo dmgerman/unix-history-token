@@ -11641,7 +11641,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 block|{
 comment|/* Make sure all other cr3 entries are updated. */

@@ -12277,7 +12277,7 @@ name|pick
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 block|{
 name|stmp

@@ -1769,7 +1769,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|)
 operator|||
 operator|(
@@ -2120,7 +2120,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|P_THREADED
+name|P_SA
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
@@ -2564,7 +2564,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|)
 condition|)
 return|return
@@ -2898,7 +2898,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|P_THREADED
+name|P_SA
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -7549,7 +7549,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|)
 operator|==
 literal|0
@@ -7998,7 +7998,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 name|thread_exit
 argument_list|()

@@ -291,7 +291,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 block|{
 name|thread_userret
@@ -1001,7 +1001,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|&&
 name|sigs
 condition|)

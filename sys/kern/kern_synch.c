@@ -611,7 +611,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 operator|||
 name|p
 operator|->
@@ -2122,7 +2122,7 @@ name|td_proc
 operator|->
 name|p_flag
 operator|&
-name|P_THREADED
+name|P_SA
 condition|)
 name|thread_switchout
 argument_list|(
