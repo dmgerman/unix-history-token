@@ -104,12 +104,6 @@ name|WI_RID_MGMT_XMIT
 value|0x0200
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WICACHE
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -123,11 +117,6 @@ directive|define
 name|WI_RID_READ_CACHE
 value|0x0400
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -428,19 +417,6 @@ begin_comment
 comment|/*   * Lucent/wavelan IEEE signal strength cache  *  * driver keeps cache of last  * MAXWICACHE packets to arrive including signal strength info.  * daemons may read this via ioctl  *  * Each entry in the wi_sigcache has a unique macsrc.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WICACHE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXWICACHE
-value|10
-end_define
-
 begin_struct
 struct|struct
 name|wi_sigcache
@@ -471,11 +447,6 @@ comment|/* quality of the packet */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
