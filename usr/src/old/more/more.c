@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.19 (Berkeley) 84/07/12"
+literal|"@(#)more.c	4.20 (Berkeley) 84/09/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,19 +464,6 @@ name|jmp_buf
 name|restore
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|obuf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* stdout buffer */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -6380,10 +6367,11 @@ index|[
 name|TBUFSIZ
 index|]
 decl_stmt|;
+specifier|static
 name|char
 name|clearbuf
 index|[
-literal|100
+name|TBUFSIZ
 index|]
 decl_stmt|;
 name|char
@@ -6403,13 +6391,6 @@ decl_stmt|;
 name|int
 name|tgrp
 decl_stmt|;
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|obuf
-argument_list|)
-expr_stmt|;
 name|retry
 label|:
 if|if
