@@ -196,7 +196,7 @@ value|(hz / PR_FASTHZ)
 end_define
 
 begin_comment
-comment|/* 200mS timeout */
+comment|/* 200ms timeout */
 end_comment
 
 begin_ifdef
@@ -247,30 +247,6 @@ parameter_list|,
 name|tvmax
 parameter_list|)
 value|do { \ 	(tv) = (value); \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	else if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ } while(0)
-end_define
-
-begin_comment
-comment|/*  * Convert slow-timeout ticks to timer ticks.  We don't really want to do  * this as it is rather expensive, so this is only a transitional stage  * until we are able to update all the code which counts timer ticks.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCPT_TICKS
-parameter_list|(
-name|stt
-parameter_list|)
-value|((stt) * hz / PR_SLOWHZ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPT_SLOWHZ
-parameter_list|(
-name|tt
-parameter_list|)
-value|(((tt) * PR_SLOWHZ) / hz)
 end_define
 
 begin_ifdef
