@@ -97,6 +97,12 @@ parameter_list|)
 value|(cr)->cr_ref++
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|void
 name|change_euid
