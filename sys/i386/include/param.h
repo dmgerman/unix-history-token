@@ -372,7 +372,7 @@ begin_define
 define|#
 directive|define
 name|UPAGES
-value|2
+value|3
 end_define
 
 begin_comment
