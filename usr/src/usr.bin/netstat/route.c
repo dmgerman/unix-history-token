@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.11 (Berkeley) 87/08/29"
+literal|"@(#)route.c	5.12 (Berkeley) 87/12/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -906,7 +906,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %s%d\n"
+literal|" %.15s%d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -998,7 +998,9 @@ specifier|static
 name|char
 name|line
 index|[
-literal|50
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -1155,11 +1157,18 @@ if|if
 condition|(
 name|cp
 condition|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|line
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -1263,7 +1272,9 @@ specifier|static
 name|char
 name|line
 index|[
-literal|50
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -1418,11 +1429,18 @@ if|if
 condition|(
 name|cp
 condition|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|line
 argument_list|,
 name|cp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 elseif|else
