@@ -551,6 +551,22 @@ literal|"Adaptec SCSI RAID 2120S"
 block|}
 block|,
 block|{
+literal|0x9005
+block|,
+literal|0x0285
+block|,
+literal|0x9005
+block|,
+literal|0x0290
+block|,
+name|AAC_HWIF_I960RX
+block|,
+name|AAC_FLAGS_NO4GB
+block|,
+literal|"Adaptec SCSI RAID 2410SA"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
