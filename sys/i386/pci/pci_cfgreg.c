@@ -1265,16 +1265,6 @@ expr_stmt|;
 if|if
 condition|(
 name|irq
-operator|!=
-literal|255
-condition|)
-name|already
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|irq
 operator|==
 literal|255
 condition|)
@@ -1286,6 +1276,16 @@ name|pe
 argument_list|,
 name|pin
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|irq
+operator|!=
+literal|255
+condition|)
+name|already
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1353,6 +1353,9 @@ expr_stmt|;
 comment|/* pin value is 0xa - 0xd */
 if|if
 condition|(
+operator|!
+name|already
+operator|&&
 name|bios32
 argument_list|(
 operator|&
@@ -1369,9 +1372,6 @@ argument_list|,
 name|SEL_KPL
 argument_list|)
 argument_list|)
-operator|&&
-operator|!
-name|already
 condition|)
 block|{
 comment|/* 	     * XXX if it fails, we should try to smack the router 	     * hardware directly. 	     * XXX Also, there may be other choices that we can try that 	     * will work. 	     */
