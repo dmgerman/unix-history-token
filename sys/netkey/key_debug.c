@@ -2005,7 +2005,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rt_refcnt = %d "
+literal|"rt_refcnt = %ld "
 argument_list|,
 name|rt
 operator|->
