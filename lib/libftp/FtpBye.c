@@ -24,12 +24,6 @@ modifier|*
 name|ftp
 parameter_list|)
 block|{
-name|String
-name|S1
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|FtpAssert
 argument_list|(
 name|ftp
@@ -80,7 +74,9 @@ name|ftp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|FTPDATA
@@ -150,6 +146,9 @@ argument_list|(
 name|ftp
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

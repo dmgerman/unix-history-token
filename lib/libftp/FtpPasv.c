@@ -9,6 +9,18 @@ directive|include
 file|"FtpLibrary.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
 begin_function
 name|char
 modifier|*
@@ -146,6 +158,9 @@ argument_list|,
 name|EOF
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -449,6 +464,9 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -9,6 +9,12 @@ directive|include
 file|"FtpLibrary.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function
 name|STATUS
 name|FtpData
@@ -44,8 +50,6 @@ name|host
 decl_stmt|;
 name|String
 name|hostname
-decl_stmt|,
-name|cmd
 decl_stmt|;
 name|int
 name|NewSocket
@@ -71,6 +75,8 @@ name|from
 argument_list|)
 decl_stmt|,
 name|i
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -272,6 +278,11 @@ name|getsockname
 argument_list|(
 name|NewSocket
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|data
 argument_list|,
@@ -460,6 +471,11 @@ name|accept
 argument_list|(
 name|NewSocket
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,

@@ -67,6 +67,7 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__STDC__
@@ -75,6 +76,13 @@ operator|||
 name|defined
 argument_list|(
 name|__cplusplus
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CONCAT
 argument_list|)
 end_if
 

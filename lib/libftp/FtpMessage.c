@@ -9,6 +9,12 @@ directive|include
 file|"FtpLibrary.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -142,10 +148,6 @@ name|Message
 parameter_list|)
 block|{
 name|int
-name|i
-init|=
-literal|0
-decl_stmt|,
 name|n
 decl_stmt|;
 name|char
@@ -451,6 +453,10 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
+name|char
+operator|*
+operator|)
 name|sys_errlist
 index|[
 name|errno

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -25,14 +31,6 @@ literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|STATUS
-name|syntax
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 name|FILE

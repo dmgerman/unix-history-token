@@ -9,6 +9,12 @@ directive|include
 file|"FtpLibrary.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function
 name|int
 name|FtpRead
@@ -431,6 +437,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -456,8 +465,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|rsize
-decl_stmt|,
-name|status
 decl_stmt|;
 name|FD_ZERO
 argument_list|(

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -24,7 +30,7 @@ name|syscal
 parameter_list|,
 name|name
 parameter_list|)
-value|name(a,b,c,d,e,f,g,h) \ {\    register int status;\    while (((status=syscal(a,b,c,d,e,f,g,h))==-1)&& (errno==EINTR));\    return status;\ }
+value|int name(void *a, void *b, void *c) \ {\    register int status;\    while (((status=syscal(a,b,c))==-1)&& (errno==EINTR));\    return status;\ }
 end_define
 
 begin_macro

@@ -177,6 +177,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -227,6 +230,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -294,19 +300,24 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|FtpHash
-argument_list|(
-argument|FTP *ftp
-argument_list|,
-argument|unsigned long chars
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|FTP
+modifier|*
+name|ftp
+parameter_list|,
+name|unsigned
+name|long
+name|chars
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -333,6 +344,10 @@ name|stdout
 argument_list|,
 literal|"%10u bytes transfered\r"
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|ftp
 operator|->
 name|counter
@@ -349,7 +364,7 @@ operator|->
 name|counter
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|STATUS

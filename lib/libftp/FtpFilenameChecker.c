@@ -157,9 +157,14 @@ name|out
 operator|=
 name|new
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 empty_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

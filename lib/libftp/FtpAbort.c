@@ -9,14 +9,20 @@ directive|include
 file|"FtpLibrary.h"
 end_include
 
-begin_macro
-name|FtpAbort
-argument_list|(
-argument|FTP *ftp
-argument_list|)
-end_macro
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
-begin_block
+begin_function
+name|int
+name|FtpAbort
+parameter_list|(
+name|FTP
+modifier|*
+name|ftp
+parameter_list|)
 block|{
 name|fd_set
 name|fds
@@ -147,10 +153,6 @@ operator|>
 literal|0
 condition|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|FtpGetMessage
 argument_list|(
 name|ftp
@@ -176,8 +178,11 @@ argument_list|)
 condition|)
 break|break;
 block|}
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 
