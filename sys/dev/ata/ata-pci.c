@@ -202,7 +202,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ata_pci_locknoop
 parameter_list|(
 name|struct
@@ -2358,7 +2358,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ata_pci_locknoop
 parameter_list|(
 name|struct
@@ -2369,7 +2369,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|)
-block|{ }
+block|{
+return|return
+name|ch
+operator|->
+name|unit
+return|;
+block|}
 end_function
 
 begin_decl_stmt

@@ -1992,7 +1992,7 @@ name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|locking
@@ -2013,6 +2013,10 @@ define|#
 directive|define
 name|ATA_LF_UNLOCK
 value|0x0002
+define|#
+directive|define
+name|ATA_LF_WHICH
+value|0x0004
 name|struct
 name|mtx
 name|queue_mtx
