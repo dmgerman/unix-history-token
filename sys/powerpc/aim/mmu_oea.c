@@ -2047,6 +2047,8 @@ name|j
 decl_stmt|;
 name|vm_size_t
 name|size
+decl_stmt|,
+name|physsz
 decl_stmt|;
 name|vm_offset_t
 name|pa
@@ -2288,6 +2290,13 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|physsz
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_for
 for|for
 control|(
@@ -2382,8 +2391,27 @@ expr_stmt|;
 name|phys_avail_count
 operator|++
 expr_stmt|;
+name|physsz
+operator|+=
+name|regions
+index|[
+name|i
+index|]
+operator|.
+name|mr_size
+expr_stmt|;
 block|}
 end_for
+
+begin_expr_stmt
+name|physmem
+operator|=
+name|btoc
+argument_list|(
+name|physsz
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * Allocate PTEG table. 	 */
