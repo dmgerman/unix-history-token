@@ -57,6 +57,7 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name

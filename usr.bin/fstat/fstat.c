@@ -680,6 +680,7 @@ begin_function_decl
 name|int
 name|getfname
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|filename
@@ -713,7 +714,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|passwd
 modifier|*
@@ -1212,6 +1212,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|Uname
@@ -2039,18 +2040,13 @@ index|[
 literal|15
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|badtype
-init|=
-name|NULL
 decl_stmt|,
 modifier|*
 name|filename
-decl_stmt|,
-modifier|*
-name|getmnton
-argument_list|()
 decl_stmt|;
 name|filename
 operator|=
@@ -2243,8 +2239,6 @@ index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
-name|badtype
-operator|=
 name|unknown
 argument_list|,
 literal|"?(%x)"
@@ -2253,6 +2247,10 @@ name|vn
 operator|.
 name|v_tag
 argument_list|)
+expr_stmt|;
+name|badtype
+operator|=
+name|unknown
 expr_stmt|;
 break|break;
 empty_stmt|;
@@ -2268,7 +2266,6 @@ name|fsmatch
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|DEVS
 modifier|*
 name|d
@@ -2967,7 +2964,6 @@ name|struct
 name|nfsnode
 name|nfsnode
 decl_stmt|;
-specifier|register
 name|mode_t
 name|mode
 decl_stmt|;
@@ -3192,7 +3188,6 @@ name|mhead
 init|=
 name|NULL
 struct|;
-specifier|register
 name|struct
 name|mtab
 modifier|*
@@ -3515,6 +3510,7 @@ name|i
 decl_stmt|;
 block|{
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|stypename
@@ -3572,10 +3568,6 @@ name|dname
 index|[
 literal|32
 index|]
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
 decl_stmt|;
 name|PREFIX
 argument_list|(
@@ -4186,7 +4178,6 @@ specifier|static
 name|int
 name|isopen
 decl_stmt|;
-specifier|register
 name|struct
 name|protoent
 modifier|*
@@ -4242,6 +4233,7 @@ name|getfname
 parameter_list|(
 name|filename
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|filename
