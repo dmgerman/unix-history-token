@@ -14071,7 +14071,7 @@ index|[
 name|n_switches
 index|]
 operator|.
-name|valid
+name|validated
 operator|=
 literal|0
 expr_stmt|;
