@@ -87,12 +87,6 @@ directive|include
 file|<dev/ppbus/ppbio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pps.h"
-end_include
-
 begin_define
 define|#
 directive|define
