@@ -1566,12 +1566,18 @@ name|p_sflag
 operator||=
 name|PS_SWAPINREQ
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMP
+comment|/* 			 * XXX: Disabled on SMP due to a LOR between 			 * sched_lock and the sleepqueue chain locks. 			 */
 name|wakeup
 argument_list|(
 operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 else|else
