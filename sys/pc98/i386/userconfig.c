@@ -9339,12 +9339,6 @@ name|lineno
 decl_stmt|;
 end_decl_stmt
 
-begin_include
-include|#
-directive|include
-file|"eisa.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
