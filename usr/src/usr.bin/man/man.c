@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.5 (Berkeley) %G%"
+literal|"@(#)man.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2495,9 +2495,11 @@ name|buf
 argument_list|,
 name|GLOB_APPEND
 operator||
+name|GLOB_BRACE
+operator||
 name|GLOB_NOSORT
 operator||
-name|GLOB_BRACE
+name|GLOB_QUOTE
 argument_list|,
 name|NULL
 argument_list|,
