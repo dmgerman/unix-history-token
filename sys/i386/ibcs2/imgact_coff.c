@@ -111,6 +111,22 @@ directive|include
 file|<i386/ibcs2/ibcs2_util.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|coff
+argument_list|,
+name|ibcs2
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
