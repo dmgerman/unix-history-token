@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2004-2005 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -179,7 +179,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|aarptab_mtx
@@ -200,38 +199,6 @@ name|MTX_DEF
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|AARPTAB_LOCK
-parameter_list|()
-value|mtx_lock(&aarptab_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AARPTAB_UNLOCK
-parameter_list|()
-value|mtx_unlock(&aarptab_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AARPTAB_LOCK_ASSERT
-parameter_list|()
-value|mtx_assert(&aarptab_mtx, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AARPTAB_UNLOCK_ASSERT
-parameter_list|()
-value|mtx_assert(&aarptab_mtx, MA_NOTOWNED)
-end_define
 
 begin_define
 define|#
@@ -1982,15 +1949,12 @@ name|AFA_PROBING
 condition|)
 block|{
 comment|/* 	     * We're probing, someone either responded to our probe, or 	     * probed for the same address we'd like to use. Change the 	     * address we're probing for. 	     */
-name|untimeout
+name|callout_stop
 argument_list|(
-name|aarpprobe
-argument_list|,
-name|ifp
-argument_list|,
+operator|&
 name|aa
 operator|->
-name|aa_ch
+name|aa_callout
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -2927,6 +2891,9 @@ name|sockaddr
 name|sa
 decl_stmt|;
 comment|/*      * We need to check whether the output ethernet type should      * be phase 1 or 2. We have the interface that we'll be sending      * the aarp out. We need to find an AppleTalk network on that      * interface with the same address as we're looking for. If the      * net is phase 2, generate an 802.2 and SNAP header.      */
+name|AARPTAB_LOCK
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|aa
@@ -2993,6 +2960,9 @@ name|NULL
 condition|)
 block|{
 comment|/* serious error XXX */
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"aarpprobe why did this happen?!\n"
@@ -3021,29 +2991,33 @@ argument_list|(
 name|aa
 argument_list|)
 expr_stmt|;
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 else|else
 block|{
+name|callout_reset
+argument_list|(
+operator|&
 name|aa
 operator|->
-name|aa_ch
-operator|=
-name|timeout
-argument_list|(
-name|aarpprobe
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|ifp
+name|aa_callout
 argument_list|,
 name|hz
 operator|/
 literal|5
+argument_list|,
+name|aarpprobe
+argument_list|,
+name|ifp
 argument_list|)
 expr_stmt|;
 block|}
+name|AARPTAB_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(

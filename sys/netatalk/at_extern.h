@@ -63,6 +63,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|aarptab_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_LOCK
+parameter_list|()
+value|mtx_lock(&aarptab_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_UNLOCK
+parameter_list|()
+value|mtx_unlock(&aarptab_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&aarptab_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AARPTAB_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&aarptab_mtx, MA_NOTOWNED)
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -60,8 +60,8 @@ name|int
 name|aa_probcnt
 decl_stmt|;
 name|struct
-name|callout_handle
-name|aa_ch
+name|callout
+name|aa_callout
 decl_stmt|;
 name|struct
 name|at_ifaddr
