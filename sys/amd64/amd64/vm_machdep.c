@@ -383,6 +383,14 @@ name|pcb
 modifier|*
 name|pcb2
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NPX
+name|int
+name|savecrit
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -469,10 +477,32 @@ block|}
 block|}
 return|return;
 block|}
+comment|/* Ensure that p1's pcb is up to date. */
 ifdef|#
 directive|ifdef
 name|DEV_NPX
-comment|/* Ensure that p1's pcb is up to date. */
+if|if
+condition|(
+name|p1
+operator|==
+name|curproc
+condition|)
+name|p1
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_gs
+operator|=
+name|rgs
+argument_list|()
+expr_stmt|;
+name|savecrit
+operator|=
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|PCPU_GET
@@ -492,6 +522,11 @@ operator|->
 name|u_pcb
 operator|.
 name|pcb_savefpu
+argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|(
+name|savecrit
 argument_list|)
 expr_stmt|;
 endif|#
@@ -518,7 +553,7 @@ name|p_addr
 operator|->
 name|u_pcb
 expr_stmt|;
-comment|/* 	 * Create a new fresh stack for the new process. 	 * Copy the trap frame for the return to user mode as if from a 	 * syscall.  This copies the user mode register values. 	 */
+comment|/* 	 * Create a new fresh stack for the new process. 	 * Copy the trap frame for the return to user mode as if from a 	 * syscall.  This copies most of the user mode register values. 	 */
 name|p2
 operator|->
 name|p_md
@@ -682,7 +717,7 @@ name|int
 operator|)
 name|fork_trampoline
 expr_stmt|;
-comment|/* 	 * pcb2->pcb_ldt:	duplicated below, if necessary. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above (always 0 here?). 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 */
+comment|/*- 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_ldt:	duplicated below, if necessary. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_gs:	cloned above. 	 * pcb2->pcb_ext:	cleared below. 	 */
 comment|/* 	 * XXX don't copy the i/o pages.  this should probably be fixed. 	 */
 name|pcb2
 operator|->
