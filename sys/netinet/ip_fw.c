@@ -6798,6 +6798,10 @@ name|bp
 operator|->
 name|pipe_ptr
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 call|(
 name|intptr_t
 call|)
