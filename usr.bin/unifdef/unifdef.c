@@ -15,16 +15,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1985, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char copyright[] = "@(#) Copyright (c) 1985, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n";
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -67,11 +68,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FBSDID
-end_ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_expr_stmt
 name|__FBSDID
@@ -80,16 +84,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * unifdef - remove ifdef'ed lines  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *      generate #line directives in place of deleted code  *  *   The first two items above require better buffer handling, which would  *     also make it possible to handle all "dodgy" directives correctly.  */
