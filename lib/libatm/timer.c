@@ -301,9 +301,6 @@ expr_stmt|;
 comment|/* 	 * Set up signal handler 	 */
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|signal
 argument_list|(
 name|SIGALRM
@@ -311,8 +308,7 @@ argument_list|,
 name|timer_tick
 argument_list|)
 operator|==
-operator|-
-literal|1
+name|SIG_ERR
 condition|)
 block|{
 return|return
