@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	3.2	%H%	*/
+comment|/*	dinode.h	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -111,31 +111,49 @@ block|{
 struct|struct
 block|{
 name|daddr_t
-name|i_addr
+name|I_addr
 index|[
 name|NADDR
 index|]
 decl_stmt|;
 comment|/* if normal file/directory */
 name|daddr_t
-name|i_lastr
+name|I_lastr
 decl_stmt|;
 comment|/* last logical block read (for read-ahead) */
 block|}
+name|i_f
 struct|;
+define|#
+directive|define
+name|i_addr
+value|i_f.I_addr
+define|#
+directive|define
+name|i_lastr
+value|i_f.I_lastr
 struct|struct
 block|{
 name|daddr_t
-name|i_rdev
+name|I_rdev
 decl_stmt|;
 comment|/* i_addr[0] */
 name|struct
 name|group
-name|i_group
+name|I_group
 decl_stmt|;
 comment|/* multiplexor group file */
 block|}
+name|i_d
 struct|;
+define|#
+directive|define
+name|i_rdev
+value|i_d.I_rdev
+define|#
+directive|define
+name|i_group
+value|i_d.I_group
 block|}
 name|i_un
 union|;
