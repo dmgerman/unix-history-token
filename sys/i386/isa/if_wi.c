@@ -368,23 +368,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCCARD_MODULE
-end_ifdef
-
 begin_decl_stmt
-specifier|static
 name|ointhand2_t
 name|wi_intr
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
