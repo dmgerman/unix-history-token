@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -96,7 +96,7 @@ parameter_list|)
 block|{
 name|PROC_NAME
 argument_list|(
-literal|"AcpiExCheckObjectType"
+literal|"ExCheckObjectType"
 argument_list|)
 expr_stmt|;
 if|if
@@ -195,6 +195,7 @@ decl_stmt|;
 name|UINT32
 name|ArgTypes
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 94 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 97 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -803,10 +803,29 @@ argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
-comment|/*      * Execute the method via the interpreter      */
+comment|/*      * Execute the method via the interpreter.  The interpreter is locked      * here before calling into the AML parser      */
 name|Status
 operator|=
-name|AcpiExExecuteMethod
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiPsxExecute
 argument_list|(
 name|MethodNode
 argument_list|,
@@ -814,6 +833,9 @@ name|Params
 argument_list|,
 name|ReturnObjDesc
 argument_list|)
+expr_stmt|;
+name|AcpiExExitInterpreter
+argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(

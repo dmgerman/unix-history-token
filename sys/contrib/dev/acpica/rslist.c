@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 17 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 19 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -51,6 +51,9 @@ name|UINT8
 name|ResourceStartByte
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Determine if this is a small or large resource      */
 switch|switch
 condition|(

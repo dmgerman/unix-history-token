@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 20 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 22 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -116,6 +116,9 @@ argument_list|(
 name|ACPI_INTEGER
 argument_list|)
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|ObjDesc
@@ -404,6 +407,9 @@ name|UINT8
 modifier|*
 name|NewBuf
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|ObjDesc
@@ -657,7 +663,9 @@ argument_list|(
 name|ACPI_INTEGER
 argument_list|)
 decl_stmt|;
-comment|/******** TBD: DEBUG only      char                    *buf;     char                    sbuf[32]; #include<stdio.h> #include<stdlib.h>     buf = _ui64toa (Integer, sbuf, 10);     printf ("1): %s\n", sbuf);      AcpiExConvertToDecimalAscii (Integer, 0, sbuf);     printf ("2): %s\n", sbuf);       buf = _ui64toa (Integer, sbuf, 16);     printf ("3): %s\n", sbuf);      printf ("4): %s\n", String); ***************************************************/
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|Base
@@ -837,7 +845,7 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/*      * Since leading zeros are supressed, we must check for the case where      * the integer equals 0.        *      * Finally, null terminate the string and return the length      */
+comment|/*      * Since leading zeros are supressed, we must check for the case where      * the integer equals 0.      *      * Finally, null terminate the string and return the length      */
 if|if
 condition|(
 operator|!
@@ -928,6 +936,9 @@ name|UINT8
 modifier|*
 name|Pointer
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|ObjDesc

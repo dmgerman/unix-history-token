@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 95 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ parameter_list|)
 block|{
 name|PROC_NAME
 argument_list|(
-literal|"AcpiExDecodeFieldAccessType"
+literal|"ExDecodeFieldAccessType"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -325,7 +325,7 @@ name|UINT16
 operator|)
 name|FieldBitLength
 expr_stmt|;
-comment|/*       * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary alignment of the access.  For AnyAcc, the width used is the      * largest necessary/possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the alignment is 8.  For all other      * access types (Byte, Word, Dword, Qword), the width is the same as the      * alignment.      */
+comment|/*      * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary alignment of the access.  For AnyAcc, the width used is the      * largest necessary/possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the alignment is 8.  For all other      * access types (Byte, Word, Dword, Qword), the width is the same as the      * alignment.      */
 name|AccessBitWidth
 operator|=
 name|AcpiExDecodeFieldAccessType
@@ -407,7 +407,7 @@ operator|=
 literal|8
 expr_stmt|;
 block|}
-comment|/*       * BaseByteOffset is the address of the start of the field within the region.  It is      * the byte address of the first *datum* (field-width data unit) of the field.      * (i.e., the first datum that contains at least the first *bit* of the field.)      */
+comment|/*      * BaseByteOffset is the address of the start of the field within the region.  It is      * the byte address of the first *datum* (field-width data unit) of the field.      * (i.e., the first datum that contains at least the first *bit* of the field.)      */
 name|NearestByteAddress
 operator|=
 name|ROUND_BITS_DOWN_TO_BYTES
@@ -468,7 +468,7 @@ operator|.
 name|StartFieldBitOffset
 argument_list|)
 expr_stmt|;
-comment|/*       * Valid bits -- the number of bits that compose a partial datum,      * 1) At the end of the field within the region (arbitrary starting bit offset)      * 2) At the end of a buffer used to contain the field (starting offset always zero)      */
+comment|/*      * Valid bits -- the number of bits that compose a partial datum,      * 1) At the end of the field within the region (arbitrary starting bit offset)      * 2) At the end of a buffer used to contain the field (starting offset always zero)      */
 name|ObjDesc
 operator|->
 name|CommonField

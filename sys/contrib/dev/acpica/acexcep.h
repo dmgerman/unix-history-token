@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 49 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -635,6 +635,7 @@ end_comment
 
 begin_decl_stmt
 name|NATIVE_CHAR
+specifier|const
 modifier|*
 name|AcpiGbl_ExceptionNames_Env
 index|[]
@@ -699,6 +700,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
+specifier|const
 modifier|*
 name|AcpiGbl_ExceptionNames_Pgm
 index|[]
@@ -719,6 +721,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
+specifier|const
 modifier|*
 name|AcpiGbl_ExceptionNames_Tbl
 index|[]
@@ -737,6 +740,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
+specifier|const
 modifier|*
 name|AcpiGbl_ExceptionNames_Aml
 index|[]
@@ -797,6 +801,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|NATIVE_CHAR
+specifier|const
 modifier|*
 name|AcpiGbl_ExceptionNames_Ctrl
 index|[]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ name|Buffer
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiExCopyBufferToBuffer"
+literal|"ExCopyBufferToBuffer"
 argument_list|)
 expr_stmt|;
 comment|/*      * We know that SourceDesc is a buffer by now      */
@@ -281,6 +281,9 @@ name|UINT8
 modifier|*
 name|Buffer
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * We know that SourceDesc is a string by now.      */
 name|Buffer
 operator|=

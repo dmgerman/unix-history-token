@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -103,6 +103,9 @@ name|PrefixNode
 init|=
 name|NULL
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Ensure that ACPI has been initialized */
 name|ACPI_IS_INITIALIZATION_COMPLETE
 argument_list|(
@@ -251,7 +254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiGetPathname  *  * PARAMETERS:  Handle          - Handle to be converted to a pathname  *              NameType        - Full pathname or single segment  *              RetPathPtr      - Buffer for returned path  *  * RETURN:      Pointer to a string containing the fully qualified Name.  *  * DESCRIPTION: This routine returns the fully qualified name associated with  *              the Handle parameter.  This and the AcpiPathnameToHandle are  *              complementary functions.  *  ******************************************************************************/
+comment|/****************************************************************************  *  * FUNCTION:    AcpiGetName  *  * PARAMETERS:  Handle          - Handle to be converted to a pathname  *              NameType        - Full pathname or single segment  *              RetPathPtr      - Buffer for returned path  *  * RETURN:      Pointer to a string containing the fully qualified Name.  *  * DESCRIPTION: This routine returns the fully qualified name associated with  *              the Handle parameter.  This and the AcpiPathnameToHandle are  *              complementary functions.  *  ******************************************************************************/
 end_comment
 
 begin_function

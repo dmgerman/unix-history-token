@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -288,7 +288,7 @@ argument_list|(
 literal|"TbFindRsdp"
 argument_list|)
 expr_stmt|;
-comment|/*       * Scan supports either 1) Logical addressing or 2) Physical addressing      */
+comment|/*      * Scan supports either 1) Logical addressing or 2) Physical addressing      */
 if|if
 condition|(
 operator|(
@@ -597,7 +597,7 @@ argument_list|(
 literal|"AcpiGetFirmwareTable"
 argument_list|)
 expr_stmt|;
-comment|/*       * Ensure that at least the table manager is initialized.  We don't      * require that the entire ACPI subsystem is up for this interface      */
+comment|/*      * Ensure that at least the table manager is initialized.  We don't      * require that the entire ACPI subsystem is up for this interface      */
 comment|/*      *  If we have a buffer, we must have a length too      */
 if|if
 condition|(
@@ -758,7 +758,7 @@ argument_list|,
 name|RsdtPtr
 argument_list|)
 expr_stmt|;
-comment|/*      * Search the RSDT/XSDT for the correct instance of the       * requested table      */
+comment|/*      * Search the RSDT/XSDT for the correct instance of the      * requested table      */
 for|for
 control|(
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 88 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 89 $  *  ******************************************************************************/
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 43 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisasm - parser op tree display routines  *              $Revision: 48 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ end_define
 begin_decl_stmt
 name|NATIVE_CHAR
 modifier|*
-name|INDENT_STRING
+name|AcpiGbl_DbDisasmIndent
 init|=
 literal|"...."
 decl_stmt|;
@@ -399,7 +399,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
 name|DepthCount
@@ -495,7 +495,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|INDENT_STRING
+name|AcpiGbl_DbDisasmIndent
 argument_list|)
 expr_stmt|;
 block|}
@@ -586,7 +586,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|INDENT_STRING
+name|AcpiGbl_DbDisasmIndent
 argument_list|)
 expr_stmt|;
 block|}
@@ -656,7 +656,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|INDENT_STRING
+name|AcpiGbl_DbDisasmIndent
 argument_list|)
 expr_stmt|;
 block|}
@@ -692,7 +692,7 @@ name|Parent
 operator|)
 operator|&&
 operator|(
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 operator|)
 condition|)
 block|{
@@ -786,7 +786,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|INDENT_STRING
+name|AcpiGbl_DbDisasmIndent
 argument_list|)
 expr_stmt|;
 block|}
@@ -990,28 +990,42 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|NamePath
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 comment|/* We are only interested in named objects */
-if|if
-condition|(
-operator|!
-name|AcpiPsIsNodeOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NSNODE
+operator|)
 condition|)
 block|{
 return|return;
 block|}
 if|if
 condition|(
-name|AcpiPsIsCreateFieldOp
-argument_list|(
-name|Op
+name|OpInfo
 operator|->
-name|Opcode
-argument_list|)
+name|Flags
+operator|&
+name|AML_CREATE
 condition|)
 block|{
 comment|/* Field creation - check for a fully qualified namepath */
@@ -1131,14 +1145,27 @@ block|}
 if|if
 condition|(
 name|Prev
-operator|&&
-operator|!
-name|AcpiPsIsFieldOp
+condition|)
+block|{
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Search
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_FIELD
+operator|)
 condition|)
 block|{
 comment|/* below root scope, append scope name */
@@ -1156,12 +1183,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|AcpiPsIsCreateFieldOp
-argument_list|(
-name|Search
+name|OpInfo
 operator|->
-name|Opcode
-argument_list|)
+name|Flags
+operator|&
+name|AML_CREATE
 condition|)
 block|{
 if|if
@@ -1246,6 +1272,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+block|}
 name|Prev
 operator|=
 name|Search
@@ -1281,9 +1308,10 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
-name|Opc
+name|OpInfo
 init|=
 name|NULL
 decl_stmt|;
@@ -1315,7 +1343,7 @@ name|AML_BYTE_OP
 case|:
 if|if
 condition|(
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1350,7 +1378,7 @@ name|AML_WORD_OP
 case|:
 if|if
 condition|(
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1385,7 +1413,7 @@ name|AML_DWORD_OP
 case|:
 if|if
 condition|(
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1420,7 +1448,7 @@ name|AML_QWORD_OP
 case|:
 if|if
 condition|(
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1599,7 +1627,7 @@ name|AML_INT_BYTELIST_OP
 case|:
 if|if
 condition|(
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1676,7 +1704,7 @@ block|}
 break|break;
 default|default:
 comment|/* Just get the opcode name and print it */
-name|Opc
+name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
 argument_list|(
@@ -1689,7 +1717,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|Opc
+name|OpInfo
 operator|->
 name|Name
 argument_list|)
@@ -1754,7 +1782,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|Opc
+name|OpInfo
 condition|)
 block|{
 comment|/* If there is another element in the list, add a comma */
@@ -1773,16 +1801,26 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * If this is a named opcode, print the associated name value      */
-if|if
-condition|(
-name|Op
-operator|&&
-name|AcpiPsIsNamedOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Op
+operator|&&
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+operator|)
 condition|)
 block|{
 name|Name
@@ -1802,7 +1840,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
 name|AcpiOsPrintf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 53 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 55 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCreateNode  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsCreateNode  *  * PARAMETERS:  AcpiName        - Name of the new node  *  * RETURN:      None  *  * DESCRIPTION: Create a namespace node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -127,7 +127,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNode  *  * PARAMETERS:  *  * RETURN:      None  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNode  *  * PARAMETERS:  Node            - Node to be deleted  *  * RETURN:      None  *  * DESCRIPTION: Delete a namespace node  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -270,7 +270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsInstallNode  *  * PARAMETERS:  WalkState       - Current state of the walk  *              ParentNode      - The parent of the new Node  *              Node        - The new Node to install  *              Type            - ACPI object type of the new Node  *  * RETURN:      None  *  * DESCRIPTION: Initialize a new entry within a namespace table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsInstallNode  *  * PARAMETERS:  WalkState       - Current state of the walk  *              ParentNode      - The parent of the new Node  *              Node            - The new Node to install  *              Type            - ACPI object type of the new Node  *  * RETURN:      None  *  * DESCRIPTION: Initialize a new entry within a namespace table.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -559,7 +559,7 @@ name|Flags
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiNsDeleteChildren"
+literal|"NsDeleteChildren"
 argument_list|,
 name|ParentNode
 argument_list|)
@@ -700,7 +700,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceSubtree  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Delete a subtree of the namespace.  This includes all objects  *              stored within the subtree.  Scope tables are deleted also  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceSubtree  *  * PARAMETERS:  ParentNode      - Root of the subtree to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Delete a subtree of the namespace.  This includes all objects  *              stored within the subtree.  Scope tables are deleted also  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -860,7 +860,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRemoveReference  *  * PARAMETERS:  Node           - Named object whose reference count is to be  *                                decremented  *  * RETURN:      None.  *  * DESCRIPTION: Remove a Node reference.  Decrements the reference count  *              of all parent Nodes up to the root.  Any object along  *              the way that reaches zero references is freed.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRemoveReference  *  * PARAMETERS:  Node           - Named object whose reference count is to be  *                               decremented  *  * RETURN:      None.  *  * DESCRIPTION: Remove a Node reference.  Decrements the reference count  *              of all parent Nodes up to the root.  Any object along  *              the way that reaches zero references is freed.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -877,6 +877,9 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|NextNode
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Decrement the reference count(s) of this object and all      * objects up to the root,  Delete anything with zero remaining references.      */
 name|NextNode
 operator|=
@@ -927,7 +930,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceByOwner  *  * PARAMETERS:  None.  *  * RETURN:      None.  *  * DESCRIPTION: Delete entries within the namespace that are owned by a  *              specific ID.  Used to delete entire ACPI tables.  All  *              reference counts are updated.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteNamespaceByOwner  *  * PARAMETERS:  OwnerId     - All nodes with this owner will be deleted  *  * RETURN:      Status  *  * DESCRIPTION: Delete entries within the namespace that are owned by a  *              specific ID.  Used to delete entire ACPI tables.  All  *              reference counts are updated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -955,7 +958,7 @@ name|ParentNode
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"NsDeleteNamespaceSubtree"
+literal|"NsDeleteNamespaceByOwner"
 argument_list|)
 expr_stmt|;
 name|ParentNode

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exxface - External interpreter interfaces  *              $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exxface - External interpreter interfaces  *              $Revision: 29 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,6 +39,12 @@ literal|"exxface"
 argument_list|)
 end_macro
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * DEFINE_AML_GLOBALS is tested in amlcode.h  * to determine whether certain global names should be "defined" or only  * "declared" in the current compilation.  This enhances maintainability  * by enabling a single header file to embody all knowledge of the names  * in question.  *  * Exactly one module of any executable should #define DEFINE_GLOBALS  * before #including the header files which use this convention.  The  * names in question will be defined and initialized in that module,  * and declared as extern in all other modules which #include those  * header files.  */
 end_comment
@@ -71,74 +77,16 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExecuteMethod  *  * PARAMETERS:  Pcode               - Pointer to the pcode stream  *              PcodeLength         - Length of pcode that comprises the method  *              **Params            - List of parameters to pass to method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method  *  ******************************************************************************/
 end_comment
 
-begin_function
-name|ACPI_STATUS
-name|AcpiExExecuteMethod
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|MethodNode
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Params
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnObjDesc
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|FUNCTION_TRACE
-argument_list|(
-literal|"ExExecuteMethod"
-argument_list|)
-expr_stmt|;
+begin_comment
+unit|ACPI_STATUS AcpiExExecuteMethod (     ACPI_NAMESPACE_NODE     *MethodNode,     ACPI_OPERAND_OBJECT     **Params,     ACPI_OPERAND_OBJECT     **ReturnObjDesc) {     ACPI_STATUS             Status;       FUNCTION_TRACE ("ExExecuteMethod");
 comment|/*      * The point here is to lock the interpreter and call the low      * level execute.      */
-name|Status
-operator|=
-name|AcpiExEnterInterpreter
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-name|Status
-operator|=
-name|AcpiPsxExecute
-argument_list|(
-name|MethodNode
-argument_list|,
-name|Params
-argument_list|,
-name|ReturnObjDesc
-argument_list|)
-expr_stmt|;
-name|AcpiExExitInterpreter
-argument_list|()
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|Status = AcpiExEnterInterpreter ();     if (ACPI_FAILURE (Status))     {         return_ACPI_STATUS (Status);     }      Status = AcpiPsxExecute (MethodNode, Params, ReturnObjDesc);      AcpiExExitInterpreter ();      return_ACPI_STATUS (Status); }
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 30 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 32 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -931,7 +931,7 @@ operator|=
 operator|*
 name|Buffer
 expr_stmt|;
-comment|/*              * To compensate for multiple interrupt numbers, add 4 bytes for               * each additional interrupts greater than 1              */
+comment|/*              * To compensate for multiple interrupt numbers, add 4 bytes for              * each additional interrupts greater than 1              */
 name|AdditionalBytes
 operator|=
 call|(
@@ -1426,7 +1426,7 @@ name|TableIndex
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiRsCalculatePciRoutingTableLength"
+literal|"RsCalculatePciRoutingTableLength"
 argument_list|)
 expr_stmt|;
 name|NumberOfElements

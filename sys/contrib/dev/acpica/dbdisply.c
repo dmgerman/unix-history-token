@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 47 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 50 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -174,6 +174,7 @@ modifier|*
 name|Op
 parameter_list|)
 block|{
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|Info
@@ -1395,6 +1396,7 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo

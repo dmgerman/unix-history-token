@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 127 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 130 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1440,6 +1440,73 @@ value|((a)->Flags& ACPI_OP_TYPE_MASK)
 end_define
 
 begin_comment
+comment|/*  * Flags byte: 0-4 (5 bits) = Opcode Class  (0x001F  *             5   (1 bit)  = Has arguments flag  *             6-7 (2 bits) = Reserved  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_NO_ARGS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_HAS_ARGS
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_NSOBJECT
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_NSOPCODE
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_NSNODE
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_NAMED
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_DEFER
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_FIELD
+value|0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_CREATE
+value|0x4000
+end_define
+
+begin_comment
 comment|/*  * AML opcode, name, and argument layout  */
 end_comment
 
@@ -1448,10 +1515,6 @@ typedef|typedef
 struct|struct
 name|acpi_opcode_info
 block|{
-name|UINT8
-name|Flags
-decl_stmt|;
-comment|/* Opcode type, HasArgs flag */
 name|UINT32
 name|ParseArgs
 decl_stmt|;
@@ -1460,6 +1523,10 @@ name|UINT32
 name|RuntimeArgs
 decl_stmt|;
 comment|/* Interpret time arguments */
+name|UINT16
+name|Flags
+decl_stmt|;
+comment|/* Opcode type, HasArgs flag */
 ifdef|#
 directive|ifdef
 name|_OPCODE_NAMES
@@ -2521,6 +2588,26 @@ end_typedef
 begin_comment
 comment|/*****************************************************************************  *  * Debug  *  ****************************************************************************/
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|UINT32
+name|ComponentId
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|ProcName
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|ModuleName
+decl_stmt|;
+block|}
+name|ACPI_DEBUG_PRINT_INFO
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Entry for a memory allocation (debug only) */

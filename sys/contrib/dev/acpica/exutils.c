@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 82 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 84 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -11,6 +11,16 @@ begin_define
 define|#
 directive|define
 name|__EXUTILS_C__
+end_define
+
+begin_comment
+comment|/*  * DEFINE_AML_GLOBALS is tested in amlcode.h  * to determine whether certain global names should be "defined" or only  * "declared" in the current compilation.  This enhances maintainability  * by enabling a single header file to embody all knowledge of the names  * in question.  *  * Exactly one module of any executable should #define DEFINE_GLOBALS  * before #including the header files which use this convention.  The  * names in question will be defined and initialized in that module,  * and declared as extern in all other modules which #include those  * header files.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFINE_AML_GLOBALS
 end_define
 
 begin_include
@@ -47,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|"acevents.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acparser.h"
 end_include
 
 begin_define
@@ -135,6 +151,9 @@ name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -185,6 +204,9 @@ modifier|*
 name|WalkState
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Object must be a valid number and we must be executing      * a control method      */
 if|if
 condition|(
@@ -473,6 +495,9 @@ decl_stmt|;
 block|}
 name|In
 union|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|In
 operator|.
 name|Value
@@ -564,6 +589,9 @@ block|{
 name|UINT32
 name|id
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* swap to big-endian to get contiguous bits */
 name|id
 operator|=
@@ -723,6 +751,9 @@ decl_stmt|;
 name|UINT32
 name|DigitsNeeded
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|DigitsNeeded
 operator|=
 name|AcpiExDigitsNeeded

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 29 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 34 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ end_macro
 
 begin_decl_stmt
 name|DB_METHOD_INFO
-name|Info
+name|AcpiGbl_DbMethodInfo
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 operator|&&
 operator|!
 name|AcpiDbgLevel
@@ -293,13 +293,13 @@ name|ReturnObj
 operator|->
 name|Pointer
 operator|=
-name|Buffer
+name|AcpiGbl_DbBuffer
 expr_stmt|;
 name|ReturnObj
 operator|->
 name|Length
 operator|=
-name|BUFFER_SIZE
+name|ACPI_DEBUG_BUFFER_SIZE
 expr_stmt|;
 comment|/* Do the actual method execution */
 name|Status
@@ -388,7 +388,7 @@ name|Info
 operator|->
 name|Pathname
 argument_list|,
-name|ScopeBuf
+name|AcpiGbl_DbScopeBuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -571,19 +571,19 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Name
 operator|=
 name|Name
 expr_stmt|;
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Args
 operator|=
 name|Args
 expr_stmt|;
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Flags
 operator|=
@@ -592,7 +592,7 @@ expr_stmt|;
 name|AcpiDbExecuteSetup
 argument_list|(
 operator|&
-name|Info
+name|AcpiGbl_DbMethodInfo
 argument_list|)
 expr_stmt|;
 name|Status
@@ -600,7 +600,7 @@ operator|=
 name|AcpiDbExecuteMethod
 argument_list|(
 operator|&
-name|Info
+name|AcpiGbl_DbMethodInfo
 argument_list|,
 operator|&
 name|ReturnObj
@@ -659,7 +659,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Execution of %s failed with status %s\n"
 argument_list|,
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Pathname
 argument_list|,
@@ -684,7 +684,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Execution of %s returned object %p Buflen %X\n"
 argument_list|,
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Pathname
 argument_list|,
@@ -940,31 +940,31 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Setup the context to be passed to each thread */
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Name
 operator|=
 name|MethodNameArg
 expr_stmt|;
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Args
 operator|=
 name|NULL
 expr_stmt|;
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|Flags
 operator|=
 literal|0
 expr_stmt|;
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|NumLoops
 operator|=
 name|NumLoops
 expr_stmt|;
-name|Info
+name|AcpiGbl_DbMethodInfo
 operator|.
 name|ThreadGate
 operator|=
@@ -973,7 +973,7 @@ expr_stmt|;
 name|AcpiDbExecuteSetup
 argument_list|(
 operator|&
-name|Info
+name|AcpiGbl_DbMethodInfo
 argument_list|)
 expr_stmt|;
 comment|/* Create the threads */
@@ -1009,7 +1009,7 @@ argument_list|,
 name|AcpiDbMethodThread
 argument_list|,
 operator|&
-name|Info
+name|AcpiGbl_DbMethodInfo
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 46 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 50 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -95,6 +95,9 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -183,6 +186,9 @@ name|NATIVE_CHAR
 name|Character
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 call|(
@@ -238,6 +244,9 @@ name|NATIVE_CHAR
 modifier|*
 name|String
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Walk entire string, uppercasing the letters */
 for|for
 control|(
@@ -1046,6 +1055,9 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Ignore null objects; these are expected */
 if|if
 condition|(
@@ -1124,6 +1136,9 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|State
 operator|=
 name|AcpiUtCreatePkgState
@@ -1226,7 +1241,7 @@ name|State
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"DsPopGenericState"
+literal|"UtPopGenericState"
 argument_list|)
 expr_stmt|;
 comment|/* Remove the state object at the head of the list (stack) */
@@ -1275,6 +1290,9 @@ name|ACPI_GENERIC_STATE
 modifier|*
 name|State
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|State
 operator|=
 name|AcpiUtAcquireFromCache
@@ -1605,7 +1623,7 @@ name|SubObject
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiUtResolvePackageReferences"
+literal|"UtResolvePackageReferences"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1808,7 +1826,7 @@ index|]
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiUtDisplayInitPathname"
+literal|"UtDisplayInitPathname"
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1921,7 +1939,7 @@ name|ThisSourceObj
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiUtWalkPackageTree"
+literal|"UtWalkPackageTree"
 argument_list|)
 expr_stmt|;
 name|State
@@ -2181,12 +2199,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _ReportError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print error message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReportError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print error message  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|_ReportError
+name|AcpiUtReportError
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -2212,12 +2230,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _ReportWarning  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print warning message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReportWarning  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print warning message  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|_ReportWarning
+name|AcpiUtReportWarning
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -2243,12 +2261,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _ReportInfo  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print information message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtReportInfo  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print information message  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|_ReportInfo
+name|AcpiUtReportInfo
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -539,7 +539,7 @@ name|Temp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The PCI bus number comes from the _BBN method       */
+comment|/*      * The PCI bus number comes from the _BBN method      */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject

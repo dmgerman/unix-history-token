@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 18 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 21 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -481,7 +481,7 @@ argument_list|,
 name|PM1BControl
 argument_list|)
 expr_stmt|;
-comment|/*       * Wait a second, then try again. This is to get S4/5 to work on all machines.      */
+comment|/*      * Wait a second, then try again. This is to get S4/5 to work on all machines.      */
 if|if
 condition|(
 name|SleepState
@@ -512,7 +512,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* wait until we enter sleep state */
-while|while
+do|do
+block|{
+name|AcpiOsStall
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+block|}
+do|while
 condition|(
 operator|!
 name|AcpiHwRegisterBitAccess
@@ -524,7 +532,7 @@ argument_list|,
 name|WAK_STS
 argument_list|)
 condition|)
-block|{  }
+do|;
 name|enable
 argument_list|()
 expr_stmt|;

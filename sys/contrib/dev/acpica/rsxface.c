@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 13 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 14 $  *  ******************************************************************************/
 end_comment
 
 begin_comment

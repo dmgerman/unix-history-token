@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 60 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 63 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -343,8 +343,7 @@ operator|=
 name|Type
 expr_stmt|;
 block|}
-comment|/*          * Type is TYPE_Any, we must try to determinte the          * actual type of the object          */
-comment|/*          * Check if value points into the AML code          */
+comment|/*          * Type is TYPE_Any, we must try to determinte the          * actual type of the object.          * Check if value points into the AML code          */
 elseif|else
 if|if
 condition|(
@@ -477,8 +476,7 @@ block|{
 comment|/*              * Cannot figure out the type -- set to DefAny which              * will print as an error in the name table dump              */
 if|if
 condition|(
-name|GetDebugLevel
-argument_list|()
+name|AcpiDbgLevel
 operator|>
 literal|0
 condition|)

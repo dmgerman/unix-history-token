@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 186 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 187 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2586,6 +2586,17 @@ block|}
 name|ACPI_MEM_SPACE_CONTEXT
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Sleep states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_SLEEP_STATES
+value|7
+end_define
 
 begin_comment
 comment|/*  * Definitions for Resource Attributes  */

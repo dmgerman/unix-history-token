@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 21 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 23 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -39,6 +39,12 @@ literal|"rsdump"
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIrq  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
@@ -67,6 +73,9 @@ name|Index
 init|=
 literal|0
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"IRQ Resource\n"
@@ -192,6 +201,9 @@ name|Index
 init|=
 literal|0
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"DMA Resource\n"
@@ -375,6 +387,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Start Dependent Functions Resource\n"
@@ -492,6 +507,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Io Resource\n"
@@ -575,6 +593,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Fixed Io Resource\n"
@@ -630,6 +651,9 @@ name|Index
 init|=
 literal|0
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Vendor Specific Resource\n"
@@ -702,6 +726,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"24-Bit Memory Range Resource\n"
@@ -785,6 +812,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"32-Bit Memory Range Resource\n"
@@ -868,6 +898,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"32-Bit Fixed Location Memory Range Resource\n"
@@ -933,6 +966,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"16-Bit Address Space Resource\n"
@@ -1280,6 +1316,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"32-Bit Address Space Resource\n"
@@ -1622,6 +1661,9 @@ operator|*
 operator|)
 name|Data
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"64-Bit Address Space Resource\n"
@@ -1969,6 +2011,9 @@ name|Index
 init|=
 literal|0
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Extended IRQ Resource\n"
@@ -2138,6 +2183,9 @@ name|Done
 init|=
 name|FALSE
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|AcpiDbgLevel
@@ -2410,6 +2458,9 @@ name|PCI_ROUTING_TABLE
 modifier|*
 name|PrtElement
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|AcpiDbgLevel
@@ -2512,6 +2563,11 @@ block|}
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

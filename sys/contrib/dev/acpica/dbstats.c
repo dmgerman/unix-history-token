@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 43 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 47 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -92,6 +92,10 @@ literal|"SIZES"
 block|}
 block|,
 block|{
+literal|"STACK"
+block|}
+block|,
+block|{
 name|NULL
 block|}
 comment|/* Must be null terminated */
@@ -141,79 +145,12 @@ name|CMD_SIZES
 value|5
 end_define
 
-begin_comment
-comment|/*  * Statistic globals  */
-end_comment
-
-begin_decl_stmt
-name|UINT16
-name|AcpiGbl_ObjTypeCount
-index|[
-name|INTERNAL_TYPE_NODE_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT16
-name|AcpiGbl_NodeTypeCount
-index|[
-name|INTERNAL_TYPE_NODE_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT16
-name|AcpiGbl_ObjTypeCountMisc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT16
-name|AcpiGbl_NodeTypeCountMisc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT32
-name|NumNodes
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT32
-name|NumObjects
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT32
-name|SizeOfParseTree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT32
-name|SizeOfMethodTrees
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT32
-name|SizeOfNodeEntries
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|UINT32
-name|SizeOfAcpiObjects
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|CMD_STACK
+value|6
+end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbEnumerateObject  *  * PARAMETERS:  ObjDesc             - Object to be counted  *  * RETURN:      None  *  * DESCRIPTION: Add this object to the global counts, by object type.  *              Recursively handles subobjects and packages.  *  *              [TBD] Restructure - remove recursion.  *  ******************************************************************************/
@@ -243,7 +180,7 @@ block|{
 return|return;
 block|}
 comment|/* Enumerate this object first */
-name|NumObjects
+name|AcpiGbl_NumObjects
 operator|++
 expr_stmt|;
 name|Type
@@ -488,7 +425,7 @@ decl_stmt|;
 name|UINT32
 name|Type
 decl_stmt|;
-name|NumNodes
+name|AcpiGbl_NumNodes
 operator|++
 expr_stmt|;
 name|Node
@@ -526,7 +463,7 @@ if|if
 condition|(
 name|Type
 operator|>
-name|INTERNAL_TYPE_INVALID
+name|INTERNAL_TYPE_NODE_MAX
 condition|)
 block|{
 name|AcpiGbl_NodeTypeCountMisc
@@ -564,11 +501,11 @@ block|{
 name|UINT32
 name|i
 decl_stmt|;
-name|NumNodes
+name|AcpiGbl_NumNodes
 operator|=
 literal|0
 expr_stmt|;
-name|NumObjects
+name|AcpiGbl_NumObjects
 operator|=
 literal|0
 expr_stmt|;
@@ -584,7 +521,11 @@ literal|0
 init|;
 name|i
 operator|<
-name|INTERNAL_TYPE_INVALID
+operator|(
+name|INTERNAL_TYPE_NODE_MAX
+operator|-
+literal|1
+operator|)
 condition|;
 name|i
 operator|++
@@ -725,14 +666,6 @@ name|AE_OK
 operator|)
 return|;
 block|}
-ifndef|#
-directive|ifndef
-name|PARSER_ONLY
-name|AcpiDbCountNamespaceObjects
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|Type
@@ -786,6 +719,12 @@ break|break;
 case|case
 name|CMD_OBJECTS
 case|:
+ifndef|#
+directive|ifndef
+name|PARSER_ONLY
+name|AcpiDbCountNamespaceObjects
+argument_list|()
+expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"\nObjects defined in the current namespace:\n\n"
@@ -854,12 +793,13 @@ literal|"%16.16s % 10ld% 10ld\n"
 argument_list|,
 literal|"TOTALS:"
 argument_list|,
-name|NumNodes
+name|AcpiGbl_NumNodes
 argument_list|,
-name|NumObjects
+name|AcpiGbl_NumObjects
 argument_list|)
 expr_stmt|;
-comment|/*         AcpiOsPrintf ("\n");          AcpiOsPrintf ("ASL/AML Grammar Usage:\n\n");         AcpiOsPrintf ("Elements Inside Methods:....% 7ld\n", NumMethodElements);         AcpiOsPrintf ("Elements Outside Methods:...% 7ld\n", NumGrammarElements - NumMethodElements);         AcpiOsPrintf ("Total Grammar Elements:.....% 7ld\n", NumGrammarElements); */
+endif|#
+directive|endif
 break|break;
 case|case
 name|CMD_MEMORY
@@ -1416,6 +1356,51 @@ sizeof|sizeof
 argument_list|(
 name|ACPI_NAMESPACE_NODE
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_STACK
+case|:
+name|Size
+operator|=
+name|AcpiGbl_EntryStackPointer
+operator|-
+name|AcpiGbl_LowestStackPointer
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\nSubsystem Stack Usage:\n\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Entry Stack Pointer          %X\n"
+argument_list|,
+name|AcpiGbl_EntryStackPointer
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Lowest Stack Pointer         %X\n"
+argument_list|,
+name|AcpiGbl_LowestStackPointer
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Stack Use                    %X (%d)\n"
+argument_list|,
+name|Size
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Deepest Procedure Nesting    %d\n"
+argument_list|,
+name|AcpiGbl_DeepestNesting
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 71 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -493,6 +493,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ArgDesc
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
@@ -736,7 +737,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*          * Second arg is the buffer data (optional) ByteList can be either           * individual bytes or a string initializer.          */
+comment|/*          * Second arg is the buffer data (optional) ByteList can be either          * individual bytes or a string initializer.          */
 name|Arg
 operator|=
 name|Op
@@ -811,7 +812,7 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*          * When called, an internal package object has already been built and           * is pointed to by ObjDesc.  AcpiDsBuildInternalObject builds another          * internal package object, so remove reference to the original so           * that it is deleted.  Error checking is done within the remove           * reference function.          */
+comment|/*          * When called, an internal package object has already been built and          * is pointed to by ObjDesc.  AcpiDsBuildInternalObject builds another          * internal package object, so remove reference to the original so          * that it is deleted.  Error checking is done within the remove          * reference function.          */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
@@ -981,7 +982,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * Decode constants here.  Turn them into real integer objects               * that are initialized to the value of the constant.              */
+comment|/*              * Decode constants here.  Turn them into real integer objects              * that are initialized to the value of the constant.              */
 switch|switch
 condition|(
 name|Op

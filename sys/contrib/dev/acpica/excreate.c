@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -484,8 +484,6 @@ name|FUNCTION_TRACE
 argument_list|(
 literal|"ExCreateEvent"
 argument_list|)
-expr_stmt|;
-name|BREAKPOINT3
 expr_stmt|;
 name|ObjDesc
 operator|=

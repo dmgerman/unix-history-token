@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ name|ScopeInfo
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiDsScopeStackClear"
+literal|"DsScopeStackClear"
 argument_list|)
 expr_stmt|;
 while|while
@@ -160,7 +160,7 @@ operator|!
 name|Node
 condition|)
 block|{
-comment|/*  invalid scope   */
+comment|/* Invalid scope   */
 name|REPORT_ERROR
 argument_list|(
 operator|(

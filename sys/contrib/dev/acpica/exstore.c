@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 142 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 147 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -305,14 +305,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"**** Write to Debug Object: ****: \n"
+literal|"**** Write to Debug Object: ****:\n\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
-name|ACPI_DB_OBJECTS
+name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"[ACPI Debug] %s: "
 operator|,
@@ -342,7 +342,7 @@ case|:
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
-name|ACPI_DB_OBJECTS
+name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"0x%X (%d)\n"
 operator|,
@@ -373,7 +373,7 @@ case|:
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
-name|ACPI_DB_OBJECTS
+name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"Length 0x%X\n"
 operator|,
@@ -395,7 +395,7 @@ case|:
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
-name|ACPI_DB_OBJECTS
+name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"%s\n"
 operator|,
@@ -414,7 +414,7 @@ case|:
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
-name|ACPI_DB_OBJECTS
+name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"Elements - 0x%X\n"
 operator|,
@@ -434,7 +434,7 @@ default|default:
 name|ACPI_DEBUG_PRINT_RAW
 argument_list|(
 operator|(
-name|ACPI_DB_OBJECTS
+name|ACPI_DB_DEBUG_OBJECT
 operator|,
 literal|"@0x%p\n"
 operator|,
@@ -444,6 +444,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"\n"
+operator|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|AML_ZERO_OP
@@ -556,7 +565,7 @@ literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiExStoreObjectToIndex"
+literal|"ExStoreObjectToIndex"
 argument_list|)
 expr_stmt|;
 comment|/*      * Destination must be a reference pointer, and      * must point to either a buffer or a package      */

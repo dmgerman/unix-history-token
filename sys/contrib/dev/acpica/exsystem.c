@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -77,7 +77,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiExSystemWaitSemaphore"
+literal|"ExSystemWaitSemaphore"
 argument_list|)
 expr_stmt|;
 name|Status
@@ -182,6 +182,9 @@ name|UINT32
 name|HowLong
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|HowLong
@@ -235,6 +238,9 @@ name|UINT32
 name|HowLong
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Since this thread will sleep, we must release the interpreter */
 name|AcpiExExitInterpreter
 argument_list|()
@@ -297,7 +303,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiExSystemAcquireMutex"
+literal|"ExSystemAcquireMutex"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -385,7 +391,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiExSystemReleaseMutex"
+literal|"ExSystemReleaseMutex"
 argument_list|)
 expr_stmt|;
 if|if
@@ -462,7 +468,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiExSystemSignalEvent"
+literal|"ExSystemSignalEvent"
 argument_list|)
 expr_stmt|;
 if|if
@@ -516,7 +522,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiExSystemWaitEvent"
+literal|"ExSystemWaitEvent"
 argument_list|)
 expr_stmt|;
 if|if
@@ -575,6 +581,9 @@ name|void
 modifier|*
 name|TempSemaphore
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * We are going to simply delete the existing semaphore and      * create a new one!      */
 name|Status
 operator|=

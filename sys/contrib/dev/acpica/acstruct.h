@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 3 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 5 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ block|{
 name|UINT8
 name|DataType
 decl_stmt|;
-comment|/* To differentiate various internal objs */
+comment|/* To differentiate various internal objs MUST BE FIRST!*/
 block|\
 name|ACPI_OWNER_ID
 name|OwnerId
@@ -138,6 +138,7 @@ name|UINT8
 modifier|*
 name|AmlLastWhile
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 87 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,48 +35,125 @@ end_macro
 
 begin_decl_stmt
 name|UINT32
-name|PrevThreadId
+name|AcpiGbl_PrevThreadId
 init|=
 literal|0xFFFFFFFF
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|AcpiGbl_FnEntryStr
+init|=
+literal|"----Entry"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|AcpiGbl_FnExitStr
+init|=
+literal|"----Exit-"
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    Get/Set debug level  *  * DESCRIPTION: Get or set value of the debug flag  *  *              These are used to allow user's to get/set the debug level  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtInitStackPtrTrace  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Save the current stack pointer  *  ****************************************************************************/
 end_comment
 
 begin_function
-name|UINT32
-name|GetDebugLevel
+name|void
+name|AcpiUtInitStackPtrTrace
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-return|return
-operator|(
-name|AcpiDbgLevel
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|SetDebugLevel
-parameter_list|(
 name|UINT32
-name|NewDebugLevel
-parameter_list|)
-block|{
-name|AcpiDbgLevel
+name|CurrentSp
+decl_stmt|;
+name|AcpiGbl_EntryStackPointer
 operator|=
-name|NewDebugLevel
+operator|(
+name|UINT32
+operator|)
+operator|&
+name|CurrentSp
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtDebugPrint  *  * PARAMETERS:  DebugLevel          - Requested debug print level  *              ProcName            - Caller's procedure name  *              ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *                *              Format              - Printf format field  *              ...                 - Optional printf arguments  *  * RETURN:      None  *  * DESCRIPTION: Print error message with prefix consisting of the module name,  *              line number, and component ID.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtTrackStackPtr  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Save the current stack pointer  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiUtTrackStackPtr
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|UINT32
+name|CurrentSp
+decl_stmt|;
+name|CurrentSp
+operator|=
+operator|(
+name|UINT32
+operator|)
+operator|&
+name|CurrentSp
+expr_stmt|;
+if|if
+condition|(
+name|CurrentSp
+operator|<
+name|AcpiGbl_LowestStackPointer
+condition|)
+block|{
+name|AcpiGbl_LowestStackPointer
+operator|=
+name|CurrentSp
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|AcpiGbl_NestingLevel
+operator|>
+name|AcpiGbl_DeepestNesting
+condition|)
+block|{
+name|AcpiGbl_DeepestNesting
+operator|=
+name|AcpiGbl_NestingLevel
+expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_DeepestNesting
+operator|==
+literal|34
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"hit deepest nesting\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtDebugPrint  *  * PARAMETERS:  DebugLevel          - Requested debug print level  *              ProcName            - Caller's procedure name  *              ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *  *              Format              - Printf format field  *              ...                 - Optional printf arguments  *  * RETURN:      None  *  * DESCRIPTION: Print error message with prefix consisting of the module name,  *              line number, and component ID.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -87,18 +164,11 @@ name|UINT32
 name|RequestedDebugLevel
 parameter_list|,
 name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ProcName
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
-name|UINT32
 name|LineNumber
+parameter_list|,
+name|ACPI_DEBUG_PRINT_INFO
+modifier|*
+name|DbgInfo
 parameter_list|,
 name|char
 modifier|*
@@ -113,6 +183,7 @@ decl_stmt|;
 name|va_list
 name|args
 decl_stmt|;
+comment|/*      * Stay silent if the debug level or component ID is disabled      */
 if|if
 condition|(
 operator|!
@@ -124,6 +195,8 @@ operator|)
 operator|||
 operator|!
 operator|(
+name|DbgInfo
+operator|->
 name|ComponentId
 operator|&
 name|AcpiDbgLayer
@@ -132,6 +205,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/*      * Thread tracking and context switch notification      */
 name|ThreadId
 operator|=
 name|AcpiOsGetThreadId
@@ -141,7 +215,7 @@ if|if
 condition|(
 name|ThreadId
 operator|!=
-name|PrevThreadId
+name|AcpiGbl_PrevThreadId
 condition|)
 block|{
 if|if
@@ -155,17 +229,29 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"\n**** Context Switch from TID %X to TID %X ****\n\n"
 argument_list|,
-name|PrevThreadId
+name|AcpiGbl_PrevThreadId
 argument_list|,
 name|ThreadId
 argument_list|)
 expr_stmt|;
 block|}
-name|PrevThreadId
+name|AcpiGbl_PrevThreadId
 operator|=
 name|ThreadId
 expr_stmt|;
 block|}
+comment|/*      * Display the module name, current line number, thread ID (if requested),      * current procedure nesting level, and the current procedure name      */
+name|AcpiOsPrintf
+argument_list|(
+literal|"%8s-%04d "
+argument_list|,
+name|DbgInfo
+operator|->
+name|ModuleName
+argument_list|,
+name|LineNumber
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_LV_THREADS
@@ -175,36 +261,29 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%8s-%04d[%04X][%02d] %s: "
-argument_list|,
-name|ModuleName
-argument_list|,
-name|LineNumber
+literal|"[%04X] "
 argument_list|,
 name|ThreadId
 argument_list|,
 name|AcpiGbl_NestingLevel
 argument_list|,
+name|DbgInfo
+operator|->
 name|ProcName
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%8s-%04d[%02d] %s: "
-argument_list|,
-name|ModuleName
-argument_list|,
-name|LineNumber
+literal|"[%02d] %-22.22s: "
 argument_list|,
 name|AcpiGbl_NestingLevel
 argument_list|,
+name|DbgInfo
+operator|->
 name|ProcName
 argument_list|)
 expr_stmt|;
-block|}
 name|va_start
 argument_list|(
 name|args
@@ -223,7 +302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtDebugPrintRaw  *  * PARAMETERS:  DebugLevel          - Requested debug print level  *              ProcName            - Caller's procedure name  *              ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *                *              Format              - Printf format field  *              ...                 - Optional printf arguments  *  * RETURN:      None  *  * DESCRIPTION: Print message with no headers.  Has same interface as   *              DebugPrint so that the same macros can be used.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtDebugPrintRaw  *  * PARAMETERS:  RequestedDebugLevel - Requested debug print level  *              LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *              Format              - Printf format field  *              ...                 - Optional printf arguments  *  * RETURN:      None  *  * DESCRIPTION: Print message with no headers.  Has same interface as  *              DebugPrint so that the same macros can be used.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -234,18 +313,11 @@ name|UINT32
 name|RequestedDebugLevel
 parameter_list|,
 name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ProcName
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
-name|UINT32
 name|LineNumber
+parameter_list|,
+name|ACPI_DEBUG_PRINT_INFO
+modifier|*
+name|DbgInfo
 parameter_list|,
 name|char
 modifier|*
@@ -268,6 +340,8 @@ operator|)
 operator|||
 operator|!
 operator|(
+name|DbgInfo
+operator|->
 name|ComponentId
 operator|&
 name|AcpiDbgLayer
@@ -294,70 +368,57 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionTrace  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtTrace  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionTrace
+name|AcpiUtTrace
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|)
 block|{
 name|AcpiGbl_NestingLevel
 operator|++
 expr_stmt|;
+name|AcpiUtTrackStackPtr
+argument_list|()
+expr_stmt|;
 name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Entered Function----\n"
+name|DbgInfo
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|AcpiGbl_FnEntryStr
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionTracePtr  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *              Pointer             - Pointer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtTracePtr  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *              Pointer             - Pointer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionTracePtr
+name|AcpiUtTracePtr
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|void
 modifier|*
@@ -367,19 +428,20 @@ block|{
 name|AcpiGbl_NestingLevel
 operator|++
 expr_stmt|;
+name|AcpiUtTrackStackPtr
+argument_list|()
+expr_stmt|;
 name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Entered Function---- %p\n"
+name|DbgInfo
+argument_list|,
+literal|"%s %p\n"
+argument_list|,
+name|AcpiGbl_FnEntryStr
 argument_list|,
 name|Pointer
 argument_list|)
@@ -388,26 +450,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionTraceStr  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *              String              - Additional string to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtTraceStr  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *              String              - Additional string to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionTraceStr
+name|AcpiUtTraceStr
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|NATIVE_CHAR
 modifier|*
@@ -417,19 +472,20 @@ block|{
 name|AcpiGbl_NestingLevel
 operator|++
 expr_stmt|;
+name|AcpiUtTrackStackPtr
+argument_list|()
+expr_stmt|;
 name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Entered Function---- %s\n"
+name|DbgInfo
+argument_list|,
+literal|"%s %s\n"
+argument_list|,
+name|AcpiGbl_FnEntryStr
 argument_list|,
 name|String
 argument_list|)
@@ -438,26 +494,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionTraceU32  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *              Integer             - Integer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtTraceU32  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *              Integer             - Integer to display  *  * RETURN:      None  *  * DESCRIPTION: Function entry trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionTraceU32
+name|AcpiUtTraceU32
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|UINT32
 name|Integer
@@ -466,19 +515,20 @@ block|{
 name|AcpiGbl_NestingLevel
 operator|++
 expr_stmt|;
+name|AcpiUtTrackStackPtr
+argument_list|()
+expr_stmt|;
 name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Entered Function---- %08X\n"
+name|DbgInfo
+argument_list|,
+literal|"%s %08X\n"
+argument_list|,
+name|AcpiGbl_FnEntryStr
 argument_list|,
 name|Integer
 argument_list|)
@@ -487,41 +537,32 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionExit  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionExit
+name|AcpiUtExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|)
 block|{
 name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Exiting Function----\n"
+name|DbgInfo
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|AcpiGbl_FnExitStr
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_NestingLevel
@@ -531,44 +572,43 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionStatusExit  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *              Status              - Exit status code  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit status also.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtStatusExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *              Status              - Exit status code  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit status also.  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionStatusExit
+name|AcpiUtStatusExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|ACPI_STATUS
 name|Status
 parameter_list|)
 block|{
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Exiting Function---- %s\n"
+name|DbgInfo
+argument_list|,
+literal|"%s %s\n"
+argument_list|,
+name|AcpiGbl_FnExitStr
 argument_list|,
 name|AcpiFormatException
 argument_list|(
@@ -576,6 +616,28 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiUtDebugPrint
+argument_list|(
+name|ACPI_LV_FUNCTIONS
+argument_list|,
+name|LineNumber
+argument_list|,
+name|DbgInfo
+argument_list|,
+literal|"%s ****Exception****: %s\n"
+argument_list|,
+name|AcpiGbl_FnExitStr
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|AcpiGbl_NestingLevel
 operator|--
 expr_stmt|;
@@ -583,26 +645,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionValueExit  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *              Value               - Value to be printed with exit msg  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit value also.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtValueExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *              Value               - Value to be printed with exit msg  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit value also.  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionValueExit
+name|AcpiUtValueExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|ACPI_INTEGER
 name|Value
@@ -612,15 +667,13 @@ name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Exiting Function---- %08X\n"
+name|DbgInfo
+argument_list|,
+literal|"%s %08X\n"
+argument_list|,
+name|AcpiGbl_FnExitStr
 argument_list|,
 name|Value
 argument_list|)
@@ -632,26 +685,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    FunctionPtrExit  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              FunctionName        - Name of Caller's function  *              Value               - Value to be printed with exit msg  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit value also.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtPtrExit  *  * PARAMETERS:  LineNumber          - Caller's line number  *              DbgInfo             - Contains:  *                  ProcName            - Caller's procedure name  *                  ModuleName          - Caller's module name  *                  ComponentId         - Caller's component ID  *              Value               - Value to be printed with exit msg  *  * RETURN:      None  *  * DESCRIPTION: Function exit trace.  Prints only if TRACE_FUNCTIONS bit is  *              set in DebugLevel.  Prints exit value also.  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|FunctionPtrExit
+name|AcpiUtPtrExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|UINT8
 modifier|*
@@ -662,15 +708,13 @@ name|AcpiUtDebugPrint
 argument_list|(
 name|ACPI_LV_FUNCTIONS
 argument_list|,
-name|ComponentId
-argument_list|,
-name|FunctionName
-argument_list|,
-name|ModuleName
-argument_list|,
 name|LineNumber
 argument_list|,
-literal|"----Exiting Function----, %p\n"
+name|DbgInfo
+argument_list|,
+literal|"%s %p\n"
+argument_list|,
+name|AcpiGbl_FnExitStr
 argument_list|,
 name|Ptr
 argument_list|)
@@ -681,8 +725,13 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              ComponentID         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              Display             - BYTE, WORD, DWORD, or QWORD display  *              ComponentID         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ****************************************************************************/
 end_comment
 
 begin_function

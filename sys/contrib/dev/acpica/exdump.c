@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 116 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 122 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -405,7 +405,9 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Node: \n"
+literal|"%p NS Node: "
+operator|,
+name|EntryDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -463,7 +465,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"%p Not a local object \n"
+literal|"%p Is not a local object \n"
 operator|,
 name|EntryDesc
 operator|)
@@ -888,13 +890,25 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Number %lX\n"
+literal|"Integer %8.8X%8.8X\n"
 operator|,
+name|HIDWORD
+argument_list|(
 name|EntryDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|EntryDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -907,13 +921,25 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"If [Number] %lX\n"
+literal|"If [Integer] %8.8X%8.8X\n"
 operator|,
+name|HIDWORD
+argument_list|(
 name|EntryDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|EntryDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -926,13 +952,25 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"While [Number] %lX\n"
+literal|"While [Integer] %8.8X%8.8X\n"
 operator|,
+name|HIDWORD
+argument_list|(
 name|EntryDesc
 operator|->
 name|Integer
 operator|.
 name|Value
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|EntryDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -976,8 +1014,7 @@ name|Package
 operator|.
 name|Elements
 operator|&&
-name|GetDebugLevel
-argument_list|()
+name|AcpiDbgLevel
 operator|>
 literal|1
 condition|)
@@ -1122,7 +1159,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"String length %X @ %p\n\n"
+literal|"String length %X @ %p \""
 operator|,
 name|EntryDesc
 operator|->
@@ -1180,7 +1217,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"\n\n"
+literal|"\"\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1577,7 +1614,7 @@ name|EntryDesc
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiExDumpOperands"
+literal|"ExDumpOperands"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1607,26 +1644,11 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"************* AcpiExDumpOperands  Mode=%X ******************\n"
-operator|,
-name|InterpreterMode
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"From %12s(%d)  %s: %s\n"
-operator|,
-name|ModuleName
-operator|,
-name|LineNumber
+literal|"************* Operand Stack Contents (Opcode [%s], %d Operands)\n"
 operator|,
 name|Ident
 operator|,
-name|Note
+name|NumLevels
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1683,6 +1705,21 @@ block|{
 break|break;
 block|}
 block|}
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"************* Stack dump from %s(%d), %s\n"
+operator|,
+name|ModuleName
+operator|,
+name|LineNumber
+operator|,
+name|Note
+operator|)
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -1703,6 +1740,9 @@ name|UINT32
 name|Flags
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1853,6 +1893,7 @@ name|UINT32
 name|Flags
 parameter_list|)
 block|{
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
@@ -1873,7 +1914,7 @@ condition|(
 operator|!
 operator|(
 operator|(
-name|ACPI_DB_OBJECTS
+name|ACPI_LV_OBJECTS
 operator|&
 name|AcpiDbgLevel
 operator|)

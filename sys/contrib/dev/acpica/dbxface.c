@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 38 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 41 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -111,6 +111,9 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|DisplayOp
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/* Is there a breakpoint set? */
 if|if
 condition|(
@@ -232,7 +235,7 @@ comment|/*      * Under certain debug conditions, display this opcode and its op
 if|if
 condition|(
 operator|(
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 operator|)
 operator|||
 operator|(
@@ -249,7 +252,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 operator|)
 operator|||
 operator|(
@@ -558,7 +561,7 @@ block|}
 comment|/* Get the user input line */
 name|AcpiOsGetLine
 argument_list|(
-name|LineBuf
+name|AcpiGbl_DbLineBuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -566,7 +569,7 @@ name|Status
 operator|=
 name|AcpiDbCommandDispatch
 argument_list|(
-name|LineBuf
+name|AcpiGbl_DbLineBuf
 argument_list|,
 name|WalkState
 argument_list|,
@@ -596,22 +599,22 @@ name|void
 parameter_list|)
 block|{
 comment|/* Init globals */
-name|Buffer
+name|AcpiGbl_DbBuffer
 operator|=
 name|AcpiOsAllocate
 argument_list|(
-name|BUFFER_SIZE
+name|ACPI_DEBUG_BUFFER_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* Initial scope is the root */
-name|ScopeBuf
+name|AcpiGbl_DbScopeBuf
 index|[
 literal|0
 index|]
 operator|=
 literal|'\\'
 expr_stmt|;
-name|ScopeBuf
+name|AcpiGbl_DbScopeBuf
 index|[
 literal|1
 index|]
@@ -651,18 +654,18 @@ block|}
 if|if
 condition|(
 operator|!
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 condition|)
 block|{
-name|INDENT_STRING
+name|AcpiGbl_DbDisasmIndent
 operator|=
 literal|"    "
 expr_stmt|;
-name|opt_disasm
+name|AcpiGbl_DbOpt_disasm
 operator|=
 name|TRUE
 expr_stmt|;
-name|opt_stats
+name|AcpiGbl_DbOpt_stats
 operator|=
 name|FALSE
 expr_stmt|;

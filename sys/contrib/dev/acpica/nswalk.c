@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the ACPI namespace  *              $Revision: 23 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the ACPI namespace  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -72,6 +72,9 @@ name|NextNode
 init|=
 name|NULL
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

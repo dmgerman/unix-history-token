@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdebug.h - ACPI/AML debugger  *       $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -77,42 +77,42 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|opt_tables
+name|AcpiGbl_DbOpt_tables
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|opt_disasm
+name|AcpiGbl_DbOpt_disasm
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|opt_stats
+name|AcpiGbl_DbOpt_stats
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|opt_parse_jit
+name|AcpiGbl_DbOpt_parse_jit
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|opt_verbose
+name|AcpiGbl_DbOpt_verbose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|opt_ini_methods
+name|AcpiGbl_DbOpt_ini_methods
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
 modifier|*
-name|Args
+name|AcpiGbl_DbArgs
 index|[
 name|DB_MAX_ARGS
 index|]
@@ -130,7 +130,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
-name|LineBuf
+name|AcpiGbl_DbLineBuf
 index|[
 literal|80
 index|]
@@ -140,7 +140,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
-name|ScopeBuf
+name|AcpiGbl_DbScopeBuf
 index|[
 literal|40
 index|]
@@ -150,7 +150,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
-name|DebugFilename
+name|AcpiGbl_DbDebugFilename
 index|[
 literal|40
 index|]
@@ -160,7 +160,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|BOOLEAN
-name|OutputToFile
+name|AcpiGbl_DbOutputToFile
 decl_stmt|;
 end_decl_stmt
 
@@ -168,7 +168,7 @@ begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
 modifier|*
-name|Buffer
+name|AcpiGbl_DbBuffer
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +176,7 @@ begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
 modifier|*
-name|Filename
+name|AcpiGbl_DbFilename
 decl_stmt|;
 end_decl_stmt
 
@@ -184,7 +184,7 @@ begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
 modifier|*
-name|INDENT_STRING
+name|AcpiGbl_DbDisasmIndent
 decl_stmt|;
 end_decl_stmt
 
@@ -209,150 +209,94 @@ name|AcpiGbl_DbConsoleDebugLevel
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Statistic globals  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
-name|UINT32
-name|NumNames
+name|UINT16
+name|AcpiGbl_ObjTypeCount
+index|[
+name|INTERNAL_TYPE_NODE_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT16
+name|AcpiGbl_NodeTypeCount
+index|[
+name|INTERNAL_TYPE_NODE_MAX
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT16
+name|AcpiGbl_ObjTypeCountMisc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT16
+name|AcpiGbl_NodeTypeCountMisc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|NumMethods
+name|AcpiGbl_NumNodes
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|NumRegions
+name|AcpiGbl_NumObjects
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|NumPackages
+name|AcpiGbl_SizeOfParseTree
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|NumAliases
+name|AcpiGbl_SizeOfMethodTrees
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|NumDevices
+name|AcpiGbl_SizeOfNodeEntries
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|UINT32
-name|NumFieldDefs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumThermalZones
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumNodes
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumGrammarElements
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumMethodElements
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumMutexes
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumPowerResources
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumBankFields
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumIndexFields
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|NumEvents
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|SizeOfParseTree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|SizeOfMethodTrees
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|SizeOfNTEs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|SizeOfAcpiObjects
+name|AcpiGbl_SizeOfAcpiObjects
 decl_stmt|;
 end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|BUFFER_SIZE
+name|ACPI_DEBUG_BUFFER_SIZE
 value|4196
 end_define
 
@@ -428,7 +372,7 @@ name|DBTEST_OUTPUT_LEVEL
 parameter_list|(
 name|lvl
 parameter_list|)
-value|if (opt_verbose)
+value|if (AcpiGbl_DbOpt_verbose)
 end_define
 
 begin_define

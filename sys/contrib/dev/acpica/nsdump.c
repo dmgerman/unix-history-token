@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 99 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -258,7 +258,7 @@ name|WhichBit
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiNsDumpOneObject"
+literal|"NsDumpOneObject"
 argument_list|)
 expr_stmt|;
 name|ThisNode
@@ -1188,6 +1188,9 @@ block|{
 name|ACPI_WALK_INFO
 name|Info
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 name|Info
 operator|.
 name|DebugLevel
@@ -1266,7 +1269,7 @@ name|i
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiNsDumpOneDevice"
+literal|"NsDumpOneDevice"
 argument_list|)
 expr_stmt|;
 name|Status
@@ -1370,7 +1373,7 @@ name|SysBusHandle
 decl_stmt|;
 name|PROC_NAME
 argument_list|(
-literal|"AcpiNsDumpRootDevices"
+literal|"NsDumpRootDevices"
 argument_list|)
 expr_stmt|;
 comment|/* Only dump the table if tracing is enabled */
@@ -1378,7 +1381,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ACPI_DB_TABLES
+name|ACPI_LV_TABLES
 operator|&
 name|AcpiDbgLevel
 operator|)
@@ -1530,12 +1533,8 @@ block|{
 name|ACPI_WALK_INFO
 name|Info
 decl_stmt|;
-name|FUNCTION_TRACE_PTR
-argument_list|(
-literal|"NsDumpEntry"
-argument_list|,
-name|Handle
-argument_list|)
+name|FUNCTION_ENTRY
+argument_list|()
 expr_stmt|;
 name|Info
 operator|.
@@ -1560,8 +1559,6 @@ name|Info
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|return_VOID
 expr_stmt|;
 block|}
 end_function

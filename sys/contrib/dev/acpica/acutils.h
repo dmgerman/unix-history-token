@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 108 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 112 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -656,34 +656,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|_UtCreateInternalObject
-parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
-name|UINT32
-name|LineNumber
-parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|ACPI_OBJECT_TYPE8
-name|Type
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * UtDebug - Debug interfaces  */
 end_comment
 
 begin_function_decl
-name|UINT32
-name|GetDebugLevel
+name|void
+name|AcpiUtInitStackPtrTrace
 parameter_list|(
 name|void
 parameter_list|)
@@ -692,52 +671,37 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|SetDebugLevel
+name|AcpiUtTrackStackPtr
 parameter_list|(
-name|UINT32
-name|level
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionTrace
+name|AcpiUtTrace
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionTracePtr
+name|AcpiUtTracePtr
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|void
 modifier|*
@@ -748,21 +712,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionTraceU32
+name|AcpiUtTraceU32
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|UINT32
 name|Integer
@@ -772,21 +729,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionTraceStr
+name|AcpiUtTraceStr
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|NATIVE_CHAR
 modifier|*
@@ -797,42 +747,28 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionExit
+name|AcpiUtExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionStatusExit
+name|AcpiUtStatusExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|ACPI_STATUS
 name|Status
@@ -842,21 +778,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionValueExit
+name|AcpiUtValueExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|ACPI_INTEGER
 name|Value
@@ -866,21 +795,14 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|FunctionPtrExit
+name|AcpiUtPtrExit
 parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
 name|UINT32
 name|LineNumber
 parameter_list|,
-name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
+name|ACPI_DEBUG_PRINT_INFO
 modifier|*
-name|FunctionName
+name|DbgInfo
 parameter_list|,
 name|UINT8
 modifier|*
@@ -891,7 +813,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_ReportInfo
+name|AcpiUtReportInfo
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -908,7 +830,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_ReportError
+name|AcpiUtReportError
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -925,7 +847,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_ReportWarning
+name|AcpiUtReportWarning
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -968,18 +890,11 @@ name|UINT32
 name|RequestedDebugLevel
 parameter_list|,
 name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ProcName
-parameter_list|,
-name|UINT32
 name|LineNumber
+parameter_list|,
+name|ACPI_DEBUG_PRINT_INFO
+modifier|*
+name|DbgInfo
 parameter_list|,
 name|char
 modifier|*
@@ -998,18 +913,11 @@ name|UINT32
 name|RequestedDebugLevel
 parameter_list|,
 name|UINT32
-name|ComponentId
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ModuleName
-parameter_list|,
-name|NATIVE_CHAR
-modifier|*
-name|ProcName
-parameter_list|,
-name|UINT32
 name|LineNumber
+parameter_list|,
+name|ACPI_DEBUG_PRINT_INFO
+modifier|*
+name|DbgInfo
 parameter_list|,
 name|char
 modifier|*
@@ -1257,9 +1165,30 @@ comment|/*  * UtObject - internal object create/delete/cache routines  */
 end_comment
 
 begin_function_decl
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiUtCreateInternalObjectDbg
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|ModuleName
+parameter_list|,
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|UINT32
+name|ComponentId
+parameter_list|,
+name|ACPI_OBJECT_TYPE8
+name|Type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
-name|_UtAllocateObjectDesc
+name|AcpiUtAllocateObjectDescDbg
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -1281,7 +1210,7 @@ name|AcpiUtCreateInternalObject
 parameter_list|(
 name|t
 parameter_list|)
-value|_UtCreateInternalObject(_THIS_MODULE,__LINE__,_COMPONENT,t)
+value|AcpiUtCreateInternalObjectDbg (_THIS_MODULE,__LINE__,_COMPONENT,t)
 end_define
 
 begin_define
@@ -1289,7 +1218,7 @@ define|#
 directive|define
 name|AcpiUtAllocateObjectDesc
 parameter_list|()
-value|_UtAllocateObjectDesc(_THIS_MODULE,__LINE__,_COMPONENT)
+value|AcpiUtAllocateObjectDescDbg (_THIS_MODULE,__LINE__,_COMPONENT)
 end_define
 
 begin_function_decl

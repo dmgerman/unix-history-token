@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -66,6 +66,9 @@ decl_stmt|;
 name|UINT32
 name|BitMask
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Translate GPE number to index into global registers array.      */
 name|RegisterIndex
 operator|=
@@ -147,6 +150,9 @@ decl_stmt|;
 name|UINT32
 name|BitMask
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Translate GPE number to index into global registers array.      */
 name|RegisterIndex
 operator|=
@@ -226,6 +232,9 @@ decl_stmt|;
 name|UINT32
 name|BitMask
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 comment|/*      * Translate GPE number to index into global registers array.      */
 name|RegisterIndex
 operator|=
@@ -294,6 +303,9 @@ name|BitMask
 init|=
 literal|0
 decl_stmt|;
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
