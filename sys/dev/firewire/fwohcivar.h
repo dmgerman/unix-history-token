@@ -173,6 +173,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|fwohci_reset
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fwohci_softc
+operator|*
+operator|,
+name|device_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|fwohci_detach
 name|__P
