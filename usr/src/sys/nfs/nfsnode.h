@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,6 +77,18 @@ name|u_long
 name|n_direofoffset
 decl_stmt|;
 comment|/* Dir. EOF offset cache */
+name|struct
+name|sillyrename
+name|n_silly
+decl_stmt|;
+comment|/* allocate here since we have room */
+name|long
+name|n_spare
+index|[
+literal|9
+index|]
+decl_stmt|;
+comment|/* round up to size 256 */
 block|}
 struct|;
 end_struct
