@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.12 1996/04/03 23:05:40 gpalmer Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.13 1996/06/14 11:01:37 asami Exp $ */
 end_comment
 
 begin_comment
@@ -1720,6 +1720,28 @@ block|)
 block|{
 endif|#
 directive|endif
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|error_exit
+goto|;
+block|}
+comment|/* Refuse to mount a FAT32 filesystem. */
+if|if
+condition|(
+operator|!
+name|pmp
+operator|->
+name|pm_FATsecs
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mountmsdosfs(): FAT32 not supported\n"
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EINVAL
