@@ -97,7 +97,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|extern struct eventhandler_list Xeventhandler_list_ ## name ;	\ struct eventhandler_entry_ ## name 				\ {								\     struct eventhandler_entry	ee;				\     type		eh_func;				\ };
+value|extern struct eventhandler_list Xeventhandler_list_ ## name ;	\ struct eventhandler_entry_ ## name 				\ {								\     struct eventhandler_entry	ee;				\     type		eh_func;				\ };								\ struct __hack
 end_define
 
 begin_define
@@ -110,7 +110,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct eventhandler_list Xeventhandler_list_ ## name = { #name };
+value|struct eventhandler_list Xeventhandler_list_ ## name = { #name };	\ struct __hack
 end_define
 
 begin_define
@@ -124,7 +124,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\     struct eventhandler_entry *_ep = TAILQ_FIRST(&(_el->el_entries));	\ 									\     while (_ep != NULL) {						\ 	((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , ## args); \ 	_ep = TAILQ_NEXT(_ep, ee_link);					\     }									\ } while (0);
+value|do {									\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;	\     struct eventhandler_entry *_ep = TAILQ_FIRST(&(_el->el_entries));	\ 									\     while (_ep != NULL) {						\ 	((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , ## args); \ 	_ep = TAILQ_NEXT(_ep, ee_link);					\     }									\ } while (0)
 end_define
 
 begin_define
@@ -171,7 +171,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct eventhandler_entry_ ## name 		\ {						\     struct eventhandler_entry	ee;		\     type		eh_func;		\ };
+value|struct eventhandler_entry_ ## name 		\ {						\     struct eventhandler_entry	ee;		\     type		eh_func;		\ };						\ struct __hack
 end_define
 
 begin_define
@@ -185,7 +185,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {									\     struct eventhandler_list *_el;					\     struct eventhandler_entry *_ep;					\ 									\     if ((_el = eventhandler_find_list(#name)) != NULL) {		\ 	for (_ep = TAILQ_FIRST(&(_el->el_entries));			\ 	     _ep != NULL;						\ 	     _ep = TAILQ_NEXT(_ep, ee_link)) {				\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , ## args); \ 	}								\     }									\ } while (0);
+value|do {									\     struct eventhandler_list *_el;					\     struct eventhandler_entry *_ep;					\ 									\     if ((_el = eventhandler_find_list(#name)) != NULL) {		\ 	for (_ep = TAILQ_FIRST(&(_el->el_entries));			\ 	     _ep != NULL;						\ 	     _ep = TAILQ_NEXT(_ep, ee_link)) {				\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , ## args); \ 	}								\     }									\ } while (0)
 end_define
 
 begin_define
@@ -215,7 +215,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|do {							\     struct eventhandler_list *_el;			\ 							\     if ((_el = eventhandler_find_list(#name)) != NULL)	\ 	eventhandler_deregister(_el, tag);		\ } while(0);
+value|do {							\     struct eventhandler_list *_el;			\ 							\     if ((_el = eventhandler_find_list(#name)) != NULL)	\ 	eventhandler_deregister(_el, tag);		\ } while(0)
 end_define
 
 begin_function_decl
