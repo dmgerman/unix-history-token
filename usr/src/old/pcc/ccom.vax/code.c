@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)code.c	1.5 (Berkeley) %G%"
+literal|"@(#)code.c	1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,11 @@ begin_block
 block|{
 comment|/* output a branch to label n */
 comment|/* exception is an ordinary function branching to retlab: then, return */
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 if|if
 condition|(
 name|n
@@ -272,6 +277,15 @@ name|lastloc
 operator|=
 name|l
 expr_stmt|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return
+operator|(
+name|temp
+operator|)
+return|;
 switch|switch
 condition|(
 name|l
@@ -343,6 +357,12 @@ return|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|deflab
+end_ifndef
+
 begin_macro
 name|deflab
 argument_list|(
@@ -362,6 +382,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|deflab
+end_endif
 
 begin_decl_stmt
 name|int
@@ -857,6 +883,11 @@ modifier|*
 name|toreg
 parameter_list|()
 function_decl|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|locctr
 argument_list|(
 name|PROG
@@ -1162,6 +1193,9 @@ block|}
 if|if
 condition|(
 name|gdebug
+operator|&&
+operator|!
+name|nerrors
 condition|)
 block|{
 ifdef|#
@@ -1263,6 +1297,12 @@ comment|/* flag is 1 if errors, 0 if none */
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|aobeg
+end_ifndef
+
 begin_macro
 name|aobeg
 argument_list|()
@@ -1273,6 +1313,18 @@ block|{
 comment|/* called before removing automatics from stab */
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|aobeg
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|aocode
+end_ifndef
 
 begin_macro
 name|aocode
@@ -1295,6 +1347,18 @@ comment|/* called when automatic p removed from stab */
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+endif|aocode
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|aoend
+end_ifndef
+
 begin_macro
 name|aoend
 argument_list|()
@@ -1305,6 +1369,12 @@ block|{
 comment|/* called after removing all automatics from stab */
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|aoend
+end_endif
 
 begin_expr_stmt
 name|defnam
@@ -1404,6 +1474,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* put byte i+1 in a string */
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 ifdef|#
 directive|ifdef
 name|ASSTRINGS
@@ -1955,6 +2030,11 @@ name|dlab
 operator|,
 name|swlab
 expr_stmt|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|range
 operator|=
 name|p
