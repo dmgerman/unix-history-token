@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.27 1996/11/10 14:46:50 peter Exp $ */
+comment|/* $Id: main.c,v 1.28 1996/11/14 07:06:25 ache Exp $ */
 end_comment
 
 begin_include
@@ -1337,13 +1337,18 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"couldn't open FTP connection to %s."
+literal|"couldn't open FTP connection to %s: %s"
 argument_list|,
 name|host
+argument_list|,
+name|hstrerror
+argument_list|(
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
