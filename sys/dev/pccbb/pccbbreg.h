@@ -964,6 +964,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_PCIC_OZ6872
+value|0x68721217ul
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_PCIC_CLPD6729
 value|0x11001013ul
 end_define

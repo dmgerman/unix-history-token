@@ -638,6 +638,17 @@ block|,
 name|PCCBB_PCIC_MEM_32
 block|}
 block|,
+comment|/* 02Micro */
+block|{
+name|PCI_DEVICE_ID_PCIC_OZ6872
+block|,
+literal|"O2Mirco OZ6872 PCI-CardBus Bridge"
+block|,
+name|CB_CIRRUS
+block|,
+name|PCCBB_PCIC_MEM_32
+block|}
+block|,
 comment|/* sentinel */
 block|{
 literal|0
