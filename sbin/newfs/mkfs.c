@@ -2649,12 +2649,6 @@ operator|.
 name|fs_ntrak
 operator|==
 literal|1
-operator|||
-name|sblock
-operator|.
-name|fs_nrpos
-operator|<=
-literal|1
 condition|)
 block|{
 name|sblock

@@ -322,14 +322,14 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Once upon a time...  *    For each cylinder we keep track of the availability of blocks at different  *    rotational positions, so that we can lay out the data to be picked  *    up with minimum rotational latency.  NRPOS is the default number of  *    rotational positions that we distinguish.  With NRPOS of 8 the resolution  *    of our summary information is 2ms for a typical 3600 rpm drive.  *  * ...but now we make this 1 (which disables the rotational position table)  * because modern drives with read-ahead and write-behind do better without  * the rotational position table.  */
+comment|/*  * Once upon a time...  *    For each cylinder we keep track of the availability of blocks at different  *    rotational positions, so that we can lay out the data to be picked  *    up with minimum rotational latency.  NRPOS is the default number of  *    rotational positions that we distinguish.  With NRPOS of 8 the resolution  *    of our summary information is 2ms for a typical 3600 rpm drive.  *  * ...but now we make this 1 (which escentially disables the rotational  * position table because modern drives with read-ahead and write-behind do  * better without the rotational position table.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NRPOS
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1230,6 +1230,16 @@ literal|"%s: bad rotational layout count\n"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nrpos
+operator|==
+literal|0
+condition|)
+name|nrpos
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
