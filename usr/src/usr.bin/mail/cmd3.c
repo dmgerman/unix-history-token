@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.16 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,6 +843,11 @@ index|]
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|touch
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|dot
 operator|=
@@ -2932,6 +2937,11 @@ name|ap
 operator|-
 literal|1
 index|]
+expr_stmt|;
+name|touch
+argument_list|(
+name|mp
+argument_list|)
 expr_stmt|;
 name|dot
 operator|=
