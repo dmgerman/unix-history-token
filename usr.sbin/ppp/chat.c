@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.21 1997/03/09 20:09:14 ache Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  *  Most of codes are derived from chat.c by Karl Fox (karl@MorningStar.Com).  *  *	Chat -- a program for automatic session establishment (i.e. dial  *		the phone and log in).  *  *	This software is in the public domain.  *  *	Please send all bug reports, requests for information, etc. to:  *  *		Karl Fox<karl@MorningStar.Com>  *		Morning Star Technologies, Inc.  *		1760 Zollinger Road  *		Columbus, OH  43221  *		(614)451-1883  *  * $Id: chat.c,v 1.22 1997/03/13 12:45:28 brian Exp $  *  *  TODO:  *	o Support more UUCP compatible control sequences.  *	o Dialing shoud not block monitor process.  *	o Reading modem by select should be unified into main.c  */
 end_comment
 
 begin_include
@@ -88,6 +88,12 @@ begin_include
 include|#
 directive|include
 file|"sig.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"chat.h"
 end_include
 
 begin_define
@@ -286,6 +292,8 @@ parameter_list|(
 name|script
 parameter_list|,
 name|pvect
+parameter_list|,
+name|maxargs
 parameter_list|)
 name|char
 modifier|*
@@ -295,6 +303,9 @@ name|char
 modifier|*
 modifier|*
 name|pvect
+decl_stmt|;
+name|int
+name|maxargs
 decl_stmt|;
 block|{
 name|int
@@ -356,17 +367,23 @@ name|script
 operator|==
 literal|'\0'
 condition|)
-return|return
-operator|(
-name|nargs
-operator|)
-return|;
+break|break;
+comment|/* Shouldn't return here. Need to null terminate below */
 block|}
 else|else
 name|instring
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|nargs
+operator|>=
+name|maxargs
+operator|-
+literal|1
+condition|)
+break|break;
 operator|*
 name|pvect
 operator|++
@@ -1809,8 +1826,12 @@ name|MakeArgs
 argument_list|(
 name|tmp
 argument_list|,
-operator|&
 name|vector
+argument_list|,
+name|VECSIZE
+argument_list|(
+name|vector
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pipe
@@ -2584,7 +2605,7 @@ name|char
 modifier|*
 name|vector
 index|[
-literal|20
+literal|40
 index|]
 decl_stmt|;
 name|char
@@ -2664,8 +2685,12 @@ name|MakeArgs
 argument_list|(
 name|script
 argument_list|,
-operator|&
 name|vector
+argument_list|,
+name|VECSIZE
+argument_list|(
+name|vector
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
