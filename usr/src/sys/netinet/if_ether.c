@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ether.c	6.6	84/08/29	*/
+comment|/*	if_ether.c	6.7	85/03/18	*/
 end_comment
 
 begin_comment
@@ -503,7 +503,7 @@ name|eh
 operator|->
 name|ether_type
 operator|=
-name|ETHERPUP_ARPTYPE
+name|ETHERTYPE_ARP
 expr_stmt|;
 comment|/* if_output will swap */
 name|ea
@@ -521,7 +521,7 @@ name|arp_pro
 operator|=
 name|htons
 argument_list|(
-name|ETHERPUP_IPTYPE
+name|ETHERTYPE_IP
 argument_list|)
 expr_stmt|;
 name|ea
@@ -569,21 +569,9 @@ argument_list|(
 name|ea
 argument_list|)
 operator|=
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
 name|ac
 operator|->
-name|ac_if
-operator|.
-name|if_addr
-operator|)
-operator|->
-name|sin_addr
+name|ac_ipaddr
 expr_stmt|;
 name|arp_tpa
 argument_list|(
@@ -626,7 +614,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Resolve an IP address into an ethernet address.  If success,   * desten is filled in and 1 is returned.  If there is no entry  * in arptab, set one up and broadcast a request   * for the IP address;  return 0.  Hold onto this mbuf and   * resend it once the address is finally resolved.  *  * We do some (conservative) locking here at splimp, since  * arptab is also altered from input interrupt service (ecintr/ilintr  * calls arpinput when ETHERPUP_ARPTYPE packets come in).  */
+comment|/*  * Resolve an IP address into an ethernet address.  If success,   * desten is filled in and 1 is returned.  If there is no entry  * in arptab, set one up and broadcast a request   * for the IP address;  return 0.  Hold onto this mbuf and   * resend it once the address is finally resolved.  *  * We do some (conservative) locking here at splimp, since  * arptab is also altered from input interrupt service (ecintr/ilintr  * calls arpinput when ETHERTYPE_ARP packets come in).  */
 end_comment
 
 begin_expr_stmt
@@ -701,19 +689,13 @@ name|s
 decl_stmt|,
 name|lna
 decl_stmt|;
-name|lna
-operator|=
-name|in_lnaof
+if|if
+condition|(
+name|in_broadcast
 argument_list|(
 operator|*
 name|destip
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lna
-operator|==
-name|INADDR_ANY
 condition|)
 block|{
 comment|/* broadcast address */
@@ -728,6 +710,14 @@ literal|1
 operator|)
 return|;
 block|}
+name|lna
+operator|=
+name|in_lnaof
+argument_list|(
+operator|*
+name|destip
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -742,19 +732,9 @@ name|destip
 operator|->
 name|s_addr
 operator|==
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifp
+name|ac
 operator|->
-name|if_addr
-operator|)
-operator|->
-name|sin_addr
+name|ac_ipaddr
 operator|.
 name|s_addr
 operator|&&
@@ -1013,7 +993,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Called from ecintr/ilintr when ether packet type ETHERPUP_ARP  * is received.  Algorithm is that given in RFC 826.  * In addition, a sanity check is performed on the sender  * protocol address, to catch impersonators.  */
+comment|/*  * Called from 10 Mb/s Ethernet interrupt handlers  * when ether packet type ETHERTYPE_ARP  * is received.  Algorithm is that given in RFC 826.  * In addition, a sanity check is performed on the sender  * protocol address, to catch impersonators.  */
 end_comment
 
 begin_expr_stmt
@@ -1110,21 +1090,9 @@ name|out
 goto|;
 name|myaddr
 operator|=
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
 name|ac
 operator|->
-name|ac_if
-operator|.
-name|if_addr
-operator|)
-operator|->
-name|sin_addr
+name|ac_ipaddr
 expr_stmt|;
 name|ea
 operator|=
@@ -1146,7 +1114,7 @@ operator|->
 name|arp_pro
 argument_list|)
 operator|!=
-name|ETHERPUP_IPTYPE
+name|ETHERTYPE_IP
 condition|)
 goto|goto
 name|out
@@ -1570,7 +1538,7 @@ name|eh
 operator|->
 name|ether_type
 operator|=
-name|ETHERPUP_ARPTYPE
+name|ETHERTYPE_ARP
 expr_stmt|;
 name|sa
 operator|.
@@ -1992,7 +1960,7 @@ return|;
 block|}
 if|if
 condition|(
-name|if_ifwithnet
+name|ifa_ifwithnet
 argument_list|(
 operator|&
 name|ar
