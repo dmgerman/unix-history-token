@@ -201,6 +201,11 @@ argument_list|,
 comment|/*flags*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501102
 comment|/*lockfunc*/
 name|busdma_lock_mutex
 argument_list|,
@@ -208,6 +213,8 @@ comment|/*lockarg*/
 operator|&
 name|Giant
 argument_list|,
+endif|#
+directive|endif
 operator|&
 name|dma
 operator|->
@@ -668,6 +675,11 @@ argument_list|,
 comment|/*flags*/
 name|BUS_DMA_ALLOCNOW
 argument_list|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501102
 comment|/*lockfunc*/
 name|busdma_lock_mutex
 argument_list|,
@@ -675,6 +687,8 @@ comment|/*lockarg*/
 operator|&
 name|Giant
 argument_list|,
+endif|#
+directive|endif
 operator|&
 name|am
 operator|->

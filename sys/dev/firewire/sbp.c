@@ -8331,10 +8331,18 @@ comment|/*maxsegsz*/
 argument|SBP_SEG_MAX,
 comment|/*flags*/
 argument|BUS_DMA_ALLOCNOW,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|501102
 comment|/*lockfunc*/
 argument|busdma_lock_mutex,
 comment|/*lockarg*/
-argument|&Giant,&sbp->dmat); 	if (error !=
+argument|&Giant,
+endif|#
+directive|endif
+argument|&sbp->dmat); 	if (error !=
 literal|0
 argument|) { 		printf(
 literal|"sbp_attach: Could not allocate DMA tag "
