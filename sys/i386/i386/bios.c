@@ -610,7 +610,7 @@ name|bios_sigsearch
 argument_list|(
 literal|0
 argument_list|,
-literal|"RST PTR"
+literal|"RSD PTR "
 argument_list|,
 literal|8
 argument_list|,
