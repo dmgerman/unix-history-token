@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.17 %G%"
+literal|"@(#)pcproc.c 1.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4588,7 +4588,15 @@ name|putop
 argument_list|(
 name|P2CALL
 argument_list|,
-name|P2INT
+name|ADDTYPE
+argument_list|(
+name|p2type
+argument_list|(
+name|filetype
+argument_list|)
+argument_list|,
+name|P2PTR
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
