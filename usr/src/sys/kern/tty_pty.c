@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.30	83/05/21	*/
+comment|/*	tty_pty.c	4.31	83/05/27	*/
 end_comment
 
 begin_comment
@@ -1245,7 +1245,7 @@ operator|~
 name|TS_CARR_ON
 expr_stmt|;
 comment|/* virtual carrier gone */
-name|flushtty
+name|ttyflush
 argument_list|(
 name|tp
 argument_list|,
@@ -2526,7 +2526,7 @@ operator|&=
 operator|~
 name|PF_REMOTE
 expr_stmt|;
-name|flushtty
+name|ttyflush
 argument_list|(
 name|tp
 argument_list|,

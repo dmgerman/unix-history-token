@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tb.c	4.7	82/12/05	*/
+comment|/*	tty_tb.c	4.8	83/05/27	*/
 end_comment
 
 begin_include
@@ -187,7 +187,7 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-name|wflushtty
+name|ttywflush
 argument_list|(
 name|tp
 argument_list|)

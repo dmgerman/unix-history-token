@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.42	82/12/17	*/
+comment|/*	uipc_mbuf.c	1.43	83/05/27	*/
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_subr.c	4.19	83/02/06	*/
+comment|/*	tty_subr.c	4.20	83/05/27	*/
 end_comment
 
 begin_include
@@ -297,6 +297,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * copy clist to buffer.  * return number of bytes moved.  */
 end_comment
@@ -590,6 +596,11 @@ return|;
 block|}
 end_block
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Return count of contiguous characters  * in clist starting at q->c_cf.  * Stop counting if flag&character is non-null.  */
 end_comment
@@ -800,10 +811,9 @@ name|end
 decl_stmt|;
 name|int
 name|rem
-decl_stmt|;
-specifier|register
+decl_stmt|,
 name|s
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spl5

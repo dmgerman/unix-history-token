@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_conf.c	4.2	82/10/17	*/
+comment|/*	tty_conf.c	4.3	83/05/27	*/
 end_comment
 
 begin_include
@@ -370,6 +370,76 @@ index|]
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Do nothing specific version of line  * discipline specific ioctl command.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
+begin_macro
+name|nullioctl
+argument_list|(
+argument|tp
+argument_list|,
+argument|cmd
+argument_list|,
+argument|data
+argument_list|,
+argument|flags
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|tty
+modifier|*
+name|tp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|data
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|tp
+operator|=
+name|tp
+expr_stmt|;
+name|data
+operator|=
+name|data
+expr_stmt|;
+name|flags
+operator|=
+name|flags
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 

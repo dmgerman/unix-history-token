@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_tables.c	2.3	82/07/15	*/
+comment|/*	ffs_tables.c	2.4	83/05/27	*/
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"../h/param.h"
 end_include
 
 begin_comment
-comment|/*  * bit patterns for identifying fragments in the block map  * used as ((map& around) == inside)  */
+comment|/*  * Bit patterns for identifying fragments in the block map  * used as ((map& around) == inside)  */
 end_comment
 
 begin_decl_stmt
@@ -72,12 +72,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * given a block map bit pattern, the frag tables tell whether a  * particular size fragment is available.   *  * used as:  * if ((1<< (size - 1))& fragtbl[fs->fs_frag][map] {  *	at least one fragment of the indicated size is available  * }  *  * These tables are used by the scanc instruction on the VAX to  * quickly find an appropriate fragment.  */
+comment|/*  * Given a block map bit pattern, the frag tables tell whether a  * particular size fragment is available.   *  * used as:  * if ((1<< (size - 1))& fragtbl[fs->fs_frag][map] {  *	at least one fragment of the indicated size is available  * }  *  * These tables are used by the scanc instruction on the VAX to  * quickly find an appropriate fragment.  */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|u_char
 name|fragtbl124
 index|[
 literal|256
@@ -600,8 +599,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|u_char
 name|fragtbl8
 index|[
 literal|256
@@ -1124,12 +1122,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * the actual fragtbl array  */
+comment|/*  * The actual fragtbl array.  */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|fragtbl
 index|[

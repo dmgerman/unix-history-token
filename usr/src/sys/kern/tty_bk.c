@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_bk.c	4.8	82/12/05	*/
+comment|/*	tty_bk.c	4.9	83/05/27	*/
 end_comment
 
 begin_include
@@ -154,7 +154,7 @@ argument_list|(
 literal|1024
 argument_list|)
 expr_stmt|;
-name|flushtty
+name|ttyflush
 argument_list|(
 name|tp
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.25	83/05/21	*/
+comment|/*	ffs_alloc.c	2.26	83/05/27	*/
 end_comment
 
 begin_include
@@ -4907,8 +4907,14 @@ name|loc
 operator|=
 name|scanc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|len
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cgp
 operator|->
@@ -4917,6 +4923,9 @@ index|[
 name|start
 index|]
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|fragtbl
 index|[
 name|fs
@@ -4924,6 +4933,10 @@ operator|->
 name|fs_frag
 index|]
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 literal|1
 operator|<<
 operator|(
@@ -4939,6 +4952,7 @@ operator|%
 name|NBBY
 operator|)
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4962,8 +4976,14 @@ name|loc
 operator|=
 name|scanc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|len
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|cgp
 operator|->
@@ -4972,6 +4992,9 @@ index|[
 name|start
 index|]
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|fragtbl
 index|[
 name|fs
@@ -4979,6 +5002,10 @@ operator|->
 name|fs_frag
 index|]
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 literal|1
 operator|<<
 operator|(
@@ -4994,6 +5021,7 @@ operator|%
 name|NBBY
 operator|)
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

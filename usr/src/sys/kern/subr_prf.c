@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.26	83/05/18	*/
+comment|/*	subr_prf.c	4.27	83/05/27	*/
 end_comment
 
 begin_include
@@ -811,6 +811,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_comment
 comment|/*  * Hard error is the preface to plaintive error messages  * about failing disk transfers.  */
 end_comment
@@ -872,6 +878,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Print a character on console or users terminal.  * If destination is console then the last MSGBUFS characters  * are saved in msgbuf for inspection later.  */
