@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.21 1994/10/31 18:00:06 jkh Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.22 1994/11/07 11:26:26 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -112,6 +112,41 @@ name|char
 modifier|*
 name|t
 decl_stmt|;
+comment|/* Pick up the story from the Bios on geometry of disks */
+for|for
+control|(
+name|ret
+operator|=
+literal|0
+init|;
+name|ret
+operator|<
+name|N_BIOS_GEOM
+condition|;
+name|ret
+operator|++
+control|)
+name|bootinfo
+operator|.
+name|bios_geom
+index|[
+name|ret
+index|]
+operator|=
+name|get_diskinfo
+argument_list|(
+name|ret
+operator|+
+literal|0x80
+argument_list|)
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"\n>> FreeBSD BOOT @ 0x%x: %d/%d k of memory\n"
@@ -129,11 +164,17 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Use hd(1,a)/kernel to boot sd0 when wd0 is also installed.\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Usage: [[[%s(0,a)]%s][-s][-r][-a][-c][-d][-b]]\nUse ? for file list.\n\n"
@@ -157,18 +198,33 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|gateA20
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|loadstart
 label|:
+end_label
+
+begin_comment
 comment|/***************************************************************\ 	* As a default set it to the first partition of the first	* 	* floppy or hard drive						* 	\***************************************************************/
+end_comment
+
+begin_expr_stmt
 name|part
 operator|=
 name|unit
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|maj
 operator|=
 operator|(
@@ -181,7 +237,13 @@ else|:
 literal|2
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* a good first bet */
+end_comment
+
+begin_expr_stmt
 name|name
 operator|=
 name|names
@@ -190,10 +252,16 @@ name|currname
 operator|++
 index|]
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|loadflags
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|currname
@@ -204,22 +272,34 @@ name|currname
 operator|=
 literal|0
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Boot: "
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|getbootdev
 argument_list|(
 operator|&
 name|loadflags
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ret
 operator|=
 name|openrd
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ret
@@ -244,30 +324,35 @@ goto|goto
 name|loadstart
 goto|;
 block|}
+end_if
+
+begin_comment
 comment|/*	if (inode.i_mode&IEXEC) 		loadflags |= RB_KDB; */
+end_comment
+
+begin_expr_stmt
 name|loadprog
 argument_list|(
 name|loadflags
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_goto
 goto|goto
 name|loadstart
 goto|;
-block|}
-end_block
+end_goto
 
-begin_macro
-name|loadprog
-argument_list|(
-argument|howto
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_expr_stmt
+unit|}  loadprog
+operator|(
+name|howto
+operator|)
 name|int
 name|howto
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
