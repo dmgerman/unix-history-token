@@ -694,7 +694,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"acl_from_text() failed"
+literal|"%s"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|entry
@@ -756,7 +758,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"acl_from_text() failed"
+literal|"%s"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|entry
