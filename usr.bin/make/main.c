@@ -300,17 +300,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|Boolean
-name|printVars
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print value of one or more vars */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|Boolean
 name|expandVars
 decl_stmt|;
 end_decl_stmt
@@ -715,10 +704,6 @@ break|break;
 case|case
 literal|'V'
 case|:
-name|printVars
-operator|=
-name|TRUE
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2276,10 +2261,6 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|printVars
-operator|=
-name|FALSE
-expr_stmt|;
 name|expandVars
 operator|=
 name|TRUE
@@ -3088,7 +3069,11 @@ expr_stmt|;
 comment|/* print the values of any variables requested by the user */
 if|if
 condition|(
-name|printVars
+operator|!
+name|Lst_IsEmpty
+argument_list|(
+name|variables
+argument_list|)
 condition|)
 block|{
 name|LstNode
@@ -3223,7 +3208,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Have now read the entire graph and need to make a list of targets 	 * to create. If none was given on the command line, we consult the 	 * parsing module to find the main target(s) to create. 	 */
+else|else
+block|{
+comment|/* 		 * Have now read the entire graph and need to make a list of targets 		 * to create. If none was given on the command line, we consult the 		 * parsing module to find the main target(s) to create. 		 */
 if|if
 condition|(
 name|Lst_IsEmpty
@@ -3250,12 +3237,9 @@ if|if
 condition|(
 operator|!
 name|compatMake
-operator|&&
-operator|!
-name|printVars
 condition|)
 block|{
-comment|/* 		 * Initialize job module before traversing the graph, now that 		 * any .BEGIN and .END targets have been read.  This is done 		 * only if the -q flag wasn't given (to prevent the .BEGIN from 		 * being executed should it exist). 		 */
+comment|/* 			 * Initialize job module before traversing the graph, now that 			 * any .BEGIN and .END targets have been read.  This is done 			 * only if the -q flag wasn't given (to prevent the .BEGIN from 			 * being executed should it exist). 			 */
 if|if
 condition|(
 operator|!
@@ -3294,19 +3278,15 @@ name|targs
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|printVars
-condition|)
+else|else
 block|{
-comment|/* 		 * Compat_Init will take care of creating all the targets as 		 * well as initializing the module. 		 */
+comment|/* 			 * Compat_Init will take care of creating all the targets as 			 * well as initializing the module. 			 */
 name|Compat_Run
 argument_list|(
 name|targs
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|Lst_Destroy
 argument_list|(
