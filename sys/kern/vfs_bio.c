@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.210 1999/05/06 20:00:26 phk Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.211 1999/05/12 22:30:50 peter Exp $  */
 end_comment
 
 begin_comment
@@ -5504,16 +5504,11 @@ name|flags
 operator|=
 name|VFS_BIO_NEED_ANY
 expr_stmt|;
-if|if
-condition|(
-name|rushjob
-operator|<
-name|syncdelay
-operator|/
-literal|2
-condition|)
-operator|++
-name|rushjob
+operator|(
+name|void
+operator|)
+name|speedup_syncer
+argument_list|()
 expr_stmt|;
 name|needsbuffer
 operator||=

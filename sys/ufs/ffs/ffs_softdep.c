@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.38 (McKusick) 5/13/99  *	$Id: ffs_softdep.c,v 1.28 1999/05/14 01:26:46 mckusick Exp $  */
+comment|/*  * Copyright 1998 Marshall Kirk McKusick. All Rights Reserved.  *  * The soft updates code is derived from the appendix of a University  * of Michigan technical report (Gregory R. Ganger and Yale N. Patt,  * "Soft Updates: A Solution to the Metadata Update Problem in File  * Systems", CSE-TR-254-95, August 1995).  *  * The following are the copyrights and redistribution conditions that  * apply to this copy of the soft update software. For a license  * to use, redistribute or sell the soft update software under  * conditions other than those described here, please contact the  * author at one of the following addresses:  *  *	Marshall Kirk McKusick		mckusick@mckusick.com  *	1614 Oxford Street		+1-510-843-9542  *	Berkeley, CA 94709-1608  *	USA  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. None of the names of McKusick, Ganger, Patt, or the University of  *    Michigan may be used to endorse or promote products derived from  *    this software without specific prior written permission.  * 4. Redistributions in any form must be accompanied by information on  *    how to obtain complete source code for any accompanying software  *    that uses this software. This source code must either be included  *    in the distribution or be available for no more than the cost of  *    distribution plus a nominal fee, and must be freely redistributable  *    under reasonable conditions. For an executable file, complete  *    source code means the source code for all modules it contains.  *    It does not mean source code for modules or files that typically  *    accompany the operating system on which the executable file runs,  *    e.g., standard library modules or system header files.  *  * THIS SOFTWARE IS PROVIDED BY MARSHALL KIRK MCKUSICK ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL MARSHALL KIRK MCKUSICK BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ffs_softdep.c	9.40 (McKusick) 6/15/99  *	$Id: ffs_softdep.c,v 1.29 1999/05/22 04:43:04 julian Exp $  */
 end_comment
 
 begin_comment
@@ -1167,12 +1167,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|checklimit
+name|request_cleanup
 name|__P
 argument_list|(
 operator|(
-name|long
-operator|*
+name|int
 operator|,
 name|int
 operator|)
@@ -2385,6 +2384,13 @@ begin_comment
 comment|/* syncer process flush some inodedeps */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FLUSH_INODES
+value|1
+end_define
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -2396,19 +2402,15 @@ begin_comment
 comment|/* syncer process flush some freeblks */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FLUSH_REMOVE
+value|2
+end_define
+
 begin_comment
 comment|/*  * runtime statistics  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|stat_rush_requests
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of times I/O speeded up */
 end_comment
 
 begin_decl_stmt
@@ -2560,27 +2562,6 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|tickdelay
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|rush_requests
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|stat_rush_requests
 argument_list|,
 literal|0
 argument_list|,
@@ -2790,20 +2771,6 @@ literal|"tickdelay"
 block|,
 operator|&
 name|tickdelay
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|ctldebug
-name|debug22
-init|=
-block|{
-literal|"rush_requests"
-block|,
-operator|&
-name|stat_rush_requests
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3053,7 +3020,7 @@ decl_stmt|;
 name|int
 name|matchcnt
 decl_stmt|;
-comment|/* 	 * Record the process identifier of our caller so that we can 	 * give this process preferential treatment in checklimit below. 	 */
+comment|/* 	 * Record the process identifier of our caller so that we can give 	 * this process preferential treatment in request_cleanup below. 	 */
 name|filesys_syncer
 operator|=
 name|p
@@ -4227,19 +4194,26 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * If we are over our limit, try to improve the situation. 	 */
 if|if
 condition|(
+name|num_inodedep
+operator|>
+name|max_softdeps
+operator|&&
 name|firsttry
 operator|&&
-name|checklimit
+name|speedup_syncer
+argument_list|()
+operator|==
+literal|0
+operator|&&
+name|request_cleanup
 argument_list|(
-operator|&
-name|num_inodedep
+name|FLUSH_INODES
 argument_list|,
 literal|1
 argument_list|)
-operator|==
-literal|1
 condition|)
 block|{
 name|firsttry
@@ -7498,13 +7472,26 @@ argument_list|(
 literal|"softde_setup_freeblocks: non-zero length"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we are over our limit, try to improve the situation. 	 */
+if|if
+condition|(
+name|num_freeblks
+operator|>
+name|max_softdeps
+operator|/
+literal|2
+operator|&&
+name|speedup_syncer
+argument_list|()
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
-name|checklimit
+name|request_cleanup
 argument_list|(
-operator|&
-name|num_freeblks
+name|FLUSH_REMOVE
 argument_list|,
 literal|0
 argument_list|)
@@ -8609,18 +8596,31 @@ name|freefile
 modifier|*
 name|freefile
 decl_stmt|;
-comment|/* 	 * This sets up the inode de-allocation dependency. 	 */
+comment|/* 	 * If we are over our limit, try to improve the situation. 	 */
+if|if
+condition|(
+name|num_freefile
+operator|>
+name|max_softdeps
+operator|/
+literal|2
+operator|&&
+name|speedup_syncer
+argument_list|()
+operator|==
+literal|0
+condition|)
 operator|(
 name|void
 operator|)
-name|checklimit
+name|request_cleanup
 argument_list|(
-operator|&
-name|num_freefile
+name|FLUSH_REMOVE
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This sets up the inode de-allocation dependency. 	 */
 name|num_freefile
 operator|+=
 literal|1
@@ -17260,13 +17260,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|drain_output
-argument_list|(
-name|vp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|FREE_LOCK
 argument_list|(
 operator|&
@@ -18957,14 +18950,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|checklimit
+name|request_cleanup
 parameter_list|(
 name|resource
 parameter_list|,
 name|islocked
 parameter_list|)
-name|long
-modifier|*
+name|int
 name|resource
 decl_stmt|;
 name|int
@@ -18982,22 +18974,6 @@ name|p
 init|=
 name|CURPROC
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-comment|/* 	 * If we are under our limit, just proceed. 	 */
-if|if
-condition|(
-operator|*
-name|resource
-operator|<
-name|max_softdeps
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * We never hold up the filesystem syncer process. 	 */
 if|if
 condition|(
@@ -19010,63 +18986,15 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Our first approach is to speed up the syncer process. 	 * We never push it to speed up more than half of its 	 * normal turn time, otherwise it could take over the cpu. 	 */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|filesys_syncer
-operator|->
-name|p_wchan
-operator|==
-operator|&
-name|lbolt
-condition|)
-name|setrunnable
-argument_list|(
-name|filesys_syncer
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rushjob
-operator|<
-name|syncdelay
-operator|/
-literal|2
-condition|)
-block|{
-name|rushjob
-operator|+=
-literal|1
-expr_stmt|;
-name|stat_rush_requests
-operator|+=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 	 * If we are resource constrained on inode dependencies, try 	 * flushing some dirty inodes. Otherwise, we are constrained 	 * by file deletions, so try accelerating flushes of directories 	 * with removal dependencies. We would like to do the cleanup 	 * here, but we probably hold an inode locked at this point and  	 * that might deadlock against one that we try to clean. So, 	 * the best that we can do is request the syncer daemon (kick 	 * started above) to do the cleanup for us. 	 */
-if|if
+comment|/* 	 * If we are resource constrained on inode dependencies, try 	 * flushing some dirty inodes. Otherwise, we are constrained 	 * by file deletions, so try accelerating flushes of directories 	 * with removal dependencies. We would like to do the cleanup 	 * here, but we probably hold an inode locked at this point and  	 * that might deadlock against one that we try to clean. So, 	 * the best that we can do is request the syncer daemon to do 	 * the cleanup for us. 	 */
+switch|switch
 condition|(
 name|resource
-operator|==
-operator|&
-name|num_inodedep
 condition|)
 block|{
+case|case
+name|FLUSH_INODES
+case|:
 name|stat_ino_limit_push
 operator|+=
 literal|1
@@ -19075,9 +19003,10 @@ name|req_clear_inodedeps
 operator|=
 literal|1
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|FLUSH_REMOVE
+case|:
 name|stat_blk_limit_push
 operator|+=
 literal|1
@@ -19085,6 +19014,13 @@ expr_stmt|;
 name|req_clear_remove
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"request_cleanup: unknown type"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Hopefully the syncer daemon will catch up and awaken us. 	 * We wait at most tickdelay before proceeding in any case. 	 */
@@ -19182,22 +19118,28 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
+switch|switch
 condition|(
 name|resource
-operator|==
-operator|&
-name|num_inodedep
 condition|)
+block|{
+case|case
+name|FLUSH_INODES
+case|:
 name|stat_ino_limit_hit
 operator|+=
 literal|1
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|FLUSH_REMOVE
+case|:
 name|stat_blk_limit_hit
 operator|+=
 literal|1
 expr_stmt|;
+break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -19220,7 +19162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Awaken processes pausing in checklimit and clear proc_waiting  * to indicate that there is no longer a timer running.  */
+comment|/*  * Awaken processes pausing in request_cleanup and clear proc_waiting  * to indicate that there is no longer a timer running.  */
 end_comment
 
 begin_function
