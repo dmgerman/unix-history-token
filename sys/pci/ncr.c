@@ -9188,9 +9188,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1000
 operator|)
 return|;
+comment|/* Allows to use both ncr and sym */
 block|}
 return|return
 operator|(
