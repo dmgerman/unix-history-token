@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwgets.c	2.1 83/07/30"
+literal|"@(#)wwgets.c	2.1.1.1 83/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|wwupdate
+argument_list|()
+expr_stmt|;
 name|wwflush
 argument_list|()
 expr_stmt|;
@@ -232,21 +235,9 @@ init|;
 condition|;
 control|)
 block|{
-name|wwsetcursor
-argument_list|(
-name|WCurRow
+name|wwcurtowin
 argument_list|(
 name|w
-operator|->
-name|ww_win
-argument_list|)
-argument_list|,
-name|WCurCol
-argument_list|(
-name|w
-operator|->
-name|ww_win
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -290,7 +281,7 @@ name|w
 argument_list|)
 expr_stmt|;
 else|else
-name|Ding
+name|wwbell
 argument_list|()
 expr_stmt|;
 block|}
@@ -416,10 +407,13 @@ name|n
 operator|-
 literal|1
 condition|)
-name|Ding
+name|wwbell
 argument_list|()
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|wwputs
 argument_list|(
 name|unctrl
@@ -484,6 +478,9 @@ operator|>=
 literal|0
 condition|;
 control|)
+operator|(
+name|void
+operator|)
 name|wwputs
 argument_list|(
 literal|"\b \b"

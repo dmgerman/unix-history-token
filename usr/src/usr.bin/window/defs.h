@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	2.1 83/07/30		*/
+comment|/*  *	@(#)defs.h	2.1.1.1 83/08/09	  */
 end_comment
 
 begin_include
@@ -65,12 +65,9 @@ name|starttime
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|struct
-name|timezone
-name|timezone
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* things for handling input */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -124,15 +121,58 @@ begin_decl_stmt
 name|struct
 name|ww
 modifier|*
+name|window
+index|[
+name|NWINDOW
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the windows */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
 name|selwin
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* the selected window */
+end_comment
 
 begin_decl_stmt
 name|struct
 name|ww
 modifier|*
 name|cmdwin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the command window */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|framewin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the window for framing */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|curwin
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +213,82 @@ name|char
 name|escapec
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|struct
+name|ww
+modifier|*
+name|getwin
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ww
+modifier|*
+name|openwin
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ww
+modifier|*
+name|idtowin
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ww
+modifier|*
+name|openiwin
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* stuff for long commands */
+end_comment
+
+begin_decl_stmt
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|argv
+index|[
+literal|100
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lineno
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line number in the source file */
+end_comment
+
+begin_decl_stmt
+name|char
+name|insource
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* we're in a source */
+end_comment
 
 end_unit
 
