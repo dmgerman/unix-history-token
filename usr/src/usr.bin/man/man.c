@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.14 (Berkeley) %G%"
+literal|"@(#)man.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,6 +560,9 @@ name|f_cat
 operator|&&
 operator|!
 name|f_how
+operator|&&
+operator|!
+name|f_where
 condition|)
 if|if
 condition|(
