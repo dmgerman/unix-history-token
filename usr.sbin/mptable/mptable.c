@@ -4228,6 +4228,8 @@ index|[
 name|entry
 operator|.
 name|type
+operator|-
+literal|128
 index|]
 operator|.
 name|name
@@ -4342,6 +4344,8 @@ index|[
 name|entry
 operator|.
 name|type
+operator|-
+literal|128
 index|]
 operator|.
 name|name
@@ -4367,7 +4371,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" parent bus ID: %d"
+literal|" parent bus ID: %d\n"
 argument_list|,
 name|entry
 operator|.
@@ -4409,6 +4413,8 @@ index|[
 name|entry
 operator|.
 name|type
+operator|-
+literal|128
 index|]
 operator|.
 name|name
@@ -4442,7 +4448,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" predefined range: 0x%08x"
+literal|" predefined range: 0x%08x\n"
 argument_list|,
 name|entry
 operator|.
