@@ -927,7 +927,7 @@ decl_stmt|;
 if|if
 condition|(
 name|mtag
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
