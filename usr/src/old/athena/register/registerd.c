@@ -1,4 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)registerd.c	1.4 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -414,7 +443,7 @@ name|sprintf
 argument_list|(
 name|msgbuf
 argument_list|,
-literal|"GOTKEY"
+name|GOTKEY_MSG
 argument_list|)
 expr_stmt|;
 name|send_packet
@@ -481,6 +510,22 @@ name|do_append
 argument_list|()
 expr_stmt|;
 break|break;
+case|case
+name|ABORT
+case|:
+name|cleanup
+argument_list|()
+expr_stmt|;
+name|close
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 default|default:
 name|retval
 operator|=
@@ -490,7 +535,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"invalid command code on Kerberos update (0x%x)"
+literal|"invalid command code on db update (0x%x)"
 argument_list|,
 name|code
 argument_list|)
