@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kstack.c	5.1 (Berkeley) %G%"
+literal|"@(#)kstack.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/rpb.h>
+file|</sys/tahoe/tahoe/rpb.h>
 end_include
 
 begin_decl_stmt
