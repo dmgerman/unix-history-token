@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.4 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.5 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.4 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.5 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1626,6 +1626,14 @@ name|CtxDataTimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|datatimeout
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_macro
 name|smtpdata
 argument_list|(
@@ -1675,11 +1683,6 @@ decl_stmt|;
 name|time_t
 name|timeout
 decl_stmt|;
-specifier|static
-name|int
-name|datatimeout
-parameter_list|()
-function_decl|;
 comment|/* 	**  Send the data. 	**	First send the command and check that it is ok. 	**	Then send the data. 	**	Follow it up with a dot to terminate. 	**	Finally get the results of the transaction. 	*/
 comment|/* send the command and check ok to proceed */
 name|smtpmessage

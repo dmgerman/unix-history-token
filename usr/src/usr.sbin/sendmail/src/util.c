@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.4 (Berkeley) %G%"
+literal|"@(#)util.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2443,6 +2443,14 @@ name|CtxReadTimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|readtimeout
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|char
 modifier|*
@@ -2489,11 +2497,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|static
-name|int
-name|readtimeout
-parameter_list|()
-function_decl|;
 comment|/* set the timeout */
 if|if
 condition|(
@@ -3583,7 +3586,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|XDEBUG
+comment|/* XDEBUG */
 block|}
 end_block
 

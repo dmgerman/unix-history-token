@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.5 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.6 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.5 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.6 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,6 +417,15 @@ begin_comment
 comment|/* special code for QUIT command */
 end_comment
 
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|skipword
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|smtp
 argument_list|(
@@ -446,12 +455,6 @@ name|char
 modifier|*
 name|cmd
 decl_stmt|;
-specifier|static
-name|char
-modifier|*
-name|skipword
-parameter_list|()
-function_decl|;
 specifier|extern
 name|ADDRESS
 modifier|*

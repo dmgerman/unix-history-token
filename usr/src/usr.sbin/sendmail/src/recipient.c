@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.6 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2424,6 +2424,14 @@ name|CtxIncludeTimeout
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|includetimeout
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|include
@@ -2509,11 +2517,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|static
-name|int
-name|includetimeout
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd

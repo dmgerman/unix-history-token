@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.6 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|"sendmail.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<pwd.h>
 end_include
 
 begin_comment

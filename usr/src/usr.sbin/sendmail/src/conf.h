@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -559,6 +559,24 @@ name|setpgrp
 value|BSDsetpgrp
 end_define
 
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* have setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1037,6 +1055,28 @@ end_define
 begin_comment
 comment|/* use IDENT proto (RFC 1413) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  If no type for argument two of getgroups call is defined, assume **  it's an integer -- unfortunately, there seem to be several choices **  here. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GIDSET_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|int
+end_define
 
 begin_endif
 endif|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.4 (Berkeley) %G%"
+literal|"@(#)conf.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sendmail.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_include
 include|#
@@ -50,18 +62,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
 end_include
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.2 (Berkeley) %G%"
+literal|"@(#)mci.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -678,7 +678,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|DAEMON
 name|s
 operator|=
 name|stab

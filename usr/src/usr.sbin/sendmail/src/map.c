@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.3 (Berkeley) %G%"
+literal|"@(#)map.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -690,10 +690,6 @@ argument_list|)
 operator|)
 condition|)
 continue|continue;
-name|c
-operator|-=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|avp
@@ -703,7 +699,7 @@ init|;
 operator|--
 name|c
 operator|>=
-literal|0
+literal|'0'
 operator|&&
 operator|*
 name|avp
@@ -913,10 +909,6 @@ goto|goto
 name|pushc
 goto|;
 block|}
-name|c
-operator|-=
-literal|'0'
-expr_stmt|;
 for|for
 control|(
 name|avp
@@ -926,7 +918,7 @@ init|;
 operator|--
 name|c
 operator|>=
-literal|0
+literal|'0'
 operator|&&
 operator|*
 name|avp

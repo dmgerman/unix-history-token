@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.5 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.6 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.5 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.6 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4505,7 +4505,7 @@ name|NGROUPS
 name|int
 name|n
 decl_stmt|;
-name|int
+name|GIDSET_T
 name|gidset
 index|[
 name|NGROUPS
