@@ -4,7 +4,7 @@ comment|/* buf.c: This file contains the scratch-file buffer rountines for the  
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rodney Ruddock of the University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -16,10 +16,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
+modifier|*
+name|rcsid
 init|=
-literal|"@(#)buf.c	5.5 (Berkeley) 3/28/93"
+literal|"@(#)$Id: buf.c,v 1.3 1993/12/14 16:19:56 alm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,31 +35,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
 end_include
 
 begin_include
@@ -67,14 +43,6 @@ include|#
 directive|include
 file|"ed.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|errmsg
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -85,31 +53,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* scratch file pointer */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|sfbuf
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* scratch file input buffer */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sfbufsz
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* scratch file input buffer size */
 end_comment
 
 begin_decl_stmt
@@ -134,22 +77,22 @@ end_comment
 
 begin_decl_stmt
 name|line_t
-name|line0
+name|buffer_head
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* initial node of line queue */
+comment|/* incore buffer */
 end_comment
 
 begin_comment
-comment|/* gettxt: get a line of text from the scratch file; return pointer    to the text */
+comment|/* get_sbuf_line: get a line of text from the scratch file; return pointer    to the text */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|gettxt
+name|get_sbuf_line
 parameter_list|(
 name|lp
 parameter_list|)
@@ -158,6 +101,21 @@ modifier|*
 name|lp
 decl_stmt|;
 block|{
+specifier|static
+name|char
+modifier|*
+name|sfbuf
+init|=
+name|NULL
+decl_stmt|;
+comment|/* buffer */
+specifier|static
+name|int
+name|sfbufsz
+init|=
+literal|0
+decl_stmt|;
+comment|/* buffer size */
 name|int
 name|len
 decl_stmt|,
@@ -168,7 +126,7 @@ condition|(
 name|lp
 operator|==
 operator|&
-name|line0
+name|buffer_head
 condition|)
 return|return
 name|NULL
@@ -237,11 +195,8 @@ operator|=
 name|lp
 operator|->
 name|len
-operator|&
-operator|~
-name|ACTV
 expr_stmt|;
-name|CKBUF
+name|REALLOC
 argument_list|(
 name|sfbuf
 argument_list|,
@@ -322,28 +277,14 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|long
-name|curln
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|lastln
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* puttxt: write a line of text to the scratch file and add a line node    to the editor buffer;  return a pointer to the end of the text */
+comment|/* put_sbuf_line: write a line of text to the scratch file and add a line node    to the editor buffer;  return a pointer to the end of the text */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|puttxt
+name|put_sbuf_line
 parameter_list|(
 name|cs
 parameter_list|)
@@ -447,14 +388,9 @@ return|;
 block|}
 name|len
 operator|=
-operator|(
 name|s
 operator|-
 name|cs
-operator|)
-operator|&
-operator|~
-name|ACTV
 expr_stmt|;
 comment|/* out of position */
 if|if
@@ -511,7 +447,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* assert: spl1() */
+comment|/* assert: SPL1() */
 if|if
 condition|(
 operator|(
@@ -579,7 +515,7 @@ name|seek
 operator|=
 name|sfseek
 expr_stmt|;
-name|lpqueue
+name|add_line_node
 argument_list|(
 name|lp
 argument_list|)
@@ -597,12 +533,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* lpqueue: add a line node in the editor buffer after the current line */
+comment|/* add_line_node: add a line node in the editor buffer after the current line */
 end_comment
 
 begin_function
 name|void
-name|lpqueue
+name|add_line_node
 parameter_list|(
 name|lp
 parameter_list|)
@@ -617,35 +553,35 @@ name|cp
 decl_stmt|;
 name|cp
 operator|=
-name|getlp
+name|get_addressed_line_node
 argument_list|(
-name|curln
+name|current_addr
 argument_list|)
 expr_stmt|;
-comment|/* this getlp last! */
-name|insqueue
+comment|/* this get_addressed_line_node last! */
+name|insque
 argument_list|(
 name|lp
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|lastln
+name|addr_last
 operator|++
 expr_stmt|;
-name|curln
+name|current_addr
 operator|++
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* getaddr: return line number of pointer */
+comment|/* get_line_node_addr: return line number of pointer */
 end_comment
 
 begin_function
 name|long
-name|getaddr
+name|get_line_node_addr
 parameter_list|(
 name|lp
 parameter_list|)
@@ -659,7 +595,7 @@ modifier|*
 name|cp
 init|=
 operator|&
-name|line0
+name|buffer_head
 decl_stmt|;
 name|long
 name|n
@@ -677,11 +613,11 @@ name|cp
 operator|=
 name|cp
 operator|->
-name|next
+name|q_forw
 operator|)
 operator|!=
 operator|&
-name|line0
+name|buffer_head
 condition|)
 name|n
 operator|++
@@ -693,7 +629,7 @@ operator|&&
 name|cp
 operator|==
 operator|&
-name|line0
+name|buffer_head
 condition|)
 block|{
 name|sprintf
@@ -714,13 +650,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* getlp: return pointer to a line node in the editor buffer */
+comment|/* get_addressed_line_node: return pointer to a line node in the editor buffer */
 end_comment
 
 begin_function
 name|line_t
 modifier|*
-name|getlp
+name|get_addressed_line_node
 parameter_list|(
 name|n
 parameter_list|)
@@ -734,7 +670,7 @@ modifier|*
 name|lp
 init|=
 operator|&
-name|line0
+name|buffer_head
 decl_stmt|;
 specifier|static
 name|long
@@ -742,7 +678,7 @@ name|on
 init|=
 literal|0
 decl_stmt|;
-name|spl1
+name|SPL1
 argument_list|()
 expr_stmt|;
 if|if
@@ -758,7 +694,7 @@ operator|<=
 operator|(
 name|on
 operator|+
-name|lastln
+name|addr_last
 operator|)
 operator|>>
 literal|1
@@ -777,21 +713,21 @@ name|lp
 operator|=
 name|lp
 operator|->
-name|next
+name|q_forw
 expr_stmt|;
 else|else
 block|{
 name|lp
 operator|=
-name|line0
+name|buffer_head
 operator|.
-name|prev
+name|q_back
 expr_stmt|;
 for|for
 control|(
 name|on
 operator|=
-name|lastln
+name|addr_last
 init|;
 name|on
 operator|>
@@ -804,7 +740,7 @@ name|lp
 operator|=
 name|lp
 operator|->
-name|prev
+name|q_back
 expr_stmt|;
 block|}
 elseif|else
@@ -830,14 +766,14 @@ name|lp
 operator|=
 name|lp
 operator|->
-name|prev
+name|q_back
 expr_stmt|;
 else|else
 block|{
 name|lp
 operator|=
 operator|&
-name|line0
+name|buffer_head
 expr_stmt|;
 for|for
 control|(
@@ -856,10 +792,10 @@ name|lp
 operator|=
 name|lp
 operator|->
-name|next
+name|q_forw
 expr_stmt|;
 block|}
-name|spl0
+name|SPL0
 argument_list|()
 expr_stmt|;
 return|return
@@ -867,6 +803,13 @@ name|lp
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|newline_added
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -884,16 +827,20 @@ comment|/* scratch file name */
 end_comment
 
 begin_comment
-comment|/* sbopen: open scratch file */
+comment|/* open_sbuf: open scratch file */
 end_comment
 
-begin_macro
-name|sbopen
-argument_list|()
-end_macro
-
-begin_block
+begin_function
+name|int
+name|open_sbuf
+parameter_list|()
 block|{
+name|isbinary
+operator|=
+name|newline_added
+operator|=
+literal|0
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|sfn
@@ -953,18 +900,16 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* sbclose: close scratch file */
+comment|/* close_sbuf: close scratch file */
 end_comment
 
-begin_macro
-name|sbclose
-argument_list|()
-end_macro
-
-begin_block
+begin_function
+name|int
+name|close_sbuf
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1026,10 +971,10 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* quit: remove scratch file and exit */
+comment|/* quit: remove_lines scratch file and exit */
 end_comment
 
 begin_function
@@ -1081,12 +1026,12 @@ comment|/* character translation table */
 end_comment
 
 begin_comment
-comment|/* init_buf: open scratch buffer; initialize line queue */
+comment|/* init_buffers: open scratch buffer; initialize line queue */
 end_comment
 
 begin_function
 name|void
-name|init_buf
+name|init_buffers
 parameter_list|()
 block|{
 name|int
@@ -1094,9 +1039,19 @@ name|i
 init|=
 literal|0
 decl_stmt|;
+comment|/* Read stdin one character at a time to avoid i/o contention  	   with shell escapes invoked by nonterminal input, e.g., 	   ed -<<EOF 	   !cat 	   hello, world 	   EOF */
+name|setbuffer
+argument_list|(
+name|stdin
+argument_list|,
+name|stdinbuf
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|sbopen
+name|open_sbuf
 argument_list|()
 operator|<
 literal|0
@@ -1106,13 +1061,13 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|requeue
+name|REQUE
 argument_list|(
 operator|&
-name|line0
+name|buffer_head
 argument_list|,
 operator|&
-name|line0
+name|buffer_head
 argument_list|)
 expr_stmt|;
 for|for
@@ -1139,13 +1094,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* translit: translate characters in a string */
+comment|/* translit_text: translate characters in a string */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|translit
+name|translit_text
 parameter_list|(
 name|s
 parameter_list|,
