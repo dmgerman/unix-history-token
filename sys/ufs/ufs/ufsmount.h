@@ -158,6 +158,32 @@ name|um_fs
 decl_stmt|;
 comment|/* pointer to superblock */
 name|struct
+name|ufs_extattr_per_mount
+name|um_extattr
+decl_stmt|;
+comment|/* extended attrs */
+name|u_long
+name|um_nindir
+decl_stmt|;
+comment|/* indirect ptrs per block */
+name|u_long
+name|um_bptrtodb
+decl_stmt|;
+comment|/* indir ptr to disk block */
+name|u_long
+name|um_seqinc
+decl_stmt|;
+comment|/* inc between seq blocks */
+name|struct
+name|mtx
+name|um_lock
+decl_stmt|;
+comment|/* Protects ufsmount& fs */
+name|long
+name|um_numindirdeps
+decl_stmt|;
+comment|/* outstanding indirdeps */
+name|struct
 name|vnode
 modifier|*
 name|um_quotas
@@ -175,27 +201,6 @@ name|MAXQUOTAS
 index|]
 decl_stmt|;
 comment|/* quota file access cred */
-name|struct
-name|ufs_extattr_per_mount
-name|um_extattr
-decl_stmt|;
-comment|/* extended attrs */
-name|u_long
-name|um_nindir
-decl_stmt|;
-comment|/* indirect ptrs per block */
-name|u_long
-name|um_bptrtodb
-decl_stmt|;
-comment|/* indir ptr to disk block */
-name|u_long
-name|um_seqinc
-decl_stmt|;
-comment|/* inc between seq blocks */
-name|long
-name|um_numindirdeps
-decl_stmt|;
-comment|/* indirdeps for this filesys */
 name|time_t
 name|um_btime
 index|[
@@ -467,6 +472,36 @@ parameter_list|,
 name|bb
 parameter_list|)
 value|((aa)->um_ifree(aa, bb))
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_LOCK
+parameter_list|(
+name|aa
+parameter_list|)
+value|mtx_lock(&(aa)->um_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_UNLOCK
+parameter_list|(
+name|aa
+parameter_list|)
+value|mtx_unlock(&(aa)->um_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UFS_MTX
+parameter_list|(
+name|aa
+parameter_list|)
+value|(&(aa)->um_lock)
 end_define
 
 begin_comment
