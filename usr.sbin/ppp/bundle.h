@@ -456,6 +456,10 @@ name|radius
 name|radius
 decl_stmt|;
 comment|/* Info retrieved from radius server */
+name|struct
+name|radacct
+name|radacct
+decl_stmt|;
 endif|#
 directive|endif
 block|}

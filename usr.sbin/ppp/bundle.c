@@ -4690,6 +4690,13 @@ ifndef|#
 directive|ifndef
 name|NORADIUS
 comment|/* Tell the radius server the bad news */
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"Radius: Destroy called from bundle_Destroy\n"
+argument_list|)
+expr_stmt|;
 name|radius_Destroy
 argument_list|(
 operator|&

@@ -61,6 +61,16 @@ name|long
 name|long
 name|OctetsOut
 decl_stmt|;
+name|unsigned
+name|long
+name|long
+name|PacketsIn
+decl_stmt|;
+name|unsigned
+name|long
+name|long
+name|PacketsOut
+decl_stmt|;
 name|int
 name|SamplePeriod
 decl_stmt|;
