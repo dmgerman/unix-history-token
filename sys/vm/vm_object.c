@@ -1229,6 +1229,10 @@ if|if
 condition|(
 name|object
 operator|!=
+name|kernel_object
+operator|&&
+name|object
+operator|!=
 name|kmem_object
 condition|)
 name|mtx_lock
@@ -1289,6 +1293,10 @@ block|}
 block|}
 if|if
 condition|(
+name|object
+operator|!=
+name|kernel_object
+operator|&&
 name|object
 operator|!=
 name|kmem_object
