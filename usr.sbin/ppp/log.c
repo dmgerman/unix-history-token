@@ -107,6 +107,9 @@ literal|"Debug"
 block|,
 literal|"DNS"
 block|,
+literal|"Filter"
+block|,
+comment|/* Log discarded packets */
 literal|"HDLC"
 block|,
 literal|"ID0"
