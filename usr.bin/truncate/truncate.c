@@ -655,6 +655,9 @@ block|{
 case|case
 literal|'G'
 case|:
+case|case
+literal|'g'
+case|:
 name|oflow
 operator|=
 name|length
@@ -671,6 +674,9 @@ expr_stmt|;
 case|case
 literal|'M'
 case|:
+case|case
+literal|'m'
+case|:
 name|oflow
 operator|=
 name|length
@@ -686,6 +692,9 @@ argument_list|)
 expr_stmt|;
 case|case
 literal|'K'
+case|:
+case|case
+literal|'k'
 case|:
 if|if
 condition|(
