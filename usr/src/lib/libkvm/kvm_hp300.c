@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_hp300.c	5.29 (Berkeley) %G%"
+literal|"@(#)kvm_hp300.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_comment
-comment|/*  * Hp300 machine depedent routines for kvm.  Hopefully, the forthcoming   * vm code will one day obsolete this module.  */
+comment|/*  * Hp300 machine dependent routines for kvm.  Hopefully, the forthcoming   * vm code will one day obsolete this module.  */
 end_comment
 
 begin_include
