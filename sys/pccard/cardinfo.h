@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|PIOCSDRV
-value|_IOW('P', 6, struct dev_desc)
+value|_IOWR('P', 6, struct dev_desc)
 end_define
 
 begin_comment
