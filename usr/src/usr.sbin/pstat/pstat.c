@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.10 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4790,7 +4790,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"8d"
+literal|"%8d"
 argument_list|,
 name|fp
 operator|->

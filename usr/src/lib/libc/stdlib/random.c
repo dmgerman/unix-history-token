@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	5.2 (Berkeley) %G%"
+literal|"@(#)random.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -663,6 +663,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"initstate: not enough state (%d bytes) with which to do jack; ignored.\n"
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 return|return;

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.11 (Berkeley) %G%"
+literal|"@(#)timed.c	2.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2642,6 +2642,13 @@ argument_list|(
 name|fd
 argument_list|,
 literal|"invalid state %d\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ntp
+operator|->
+name|status
 argument_list|)
 expr_stmt|;
 break|break;

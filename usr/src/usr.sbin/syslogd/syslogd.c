@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.18 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1498,12 +1498,6 @@ argument_list|(
 literal|"readfds = %#x\n"
 argument_list|,
 name|readfds
-argument_list|,
-name|funix
-argument_list|,
-name|finet
-argument_list|,
-name|fklog
 argument_list|)
 expr_stmt|;
 name|nfds
