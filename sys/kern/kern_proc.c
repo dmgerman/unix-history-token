@@ -898,8 +898,14 @@ argument_list|()
 expr_stmt|;
 name|diff
 operator|=
+operator|(
+name|rlim_t
+operator|)
 name|to
 operator|-
+operator|(
+name|rlim_t
+operator|)
 operator|*
 name|hiwat
 expr_stmt|;
