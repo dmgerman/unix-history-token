@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright 1988,1990,1993,1994 by Paul Vixie  * All rights reserved  *  * Distribute freely, except: don't remove my name from the source or  * documentation (don't take credit for my work), mark your changes (don't  * get me blamed for your possible bugs), don't alter or remove this  * notice.  May be sold if buildable source is provided to buyer.  No  * warrantee of any kind, express or implied, is included with this  * software; use at your own risk, responsibility for damages (if any) to  * anyone resulting from the use of this software rests entirely with the  * user.  *  * Send bug reports, bug fixes, enhancements, requests, flames, etc., and  * I'll try to keep a version up to date.  I can be reached as follows:  * Paul Vixie<paul@vix.com>          uunet!decwrl!vixie!paul  */
+comment|/* Copyright 1988,1990,1993,1994 by Paul Vixie  * All rights reserved  *  * Distribute freely, except: don't remove my name from the source or  * documentation (don't take credit for my work), mark your changes (don't  * get me blamed for your possible bugs), don't alter or remove this  * notice.  May be sold if buildable source is provided to buyer.  No  * warrantee of any kind, express or implied, is included with this  * software; use at your own risk, responsibility for damages (if any) to  * anyone resulting from the use of this software rests entirely with the  * user.  *  * Send bug reports, bug fixes, enhancements, requests, flames, etc., and  * I'll try to keep a version up to date.  I can be reached as follows:  * Paul Vixie<paul@vix.com>          uunet!decwrl!vixie!paul  * From Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp  */
 end_comment
 
 begin_if
@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $"
+literal|"$Id: crontab.c,v 1.4 1994/04/13 21:57:55 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1462,7 +1462,7 @@ name|fdopen
 argument_list|(
 name|t
 argument_list|,
-literal|"r+"
+literal|"w"
 argument_list|)
 operator|)
 condition|)
@@ -1587,12 +1587,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fflush
+name|fclose
 argument_list|(
 name|NewCrontab
 argument_list|)
-operator|<
-name|OK
 condition|)
 block|{
 name|perror
@@ -1608,28 +1606,22 @@ expr_stmt|;
 block|}
 name|again
 label|:
-name|rewind
-argument_list|(
-name|NewCrontab
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|ferror
+name|stat
 argument_list|(
-name|NewCrontab
+name|Filename
+argument_list|,
+operator|&
+name|statbuf
 argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: error while writing new crontab to %s\n"
-argument_list|,
-name|ProgramName
-argument_list|,
-name|Filename
+literal|"stat"
 argument_list|)
 expr_stmt|;
 name|fatal
@@ -1644,28 +1636,6 @@ argument_list|(
 name|ERROR_EXIT
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|fstat
-argument_list|(
-name|t
-argument_list|,
-operator|&
-name|statbuf
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|perror
-argument_list|(
-literal|"fstat"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fatal
-goto|;
 block|}
 name|mtime
 operator|=
@@ -1951,9 +1921,9 @@ goto|;
 block|}
 if|if
 condition|(
-name|fstat
+name|stat
 argument_list|(
-name|t
+name|Filename
 argument_list|,
 operator|&
 name|statbuf
@@ -1964,7 +1934,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"fstat"
+literal|"stat"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2002,6 +1972,30 @@ argument_list|,
 name|ProgramName
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|NewCrontab
+operator|=
+name|fopen
+argument_list|(
+name|Filename
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+condition|)
+block|{
+name|perror
+argument_list|(
+name|Filename
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fatal
+goto|;
+block|}
 switch|switch
 condition|(
 name|replace_cmd
@@ -2288,11 +2282,6 @@ name|rcsid
 argument_list|)
 expr_stmt|;
 comment|/* copy the crontab to the tmp 	 */
-name|rewind
-argument_list|(
-name|NewCrontab
-argument_list|)
-expr_stmt|;
 name|Set_LineNum
 argument_list|(
 literal|1
@@ -2315,6 +2304,11 @@ argument_list|(
 name|ch
 argument_list|,
 name|tmp
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|NewCrontab
 argument_list|)
 expr_stmt|;
 name|ftruncate
