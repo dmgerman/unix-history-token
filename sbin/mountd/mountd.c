@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.18 1997/04/09 20:17:15 guido Exp $"
+literal|"$Id: mountd.c,v 1.19 1997/04/22 10:37:27 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -9160,12 +9160,17 @@ name|name
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|maskflg
+operator|&&
+operator|(
 name|np
 operator|=
 name|getnetbyname
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 condition|)
 name|inetaddr
 operator|=
