@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.57	82/11/13	*/
+comment|/*	uba.c	4.58	82/11/26	*/
 end_comment
 
 begin_include
@@ -640,9 +640,10 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|uh
 operator|->
-name|uh_map
+name|uh_mrwant
 argument_list|,
 name|PSWP
 argument_list|)
@@ -720,9 +721,10 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|uh
 operator|->
-name|uh_map
+name|uh_bdpwant
 argument_list|,
 name|PSWP
 argument_list|)
@@ -1269,9 +1271,10 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|uh
 operator|->
-name|uh_map
+name|uh_bdpwant
 argument_list|)
 expr_stmt|;
 block|}
@@ -1347,9 +1350,10 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|uh
 operator|->
-name|uh_map
+name|uh_mrwant
 argument_list|)
 expr_stmt|;
 block|}
