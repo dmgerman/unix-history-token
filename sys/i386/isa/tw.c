@@ -4411,10 +4411,10 @@ name|inb
 argument_list|(
 name|port
 operator|+
-name|tw_control
+name|tw_zcport
 argument_list|)
 operator|&
-name|TWC_SYNC
+name|tw_zcmask
 expr_stmt|;
 name|microtime
 argument_list|(
