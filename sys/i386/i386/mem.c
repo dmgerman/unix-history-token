@@ -1239,7 +1239,7 @@ continue|continue;
 default|default:
 return|return
 operator|(
-name|ENXIO
+name|ENODEV
 operator|)
 return|;
 block|}
