@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.1 (Berkeley) %G%"
+literal|"@(#)move.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|x
+operator|<
+literal|0
+operator|||
+name|y
+operator|<
+literal|0
+condition|)
+return|return
+name|ERR
+return|;
 if|if
 condition|(
 name|x
