@@ -64,6 +64,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_MACTEMP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * MAC Framework global variables.  */
 end_comment
@@ -122,18 +130,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MAC Framework global types and constants.  */
-end_comment
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_MACTEMP
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * MAC Framework object/access counter primitives, conditionally  * compiled.  */
