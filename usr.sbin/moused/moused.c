@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.4.2.4 1998/01/20 03:52:44 yokota Exp $"
+literal|"$Id: moused.c,v 1.4.2.5 1998/03/06 03:12:22 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -453,6 +453,15 @@ name|int
 name|extioctl
 init|=
 name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|pidfile
+init|=
+literal|"/var/run/moused.pid"
 decl_stmt|;
 end_decl_stmt
 
@@ -1635,7 +1644,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"3C:DF:PRS:cdfhi:l:m:p:r:st:z:"
+literal|"3C:DF:I:PRS:cdfhi:l:m:p:r:st:z:"
 argument_list|)
 operator|)
 operator|!=
@@ -2169,6 +2178,14 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'I'
+case|:
+name|pidfile
+operator|=
+name|optarg
+expr_stmt|;
 break|break;
 case|case
 literal|'P'
@@ -2797,6 +2814,10 @@ decl_stmt|;
 name|u_char
 name|b
 decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2860,6 +2881,38 @@ name|background
 operator|=
 name|TRUE
 expr_stmt|;
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|pidfile
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%d\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* clear mouse data */
 name|bzero
