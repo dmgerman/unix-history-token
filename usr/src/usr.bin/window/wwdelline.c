@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwdelline.c	3.8 (Berkeley) %G%"
+literal|"@(#)wwdelline.c	3.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,6 +245,15 @@ name|deleted
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|cp
+operator|+=
+name|w
+operator|->
+name|ww_b
+operator|.
+name|l
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -268,6 +277,7 @@ name|c_w
 operator|=
 literal|' '
 expr_stmt|;
+block|}
 block|}
 end_block
 
