@@ -228,6 +228,8 @@ name|newsof
 decl_stmt|,
 name|newsol
 decl_stmt|,
+name|nargs
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* 		 * XXX this assumes the simplistic stack frames used 		 * by the old toolchain. 		 */
@@ -304,6 +306,22 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|nargs
+operator|=
+name|newsof
+operator|-
+name|newsol
+expr_stmt|;
+if|if
+condition|(
+name|nargs
+operator|>
+literal|8
+condition|)
+name|nargs
+operator|=
+literal|8
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -312,9 +330,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|newsof
-operator|-
-name|newsol
+name|nargs
 condition|;
 name|i
 operator|++
