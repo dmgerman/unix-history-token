@@ -4960,18 +4960,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Do soft update processing. 		 */
-if|if
-condition|(
-name|bioops
-operator|.
-name|io_sync
-condition|)
-call|(
-modifier|*
-name|bioops
-operator|.
-name|io_sync
-call|)
+name|softdep_process_worklist
 argument_list|(
 name|NULL
 argument_list|)

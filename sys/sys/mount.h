@@ -2539,6 +2539,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|softdep_process_worklist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else

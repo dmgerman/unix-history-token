@@ -1357,12 +1357,6 @@ comment|/* io_complete */
 name|softdep_deallocate_dependencies
 block|,
 comment|/* io_deallocate */
-name|softdep_fsync
-block|,
-comment|/* io_fsync */
-name|softdep_process_worklist
-block|,
-comment|/* io_sync */
 name|softdep_move_dependencies
 block|,
 comment|/* io_movedeps */
