@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This test was written by Alexander V. Lukyanov to demonstrate difference  * between ncurses 4.1 and SVR4 curses  *  * $Id: firstlast.c,v 1.2 1997/10/18 21:34:53 tom Exp $  */
+comment|/*  * This test was written by Alexander V. Lukyanov to demonstrate difference  * between ncurses 4.1 and SVR4 curses  *  * $Id: firstlast.c,v 1.3 2001/09/15 21:46:34 tom Exp $  */
 end_comment
 
 begin_include
@@ -317,9 +317,11 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: init.c,v 1.2 2000/05/13 19:58:48 Daniel.Weaver Exp $"
+literal|"$Id: init.c,v 1.3 2001/06/16 17:54:19 tom Exp $"
 argument_list|)
 end_macro
 
@@ -659,6 +659,9 @@ name|cursor_home
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|user9
 name|report_cap
 argument_list|(
 literal|"ENQ   (u9)"
@@ -666,6 +669,11 @@ argument_list|,
 name|user9
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|user8
 name|report_cap
 argument_list|(
 literal|"ACK   (u8)"
@@ -673,6 +681,8 @@ argument_list|,
 name|user8
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sprintf
 argument_list|(
 name|temp

@@ -4,26 +4,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Compile this with the command `cc -O blue.c -lcurses -o blue'.  For best  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is  * just as good.  *  * $Id: blue.c,v 1.18 1999/01/17 00:11:56 tom Exp $  */
+comment|/*  * Compile this with the command `cc -O blue.c -lcurses -o blue'.  For best  * results, use the ncurses(3) library.  On non-Intel machines, SVr4 curses is  * just as good.  *  * $Id: blue.c,v 1.23 2002/04/06 23:05:16 tom Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_include
 include|#
@@ -34,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<term.h>
+file|<test.priv.h>
 end_include
 
 begin_define
@@ -527,7 +509,7 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_SUCCESS
 argument_list|)
@@ -2303,7 +2285,7 @@ argument_list|(
 name|SIGINT
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/*NOTREACHED */
 block|}
 end_function
 

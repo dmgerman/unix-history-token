@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * This is a test program for the PDCurses screen package for IBM PC type  * machines.  *  * This program was written by John Burnell (johnb@kea.am.dsir.govt.nz)  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either  *                  PDCurses or under Unix System V, R4  *  * $Id: testcurs.c,v 1.24 2001/02/24 22:13:23 tom Exp $  */
+comment|/*  *  * This is a test program for the PDCurses screen package for IBM PC type  * machines.  *  * This program was written by John Burnell (johnb@kea.am.dsir.govt.nz)  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either  *                  PDCurses or under Unix System V, R4  *  * $Id: testcurs.c,v 1.28 2002/02/03 00:29:22 tom Exp $  */
 end_comment
 
 begin_include
@@ -187,7 +187,7 @@ index|[]
 init|=
 block|{
 block|{
-literal|"Intro Test"
+literal|"General Test"
 block|,
 name|introTest
 block|}
@@ -275,14 +275,16 @@ name|win
 decl_stmt|;
 name|int
 name|key
-decl_stmt|,
+decl_stmt|;
+name|int
 name|old_option
 init|=
 operator|(
 operator|-
 literal|1
 operator|)
-decl_stmt|,
+decl_stmt|;
+name|int
 name|new_option
 init|=
 literal|0
@@ -291,6 +293,9 @@ name|bool
 name|quit
 init|=
 name|FALSE
+decl_stmt|;
+name|unsigned
+name|n
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -311,9 +316,11 @@ operator|&
 name|win
 argument_list|)
 condition|)
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_FAILURE
-return|;
+argument_list|)
+expr_stmt|;
 name|erase
 argument_list|()
 expr_stmt|;
@@ -324,10 +331,11 @@ argument_list|,
 name|new_option
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 ifdef|#
 directive|ifdef
@@ -400,6 +408,82 @@ operator|=
 name|getch
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|key
+operator|<
+name|KEY_MIN
+operator|&&
+name|key
+operator|>
+literal|0
+operator|&&
+name|isalpha
+argument_list|(
+name|key
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|islower
+argument_list|(
+name|key
+argument_list|)
+condition|)
+name|key
+operator|=
+name|toupper
+argument_list|(
+name|key
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|MAX_OPTIONS
+condition|;
+operator|++
+name|n
+control|)
+block|{
+if|if
+condition|(
+name|key
+operator|==
+name|command
+index|[
+name|n
+index|]
+operator|.
+name|text
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|display_menu
+argument_list|(
+name|old_option
+argument_list|,
+name|new_option
+operator|=
+name|n
+argument_list|)
+expr_stmt|;
+name|key
+operator|=
+literal|' '
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
 switch|switch
 condition|(
 name|key
@@ -508,6 +592,13 @@ name|TRUE
 expr_stmt|;
 break|break;
 default|default:
+name|beep
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|' '
+case|:
 break|break;
 block|}
 if|if
@@ -534,9 +625,11 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1250,6 +1343,12 @@ name|win
 parameter_list|)
 block|{
 name|int
+name|answered
+decl_stmt|;
+name|int
+name|repeat
+decl_stmt|;
+name|int
 name|w
 decl_stmt|,
 name|h
@@ -1652,10 +1751,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|wmove
 argument_list|(
@@ -1915,6 +2015,42 @@ directive|endif
 name|refresh
 argument_list|()
 expr_stmt|;
+name|repeat
+operator|=
+literal|0
+expr_stmt|;
+do|do
+block|{
+specifier|static
+name|char
+modifier|*
+name|fmt
+index|[]
+init|=
+block|{
+literal|"%d %10s"
+block|,
+literal|"%d %[a-zA-Z]s"
+block|,
+literal|"%d %[][a-zA-Z]s"
+block|,
+literal|"%d %[^0-9]"
+block|}
+decl_stmt|;
+name|char
+modifier|*
+name|format
+init|=
+name|fmt
+index|[
+name|repeat
+operator|%
+name|SIZEOF
+argument_list|(
+name|fmt
+argument_list|)
+index|]
+decl_stmt|;
 name|wclear
 argument_list|(
 name|win
@@ -1942,7 +2078,7 @@ argument_list|,
 literal|"This text should have appeared without you pressing a key"
 argument_list|)
 expr_stmt|;
-name|mvwaddstr
+name|mvwprintw
 argument_list|(
 name|win
 argument_list|,
@@ -1950,7 +2086,9 @@ literal|6
 argument_list|,
 literal|2
 argument_list|,
-literal|"Enter a number then a string separated by space"
+literal|"Scanning with format \"%s\""
+argument_list|,
+name|format
 argument_list|)
 expr_stmt|;
 name|mvwin
@@ -1958,9 +2096,31 @@ argument_list|(
 name|win
 argument_list|,
 literal|2
+operator|+
+literal|2
+operator|*
+operator|(
+name|repeat
+operator|%
+literal|4
+operator|)
 argument_list|,
 literal|1
+operator|+
+literal|2
+operator|*
+operator|(
+name|repeat
+operator|%
+literal|4
+operator|)
 argument_list|)
+expr_stmt|;
+name|erase
+argument_list|()
+expr_stmt|;
+name|refresh
+argument_list|()
 expr_stmt|;
 name|wrefresh
 argument_list|(
@@ -1982,6 +2142,8 @@ name|buffer
 operator|=
 literal|0
 expr_stmt|;
+name|answered
+operator|=
 name|mvwscanw
 argument_list|(
 name|win
@@ -1990,7 +2152,7 @@ literal|7
 argument_list|,
 literal|6
 argument_list|,
-literal|"%d %s"
+name|format
 argument_list|,
 operator|&
 name|num
@@ -2006,11 +2168,13 @@ literal|8
 argument_list|,
 literal|6
 argument_list|,
-literal|"String: %s Number: %d"
+literal|"String: %s Number: %d (%d values read)"
 argument_list|,
 name|buffer
 argument_list|,
 name|num
+argument_list|,
+name|answered
 argument_list|)
 expr_stmt|;
 name|Continue
@@ -2018,6 +2182,17 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
+operator|++
+name|repeat
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|answered
+operator|>
+literal|0
+condition|)
+do|;
 block|}
 end_function
 

@@ -12,7 +12,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|// $Id: cursesf.h,v 1.15 2001/03/24 21:41:23 tom Exp $
+comment|// $Id: cursesf.h,v 1.16 2001/07/15 00:02:53 tom Exp $
 end_comment
 
 begin_ifndef
@@ -970,7 +970,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|// Retrieve the value of a fields buffer. The defaukt buffer is nr. 0
+comment|// Retrieve the value of a fields buffer. The default buffer is nr. 0
 specifier|inline
 name|char
 modifier|*

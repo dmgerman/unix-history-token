@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1999,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1999-2001,2002 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.6 2000/11/04 23:14:28 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
+comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1999  *  * $Id: cardfile.c,v 1.11 2002/04/06 23:12:50 tom Exp $  *  * File format: text beginning in column 1 is a title; other text forms the content.  */
 end_comment
 
 begin_include
@@ -12,6 +12,18 @@ include|#
 directive|include
 file|<test.priv.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|HAVE_FORM_H
+operator|&&
+name|HAVE_PANEL_H
+operator|&&
+name|HAVE_LIBFORM
+operator|&&
+name|HAVE_LIBPANEL
+end_if
 
 begin_include
 include|#
@@ -23,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|<panel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -209,7 +215,7 @@ while|while
 condition|(
 name|isspace
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|buffer
@@ -250,7 +256,7 @@ operator|--
 operator|&&
 name|isspace
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 name|buffer
 index|[
@@ -699,7 +705,7 @@ if|if
 condition|(
 name|isspace
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|buffer
@@ -1730,6 +1736,18 @@ name|fname
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|KEY_RESIZE
+case|case
+name|KEY_RESIZE
+case|:
+name|flash
+argument_list|()
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 default|default:
 name|beep
 argument_list|()
@@ -1849,11 +1867,43 @@ block|}
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"This program requires the curses form and panel libraries\n"
+argument_list|)
+expr_stmt|;
+name|ExitProgram
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

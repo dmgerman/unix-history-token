@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,2000 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2000,2001 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -26,12 +26,44 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: resizeterm.c,v 1.9 2000/12/10 02:43:28 tom Exp $"
+literal|"$Id: resizeterm.c,v 1.13 2002/02/02 19:26:27 tom Exp $"
 argument_list|)
 end_macro
 
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
+name|is_term_resized
+argument_list|(
+argument|int ToLines
+argument_list|,
+argument|int ToCols
+argument_list|)
+end_macro
+
+begin_block
+block|{
+return|return
+operator|(
+name|ToLines
+operator|!=
+name|screen_lines
+operator|||
+name|ToCols
+operator|!=
+name|screen_columns
+operator|)
+return|;
+block|}
+end_block
+
 begin_comment
-comment|/*  * This function reallocates NCURSES window structures.  It is invoked in  * response to a SIGWINCH interrupt.  Other user-defined windows may also need  * to be reallocated.  *  * Because this performs memory allocation, it should not (in general) be  * invoked directly from the signal handler.  */
+comment|/*  * This function reallocates NCURSES window structures, with no side-effects  * such as ungetch().  */
 end_comment
 
 begin_macro
@@ -42,7 +74,7 @@ argument_list|)
 end_macro
 
 begin_macro
-name|resizeterm
+name|resize_term
 argument_list|(
 argument|int ToLines
 argument_list|,
@@ -77,7 +109,7 @@ argument_list|(
 operator|(
 name|T_CALLED
 argument_list|(
-literal|"resizeterm(%d,%d) old(%d,%d)"
+literal|"resize_term(%d,%d) old(%d,%d)"
 argument_list|)
 operator|,
 name|ToLines
@@ -90,46 +122,20 @@ name|screen_columns
 operator|)
 argument_list|)
 expr_stmt|;
-name|SP
-operator|->
-name|_sig_winch
-operator|=
-name|FALSE
-expr_stmt|;
 if|if
 condition|(
+name|is_term_resized
+argument_list|(
 name|ToLines
-operator|!=
-name|screen_lines
-operator|||
+argument_list|,
 name|ToCols
-operator|!=
-name|screen_columns
+argument_list|)
 condition|)
 block|{
 name|WINDOWLIST
 modifier|*
 name|wp
 decl_stmt|;
-if|#
-directive|if
-name|USE_SIGWINCH
-name|ungetch
-argument_list|(
-name|KEY_RESIZE
-argument_list|)
-expr_stmt|;
-comment|/* so application can know this */
-name|clearok
-argument_list|(
-name|curscr
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-comment|/* screen contents are unknown */
-endif|#
-directive|endif
 for|for
 control|(
 name|wp
@@ -151,9 +157,12 @@ name|WINDOW
 modifier|*
 name|win
 init|=
+operator|&
+operator|(
 name|wp
 operator|->
 name|win
+operator|)
 decl_stmt|;
 name|int
 name|myLines
@@ -337,6 +346,104 @@ expr_stmt|;
 name|returnCode
 argument_list|(
 name|OK
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * This function reallocates NCURSES window structures.  It is invoked in  * response to a SIGWINCH interrupt.  Other user-defined windows may also need  * to be reallocated.  *  * Because this performs memory allocation, it should not (in general) be  * invoked directly from the signal handler.  */
+end_comment
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|resizeterm
+argument_list|(
+argument|int ToLines
+argument_list|,
+argument|int ToCols
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|int
+name|result
+init|=
+name|OK
+decl_stmt|;
+name|SP
+operator|->
+name|_sig_winch
+operator|=
+name|FALSE
+expr_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"resizeterm(%d,%d) old(%d,%d)"
+argument_list|)
+operator|,
+name|ToLines
+operator|,
+name|ToCols
+operator|,
+name|screen_lines
+operator|,
+name|screen_columns
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is_term_resized
+argument_list|(
+name|ToLines
+argument_list|,
+name|ToCols
+argument_list|)
+condition|)
+block|{
+if|#
+directive|if
+name|USE_SIGWINCH
+name|ungetch
+argument_list|(
+name|KEY_RESIZE
+argument_list|)
+expr_stmt|;
+comment|/* so application can know this */
+name|clearok
+argument_list|(
+name|curscr
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+comment|/* screen contents are unknown */
+endif|#
+directive|endif
+name|result
+operator|=
+name|resize_term
+argument_list|(
+name|ToLines
+argument_list|,
+name|ToCols
+argument_list|)
+expr_stmt|;
+block|}
+name|returnCode
+argument_list|(
+name|result
 argument_list|)
 expr_stmt|;
 block|}

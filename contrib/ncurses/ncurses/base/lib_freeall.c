@@ -50,7 +50,7 @@ end_endif
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_freeall.c,v 1.18 2000/12/10 02:43:27 tom Exp $"
+literal|"$Id: lib_freeall.c,v 1.19 2001/09/15 21:32:48 tom Exp $"
 argument_list|)
 end_macro
 
@@ -252,21 +252,24 @@ operator|(
 name|q
 operator|->
 name|win
-operator|->
+operator|.
 name|_flags
 operator|&
 name|_SUBWIN
 operator|)
 operator|&&
 operator|(
+operator|&
+operator|(
 name|p
 operator|->
 name|win
+operator|)
 operator|==
 name|q
 operator|->
 name|win
-operator|->
+operator|.
 name|_parent
 operator|)
 condition|)
@@ -286,9 +289,12 @@ condition|)
 block|{
 name|delwin
 argument_list|(
+operator|&
+operator|(
 name|p
 operator|->
 name|win
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -328,6 +334,27 @@ argument_list|(
 name|SP
 operator|->
 name|_color_table
+argument_list|)
+expr_stmt|;
+name|FreeIfNeeded
+argument_list|(
+name|SP
+operator|->
+name|oldhash
+argument_list|)
+expr_stmt|;
+name|FreeIfNeeded
+argument_list|(
+name|SP
+operator|->
+name|newhash
+argument_list|)
+expr_stmt|;
+name|FreeIfNeeded
+argument_list|(
+name|SP
+operator|->
+name|hashtab
 argument_list|)
 expr_stmt|;
 if|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This is an example written by Alexander V. Lukyanov<lav@yars.free.net>,  * to demonstrate an inconsistency between ncurses and SVr4 curses.  *  * $Id: testaddch.c,v 1.3 1997/10/18 21:35:15 tom Exp $  */
+comment|/*  * This is an example written by Alexander V. Lukyanov<lav@yars.free.net>,  * to demonstrate an inconsistency between ncurses and SVr4 curses.  *  * $Id: testaddch.c,v 1.4 2001/09/15 21:46:34 tom Exp $  */
 end_comment
 
 begin_include
@@ -309,9 +309,11 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

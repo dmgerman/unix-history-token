@@ -32,7 +32,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: alloc_entry.c,v 1.35 2001/01/13 22:40:17 tom Exp $"
+literal|"$Id: alloc_entry.c,v 1.36 2001/09/22 21:10:26 tom Exp $"
 argument_list|)
 end_macro
 
@@ -64,10 +64,8 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|stringbuf
-index|[
-name|MAX_STRTAB
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +107,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|stringbuf
+operator|==
+literal|0
+condition|)
+name|stringbuf
+operator|=
+name|malloc
+argument_list|(
+name|MAX_STRTAB
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|NCURSES_XNAMES

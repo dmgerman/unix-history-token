@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tic.c,v 1.90 2001/04/15 00:21:31 tom Exp $"
+literal|"$Id: tic.c,v 1.92 2001/06/18 18:44:01 tom Exp $"
 argument_list|)
 end_macro
 
@@ -1081,7 +1081,7 @@ while|while
 condition|(
 name|isspace
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|src
@@ -1135,7 +1135,7 @@ literal|0
 operator|&&
 name|isspace
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 name|dst
 index|[
@@ -1927,7 +1927,7 @@ name|stderr
 expr_stmt|;
 name|_nc_progname
 operator|=
-name|_nc_basename
+name|_nc_rootname
 argument_list|(
 name|argv
 index|[

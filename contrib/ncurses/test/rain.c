@@ -1,28 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: rain.c,v 1.15 2000/09/02 18:41:22 tom Exp $  */
+comment|/*  * $Id: rain.c,v 1.19 2002/04/06 20:45:22 tom Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<term.h>
-end_include
-
-begin_comment
-comment|/* for tparm() */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_comment
@@ -701,11 +685,11 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 case|case
 literal|'s'
 case|:
@@ -789,7 +773,7 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)

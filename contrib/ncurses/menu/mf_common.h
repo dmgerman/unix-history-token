@@ -11,11 +11,18 @@ begin_comment
 comment|/* Common internal header for menu and form library */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|HAVE_CONFIG_H
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MF_COMMON_H_incl
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MF_COMMON_H_incl
+value|1
+end_define
 
 begin_include
 include|#
@@ -23,10 +30,11 @@ directive|include
 file|<ncurses_cfg.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
 
 begin_include
 include|#
@@ -281,6 +289,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MF_COMMON_H_incl */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,1999,2000,2001 Free Software Foundation, Inc.         *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_newwin.c,v 1.27 2000/12/10 02:43:27 tom Exp $"
+literal|"$Id: lib_newwin.c,v 1.33 2001/12/19 01:06:30 tom Exp $"
 argument_list|)
 end_macro
 
@@ -89,9 +89,12 @@ control|)
 block|{
 if|if
 condition|(
+operator|&
+operator|(
 name|p
 operator|->
 name|win
+operator|)
 operator|==
 name|win
 condition|)
@@ -116,11 +119,6 @@ operator|=
 name|p
 operator|->
 name|next
-expr_stmt|;
-name|free
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -171,7 +169,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|win
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -253,7 +251,7 @@ name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-name|chtype
+name|NCURSES_CH_T
 modifier|*
 name|ptr
 decl_stmt|;
@@ -401,7 +399,7 @@ name|text
 operator|=
 name|typeCalloc
 argument_list|(
-name|chtype
+name|NCURSES_CH_T
 argument_list|,
 operator|(
 name|unsigned
@@ -463,23 +461,20 @@ name|text
 operator|+
 name|num_columns
 condition|;
-control|)
-operator|*
 name|ptr
 operator|++
-operator|=
-literal|' '
-expr_stmt|;
-block|}
-name|T
+control|)
+name|SetChar
 argument_list|(
-operator|(
-literal|"newwin: returned window is %p"
-operator|,
-name|win
-operator|)
+operator|*
+name|ptr
+argument_list|,
+name|BLANK_TEXT
+argument_list|,
+name|BLANK_ATTR
 argument_list|)
 expr_stmt|;
+block|}
 name|returnWin
 argument_list|(
 name|win
@@ -544,7 +539,7 @@ name|begx
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*        ** make sure window fits inside the original one      */
+comment|/*      * make sure window fits inside the original one      */
 if|if
 condition|(
 name|begy
@@ -699,11 +694,11 @@ name|_attrs
 expr_stmt|;
 name|win
 operator|->
-name|_bkgd
+name|_nc_bkgd
 operator|=
 name|orig
 operator|->
-name|_bkgd
+name|_nc_bkgd
 expr_stmt|;
 for|for
 control|(
@@ -746,15 +741,6 @@ operator|->
 name|_parent
 operator|=
 name|orig
-expr_stmt|;
-name|T
-argument_list|(
-operator|(
-literal|"derwin: returned window is %p"
-operator|,
-name|win
-operator|)
-argument_list|)
 expr_stmt|;
 name|returnWin
 argument_list|(
@@ -972,24 +958,15 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
-operator|(
 name|win
 operator|=
-name|typeCalloc
-argument_list|(
-name|WINDOW
-argument_list|,
-literal|1
-argument_list|)
+operator|&
+operator|(
+name|wp
+operator|->
+name|win
 operator|)
-operator|==
-literal|0
-condition|)
-return|return
-literal|0
-return|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1083,11 +1060,16 @@ name|_attrs
 operator|=
 name|A_NORMAL
 expr_stmt|;
+name|SetChar
+argument_list|(
 name|win
 operator|->
-name|_bkgd
-operator|=
-name|BLANK
+name|_nc_bkgd
+argument_list|,
+name|BLANK_TEXT
+argument_list|,
+name|BLANK_ATTR
+argument_list|)
 expr_stmt|;
 name|win
 operator|->
@@ -1358,12 +1340,6 @@ operator|->
 name|next
 operator|=
 name|_nc_windows
-expr_stmt|;
-name|wp
-operator|->
-name|win
-operator|=
-name|win
 expr_stmt|;
 name|_nc_windows
 operator|=

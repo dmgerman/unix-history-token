@@ -90,7 +90,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_mvcur.c,v 1.78 2001/04/14 22:26:14 tom Exp $"
+literal|"$Id: lib_mvcur.c,v 1.85 2001/06/03 01:48:29 skimo Exp $"
 argument_list|)
 end_macro
 
@@ -519,7 +519,7 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|cp
@@ -569,7 +569,7 @@ operator|)
 operator|&&
 name|isdigit
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 operator|*
 name|cp
@@ -1747,6 +1747,17 @@ condition|(
 name|cursor_down
 operator|&&
 operator|(
+operator|*
+name|cursor_down
+operator|!=
+literal|'\n'
+operator|||
+name|SP
+operator|->
+name|_nl
+operator|)
+operator|&&
+operator|(
 name|n
 operator|*
 name|SP
@@ -2155,7 +2166,7 @@ literal|'\0'
 operator|&&
 name|isdigit
 argument_list|(
-name|TextOf
+name|CharOf
 argument_list|(
 name|WANT_CHAR
 argument_list|(
@@ -2195,7 +2206,7 @@ name|i
 operator|++
 control|)
 block|{
-name|chtype
+name|NCURSES_CH_T
 name|ch
 init|=
 name|WANT_CHAR
@@ -2209,31 +2220,21 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
+name|AttrOf
+argument_list|(
 name|ch
-operator|&
-name|A_ATTRIBUTES
-operator|)
+argument_list|)
 operator|!=
 name|CURRENT_ATTR
 if|#
 directive|if
 name|USE_WIDEC_SUPPORT
 operator|||
-operator|(
-name|TextOf
+operator|!
+name|Charable
 argument_list|(
 name|ch
 argument_list|)
-operator|>=
-literal|0x80
-operator|&&
-name|SP
-operator|->
-name|_outch
-operator|==
-name|_nc_utf8_outch
-operator|)
 endif|#
 directive|endif
 condition|)
@@ -2273,6 +2274,8 @@ operator|.
 name|s_tail
 operator|++
 operator|=
+name|CharOf
+argument_list|(
 name|WANT_CHAR
 argument_list|(
 name|to_y
@@ -2280,6 +2283,7 @@ argument_list|,
 name|from_x
 operator|+
 name|i
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3409,10 +3413,15 @@ begin_block
 block|{
 name|TR
 argument_list|(
+name|TRACE_CALLS
+operator||
 name|TRACE_MOVE
 argument_list|,
 operator|(
-literal|"mvcur(%d,%d,%d,%d) called"
+name|T_CALLED
+argument_list|(
+literal|"mvcur(%d,%d,%d,%d)"
+argument_list|)
 operator|,
 name|yold
 operator|,
@@ -3426,6 +3435,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SP
+operator|==
+literal|0
+condition|)
+name|returnCode
+argument_list|(
+name|ERR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|yold
 operator|==
 name|ynew
@@ -3434,11 +3454,11 @@ name|xold
 operator|==
 name|xnew
 condition|)
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|OK
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 comment|/*      * Most work here is rounding for terminal boundaries getting the      * column position implied by wraparound or the lack thereof and      * rolling up the screen to get ynew on the screen.      */
 if|if
 condition|(
@@ -3468,6 +3488,13 @@ block|{
 name|int
 name|l
 decl_stmt|;
+if|if
+condition|(
+name|SP
+operator|->
+name|_nl
+condition|)
+block|{
 name|l
 operator|=
 operator|(
@@ -3574,6 +3601,21 @@ expr_stmt|;
 block|}
 block|}
 block|}
+else|else
+block|{
+comment|/* 	     * If caller set nonl(), we cannot really use newlines to position 	     * to the next row. 	     */
+name|xold
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|yold
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|yold
@@ -3603,8 +3645,8 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* destination location is on screen now */
-return|return
-operator|(
+name|returnCode
+argument_list|(
 name|onscreen_mvcur
 argument_list|(
 name|yold
@@ -3617,8 +3659,8 @@ name|xnew
 argument_list|,
 name|TRUE
 argument_list|)
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

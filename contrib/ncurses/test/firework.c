@@ -1,24 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: firework.c,v 1.17 2000/09/02 18:41:12 tom Exp $  */
+comment|/*  * $Id: firework.c,v 1.20 2002/03/23 21:41:42 tom Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<test.priv.h>
 end_include
 
 begin_decl_stmt
@@ -62,7 +56,7 @@ block|{
 name|cleanup
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -125,7 +119,7 @@ block|{
 name|cleanup
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_SUCCESS
 argument_list|)

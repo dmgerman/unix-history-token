@@ -24,7 +24,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: edit.c,v 1.7 2001/02/24 22:10:40 tom Exp $"
+literal|"$Id: edit.c,v 1.8 2001/06/18 18:44:32 tom Exp $"
 argument_list|)
 end_macro
 
@@ -4479,7 +4479,7 @@ literal|'\0'
 operator|&&
 name|isalpha
 argument_list|(
-name|CharOf
+name|UChar
 argument_list|(
 name|buf
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_getch.c,v 1.54 2000/12/10 02:43:27 tom Exp $"
+literal|"$Id: lib_getch.c,v 1.60 2002/03/17 00:46:01 tom Exp $"
 argument_list|)
 end_macro
 
@@ -113,9 +113,12 @@ argument_list|(
 name|TRACE_IEVENT
 argument_list|,
 operator|(
-literal|"pulling %d from %d"
+literal|"pulling %s from %d"
 operator|,
+name|_tracechar
+argument_list|(
 name|ch
+argument_list|)
 operator|,
 name|head
 operator|)
@@ -275,10 +278,7 @@ argument_list|)
 expr_stmt|;
 name|ch
 operator|=
-name|CharOf
-argument_list|(
 name|c2
-argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -385,9 +385,12 @@ argument_list|(
 name|TRACE_IEVENT
 argument_list|,
 operator|(
-literal|"pushed %#x at %d"
+literal|"pushed %s at %d"
 operator|,
+name|_tracechar
+argument_list|(
 name|ch
+argument_list|)
 operator|,
 name|tail
 operator|)
@@ -422,30 +425,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|FIFO_SIZE
-condition|;
-name|i
-operator|++
-control|)
+name|memset
+argument_list|(
 name|SP
 operator|->
 name|_fifo
-index|[
-name|i
-index|]
-operator|=
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|SP
+operator|->
+name|_fifo
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|head
 operator|=
@@ -466,8 +460,7 @@ specifier|static
 name|int
 name|kgetch
 parameter_list|(
-name|WINDOW
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -490,9 +483,13 @@ argument_list|)
 end_macro
 
 begin_macro
-name|wgetch
+name|_nc_wgetch
 argument_list|(
 argument|WINDOW *win
+argument_list|,
+argument|unsigned long *result
+argument_list|,
+argument|int use_meta
 argument_list|)
 end_macro
 
@@ -512,6 +509,11 @@ operator|,
 name|win
 operator|)
 argument_list|)
+expr_stmt|;
+operator|*
+name|result
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -541,28 +543,15 @@ argument_list|(
 name|win
 argument_list|)
 expr_stmt|;
-name|ch
+operator|*
+name|result
 operator|=
 name|fifo_pull
 argument_list|()
 expr_stmt|;
-name|T
-argument_list|(
-operator|(
-literal|"wgetch returning (pre-cooked): %#x = %s"
-operator|,
-name|ch
-operator|,
-name|_trace_key
-argument_list|(
-name|ch
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 name|returnCode
 argument_list|(
-name|ch
+name|OK
 argument_list|)
 expr_stmt|;
 block|}
@@ -645,13 +634,35 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|returnCode
-argument_list|(
+operator|*
+name|result
+operator|=
 name|fifo_pull
 argument_list|()
+expr_stmt|;
+name|returnCode
+argument_list|(
+name|OK
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|win
+operator|->
+name|_use_keypad
+operator|!=
+name|SP
+operator|->
+name|_keypad_on
+condition|)
+name|_nc_keypad
+argument_list|(
+name|win
+operator|->
+name|_use_keypad
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|wgetch_should_refresh
@@ -785,9 +796,7 @@ block|{
 name|ch
 operator|=
 name|kgetch
-argument_list|(
-name|win
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -810,6 +819,15 @@ argument_list|)
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|SP
+operator|->
+name|_maxclick
+operator|<
+literal|0
+condition|)
+break|break;
 block|}
 do|while
 condition|(
@@ -911,41 +929,21 @@ name|cooked_key_in_fifo
 argument_list|()
 condition|)
 block|{
-name|ch
+operator|*
+name|result
 operator|=
 name|fifo_pull
 argument_list|()
 expr_stmt|;
-name|T
-argument_list|(
-operator|(
-literal|"wgetch returning (pre-cooked): %#x = %s"
-operator|,
-name|ch
-operator|,
-name|_trace_key
-argument_list|(
-name|ch
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
 name|returnCode
 argument_list|(
-name|ch
+name|OK
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 endif|#
 directive|endif
-name|T
-argument_list|(
-operator|(
-literal|"wgetch returning ERR"
-operator|)
-argument_list|)
-expr_stmt|;
 name|returnCode
 argument_list|(
 name|ERR
@@ -1016,6 +1014,11 @@ expr_stmt|;
 comment|/* Strip 8th-bit if so desired.  We do this only for characters that      * are in the range 128-255, to provide compatibility with terminals      * that display only 7-bit characters.  Note that 'ch' may be a      * function key at this point, so we mustn't strip _those_.      */
 if|if
 condition|(
+operator|!
+name|use_meta
+condition|)
+if|if
+condition|(
 operator|(
 name|ch
 operator|<
@@ -1028,13 +1031,6 @@ operator|&
 literal|0x80
 operator|)
 condition|)
-if|if
-condition|(
-operator|!
-name|SP
-operator|->
-name|_use_meta
-condition|)
 name|ch
 operator|&=
 literal|0x7f
@@ -1042,27 +1038,103 @@ expr_stmt|;
 name|T
 argument_list|(
 operator|(
-literal|"wgetch returning : %#x = %s"
+literal|"wgetch returning : %s"
 operator|,
-name|ch
-operator|,
-name|_trace_key
+name|_tracechar
 argument_list|(
 name|ch
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+operator|*
+name|result
+operator|=
+name|ch
+expr_stmt|;
 name|returnCode
 argument_list|(
 name|ch
+operator|>=
+name|KEY_MIN
+condition|?
+name|KEY_CODE_YES
+else|:
+name|OK
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|wgetch
+argument_list|(
+argument|WINDOW *win
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|int
+name|code
+decl_stmt|;
+name|unsigned
+name|long
+name|value
+decl_stmt|;
+name|T
+argument_list|(
+operator|(
+name|T_CALLED
+argument_list|(
+literal|"wgetch(%p)"
+argument_list|)
+operator|,
+name|win
+operator|)
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+name|_nc_wgetch
+argument_list|(
+name|win
+argument_list|,
+operator|&
+name|value
+argument_list|,
+name|SP
+operator|->
+name|_use_meta
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|code
+operator|!=
+name|ERR
+condition|)
+name|code
+operator|=
+name|value
+expr_stmt|;
+name|returnCode
+argument_list|(
+name|code
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/* **      int **      kgetch() ** **      Get an input character, but take care of keypad sequences, returning **      an appropriate code when one matches the input.  After each character **      is received, set an alarm call based on ESCDELAY.  If no more of the **      sequence is received by the time the alarm goes off, pass through **      the sequence gotten so far. ** **	This function must be called when there is no cooked keys in queue. **	(that is head==-1 || peek==head) ** */
+comment|/* **      int **      kgetch() ** **      Get an input character, but take care of keypad sequences, returning **      an appropriate code when one matches the input.  After each character **      is received, set an alarm call based on ESCDELAY.  If no more of the **      sequence is received by the time the alarm goes off, pass through **      the sequence gotten so far. ** **	This function must be called when there are no cooked keys in queue. **	(that is head==-1 || peek==head) ** */
 end_comment
 
 begin_function
@@ -1070,10 +1142,7 @@ specifier|static
 name|int
 name|kgetch
 parameter_list|(
-name|WINDOW
-modifier|*
-name|win
-name|GCC_UNUSED
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -1096,9 +1165,7 @@ argument_list|(
 name|TRACE_IEVENT
 argument_list|,
 operator|(
-literal|"kgetch(%p) called"
-operator|,
-name|win
+literal|"kgetch() called"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1171,7 +1238,7 @@ argument_list|,
 operator|(
 literal|"ch: %s"
 operator|,
-name|_trace_key
+name|_tracechar
 argument_list|(
 operator|(
 name|unsigned
@@ -1208,9 +1275,6 @@ name|ptr
 operator|->
 name|sibling
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
 if|if
 condition|(
 name|ptr
@@ -1227,8 +1291,8 @@ literal|"ptr is null"
 operator|)
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
 name|TR
 argument_list|(
 name|TRACE_IEVENT
@@ -1248,16 +1312,6 @@ name|value
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* TRACE */
-if|if
-condition|(
-name|ptr
-operator|==
-name|NULL
-condition|)
-break|break;
 if|if
 condition|(
 name|ptr

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: tack.c,v 1.1 1998/01/10 01:34:45 tom Exp $"
+literal|"$Id: tack.c,v 1.2 2001/10/28 01:05:35 tom Exp $"
 argument_list|)
 end_macro
 
@@ -727,7 +727,7 @@ literal|'n'
 block|,
 literal|0
 block|,
-literal|"Mode test menu"
+literal|"Test modes and glitches:"
 block|,
 literal|"mode"
 block|,
@@ -768,7 +768,7 @@ literal|'n'
 block|,
 literal|0
 block|,
-literal|"Alternate character set and graphics rendition test menu"
+literal|"Test alternate character set and graphics rendition:"
 block|,
 literal|"acs"
 block|,
@@ -808,7 +808,7 @@ literal|'n'
 block|,
 literal|0
 block|,
-literal|"Color test menu"
+literal|"Test color:"
 block|,
 literal|"color"
 block|,
@@ -849,7 +849,7 @@ literal|'n'
 block|,
 literal|0
 block|,
-literal|"Cursor movement test menu"
+literal|"Test cursor movement:"
 block|,
 literal|"move"
 block|,
@@ -890,7 +890,7 @@ literal|'n'
 block|,
 literal|0
 block|,
-literal|"Function key test menu"
+literal|"Test function keys:"
 block|,
 literal|"fkey"
 block|,
@@ -931,7 +931,7 @@ literal|'n'
 block|,
 literal|0
 block|,
-literal|"Printer test menu"
+literal|"Test printer:"
 block|,
 literal|"printer"
 block|,
@@ -990,7 +990,7 @@ literal|'n'
 block|,
 literal|0
 block|,
-literal|"Pad test menu"
+literal|"Test padding and string capabilities:"
 block|,
 literal|"pad"
 block|,
@@ -1076,7 +1076,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"a) test alternate character sets"
+literal|"a) test alternate character set and graphic rendition"
 block|,
 literal|0
 block|,
@@ -1144,7 +1144,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|"p) test string capabilities"
+literal|"p) test padding and string capabilities"
 block|,
 literal|0
 block|,

@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Test lower-right-hand corner access  *  * originally by Eric S. Raymond<esr@thyrsus.com>, written for animation  * and resizing -TD  *  * This can't be part of the ncurses test-program, because ncurses rips off the  * bottom line to do labels.  *  * $Id: lrtest.c,v 0.15 2000/12/31 02:09:42 tom Exp $  */
+comment|/*  * Test lower-right-hand corner access  *  * originally by Eric S. Raymond<esr@thyrsus.com>, written for animation  * and resizing -TD  *  * This can't be part of the ncurses test-program, because ncurses rips off the  * bottom line to do labels.  *  * $Id: lrtest.c,v 0.17 2002/04/06 20:45:22 tom Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<term.h>
 end_include
 
 begin_typedef
@@ -765,9 +759,11 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+name|ExitProgram
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -1,19 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  newdemo.c	-	A demo program using PDCurses. The program illustrate  *  	 		the use of colours for text output.  *  * $Id: newdemo.c,v 1.18 2001/03/10 22:27:17 tom Exp $  */
+comment|/*  *  newdemo.c	-	A demo program using PDCurses. The program illustrate  *  	 		the use of colours for text output.  *  * $Id: newdemo.c,v 1.23 2002/03/23 22:17:24 tom Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<test.priv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
 
 begin_include
 include|#
@@ -24,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<test.priv.h>
 end_include
 
 begin_define
@@ -131,7 +119,7 @@ block|{
 name|endwin
 argument_list|()
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -1150,9 +1138,11 @@ block|{
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
-literal|1
-return|;
+name|ExitProgram
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 block|}
 while|while
 condition|(
@@ -1867,9 +1857,11 @@ block|}
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
+name|ExitProgram
+argument_list|(
+name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -4,7 +4,7 @@ comment|/* ** Copyright (C) 1991, 1997 Free Software Foundation, Inc. **  ** Thi
 end_comment
 
 begin_comment
-comment|/* $Id: tack.h,v 1.8 2001/03/24 21:53:35 tom Exp $ */
+comment|/* $Id: tack.h,v 1.9 2001/06/18 18:44:49 tom Exp $ */
 end_comment
 
 begin_ifndef
@@ -230,7 +230,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|CharOf
+name|UChar
 parameter_list|(
 name|c
 parameter_list|)

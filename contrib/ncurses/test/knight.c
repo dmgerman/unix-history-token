@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Knight's Tour - a brain game  *  * The original of this game was anonymous.  It had an unbelievably bogus  * interface, you actually had to enter square coordinates!  Redesign by  * Eric S. Raymond<esr@snark.thyrsus.com> July 22 1995.  Mouse support  * added September 20th 1995.  *  * $Id: knight.c,v 1.20 2000/10/29 00:51:51 tom Exp $  */
+comment|/*  * Knight's Tour - a brain game  *  * The original of this game was anonymous.  It had an unbelievably bogus  * interface, you actually had to enter square coordinates!  Redesign by  * Eric S. Raymond<esr@snark.thyrsus.com> July 22 1995.  Mouse support  * added September 20th 1995.  *  * $Id: knight.c,v 1.24 2002/03/23 22:17:24 tom Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<test.priv.h>
-end_include
 
 begin_include
 include|#
@@ -18,13 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<test.priv.h>
 end_include
 
 begin_comment
@@ -3743,9 +3731,11 @@ expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

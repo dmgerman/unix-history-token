@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998 Free Software Foundation, Inc.                        *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998,2001 Free Software Foundation, Inc.                   *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: ditto.c,v 1.3 1998/08/15 23:39:34 tom Exp $  *  * The program illustrates how to set up multiple screens from a single  * program.  Invoke the program by specifying another terminal on the same  * machine by specifying its device, e.g.,  *	ditto /dev/ttyp1  */
+comment|/*  * Author: Thomas E. Dickey<dickey@clark.net> 1998  *  * $Id: ditto.c,v 1.4 2001/09/15 21:53:37 tom Exp $  *  * The program illustrates how to set up multiple screens from a single  * program.  Invoke the program by specifying another terminal on the same  * machine by specifying its device, e.g.,  *	ditto /dev/ttyp1  */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -85,7 +85,7 @@ argument_list|,
 literal|"usage: ditto [terminal1 ...]\n"
 argument_list|)
 expr_stmt|;
-name|exit
+name|ExitProgram
 argument_list|(
 name|EXIT_FAILURE
 argument_list|)
@@ -303,7 +303,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we got this far, we have open connection(s) to the terminal(s). 	 * Set up the screens. 	 */
+comment|/*      * If we got this far, we have open connection(s) to the terminal(s).      * Set up the screens.      */
 for|for
 control|(
 name|j
@@ -382,7 +382,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Loop, reading characters from any of the inputs and writing to all 	 * of the screens. 	 */
+comment|/*      * Loop, reading characters from any of the inputs and writing to all      * of the screens.      */
 for|for
 control|(
 init|;
@@ -455,7 +455,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Cleanup and exit 	 */
+comment|/*      * Cleanup and exit      */
 for|for
 control|(
 name|j
@@ -486,9 +486,11 @@ name|endwin
 argument_list|()
 expr_stmt|;
 block|}
-return|return
+name|ExitProgram
+argument_list|(
 name|EXIT_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

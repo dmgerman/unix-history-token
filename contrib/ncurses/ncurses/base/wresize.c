@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/****************************************************************************  * Copyright (c) 1998,1999,2000 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
+comment|/****************************************************************************  * Copyright (c) 1998-2001,2002 Free Software Foundation, Inc.              *  *                                                                          *  * Permission is hereby granted, free of charge, to any person obtaining a  *  * copy of this software and associated documentation files (the            *  * "Software"), to deal in the Software without restriction, including      *  * without limitation the rights to use, copy, modify, merge, publish,      *  * distribute, distribute with modifications, sublicense, and/or sell       *  * copies of the Software, and to permit persons to whom the Software is    *  * furnished to do so, subject to the following conditions:                 *  *                                                                          *  * The above copyright notice and this permission notice shall be included  *  * in all copies or substantial portions of the Software.                   *  *                                                                          *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  *  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               *  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   *  * IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,   *  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR    *  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR    *  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *  *                                                                          *  * Except as contained in this notice, the name(s) of the above copyright   *  * holders shall not be used in advertising or otherwise to promote the     *  * sale, use or other dealings in this Software without prior written       *  * authorization.                                                           *  ****************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: wresize.c,v 1.18 2000/12/10 02:43:28 tom Exp $"
+literal|"$Id: wresize.c,v 1.21 2002/05/11 19:36:29 tom Exp $"
 argument_list|)
 end_macro
 
@@ -59,7 +59,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
-value|DOALLOC(p,chtype,n)
+value|DOALLOC(p,NCURSES_CH_T,n)
 end_define
 
 begin_macro
@@ -96,7 +96,7 @@ name|ldat
 modifier|*
 name|pline
 decl_stmt|;
-name|chtype
+name|NCURSES_CH_T
 name|blank
 decl_stmt|;
 ifdef|#
@@ -454,10 +454,9 @@ block|}
 comment|/*      * Adjust the width of the columns:      */
 name|blank
 operator|=
-name|_nc_background
-argument_list|(
 name|win
-argument_list|)
+operator|->
+name|_nc_bkgd
 expr_stmt|;
 for|for
 control|(
@@ -473,7 +472,7 @@ name|row
 operator|++
 control|)
 block|{
-name|chtype
+name|NCURSES_CH_T
 modifier|*
 name|s
 init|=
@@ -582,13 +581,7 @@ name|ERR
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|s
-operator|==
-literal|0
-condition|)
+else|else
 block|{
 name|win
 operator|->
@@ -651,17 +644,18 @@ name|firstchar
 operator|=
 name|begin
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|win
 operator|->
-name|_line
-index|[
-name|row
-index|]
-operator|.
-name|lastchar
-operator|=
-name|ToCols
-expr_stmt|;
+name|_flags
+operator|&
+name|_SUBWIN
+operator|)
+condition|)
+block|{
 do|do
 block|{
 name|s
@@ -681,6 +675,7 @@ name|begin
 condition|)
 do|;
 block|}
+block|}
 else|else
 block|{
 comment|/* shrinking */
@@ -695,6 +690,7 @@ name|firstchar
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|win
 operator|->
 name|_line
@@ -706,7 +702,6 @@ name|lastchar
 operator|=
 name|ToCols
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/*      * Finally, adjust the parameters showing screen size and cursor      * position:      */
