@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net80211/ieee80211_ioctl.h>
 end_include
 
@@ -1030,7 +1036,7 @@ decl_stmt|;
 name|u_int8_t
 name|data
 index|[
-literal|14
+name|IEEE80211_KEYBUF_SIZE
 index|]
 decl_stmt|;
 if|if
@@ -1147,7 +1153,7 @@ decl_stmt|;
 name|u_int8_t
 name|data
 index|[
-literal|14
+name|IEEE80211_KEYBUF_SIZE
 index|]
 decl_stmt|;
 name|set80211
@@ -2074,7 +2080,7 @@ name|ireq
 operator|.
 name|i_len
 operator|>
-literal|13
+name|IEEE80211_KEYBUF_SIZE
 condition|)
 continue|continue;
 name|printf
@@ -2093,7 +2099,15 @@ name|i_len
 operator|<=
 literal|5
 condition|?
-literal|"64-bit"
+literal|"40-bit"
+else|:
+name|ireq
+operator|.
+name|i_len
+operator|<=
+literal|13
+condition|?
+literal|"104-bit"
 else|:
 literal|"128-bit"
 argument_list|)
