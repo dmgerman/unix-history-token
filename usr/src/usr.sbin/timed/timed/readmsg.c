@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readmsg.c	2.4 (Berkeley) %G%"
+literal|"@(#)readmsg.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1539,15 +1539,16 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
+switch|switch
 condition|(
 name|msg
 operator|->
 name|tsp_type
-operator|==
-name|TSP_LOOP
 condition|)
 block|{
+case|case
+name|TSP_LOOP
+case|:
 name|fprintf
 argument_list|(
 name|fd
@@ -1585,9 +1586,16 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+case|case
+name|TSP_ADJTIME
+case|:
+case|case
+name|TSP_SETDATE
+case|:
+case|case
+name|TSP_SETDATEREQ
+case|:
 name|fprintf
 argument_list|(
 name|fd
@@ -1633,6 +1641,42 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"%s %d %d %s %s\n"
+argument_list|,
+name|tsptype
+index|[
+name|msg
+operator|->
+name|tsp_type
+index|]
+argument_list|,
+name|msg
+operator|->
+name|tsp_vers
+argument_list|,
+name|msg
+operator|->
+name|tsp_seq
+argument_list|,
+name|msg
+operator|->
+name|tsp_name
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|addr
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_block
