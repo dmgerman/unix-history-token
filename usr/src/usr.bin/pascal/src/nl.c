@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.6 %G%"
+literal|"@(#)nl.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,8 +515,6 @@ operator||
 name|NSTAND
 block|,
 name|O_DISPOSE
-operator||
-name|NSTAND
 block|,
 name|O_FLUSH
 operator||
