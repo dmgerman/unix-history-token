@@ -176,7 +176,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/fdreg.h>
+file|<dev/fdc/fdcreg.h>
 end_include
 
 begin_include
