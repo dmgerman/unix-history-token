@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: SYS.h,v 1.1.1.1 1998/03/09 06:34:40 jb Exp $ */
+comment|/* $Id: SYS.h,v 1.2 1998/06/09 22:43:34 jb Exp $ */
 end_comment
 
 begin_comment
@@ -17,11 +17,33 @@ directive|include
 file|<machine/asm.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NETBSD_SYSCALLS
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/netbsd_syscall.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/syscall.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
