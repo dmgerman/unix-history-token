@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_close.c	5.11 (Berkeley) %G%"
+literal|"@(#)bt_close.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 operator|&&
 name|__bt_crsrdel
@@ -157,6 +157,8 @@ condition|(
 name|__bt_sync
 argument_list|(
 name|dbp
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 name|RET_ERROR
@@ -261,11 +263,16 @@ name|int
 name|__bt_sync
 parameter_list|(
 name|dbp
+parameter_list|,
+name|flags
 parameter_list|)
 specifier|const
 name|DB
 modifier|*
 name|dbp
+decl_stmt|;
+name|u_int
+name|flags
 decl_stmt|;
 block|{
 name|BTREE
@@ -283,6 +290,23 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
+if|if
+condition|(
+name|flags
+operator|!=
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|RET_ERROR
+operator|)
+return|;
+block|}
 name|t
 operator|=
 name|dbp
@@ -295,9 +319,9 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_INMEM
+name|B_INMEM
 operator||
-name|BTF_RDONLY
+name|B_RDONLY
 argument_list|)
 operator|||
 operator|!
@@ -305,7 +329,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MODIFIED
+name|B_MODIFIED
 argument_list|)
 condition|)
 return|return
@@ -319,7 +343,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_METADIRTY
+name|B_METADIRTY
 argument_list|)
 operator|&&
 name|bt_meta
@@ -341,7 +365,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|)
 block|{
@@ -459,7 +483,7 @@ name|CLR
 argument_list|(
 name|t
 argument_list|,
-name|BTF_MODIFIED
+name|B_MODIFIED
 argument_list|)
 expr_stmt|;
 name|ecrsr
@@ -470,7 +494,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_DELCRSR
+name|B_DELCRSR
 argument_list|)
 condition|)
 block|{
