@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.22 (Berkeley) %G%"
+literal|"@(#)headers.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1276,13 +1276,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|free
-argument_list|(
-name|h
-operator|->
-name|h_value
-argument_list|)
-expr_stmt|;
 name|h
 operator|->
 name|h_value
