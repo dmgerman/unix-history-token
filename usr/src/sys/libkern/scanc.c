@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)scanc.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)scanc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
@@ -13,7 +13,7 @@ name|cp
 argument_list|,
 name|table
 argument_list|,
-name|mask
+name|mask0
 argument_list|)
 name|unsigned
 name|int
@@ -34,10 +34,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
-name|unsigned
-name|char
-name|mask
+name|int
+name|mask0
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +47,15 @@ name|char
 modifier|*
 name|end
 decl_stmt|;
+specifier|register
+name|unsigned
+name|char
+name|mask
+decl_stmt|;
+name|mask
+operator|=
+name|mask0
+expr_stmt|;
 for|for
 control|(
 name|end
