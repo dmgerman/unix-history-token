@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.84 2004/05/10 02:24:55 emax Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.85 2004/05/13 01:24:26 imp Exp   */
 end_comment
 
 begin_comment
@@ -2690,6 +2690,27 @@ define|#
 directive|define
 name|PCMCIA_STR_INTEL_ETHEREXPPRO
 value|"Intel EtherExpress Pro PCMCIA Card"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_INTEL_PRO100LAN56
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_INTEL_PRO100LAN56
+value|0x110a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_INTEL_PRO100LAN56
+value|"Intel EtherExpress PRO/100 LAN Modem"
 end_define
 
 begin_comment
