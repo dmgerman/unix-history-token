@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: i386-fbsd.c,v 1.3 1998/01/05 07:30:24 charnier Exp $"
+literal|"$Id: i386-fbsd.c,v 1.4 1998/01/09 00:39:07 sef Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/reg.h>
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/include/psl.h>
+file|<machine/psl.h>
 end_include
 
 begin_include
