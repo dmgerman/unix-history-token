@@ -542,6 +542,8 @@ comment|/* get next input token */
 block|{
 name|int
 name|c
+decl_stmt|,
+name|retc
 decl_stmt|;
 name|char
 modifier|*
@@ -719,6 +721,11 @@ name|bp
 operator|=
 literal|0
 expr_stmt|;
+name|retc
+operator|=
+literal|'a'
+expr_stmt|;
+comment|/* alphanumeric */
 block|}
 else|else
 block|{
@@ -845,6 +852,34 @@ name|rem
 argument_list|)
 expr_stmt|;
 comment|/* put rest back for later */
+if|if
+condition|(
+name|rem
+operator|==
+name|buf
+condition|)
+block|{
+comment|/* it wasn't a valid number at all */
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* so return one character as token */
+name|retc
+operator|=
+name|buf
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* character is its own type */
+block|}
+else|else
+block|{
+comment|/* some prefix was a number */
 name|rem
 index|[
 literal|0
@@ -852,6 +887,13 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* so truncate where failure started */
+name|retc
+operator|=
+literal|'0'
+expr_stmt|;
+comment|/* number */
+block|}
 block|}
 operator|*
 name|pbuf
@@ -864,10 +906,7 @@ operator|=
 name|sz
 expr_stmt|;
 return|return
-name|buf
-index|[
-literal|0
-index|]
+name|retc
 return|;
 block|}
 end_function
@@ -1051,10 +1090,6 @@ name|isdigit
 argument_list|(
 name|c
 argument_list|)
-operator|||
-name|c
-operator|==
-literal|'.'
 condition|)
 block|{
 name|yylval
@@ -1838,6 +1873,26 @@ name|IVAR
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+block|{
+comment|/*  */
+name|SYNTAX
+argument_list|(
+literal|"unexpected end of input after $"
+argument_list|)
+expr_stmt|;
+name|RET
+argument_list|(
+literal|';'
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|unputstr
@@ -2097,6 +2152,18 @@ argument_list|)
 expr_stmt|;
 name|lineno
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+comment|/* hopeless */
+name|FATAL
+argument_list|(
+literal|"giving up"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
