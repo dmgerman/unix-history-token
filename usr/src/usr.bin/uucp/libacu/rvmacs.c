@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rvmacs.c	4.3 (Berkeley) %G%"
+literal|"@(#)rvmacs.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -852,6 +852,16 @@ operator|>
 literal|0
 condition|)
 block|{
+name|char
+name|c
+decl_stmt|;
+name|pc
+argument_list|(
+name|fd
+argument_list|,
+name|ABORT
+argument_list|)
+expr_stmt|;
 name|ioctl
 argument_list|(
 name|fd

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsdtcp.c	4.2 (Berkeley) %G%"
+literal|"@(#)bsdtcp.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,9 @@ name|hisctladdr
 decl_stmt|;
 name|int
 name|s
+init|=
+operator|-
+literal|1
 decl_stmt|,
 name|port
 decl_stmt|;
@@ -188,6 +191,11 @@ name|Sjbuf
 argument_list|)
 condition|)
 block|{
+name|bsdtcpcls
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|logent
 argument_list|(
 literal|"tcpopen"
@@ -435,7 +443,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|close
+name|bsdtcpcls
 argument_list|(
 name|s
 argument_list|)
