@@ -145,7 +145,7 @@ literal|"can't boot '%s', kernel module already loaded"
 argument_list|,
 name|argv
 index|[
-literal|0
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -576,8 +576,6 @@ name|int
 name|c
 decl_stmt|,
 name|yes
-decl_stmt|,
-name|cr
 decl_stmt|;
 name|char
 modifier|*
@@ -672,10 +670,6 @@ name|yes
 operator|=
 literal|0
 expr_stmt|;
-name|cr
-operator|=
-literal|0
-expr_stmt|;
 comment|/* XXX could try to work out what we might boot */
 name|printf
 argument_list|(
@@ -758,7 +752,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\rBooting [%s] in %d seconds... "
+literal|"\rBooting [%s] in %d second%s... "
 argument_list|,
 name|getbootfile
 argument_list|(
@@ -773,15 +767,23 @@ name|when
 operator|-
 name|ntime
 argument_list|)
+argument_list|,
+operator|(
+name|when
+operator|-
+name|ntime
+operator|)
+operator|==
+literal|1
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 name|otime
 operator|=
 name|ntime
-expr_stmt|;
-name|cr
-operator|=
-literal|1
 expr_stmt|;
 block|}
 block|}
@@ -799,10 +801,6 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cr
-condition|)
 name|putchar
 argument_list|(
 literal|'\n'
