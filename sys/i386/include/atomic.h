@@ -15,42 +15,6 @@ directive|define
 name|_MACHINE_ATOMIC_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"This file must be compiled with GCC or lint"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* lint */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUC__ */
-end_comment
-
 begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  *  * atomic_set_char(P, V)	(*(u_char*)(P) |= (V))  * atomic_clear_char(P, V)	(*(u_char*)(P)&= ~(V))  * atomic_add_char(P, V)	(*(u_char*)(P) += (V))  * atomic_subtract_char(P, V)	(*(u_char*)(P) -= (V))  *  * atomic_set_short(P, V)	(*(u_short*)(P) |= (V))  * atomic_clear_short(P, V)	(*(u_short*)(P)&= ~(V))  * atomic_add_short(P, V)	(*(u_short*)(P) += (V))  * atomic_subtract_short(P, V)	(*(u_short*)(P) -= (V))  *  * atomic_set_int(P, V)		(*(u_int*)(P) |= (V))  * atomic_clear_int(P, V)	(*(u_int*)(P)&= ~(V))  * atomic_add_int(P, V)		(*(u_int*)(P) += (V))  * atomic_subtract_int(P, V)	(*(u_int*)(P) -= (V))  * atomic_readandclear_int(P)	(return  *(u_int*)P; *(u_int*)P = 0;)  *  * atomic_set_long(P, V)	(*(u_long*)(P) |= (V))  * atomic_clear_long(P, V)	(*(u_long*)(P)&= ~(V))  * atomic_add_long(P, V)	(*(u_long*)(P) += (V))  * atomic_subtract_long(P, V)	(*(u_long*)(P) -= (V))  * atomic_readandclear_long(P)	(return  *(u_long*)P; *(u_long*)P = 0;)  */
 end_comment
@@ -129,6 +93,12 @@ begin_comment
 comment|/* !KLD_MODULE */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_comment
 comment|/*  * For userland, assume the SMP case and use lock prefixes so that  * the binaries will run on both types of systems.  */
 end_comment
@@ -175,12 +145,6 @@ begin_comment
 comment|/*  * The assembly is volatilized to demark potential before-and-after side  * effects if an interrupt or SMP collision were to occur.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -225,7 +189,7 @@ parameter_list|,
 name|V
 parameter_list|)
 define|\
-value|void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
+value|extern void atomic_##NAME##_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
 end_define
 
 begin_endif
@@ -418,38 +382,6 @@ begin_comment
 comment|/* defined(I386_CPU) */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !defined(__GNUC__) */
-end_comment
-
-begin_function
-unit|static
-name|__inline
-name|int
-name|atomic_cmpset_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|dst
-name|__unused
-parameter_list|,
-name|u_int
-name|exp
-name|__unused
-parameter_list|,
-name|u_int
-name|src
-name|__unused
-parameter_list|)
-block|{ }
-end_function
-
 begin_endif
 endif|#
 directive|endif
@@ -548,9 +480,21 @@ begin_comment
 comment|/* !defined(__GNUC__) */
 end_comment
 
-begin_comment
-comment|/*  * XXXX: Dummy functions!!  */
-end_comment
+begin_function_decl
+unit|extern
+name|int
+name|atomic_cmpset_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -564,7 +508,7 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|u_##TYPE atomic_load_acq_##TYPE(volatile u_##TYPE *p __unused);	\ void atomic_store_rel_##TYPE(volatile u_##TYPE *p __unused,	\     u_##TYPE v __unused)
+value|extern u_##TYPE atomic_load_acq_##TYPE(volatile u_##TYPE *p);		\ extern void atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)
 end_define
 
 begin_endif
@@ -1722,55 +1666,8 @@ operator|)
 return|;
 end_return
 
-begin_else
-unit|}
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !defined(__GNUC__) */
-end_comment
-
-begin_comment
-comment|/*  * XXXX: Dummy!  */
-end_comment
-
 begin_function
-unit|static
-name|__inline
-name|u_int
-name|atomic_readandclear_int
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|addr
-name|__unused
-parameter_list|)
-block|{ }
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(__GNUC__) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_if
-
-begin_function
-specifier|static
+unit|}  static
 name|__inline
 name|u_long
 name|atomic_readandclear_long
@@ -1826,24 +1723,29 @@ begin_comment
 comment|/* !defined(__GNUC__) */
 end_comment
 
-begin_comment
-comment|/*  * XXXX: Dummy!  */
-end_comment
-
-begin_function
-unit|static
-name|__inline
+begin_function_decl
+unit|extern
 name|u_long
 name|atomic_readandclear_long
 parameter_list|(
 specifier|volatile
 name|u_long
 modifier|*
-name|addr
-name|__unused
 parameter_list|)
-block|{ }
-end_function
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u_int
+name|atomic_readandclear_int
+parameter_list|(
+specifier|volatile
+name|u_int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
