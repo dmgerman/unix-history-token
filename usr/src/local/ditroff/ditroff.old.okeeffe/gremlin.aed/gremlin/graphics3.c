@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)graphics3.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains additional routines for implementing graphics  * primitives for the gremlin picture editor  */
+comment|/* @(#)graphics3.c	1.4	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains additional routines for implementing graphics  * primitives for the gremlin picture editor  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_comment
