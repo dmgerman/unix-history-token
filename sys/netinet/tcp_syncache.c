@@ -3778,6 +3778,13 @@ name|th
 operator|->
 name|th_seq
 expr_stmt|;
+name|sc
+operator|->
+name|sc_iss
+operator|=
+name|arc4random
+argument_list|()
+expr_stmt|;
 comment|/* Initial receive window: clip sbspace to [0 .. TCP_MAXWIN] */
 name|win
 operator|=
@@ -4122,13 +4129,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * TAO test failed or there was no CC option, 	 *    do a standard 3-way handshake. 	 */
-name|sc
-operator|->
-name|sc_iss
-operator|=
-name|arc4random
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|syncache_insert
