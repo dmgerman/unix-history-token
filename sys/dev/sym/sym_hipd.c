@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|SYM_DRIVER_NAME
-value|"sym-1.0.0-19991205"
+value|"sym-1.1.1-20000101"
 end_define
 
 begin_include
@@ -2283,6 +2283,50 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *  Return a string for SCSI BUS mode.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|sym_scsi_bus_mode
+parameter_list|(
+name|int
+name|mode
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|mode
+condition|)
+block|{
+case|case
+name|SMODE_HVD
+case|:
+return|return
+literal|"HVD"
+return|;
+case|case
+name|SMODE_SE
+case|:
+return|return
+literal|"SE"
+return|;
+case|case
+name|SMODE_LVD
+case|:
+return|return
+literal|"LVD"
+return|;
+block|}
+return|return
+literal|"??"
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *  Some poor sync table that refers to Tekram NVRAM layout.  */
 end_comment
 
@@ -4168,10 +4212,6 @@ name|u_char
 name|lun
 decl_stmt|;
 name|ccb_p
-name|link_ccb
-decl_stmt|;
-comment|/* Host adapter CCB chain	*/
-name|ccb_p
 name|link_ccbh
 decl_stmt|;
 comment|/* Host adapter CCB hash chain	*/
@@ -4597,10 +4637,6 @@ name|CCB_HASH_SIZE
 index|]
 decl_stmt|;
 comment|/* CCB hashed by DSA value	*/
-name|ccb_p
-name|ccbc
-decl_stmt|;
-comment|/* CCB chain			*/
 name|SYM_QUEHEAD
 name|free_ccbq
 decl_stmt|;
@@ -5695,11 +5731,7 @@ name|hcb_p
 name|np
 parameter_list|,
 name|int
-name|reset
-parameter_list|,
-name|char
-modifier|*
-name|msg
+name|reason
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -14917,7 +14949,7 @@ name|type
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: %s NVRAM, ID %d, Fast-%d, %s%s\n"
+literal|"%s: %s NVRAM, ID %d, Fast-%d, %s, %s\n"
 argument_list|,
 name|sym_name
 argument_list|(
@@ -14944,35 +14976,44 @@ name|np
 operator|->
 name|myaddr
 argument_list|,
+operator|(
 name|np
 operator|->
-name|minsync
-operator|<
-literal|10
+name|features
+operator|&
+name|FE_ULTRA3
+operator|)
 condition|?
 literal|80
 else|:
 operator|(
 name|np
 operator|->
-name|minsync
-operator|<
-literal|12
+name|features
+operator|&
+name|FE_ULTRA2
+operator|)
 condition|?
 literal|40
 else|:
 operator|(
 name|np
 operator|->
-name|minsync
-operator|<
-literal|25
+name|features
+operator|&
+name|FE_ULTRA
+operator|)
 condition|?
 literal|20
 else|:
 literal|10
-operator|)
-operator|)
+argument_list|,
+name|sym_scsi_bus_mode
+argument_list|(
+name|np
+operator|->
+name|scsi_mode
+argument_list|)
 argument_list|,
 operator|(
 name|np
@@ -14985,16 +15026,6 @@ condition|?
 literal|"parity checking"
 else|:
 literal|"NO parity"
-argument_list|,
-name|np
-operator|->
-name|scsi_mode
-operator|==
-name|SMODE_HVD
-condition|?
-literal|", HVD"
-else|:
-literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 *  Tell him more on demand. 	 */
@@ -15002,6 +15033,7 @@ if|if
 condition|(
 name|sym_verbose
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s: %s IRQ line driver%s\n"
@@ -15030,6 +15062,25 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|features
+operator|&
+name|FE_NOPM
+condition|)
+name|printf
+argument_list|(
+literal|"%s: handling phase mismatch from SCRIPTS.\n"
+argument_list|,
+name|sym_name
+argument_list|(
+name|np
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 *  And still more. 	 */
 if|if
 condition|(
@@ -15760,7 +15811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Soft reset the chip.  *  *  Raising SRST when the chip is running may cause   *  problems on dual function chips (see below).   */
+comment|/*  *  Soft reset the chip.  *  *  Raising SRST when the chip is running may cause   *  problems on dual function chips (see below).  *  On the other hand, LVD devices need some delay   *  to settle and report actual BUS mode in STEST4.  */
 end_comment
 
 begin_function
@@ -15791,6 +15842,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|UDELAY
+argument_list|(
+literal|2000
+argument_list|)
+expr_stmt|;
+comment|/* For BUS MODE to settle */
 block|}
 end_function
 
@@ -15950,12 +16007,6 @@ name|np
 argument_list|)
 expr_stmt|;
 comment|/* Soft reset the chip */
-name|UDELAY
-argument_list|(
-literal|2000
-argument_list|)
-expr_stmt|;
-comment|/* The 895/6 need time for the bus mode to settle */
 if|if
 condition|(
 name|enab_int
@@ -16016,7 +16067,6 @@ argument_list|(
 name|nc_sstat0
 argument_list|)
 expr_stmt|;
-comment|/* rst, sdp0 */
 name|term
 operator|=
 operator|(
@@ -16036,9 +16086,10 @@ operator|&
 literal|1
 operator|)
 operator|<<
-literal|16
+literal|17
 operator|)
 expr_stmt|;
+comment|/* rst sdp0 */
 name|term
 operator||=
 operator|(
@@ -16051,26 +16102,44 @@ operator|&
 literal|0x01
 operator|)
 operator|<<
-literal|25
+literal|26
 operator|)
 operator||
-comment|/* sdp1 */
+comment|/* sdp1     */
+operator|(
 operator|(
 name|INW
 argument_list|(
 name|nc_sbdl
 argument_list|)
+operator|&
+literal|0xff
+operator|)
 operator|<<
 literal|9
 operator|)
 operator||
-comment|/* d15-0 */
+comment|/* d7-0     */
+operator|(
+operator|(
+name|INW
+argument_list|(
+name|nc_sbdl
+argument_list|)
+operator|&
+literal|0xff00
+operator|)
+operator|<<
+literal|10
+operator|)
+operator||
+comment|/* d15-8    */
 name|INB
 argument_list|(
 name|nc_sbcl
 argument_list|)
 expr_stmt|;
-comment|/* req, ack, bsy, sel, atn, msg, cd, io */
+comment|/* req ack bsy sel atn msg cd io    */
 if|if
 condition|(
 operator|!
@@ -16355,7 +16424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Start chip.  */
+comment|/*  *  Start chip.  *  *  'reason' means:  *     0: initialisation.  *     1: SCSI BUS RESET delivered or received.  *     2: SCSI BUS MODE changed.  */
 end_comment
 
 begin_function
@@ -16367,11 +16436,7 @@ name|hcb_p
 name|np
 parameter_list|,
 name|int
-name|reset
-parameter_list|,
-name|char
-modifier|*
-name|msg
+name|reason
 parameter_list|)
 block|{
 name|int
@@ -16383,7 +16448,9 @@ decl_stmt|;
 comment|/* 	 *  Reset chip if asked, otherwise just clear fifos.  	 */
 if|if
 condition|(
-name|reset
+name|reason
+operator|==
+literal|1
 condition|)
 name|sym_soft_reset
 argument_list|(
@@ -16409,23 +16476,6 @@ name|CLF
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Message. 	 */
-if|if
-condition|(
-name|msg
-condition|)
-name|printf
-argument_list|(
-literal|"%s: restart (%s).\n"
-argument_list|,
-name|sym_name
-argument_list|(
-name|np
-argument_list|)
-argument_list|,
-name|msg
-argument_list|)
-expr_stmt|;
 comment|/* 	 *  Clear Start Queue 	 */
 name|phys
 operator|=
@@ -16907,20 +16957,6 @@ operator|&
 name|FE_NOPM
 condition|)
 block|{
-if|if
-condition|(
-name|sym_verbose
-condition|)
-name|printf
-argument_list|(
-literal|"%s: handling phase mismatch from SCRIPTS.\n"
-argument_list|,
-name|sym_name
-argument_list|(
-name|np
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|OUTL
 argument_list|(
 name|nc_pmjad1
@@ -17029,7 +17065,7 @@ operator||
 name|IID
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  For 895/6 enable SBMC interrupt and save current SCSI bus mode. 	 */
+comment|/* 	 *  For 895/6 enable SBMC interrupt and save current SCSI bus mode. 	 *  Try to eat the spurious SBMC interrupt that may occur when  	 *  we reset the chip but not the SCSI BUS (at initialization). 	 */
 if|if
 condition|(
 name|np
@@ -17050,6 +17086,24 @@ argument_list|,
 name|SBMC
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|reason
+operator|==
+literal|0
+condition|)
+block|{
+name|MDELAY
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
+name|INW
+argument_list|(
+name|nc_sist
+argument_list|)
+expr_stmt|;
+block|}
 name|np
 operator|->
 name|scsi_mode
@@ -17166,6 +17220,8 @@ block|{
 if|if
 condition|(
 name|sym_verbose
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -17306,7 +17362,13 @@ argument_list|,
 name|phys
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Notify the XPT of the event. 	 */
+comment|/* 	 *  Notify the XPT about the RESET condition. 	 */
+if|if
+condition|(
+name|reason
+operator|!=
+literal|0
+condition|)
 name|xpt_async
 argument_list|(
 name|AC_BUS_RESET
@@ -18705,6 +18767,10 @@ name|u_char
 name|fak
 parameter_list|)
 block|{
+name|SYM_QUEHEAD
+modifier|*
+name|qp
+decl_stmt|;
 name|union
 name|ccb
 modifier|*
@@ -19167,33 +19233,26 @@ name|uval
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  patch ALL ccbs of this target. 	 */
-for|for
-control|(
-name|cp
-operator|=
-name|np
-operator|->
-name|ccbc
-init|;
-name|cp
-condition|;
-name|cp
-operator|=
-name|cp
-operator|->
-name|link_ccb
-control|)
+comment|/* 	 *  patch ALL busy ccbs of this target. 	 */
+name|FOR_EACH_QUEUED_ELEMENT
+argument_list|(
+argument|&np->busy_ccbq
+argument_list|,
+argument|qp
+argument_list|)
 block|{
-if|if
-condition|(
 name|cp
-operator|->
-name|host_status
-operator|==
-name|HS_IDLE
-condition|)
-continue|continue;
+operator|=
+name|sym_que_entry
+argument_list|(
+name|qp
+argument_list|,
+expr|struct
+name|sym_ccb
+argument_list|,
+name|link_ccbq
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cp
@@ -20049,17 +20108,23 @@ operator|&
 name|RST
 condition|)
 block|{
+name|xpt_print_path
+argument_list|(
+name|np
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SCSI BUS reset detected.\n"
+argument_list|)
+expr_stmt|;
 name|sym_init
 argument_list|(
 name|np
 argument_list|,
 literal|1
-argument_list|,
-name|sym_verbose
-condition|?
-literal|"scsi reset"
-else|:
-name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -20654,40 +20719,37 @@ argument_list|)
 operator|&
 name|SMODE
 decl_stmt|;
+comment|/* 	 *  Notify user. 	 */
+name|xpt_print_path
+argument_list|(
+name|np
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: SCSI bus mode change from %x to %x.\n"
+literal|"SCSI BUS mode change from %s to %s.\n"
 argument_list|,
-name|sym_name
+name|sym_scsi_bus_mode
 argument_list|(
 name|np
-argument_list|)
-argument_list|,
-name|np
 operator|->
 name|scsi_mode
+argument_list|)
 argument_list|,
+name|sym_scsi_bus_mode
+argument_list|(
 name|scsi_mode
 argument_list|)
+argument_list|)
 expr_stmt|;
-name|np
-operator|->
-name|scsi_mode
-operator|=
-name|scsi_mode
-expr_stmt|;
-comment|/* 	 *  Should suspend command processing for 1 second and  	 *  reinitialize all except the chip. 	 */
+comment|/* 	 *  Should suspend command processing for a few seconds and  	 *  reinitialize all except the chip. 	 */
 name|sym_init
 argument_list|(
 name|np
 argument_list|,
-literal|0
-argument_list|,
-name|sym_verbose
-condition|?
-literal|"scsi mode change"
-else|:
-name|NULL
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -28572,7 +28634,7 @@ goto|goto
 name|out_free
 goto|;
 block|}
-comment|/* 			 *  Get a tag for this SCSI IO and set up 			 *  the CCB bus address for reselection,  			 *  and count it for this LUN. 			 *  Toggle reselect patch to tagged. 			 */
+comment|/* 			 *  Get a tag for this SCSI IO and set up 			 *  the CCB bus address for reselection,  			 *  and count it for this LUN. 			 *  Toggle reselect path to tagged. 			 */
 if|if
 condition|(
 name|lp
@@ -29243,21 +29305,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 *  Chain into wakeup list and into free ccb queue. 	 */
-name|cp
-operator|->
-name|link_ccb
-operator|=
-name|np
-operator|->
-name|ccbc
-expr_stmt|;
-name|np
-operator|->
-name|ccbc
-operator|=
-name|cp
-expr_stmt|;
+comment|/* 	 *  Chain into free ccb queue. 	 */
 name|sym_insque_head
 argument_list|(
 operator|&
@@ -32039,39 +32087,50 @@ block|{
 name|ccb_p
 name|cp
 decl_stmt|;
+name|SYM_QUEHEAD
+modifier|*
+name|qp
+decl_stmt|;
 comment|/* 	 *  Look up our CCB control block. 	 */
-for|for
-control|(
 name|cp
 operator|=
-name|np
-operator|->
-name|ccbc
-init|;
-name|cp
-condition|;
-name|cp
-operator|=
-name|cp
-operator|->
-name|link_ccb
-control|)
+literal|0
+expr_stmt|;
+name|FOR_EACH_QUEUED_ELEMENT
+argument_list|(
+argument|&np->busy_ccbq
+argument_list|,
+argument|qp
+argument_list|)
 block|{
+name|ccb_p
+name|cp2
+init|=
+name|sym_que_entry
+argument_list|(
+name|qp
+argument_list|,
+expr|struct
+name|sym_ccb
+argument_list|,
+name|link_ccbq
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
-name|cp
-operator|->
-name|host_status
-operator|!=
-name|HS_IDLE
-operator|&&
-name|cp
+name|cp2
 operator|->
 name|cam_ccb
 operator|==
 name|ccb
 condition|)
+block|{
+name|cp
+operator|=
+name|cp2
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -33890,7 +33949,7 @@ name|phys
 operator|.
 name|savep
 expr_stmt|;
-comment|/* 	 *  Activate this job. 	 *  If we have awaiting commands for that unit, 2 max  	 *  at a time is enough to flush the CCB wait queue. 	 */
+comment|/* 	 *  Activate this job. 	 */
 name|sym_put_start_queue
 argument_list|(
 name|np
@@ -34952,15 +35011,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sym_init
-argument_list|(
-name|np
-argument_list|,
-literal|1
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sym_verbose
@@ -34975,10 +35025,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SCSI bus reset delivered.\n"
+literal|"SCSI BUS reset delivered.\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|sym_init
+argument_list|(
+name|np
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|sym_xpt_done2
 argument_list|(
 name|np
@@ -35916,6 +35973,56 @@ block|}
 block|,
 block|{
 name|PCI_ID_LSI53C1010
+block|,
+literal|0xff
+block|,
+literal|"1010"
+block|,
+literal|6
+block|,
+literal|62
+block|,
+literal|7
+block|,
+literal|8
+block|,
+name|FE_WIDE
+operator||
+name|FE_ULTRA3
+operator||
+name|FE_QUAD
+operator||
+name|FE_CACHE_SET
+operator||
+name|FE_BOF
+operator||
+name|FE_DFBC
+operator||
+name|FE_LDSTR
+operator||
+name|FE_PFEN
+operator||
+name|FE_RAM
+operator||
+name|FE_RAM8K
+operator||
+name|FE_64BIT
+operator||
+name|FE_IO256
+operator||
+name|FE_NOPM
+operator||
+name|FE_LEDC
+operator||
+name|FE_CRC
+operator||
+name|FE_C10
+operator||
+name|FE_U3EN
+block|}
+block|,
+block|{
+name|PCI_ID_LSI53C1010_2
 block|,
 literal|0xff
 block|,
@@ -38349,12 +38456,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Reset the chip. 	 *  We should use sym_soft_reset(), but we donnot want to do  	 *  so, since we may not be safe if ABRT interrupt occurs due  	 *  to the BIOS or previous O/S having enable this interrupt. 	 */
-name|sym_chip_reset
-argument_list|(
-name|np
-argument_list|)
-expr_stmt|;
 comment|/* 	 *  Now check the cache handling of the pci chipset. 	 */
 if|if
 condition|(
@@ -38434,6 +38535,10 @@ name|hcb_p
 name|np
 parameter_list|)
 block|{
+name|SYM_QUEHEAD
+modifier|*
+name|qp
+decl_stmt|;
 name|ccb_p
 name|cp
 decl_stmt|;
@@ -38659,23 +38764,31 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|cp
+name|qp
 operator|=
+name|sym_remque_head
+argument_list|(
+operator|&
 name|np
 operator|->
-name|ccbc
+name|free_ccbq
+argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
-name|np
-operator|->
-name|ccbc
-operator|=
 name|cp
-operator|->
-name|link_ccb
+operator|=
+name|sym_que_entry
+argument_list|(
+name|qp
+argument_list|,
+expr|struct
+name|sym_ccb
+argument_list|,
+name|link_ccbq
+argument_list|)
 expr_stmt|;
 name|sym_mfree
 argument_list|(
@@ -39153,6 +39266,14 @@ comment|/* 	 *  Establish our async notification handler. 	 */
 block|{ 	struct ccb_setasync csa; 	xpt_setup_ccb(&csa.ccb_h, np->path, 5); 	csa.ccb_h.func_code = XPT_SASYNC_CB; 	csa.event_enable    = AC_LOST_DEVICE; 	csa.callback	    = sym_async; 	csa.callback_arg    = np->sim; 	xpt_action((union ccb *)&csa); 	}
 endif|#
 directive|endif
+comment|/* 	 *  Start the chip now, without resetting the BUS, since   	 *  it seems that this must stay under control of CAM. 	 *  With LVD/SE capable chips and BUS in SE mode, we may  	 *  get a spurious SMBC interrupt. 	 */
+name|sym_init
+argument_list|(
+name|np
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -41185,13 +41306,9 @@ argument_list|,
 operator|&
 name|ack_data
 argument_list|,
-operator|(
 name|offset
 operator|&
-literal|0x7f
-operator|)
-operator|<<
-literal|1
+literal|0xff
 argument_list|,
 operator|&
 name|gpreg

@@ -128,6 +128,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCI_ID_LSI53C1010_2
+value|0x21
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCI_ID_LSI53C1510D
 value|0xa
 end_define
