@@ -553,6 +553,17 @@ begin_comment
 comment|/* get IF status */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIOCSIFLLADDR
+value|_IOW('i', 60, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set link level addr */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
