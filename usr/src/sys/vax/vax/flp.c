@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.c	4.3	%G%	*/
+comment|/*	flp.c	4.4	%G%	*/
 end_comment
 
 begin_if
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../h/cons.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/cpu.h"
 end_include
 
 begin_struct
