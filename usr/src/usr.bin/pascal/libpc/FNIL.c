@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)FNIL.c 1.1 %G%"
+literal|"@(#)FNIL.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,26 +100,6 @@ argument_list|(
 name|curfile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|curfile
-operator|->
-name|funit
-operator|&
-name|EOFF
-condition|)
-block|{
-name|ERROR
-argument_list|(
-name|EPASTEOF
-argument_list|,
-name|curfile
-operator|->
-name|pfname
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 return|return
 name|curfile

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)IOSYNC.c 1.1 %G%"
+literal|"@(#)IOSYNC.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,22 @@ name|unit
 operator||
 name|EOFF
 expr_stmt|;
+if|if
+condition|(
+name|unit
+operator|&
+name|FTEXT
+condition|)
+block|{
+operator|*
+name|curfile
+operator|->
+name|fileptr
+operator|=
+literal|' '
+expr_stmt|;
+return|return;
+block|}
 name|limit
 operator|=
 operator|&
