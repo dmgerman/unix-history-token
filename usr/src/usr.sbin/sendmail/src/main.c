@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.44 (Berkeley) %G%"
+literal|"@(#)main.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2599,6 +2599,59 @@ operator|->
 name|m_eol
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_argv
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+modifier|*
+modifier|*
+name|a
+init|=
+name|m
+operator|->
+name|m_argv
+decl_stmt|;
+name|printf
+argument_list|(
+literal|" A="
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|a
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|a
+operator|!=
+name|m
+operator|->
+name|m_argv
+condition|)
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+operator|*
+name|a
+operator|++
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -2654,7 +2707,12 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ADDRESS TEST MODE\nEnter<ruleset><address>\n"
+literal|"ADDRESS TEST MODE (ruleset 3 NOT automatically invoked)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Enter<ruleset><address>\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2792,13 +2850,6 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-name|rewrite
-argument_list|(
-name|pvp
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 name|q

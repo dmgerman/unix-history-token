@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.31 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 comment|/* map $ into \001 (ASCII SOH) for macro expansion */
 for|for
 control|(
@@ -1047,6 +1057,32 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|cf
+argument_list|)
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Error reading %s"
+argument_list|,
+name|cfname
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OSFILE
+argument_list|)
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|cf
+argument_list|)
+expr_stmt|;
 name|FileName
 operator|=
 name|NULL
@@ -1608,7 +1644,11 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"`=' expected"
+literal|"mailer %s: `=' expected"
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1667,6 +1707,15 @@ condition|;
 name|p
 operator|++
 control|)
+if|if
+condition|(
+operator|!
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
 name|setbitn
 argument_list|(
 operator|*

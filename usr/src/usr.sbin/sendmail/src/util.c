@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.23 (Berkeley) %G%"
+literal|"@(#)util.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -892,6 +892,18 @@ operator|=
 literal|'t'
 expr_stmt|;
 break|break;
+case|case
+literal|'\001'
+case|:
+operator|(
+name|void
+operator|)
+name|putchar
+argument_list|(
+literal|'$'
+argument_list|)
+expr_stmt|;
+continue|continue;
 default|default:
 operator|(
 name|void

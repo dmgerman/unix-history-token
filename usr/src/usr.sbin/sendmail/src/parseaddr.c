@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.16 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1803,6 +1803,11 @@ name|NULL
 condition|;
 control|)
 block|{
+name|int
+name|loopcount
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1858,6 +1863,23 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|++
+name|loopcount
+operator|>
+literal|100
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Infinite loop in ruleset %d"
+argument_list|,
+name|ruleset
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|rp
 operator|=
 operator|*
@@ -1875,7 +1897,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ap="
+literal|"operator="
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -1885,7 +1907,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", rp="
+literal|", token="
 argument_list|)
 expr_stmt|;
 name|xputs
