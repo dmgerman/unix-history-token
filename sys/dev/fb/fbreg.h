@@ -312,7 +312,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_set_region_1(IA64_BUS_SPACE_MEM, d, 0, 0, c)
+value|bus_space_set_region_1(IA64_BUS_SPACE_MEM, (intptr_t)(d), 0, 0, c)
 end_define
 
 begin_define
@@ -327,7 +327,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_set_region_1(IA64_BUS_SPACE_MEM, d, 0, p, c)
+value|bus_space_set_region_1(IA64_BUS_SPACE_MEM, (intptr_t)(d), 0, p, c)
 end_define
 
 begin_define
@@ -342,7 +342,17 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|bus_space_set_region_2(IA64_BUS_SPACE_MEM, d, 0, p, c)
+value|bus_space_set_region_2(IA64_BUS_SPACE_MEM, (intptr_t)(d), 0, p, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|readb
+parameter_list|(
+name|a
+parameter_list|)
+value|bus_space_read_1(IA64_BUS_SPACE_MEM, a, 0)
 end_define
 
 begin_define
@@ -352,8 +362,19 @@ name|readw
 parameter_list|(
 name|a
 parameter_list|)
-define|\
 value|bus_space_read_2(IA64_BUS_SPACE_MEM, a, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|writeb
+parameter_list|(
+name|a
+parameter_list|,
+name|v
+parameter_list|)
+value|bus_space_write_1(IA64_BUS_SPACE_MEM, a, 0, v)
 end_define
 
 begin_define
@@ -365,7 +386,6 @@ name|a
 parameter_list|,
 name|v
 parameter_list|)
-define|\
 value|bus_space_write_2(IA64_BUS_SPACE_MEM, a, 0, v)
 end_define
 
@@ -378,7 +398,6 @@ name|a
 parameter_list|,
 name|v
 parameter_list|)
-define|\
 value|bus_space_write_4(IA64_BUS_SPACE_MEM, a, 0, v)
 end_define
 
