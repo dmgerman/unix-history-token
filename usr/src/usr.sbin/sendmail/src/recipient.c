@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.38 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2707,6 +2707,19 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'#'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 name|e
 operator|->
 name|e_to
