@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuq.c	4.9	(Berkeley) %G%"
+literal|"@(#)uuq.c	4.10	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -409,7 +409,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"r:s:u:d:b:hl"
+literal|"r:S:s:u:d:b:hl"
 argument_list|)
 operator|)
 operator|!=
@@ -422,6 +422,9 @@ condition|)
 block|{
 case|case
 literal|'r'
+case|:
+case|case
+literal|'S'
 case|:
 name|Spool
 operator|=
