@@ -4141,6 +4141,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Terminate ACPI\n"
+argument_list|)
+expr_stmt|;
+name|AcpiTerminate
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
