@@ -344,7 +344,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|int
+name|u_int
 name|k
 decl_stmt|;
 name|printf

@@ -67,6 +67,7 @@ name|struct
 name|ngm_rmhook
 name|rmh
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path

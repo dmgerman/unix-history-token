@@ -39,6 +39,8 @@ block|,
 literal|"Show information about all installed node types"
 block|,
 name|NULL
+block|,
+block|{}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -55,6 +57,7 @@ name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 name|u_char
@@ -94,11 +97,12 @@ operator|->
 name|data
 decl_stmt|;
 name|int
-name|k
-decl_stmt|,
 name|rtn
 init|=
 name|CMDRTN_OK
+decl_stmt|;
+name|u_int
+name|k
 decl_stmt|;
 comment|/* Get arguments */
 switch|switch

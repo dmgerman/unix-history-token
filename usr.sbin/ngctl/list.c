@@ -105,13 +105,14 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|k
-decl_stmt|,
 name|ch
 decl_stmt|,
 name|rtn
 init|=
 name|CMDRTN_OK
+decl_stmt|;
+name|u_int
+name|k
 decl_stmt|;
 comment|/* Get options */
 name|optind
@@ -292,7 +293,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|av
+name|argv
 index|[
 literal|3
 index|]
@@ -343,7 +344,7 @@ call|)
 argument_list|(
 literal|3
 argument_list|,
-name|av
+name|argv
 argument_list|)
 operator|)
 operator|!=

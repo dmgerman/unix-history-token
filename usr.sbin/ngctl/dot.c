@@ -120,7 +120,8 @@ name|stdout
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|i
 decl_stmt|;
 comment|/* Get options */
@@ -544,7 +545,7 @@ index|[
 name|NG_PATHSIZ
 index|]
 decl_stmt|;
-name|int
+name|u_int
 name|j
 decl_stmt|;
 operator|(

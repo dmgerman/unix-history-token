@@ -2041,11 +2041,13 @@ name|QuitCmd
 parameter_list|(
 name|int
 name|ac
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
+name|__unused
 parameter_list|)
 block|{
 return|return

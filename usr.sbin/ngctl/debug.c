@@ -42,6 +42,8 @@ literal|"Without any argument, this command displays the current"
 literal|" debugging verbosity level. If the argument is ``+'' or ``-''"
 literal|" the debug level is incremented or decremented; otherwise,"
 literal|" it must be an absolute numerical level."
+block|,
+block|{}
 block|}
 decl_stmt|;
 end_decl_stmt
