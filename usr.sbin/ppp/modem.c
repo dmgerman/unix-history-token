@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.85 1998/05/25 10:37:02 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.86 1998/05/28 23:15:38 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -2307,7 +2307,9 @@ name|fprintf
 argument_list|(
 name|lockfile
 argument_list|,
-literal|"tun%d\n"
+literal|"%s%d\n"
+argument_list|,
+name|TUN_NAME
 argument_list|,
 name|tunno
 argument_list|)
@@ -4219,6 +4221,9 @@ modifier|*
 name|modem
 parameter_list|)
 block|{
+name|int
+name|newsid
+decl_stmt|;
 name|log_Printf
 argument_list|(
 name|LogDEBUG
@@ -4231,6 +4236,18 @@ name|link
 operator|.
 name|name
 argument_list|)
+expr_stmt|;
+name|newsid
+operator|=
+name|tcgetpgrp
+argument_list|(
+name|modem
+operator|->
+name|fd
+argument_list|)
+operator|==
+name|getpgrp
+argument_list|()
 expr_stmt|;
 name|close
 argument_list|(
@@ -4287,6 +4304,21 @@ operator|->
 name|link
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|newsid
+condition|)
+name|bundle_setsid
+argument_list|(
+name|modem
+operator|->
+name|dl
+operator|->
+name|bundle
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6484,6 +6516,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|p
+operator|->
+name|fd
+operator|>=
+literal|0
+operator|&&
 name|p
 operator|->
 name|type
