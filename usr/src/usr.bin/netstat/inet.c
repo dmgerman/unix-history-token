@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.14 (Berkeley) 83/09/21"
+literal|"@(#)inet.c	4.15 (Berkeley) 84/05/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,7 +381,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s %s\n"
+literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s %s\n"
 argument_list|,
 literal|"Proto"
 argument_list|,
@@ -1532,7 +1532,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%.10s."
+literal|"%.16s."
 argument_list|,
 name|inetname
 argument_list|(
@@ -1607,7 +1607,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-18.18s"
+literal|" %-22.22s"
 argument_list|,
 name|line
 argument_list|)
@@ -1650,6 +1650,50 @@ operator|!
 name|nflag
 condition|)
 block|{
+name|struct
+name|netent
+modifier|*
+name|np
+decl_stmt|;
+name|int
+name|net
+init|=
+name|inet_netof
+argument_list|(
+name|in
+argument_list|)
+decl_stmt|,
+name|subnet
+init|=
+name|inet_subnetof
+argument_list|(
+name|in
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|subnet
+operator|!=
+name|net
+operator|&&
+operator|(
+name|np
+operator|=
+name|getnetbyaddr
+argument_list|(
+name|subnet
+argument_list|,
+name|AF_INET
+argument_list|)
+operator|)
+condition|)
+name|cp
+operator|=
+name|np
+operator|->
+name|n_name
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|inet_lnaof
@@ -1660,19 +1704,11 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
-name|struct
-name|netent
-modifier|*
-name|np
-decl_stmt|;
 name|np
 operator|=
 name|getnetbyaddr
 argument_list|(
-name|inet_netof
-argument_list|(
-name|in
-argument_list|)
+name|net
 argument_list|,
 name|AF_INET
 argument_list|)
