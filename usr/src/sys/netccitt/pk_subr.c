@@ -3211,14 +3211,6 @@ argument_list|(
 operator|&
 name|so
 operator|->
-name|so_rcv
-argument_list|)
-expr_stmt|;
-name|sbflush
-argument_list|(
-operator|&
-name|so
-operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
