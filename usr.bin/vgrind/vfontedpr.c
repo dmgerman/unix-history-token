@@ -3172,6 +3172,10 @@ expr_stmt|;
 do|do
 name|putcp
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|start
 operator|++
@@ -3195,6 +3199,10 @@ block|}
 block|}
 name|putcp
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|start
 operator|++
