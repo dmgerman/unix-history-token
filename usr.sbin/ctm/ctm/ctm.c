@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.5 1994/10/24 20:09:20 phk Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a   * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -b<dir>		Base-dir	  * -B<file>		Backup to tar-file.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -c			Check it out, don't do anything.  * -F      		Force  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -v 			Tell us more.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm.c,v 1.6 1994/11/26 08:57:40 phk Exp $  *  * This is the client program of 'CTM'.  It will apply a CTM-patch to a   * collection of files.  *  * Options we'd like to see:  *  * -a 			Attempt best effort.  * -b<dir>		Base-dir	  * -B<file>		Backup to tar-file.  * -d<int>		Debug TBD.  * -m<mail-addr>	Email me instead.  * -r<name>		Reconstruct file.  * -R<file>		Read list of files to reconstruct.  *  * Options we have:  * -c			Check it out, don't do anything.  * -F      		Force  * -p			Less paranoid.  * -P			Paranoid.  * -q 			Tell us less.  * -T<tmpdir>.		Temporary files.  * -v 			Tell us more.  *  */
 end_comment
 
 begin_define
@@ -257,7 +257,7 @@ name|argc
 operator|--
 operator|&&
 name|stat
-operator|!=
+operator|==
 name|Exit_Done
 condition|)
 block|{
