@@ -172,11 +172,19 @@ begin_comment
 comment|/*  * KERN_PROC subtype ops return arrays of selected proc structure entries:  *  * When adding new fields to this structure, ALWAYS add them at the end  * and decrease the size of the spare field by the amount of space that  * you are adding.  Byte aligned data should be added to the ki_sparestring  * space; other entries should be added to the ki_spare space. Always  * verify that sizeof(struct kinfo_proc) == KINFO_PROC_SIZE when you are  * done. If you change the size of this structure, many programs will stop  * working! Once you have added the new field, you will need to add code  * to initialize it in two places: kern/kern_proc.c in the function  * fill_kinfo_proc and in lib/libkvm/kvm_proc.c in the function kvm_proclist.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -245,24 +253,6 @@ define|#
 directive|define
 name|KINFO_PROC_SIZE
 value|656
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KINFO_PROC_SIZE
-value|888
 end_define
 
 begin_endif
