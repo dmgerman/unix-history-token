@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perform.c,v 1.15 1997/10/13 15:03:52 jkh Exp $"
+literal|"$Id: perform.c,v 1.16 1998/09/11 07:26:58 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,6 +173,47 @@ name|char
 modifier|*
 name|tmp
 decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pkg
+operator|||
+operator|!
+operator|(
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|pkg
+argument_list|)
+operator|)
+condition|)
+return|return
+literal|1
+return|;
+if|if
+condition|(
+name|pkg
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+name|pkg
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* Reset some state */
 if|if
 condition|(
