@@ -1189,6 +1189,10 @@ argument_list|,
 name|kp
 operator|->
 name|ktr_parm5
+argument_list|,
+name|kp
+operator|->
+name|ktr_parm6
 argument_list|)
 expr_stmt|;
 endif|#
