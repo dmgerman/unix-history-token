@@ -71,6 +71,16 @@ directive|include
 file|<dev/mii/miivar.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|miibus
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
