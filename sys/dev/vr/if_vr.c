@@ -7471,16 +7471,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|vr_softc
-modifier|*
-name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
 name|vr_detach
 argument_list|(
 name|dev
