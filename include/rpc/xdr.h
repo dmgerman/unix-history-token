@@ -278,7 +278,43 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  *  * XXX can't actually prototype it, because some take three args!!!  */
+comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|bool_t
+argument_list|(
+argument|*xdrproc_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * XXX can't actually prototype it, because some take three args!!!  */
 end_comment
 
 begin_typedef
@@ -295,6 +331,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Operations defined on a XDR handle  *  * XDR		*xdrs;  * long		*longp;  * char *	 addr;  * u_int	 len;  * u_int	 pos;  */
