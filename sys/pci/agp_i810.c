@@ -1534,10 +1534,6 @@ operator|~
 literal|1
 expr_stmt|;
 block|}
-comment|/* 	 * Make sure the chipset can see everything. 	 */
-name|agp_flush_cache
-argument_list|()
-expr_stmt|;
 return|return
 literal|0
 return|;
