@@ -281,6 +281,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DIST_SRC_BIN
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DIST_SRC_ALL
 value|0xFFFF
 end_define
