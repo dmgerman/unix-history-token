@@ -18,20 +18,37 @@ name|lint
 argument_list|)
 end_if
 
-begin_expr_stmt
-operator|.
-name|asciz
-literal|"@(#)saveregs.c	5.1 (Berkeley) %G%"
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)saveregs.c	5.2 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* LIBC_SCCS and not lint */
+end_comment
+
+begin_macro
 name|__builtin_saveregs
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|abort
 argument_list|()
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
