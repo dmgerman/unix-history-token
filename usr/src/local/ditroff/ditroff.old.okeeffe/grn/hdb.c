@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hdb.c	1.8	(Berkeley) 84/10/20  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
+comment|/*	hdb.c	1.9	(Berkeley) 86/04/14  *  * Copyright -C- 1982 Barry S. Roitblat  *  *      This file contains database routines for the hard copy programs of the  * gremlin picture editor.  */
 end_comment
 
 begin_include
@@ -621,10 +621,32 @@ operator|!
 name|SUNFILE
 operator|)
 condition|)
+block|{
 name|lastpoint
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
+else|else
+block|{
+name|savebounds
+argument_list|(
+name|xorn
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+argument_list|,
+name|yorn
+argument_list|(
+name|x
+argument_list|,
+name|y
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 do|while
