@@ -1231,10 +1231,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-specifier|static
-name|int
-name|count
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1261,9 +1257,6 @@ argument_list|,
 argument|list
 argument_list|)
 block|{
-name|count
-operator|++
-expr_stmt|;
 name|i
 operator|=
 operator|(
@@ -4302,6 +4295,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+comment|/* FALLTHROUGH */
 default|default:
 name|musycc_intr0_tx_eom
 argument_list|(
@@ -5876,8 +5870,6 @@ modifier|*
 name|md0
 decl_stmt|;
 name|u_int32_t
-name|ch
-decl_stmt|,
 name|u
 decl_stmt|,
 name|u0
@@ -5912,12 +5904,6 @@ operator|=
 name|sc
 operator|->
 name|csc
-expr_stmt|;
-name|ch
-operator|=
-name|sch
-operator|->
-name|chan
 expr_stmt|;
 if|if
 condition|(
