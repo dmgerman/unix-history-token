@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<bootp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bootparam.h>
 end_include
 
@@ -564,6 +570,8 @@ condition|)
 name|bootp
 argument_list|(
 name|sock
+argument_list|,
+name|BOOTP_NONE
 argument_list|)
 expr_stmt|;
 if|if

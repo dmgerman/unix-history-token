@@ -1686,11 +1686,16 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* DHCP magic cookie */
+ifndef|#
+directive|ifndef
+name|VM_RFC1048
 define|#
 directive|define
 name|VM_RFC1048
 value|0x63825363L
 comment|/* ? */
+endif|#
+directive|endif
 name|uint32_t
 name|flags
 decl_stmt|;
