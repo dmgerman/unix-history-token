@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1999, 2000 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  * acl_from_text: convert a text-form ACL from a string to an acl_t  */
+comment|/*  * acl_from_text: Convert a text-form ACL from a string to an acl_t.  */
 end_comment
 
 begin_include
@@ -48,26 +48,6 @@ include|#
 directive|include
 file|"acl_support.h"
 end_include
-
-begin_enum
-enum|enum
-name|PARSE_MODE
-block|{
-name|PM_BASE
-block|,
-comment|/* initial, begin line, or after , */
-name|PM_QUALIFIER
-block|,
-comment|/* in qualifier field */
-name|PM_PERM
-block|,
-comment|/* in permission field */
-name|PM_COMMENT
-block|,
-comment|/* in comment */
-block|}
-enum|;
-end_enum
 
 begin_function
 specifier|static
@@ -410,7 +390,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * acl_from_text -- convert a string into an ACL  * postpone most validity checking until the end and cal acl_valid to do  * that.  */
+comment|/*  * acl_from_text -- Convert a string into an ACL.  * Postpone most validity checking until the end and call acl_valid() to do  * that.  */
 end_comment
 
 begin_function
@@ -467,7 +447,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* local copy we can mess up */
+comment|/* Local copy we can mess up. */
 name|mybuf_p
 operator|=
 name|strdup
@@ -519,7 +499,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* outer loop: delimit at \n boundaries */
+comment|/* Outer loop: delimit at \n boundaries. */
 name|cur
 operator|=
 name|mybuf_p
@@ -539,7 +519,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* now split the line on the first # to strip out comments */
+comment|/* Now split the line on the first # to strip out comments. */
 name|comment
 operator|=
 name|line
@@ -554,7 +534,7 @@ argument_list|,
 literal|"#"
 argument_list|)
 expr_stmt|;
-comment|/* inner loop: delimit at , boundaries */
+comment|/* Inner loop: delimit at ',' boundaries. */
 while|while
 condition|(
 operator|(
@@ -570,7 +550,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* now split into three :-delimited fields */
+comment|/* Now split into three ':' delimited fields. */
 name|tag
 operator|=
 name|strsep
@@ -587,7 +567,6 @@ operator|!
 name|tag
 condition|)
 block|{
-comment|/* printf("no tag\n"); */
 name|errno
 operator|=
 name|EINVAL
@@ -618,7 +597,7 @@ name|entry
 operator|)
 condition|)
 block|{
-comment|/* 				 * is an entirely comment line, skip to next 				 * comma 				 */
+comment|/* 				 * Is an entirely comment line, skip to next 				 * comma. 				 */
 continue|continue;
 block|}
 name|string_trim_trailing_whitespace
@@ -642,7 +621,6 @@ operator|!
 name|qualifier
 condition|)
 block|{
-comment|/* printf("no qualifier\n"); */
 name|errno
 operator|=
 name|EINVAL
@@ -685,7 +663,6 @@ name|entry
 operator|)
 condition|)
 block|{
-comment|/* printf("no permission, or more stuff\n"); */
 name|errno
 operator|=
 name|EINVAL
@@ -706,7 +683,6 @@ argument_list|(
 name|permission
 argument_list|)
 expr_stmt|;
-comment|/* printf("[%s/%s/%s]\n", tag, qualifier, 			    permission); */
 name|t
 operator|=
 name|acl_string_to_tag
@@ -862,8 +838,8 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/* XXX should we only return ACLs valid according to acl_valid? */
-comment|/* verify validity of the ACL we read in */
+comment|/* XXX Should we only return ACLs valid according to acl_valid? */
+comment|/* Verify validity of the ACL we read in. */
 block|if (acl_valid(acl) == -1) { 		errno = EINVAL; 		goto error_label; 	}
 endif|#
 directive|endif
