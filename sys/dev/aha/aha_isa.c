@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/isareg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<isa/isavar.h>
 end_include
 
