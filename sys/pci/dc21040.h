@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.3 1995/05/05 19:44:34 thomas Exp $  *  * $Log: dc21040.h,v $  * Revision 1.3  1995/05/05  19:44:34  thomas  * cogent em100 support  *  * Revision 1.1  1994/10/01  20:16:45  wollman  * Add Matt Thomas's DC21040 PCI Ethernet driver.  (This is turning out  * to be quite a popular chip, so expect to see a number of products  * based on it.)  *  * Revision 1.2  1994/08/15  20:42:25  thomas  * misc additions  *  * Revision 1.1  1994/08/12  21:02:46  thomas  * Initial revision  *  * Revision 1.8  1994/08/05  20:20:54  thomas  * Enable change log  *  * Revision 1.7  1994/08/05  20:20:14  thomas  * *** empty log message ***  *  */
+comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: dc21040.h,v 1.4 1995/05/05 20:09:48 davidg Exp $  *  */
 end_comment
 
 begin_if
@@ -21,9 +21,9 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|signed
-name|int
-name|tulip_sint32_t
+name|unsigned
+name|short
+name|tulip_uint16_t
 typedef|;
 end_typedef
 
@@ -1141,6 +1141,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TULIP_STS_LINKPASS
+value|0x00000010L
+end_define
+
+begin_comment
+comment|/* (RW)  LinkPass (DC21041) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TULIP_STS_TXBABBLE
 value|0x00000008L
 end_define
@@ -1266,6 +1277,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TULIP_CMD_ENHCAPTEFFCT
+value|0x00040000L
+end_define
+
+begin_comment
+comment|/* (RW)  Enhanced Capture Effecty (DC21041) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TULIP_CMD_CAPTREFFCT
 value|0x00020000L
 end_define
@@ -1376,7 +1398,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TULIP_CMD_FULLDULPEX
+name|TULIP_CMD_FULLDUPLEX
 value|0x00000200L
 end_define
 
@@ -1486,6 +1508,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TULIP_SIASTS_OTHERRXACTIVITY
+value|0x00000200L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_SIASTS_RXACTIVITY
+value|0x00000100L
+end_define
+
+begin_define
+define|#
+directive|define
 name|TULIP_SIASTS_LINKFAIL
 value|0x00000004L
 end_define
@@ -1509,6 +1545,69 @@ define|#
 directive|define
 name|TULIP_SIACONN_10BASET
 value|0x00000005L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIACONN_10BASET
+value|0x0000EF01L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIATXRX_10BASET
+value|0x0000FF3FL
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIAGEN_10BASET
+value|0x00000000L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIACONN_AUI
+value|0x0000EF09L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIATXRX_AUI
+value|0x0000F73DL
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIAGEN_AUI
+value|0x0000000EL
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIACONN_BNC
+value|0x0000EF09L
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIATXRX_BNC
+value|0x0000F73DL
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_DC21041_SIAGEN_BNC
+value|0x00000006L
 end_define
 
 begin_define
@@ -1626,23 +1725,78 @@ end_define
 begin_define
 define|#
 directive|define
-name|TULIP_BUSMODE_TXPOLL_200us
+name|TULIP_BUSMODE_TXPOLL_200000ns
 value|0x00020000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_BUSMODE_TXPOLL_800us
+name|TULIP_BUSMODE_TXPOLL_800000ns
 value|0x00040000L
 end_define
 
 begin_define
 define|#
 directive|define
-name|TULIP_BUSMODE_TXPOLL_1600us
+name|TULIP_BUSMODE_TXPOLL_1600000ns
 value|0x00060000L
 end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_BUSMODE_TXPOLL_12800ns
+value|0x00080000L
+end_define
+
+begin_comment
+comment|/* DC21041 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_BUSMODE_TXPOLL_25600ns
+value|0x000A0000L
+end_define
+
+begin_comment
+comment|/* DC21041 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_BUSMODE_TXPOLL_51200ns
+value|0x000C0000L
+end_define
+
+begin_comment
+comment|/* DC21041 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_BUSMODE_TXPOLL_102400ns
+value|0x000E0000L
+end_define
+
+begin_comment
+comment|/* DC21041 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_BUSMODE_DESC_BIGENDIAN
+value|0x00100000L
+end_define
+
+begin_comment
+comment|/* DC21041 only */
+end_comment
 
 begin_comment
 comment|/*  * These are the defintitions used for the DEC DC21140  * evaluation board.  */
@@ -1775,7 +1929,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_OUI_COGENT_2
-value|0x94
+value|0x92
 end_define
 
 begin_define
@@ -1783,6 +1937,71 @@ define|#
 directive|define
 name|TULIP_COGENT_EM100_ID
 value|0x12
+end_define
+
+begin_comment
+comment|/*  * These are the defintitions used for the Znyx ZX342  * 10/100 board  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_ZX34X_PINS
+value|0x0000011F
+end_define
+
+begin_comment
+comment|/* General Purpose Pin directions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_ZX34X_OK10
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* 10 Mb/sec Signal Detect gep<7> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_ZX34X_OK100
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* 100 Mb/sec Signal Detect gep<6> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TULIP_GP_ZX34X_INIT
+value|0x00000009
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_OUI_ZNYX_0
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_OUI_ZNYX_1
+value|0xC0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TULIP_OUI_ZNYX_2
+value|0x95
 end_define
 
 begin_comment
@@ -1899,6 +2118,146 @@ define|#
 directive|define
 name|SROM_BITWIDTH
 value|6
+end_define
+
+begin_comment
+comment|/*  * Definitions for the DE425.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_CFID
+value|0x08
+end_define
+
+begin_comment
+comment|/* Configuration Id */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_CFCS
+value|0x0C
+end_define
+
+begin_comment
+comment|/* Configuration Command-Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_CFRV
+value|0x18
+end_define
+
+begin_comment
+comment|/* Configuration Revision */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_CFLT
+value|0x1C
+end_define
+
+begin_comment
+comment|/* Configuration Latency Timer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_CBIO
+value|0x28
+end_define
+
+begin_comment
+comment|/* Configuration Base IO Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_CFDA
+value|0x2C
+end_define
+
+begin_comment
+comment|/* Configuration Driver Area */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_ENETROM_OFFSET
+value|0xC90
+end_define
+
+begin_comment
+comment|/* Offset in I/O space for ENETROM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DE425_CFG0
+value|0xC88
+end_define
+
+begin_comment
+comment|/* IRQ register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEC_VENDORID
+value|0x1011
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC21040_CHIPID
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC21140_CHIPID
+value|0x0009
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC21041_CHIPID
+value|0x0014
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_VENDORID
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFFFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_CHIPID
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xFFFF)
 end_define
 
 begin_endif
