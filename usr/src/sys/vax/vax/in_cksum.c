@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.6 81/10/26 */
+comment|/* in_cksum.c 1.6 81/10/28 */
 end_comment
 
 begin_include
@@ -134,8 +134,7 @@ expr_stmt|;
 name|w
 operator|=
 operator|(
-name|unsigned
-name|short
+name|u_short
 operator|*
 operator|)
 operator|(
@@ -336,7 +335,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cksum: out of data"
+literal|"cksum: out of data\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -360,20 +359,14 @@ block|}
 block|}
 name|done
 label|:
+comment|/* add together high and low parts of sum and carry to get cksum */
+block|{
+asm|asm("ashl $-16,r8,r0; addw2 r0,r8; adwc $0,r8");
+asm|asm("mcoml r8,r8; movzwl r8,r8");
+block|}
 return|return
 operator|(
-operator|~
-operator|(
 name|sum
-operator|+
-operator|(
-name|sum
-operator|>>
-literal|16
-operator|)
-operator|)
-operator|&
-literal|0xffff
 operator|)
 return|;
 block|}
