@@ -3146,7 +3146,7 @@ name|done
 goto|;
 block|}
 block|}
-comment|/* 	 * Allocate the space for the list of preallocated snapshot blocks. 	 * The i_offset field is borrowed to pass the value of snapblklist 	 * down into the expunge functions. 	 */
+comment|/* 	 * Allocate the space for the list of preallocated snapshot blocks. 	 */
 name|snaplistsize
 operator|=
 name|fs
@@ -3194,17 +3194,9 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-operator|(
-operator|(
-name|daddr_t
-operator|*
-operator|)
-operator|(
 name|ip
 operator|->
-name|i_offset
-operator|)
-operator|)
+name|i_snapblklist
 operator|=
 operator|&
 name|snapblklist
@@ -3212,7 +3204,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|/* 	 * Expunge the blocks used by the snapshots from the set of 	 * blocks marked as used in the snapshot bitmaps. Also, collect 	 * the list of allocated blocks in i_offset. 	 */
+comment|/* 	 * Expunge the blocks used by the snapshots from the set of 	 * blocks marked as used in the snapshot bitmaps. Also, collect 	 * the list of allocated blocks in i_snapblklist. 	 */
 if|if
 condition|(
 name|ip
@@ -3281,17 +3273,9 @@ goto|;
 block|}
 name|snaplistsize
 operator|=
-operator|(
-operator|(
-name|daddr_t
-operator|*
-operator|)
-operator|(
 name|ip
 operator|->
-name|i_offset
-operator|)
-operator|)
+name|i_snapblklist
 operator|-
 name|snapblklist
 expr_stmt|;
@@ -3304,7 +3288,7 @@ name|snaplistsize
 expr_stmt|;
 name|ip
 operator|->
-name|i_offset
+name|i_snapblklist
 operator|=
 literal|0
 expr_stmt|;
@@ -6182,17 +6166,9 @@ operator|!=
 name|BLK_SNAP
 condition|)
 operator|*
-operator|(
-operator|(
-name|daddr_t
-operator|*
-operator|)
-operator|(
 name|ip
 operator|->
-name|i_offset
-operator|)
-operator|)
+name|i_snapblklist
 operator|++
 operator|=
 name|lblkno
@@ -7901,17 +7877,9 @@ operator|!=
 name|BLK_SNAP
 condition|)
 operator|*
-operator|(
-operator|(
-name|daddr_t
-operator|*
-operator|)
-operator|(
 name|ip
 operator|->
-name|i_offset
-operator|)
-operator|)
+name|i_snapblklist
 operator|++
 operator|=
 name|lblkno
