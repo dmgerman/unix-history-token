@@ -5774,7 +5774,7 @@ name|VINUMRMINOR
 argument_list|(
 name|sdno
 argument_list|,
-name|VINUM_SD_TYPE
+name|VINUM_RAWSD_TYPE
 argument_list|)
 argument_list|,
 name|UID_ROOT
@@ -6736,7 +6736,7 @@ name|VINUMRMINOR
 argument_list|(
 name|plexno
 argument_list|,
-name|VINUM_PLEX_TYPE
+name|VINUM_RAWPLEX_TYPE
 argument_list|)
 argument_list|,
 name|UID_ROOT
