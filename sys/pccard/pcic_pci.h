@@ -217,6 +217,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLPD6832_LEGACY_16BIT_IOENABLE
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLPD6832_SOCKET
 value|0x004c
 end_define
@@ -903,6 +910,17 @@ end_define
 
 begin_comment
 comment|/* Legacy 16bit I/O address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_PCI_LEGACY16_IOENABLE
+value|0x01
+end_define
+
+begin_comment
+comment|/* Enable Legacy 16bit I/O address */
 end_comment
 
 end_unit
