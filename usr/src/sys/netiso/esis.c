@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)esis.c	7.14 (Berkeley) %G% */
+comment|/*	@(#)esis.c	7.15 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -619,6 +619,12 @@ argument_list|,
 operator|&
 name|esis_pcb
 argument_list|)
+expr_stmt|;
+name|rp
+operator|->
+name|rcb_socket
+operator|=
+name|so
 expr_stmt|;
 name|error
 operator|=
@@ -2510,6 +2516,13 @@ name|ESISOVAL_ESCT
 case|:
 if|if
 condition|(
+name|iso_systype
+operator|&
+name|SNPA_IS
+condition|)
+break|break;
+if|if
+condition|(
 name|buf
 index|[
 literal|1
@@ -4295,7 +4308,7 @@ argument_list|,
 operator|&
 name|esis_dl
 argument_list|,
-name|mm
+name|m0
 argument_list|,
 operator|(
 expr|struct
