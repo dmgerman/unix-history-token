@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -284,7 +290,7 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 while|while
@@ -576,7 +582,7 @@ argument_list|)
 operator|)
 operator|)
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|warnx
@@ -932,7 +938,7 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* Can't mv(1) a mount point. */
