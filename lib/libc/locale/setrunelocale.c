@@ -175,6 +175,7 @@ specifier|static
 name|int
 name|__setrunelocale
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -287,6 +288,11 @@ return|return
 operator|(
 name|__setrunelocale
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|encoding
 argument_list|)
 operator|)
@@ -299,6 +305,7 @@ specifier|static
 name|int
 name|__setrunelocale
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|encoding
@@ -765,10 +772,6 @@ name|ret
 init|=
 name|__setrunelocale
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|locale
 argument_list|)
 decl_stmt|;
