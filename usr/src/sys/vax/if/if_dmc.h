@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.h	6.1	83/07/29	*/
+comment|/*	if_dmc.h	6.2	84/09/26	*/
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|DMCMTU
-value|(2048)
+value|(1024)
 end_define
 
 begin_define
@@ -221,6 +221,13 @@ begin_comment
 comment|/* port ready */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DMC0BITS
+value|"\10\8RDI\7IEI\6RQI"
+end_define
+
 begin_comment
 comment|/* defines for bsel1 */
 end_comment
@@ -246,6 +253,13 @@ end_define
 begin_comment
 comment|/* clock running */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DMC1BITS
+value|"\10\8RUN\7MCLR"
+end_define
 
 begin_comment
 comment|/* defines for bsel2 */
@@ -308,6 +322,13 @@ end_define
 begin_comment
 comment|/* port available */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DMC2BITS
+value|"\10\8RDO\7IEO"
+end_define
 
 begin_comment
 comment|/* defines for CNTLI mode */
@@ -397,8 +418,79 @@ end_define
 begin_define
 define|#
 directive|define
+name|DMC_DATACK
+value|01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_TIMEOUT
+value|02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_NOBUFS
+value|04
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_MAINTREC
+value|010
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_LOSTDATA
+value|020
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_DISCONN
+value|0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_START
+value|0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_NEXMEM
+value|0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMC_ERROR
+value|01000
+end_define
+
+begin_define
+define|#
+directive|define
 name|DMC_FATAL
-value|01620
+value|(DMC_ERROR|DMC_NEXMEM|DMC_START|DMC_LOSTDATA|DMC_MAINTREC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNTLO_BITS
+define|\
+value|"\10\12ERROR\11NEXMEM\10START\7DISC\5LSTDATA\4MAINT\3NOBUF\2TIMEO\1DATACK"
 end_define
 
 end_unit
