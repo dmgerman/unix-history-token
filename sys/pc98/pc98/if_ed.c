@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.5 1996/09/03 10:23:30 asami Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.6 1996/09/07 02:13:48 asami Exp $  */
 end_comment
 
 begin_comment
@@ -69,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -383,11 +377,6 @@ name|u_char
 name|next_packet
 decl_stmt|;
 comment|/* pointer to next unread RX packet */
-name|struct
-name|kern_devconf
-name|kdc
-decl_stmt|;
-comment|/* kernel configuration database info */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -1321,11 +1310,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|==
-name|DC_UNCONFIGURED
+name|gone
 condition|)
 block|{
 name|printf
@@ -1341,14 +1326,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_UNCONFIGURED
-expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -1569,124 +1546,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_ed_template
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"ed"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"net"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* state */
-literal|""
-block|,
-comment|/* description */
-name|DC_CLS_NETIF
-comment|/* class */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|ed_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|descr
-parameter_list|)
-block|{
-name|struct
-name|kern_devconf
-modifier|*
-name|kdc
-init|=
-operator|&
-name|ed_softc
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc
-decl_stmt|;
-operator|*
-name|kdc
-operator|=
-name|kdc_ed_template
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_parentdata
-operator|=
-name|id
-expr_stmt|;
-name|kdc
-operator|->
-name|kdc_description
-operator|=
-name|descr
-expr_stmt|;
-name|dev_attach
-argument_list|(
-name|kdc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer to an isa_device struct  *   on exit:  *	NULL if device not found  *	or # of i/o addresses used (if found)  */
 end_comment
@@ -1721,19 +1580,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|DEV_LKM
-name|ed_registerdev
-argument_list|(
-name|isa_dev
-argument_list|,
-literal|"Ethernet adapter"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* not DEV_LKM */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2776,14 +2622,6 @@ name|type_str
 operator|=
 literal|"WD8003S"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8003S"
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8003E
@@ -2793,14 +2631,6 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8003E"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8003E"
 expr_stmt|;
 break|break;
 case|case
@@ -2812,14 +2642,6 @@ name|type_str
 operator|=
 literal|"WD8003EB"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8003EB"
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8003W
@@ -2830,14 +2652,6 @@ name|type_str
 operator|=
 literal|"WD8003W"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8003W"
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE_WD8013EBT
@@ -2847,14 +2661,6 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013EBT"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8013EBT"
 expr_stmt|;
 name|memsize
 operator|=
@@ -2873,14 +2679,6 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013W"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8013W"
 expr_stmt|;
 name|memsize
 operator|=
@@ -2923,14 +2721,6 @@ name|type_str
 operator|=
 literal|"WD8013EP"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8013EP"
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2939,14 +2729,6 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8003EP"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8003EP"
 expr_stmt|;
 block|}
 break|break;
@@ -2958,14 +2740,6 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013WC"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8013WC"
 expr_stmt|;
 name|memsize
 operator|=
@@ -2985,14 +2759,6 @@ name|type_str
 operator|=
 literal|"WD8013EBP"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8013EBP"
-expr_stmt|;
 name|memsize
 operator|=
 literal|16384
@@ -3010,14 +2776,6 @@ operator|->
 name|type_str
 operator|=
 literal|"WD8013EPC"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: WD 8013EPC"
 expr_stmt|;
 name|memsize
 operator|=
@@ -3050,14 +2808,6 @@ name|type_str
 operator|=
 literal|"SMC8216/SMC8216C"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: SMC 8216 or 8216C"
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3066,14 +2816,6 @@ operator|->
 name|type_str
 operator|=
 literal|"SMC8216T"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: SMC 8216T"
 expr_stmt|;
 block|}
 name|outb
@@ -3153,14 +2895,6 @@ name|type_str
 operator|=
 literal|"SMC8416C/SMC8416BT"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: SMC 8416C or 8416BT"
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3169,14 +2903,6 @@ operator|->
 name|type_str
 operator|=
 literal|"SMC8416T"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: SMC 8416T"
 expr_stmt|;
 block|}
 name|memsize
@@ -3229,14 +2955,6 @@ name|type_str
 operator|=
 literal|"Toshiba1"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: Toshiba1"
-expr_stmt|;
 name|memsize
 operator|=
 literal|32768
@@ -3254,14 +2972,6 @@ operator|->
 name|type_str
 operator|=
 literal|"Toshiba4"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: Toshiba4"
 expr_stmt|;
 name|memsize
 operator|=
@@ -4778,14 +4488,6 @@ literal|"3c503"
 expr_stmt|;
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: 3c503"
-expr_stmt|;
-name|sc
-operator|->
 name|mem_shared
 operator|=
 literal|1
@@ -5875,14 +5577,6 @@ name|type_str
 operator|=
 literal|"NE2000"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: NE2000"
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -5897,14 +5591,6 @@ operator|->
 name|type_str
 operator|=
 literal|"NE1000"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: NE1000"
 expr_stmt|;
 else|#
 directive|else
@@ -5925,14 +5611,6 @@ name|type_str
 operator|=
 literal|"NE2000"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: NE2000"
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_LPC
@@ -5942,14 +5620,6 @@ operator|->
 name|type_str
 operator|=
 literal|"LPC-T"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: LPC-T"
 expr_stmt|;
 break|break;
 case|case
@@ -5961,14 +5631,6 @@ name|type_str
 operator|=
 literal|"LD-BDN"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: LD-BDN"
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_EGY
@@ -5978,14 +5640,6 @@ operator|->
 name|type_str
 operator|=
 literal|"EGY-98"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: EGY-98"
 expr_stmt|;
 break|break;
 case|case
@@ -5997,14 +5651,6 @@ name|type_str
 operator|=
 literal|"LGY-98"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: LGY-98"
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_ICM
@@ -6014,14 +5660,6 @@ operator|->
 name|type_str
 operator|=
 literal|"ICM"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: ICM"
 expr_stmt|;
 break|break;
 case|case
@@ -6033,14 +5671,6 @@ name|type_str
 operator|=
 literal|"SIC-98"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: SIC-98"
-expr_stmt|;
 break|break;
 case|case
 name|ED_TYPE98_108
@@ -6050,14 +5680,6 @@ operator|->
 name|type_str
 operator|=
 literal|"PC-9801-108"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: PC-9801-108"
 expr_stmt|;
 break|break;
 case|case
@@ -6069,14 +5691,6 @@ name|type_str
 operator|=
 literal|"LA-98"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: LA-98"
-expr_stmt|;
 break|break;
 default|default:
 name|sc
@@ -6084,14 +5698,6 @@ operator|->
 name|type_str
 operator|=
 literal|"Unknown"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: Unkonwn"
 expr_stmt|;
 break|break;
 endif|#
@@ -6711,14 +6317,6 @@ name|type_str
 operator|=
 literal|"Gateway AT"
 expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: Gateway AT"
-expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -6909,14 +6507,6 @@ operator|->
 name|type_str
 operator|=
 literal|"PCCARD"
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"PCCARD Ethernet"
 expr_stmt|;
 name|sc
 operator|->
@@ -7918,14 +7508,6 @@ literal|"HP-PCLAN+"
 expr_stmt|;
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adapter: HP PCLAN+ (27247B/27252A)"
-expr_stmt|;
-name|sc
-operator|->
 name|mem_shared
 operator|=
 literal|0
@@ -8642,14 +8224,6 @@ literal|"SIC98"
 expr_stmt|;
 name|sc
 operator|->
-name|kdc
-operator|.
-name|kdc_description
-operator|=
-literal|"Ethernet adpater: SIC-98"
-expr_stmt|;
-name|sc
-operator|->
 name|cr_proto
 operator|=
 literal|0
@@ -9006,14 +8580,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 comment|/* 	 * Print additional info when attached 	 */
 name|printf
 argument_list|(
@@ -11872,27 +11438,6 @@ name|IFF_RUNNING
 expr_stmt|;
 block|}
 block|}
-comment|/* UP controls BUSY/IDLE */
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_state
-operator|=
-operator|(
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-condition|?
-name|DC_BUSY
-else|:
-name|DC_IDLE
-operator|)
-expr_stmt|;
 if|#
 directive|if
 name|NBPFILTER

@@ -836,39 +836,6 @@ begin_comment
 comment|/*  * The rest of this file is not complete yet. The functions using these  * macros will not work  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ALLOC_DMA_CHN
-parameter_list|(
-name|chn
-parameter_list|,
-name|deviceID
-parameter_list|)
-value|(pc98_dma_acquire(chn))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RELEASE_DMA_CHN
-parameter_list|(
-name|chn
-parameter_list|)
-value|(pc98_dma_release(chn))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -890,11 +857,6 @@ name|chn
 parameter_list|)
 value|(isa_dma_release(chn))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

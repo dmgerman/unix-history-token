@@ -19,6 +19,12 @@ directive|include
 file|"wdc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_atapi.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -484,10 +490,6 @@ name|atapi_params
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|struct
-name|kern_devconf
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -517,11 +519,6 @@ name|unit
 parameter_list|,
 name|int
 name|port
-parameter_list|,
-name|struct
-name|kern_devconf
-modifier|*
-name|parent
 parameter_list|)
 block|{
 name|struct
@@ -854,12 +851,6 @@ name|ctlr
 expr_stmt|;
 name|ata
 operator|->
-name|parent
-operator|=
-name|parent
-expr_stmt|;
-name|ata
-operator|->
 name|attached
 index|[
 name|unit
@@ -1037,8 +1028,6 @@ argument_list|,
 name|ata
 operator|->
 name|debug
-argument_list|,
-name|parent
 argument_list|)
 operator|<
 literal|0

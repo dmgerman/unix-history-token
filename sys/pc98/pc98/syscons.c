@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.6 1996/09/04 09:52:29 asami Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.166 1996/09/06 23:35:54 pst Exp $  */
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ begin_include
 include|#
 directive|include
 file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_syscons.h"
 end_include
 
 begin_if
@@ -106,12 +112,6 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_ifdef
@@ -2279,11 +2279,23 @@ name|retries
 operator|<
 literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"scprobe: keyboard won't accept RESET command\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SC_KBD_PROBE_WORKS
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
 else|else
 block|{
 name|i
@@ -2358,6 +2370,7 @@ name|val
 operator|!=
 name|KB_RESET_DONE
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"scprobe: keyboard RESET failed (result = 0x%02x)\n"
@@ -2365,6 +2378,17 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SC_KBD_PROBE_WORKS
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -2402,129 +2426,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_sc
-index|[
-name|NSC
-index|]
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"sc"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"tty"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_BUSY
-block|,
-comment|/* the console is almost always busy */
-literal|"Graphics console"
-block|,
-name|DC_CLS_DISPLAY
-comment|/* class */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|sc_registerdev
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-name|kdc_sc
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_sc
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_sc
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_sc
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_sc
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3484,11 +3385,6 @@ argument_list|(
 name|scp
 operator|->
 name|status
-argument_list|)
-expr_stmt|;
-name|sc_registerdev
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 name|printf

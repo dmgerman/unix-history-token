@@ -1750,10 +1750,12 @@ name|ED_PC_MISC
 operator|=
 literal|0x18
 expr_stmt|;
+comment|/* dummy */
 name|ED_PC_RESET
 operator|=
 literal|0x1f
 expr_stmt|;
+comment|/* dummy */
 break|break;
 case|case
 name|ED_TYPE98_LPC

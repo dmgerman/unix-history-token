@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.3 1996/08/31 15:07:38 asami Exp $ */
+comment|/* $Id: matcd.c,v 1.4 1996/09/03 10:24:08 asami Exp $ */
 end_comment
 
 begin_comment
@@ -122,7 +122,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pc98/pc98/matcd/matcddrv.h"
+file|"i386/isa/matcd/matcddrv.h"
 end_include
 
 begin_comment
@@ -178,12 +178,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
-end_include
 
 begin_include
 include|#
@@ -753,65 +747,6 @@ end_struct
 
 begin_comment
 comment|/*	This mystery structure is supposed to make dynamic driver 	loading possible. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_matcd
-index|[
-name|TOTALDRIVES
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/*Filled in by dev_attach*/
-literal|"matcdc"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"bio"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/*<12>Parent*/
-literal|0
-block|,
-comment|/*<12>Parent Data*/
-name|DC_IDLE
-block|,
-comment|/*<12>Status*/
-literal|"Matsushita CD-ROM Controller"
-comment|/*<12>This is the description*/
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*<12>*/
 end_comment
 
 begin_comment
@@ -4957,81 +4892,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*---------------------------------------------------------------------------<12>	matcd_register - Something to handle dynamic driver loading. 		Sorry for the lousy description but no one could point 		me to anything that explained what it is for either. 		Added in Edit 12. ---------------------------------------------------------------------------*/
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|matcd_register
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|)
-block|{
-if|if
-condition|(
-name|id
-operator|->
-name|id_unit
-condition|)
-block|{
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|=
-name|kdc_matcd
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_matcd
-index|[
-name|id
-operator|->
-name|id_unit
-index|]
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11344,27 +11204,6 @@ directive|ifdef
 name|FULLDRIVER
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"pc98/pc98/matcd/audio.c"
-end_include
-
-begin_comment
-comment|/*<15>ioctls related to 						      audio are here*/
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -11374,11 +11213,6 @@ end_include
 begin_comment
 comment|/*<15>ioctls related to 						      audio are here*/
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

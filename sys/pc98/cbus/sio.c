@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.4 1996/09/03 10:23:59 asami Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.5 1996/09/07 02:14:23 asami Exp $  */
 end_comment
 
 begin_include
@@ -201,12 +201,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_ifdef
@@ -1274,22 +1268,6 @@ expr|struct
 name|isa_device
 operator|*
 name|dev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|sioregisterdev
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|id
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2854,63 +2832,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|kern_devconf
-name|kdc_sio
-index|[
-name|NSIO
-index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-name|driver_name
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_ISA
-block|,
-literal|0
-block|,
-literal|"tty"
-block|}
-block|,
-name|isa_generic_externalize
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|ISA_EXTERNALLEN
-block|,
-operator|&
-name|kdc_isa0
-block|,
-comment|/* parent */
-literal|0
-block|,
-comment|/* parentdata */
-name|DC_UNCONFIGURED
-block|,
-comment|/* state */
-literal|"Serial port"
-block|,
-name|DC_CLS_SERIAL
-comment|/* class */
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3249,28 +3170,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|kdc_sio
-index|[
-name|com
-operator|->
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_UNCONFIGURED
-expr_stmt|;
-name|kdc_sio
-index|[
-name|com
-operator|->
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port"
-expr_stmt|;
 if|if
 condition|(
 name|com
@@ -3454,103 +3353,6 @@ end_comment
 
 begin_function
 specifier|static
-name|void
-name|sioregisterdev
-parameter_list|(
-name|id
-parameter_list|)
-name|struct
-name|isa_device
-modifier|*
-name|id
-decl_stmt|;
-block|{
-name|int
-name|unit
-decl_stmt|;
-name|unit
-operator|=
-name|id
-operator|->
-name|id_unit
-expr_stmt|;
-comment|/*  *	If already registered, don't try to re-register.  */
-if|if
-condition|(
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_isa
-condition|)
-return|return;
-if|if
-condition|(
-name|unit
-operator|!=
-literal|0
-condition|)
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|=
-name|kdc_sio
-index|[
-literal|0
-index|]
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_UNCONFIGURED
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port"
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_unit
-operator|=
-name|unit
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_isa
-operator|=
-name|id
-expr_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_sio
-index|[
-name|unit
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|int
 name|sioprobe
 parameter_list|(
@@ -3623,11 +3425,6 @@ name|xdev
 decl_stmt|;
 endif|#
 directive|endif
-name|sioregisterdev
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -5363,15 +5160,6 @@ argument_list|(
 literal|" Digicom Systems, Inc. SoftModem"
 argument_list|)
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: Digicom Systems SoftModem"
-expr_stmt|;
 goto|goto
 name|determined_type
 goto|;
@@ -5475,15 +5263,6 @@ argument_list|(
 literal|" 8250"
 argument_list|)
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: National 8250 or compatible"
-expr_stmt|;
 goto|goto
 name|determined_type
 goto|;
@@ -5554,15 +5333,6 @@ argument_list|(
 literal|" 8251 (internal)"
 argument_list|)
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: PC-9801 internal"
-expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
@@ -5574,15 +5344,6 @@ name|printf
 argument_list|(
 literal|" 8251 (PC9861K)"
 argument_list|)
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: PC-9861K"
 expr_stmt|;
 break|break;
 endif|#
@@ -5598,15 +5359,6 @@ argument_list|(
 literal|" 8251 (PIO9032B)"
 argument_list|)
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: PIO9032B"
-expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -5620,15 +5372,6 @@ name|printf
 argument_list|(
 literal|" 8251 (B98_01)"
 argument_list|)
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: B98_01"
 expr_stmt|;
 break|break;
 endif|#
@@ -5676,15 +5419,6 @@ argument_list|(
 literal|" 16450"
 argument_list|)
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: National 16450 or compatible"
-expr_stmt|;
 break|break;
 case|case
 name|FIFO_RX_MEDL
@@ -5694,15 +5428,6 @@ argument_list|(
 literal|" 16450?"
 argument_list|)
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: maybe National 16450"
-expr_stmt|;
 break|break;
 case|case
 name|FIFO_RX_MEDH
@@ -5711,15 +5436,6 @@ name|printf
 argument_list|(
 literal|" 16550?"
 argument_list|)
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: maybe National 16550"
 expr_stmt|;
 break|break;
 case|case
@@ -5743,15 +5459,6 @@ argument_list|(
 literal|" fifo disabled"
 argument_list|)
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: National 16550A, FIFO disabled"
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -5766,15 +5473,6 @@ operator|->
 name|tx_fifo_size
 operator|=
 literal|16
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: National 16550A or compatible"
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -5812,15 +5510,6 @@ name|tx_fifo_size
 operator|=
 literal|1024
 expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_description
-operator|=
-literal|"Serial port: Hayes ESP"
-expr_stmt|;
 break|break;
 block|}
 endif|#
@@ -5830,7 +5519,7 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * Check for the Startech ST16C650 chip. 		 * it has a shadow register under the com_iir, 		 * which can only be accessed when cfcr == 0xff 		 */
-block|{ 		u_char i, j;  		i = inb(iobase + com_iir); 		outb(iobase + com_cfcr, 0xff); 		outb(iobase + com_iir, 0x0); 		outb(iobase + com_cfcr, CFCR_8BITS); 		j = inb(iobase + com_iir); 		outb(iobase + com_iir, i); 		if (i != j) { 			printf(" 16550A"); 		} else { 			com->tx_fifo_size = 32; 			printf(" 16650"); 			kdc_sio[unit].kdc_description = 			  "Serial port: Startech 16C650 or similar"; 		} 		if (!com->tx_fifo_size) 			printf(" fifo disabled"); 		}
+block|{ 		u_char i, j;  		i = inb(iobase + com_iir); 		outb(iobase + com_cfcr, 0xff); 		outb(iobase + com_iir, 0x0); 		outb(iobase + com_cfcr, CFCR_8BITS); 		j = inb(iobase + com_iir); 		outb(iobase + com_iir, i); 		if (i != j) { 			printf(" 16550A"); 		} else { 			com->tx_fifo_size = 32; 			printf(" 16650"); 		} 		if (!com->tx_fifo_size) 			printf(" fifo disabled"); 		}
 endif|#
 directive|endif
 break|break;
@@ -6083,23 +5772,6 @@ name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
-expr_stmt|;
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-operator|(
-name|unit
-operator|==
-name|comconsole
-operator|)
-condition|?
-name|DC_BUSY
-else|:
-name|DC_IDLE
 expr_stmt|;
 name|s
 operator|=
@@ -6508,15 +6180,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_BUSY
-expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -7820,30 +7483,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* restart any wopeners */
-if|if
-condition|(
-operator|!
-operator|(
-name|com
-operator|->
-name|state
-operator|&
-name|CS_DTR_OFF
-operator|)
-operator|&&
-name|unit
-operator|!=
-name|comconsole
-condition|)
-name|kdc_sio
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -8113,25 +7752,6 @@ name|state
 operator|&=
 operator|~
 name|CS_DTR_OFF
-expr_stmt|;
-if|if
-condition|(
-name|com
-operator|->
-name|unit
-operator|!=
-name|comconsole
-condition|)
-name|kdc_sio
-index|[
-name|com
-operator|->
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
 expr_stmt|;
 name|wakeup
 argument_list|(

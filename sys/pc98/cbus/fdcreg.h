@@ -7,12 +7,6 @@ begin_comment
 comment|/*  * AT floppy controller registers and bitfields  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_comment
 comment|/* uses NEC765 controller */
 end_comment
@@ -20,8 +14,18 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/ic/nec765.h>
+file|<i386/isa/ic/nec765.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_comment
+comment|/* registers */
+end_comment
 
 begin_define
 define|#
@@ -43,10 +47,6 @@ end_define
 
 begin_comment
 comment|/* NEC 765 Data Register (R/W) */
-end_comment
-
-begin_comment
-comment|/* registers */
 end_comment
 
 begin_define
@@ -262,16 +262,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* uses NEC765 controller */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/ic/nec765.h>
-end_include
 
 begin_comment
 comment|/* registers */

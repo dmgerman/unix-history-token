@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: pc98.h,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.h	5.7 (Berkeley) 5/9/91  *	$Id: pc98.h,v 1.2 1996/09/03 10:23:48 asami Exp $  */
 end_comment
 
 begin_ifndef
@@ -34,18 +34,8 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IO_BEGIN
+name|IO_ISABEGIN
 end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
-begin_comment
-comment|/* IBM-PC */
-end_comment
 
 begin_define
 define|#
@@ -57,11 +47,6 @@ end_define
 begin_comment
 comment|/* 0x000 - Beginning of I/O Registers */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* PC98 IO address ... very dirty (^_^; */
@@ -81,23 +66,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_ICU2
-value|0x008
-end_define
-
-begin_comment
-comment|/* 8259A Interrupt Controller #2 */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_DMA
 value|0x001
 end_define
 
 begin_comment
 comment|/* 8237A DMA Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_ICU2
+value|0x008
+end_define
+
+begin_comment
+comment|/* 8259A Interrupt Controller #2 */
 end_comment
 
 begin_define
@@ -136,34 +121,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_COM2
-value|0x0b1
-end_define
-
-begin_comment
-comment|/* 8251A RS232C serial I/O (ext) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_COM3
-value|0x0b9
-end_define
-
-begin_comment
-comment|/* 8251A RS232C serial I/O (ext) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IO_SYSPORT
 value|0x031
 end_define
 
 begin_comment
 comment|/* 8255A System Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_PPI
+value|0x035
+end_define
+
+begin_comment
+comment|/* Programmable Peripheral Interface */
 end_comment
 
 begin_define
@@ -186,17 +160,6 @@ end_define
 
 begin_comment
 comment|/* 8251A Keyboard */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_PPI
-value|0x035
-end_define
-
-begin_comment
-comment|/* Programmable Peripheral Interface */
 end_comment
 
 begin_define
@@ -257,12 +220,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_SOUND
-value|0x188
+name|IO_FD1
+value|0x090
 end_define
 
 begin_comment
-comment|/* YM2203 FM sound board */
+comment|/* 765A 1MB FDC */
 end_comment
 
 begin_define
@@ -270,17 +233,6 @@ define|#
 directive|define
 name|IO_GDC2
 value|0x0a0
-end_define
-
-begin_comment
-comment|/* 7220 GDC Graphic Control */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_EGC
-value|0x4a0
 end_define
 
 begin_comment
@@ -301,34 +253,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_SCSI
-value|0xCC0
+name|IO_COM2
+value|0x0b1
 end_define
 
 begin_comment
-comment|/* SCSI Controller */
+comment|/* 8251A RS232C serial I/O (ext) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IO_FD1
-value|0x090
+name|IO_COM3
+value|0x0b9
 end_define
 
 begin_comment
-comment|/* 765A 1MB FDC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_FD2
-value|0x0c8
-end_define
-
-begin_comment
-comment|/* 765A 640KB FDC */
+comment|/* 8251A RS232C serial I/O (ext) */
 end_comment
 
 begin_define
@@ -345,34 +286,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_BEEPF
-value|0x3fdb
+name|IO_FD2
+value|0x0c8
 end_define
 
 begin_comment
-comment|/* beep frequency */
+comment|/* 765A 640KB FDC */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IO_MOUSE
-value|0x7fd9
+name|IO_SIO1
+value|0x0d0
 end_define
 
 begin_comment
-comment|/* mouse */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_MOUSETM
-value|0xdfbd
-end_define
-
-begin_comment
-comment|/* mouse timer */
+comment|/* MC16550II ext RS232C */
 end_comment
 
 begin_define
@@ -422,6 +352,72 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IO_SOUND
+value|0x188
+end_define
+
+begin_comment
+comment|/* YM2203 FM sound board */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_EGC
+value|0x4a0
+end_define
+
+begin_comment
+comment|/* 7220 GDC Graphic Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_SCSI
+value|0xcc0
+end_define
+
+begin_comment
+comment|/* SCSI Controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_SIO2
+value|0x8d0
+end_define
+
+begin_comment
+comment|/* MC16550II ext RS232C */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_BEEPF
+value|0x3fdb
+end_define
+
+begin_comment
+comment|/* beep frequency */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IO_MOUSE
+value|0x7fd9
+end_define
+
+begin_comment
+comment|/* mouse */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IO_BMS
 value|0x7fd9
 end_define
@@ -444,37 +440,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_SIO1
-value|0x0d0
+name|IO_MOUSETM
+value|0xdfbd
 end_define
 
 begin_comment
-comment|/* MC16550II ext RS232C */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_SIO2
-value|0x8d0
-end_define
-
-begin_comment
-comment|/* MC16550II ext RS232C */
-end_comment
-
-begin_comment
-comment|/*#ifdef PC98NS*/
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_comment
-comment|/* Oct 13, ukai */
+comment|/* mouse timer */
 end_comment
 
 begin_define
@@ -510,26 +481,11 @@ begin_comment
 comment|/* IDE Hard disk controller */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PC98
-end_ifndef
-
-begin_comment
-comment|/* IBM-PC */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|IO_ISAEND
-value|0x3FF
+value|0xFFFF
 end_define
 
 begin_comment
@@ -539,13 +495,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|IO_ISABEGIN
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* !IO_ISABEGIN */
+end_comment
 
 begin_comment
 comment|/*  * Input / Output Port Sizes - these are from several sources, and tend  * to be the larger of what was found, ie COM ports can be 4, but some  * boards do not fully decode the address, thus 8 ports are used.  */
@@ -554,13 +508,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IO_PC98SIZES
+name|IO_ISASIZES
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|IO_PC98SIZES
+name|IO_ISASIZES
 end_define
 
 begin_define
@@ -756,7 +710,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IO_PC98SIZES */
+comment|/* !IO_ISASIZES */
 end_comment
 
 begin_comment
@@ -801,8 +755,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|IOM_BEGIN
 end_endif
+
+begin_comment
+comment|/* !RAM_BEGIN */
+end_comment
 
 begin_comment
 comment|/*  * RAM Physical Address Space (ignoring the above mentioned "hole")  */
@@ -873,8 +830,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|RAM_BEGIN
 end_endif
+
+begin_comment
+comment|/* !RAM_BEGIN */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -950,17 +910,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * Obtained from NetBSD/pc98  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MADDRUNK
-value|-1
-end_define
 
 begin_define
 define|#
@@ -1287,6 +1236,17 @@ end_endif
 begin_comment
 comment|/* KERNEL */
 end_comment
+
+begin_comment
+comment|/*  * Obtained from NetBSD/pc98  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MADDRUNK
+value|-1
+end_define
 
 begin_endif
 endif|#

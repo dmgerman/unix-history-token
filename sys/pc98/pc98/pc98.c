@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: pc98.c,v 1.4 1996/09/03 10:23:47 asami Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: pc98.c,v 1.5 1996/09/07 02:14:09 asami Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * code to manage AT bus  *  * 92/08/18  Frank P. MacLachlan (fpm@cra
 end_comment
 
 begin_comment
-comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *	$Id: pc98.c,v 1.4 1996/09/03 10:23:47 asami Exp $  */
+comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  */
 end_comment
 
 begin_include
@@ -107,18 +107,6 @@ directive|include
 file|<pc98/pc98/pc98.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/ic/i8237.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -130,6 +118,11 @@ directive|include
 file|<i386/isa/isa.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -140,17 +133,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/ic/i8237.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/devconf.h>
 end_include
 
 begin_include
@@ -180,6 +162,64 @@ end_endif
 begin_comment
 comment|/* **  Register definitions for DMA controller 1 (channels 0..3): */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DMA1_CHN
+parameter_list|(
+name|c
+parameter_list|)
+value|(IO_DMA + (chan<<2))
+end_define
+
+begin_comment
+comment|/* addr reg for channel c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA1_SMSK
+value|(IO_DMA + 0x14)
+end_define
+
+begin_comment
+comment|/* single mask register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA1_MODE
+value|(IO_DMA + 0x16)
+end_define
+
+begin_comment
+comment|/* mode register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMA1_FFC
+value|(IO_DMA + 0x18)
+end_define
+
+begin_comment
+comment|/* clear first/last FF */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -227,6 +267,11 @@ end_define
 begin_comment
 comment|/* clear first/last FF */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  Register definitions for DMA controller 2 (channels 4..7): */
@@ -363,128 +408,6 @@ name|char
 name|dt
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|kern_devconf
-name|kdc_cpu0
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|kern_devconf
-name|kdc_isa0
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"nec"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_BUS
-block|,
-literal|0
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|BUS_EXTERNALLEN
-block|,
-operator|&
-name|kdc_cpu0
-block|,
-comment|/* parent is the CPU */
-literal|0
-block|,
-comment|/* no parentdata */
-name|DC_BUSY
-block|,
-comment|/* busses are always busy */
-literal|"PC-9801 C-bus"
-block|,
-name|DC_CLS_BUS
-comment|/* class */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|struct
-name|kern_devconf
-name|kdc_isa0
-init|=
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* filled in by dev_attach */
-literal|"isa"
-block|,
-literal|0
-block|,
-block|{
-name|MDDT_BUS
-block|,
-literal|0
-block|}
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|BUS_EXTERNALLEN
-block|,
-operator|&
-name|kdc_cpu0
-block|,
-comment|/* parent is the CPU */
-literal|0
-block|,
-comment|/* no parentdata */
-name|DC_BUSY
-block|,
-comment|/* busses are always busy */
-literal|"ISA bus"
-block|,
-name|DC_CLS_BUS
-comment|/* class */
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -711,150 +634,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|void
-name|config_pc98dev
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|isdp
-operator|,
-name|u_int
-operator|*
-name|mp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|config_pc98dev_c
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|isdp
-operator|,
-name|u_int
-operator|*
-name|mp
-operator|,
-name|int
-name|reconfig
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|conflict
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|dvp
-operator|,
-expr|struct
-name|isa_device
-operator|*
-name|tmpdvp
-operator|,
-name|int
-name|item
-operator|,
-name|char
-specifier|const
-operator|*
-name|whatnot
-operator|,
-name|char
-specifier|const
-operator|*
-name|reason
-operator|,
-name|char
-specifier|const
-operator|*
-name|format
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|haveseen
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|isa_device
-operator|*
-name|dvp
-operator|,
-expr|struct
-name|isa_device
-operator|*
-name|tmpdvp
-operator|,
-name|u_int
-name|checkbits
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|isa_dmarangecheck
-name|__P
-argument_list|(
-operator|(
-name|caddr_t
-name|va
-operator|,
-name|u_int
-name|length
-operator|,
-name|int
-name|chan
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|inthand2_t
-name|pc98_strayintr
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -987,11 +766,6 @@ name|inthand2_t
 name|isa_strayintr
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1409,7 +1183,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search through all the pc98_devtab_* tables looking for anything that  * conflicts with the current device.  */
+comment|/*  * Search through all the isa_devtab_* tables looking for anything that  * conflicts with the current device.  */
 end_comment
 
 begin_function
@@ -1580,7 +1354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Configure all PC98 devices  */
+comment|/*  * Configure all ISA devices  */
 end_comment
 
 begin_function
@@ -1593,18 +1367,12 @@ name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
-name|dev_attach
-argument_list|(
-operator|&
-name|kdc_isa0
-argument_list|)
-expr_stmt|;
 name|splhigh
 argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Probing for devices on the PC98 bus:\n"
+literal|"Probing for devices on the ISA bus:\n"
 argument_list|)
 expr_stmt|;
 comment|/* First probe all the sensitive probes */
@@ -1629,7 +1397,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1658,7 +1426,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1687,7 +1455,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1716,7 +1484,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1750,7 +1518,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1780,7 +1548,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1810,7 +1578,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1840,7 +1608,7 @@ name|id_driver
 operator|->
 name|sensitive_hw
 condition|)
-name|config_pc98dev
+name|config_isadev
 argument_list|(
 name|dvp
 argument_list|,
@@ -1863,7 +1631,7 @@ name|tty_imask
 operator||=
 name|SWI_TTY_MASK
 expr_stmt|;
-comment|/*  * XXX we should really add the tty device to net_imask when the line is  * switched to SLIPDISC, and then remove it when it is switched away from  * SLIPDISC.  No need to block out ALL ttys during a splimp when only one  * of them is running slip.  *  * XXX actually, blocking all ttys during a splimp doesn't matter so much   * with sio because the serial interrupt layer doesn't use tty_imask.  Only  * non-serial ttys suffer.  It's more stupid that ALL 'net's are blocked  * during spltty.  */
+comment|/*  * XXX we should really add the tty device to net_imask when the line is  * switched to SLIPDISC, and then remove it when it is switched away from  * SLIPDISC.  No need to block out ALL ttys during a splimp when only one  * of them is running slip.  *  * XXX actually, blocking all ttys during a splimp doesn't matter so much  * with sio because the serial interrupt layer doesn't use tty_imask.  Only  * non-serial ttys suffer.  It's more stupid that ALL 'net's are blocked  * during spltty.  */
 include|#
 directive|include
 file|"sl.h"
@@ -1986,13 +1754,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Configure an PC98 device.  */
+comment|/*  * Configure an ISA device.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|config_pc98dev
+name|config_isadev
 parameter_list|(
 name|isdp
 parameter_list|,
@@ -2008,7 +1776,7 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
-name|config_pc98dev_c
+name|config_isadev_c
 argument_list|(
 name|isdp
 argument_list|,
@@ -2038,7 +1806,7 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
-name|config_pc98dev_c
+name|config_isadev_c
 argument_list|(
 name|isdp
 argument_list|,
@@ -2053,7 +1821,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|config_pc98dev_c
+name|config_isadev_c
 parameter_list|(
 name|isdp
 parameter_list|,
@@ -2366,19 +2134,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
-if|if
-condition|(
-name|isdp
-operator|->
-name|id_iobase
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|" on pc98"
+literal|" on isa"
 argument_list|)
 expr_stmt|;
-block|}
 else|#
 directive|else
 if|if
@@ -2449,7 +2209,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Check for conflicts again.  The driver may have  			 * changed *dvp.  We should weaken the early check  			 * since the driver may have been able to change  			 * *dvp to avoid conflicts if given a chance.  We  			 * already skip the early check for IRQs and force  			 * a check for IRQs in the next group of checks. 			 */
+comment|/* 			 * Check for conflicts again.  The driver may have 			 * changed *dvp.  We should weaken the early check 			 * since the driver may have been able to change 			 * *dvp to avoid conflicts if given a chance.  We 			 * already skip the early check for IRQs and force 			 * a check for IRQs in the next group of checks. 			 */
 name|checkbits
 operator||=
 name|CC_IRQ
@@ -2663,129 +2423,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Provide PC98-specific device information to user programs using the  * hw.devconf interface.  */
-end_comment
-
-begin_function
-name|int
-name|isa_externalize
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|,
-name|struct
-name|sysctl_req
-modifier|*
-name|req
-parameter_list|)
-block|{
-return|return
-operator|(
-name|SYSCTL_OUT
-argument_list|(
-name|req
-argument_list|,
-name|id
-argument_list|,
-sizeof|sizeof
-expr|*
-name|id
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * This is used to forcibly reconfigure an PC98 device.  It currently just  * returns an error 'cos you can't do that yet.  It is here to demonstrate  * what the `internalize' routine is supposed to do.  */
-end_comment
-
-begin_function
-name|int
-name|isa_internalize
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|id
-parameter_list|,
-name|struct
-name|sysctl_req
-modifier|*
-name|req
-parameter_list|)
-block|{
-name|struct
-name|isa_device
-name|myid
-decl_stmt|;
-name|int
-name|rv
-decl_stmt|;
-name|rv
-operator|=
-name|SYSCTL_IN
-argument_list|(
-name|req
-argument_list|,
-operator|&
-name|myid
-argument_list|,
-sizeof|sizeof
-expr|*
-name|id
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-condition|)
-return|return
-name|rv
-return|;
-name|rv
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-comment|/* code would go here to validate the configuration request */
-comment|/* code would go here to actually perform the reconfiguration */
-return|return
-name|rv
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|isa_generic_externalize
-parameter_list|(
-name|struct
-name|kern_devconf
-modifier|*
-name|kdc
-parameter_list|,
-name|struct
-name|sysctl_req
-modifier|*
-name|req
-parameter_list|)
-block|{
-return|return
-name|isa_externalize
-argument_list|(
-name|kdc
-operator|->
-name|kdc_isa
-argument_list|,
-name|req
-argument_list|)
-return|;
 block|}
 end_function
 
@@ -3769,17 +3406,10 @@ name|vm_offset_t
 name|phys
 decl_stmt|;
 name|int
-name|modeport
-decl_stmt|,
 name|waport
-decl_stmt|,
-name|mskport
 decl_stmt|;
 name|caddr_t
 name|newaddr
-decl_stmt|;
-name|int
-name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3972,12 +3602,6 @@ operator|)
 name|addr
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-comment|/* mask on */
 ifdef|#
 directive|ifdef
 name|CYRIX_5X86
@@ -3985,33 +3609,23 @@ asm|asm("wbinvd");
 comment|/* wbinvd (WB cache flush) */
 endif|#
 directive|endif
-comment|/* mask channel */
-name|mskport
-operator|=
-name|IO_DMA
-operator|+
-literal|0x14
-expr_stmt|;
-comment|/* 0x15 */
-name|outb
-argument_list|(
-name|mskport
-argument_list|,
+ifndef|#
+directive|ifndef
+name|PC98
+if|if
+condition|(
+operator|(
 name|chan
 operator|&
-literal|3
-operator||
-literal|0x04
-argument_list|)
-expr_stmt|;
+literal|4
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+endif|#
+directive|endif
 comment|/* set dma channel mode, and reset address ff */
-name|modeport
-operator|=
-name|IO_DMA
-operator|+
-literal|0x16
-expr_stmt|;
-comment|/* 0x17 */
 comment|/* If B_RAW flag is set, then use autoinitialise mode */
 if|if
 condition|(
@@ -4028,33 +3642,25 @@ name|B_READ
 condition|)
 name|outb
 argument_list|(
-name|modeport
+name|DMA1_MODE
 argument_list|,
 name|DMA37MD_AUTO
 operator||
 name|DMA37MD_WRITE
 operator||
-operator|(
 name|chan
-operator|&
-literal|3
-operator|)
 argument_list|)
 expr_stmt|;
 else|else
 name|outb
 argument_list|(
-name|modeport
+name|DMA1_MODE
 argument_list|,
 name|DMA37MD_AUTO
 operator||
 name|DMA37MD_READ
 operator||
-operator|(
 name|chan
-operator|&
-literal|3
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4067,59 +3673,42 @@ name|B_READ
 condition|)
 name|outb
 argument_list|(
-name|modeport
+name|DMA1_MODE
 argument_list|,
 name|DMA37MD_SINGLE
 operator||
 name|DMA37MD_WRITE
 operator||
-operator|(
 name|chan
-operator|&
-literal|3
-operator|)
 argument_list|)
 expr_stmt|;
 else|else
 name|outb
 argument_list|(
-name|modeport
+name|DMA1_MODE
 argument_list|,
 name|DMA37MD_SINGLE
 operator||
 name|DMA37MD_READ
 operator||
-operator|(
 name|chan
-operator|&
-literal|3
-operator|)
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|modeport
-operator|+
-literal|1
-operator|*
-literal|2
+name|DMA1_FFC
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 0x19 (clear byte pointer) */
 comment|/* send start address */
 name|waport
 operator|=
-name|IO_DMA
-operator|+
-operator|(
+name|DMA1_CHN
+argument_list|(
 name|chan
-operator|<<
-literal|2
-operator|)
+argument_list|)
 expr_stmt|;
-comment|/* 0x1, 0x5, 0x9, 0xd */
 name|outb
 argument_list|(
 name|waport
@@ -4172,28 +3761,191 @@ literal|8
 argument_list|)
 expr_stmt|;
 comment|/* unmask channel */
-name|mskport
-operator|=
-name|IO_DMA
-operator|+
-literal|0x14
-expr_stmt|;
-comment|/* 0x15 */
 name|outb
 argument_list|(
-name|mskport
+name|DMA1_SMSK
 argument_list|,
 name|chan
 operator|&
 literal|3
 argument_list|)
 expr_stmt|;
-name|splx
+ifndef|#
+directive|ifndef
+name|PC98
+block|}
+else|else
+block|{
+comment|/* 		 * Program one of DMA channels 4..7.  These are 		 * word mode channels. 		 */
+comment|/* set dma channel mode, and reset address ff */
+comment|/* If B_RAW flag is set, then use autoinitialise mode */
+if|if
+condition|(
+name|flags
+operator|&
+name|B_RAW
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|B_READ
+condition|)
+name|outb
 argument_list|(
-name|s
+name|DMA2_MODE
+argument_list|,
+name|DMA37MD_AUTO
+operator||
+name|DMA37MD_WRITE
+operator||
+operator|(
+name|chan
+operator|&
+literal|3
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* mask off */
+else|else
+name|outb
+argument_list|(
+name|DMA2_MODE
+argument_list|,
+name|DMA37MD_AUTO
+operator||
+name|DMA37MD_READ
+operator||
+operator|(
+name|chan
+operator|&
+literal|3
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|B_READ
+condition|)
+name|outb
+argument_list|(
+name|DMA2_MODE
+argument_list|,
+name|DMA37MD_SINGLE
+operator||
+name|DMA37MD_WRITE
+operator||
+operator|(
+name|chan
+operator|&
+literal|3
+operator|)
+argument_list|)
+expr_stmt|;
+else|else
+name|outb
+argument_list|(
+name|DMA2_MODE
+argument_list|,
+name|DMA37MD_SINGLE
+operator||
+name|DMA37MD_READ
+operator||
+operator|(
+name|chan
+operator|&
+literal|3
+operator|)
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|DMA2_FFC
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* send start address */
+name|waport
+operator|=
+name|DMA2_CHN
+argument_list|(
+name|chan
+operator|-
+literal|4
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|waport
+argument_list|,
+name|phys
+operator|>>
+literal|1
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|waport
+argument_list|,
+name|phys
+operator|>>
+literal|9
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|dmapageport
+index|[
+name|chan
+index|]
+argument_list|,
+name|phys
+operator|>>
+literal|16
+argument_list|)
+expr_stmt|;
+comment|/* send count */
+name|nbytes
+operator|>>=
+literal|1
+expr_stmt|;
+name|outb
+argument_list|(
+name|waport
+operator|+
+literal|2
+argument_list|,
+operator|--
+name|nbytes
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|waport
+operator|+
+literal|2
+argument_list|,
+name|nbytes
+operator|>>
+literal|8
+argument_list|)
+expr_stmt|;
+comment|/* unmask channel */
+name|outb
+argument_list|(
+name|DMA2_SMSK
+argument_list|,
+name|chan
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4435,13 +4187,13 @@ directive|ifdef
 name|EPSON_BOUNCEDMA
 define|#
 directive|define
-name|PC98RAM_END
+name|ISARAM_END
 value|0xf00000
 else|#
 directive|else
 define|#
 directive|define
-name|PC98RAM_END
+name|ISARAM_END
 value|RAM_END
 endif|#
 directive|endif
@@ -4460,7 +4212,7 @@ if|if
 condition|(
 name|phys
 operator|>=
-name|PC98RAM_END
+name|ISARAM_END
 condition|)
 return|return
 operator|(
@@ -4786,7 +4538,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pc98_strayintr
+name|isa_strayintr
 parameter_list|(
 name|d
 parameter_list|)
@@ -4898,7 +4650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find an PC98 device in a given isa_devtab_* table, given  * the table to search, the expected id_driver entry, and the unit number.  *  * this function is defined in isa_device.h, and this location is debatable;  * i put it there because it's useless w/o, and directly operates on  * the other stuff in that file.  *  */
+comment|/*  * find an ISA device in a given isa_devtab_* table, given  * the table to search, the expected id_driver entry, and the unit number.  *  * this function is defined in isa_device.h, and this location is debatable;  * i put it there because it's useless w/o, and directly operates on  * the other stuff in that file.  *  */
 end_comment
 
 begin_function
@@ -5261,7 +5013,7 @@ index|[
 name|intr
 index|]
 operator|!=
-name|pc98_strayintr
+name|isa_strayintr
 condition|)
 return|return
 operator|(
@@ -5584,7 +5336,7 @@ index|[
 name|intr
 index|]
 operator|=
-name|pc98_strayintr
+name|isa_strayintr
 expr_stmt|;
 name|intr_mptr
 index|[
