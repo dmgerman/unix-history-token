@@ -2282,6 +2282,7 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* otherwise, rec->length>= bs */
 block|}
 name|EVP_Cipher
 argument_list|(
@@ -2323,7 +2324,7 @@ index|]
 operator|+
 literal|1
 expr_stmt|;
-comment|/* SSL 3.0 bounds the number of padding bytes by the block size; 			 * padding bytes (except that last) are arbitrary */
+comment|/* SSL 3.0 bounds the number of padding bytes by the block size; 			 * padding bytes (except the last one) are arbitrary */
 if|if
 condition|(
 name|i
@@ -2337,6 +2338,7 @@ operator|-
 literal|1
 return|;
 block|}
+comment|/* now i<= bs<= rec->length */
 name|rec
 operator|->
 name|length

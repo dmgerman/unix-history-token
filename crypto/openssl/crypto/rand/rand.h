@@ -183,6 +183,9 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|int
 name|RAND_set_rand_engine
 parameter_list|(
@@ -191,6 +194,8 @@ modifier|*
 name|engine
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|RAND_METHOD
 modifier|*
 name|RAND_SSLeay

@@ -775,7 +775,7 @@ parameter_list|()
 function_decl|;
 name|long
 function_decl|(
-name|_fat
+name|_far
 modifier|*
 name|callback_ctrl
 function_decl|)
@@ -2631,8 +2631,7 @@ parameter_list|,
 name|long
 name|type
 parameter_list|,
-name|unsigned
-name|long
+name|void
 modifier|*
 name|arg
 parameter_list|)

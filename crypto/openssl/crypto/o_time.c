@@ -169,6 +169,12 @@ argument_list|(
 name|timer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ts
+operator|!=
+name|NULL
+condition|)
 name|memcpy
 argument_list|(
 name|result

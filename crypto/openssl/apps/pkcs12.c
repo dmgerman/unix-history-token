@@ -537,12 +537,17 @@ name|CAfile
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|apps_startup
 argument_list|()
 expr_stmt|;
@@ -1595,6 +1600,9 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 block|}
 elseif|else
 if|if
@@ -1631,6 +1639,8 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|badarg
@@ -1914,6 +1924,9 @@ argument_list|,
 literal|"-passout p    output file pass phrase source\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1921,6 +1934,8 @@ argument_list|,
 literal|"-engine e     use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1950,6 +1965,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -1961,6 +1979,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|passarg

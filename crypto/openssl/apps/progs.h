@@ -551,6 +551,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_function_decl
 specifier|extern
 name|int
@@ -566,6 +572,11 @@ index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -890,6 +901,9 @@ block|}
 block|,
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SPEED
 block|{
 name|FUNC_TYPE_GENERAL
 block|,
@@ -898,6 +912,8 @@ block|,
 name|speed_main
 block|}
 block|,
+endif|#
+directive|endif
 if|#
 directive|if
 operator|!
@@ -1053,6 +1069,9 @@ block|,
 name|rand_main
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 block|{
 name|FUNC_TYPE_GENERAL
 block|,
@@ -1061,6 +1080,8 @@ block|,
 name|engine_main
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 name|FUNC_TYPE_GENERAL
 block|,

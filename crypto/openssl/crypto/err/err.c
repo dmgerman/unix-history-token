@@ -810,6 +810,11 @@ block|, 	}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Define the predeclared (but externally opaque) "ERR_FNS" type */
 end_comment
@@ -2027,6 +2032,12 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ERR
+end_ifndef
 
 begin_define
 define|#

@@ -89,11 +89,22 @@ directive|include
 file|<openssl/safestack.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -4428,6 +4439,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|format
@@ -4466,6 +4480,8 @@ goto|goto
 name|end
 goto|;
 block|}
+endif|#
+directive|endif
 name|key
 operator|=
 name|BIO_new
@@ -4819,6 +4835,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|format
@@ -4857,6 +4876,8 @@ goto|goto
 name|end
 goto|;
 block|}
+endif|#
+directive|endif
 name|key
 operator|=
 name|BIO_new
@@ -7025,6 +7046,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_comment
 comment|/* Try to load an engine in a shareable library */
 end_comment
@@ -7298,6 +7325,11 @@ name|e
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int

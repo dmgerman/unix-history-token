@@ -3021,6 +3021,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* OPENSSL_SYS_WIN32 */
+end_comment
+
 begin_decl_stmt
 name|int
 name|SSL_add_dir_cert_subjects_to_stack

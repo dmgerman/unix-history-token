@@ -43,11 +43,22 @@ directive|include
 file|<openssl/x509.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Size of an SSL signature: MD5+SHA1 */
@@ -131,6 +142,9 @@ decl_stmt|;
 name|ASN1_OCTET_STRING
 name|digest
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 operator|(
@@ -173,6 +187,8 @@ argument_list|,
 name|rsa
 argument_list|)
 return|;
+endif|#
+directive|endif
 comment|/* Special case: SSL signature, just check the length */
 if|if
 condition|(
@@ -583,6 +599,9 @@ literal|0
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 operator|(
@@ -625,6 +644,8 @@ argument_list|,
 name|rsa
 argument_list|)
 return|;
+endif|#
+directive|endif
 name|s
 operator|=
 operator|(

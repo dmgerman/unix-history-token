@@ -276,7 +276,7 @@ name|BIND_IMMEDIATE
 operator||
 name|DYNAMIC_PATH
 argument_list|,
-name|NULL
+literal|0L
 argument_list|)
 expr_stmt|;
 if|if

@@ -31,11 +31,22 @@ directive|include
 file|<openssl/err.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -199,6 +210,9 @@ operator|=
 name|enc
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 comment|/* Whether it's nice or not, "Inits" can be used on "Final"'d contexts 	 * so this context may already have an ENGINE! Try to avoid releasing 	 * the previous handle, re-querying for an ENGINE, and having a 	 * reinitialisation, when it may all be unecessary. */
 if|if
 condition|(
@@ -234,6 +248,8 @@ condition|)
 goto|goto
 name|skip_to_init
 goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cipher
@@ -252,6 +268,9 @@ name|encrypt
 operator|=
 name|enc
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|impl
@@ -347,6 +366,8 @@ name|engine
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|ctx
 operator|->
 name|cipher
@@ -439,8 +460,13 @@ return|return
 literal|0
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|skip_to_init
 label|:
+endif|#
+directive|endif
 comment|/* we assume block size is a power of 2 in *cryptUpdate */
 name|OPENSSL_assert
 argument_list|(
@@ -914,13 +940,11 @@ name|iv
 parameter_list|)
 block|{
 return|return
-name|EVP_CipherInit_ex
+name|EVP_CipherInit
 argument_list|(
 name|ctx
 argument_list|,
 name|cipher
-argument_list|,
-name|NULL
 argument_list|,
 name|key
 argument_list|,
@@ -2070,6 +2094,9 @@ operator|->
 name|cipher_data
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|c
@@ -2084,6 +2111,8 @@ operator|->
 name|engine
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|memset
 argument_list|(
 name|c

@@ -14,12 +14,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<openssl/e_os2.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -27,6 +21,49 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_ENGINE
+end_ifdef
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"No ENGINE support\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
 end_include
 
 begin_include
@@ -1059,6 +1096,11 @@ name|to_return
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -273,6 +273,8 @@ operator|&
 name|h
 argument_list|,
 name|cb
+argument_list|,
+name|bio_err
 argument_list|)
 expr_stmt|;
 if|if

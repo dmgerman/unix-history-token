@@ -168,12 +168,17 @@ name|outfile
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|keyfile
@@ -445,6 +450,9 @@ name|argv
 operator|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 block|}
 elseif|else
 if|if
@@ -478,6 +486,8 @@ operator|++
 name|argv
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -749,6 +759,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -760,6 +773,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* FIXME: seed PRNG only if needed */
 name|app_RAND_load_file
 argument_list|(
@@ -1472,6 +1487,9 @@ argument_list|,
 literal|"-hexdump        hex dump output\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1479,6 +1497,8 @@ argument_list|,
 literal|"-engine e       use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

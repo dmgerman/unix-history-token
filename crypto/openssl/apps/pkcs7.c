@@ -116,12 +116,17 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE
 modifier|*
 name|e
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|PKCS7
 modifier|*
 name|p7
@@ -179,12 +184,17 @@ name|ret
 init|=
 literal|1
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|apps_startup
 argument_list|()
 expr_stmt|;
@@ -443,6 +453,9 @@ name|print_certs
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -476,6 +489,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 else|else
 block|{
 name|BIO_printf
@@ -573,6 +588,9 @@ argument_list|,
 literal|" -noout        don't output encoded data\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -580,6 +598,8 @@ argument_list|,
 literal|" -engine e     use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ret
 operator|=
 literal|1
@@ -591,6 +611,9 @@ block|}
 name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -602,6 +625,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|in
 operator|=
 name|BIO_new

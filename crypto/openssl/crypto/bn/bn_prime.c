@@ -241,6 +241,12 @@ argument_list|(
 name|bits
 argument_list|)
 decl_stmt|;
+name|BN_init
+argument_list|(
+operator|&
+name|t
+argument_list|)
+expr_stmt|;
 name|ctx
 operator|=
 name|BN_CTX_new
@@ -281,12 +287,6 @@ else|else
 name|rnd
 operator|=
 name|ret
-expr_stmt|;
-name|BN_init
-argument_list|(
-operator|&
-name|t
-argument_list|)
 expr_stmt|;
 name|loop
 label|:

@@ -723,12 +723,17 @@ name|keyout
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|extensions
@@ -983,6 +988,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -1016,6 +1024,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -2335,6 +2345,9 @@ argument_list|,
 literal|" -nodes         don't encrypt the output key\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -2342,6 +2355,8 @@ argument_list|,
 literal|" -engine e      use engine e, possibly a hardware device\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -2518,7 +2533,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -nameopt arg   - various certificate name options\n"
+literal|" -nameopt arg    - various certificate name options\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -3209,6 +3224,9 @@ condition|)
 goto|goto
 name|end
 goto|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -3220,6 +3238,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|keyfile
@@ -6087,11 +6107,16 @@ operator|&
 name|n_min
 argument_list|)
 condition|)
+block|{
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
 name|n_min
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|buf
@@ -6118,11 +6143,16 @@ operator|&
 name|n_max
 argument_list|)
 condition|)
+block|{
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
 name|n_max
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

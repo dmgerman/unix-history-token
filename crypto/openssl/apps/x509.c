@@ -247,8 +247,13 @@ literal|" -clrext         - delete extensions before signing and input certifica
 block|,
 literal|" -nameopt arg    - various certificate name options\n"
 block|,
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 literal|" -engine e       - use engine e, possibly a hardware device.\n"
 block|,
+endif|#
+directive|endif
 literal|" -certopt arg    - various certificate text options\n"
 block|,
 name|NULL
@@ -746,12 +751,17 @@ name|certflag
 init|=
 literal|0
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|reqfile
 operator|=
 literal|0
@@ -1815,6 +1825,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -1848,6 +1861,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -2423,6 +2438,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -2434,6 +2452,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|need_rand

@@ -2496,7 +2496,7 @@ if|if
 condition|(
 name|tty_in
 operator|!=
-name|stderr
+name|stdin
 condition|)
 name|fclose
 argument_list|(

@@ -53,11 +53,22 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* This is the automatic configuration loader: it is called automatically by  * OpenSSL when any of a number of standard initialisation functions are called,  * unless this is overridden by calling OPENSSL_no_config()  */
@@ -90,10 +101,15 @@ return|return;
 name|OPENSSL_load_builtin_modules
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 comment|/* Need to load ENGINEs */
 name|ENGINE_load_builtin_engines
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Add others here? */
 name|ERR_clear_error
 argument_list|()
