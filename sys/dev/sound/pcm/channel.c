@@ -1560,6 +1560,8 @@ decl_stmt|,
 name|res
 decl_stmt|,
 name|newsize
+decl_stmt|,
+name|count
 decl_stmt|;
 name|long
 name|s
@@ -1713,13 +1715,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Store the initial size in the uio. */
-name|res
-operator|=
-name|buf
-operator|->
-name|uio_resid
-expr_stmt|;
 comment|/* 	 * Fill up the secondary and DMA buffer. 	 * chn_wrfeed*() takes care of the alignment. 	 */
 comment|/* Check for underflow before writing into the buffers. */
 name|chn_checkunderflow
@@ -1781,14 +1776,26 @@ operator|==
 literal|0
 condition|)
 block|{
+name|count
+operator|=
+name|hz
+expr_stmt|;
 comment|/* Wait until all samples are played in blocking mode. */
 while|while
 condition|(
+operator|(
 name|buf
 operator|->
 name|uio_resid
 operator|>
 literal|0
+operator|)
+operator|&&
+operator|(
+name|count
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* Check for underflow before writing into the buffers. */
@@ -1798,6 +1805,12 @@ name|c
 argument_list|)
 expr_stmt|;
 comment|/* Fill up the buffers with new pcm data. */
+name|res
+operator|=
+name|buf
+operator|->
+name|uio_resid
+expr_stmt|;
 while|while
 condition|(
 name|chn_wrfeed2nd
@@ -1810,6 +1823,22 @@ operator|>
 literal|0
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|buf
+operator|->
+name|uio_resid
+operator|<
+name|res
+condition|)
+name|count
+operator|=
+name|hz
+expr_stmt|;
+else|else
+name|count
+operator|--
+expr_stmt|;
 comment|/* Have we finished to feed the secondary buffer? */
 if|if
 condition|(
@@ -1855,6 +1884,31 @@ operator|==
 name|ERESTART
 condition|)
 break|break;
+block|}
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+block|{
+name|c
+operator|->
+name|flags
+operator||=
+name|CHN_F_DEAD
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|c
+operator|->
+name|parent
+operator|->
+name|dev
+argument_list|,
+literal|"play interrupt timeout, channel dead\n"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else

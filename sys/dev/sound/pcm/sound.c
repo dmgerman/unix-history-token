@@ -357,6 +357,12 @@ operator|=
 operator|*
 name|templ
 expr_stmt|;
+name|ch
+operator|->
+name|parent
+operator|=
+name|d
+expr_stmt|;
 if|if
 condition|(
 name|chn_init
@@ -776,6 +782,12 @@ literal|"mixer%d"
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|d
+operator|->
+name|dev
+operator|=
+name|dev
 expr_stmt|;
 name|d
 operator|->

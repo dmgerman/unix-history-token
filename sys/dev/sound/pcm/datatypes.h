@@ -542,6 +542,10 @@ name|buffer
 decl_stmt|,
 name|buffer2nd
 decl_stmt|;
+name|snddev_info
+modifier|*
+name|parent
+decl_stmt|;
 name|void
 modifier|*
 name|devinfo
@@ -626,6 +630,9 @@ decl_stmt|;
 name|pcm_swap_t
 modifier|*
 name|swap
+decl_stmt|;
+name|device_t
+name|dev
 decl_stmt|;
 name|char
 name|status
