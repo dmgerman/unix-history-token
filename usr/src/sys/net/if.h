@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -557,28 +557,6 @@ directive|include
 file|"../net/if_arp.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|ifqueue
-name|ipintrq
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ip packet input queue */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|struct
 name|ifqueue
@@ -607,10 +585,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|ifa_ifwithnet
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ifa_ifwithaf
 argument_list|()
 decl_stmt|;
 end_decl_stmt
