@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disks.c	5.8 (Berkeley) %G%"
+literal|"@(#)disks.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1302,6 +1302,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
+end_ifdef
+
+begin_macro
+name|read_names
+argument_list|()
+end_macro
+
+begin_block
+block|{}
 end_block
 
 begin_endif
