@@ -7347,11 +7347,8 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-name|struct
-name|ohci_pipe
-modifier|*
 name|opipe
-init|=
+operator|=
 operator|(
 expr|struct
 name|ohci_pipe
@@ -7360,7 +7357,7 @@ operator|)
 name|xfer
 operator|->
 name|pipe
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|opipe
