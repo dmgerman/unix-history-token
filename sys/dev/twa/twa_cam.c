@@ -1647,7 +1647,7 @@ name|path_inq
 operator|->
 name|hba_inquiry
 operator|=
-literal|0
+name|PI_WIDE_16
 expr_stmt|;
 name|path_inq
 operator|->
