@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	8.3 (Berkeley) %G%"
+literal|"@(#)fmt.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vis.h>
 end_include
 
 begin_include
@@ -140,7 +146,7 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|1024
+literal|4096
 index|]
 decl_stmt|;
 comment|/* XXX */
@@ -195,37 +201,36 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|strvis
+argument_list|(
+name|dst
+argument_list|,
+name|src
+argument_list|,
+name|VIS_NL
+operator||
+name|VIS_CSTYLE
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
-operator|(
 operator|*
 name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-operator|)
-operator|!=
-literal|0
 condition|)
-continue|continue;
 name|dst
-index|[
-operator|-
-literal|1
-index|]
+operator|++
+expr_stmt|;
+operator|*
+name|dst
+operator|++
 operator|=
 literal|' '
 expr_stmt|;
 block|}
+operator|*
 name|dst
-index|[
-operator|-
-literal|1
-index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
