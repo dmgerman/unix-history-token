@@ -574,7 +574,7 @@ comment|/* 02Micro */
 block|{
 name|PCIC_ID_OZ6832
 block|,
-literal|"O2Mirco OZ6832/6833 PCI-CardBus Bridge"
+literal|"O2Micro OZ6832/6833 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
@@ -582,7 +582,7 @@ block|,
 block|{
 name|PCIC_ID_OZ6860
 block|,
-literal|"O2Mirco OZ6836/6860 PCI-CardBus Bridge"
+literal|"O2Micro OZ6836/6860 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
@@ -590,7 +590,7 @@ block|,
 block|{
 name|PCIC_ID_OZ6872
 block|,
-literal|"O2Mirco OZ6812/6872 PCI-CardBus Bridge"
+literal|"O2Micro OZ6812/6872 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
@@ -598,7 +598,7 @@ block|,
 block|{
 name|PCIC_ID_OZ6912
 block|,
-literal|"O2Mirco OZ6912/6972 PCI-CardBus Bridge"
+literal|"O2Micro OZ6912/6972 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
@@ -606,7 +606,7 @@ block|,
 block|{
 name|PCIC_ID_OZ6922
 block|,
-literal|"O2Mirco OZ6822 PCI-CardBus Bridge"
+literal|"O2Micro OZ6822 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
@@ -614,7 +614,7 @@ block|,
 block|{
 name|PCIC_ID_OZ6933
 block|,
-literal|"O2Mirco OZ6833 PCI-CardBus Bridge"
+literal|"O2Micro OZ6833 PCI-CardBus Bridge"
 block|,
 name|CB_CIRRUS
 block|}
