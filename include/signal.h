@@ -310,10 +310,54 @@ comment|/*  * PR: 35924  * XXX we don't actually have these.  We set _POSIX_REAL
 end_comment
 
 begin_endif
-unit|int	sigqueue(__pid_t, int, const union sigval); struct timespec; int	sigtimedwait(const sigset_t * __restrict, siginfo_t * __restrict, 	    const struct timespec * __restrict); int	sigwaitinfo(const sigset_t * __restrict, siginfo_t * __restrict);
+unit|int	sigqueue(__pid_t, int, const union sigval);
 endif|#
 directive|endif
 end_endif
+
+begin_struct_decl
+struct_decl|struct
+name|timespec
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|sigtimedwait
+parameter_list|(
+specifier|const
+name|sigset_t
+modifier|*
+name|__restrict
+parameter_list|,
+name|siginfo_t
+modifier|*
+name|__restrict
+parameter_list|,
+specifier|const
+name|struct
+name|timespec
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sigwaitinfo
+parameter_list|(
+specifier|const
+name|sigset_t
+modifier|*
+name|__restrict
+parameter_list|,
+name|siginfo_t
+modifier|*
+name|__restrict
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
