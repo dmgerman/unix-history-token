@@ -455,13 +455,6 @@ literal|"3Com 3CCEM556"
 operator|)
 return|;
 default|default:
-name|printf
-argument_list|(
-literal|"Unknown ID: 0x%x\n"
-argument_list|,
-name|id
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -501,7 +494,7 @@ comment|/* 3C572BT */
 case|case
 literal|0x4057
 case|:
-comment|/* 3C574 */
+comment|/* 3C574, 3C574-TX */
 case|case
 literal|0x4b57
 case|:
