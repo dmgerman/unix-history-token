@@ -2279,7 +2279,6 @@ case|:
 comment|/* find a matching video mode */
 return|return
 operator|(
-operator|(
 operator|*
 name|vidsw
 index|[
@@ -2300,11 +2299,6 @@ name|video_info_t
 operator|*
 operator|)
 name|data
-operator|)
-condition|?
-name|ENODEV
-else|:
-literal|0
 operator|)
 return|;
 case|case
