@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_tty.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -168,22 +168,13 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|ttyvp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+operator|!
 name|error
 condition|)
-return|return
-operator|(
 name|error
-operator|)
-return|;
-return|return
-operator|(
+operator|=
 name|VOP_OPEN
 argument_list|(
 name|ttyvp
@@ -194,6 +185,15 @@ name|NOCRED
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|ttyvp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
