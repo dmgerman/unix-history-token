@@ -1682,11 +1682,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|catch_child
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{ }
 end_function
