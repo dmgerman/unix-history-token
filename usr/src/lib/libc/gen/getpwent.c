@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwent.c	5.6 (Berkeley) %G%"
+literal|"@(#)getpwent.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,8 +99,6 @@ decl_stmt|,
 name|_pw_rewind
 init|=
 literal|1
-decl_stmt|,
-name|_pw_set
 decl_stmt|,
 name|_pw_stayopen
 decl_stmt|;
@@ -690,10 +688,6 @@ block|{
 name|_pw_file
 operator|=
 name|file
-expr_stmt|;
-name|_pw_set
-operator|=
-literal|1
 expr_stmt|;
 block|}
 end_function
