@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass2.c,v 1.7 1995/03/19 12:01:23 roberto Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ctm_pass2.c,v 1.8 1995/05/30 03:47:24 rgrimes Exp $  *  */
 end_comment
 
 begin_include
@@ -81,6 +81,12 @@ name|int
 name|ret
 init|=
 literal|0
+decl_stmt|;
+name|char
+name|md5_1
+index|[
+literal|33
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -640,6 +646,8 @@ argument_list|(
 name|MD5File
 argument_list|(
 name|name
+argument_list|,
+name|md5_1
 argument_list|)
 argument_list|,
 name|p
@@ -820,6 +828,8 @@ argument_list|,
 name|MD5File
 argument_list|(
 name|p
+argument_list|,
+name|md5_1
 argument_list|)
 argument_list|)
 condition|)
@@ -868,6 +878,8 @@ name|MD5End
 argument_list|(
 operator|&
 name|ctx
+argument_list|,
+name|md5_1
 argument_list|)
 expr_stmt|;
 name|GETFIELD
