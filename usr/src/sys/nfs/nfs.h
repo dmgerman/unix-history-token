@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ begin_define
 define|#
 directive|define
 name|NFS_HZ
-value|10
+value|25
 end_define
 
 begin_comment
@@ -40,7 +40,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MINTIMEO
-value|(NFS_HZ)
+value|(1*NFS_HZ)
 end_define
 
 begin_comment
@@ -62,22 +62,11 @@ begin_define
 define|#
 directive|define
 name|NFS_MINIDEMTIMEO
-value|(2*NFS_HZ)
-end_define
-
-begin_comment
-comment|/* Min timeout for non-idempotent ops*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_RELIABLETIMEO
 value|(5*NFS_HZ)
 end_define
 
 begin_comment
-comment|/* Min timeout on reliable sockets */
+comment|/* Min timeout for non-idempotent ops*/
 end_comment
 
 begin_define
@@ -116,12 +105,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NFS_FISHY
-value|8
+name|NFS_MAXGRPS
+value|16
 end_define
 
 begin_comment
-comment|/* Host not responding at this count */
+comment|/* Max. size of groups list */
 end_comment
 
 begin_define
@@ -160,12 +149,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NFS_DEFRAHEAD
+value|1
+end_define
+
+begin_comment
+comment|/* Def. read ahead # blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXRAHEAD
+value|4
+end_define
+
+begin_comment
+comment|/* Max. read ahead # blocks */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NFS_MAXREADDIR
 value|NFS_MAXDATA
 end_define
 
 begin_comment
 comment|/* Max. size of directory read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_MAXUIDHASH
+value|64
+end_define
+
+begin_comment
+comment|/* Max. # of hashed uid entries/mp */
 end_comment
 
 begin_define
@@ -201,251 +223,94 @@ value|((a) % nfs_asyncdaemons)
 end_define
 
 begin_comment
-comment|/*  * The set of signals the interrupt an I/O in progress for NFSMNT_INT mounts.  * What should be in this set is open to debate, but I believe that since  * I/O system calls on ufs are never interrupted by signals the set should  * be minimal. My reasoning is that many current programs that use signals  * such as SIGALRM will not expect file I/O system calls to be interrupted  * by them and break.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSINT_SIGMASK
-value|(sigmask(SIGINT)|sigmask(SIGTERM)|sigmask(SIGKILL)| \ 			 sigmask(SIGHUP)|sigmask(SIGQUIT))
-end_define
-
-begin_comment
-comment|/*  * Socket errors ignored for connectionless sockets??  * For now, ignore them all  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFSIGNORE_SOERROR
-parameter_list|(
-name|s
-parameter_list|,
-name|e
-parameter_list|)
-define|\
-value|((e) != EINTR&& (e) != ERESTART&& (e) != EWOULDBLOCK&& \ 		((s)& PR_CONNREQUIRED) == 0)
-end_define
-
-begin_comment
-comment|/*  * Nfs outstanding request list element  */
+comment|/*  * Structures for the nfssvc(2) syscall. Not that anyone but nfsd and mount_nfs  * should ever try and use it.  */
 end_comment
 
 begin_struct
 struct|struct
-name|nfsreq
+name|nfsd_args
 block|{
-name|struct
-name|nfsreq
-modifier|*
-name|r_next
+name|int
+name|sock
 decl_stmt|;
-name|struct
-name|nfsreq
-modifier|*
-name|r_prev
+comment|/* Socket to serve */
+name|caddr_t
+name|name
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|r_mreq
+comment|/* Client address for connection based sockets */
+name|int
+name|namelen
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|r_mrep
-decl_stmt|;
-name|struct
-name|nfsmount
-modifier|*
-name|r_nmp
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|r_vp
-decl_stmt|;
-name|u_long
-name|r_xid
-decl_stmt|;
-name|short
-name|r_flags
-decl_stmt|;
-comment|/* flags on request, see below */
-name|short
-name|r_retry
-decl_stmt|;
-comment|/* max retransmission count */
-name|short
-name|r_rexmit
-decl_stmt|;
-comment|/* current retrans count */
-name|short
-name|r_timer
-decl_stmt|;
-comment|/* tick counter on reply */
-name|short
-name|r_timerinit
-decl_stmt|;
-comment|/* reinit tick counter on reply */
-name|struct
-name|proc
-modifier|*
-name|r_procp
-decl_stmt|;
-comment|/* Proc that did I/O system call */
+comment|/* Length of name */
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Flag values for r_flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_TIMING
-value|0x01
-end_define
-
-begin_comment
-comment|/* timing request (in mntp) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_SENT
-value|0x02
-end_define
-
-begin_comment
-comment|/* request has been sent */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_SOFTTERM
-value|0x04
-end_define
-
-begin_comment
-comment|/* soft mnt, too many retries */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_INTR
-value|0x08
-end_define
-
-begin_comment
-comment|/* intr mnt, signal pending */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_SOCKERR
-value|0x10
-end_define
-
-begin_comment
-comment|/* Fatal error on socket */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_TPRINTFMSG
-value|0x20
-end_define
-
-begin_comment
-comment|/* Did a tprintf msg. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_MUSTRESEND
-value|0x40
-end_define
-
-begin_comment
-comment|/* Must resend request */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Silly rename structure that hangs off the nfsnode until the name  * can be removed by nfs_inactive()  */
-end_comment
-
 begin_struct
 struct|struct
-name|sillyrename
+name|nfsd_srvargs
 block|{
-name|nfsv2fh_t
-name|s_fh
+name|struct
+name|nfsd
+modifier|*
+name|nsd_nfsd
 decl_stmt|;
+comment|/* Pointer to in kernel nfsd struct */
+name|uid_t
+name|nsd_uid
+decl_stmt|;
+comment|/* Effective uid mapped to cred */
+name|u_long
+name|nsd_haddr
+decl_stmt|;
+comment|/* Ip address of client */
 name|struct
 name|ucred
-modifier|*
-name|s_cred
+name|nsd_cr
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|s_dvp
+comment|/* Cred. uid maps to */
+name|int
+name|nsd_authlen
 decl_stmt|;
-name|long
-name|s_namlen
-decl_stmt|;
+comment|/* Length of auth string (ret) */
 name|char
-name|s_name
-index|[
-literal|20
-index|]
+modifier|*
+name|nsd_authstr
 decl_stmt|;
+comment|/* Auth string (ret) */
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* And its flag values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REMOVE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RMDIR
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
+begin_struct
+struct|struct
+name|nfsd_cargs
+block|{
+name|char
+modifier|*
+name|ncd_dirp
+decl_stmt|;
+comment|/* Mount dir path */
+name|uid_t
+name|ncd_authuid
+decl_stmt|;
+comment|/* Effective uid */
+name|int
+name|ncd_authtype
+decl_stmt|;
+comment|/* Type of authenticator */
+name|int
+name|ncd_authlen
+decl_stmt|;
+comment|/* Length of authenticator string */
+name|char
+modifier|*
+name|ncd_authstr
+decl_stmt|;
+comment|/* Authenticator string */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Stats structure  */
@@ -548,9 +413,75 @@ decl_stmt|;
 name|int
 name|srvcache_misses
 decl_stmt|;
+name|int
+name|srvnqnfs_leases
+decl_stmt|;
+name|int
+name|srvnqnfs_maxleases
+decl_stmt|;
+name|int
+name|srvnqnfs_getleases
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Flags for nfssvc() system call.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_BIOD
+value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_NFSD
+value|0x004
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_ADDSOCK
+value|0x008
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_AUTHIN
+value|0x010
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_GOTAUTH
+value|0x040
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_AUTHINFAIL
+value|0x080
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSSVC_MNTD
+value|0x100
+end_define
+
+begin_comment
+comment|/*  * The set of signals the interrupt an I/O in progress for NFSMNT_INT mounts.  * What should be in this set is open to debate, but I believe that since  * I/O system calls on ufs are never interrupted by signals the set should  * be minimal. My reasoning is that many current programs that use signals  * such as SIGALRM will not expect file I/O system calls to be interrupted  * by them and break.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -558,12 +489,556 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|NFSINT_SIGMASK
+value|(sigmask(SIGINT)|sigmask(SIGTERM)|sigmask(SIGKILL)| \ 			 sigmask(SIGHUP)|sigmask(SIGQUIT))
+end_define
+
+begin_comment
+comment|/*  * Socket errors ignored for connectionless sockets??  * For now, ignore them all  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSIGNORE_SOERROR
+parameter_list|(
+name|s
+parameter_list|,
+name|e
+parameter_list|)
+define|\
+value|((e) != EINTR&& (e) != ERESTART&& (e) != EWOULDBLOCK&& \ 		((s)& PR_CONNREQUIRED) == 0)
+end_define
+
+begin_comment
+comment|/*  * Nfs outstanding request list element  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfsreq
+block|{
+name|struct
+name|nfsreq
+modifier|*
+name|r_next
+decl_stmt|;
+name|struct
+name|nfsreq
+modifier|*
+name|r_prev
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|r_mreq
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|r_mrep
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|r_md
+decl_stmt|;
+name|caddr_t
+name|r_dpos
+decl_stmt|;
+name|struct
+name|nfsmount
+modifier|*
+name|r_nmp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|r_vp
+decl_stmt|;
+name|u_long
+name|r_xid
+decl_stmt|;
+name|int
+name|r_flags
+decl_stmt|;
+comment|/* flags on request, see below */
+name|int
+name|r_retry
+decl_stmt|;
+comment|/* max retransmission count */
+name|int
+name|r_rexmit
+decl_stmt|;
+comment|/* current retrans count */
+name|int
+name|r_timer
+decl_stmt|;
+comment|/* tick counter on reply */
+name|int
+name|r_procnum
+decl_stmt|;
+comment|/* NFS procedure number */
+name|int
+name|r_rtt
+decl_stmt|;
+comment|/* RTT for rpc */
+name|struct
+name|proc
+modifier|*
+name|r_procp
+decl_stmt|;
+comment|/* Proc that did I/O system call */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Flag values for r_flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_TIMING
+value|0x01
+end_define
+
+begin_comment
+comment|/* timing request (in mntp) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SENT
+value|0x02
+end_define
+
+begin_comment
+comment|/* request has been sent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SOFTTERM
+value|0x04
+end_define
+
+begin_comment
+comment|/* soft mnt, too many retries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_INTR
+value|0x08
+end_define
+
+begin_comment
+comment|/* intr mnt, signal pending */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_SOCKERR
+value|0x10
+end_define
+
+begin_comment
+comment|/* Fatal error on socket */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_TPRINTFMSG
+value|0x20
+end_define
+
+begin_comment
+comment|/* Did a tprintf msg. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_MUSTRESEND
+value|0x40
+end_define
+
+begin_comment
+comment|/* Must resend request */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|nfsstats
 name|nfsstats
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * A list of nfssvc_sock structures is maintained with all the sockets  * that require service by the nfsd.  * The nfsuid structs hang off of the nfssvc_sock structs in both lru  * and uid hash lists.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUIDHASHSIZ
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUIDHASH
+parameter_list|(
+name|uid
+parameter_list|)
+value|((uid)& (NUIDHASHSIZ - 1))
+end_define
+
+begin_struct
+struct|struct
+name|nfsuid
+block|{
+name|struct
+name|nfsuid
+modifier|*
+name|nu_lrunext
+decl_stmt|;
+comment|/* MUST be first */
+name|struct
+name|nfsuid
+modifier|*
+name|nu_lruprev
+decl_stmt|;
+name|struct
+name|nfsuid
+modifier|*
+name|nu_hnext
+decl_stmt|;
+name|struct
+name|nfsuid
+modifier|*
+name|nu_hprev
+decl_stmt|;
+name|int
+name|nu_flag
+decl_stmt|;
+comment|/* Flags */
+name|uid_t
+name|nu_uid
+decl_stmt|;
+comment|/* Uid mapped by this entry */
+name|union
+name|nethostaddr
+name|nu_haddr
+decl_stmt|;
+comment|/* Host addr. for dgram sockets */
+name|struct
+name|ucred
+name|nu_cr
+decl_stmt|;
+comment|/* Cred uid mapped to */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|nu_inetaddr
+value|nu_haddr.had_inetaddr
+end_define
+
+begin_define
+define|#
+directive|define
+name|nu_nam
+value|nu_haddr.had_nam
+end_define
+
+begin_comment
+comment|/* Bits for nu_flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NU_INETADDR
+value|0x1
+end_define
+
+begin_struct
+struct|struct
+name|nfssvc_sock
+block|{
+name|struct
+name|nfsuid
+modifier|*
+name|ns_lrunext
+decl_stmt|;
+comment|/* MUST be first */
+name|struct
+name|nfsuid
+modifier|*
+name|ns_lruprev
+decl_stmt|;
+name|struct
+name|nfssvc_sock
+modifier|*
+name|ns_next
+decl_stmt|;
+name|struct
+name|nfssvc_sock
+modifier|*
+name|ns_prev
+decl_stmt|;
+name|int
+name|ns_flag
+decl_stmt|;
+name|u_long
+name|ns_sref
+decl_stmt|;
+name|struct
+name|file
+modifier|*
+name|ns_fp
+decl_stmt|;
+name|struct
+name|socket
+modifier|*
+name|ns_so
+decl_stmt|;
+name|int
+name|ns_solock
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|ns_nam
+decl_stmt|;
+name|int
+name|ns_cc
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|ns_raw
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|ns_rawend
+decl_stmt|;
+name|int
+name|ns_reclen
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|ns_rec
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|ns_recend
+decl_stmt|;
+name|int
+name|ns_numuids
+decl_stmt|;
+name|struct
+name|nfsuid
+modifier|*
+name|ns_uidh
+index|[
+name|NUIDHASHSIZ
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Bits for "ns_flag" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLP_VALID
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLP_GOTIT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLP_NEEDQ
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLP_DISCONN
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLP_GETSTREAM
+value|0x10
+end_define
+
+begin_comment
+comment|/*  * One of these structures is allocated for each nfsd.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nfsd
+block|{
+name|struct
+name|nfsd
+modifier|*
+name|nd_next
+decl_stmt|;
+comment|/* Must be first */
+name|struct
+name|nfsd
+modifier|*
+name|nd_prev
+decl_stmt|;
+name|int
+name|nd_flag
+decl_stmt|;
+comment|/* NFSD_ flags */
+name|struct
+name|nfssvc_sock
+modifier|*
+name|nd_slp
+decl_stmt|;
+comment|/* Current socket */
+name|u_long
+name|nd_sref
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|nd_nam
+decl_stmt|;
+comment|/* Client addr for datagram req. */
+name|struct
+name|mbuf
+modifier|*
+name|nd_mrep
+decl_stmt|;
+comment|/* Req. mbuf list */
+name|struct
+name|mbuf
+modifier|*
+name|nd_md
+decl_stmt|;
+name|caddr_t
+name|nd_dpos
+decl_stmt|;
+comment|/* Position in list */
+name|int
+name|nd_procnum
+decl_stmt|;
+comment|/* RPC procedure number */
+name|u_long
+name|nd_retxid
+decl_stmt|;
+comment|/* RPC xid */
+name|int
+name|nd_repstat
+decl_stmt|;
+comment|/* Reply status value */
+name|struct
+name|ucred
+name|nd_cr
+decl_stmt|;
+comment|/* Credentials for req. */
+name|int
+name|nd_nqlflag
+decl_stmt|;
+comment|/* Leasing flag */
+name|int
+name|nd_duration
+decl_stmt|;
+comment|/* Lease duration */
+name|int
+name|nd_authlen
+decl_stmt|;
+comment|/* Authenticator len */
+name|u_char
+name|nd_authstr
+index|[
+name|RPCAUTH_MAXSIZ
+index|]
+decl_stmt|;
+comment|/* Authenticator data */
+name|struct
+name|proc
+modifier|*
+name|nd_procp
+decl_stmt|;
+comment|/* Proc ptr */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NFSD_WAITING
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_CHECKSLP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_REQINPROG
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_NEEDAUTH
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_AUTHFAIL
+value|0x10
+end_define
 
 begin_endif
 endif|#
