@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.8 1993/09/04 05:06:29 jkh Exp $"
+literal|"$Id: perform.c,v 1.3 1993/09/05 04:53:50 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -752,6 +752,14 @@ name|success
 goto|;
 comment|/* close enough for government work */
 block|}
+comment|/* Make sure pkg_info can read the entry */
+name|vsystem
+argument_list|(
+literal|"chmod a+rx %s"
+argument_list|,
+name|LogDir
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fexists

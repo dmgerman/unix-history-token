@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: extract.c,v 1.5 1993/09/04 05:06:26 jkh Exp $"
+literal|"$Id: extract.c,v 1.4 1993/09/06 23:26:21 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ condition|(
 name|p
 condition|)
 block|{
+name|char
+name|cmd
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
 switch|switch
 condition|(
 name|p
@@ -270,28 +276,10 @@ break|break;
 case|case
 name|PLIST_CMD
 case|:
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
+name|format_cmd
 argument_list|(
-literal|"extract: exec cmd '%s' (lastfile = %s)\n"
+name|cmd
 argument_list|,
-name|p
-operator|->
-name|name
-argument_list|,
-name|last_file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|Fake
-operator|&&
-name|vsystem
-argument_list|(
 name|p
 operator|->
 name|name
@@ -300,14 +288,33 @@ name|Directory
 argument_list|,
 name|last_file
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"extract: execute '%s'\n"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Fake
+operator|&&
+name|system
+argument_list|(
+name|cmd
+argument_list|)
 condition|)
 name|whinge
 argument_list|(
 literal|"Command '%s' failed."
 argument_list|,
-name|p
-operator|->
-name|name
+name|cmd
 argument_list|)
 expr_stmt|;
 break|break;
