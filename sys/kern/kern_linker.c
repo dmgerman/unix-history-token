@@ -1018,6 +1018,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|linker_set
+name|modmetadata_set
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1082,6 +1090,20 @@ literal|"modmetadata_set"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|modules
+operator|&&
+name|lf
+operator|==
+name|linker_kernel_file
+condition|)
+name|modules
+operator|=
+operator|&
+name|modmetadata_set
 expr_stmt|;
 name|mcount
 operator|=
