@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.28 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_syscalls.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4797,8 +4797,20 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+name|mp
+operator|->
+name|msg_control
+condition|?
 operator|&
 name|control
+else|:
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|*
+operator|)
+literal|0
 argument_list|,
 operator|&
 name|mp
