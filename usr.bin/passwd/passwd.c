@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: passwd.c,v 1.13 1997/07/31 06:57:47 charnier Exp $"
+literal|"$Id: passwd.c,v 1.14 1998/03/23 14:14:24 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -248,6 +260,10 @@ modifier|*
 name|uflag
 init|=
 literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|k
 decl_stmt|;
 endif|#
 directive|endif
@@ -693,6 +709,24 @@ block|{
 ifdef|#
 directive|ifdef
 name|KERBEROS
+name|k
+operator|=
+name|auth_getval
+argument_list|(
+literal|"auth_list"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|&&
+name|strstr
+argument_list|(
+name|k
+argument_list|,
+literal|"kerberos"
+argument_list|)
+condition|)
 if|if
 condition|(
 name|krb_get_lrealm

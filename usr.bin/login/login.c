@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.37 1998/07/31 07:22:31 bde Exp $"
+literal|"$Id: login.c,v 1.38 1998/08/17 03:25:07 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -836,6 +842,15 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* SKEY */
+ifdef|#
+directive|ifdef
+name|KERBEROS
+name|char
+modifier|*
+name|k
+decl_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -2083,6 +2098,28 @@ else|else
 endif|#
 directive|endif
 comment|/* SKEY */
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+name|k
+operator|=
+name|auth_getval
+argument_list|(
+literal|"auth_list"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|&&
+name|strstr
+argument_list|(
+name|k
+argument_list|,
+literal|"kerberos"
+argument_list|)
+condition|)
 name|rval
 operator|=
 name|klogin
