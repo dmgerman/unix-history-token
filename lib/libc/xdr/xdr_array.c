@@ -210,6 +210,12 @@ operator|(
 name|c
 operator|>
 name|maxsize
+operator|&&
+name|UINT_MAX
+operator|/
+name|elsize
+operator|<
+name|c
 operator|)
 operator|&&
 operator|(
