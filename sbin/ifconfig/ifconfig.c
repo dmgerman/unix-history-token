@@ -1751,7 +1751,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: ifconfig interface address_family [address [dest_address]]"
 argument_list|,
@@ -1760,6 +1760,8 @@ argument_list|,
 literal|"       ifconfig -a [-d] [-u] [address_family]"
 argument_list|,
 literal|"       ifconfig -l [-d] [-u] [address_family]"
+argument_list|,
+literal|"       ifconfig [-d] [-u]"
 argument_list|)
 expr_stmt|;
 else|#
@@ -1768,7 +1770,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: ifconfig [-L] interface address_family [address [dest_address]]"
 argument_list|,
@@ -1777,6 +1779,8 @@ argument_list|,
 literal|"       ifconfig -a [-L] [-d] [-u] [address_family]"
 argument_list|,
 literal|"       ifconfig -l [-d] [-u] [address_family]"
+argument_list|,
+literal|"       ifconfig [-L] [-d] [-u]"
 argument_list|)
 expr_stmt|;
 endif|#
