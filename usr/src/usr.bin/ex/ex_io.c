@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.16 (Berkeley) %G%"
+literal|"@(#)ex_io.c	7.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,23 +55,17 @@ directive|include
 file|"ex_vis.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLOCKFILE
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-endif|FLOCKFILE
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/exec.h>
+end_include
 
 begin_comment
 comment|/*  * File input/output, source, preserve and recover  */
@@ -1700,8 +1694,9 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
-name|short
-name|magic
+name|struct
+name|exec
+name|head
 decl_stmt|;
 specifier|static
 name|int
@@ -1861,21 +1856,24 @@ name|char
 operator|*
 operator|)
 operator|&
-name|magic
+name|head
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|magic
+name|head
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|io
 argument_list|,
-literal|0l
+literal|0L
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 expr_stmt|;
 if|if
@@ -1884,7 +1882,7 @@ name|i
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|magic
+name|head
 argument_list|)
 condition|)
 break|break;
@@ -1893,7 +1891,12 @@ directive|ifndef
 name|vms
 switch|switch
 condition|(
-name|magic
+operator|(
+name|int
+operator|)
+name|head
+operator|.
+name|a_magic
 condition|)
 block|{
 case|case
@@ -1901,11 +1904,11 @@ literal|0405
 case|:
 comment|/* data overlay on exec */
 case|case
-literal|0407
+name|OMAGIC
 case|:
 comment|/* unshared */
 case|case
-literal|0410
+name|NMAGIC
 case|:
 comment|/* shared text */
 case|case
@@ -1913,7 +1916,7 @@ literal|0411
 case|:
 comment|/* separate I/D */
 case|case
-literal|0413
+name|ZMAGIC
 case|:
 comment|/* VM/Unix demand paged */
 case|case
@@ -1941,33 +1944,88 @@ argument_list|(
 literal|" Archive"
 argument_list|)
 expr_stmt|;
-default|default:
-ifdef|#
-directive|ifdef
-name|mbb
-comment|/* C/70 has a 10 bit byte */
-if|if
-condition|(
-name|magic
-operator|&
-literal|03401600
-condition|)
-else|#
-directive|else
-comment|/* Everybody else has an 8 bit byte */
-if|if
-condition|(
-name|magic
-operator|&
-literal|0100200
-condition|)
-endif|#
-directive|endif
+case|case
+literal|070707
+case|:
 name|error
 argument_list|(
-literal|" Non-ascii file"
+literal|" Cpio file"
 argument_list|)
 expr_stmt|;
+default|default:
+block|{
+name|char
+modifier|*
+name|bp
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|head
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|u_char
+operator|)
+name|bp
+index|[
+literal|0
+index|]
+operator|==
+operator|(
+name|u_char
+operator|)
+literal|'\037'
+operator|&&
+operator|(
+name|u_char
+operator|)
+name|bp
+index|[
+literal|1
+index|]
+operator|==
+operator|(
+name|u_char
+operator|)
+literal|'\235'
+condition|)
+name|error
+argument_list|(
+literal|" Compressed file"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|bp
+argument_list|,
+literal|"!<arch>\n__.SYMDEF"
+argument_list|,
+literal|17
+argument_list|)
+operator|||
+operator|!
+name|strncmp
+argument_list|(
+name|bp
+argument_list|,
+literal|"!<arch>\n"
+argument_list|,
+literal|8
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|" Archive"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 endif|#
@@ -4649,14 +4707,14 @@ end_endif
 begin_macro
 name|checkmodeline
 argument_list|(
-argument|line
+argument|l
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|line
+name|l
 decl_stmt|;
 end_decl_stmt
 
@@ -4692,7 +4750,7 @@ name|beg
 operator|=
 name|index
 argument_list|(
-name|line
+name|l
 argument_list|,
 literal|':'
 argument_list|)
@@ -4713,7 +4771,7 @@ operator|-
 literal|3
 index|]
 operator|<
-name|line
+name|l
 condition|)
 return|return;
 if|if
