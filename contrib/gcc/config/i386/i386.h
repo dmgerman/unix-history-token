@@ -2017,7 +2017,7 @@ define|#
 directive|define
 name|CPP_CPU32_SPEC
 define|\
-value|"-Acpu=i386 -Amachine=i386 -D__i386 -D__i386__ %(cpp_cpu32sizet)"
+value|"-Acpu=i386 -Amachine=i386 %{!ansi:%{!std=c*:%{!std=i*:-Di386}}} -D__i386 \ -D__i386__ %(cpp_cpu32sizet)"
 end_define
 
 begin_define
