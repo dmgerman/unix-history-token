@@ -4659,22 +4659,6 @@ operator|==
 name|PROTO_ICOMPD
 condition|)
 block|{
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"ccp_LayerPull: PROTO_%sCOMPDP -> PROTO_IP\n"
-argument_list|,
-operator|*
-name|proto
-operator|==
-name|PROTO_ICOMPD
-condition|?
-literal|"I"
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
 comment|/* Decompress incoming data */
 if|if
 condition|(
@@ -4827,13 +4811,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"ccp_LayerPull: Ignore packet (dict only)\n"
-argument_list|)
-expr_stmt|;
 comment|/* Add incoming Network Layer traffic to our dictionary */
 operator|(
 operator|*
@@ -4873,14 +4850,6 @@ name|bp
 operator|)
 expr_stmt|;
 block|}
-else|else
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"ccp_LayerPull: Ignore packet\n"
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 name|bp
