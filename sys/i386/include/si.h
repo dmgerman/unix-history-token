@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id$  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.h,v 1.1 1995/08/09 13:13:29 peter Exp $  */
 end_comment
 
 begin_comment
@@ -246,20 +246,6 @@ define|#
 directive|define
 name|SLXOS_BUFFERSIZE
 value|256
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIN_TXWATER
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_TXWATER
-value|(SLXOS_BUFFERSIZE-20)
 end_define
 
 begin_typedef
@@ -1279,74 +1265,7 @@ value|0xd
 end_define
 
 begin_comment
-comment|/*#define	CLK110		0xe	?? */
-end_comment
-
-begin_comment
-comment|/*#define	CLK110		0xf	?? */
-end_comment
-
-begin_comment
-comment|/*  * the driver's soft config state  * This is visible via ioctl()'s.  */
-end_comment
-
-begin_struct
-struct|struct
-name|si_softc
-block|{
-name|struct
-name|device
-name|sc_dev
-decl_stmt|;
-comment|/* base device */
-name|int
-name|sc_type
-decl_stmt|;
-comment|/* adapter type */
-name|char
-modifier|*
-name|sc_typename
-decl_stmt|;
-comment|/* adapter type string */
-name|struct
-name|si_port
-modifier|*
-name|sc_ports
-decl_stmt|;
-comment|/* port structures for this card */
-name|caddr_t
-name|sc_paddr
-decl_stmt|;
-comment|/* physical addr of iomem */
-name|caddr_t
-name|sc_maddr
-decl_stmt|;
-comment|/* kvaddr of iomem */
-name|int
-name|sc_nport
-decl_stmt|;
-comment|/* # ports on this card */
-name|int
-name|sc_irq
-decl_stmt|;
-comment|/* copy of attach irq */
-name|int
-name|sc_eisa_iobase
-decl_stmt|;
-comment|/* EISA io port address */
-name|int
-name|sc_eisa_irqbits
-decl_stmt|;
-name|struct
-name|kern_devconf
-name|sc_kdc
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Per-port (channel) soft information structure, stored in the driver.  */
+comment|/*  * Per-port (channel) soft information structure, stored in the driver.  * This is visible via ioctl()'s.  */
 end_comment
 
 begin_struct
@@ -1979,19 +1898,14 @@ decl_stmt|,
 comment|/* 0 - 31 ports per card */
 name|sid_card
 range|:
-literal|1
+literal|2
 decl_stmt|,
-comment|/* 0 - 1 cards */
+comment|/* 0 - 3 cards */
 name|sid_control
 range|:
 literal|1
-decl_stmt|,
-comment|/* controlling device (all cards) */
-name|sid_xprint
-range|:
-literal|1
 decl_stmt|;
-comment|/* xprint version of line */
+comment|/* controlling device (all cards) */
 block|}
 name|sidev_t
 typedef|;
@@ -2012,9 +1926,6 @@ decl_stmt|;
 name|int
 name|x_dbglvl
 decl_stmt|;
-name|int
-name|x_modemflag
-decl_stmt|;
 block|}
 name|tc_action
 union|;
@@ -2034,14 +1945,46 @@ define|#
 directive|define
 name|tc_dbglvl
 value|tc_action.x_dbglvl
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|si_pstat
+block|{
+name|sidev_t
+name|tc_dev
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|si_port
+name|x_siport
+decl_stmt|;
+name|struct
+name|si_channel
+name|x_ccb
+decl_stmt|;
+name|struct
+name|tty
+name|x_tty
+decl_stmt|;
+block|}
+name|tc_action
+union|;
 define|#
 directive|define
-name|tc_modemflag
-value|tc_action.x_modemflag
+name|tc_siport
+value|tc_action.x_siport
 define|#
 directive|define
-name|tc_string
-value|tc_action.x_string
+name|tc_ccb
+value|tc_action.x_ccb
+define|#
+directive|define
+name|tc_tty
+value|tc_action.x_tty
 block|}
 struct|;
 end_struct
@@ -2086,15 +2029,8 @@ begin_comment
 comment|/* TX int throttle */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TCSIMIN
-value|_IOW('S', 99, struct si_tcsi)
-end_define
-
 begin_comment
-comment|/* TX min xfer amount */
+comment|/* 99 defunct */
 end_comment
 
 begin_comment
@@ -2193,12 +2129,9 @@ name|TCSIGIT
 value|_IOWR('S', 111, struct si_tcsi)
 end_define
 
-begin_define
-define|#
-directive|define
-name|TCSIGMIN
-value|_IOWR('S', 112, struct si_tcsi)
-end_define
+begin_comment
+comment|/* 112 defunct */
+end_comment
 
 begin_comment
 comment|/* 113 defunct */
@@ -2261,43 +2194,12 @@ comment|/* set/get h/w flow state */
 end_comment
 
 begin_comment
-comment|/*  * Stuff for downloading and initialising an adapter  */
+comment|/* 121 defunct */
 end_comment
 
-begin_struct
-struct|struct
-name|si_loadcode
-block|{
-name|int
-name|sd_offset
-decl_stmt|;
-name|int
-name|sd_nbytes
-decl_stmt|;
-name|char
-name|sd_bytes
-index|[
-literal|1024
-index|]
-decl_stmt|;
-comment|/* actually larger than this */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|TCSIDOWNLOAD
-value|_IOW('S', 121, struct si_loadcode)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCSIBOOT
-value|_IOR('S', 122, struct si_tcsi)
-end_define
+begin_comment
+comment|/* 122 defunct */
+end_comment
 
 begin_define
 define|#
@@ -2321,11 +2223,48 @@ begin_comment
 comment|/* Number of modules found */
 end_comment
 
+begin_comment
+comment|/* Various stats and monitoring hooks per tty device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCSI_PORT
+value|_IOWR('S', 125, struct si_pstat)
+end_define
+
+begin_comment
+comment|/* get si_port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCSI_CCB
+value|_IOWR('S', 126, struct si_pstat)
+end_define
+
+begin_comment
+comment|/* get si_ccb */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCSI_TTY
+value|_IOWR('S', 127, struct si_pstat)
+end_define
+
+begin_comment
+comment|/* get tty struct */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IOCTL_MAX
-value|124
+value|127
 end_define
 
 begin_define
