@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -158,7 +170,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -172,6 +184,14 @@ condition|)
 return|return
 name|ENOBUFS
 return|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -397,7 +417,7 @@ name|mn
 operator|=
 name|m_get
 argument_list|(
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -847,7 +867,7 @@ name|m
 argument_list|,
 name|size
 argument_list|,
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1294,7 +1314,7 @@ name|m
 operator|=
 name|m_gethdr
 argument_list|(
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|,
 name|MT_DATA
 argument_list|)
@@ -1308,6 +1328,14 @@ condition|)
 return|return
 name|ENOBUFS
 return|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+name|NULL
+expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -2204,7 +2232,7 @@ argument_list|)
 argument_list|,
 name|size
 argument_list|,
-name|M_TRYWAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
