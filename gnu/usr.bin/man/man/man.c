@@ -4953,6 +4953,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|f
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -4966,6 +4970,7 @@ operator|)
 operator|!=
 name|EOF
 condition|)
+block|{
 name|putc
 argument_list|(
 name|s
@@ -4973,8 +4978,16 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+name|f
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
+operator|!
+name|f
+operator|||
+operator|(
 operator|(
 name|s
 operator|=
@@ -4986,6 +4999,7 @@ operator|)
 operator|==
 operator|-
 literal|1
+operator|)
 condition|)
 block|{
 name|s
