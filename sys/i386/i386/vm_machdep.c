@@ -1194,9 +1194,10 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|void
+name|struct
+name|thread
 modifier|*
-name|pcb
+name|td0
 parameter_list|)
 block|{
 name|struct
@@ -1214,7 +1215,9 @@ expr_stmt|;
 comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 * 	 * XXXKSE It might be a good idea to simply skip this as 	 * the values of the other registers may be unimportant. 	 * This would remove any requirement for knowing the KSE 	 * at this time (see the matching comment below for 	 * more analysis) (need a good safe default). 	 */
 name|bcopy
 argument_list|(
-name|pcb
+name|td0
+operator|->
+name|td_pcb
 argument_list|,
 name|pcb2
 argument_list|,
@@ -1226,25 +1229,22 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new thread. 	 * The -16 is so we can expand the trapframe if we go to vm86. 	 * Don't forget to set this stack value into whatever supplies 	 * the address for the fault handlers. 	 * The contexts are filled in at the time we actually DO the 	 * upcall as only then do we know which KSE we got. 	 */
+name|bcopy
+argument_list|(
+name|td0
+operator|->
+name|td_frame
+argument_list|,
 name|td
 operator|->
 name|td_frame
-operator|=
-operator|(
+argument_list|,
+sizeof|sizeof
+argument_list|(
 expr|struct
 name|trapframe
-operator|*
-operator|)
-operator|(
-operator|(
-name|caddr_t
-operator|)
-name|pcb2
-operator|-
-literal|16
-operator|)
-operator|-
-literal|1
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
 ifdef|#

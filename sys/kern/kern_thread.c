@@ -6022,30 +6022,11 @@ name|ku_ksegrp
 argument_list|)
 expr_stmt|;
 comment|/* inherit blocked thread's context */
-name|bcopy
-argument_list|(
-name|td
-operator|->
-name|td_frame
-argument_list|,
-name|td2
-operator|->
-name|td_frame
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|trapframe
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|cpu_set_upcall
 argument_list|(
 name|td2
 argument_list|,
 name|td
-operator|->
-name|td_pcb
 argument_list|)
 expr_stmt|;
 comment|/* Let the new thread become owner of the upcall */

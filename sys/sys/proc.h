@@ -4255,9 +4255,10 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|void
+name|struct
+name|thread
 modifier|*
-name|pcb
+name|td0
 parameter_list|)
 function_decl|;
 end_function_decl
