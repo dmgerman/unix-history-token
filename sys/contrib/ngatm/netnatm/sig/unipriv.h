@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/atm/sig/unipriv.h,v 1.5 2003/09/24 10:27:50 hbb Exp $  *  * Private UNI stuff.  */
+comment|/*  * Copyright (c) 1996-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  * 	All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Author: Hartmut Brandt<harti@freebsd.org>  *  * $Begemot: libunimsg/netnatm/sig/unipriv.h,v 1.17 2004/07/08 08:22:25 brandt Exp $  *  * Private UNI stuff.  */
 end_comment
 
 begin_ifndef
@@ -239,11 +239,11 @@ modifier|*
 name|party
 decl_stmt|;
 comment|/* party to send to */
-name|u_int32_t
+name|uint32_t
 name|sig
 decl_stmt|;
 comment|/* the signal */
-name|u_int32_t
+name|uint32_t
 name|cookie
 decl_stmt|;
 comment|/* user cookie */
@@ -295,7 +295,7 @@ parameter_list|,
 name|enum
 name|party_sig
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|struct
@@ -320,7 +320,7 @@ parameter_list|,
 name|enum
 name|call_sig
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|struct
@@ -345,7 +345,7 @@ parameter_list|,
 name|enum
 name|coord_sig
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|struct
@@ -366,7 +366,7 @@ parameter_list|,
 name|enum
 name|start_sig
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|struct
@@ -391,7 +391,7 @@ parameter_list|,
 name|enum
 name|respond_sig
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
 name|struct
@@ -570,7 +570,7 @@ parameter_list|,
 name|u_int
 name|mine
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 function_decl|;
@@ -832,7 +832,7 @@ parameter_list|,
 name|u_int
 name|mine
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 function_decl|;
@@ -848,7 +848,7 @@ name|struct
 name|uni
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 function_decl|;
@@ -959,7 +959,7 @@ comment|/* delayed signal queue */
 name|int
 name|working
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|cref_alloc
 decl_stmt|;
 name|enum
@@ -1079,13 +1079,13 @@ name|uni
 modifier|*
 name|uni
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|reason
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|state
 parameter_list|)
 function_decl|;
@@ -1100,10 +1100,10 @@ name|call
 modifier|*
 name|c
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|reason
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 function_decl|;
@@ -1118,10 +1118,10 @@ name|party
 modifier|*
 name|p
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|reason
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|cookie
 parameter_list|)
 function_decl|;
@@ -1646,6 +1646,19 @@ define|\
 value|({								\ 	TYPE *_tmp = NULL;					\ 								\ 	if(((API) = uni_msg_alloc(sizeof(TYPE))) != NULL) {	\ 		_tmp = uni_msg_wptr((API), TYPE *);		\ 		(API)->b_wptr += sizeof(TYPE);			\ 		memset(_tmp, 0, sizeof(TYPE));			\ 	}							\ 	_tmp;							\     })
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|<
+literal|3
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1657,12 +1670,10 @@ name|FAC
 parameter_list|,
 name|LEVEL
 parameter_list|,
-name|FMT
-parameter_list|,
 name|ARGS
 modifier|...
 parameter_list|)
-value|do {		\ 	if ((UNI)->debug[(FAC)]>= (LEVEL)) {			\ 		(UNI)->funcs->verbose((UNI), (UNI)->arg, (FAC),	\ 		    FMT , ## ARGS);				\ 	}							\     } while(0)
+value|do {			\ 	if ((UNI)->debug[(FAC)]>= (LEVEL)) {			\ 		(UNI)->funcs->verbose((UNI), (UNI)->arg, (FAC) ,\ 		   ## ARGS);					\ 	}							\     } while(0)
 end_define
 
 begin_define
@@ -1674,13 +1685,51 @@ name|UNI
 parameter_list|,
 name|FAC
 parameter_list|,
-name|FMT
-parameter_list|,
 name|ARGS
 modifier|...
 parameter_list|)
-value|do {			\ 	(UNI)->funcs->verbose((UNI), (UNI)->arg, (FAC), FMT ,	\ 	    ## ARGS);						\     } while(0)
+value|do {			\ 	(UNI)->funcs->verbose((UNI), (UNI)->arg, (FAC) ,	\ 	    ## ARGS);						\     } while(0)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VERBOSE
+parameter_list|(
+name|UNI
+parameter_list|,
+name|FAC
+parameter_list|,
+name|LEVEL
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {			\ 	if ((UNI)->debug[(FAC)]>= (LEVEL)) {			\ 		(UNI)->funcs->verbose((UNI), (UNI)->arg, (FAC),	\ 		    __VA_ARGS__);				\ 	}							\     } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VERBOSE0
+parameter_list|(
+name|UNI
+parameter_list|,
+name|FAC
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {				\ 	(UNI)->funcs->verbose((UNI), (UNI)->arg, (FAC),		\ 	    __VA_ARGS__);					\     } while(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
