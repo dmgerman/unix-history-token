@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ name|u_short
 name|conn_flag
 decl_stmt|;
 name|u_short
-name|conn_sref
+name|conn_spare
 decl_stmt|;
 name|struct
 name|nfssvc_sock
@@ -293,13 +293,6 @@ define|#
 directive|define
 name|lph_nam
 value|lph_un.un_connless.connless_haddr.had_nam
-end_define
-
-begin_define
-define|#
-directive|define
-name|lph_sref
-value|lph_un.un_conn.conn_sref
 end_define
 
 begin_define
@@ -498,6 +491,17 @@ end_define
 
 begin_comment
 comment|/* Recently wrote to the leased file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LC_SREF
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Holds a nfssvc_sock reference */
 end_comment
 
 begin_struct
