@@ -3980,6 +3980,16 @@ if|if
 condition|(
 name|recurse
 condition|)
+block|{
+name|get_sd_info
+argument_list|(
+operator|&
+name|sd
+argument_list|,
+name|sdno
+argument_list|)
+expr_stmt|;
+comment|/* get the info */
 name|reset_drive_stats
 argument_list|(
 name|sd
@@ -3987,6 +3997,8 @@ operator|.
 name|driveno
 argument_list|)
 expr_stmt|;
+comment|/* and clear the drive */
+block|}
 block|}
 end_function
 
