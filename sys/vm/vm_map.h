@@ -1363,6 +1363,9 @@ parameter_list|,
 name|vm_offset_t
 name|addr
 parameter_list|,
+name|vm_prot_t
+name|prot
+parameter_list|,
 name|vm_object_t
 name|object
 parameter_list|,

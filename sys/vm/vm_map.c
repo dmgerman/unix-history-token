@@ -3395,6 +3395,8 @@ name|map
 argument_list|,
 name|start
 argument_list|,
+name|prot
+argument_list|,
 name|object
 argument_list|,
 name|OFF_TO_IDX
@@ -4743,7 +4745,7 @@ value|96
 end_define
 
 begin_comment
-comment|/*  *	vm_map_pmap_enter:  *  *	Preload the mappings for the given object into the specified  *	map.  This eliminates the soft faults on process startup and  *	immediately after an mmap(2).  */
+comment|/*  *	vm_map_pmap_enter:  *  *	Preload read-only mappings for the given object into the specified  *	map.  This eliminates the soft faults on process startup and  *	immediately after an mmap(2).  */
 end_comment
 
 begin_function
@@ -4755,6 +4757,9 @@ name|map
 parameter_list|,
 name|vm_offset_t
 name|addr
+parameter_list|,
+name|vm_prot_t
+name|prot
 parameter_list|,
 name|vm_object_t
 name|object
@@ -4782,6 +4787,14 @@ name|mpte
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|prot
+operator|&
+name|VM_PROT_READ
+operator|)
+operator|==
+literal|0
+operator|||
 name|object
 operator|==
 name|NULL
@@ -5904,6 +5917,10 @@ argument_list|(
 name|map
 argument_list|,
 name|useStart
+argument_list|,
+name|current
+operator|->
+name|protection
 argument_list|,
 name|current
 operator|->
