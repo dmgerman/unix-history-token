@@ -3207,6 +3207,7 @@ return|;
 case|case
 literal|0x14
 case|:
+comment|/* 			 * We can't be picky about numpst since at least 			 * some systems have a value of 1 and some have 2. 			 * We trust that cpuid_is_k7() will be better at 			 * catching that we're on a K8 anyway. 			 */
 if|if
 condition|(
 name|sc
@@ -3214,12 +3215,6 @@ operator|->
 name|pn_type
 operator|!=
 name|PN8_TYPE
-operator|||
-name|psb
-operator|->
-name|numpst
-operator|!=
-literal|1
 condition|)
 return|return
 operator|(
