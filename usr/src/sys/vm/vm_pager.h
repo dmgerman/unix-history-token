@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -19,18 +19,31 @@ directive|define
 name|_VM_PAGER_
 end_define
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|pagerlst
+argument_list|,
+name|pager_struct
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|pager_struct
 block|{
-name|queue_head_t
+name|TAILQ_ENTRY
+argument_list|(
+argument|pager_struct
+argument_list|)
 name|pg_list
-decl_stmt|;
+expr_stmt|;
 comment|/* links for list management */
 name|caddr_t
 name|pg_handle
 decl_stmt|;
-comment|/* external handle (vp, dev, fp) */
+comment|/* ext. handle (vp, dev, fp) */
 name|int
 name|pg_type
 decl_stmt|;
@@ -378,7 +391,8 @@ name|vm_pager_lookup
 name|__P
 argument_list|(
 operator|(
-name|queue_head_t
+expr|struct
+name|pagerlst
 operator|*
 operator|,
 name|caddr_t
