@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ftp.c,v 1.4 1998/07/12 22:34:39 des Exp $  */
+comment|/*-  * Copyright (c) 1998 Dag-Erling Coïdan Smørgrav  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ftp.c,v 1.5 1998/08/17 09:30:19 des Exp $  */
 end_comment
 
 begin_comment
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"fetch.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"common.h"
 end_include
 
 begin_include
@@ -198,111 +204,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Map error code to string  */
-end_comment
-
-begin_function
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|_ftp_errstring
-parameter_list|(
-name|int
-name|e
-parameter_list|)
-block|{
-name|struct
-name|ftperr
-modifier|*
-name|p
-init|=
-name|_ftp_errlist
-decl_stmt|;
-while|while
-condition|(
-operator|(
-name|p
-operator|->
-name|num
-operator|!=
-operator|-
-literal|1
-operator|)
-operator|&&
-operator|(
-name|p
-operator|->
-name|num
-operator|!=
-name|e
-operator|)
-condition|)
-name|p
-operator|++
-expr_stmt|;
-return|return
-name|p
-operator|->
-name|string
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Set error code  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|_ftp_seterr
-parameter_list|(
-name|int
-name|e
-parameter_list|)
-block|{
-name|fetchLastErrCode
-operator|=
-name|e
-expr_stmt|;
-name|fetchLastErrText
-operator|=
-name|_ftp_errstring
-argument_list|(
-name|e
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Set error code according to errno  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|_ftp_syserr
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|fetchLastErrCode
-operator|=
-name|errno
-expr_stmt|;
-name|fetchLastErrText
-operator|=
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Get server response, check that first digit is a '2'  */
 end_comment
 
@@ -363,7 +264,7 @@ literal|4
 operator|)
 condition|)
 block|{
-name|_ftp_syserr
+name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -771,7 +672,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_ftp_syserr
+name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1259,7 +1160,7 @@ name|df
 return|;
 name|sysouch
 label|:
-name|_ftp_syserr
+name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 name|ouch
@@ -1413,7 +1314,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_ftp_syserr
+name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 return|return
@@ -1437,7 +1338,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_ftp_syserr
+name|_fetch_syserr
 argument_list|()
 expr_stmt|;
 goto|goto
