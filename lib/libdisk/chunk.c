@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"libdisk.h"
 end_include
 
@@ -450,7 +444,7 @@ condition|(
 operator|!
 name|c2
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -640,7 +634,7 @@ condition|(
 operator|!
 name|ct
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -770,7 +764,7 @@ condition|(
 operator|!
 name|cs
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -876,7 +870,7 @@ condition|(
 operator|!
 name|cs
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -1248,7 +1242,7 @@ condition|(
 operator|!
 name|c1
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -1280,7 +1274,7 @@ condition|(
 operator|!
 name|c2
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -2072,7 +2066,7 @@ literal|0
 end_if
 
 begin_ifdef
-unit|int Collapse_Chunk(struct disk *d, struct chunk *c1) { 	struct chunk *c2, *c3;  	if(c1->next&& Collapse_Chunk(d,c1->next)) 		return 1;  	if(c1->type == unused&& c1->next&& c1->next->type == unused) { 		c3 = c1->next; 		c1->size += c3->size; 		c1->end = c3->end; 		c1->next = c3->next; 		c3->next = 0; 		Free_Chunk(c3); 		return 1; 	} 	c3 = c1->part; 	if(!c3) 		return 0; 	if (Collapse_Chunk(d,c1->part)) 		return 1;  	if (c1->type == whole) 		return 0;  	if(c3->type == unused&& c3->size == c1->size) { 		Delete_Chunk(d,c1); 		return 1; 	} 	if(c3->type == unused) { 		c2 = new_chunk(); 		if (!c2) err(1,"malloc failed"); 		*c2 = *c1; 		c1->next = c2; 		c1->disk = d;
+unit|int Collapse_Chunk(struct disk *d, struct chunk *c1) { 	struct chunk *c2, *c3;  	if(c1->next&& Collapse_Chunk(d,c1->next)) 		return 1;  	if(c1->type == unused&& c1->next&& c1->next->type == unused) { 		c3 = c1->next; 		c1->size += c3->size; 		c1->end = c3->end; 		c1->next = c3->next; 		c3->next = 0; 		Free_Chunk(c3); 		return 1; 	} 	c3 = c1->part; 	if(!c3) 		return 0; 	if (Collapse_Chunk(d,c1->part)) 		return 1;  	if (c1->type == whole) 		return 0;  	if(c3->type == unused&& c3->size == c1->size) { 		Delete_Chunk(d,c1); 		return 1; 	} 	if(c3->type == unused) { 		c2 = new_chunk(); 		if (!c2) barfout(1,"malloc failed"); 		*c2 = *c1; 		c1->next = c2; 		c1->disk = d;
 ifdef|#
 directive|ifdef
 name|PC98

@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -310,7 +304,7 @@ condition|(
 operator|!
 name|d
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -2189,7 +2183,7 @@ condition|(
 operator|!
 name|d2
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -2853,7 +2847,7 @@ name|d
 operator|->
 name|bootipl
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -2932,7 +2926,7 @@ name|d
 operator|->
 name|bootmenu
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -3013,7 +3007,7 @@ name|d
 operator|->
 name|bootmgr
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -3092,7 +3086,7 @@ name|d
 operator|->
 name|boot1
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -3141,7 +3135,7 @@ name|d
 operator|->
 name|boot2
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -3198,7 +3192,7 @@ name|d
 operator|->
 name|boot1
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,

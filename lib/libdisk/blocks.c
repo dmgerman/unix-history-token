@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"libdisk.h"
 end_include
 
@@ -61,7 +55,7 @@ condition|(
 operator|!
 name|foo
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -87,7 +81,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -107,7 +101,7 @@ argument_list|,
 literal|512
 argument_list|)
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -154,7 +148,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
@@ -174,7 +168,7 @@ argument_list|,
 literal|512
 argument_list|)
 condition|)
-name|err
+name|barfout
 argument_list|(
 literal|1
 argument_list|,
