@@ -3215,6 +3215,13 @@ modifier|*
 name|wakeArg
 decl_stmt|;
 comment|/* Add parity to the appropriate log, one sector at a time. This 	 * routine is called is called by dag functions ParityLogUpdateFunc 	 * and ParityLogOverwriteFunc and therefore MUST BE NONBLOCKING. 	 *  	 * Parity to be logged is contained in a linked-list (logData).  When 	 * this routine returns, every sector in the list will be in one of 	 * three places: 1) entered into the parity log 2) queued, waiting on 	 * reintegration 3) queued, waiting on a core log 	 *  	 * Blocked work is passed to the ParityLoggingDiskManager for completion. 	 * Later, as conditions which required the block are removed, the work 	 * reenters this routine with the "finish" parameter set to "RF_TRUE." 	 *  	 * NON-BLOCKING */
+name|RF_ASSERT
+argument_list|(
+name|logData
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|raidPtr
 operator|=
 name|logData
@@ -3224,13 +3231,6 @@ operator|->
 name|raidPtr
 expr_stmt|;
 comment|/* lock the region for the first item in logData */
-name|RF_ASSERT
-argument_list|(
-name|logData
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 name|regionID
 operator|=
 name|logData
