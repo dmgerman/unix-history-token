@@ -314,7 +314,7 @@ block|}
 block|,
 comment|/* @P@1001 */
 block|{
-literal|0x01100002
+literal|0x01200002
 block|,
 literal|"ALS0120 PnP Joystick"
 block|}
