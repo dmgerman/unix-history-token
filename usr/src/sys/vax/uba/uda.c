@@ -185,6 +185,17 @@ name|NCMD
 value|(1<<NCMDL2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|UDABURST
+value|4
+end_define
+
+begin_comment
+comment|/* default for DMA burst size */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2456,6 +2467,22 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Start the hardware initialization sequence. 	 */
+if|if
+condition|(
+name|udaburst
+index|[
+name|d
+index|]
+operator|==
+literal|0
+condition|)
+name|udaburst
+index|[
+name|d
+index|]
+operator|=
+name|UDABURST
+expr_stmt|;
 name|udaddr
 operator|->
 name|udaip
