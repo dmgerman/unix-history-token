@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: readpass.c,v 1.10 2000/04/14 10:30:32 markus Exp $"
+literal|"$OpenBSD: readpass.c,v 1.11 2000/06/20 01:39:44 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * buffer.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sat Mar 18 04:12:25 1995 ylo  *  * Code for manipulating FIFO buffers.  *  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Code for manipulating FIFO buffers.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: buffer.h,v 1.4 2000/04/14 10:30:30 markus Exp $"); */
+comment|/* RCSID("$OpenBSD: buffer.h,v 1.6 2000/09/07 20:27:50 deraadt Exp $"); */
 end_comment
 
 begin_ifndef

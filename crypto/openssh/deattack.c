@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: deattack.c,v 1.6 1999/11/24 00:26:01 deraadt Exp $  * Cryptographic attack detector for ssh - source code  *  * Copyright (c) 1998 CORE SDI S.A., Buenos Aires, Argentina.  *  * All rights reserved. Redistribution and use in source and binary  * forms, with or without modification, are permitted provided that  * this copyright notice is retained.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES ARE DISCLAIMED. IN NO EVENT SHALL CORE SDI S.A. BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR  * CONSEQUENTIAL DAMAGES RESULTING FROM THE USE OR MISUSE OF THIS  * SOFTWARE.  *  * Ariel Futoransky<futo@core-sdi.com>  *<http://www.core-sdi.com>  */
+comment|/*	$OpenBSD: deattack.c,v 1.9 2000/09/07 20:27:51 deraadt Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Cryptographic attack detector for ssh - source code  *  * Copyright (c) 1998 CORE SDI S.A., Buenos Aires, Argentina.  *  * All rights reserved. Redistribution and use in source and binary  * forms, with or without modification, are permitted provided that  * this copyright notice is retained.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES ARE DISCLAIMED. IN NO EVENT SHALL CORE SDI S.A. BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR  * CONSEQUENTIAL DAMAGES RESULTING FROM THE USE OR MISUSE OF THIS  * SOFTWARE.  *  * Ariel Futoransky<futo@core-sdi.com>  *<http://www.core-sdi.com>  */
 end_comment
 
 begin_include
@@ -159,7 +163,7 @@ expr_stmt|;
 operator|*
 name|a
 operator|=
-name|crc32
+name|ssh_crc32
 argument_list|(
 operator|(
 name|unsigned

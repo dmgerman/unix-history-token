@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * authfd.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Wed Mar 29 01:17:41 1995 ylo  *  * Functions to interface with the SSH_AUTHENTICATION_FD socket.  *  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Functions to interface with the SSH_AUTHENTICATION_FD socket.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: authfd.h,v 1.7 2000/04/14 10:30:30 markus Exp $"); */
+comment|/* RCSID("$OpenBSD: authfd.h,v 1.11 2000/09/07 20:27:49 deraadt Exp $"); */
 end_comment
 
 begin_ifndef
@@ -92,15 +92,61 @@ name|SSH_AGENTC_REMOVE_ALL_RSA_IDENTITIES
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSH2_AGENTC_REQUEST_IDENTITIES
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_AGENT_IDENTITIES_ANSWER
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_AGENTC_SIGN_REQUEST
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_AGENT_SIGN_RESPONSE
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_AGENTC_ADD_IDENTITY
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_AGENTC_REMOVE_IDENTITY
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_AGENTC_REMOVE_ALL_IDENTITIES
+value|19
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
 name|int
 name|fd
-decl_stmt|;
-name|Buffer
-name|packet
 decl_stmt|;
 name|Buffer
 name|identities
@@ -160,69 +206,61 @@ name|ssh_close_authentication_connection
 parameter_list|(
 name|AuthenticationConnection
 modifier|*
-name|ac
+name|auth
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the first authentication identity held by the agent. Returns true  * if an identity is available, 0 otherwise. The caller must initialize the  * integers before the call, and free the comment after a successful call  * (before calling ssh_get_next_identity).  */
+comment|/*  * Returns the first authentication identity held by the agent or NULL if  * no identies are available. Caller must free comment and key.  * Note that you cannot mix calls with different versions.  */
 end_comment
 
 begin_function_decl
-name|int
+name|Key
+modifier|*
 name|ssh_get_first_identity
 parameter_list|(
 name|AuthenticationConnection
 modifier|*
-name|connection
-parameter_list|,
-name|BIGNUM
-modifier|*
-name|e
-parameter_list|,
-name|BIGNUM
-modifier|*
-name|n
+name|auth
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|comment
+parameter_list|,
+name|int
+name|version
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Returns the next authentication identity for the agent.  Other functions  * can be called between this and ssh_get_first_identity or two calls of this  * function.  This returns 0 if there are no more identities.  The caller  * must free comment after a successful return.  */
+comment|/*  * Returns the next authentication identity for the agent.  Other functions  * can be called between this and ssh_get_first_identity or two calls of this  * function.  This returns NULL if there are no more identities.  The caller  * must free key and comment after a successful return.  */
 end_comment
 
 begin_function_decl
-name|int
+name|Key
+modifier|*
 name|ssh_get_next_identity
 parameter_list|(
 name|AuthenticationConnection
 modifier|*
-name|connection
-parameter_list|,
-name|BIGNUM
-modifier|*
-name|e
-parameter_list|,
-name|BIGNUM
-modifier|*
-name|n
+name|auth
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|comment
+parameter_list|,
+name|int
+name|version
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Requests the agent to decrypt the given challenge.  Returns true if    the agent claims it was able to decrypt it. */
+comment|/*  * Requests the agent to decrypt the given challenge.  Returns true if the  * agent claims it was able to decrypt it.  */
 end_comment
 
 begin_function_decl
@@ -233,13 +271,9 @@ name|AuthenticationConnection
 modifier|*
 name|auth
 parameter_list|,
-name|BIGNUM
+name|Key
 modifier|*
-name|e
-parameter_list|,
-name|BIGNUM
-modifier|*
-name|n
+name|key
 parameter_list|,
 name|BIGNUM
 modifier|*
@@ -267,6 +301,43 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Requests the agent to sign data using key */
+end_comment
+
+begin_function_decl
+name|int
+name|ssh_agent_sign
+parameter_list|(
+name|AuthenticationConnection
+modifier|*
+name|auth
+parameter_list|,
+name|Key
+modifier|*
+name|key
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+modifier|*
+name|sigp
+parameter_list|,
+name|int
+modifier|*
+name|lenp
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|datalen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Adds an identity to the authentication server.  This call is not meant to  * be used by normal applications.  This returns true if the identity was  * successfully added.  */
 end_comment
 
@@ -276,9 +347,9 @@ name|ssh_add_identity
 parameter_list|(
 name|AuthenticationConnection
 modifier|*
-name|connection
+name|auth
 parameter_list|,
-name|RSA
+name|Key
 modifier|*
 name|key
 parameter_list|,
@@ -300,9 +371,9 @@ name|ssh_remove_identity
 parameter_list|(
 name|AuthenticationConnection
 modifier|*
-name|connection
+name|auth
 parameter_list|,
-name|RSA
+name|Key
 modifier|*
 name|key
 parameter_list|)
@@ -319,22 +390,10 @@ name|ssh_remove_all_identities
 parameter_list|(
 name|AuthenticationConnection
 modifier|*
-name|connection
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Closes the connection to the authentication agent. */
-end_comment
-
-begin_function_decl
-name|void
-name|ssh_close_authentication
-parameter_list|(
-name|AuthenticationConnection
-modifier|*
-name|connection
+name|auth
+parameter_list|,
+name|int
+name|version
 parameter_list|)
 function_decl|;
 end_function_decl

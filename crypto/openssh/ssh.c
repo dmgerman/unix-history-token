@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 16:36:11 1995 ylo  * Ssh client program.  This program can be used to log into a remote machine.  * The software supports strong authentication, encryption, and forwarding  * of X11, TCP/IP, and authentication connections.  *  * Modified to work with SSL by Niels Provos<provos@citi.umich.edu> in Canada.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Ssh client program.  This program can be used to log into a remote machine.  * The software supports strong authentication, encryption, and forwarding  * of X11, TCP/IP, and authentication connections.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * Copyright (c) 1999 Niels Provos.  All rights reserved.  *  * Modified to work with SSL by Niels Provos<provos@citi.umich.edu>  * in Canada (German citizen).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh.c,v 1.54 2000/05/30 17:32:06 markus Exp $"
+literal|"$OpenBSD: ssh.c,v 1.65 2000/09/07 20:40:30 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"authfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"readconf.h"
 end_include
 
@@ -99,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"authfd.h"
 end_include
 
 begin_include
@@ -937,8 +937,6 @@ name|cp
 argument_list|,
 literal|"rsh"
 argument_list|)
-operator|!=
-literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -946,8 +944,6 @@ name|cp
 argument_list|,
 literal|"ssh"
 argument_list|)
-operator|!=
-literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -955,8 +951,6 @@ name|cp
 argument_list|,
 literal|"rlogin"
 argument_list|)
-operator|!=
-literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -964,8 +958,13 @@ name|cp
 argument_list|,
 literal|"slogin"
 argument_list|)
-operator|!=
-literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"remsh"
+argument_list|)
 condition|)
 name|host
 operator|=
@@ -1929,6 +1928,9 @@ name|command
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|!
+name|no_shell_flag
 condition|)
 name|fatal
 argument_list|(
@@ -2066,6 +2068,17 @@ operator|=
 name|pw
 operator|->
 name|pw_gid
+expr_stmt|;
+name|pwcopy
+operator|.
+name|pw_class
+operator|=
+name|xstrdup
+argument_list|(
+name|pw
+operator|->
+name|pw_class
+argument_list|)
 expr_stmt|;
 name|pwcopy
 operator|.
@@ -2577,7 +2590,7 @@ name|mkdir
 argument_list|(
 name|buf
 argument_list|,
-literal|0755
+literal|0700
 argument_list|)
 operator|<
 literal|0
@@ -2879,9 +2892,13 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XAUTH_PATH
+if|if
+condition|(
+name|options
+operator|.
+name|xauth_location
+condition|)
+block|{
 comment|/* Try to get Xauthority information for the display. */
 name|snprintf
 argument_list|(
@@ -2892,7 +2909,9 @@ name|line
 argument_list|,
 literal|"%.100s list %.200s 2>/dev/null"
 argument_list|,
-name|XAUTH_PATH
+name|options
+operator|.
+name|xauth_location
 argument_list|,
 name|getenv
 argument_list|(
@@ -2951,9 +2970,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* XAUTH_PATH */
+block|}
 comment|/* 	 * If we didn't get authentication data, just make up some 	 * data.  The forwarding code will check the validity of the 	 * response anyway, and substitute this data.  The X11 	 * server, however, will ignore this fake data and use 	 * whatever authentication mechanisms it was using otherwise 	 * for the local connection. 	 */
 if|if
 condition|(
@@ -3800,6 +3817,8 @@ name|escape_char
 else|:
 operator|-
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -4218,28 +4237,50 @@ name|id
 decl_stmt|;
 name|int
 name|in
-init|=
+decl_stmt|,
+name|out
+decl_stmt|,
+name|err
+decl_stmt|;
+if|if
+condition|(
+name|stdin_null_flag
+condition|)
+block|{
+name|in
+operator|=
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+name|O_RDONLY
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|in
+operator|=
 name|dup
 argument_list|(
 name|STDIN_FILENO
 argument_list|)
-decl_stmt|;
-name|int
+expr_stmt|;
+block|}
 name|out
-init|=
+operator|=
 name|dup
 argument_list|(
 name|STDOUT_FILENO
 argument_list|)
-decl_stmt|;
-name|int
+expr_stmt|;
 name|err
-init|=
+operator|=
 name|dup
 argument_list|(
 name|STDERR_FILENO
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|in
@@ -4256,41 +4297,59 @@ literal|0
 condition|)
 name|fatal
 argument_list|(
-literal|"dump in/out/err failed"
+literal|"dup() in/out/err failed"
 argument_list|)
 expr_stmt|;
 comment|/* should be pre-session */
 name|init_local_fwd
 argument_list|()
 expr_stmt|;
+comment|/* If requested, let ssh continue in the background. */
+if|if
+condition|(
+name|fork_after_authentication_flag
+condition|)
+if|if
+condition|(
+name|daemon
+argument_list|(
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"daemon() failed: %.200s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|window
 operator|=
-literal|32
-operator|*
-literal|1024
+name|CHAN_SES_WINDOW_DEFAULT
+expr_stmt|;
+name|packetmax
+operator|=
+name|CHAN_SES_PACKET_DEFAULT
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|tty_flag
 condition|)
-block|{
-name|packetmax
-operator|=
-name|window
-operator|/
-literal|8
-expr_stmt|;
-block|}
-else|else
 block|{
 name|window
 operator|*=
 literal|2
 expr_stmt|;
 name|packetmax
-operator|=
-name|window
-operator|/
+operator|*=
 literal|2
 expr_stmt|;
 block|}
@@ -4353,6 +4412,8 @@ name|escape_char
 else|:
 operator|-
 literal|1
+argument_list|,
+name|id
 argument_list|)
 return|;
 block|}
