@@ -2422,8 +2422,6 @@ argument_list|(
 name|xvp
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_INTERLOCK
 argument_list|,
 name|td
 argument_list|)
