@@ -251,37 +251,6 @@ value|"             Input    Input  Input  Output   Output Output    Cmd\n\ Inte
 end_define
 
 begin_comment
-comment|/*  * External references  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|proto
-name|protos
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|aal
-name|aals
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|encaps
-name|encaps
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Local variables  */
 end_comment
 
@@ -371,6 +340,8 @@ comment|/*  * SIGPVC state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|sigpvc_states
@@ -403,6 +374,8 @@ comment|/*  * SPANS state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|spans_states
@@ -447,6 +420,8 @@ comment|/*  * UNISIG state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|unisig_states
@@ -497,6 +472,8 @@ comment|/*  * SIGPVC VCC state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|sigpvc_vcc_states
@@ -535,6 +512,8 @@ comment|/*  * SPANS VCC state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|spans_vcc_states
@@ -609,6 +588,8 @@ comment|/*  * UNISIG VCC state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|unisig_vcc_states
@@ -719,6 +700,8 @@ comment|/*  * IP VCC state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|ip_vcc_states
@@ -781,6 +764,8 @@ comment|/*  * ARP server state definitions  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|arpserver_states
@@ -837,6 +822,8 @@ comment|/*  * Supported signalling managers  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|proto_state
 name|proto_states
@@ -911,6 +898,8 @@ comment|/*  * ATMARP origin values  */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|state
 name|arp_origins
@@ -987,6 +976,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|atm_addr
@@ -1011,7 +1001,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sain
 decl_stmt|;
 comment|/* 	 * Print a header if it hasn't been done yet. 	 */
 if|if
@@ -1041,11 +1031,15 @@ operator|->
 name|aap_addr
 argument_list|)
 expr_stmt|;
-name|sin
+name|sain
 operator|=
 operator|(
 expr|struct
 name|sockaddr_in
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -1058,7 +1052,7 @@ operator|=
 name|format_ip_addr
 argument_list|(
 operator|&
-name|sin
+name|sain
 operator|->
 name|sin_addr
 argument_list|)
@@ -1253,6 +1247,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|atm_addr
@@ -1487,6 +1482,7 @@ modifier|*
 name|si
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|adapter
@@ -1646,17 +1642,21 @@ name|char
 modifier|*
 name|atm_addr
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sigmgr
 init|=
 literal|"-"
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|state_name
 init|=
 literal|"-"
 decl_stmt|;
+specifier|const
 name|struct
 name|state
 modifier|*
@@ -1953,6 +1953,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ip_addr
@@ -1974,7 +1975,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sain
 decl_stmt|;
 comment|/* 	 * Print a header if it hasn't been done yet. 	 */
 if|if
@@ -1994,11 +1995,15 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Format the IP address 	 */
-name|sin
+name|sain
 operator|=
 operator|(
 expr|struct
 name|sockaddr_in
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -2011,7 +2016,7 @@ operator|=
 name|format_ip_addr
 argument_list|(
 operator|&
-name|sin
+name|sain
 operator|->
 name|sin_addr
 argument_list|)
@@ -2249,6 +2254,7 @@ modifier|*
 name|ni
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|ip_addr
@@ -2256,7 +2262,7 @@ decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sain
 decl_stmt|;
 comment|/* 	 * Print a header 	 */
 if|if
@@ -2275,11 +2281,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Format the protocol address 	 */
-name|sin
+name|sain
 operator|=
 operator|(
 expr|struct
 name|sockaddr_in
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|&
@@ -2292,7 +2302,7 @@ operator|=
 name|format_ip_addr
 argument_list|(
 operator|&
-name|sin
+name|sain
 operator|->
 name|sin_addr
 argument_list|)
@@ -2358,30 +2368,65 @@ name|pi
 operator|->
 name|app_intf
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pi
 operator|->
 name|app_ipdus
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pi
 operator|->
 name|app_ibytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pi
 operator|->
 name|app_ierrors
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pi
 operator|->
 name|app_opdus
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pi
 operator|->
 name|app_obytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pi
 operator|->
 name|app_oerrors
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pi
 operator|->
 name|app_cmderrors
@@ -2525,6 +2570,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|aal_name
@@ -2541,6 +2587,7 @@ name|owner_name
 init|=
 literal|"-"
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|state_name
@@ -2558,6 +2605,7 @@ index|[
 literal|10
 index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|state
 modifier|*
