@@ -6112,14 +6112,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|callout_handle_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sis_stat_ch
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Call MI attach routine. 	 */
 name|ether_ifattach
 argument_list|(
@@ -7825,19 +7817,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-name|sc
-operator|->
-name|sis_stat_ch
-operator|=
-name|timeout
-argument_list|(
-name|sis_tick
-argument_list|,
-name|sc
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 name|SIS_UNLOCK
 argument_list|(
 name|sc
