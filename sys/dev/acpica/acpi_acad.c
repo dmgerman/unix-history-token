@@ -734,23 +734,12 @@ name|initializing
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Also install a system notify handler even though this is not      * required by the specification.  The Casio FIVA needs this.      */
+comment|/*      * Install both system and device notify handlers since the Casio      * FIVA needs them.      */
 name|AcpiInstallNotifyHandler
 argument_list|(
 name|handle
 argument_list|,
-name|ACPI_SYSTEM_NOTIFY
-argument_list|,
-name|acpi_acad_notify_handler
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
-name|AcpiInstallNotifyHandler
-argument_list|(
-name|handle
-argument_list|,
-name|ACPI_DEVICE_NOTIFY
+name|ACPI_ALL_NOTIFY
 argument_list|,
 name|acpi_acad_notify_handler
 argument_list|,
