@@ -185,6 +185,17 @@ name|_MC_VERSION
 value|0x1
 end_define
 
+begin_define
+define|#
+directive|define
+name|_MC_VERSION_KSE
+value|0xee
+end_define
+
+begin_comment
+comment|/* partial ucontext for libpthread */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
