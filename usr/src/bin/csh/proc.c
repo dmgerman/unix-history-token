@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	4.11 (Berkeley) 83/07/01"
+literal|"@(#)proc.c	4.12 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wait.h>
+file|<sys/wait.h>
 end_include
 
 begin_include

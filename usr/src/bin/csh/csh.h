@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* csh.h 4.9 83/06/11 */
+comment|/* csh.h 4.10 83/07/01 */
 end_comment
 
 begin_include
@@ -12,13 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<resource.h>
+file|<sys/resource.h>
 end_include
 
 begin_comment
