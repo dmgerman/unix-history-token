@@ -544,6 +544,7 @@ name|xvu_ino
 decl_stmt|;
 comment|/* id, if VDIR/VREG/VLNK */
 block|}
+name|xv_uns
 struct|;
 block|}
 name|xv_un
@@ -577,14 +578,14 @@ begin_define
 define|#
 directive|define
 name|xv_dev
-value|xv_un.xvu_dev
+value|xv_un.xv_uns.xvu_dev
 end_define
 
 begin_define
 define|#
 directive|define
 name|xv_ino
-value|xv_un.xvu_ino
+value|xv_un.xv_uns.xvu_ino
 end_define
 
 begin_define
