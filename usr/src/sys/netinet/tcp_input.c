@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.94	83/05/14	*/
+comment|/*	tcp_input.c	1.95	83/06/14	*/
 end_comment
 
 begin_include
@@ -2543,7 +2543,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * This is a kludge, but the BBN C70 TCP 		 * randomly sends packets with the urgent flag 		 * set and random ti_urp values.  This crashes 		 * the system because so_oobmark ends up being 		 * interpreted as a negative number in soreceive. 		 */
+comment|/* 		 * This is a kludge, but if we receive accept 		 * random urgent pointers, we'll crash in 		 * soreceive.  It's hard to imagine someone 		 * actually wanting to send this much urgent data. 		 */
 if|if
 condition|(
 name|ti
@@ -2578,7 +2578,7 @@ name|TH_URG
 expr_stmt|;
 comment|/* XXX */
 goto|goto
-name|bbnurp
+name|badurp
 goto|;
 comment|/* XXX */
 block|}
@@ -2681,7 +2681,7 @@ name|ti
 argument_list|)
 expr_stmt|;
 block|}
-name|bbnurp
+name|badurp
 label|:
 comment|/* XXX */
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
