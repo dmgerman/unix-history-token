@@ -1795,8 +1795,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-define|\
-value|*(b) = FASTCALL(hal_lock, a, 0)
+value|*(b) = FASTCALL1(hal_lock, a)
 end_define
 
 begin_define
@@ -1808,8 +1807,27 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-define|\
-value|FASTCALL(hal_unlock, a, b)
+value|FASTCALL2(hal_unlock, a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ntoskrnl_raise_irql
+parameter_list|(
+name|a
+parameter_list|)
+value|FASTCALL1(hal_raise_irql, a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ntoskrnl_lower_irql
+parameter_list|(
+name|a
+parameter_list|)
+value|FASTCALL1(hal_lower_irql, a)
 end_define
 
 begin_endif

@@ -2641,7 +2641,7 @@ argument|OID_AUTO, cfg->ndis_cfg.nc_cfgkey, flag, 	    cfg->ndis_cfg.nc_val, siz
 literal|0
 argument|); }  int ndis_flush_sysctls(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	struct ndis_cfglist	*cfg;  	sc = arg;  	while (!TAILQ_EMPTY(&sc->ndis_cfglist_head)) { 		cfg = TAILQ_FIRST(&sc->ndis_cfglist_head); 		TAILQ_REMOVE(&sc->ndis_cfglist_head, cfg, link); 		free(cfg->ndis_cfg.nc_cfgkey, M_DEVBUF); 		free(cfg->ndis_cfg.nc_cfgdesc, M_DEVBUF); 		free(cfg, M_DEVBUF); 	}  	return(
 literal|0
-argument|); }  static void ndis_return(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	__stdcall ndis_return_handler	returnfunc; 	ndis_handle		adapter; 	ndis_packet		*p; 	uint8_t			irql;  	p = arg; 	sc = p->np_softc; 	adapter = sc->ndis_block.nmb_miniportadapterctx;  	if (adapter == NULL) 		return;  	returnfunc = sc->ndis_chars.nmc_return_packet_func; 	irql = FASTCALL1(hal_raise_irql, DISPATCH_LEVEL); 	returnfunc(adapter, p); 	FASTCALL1(hal_lower_irql, irql);  	return; }  void ndis_return_packet(buf, arg) 	void			*buf;
+argument|); }  static void ndis_return(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	__stdcall ndis_return_handler	returnfunc; 	ndis_handle		adapter; 	ndis_packet		*p; 	uint8_t			irql;  	p = arg; 	sc = p->np_softc; 	adapter = sc->ndis_block.nmb_miniportadapterctx;  	if (adapter == NULL) 		return;  	returnfunc = sc->ndis_chars.nmc_return_packet_func; 	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	returnfunc(adapter, p); 	ntoskrnl_lower_irql(irql);  	return; }  void ndis_return_packet(buf, arg) 	void			*buf;
 comment|/* not used */
 argument|void			*arg; { 	ndis_packet		*p;  	if (arg == NULL) 		return;  	p = arg;
 comment|/* Decrement refcount. */
@@ -2689,19 +2689,19 @@ argument|); }  int ndis_set_info(arg, oid, buf, buflen) 	void			*arg; 	ndis_oid	
 literal|0
 argument|, bytesneeded =
 literal|0
-argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	setfunc = sc->ndis_chars.nmc_setinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || setfunc == NULL) 		return(ENXIO);  	irql = FASTCALL1(hal_raise_irql, DISPATCH_LEVEL); 	rval = setfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	FASTCALL1(hal_lower_irql, irql);  	if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		error = msleep(&sc->ndis_block.nmb_wkupdpctimer,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
+argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	setfunc = sc->ndis_chars.nmc_setinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || setfunc == NULL) 		return(ENXIO);  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	rval = setfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	ntoskrnl_lower_irql(irql);  	if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		error = msleep(&sc->ndis_block.nmb_wkupdpctimer,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisset"
 argument|,
 literal|5
 argument|* hz); 		rval = sc->ndis_block.nmb_setstat; 	}  	if (byteswritten) 		*buflen = byteswritten; 	if (bytesneeded) 		*buflen = bytesneeded;  	if (rval == NDIS_STATUS_INVALID_LENGTH) 		return(ENOSPC);  	if (rval == NDIS_STATUS_INVALID_OID) 		return(EINVAL);  	if (rval == NDIS_STATUS_NOT_SUPPORTED || 	    rval == NDIS_STATUS_NOT_ACCEPTED) 		return(ENOTSUP);  	if (rval != NDIS_STATUS_SUCCESS) 		return(ENODEV);  	return(
 literal|0
-argument|); }  typedef void (*ndis_senddone_func)(ndis_handle, ndis_packet *, ndis_status);  int ndis_send_packets(arg, packets, cnt) 	void			*arg; 	ndis_packet		**packets; 	int			cnt; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_sendmulti_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	int			i; 	ndis_packet		*p; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars.nmc_sendmulti_func; 	senddonefunc = sc->ndis_block.nmb_senddone_func; 	irql = FASTCALL1(hal_raise_irql, DISPATCH_LEVEL); 	sendfunc(adapter, packets, cnt); 	FASTCALL1(hal_lower_irql, irql);  	for (i =
+argument|); }  typedef void (*ndis_senddone_func)(ndis_handle, ndis_packet *, ndis_status);  int ndis_send_packets(arg, packets, cnt) 	void			*arg; 	ndis_packet		**packets; 	int			cnt; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_sendmulti_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	int			i; 	ndis_packet		*p; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars.nmc_sendmulti_func; 	senddonefunc = sc->ndis_block.nmb_senddone_func; 	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	sendfunc(adapter, packets, cnt); 	ntoskrnl_lower_irql(irql);  	for (i =
 literal|0
 argument|; i< cnt; i++) { 		p = packets[i];
 comment|/* 		 * Either the driver already handed the packet to 		 * ndis_txeof() due to a failure, or it wants to keep 		 * it and release it asynchronously later. Skip to the 		 * next one. 		 */
 argument|if (p == NULL || p->np_oob.npo_status == NDIS_STATUS_PENDING) 			continue; 		senddonefunc(&sc->ndis_block, p, p->np_oob.npo_status); 	}  	return(
 literal|0
-argument|); }  int ndis_send_packet(arg, packet) 	void			*arg; 	ndis_packet		*packet; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_status		status; 	__stdcall ndis_sendsingle_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars.nmc_sendsingle_func; 	senddonefunc = sc->ndis_block.nmb_senddone_func;  	irql = FASTCALL1(hal_raise_irql, DISPATCH_LEVEL); 	status = sendfunc(adapter, packet, packet->np_private.npp_flags); 	FASTCALL1(hal_lower_irql, irql);  	if (status == NDIS_STATUS_PENDING) 		return(
+argument|); }  int ndis_send_packet(arg, packet) 	void			*arg; 	ndis_packet		*packet; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	ndis_status		status; 	__stdcall ndis_sendsingle_handler	sendfunc; 	__stdcall ndis_senddone_func		senddonefunc; 	uint8_t			irql;  	sc = arg; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	if (adapter == NULL) 		return(ENXIO); 	sendfunc = sc->ndis_chars.nmc_sendsingle_func; 	senddonefunc = sc->ndis_block.nmb_senddone_func;  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	status = sendfunc(adapter, packet, packet->np_private.npp_flags); 	ntoskrnl_lower_irql(irql);  	if (status == NDIS_STATUS_PENDING) 		return(
 literal|0
 argument|);  	senddonefunc(&sc->ndis_block, packet, status);  	return(
 literal|0
@@ -2717,7 +2717,7 @@ argument|; i< sc->ndis_maxpkts; i++) { 		if (sc->ndis_txarray[i] != NULL) { 			p
 literal|1
 argument|]; 			if (m != NULL) 				m_freem(m); 			ndis_free_packet(sc->ndis_txarray[i]); 		} 		bus_dmamap_destroy(sc->ndis_ttag, sc->ndis_tmaps[i]); 	}  	free(sc->ndis_tmaps, M_DEVBUF);  	bus_dma_tag_destroy(sc->ndis_ttag);  	return(
 literal|0
-argument|); }  int ndis_reset_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_reset_handler	resetfunc; 	uint8_t			addressing_reset; 	struct ifnet		*ifp; 	int			rval; 	uint8_t			irql;  	sc = arg; 	ifp =&sc->arpcom.ac_if; 	NDIS_LOCK(sc); 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	resetfunc = sc->ndis_chars.nmc_reset_func; 	NDIS_UNLOCK(sc); 	if (adapter == NULL || resetfunc == NULL) 		return(EIO);  	irql = FASTCALL1(hal_raise_irql, DISPATCH_LEVEL); 	rval = resetfunc(&addressing_reset, adapter); 	FASTCALL1(hal_lower_irql, irql);  	if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		msleep(sc,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
+argument|); }  int ndis_reset_nic(arg) 	void			*arg; { 	struct ndis_softc	*sc; 	ndis_handle		adapter; 	__stdcall ndis_reset_handler	resetfunc; 	uint8_t			addressing_reset; 	struct ifnet		*ifp; 	int			rval; 	uint8_t			irql;  	sc = arg; 	ifp =&sc->arpcom.ac_if; 	NDIS_LOCK(sc); 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	resetfunc = sc->ndis_chars.nmc_reset_func; 	NDIS_UNLOCK(sc); 	if (adapter == NULL || resetfunc == NULL) 		return(EIO);  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	rval = resetfunc(&addressing_reset, adapter); 	ntoskrnl_lower_irql(irql);  	if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		msleep(sc,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisrst"
 argument|,
 literal|0
@@ -2747,7 +2747,7 @@ argument|); }  int ndis_get_info(arg, oid, buf, buflen) 	void			*arg; 	ndis_oid	
 literal|0
 argument|, bytesneeded =
 literal|0
-argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	queryfunc = sc->ndis_chars.nmc_queryinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || queryfunc == NULL) 		return(ENXIO);  	irql = FASTCALL1(hal_raise_irql, DISPATCH_LEVEL); 	rval = queryfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	FASTCALL1(hal_lower_irql, irql);
+argument|; 	int			error; 	uint8_t			irql;  	sc = arg; 	NDIS_LOCK(sc); 	queryfunc = sc->ndis_chars.nmc_queryinfo_func; 	adapter = sc->ndis_block.nmb_miniportadapterctx; 	NDIS_UNLOCK(sc);  	if (adapter == NULL || queryfunc == NULL) 		return(ENXIO);  	irql = ntoskrnl_raise_irql(DISPATCH_LEVEL); 	rval = queryfunc(adapter, oid, buf, *buflen,&byteswritten,&bytesneeded); 	ntoskrnl_lower_irql(irql);
 comment|/* Wait for requests that block. */
 argument|if (rval == NDIS_STATUS_PENDING) { 		PROC_LOCK(curthread->td_proc); 		error = msleep(&sc->ndis_block.nmb_wkupdpctimer,&curthread->td_proc->p_mtx, 		    curthread->td_priority|PDROP,
 literal|"ndisget"
