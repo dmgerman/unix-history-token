@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.27 1999/06/10 00:17:26 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.28 1999/07/24 02:53:39 brian Exp $  */
 end_comment
 
 begin_include
@@ -2139,6 +2139,8 @@ operator|->
 name|cnt
 argument_list|)
 expr_stmt|;
+name|bp
+operator|=
 name|mbuf_Read
 argument_list|(
 name|bp
