@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.16 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,19 @@ name|X_HPDINIT
 value|(X_END+1)
 block|{
 literal|"_hp_dinit"
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|mips
+define|#
+directive|define
+name|X_SCSI_DINIT
+value|(X_END+1)
+block|{
+literal|"_scsi_dinit"
 block|}
 block|,
 endif|#
