@@ -594,7 +594,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|ffs_reclaim
+name|ufs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1138,7 +1138,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|ffs_reclaim
+name|ufs_reclaim
 block|}
 block|,
 comment|/* reclaim */
@@ -1682,7 +1682,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|ffs_reclaim
+name|ufs_reclaim
 block|}
 block|,
 comment|/* reclaim */

@@ -436,6 +436,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|malloc_type_t
+name|M_EXT2NODE
+init|=
+block|{
+literal|"EXT2 nodes"
+block|,
+literal|"EXT2 Filsystem inodes"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|vfsops
@@ -3325,6 +3337,12 @@ expr|*
 name|ump
 argument_list|)
 expr_stmt|;
+name|ump
+operator|->
+name|um_malloctype
+operator|=
+name|M_EXT2NODE
+expr_stmt|;
 comment|/* I don't know whether this is the right strategy. Note that 	   we dynamically allocate both a ext2_sb_info and a ext2_super_block 	   while Linux keeps the super block in a locked buffer 	 */
 name|ump
 operator|->
@@ -4789,8 +4807,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|type
-decl_stmt|,
 name|error
 decl_stmt|;
 name|int
@@ -4903,22 +4919,6 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* I don't really know what this 'type' does. I suppose it's some kind 	 * of memory accounting. Let's just book this memory on FFS's account  	 * If I'm not mistaken, this stuff isn't implemented anyway in Lites 	 */
-name|type
-operator|=
-name|ump
-operator|->
-name|um_devvp
-operator|->
-name|v_tag
-operator|==
-name|VT_MFS
-condition|?
-name|M_MFSNODE
-else|:
-name|M_FFSNODE
-expr_stmt|;
-comment|/* XXX */
 name|MALLOC
 argument_list|(
 name|ip
@@ -4933,7 +4933,7 @@ expr|struct
 name|inode
 argument_list|)
 argument_list|,
-name|type
+name|M_EXT2NODE
 argument_list|,
 name|M_WAITOK
 argument_list|)
