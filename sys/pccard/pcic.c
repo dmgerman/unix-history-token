@@ -149,6 +149,17 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
+name|pcicintr1
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|pcic_ioctl
 parameter_list|(
 name|struct
@@ -4042,6 +4053,28 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Wrapper function for pcicintr so that signatures match.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|pcicintr
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|pcicintr1
+argument_list|(
+name|arg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	PCIC timer.  If the controller doesn't have a free IRQ to use  *	or if interrupt steering doesn't work, poll the controller for  *	insertion/removal events.  */
 end_comment
 
@@ -4055,11 +4088,28 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
-name|pcicintr
+if|if
+condition|(
+name|pcicintr1
 argument_list|(
 name|chan
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pcic%d: Static bug detected, ignoring hardware.\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|chan
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|pcictimeout_ch
 operator|=
 name|timeout
@@ -4082,8 +4132,8 @@ end_comment
 
 begin_function
 specifier|static
-name|void
-name|pcicintr
+name|int
+name|pcicintr1
 parameter_list|(
 name|void
 modifier|*
@@ -4234,19 +4284,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 				 * if chg is 0xff, then we know that 				 * we've hit the famous "static bug" for 				 * some desktop pcmcia cards.  This is 				 * caused by static discharge frying the 				 * poor card's mind and it starts return 0xff 				 * forever.  We return an error and stop 				 * polling the card.  When we're interrupt 				 * based, we never see this.  The card just 				 * goes away silently. 				 */
 if|if
 condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Slot %d chg = 0x%x\n"
-argument_list|,
-name|slot
-argument_list|,
 name|chg
+operator|==
+literal|0xff
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|chg
@@ -4312,6 +4368,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
