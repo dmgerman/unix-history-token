@@ -15,7 +15,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|%
 name|G
 operator|%
@@ -260,7 +260,7 @@ name|tTd
 argument_list|(
 literal|5
 argument_list|,
-literal|2
+literal|5
 argument_list|)
 condition|)
 name|printf
@@ -339,7 +339,7 @@ name|tTd
 argument_list|(
 literal|5
 argument_list|,
-literal|2
+literal|5
 argument_list|)
 condition|)
 name|printf
@@ -472,7 +472,7 @@ name|tTd
 argument_list|(
 literal|5
 argument_list|,
-literal|1
+literal|4
 argument_list|)
 condition|)
 name|printf
@@ -530,7 +530,7 @@ name|tTd
 argument_list|(
 literal|5
 argument_list|,
-literal|3
+literal|6
 argument_list|)
 condition|)
 name|printf

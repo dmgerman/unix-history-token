@@ -21,7 +21,7 @@ operator|)
 name|macro
 operator|.
 name|c
-literal|3.15
+literal|3.16
 operator|%
 name|G
 operator|%
@@ -195,6 +195,16 @@ endif|DEBUG
 name|skipping
 operator|=
 name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|s
+operator|=
+literal|""
 expr_stmt|;
 for|for
 control|(
@@ -376,7 +386,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"expand ==> '"
+literal|"expand ==> "
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -386,7 +396,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"'\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

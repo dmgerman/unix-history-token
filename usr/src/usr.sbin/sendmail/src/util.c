@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.30
+literal|3.31
 operator|%
 name|G
 operator|%
@@ -565,12 +565,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|44
+argument_list|)
+condition|)
 name|printf
 argument_list|(
-literal|"\t%08x="
+literal|"\n\t%08x="
 argument_list|,
 operator|*
 name|av
+argument_list|)
+expr_stmt|;
+else|else
+name|putchar
+argument_list|(
+literal|' '
 argument_list|)
 expr_stmt|;
 name|xputs
@@ -580,12 +595,12 @@ name|av
 operator|++
 argument_list|)
 expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -686,6 +701,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|putchar
+argument_list|(
+literal|'"'
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -742,6 +762,11 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+name|putchar
+argument_list|(
+literal|'"'
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
