@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)signal.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,16 @@ directive|define
 name|NSIG
 value|32
 end_define
+
+begin_include
+include|#
+directive|include
+file|<machine/trap.h>
+end_include
+
+begin_comment
+comment|/* codes for SIGILL, SIGFPE */
+end_comment
 
 begin_define
 define|#
@@ -58,43 +68,6 @@ end_define
 
 begin_comment
 comment|/* illegal instruction (not reset when caught) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ILL_RESAD_FAULT
-value|0x0
-end_define
-
-begin_comment
-comment|/* reserved addressing fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ILL_PRIVIN_FAULT
-value|0x1
-end_define
-
-begin_comment
-comment|/* privileged instruction fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ILL_RESOP_FAULT
-value|0x2
-end_define
-
-begin_comment
-comment|/* reserved operand fault */
-end_comment
-
-begin_comment
-comment|/* CHME, CHMS, CHMU are not yet given back to users reasonably */
 end_comment
 
 begin_define
@@ -150,116 +123,6 @@ end_define
 
 begin_comment
 comment|/* floating point exception */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_INTOVF_TRAP
-value|0x1
-end_define
-
-begin_comment
-comment|/* integer overflow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_INTDIV_TRAP
-value|0x2
-end_define
-
-begin_comment
-comment|/* integer divide by zero */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_FLTOVF_TRAP
-value|0x3
-end_define
-
-begin_comment
-comment|/* floating overflow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_FLTDIV_TRAP
-value|0x4
-end_define
-
-begin_comment
-comment|/* floating/decimal divide by zero */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_FLTUND_TRAP
-value|0x5
-end_define
-
-begin_comment
-comment|/* floating underflow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_DECOVF_TRAP
-value|0x6
-end_define
-
-begin_comment
-comment|/* decimal overflow */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_SUBRNG_TRAP
-value|0x7
-end_define
-
-begin_comment
-comment|/* subscript out of range */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_FLTOVF_FAULT
-value|0x8
-end_define
-
-begin_comment
-comment|/* floating overflow fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_FLTDIV_FAULT
-value|0x9
-end_define
-
-begin_comment
-comment|/* divide by zero floating fault */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FPE_FLTUND_FAULT
-value|0xa
-end_define
-
-begin_comment
-comment|/* floating underflow fault */
 end_comment
 
 begin_define
