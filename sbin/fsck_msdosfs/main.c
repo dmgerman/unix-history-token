@@ -240,7 +240,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"pynf"
+literal|"fFnpy"
 argument_list|)
 operator|)
 operator|!=
@@ -257,6 +257,16 @@ case|case
 literal|'f'
 case|:
 comment|/* 			 * We are always forced, since we don't 			 * have a clean flag 			 */
+break|break;
+case|case
+literal|'F'
+case|:
+comment|/* We can never run in background */
+name|exit
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'n'
