@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufsmount.h	4.3	81/02/26	*/
+comment|/*	ufsmount.h	4.4	82/07/19	*/
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ modifier|*
 name|m_inodp
 decl_stmt|;
 comment|/* pointer to mounted on inode */
+name|struct
+name|inode
+modifier|*
+name|m_qinod
+decl_stmt|;
+comment|/* QUOTA: pointer to quota file */
 block|}
 struct|;
 end_struct
