@@ -337,13 +337,12 @@ begin_comment
 comment|/* Define if you have the bpf_dump function.  */
 end_comment
 
-begin_comment
-comment|/* XXX Temporary, until merge of libpcap 0.6 */
-end_comment
-
-begin_comment
-comment|/* #define HAVE_BPF_DUMP 1 */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_BPF_DUMP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the ether_ntohost function.  */
