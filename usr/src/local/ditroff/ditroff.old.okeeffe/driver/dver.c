@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * dver.c - Versatec driver for the new troff  *  * Authors:	BWK(BELL), VCAT(berkley), and Richard L. Hyde  *		Many parts where lifted from the above sources.  * Editor:	Richard L. Hyde  * 		Dept. of Computer Sciences  * 		Purdue University  * Date:	Thu Oct 28 1982  */
+comment|/* dver.c	1.2	83/05/19  *  * dver.c - Versatec driver for the new troff  *  * Authors:	BWK(BELL), VCAT(berkley), and Richard L. Hyde  *		Many parts where lifted from the above sources.  * Editor:	Richard L. Hyde  * 		Dept. of Computer Sciences  * 		Purdue University  * Date:	Thu Oct 28 1982  */
 end_comment
 
 begin_comment
-comment|/* output language from troff: all numbers are character strings  sn	size in points fn	font as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ...\n	draw operation 't': 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	wiggly line by x,y then x,y ... nb a	end of line (information only -- no action needed) w	paddable word space -- no action needed 	b = space before line, a = after p	new page begins -- set v to 0 #...\n	comment x ...\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init". */
+comment|/*******************************************************************************      output language from troff:     all numbers are character strings  sn	size in points fn	font as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ..\n	draw operation 't': 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	wiggly line by x,y then x,y ... nb a	end of line (information only -- no action needed) w	paddable word space -- no action needed 	b = space before line, a = after p	new page begins -- set v to 0 #..\n	comment x ..\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init".  *******************************************************************************/
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ file|"modes.h"
 end_include
 
 begin_comment
-comment|/*  * Versatec troff driver hacked from vcat and others.  */
+comment|/*#define ACCOUNT*/
 end_comment
 
 begin_define
@@ -92,6 +92,15 @@ directive|define
 name|ABORT
 value|2
 end_define
+
+begin_decl_stmt
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"dver.c	1.2	83/05/19"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -314,7 +323,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* input assumed computed according to this resolution */
+comment|/* input was computed according to this resolution */
 end_comment
 
 begin_decl_stmt
@@ -424,7 +433,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* horizontal position where we are supposed to be next (left = 0) */
+comment|/* horizontal position we are to be at next; left = 0 */
 end_comment
 
 begin_decl_stmt
@@ -822,9 +831,11 @@ literal|10
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* accounting variables */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACCOUNT
+end_ifdef
 
 begin_decl_stmt
 name|int
@@ -848,6 +859,11 @@ end_decl_stmt
 begin_comment
 comment|/* user name */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*     old  */
@@ -874,9 +890,6 @@ name|int
 name|done
 parameter_list|()
 function_decl|;
-name|idput
-argument_list|()
-expr_stmt|;
 name|tf
 operator|=
 name|stdout
@@ -1012,8 +1025,13 @@ comment|/* user's name */
 name|argc
 operator|--
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACCOUNT
 name|user
 operator|=
+endif|#
+directive|endif
 operator|*
 operator|++
 name|argv
@@ -1111,9 +1129,14 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACCOUNT
 name|accounting
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|waitchild
 argument_list|()
 expr_stmt|;
@@ -1805,7 +1828,6 @@ case|case
 literal|'h'
 case|:
 comment|/* relative horizontal motion */
-comment|/* fscanf(fp, "%d",&n); */
 while|while
 condition|(
 operator|(
@@ -2161,7 +2183,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* in case there's nothing to come in */
+comment|/* in case nothing comes in */
 name|sscanf
 argument_list|(
 name|buf
@@ -2247,14 +2269,14 @@ break|break;
 block|}
 end_block
 
+begin_comment
+comment|/* fileinit:	read in font and code files, etc. 		Must open table for device, read in resolution, 		size info, font info, etc. and set params */
+end_comment
+
 begin_macro
 name|fileinit
 argument_list|()
 end_macro
-
-begin_comment
-comment|/* read in font and code files, etc. */
-end_comment
 
 begin_block
 block|{
@@ -2278,7 +2300,6 @@ index|[
 literal|60
 index|]
 decl_stmt|;
-comment|/* open table for device, 	/* read in resolution, size info, font info, etc. 	/* and set params 	*/
 name|sprintf
 argument_list|(
 name|temp
@@ -2470,7 +2491,7 @@ expr|struct
 name|font
 argument_list|)
 expr_stmt|;
-comment|/* that's what's on the beginning */
+comment|/* that is on the beginning */
 name|widthtab
 index|[
 name|i
@@ -3192,7 +3213,7 @@ name|nwfont
 operator|=
 name|norig
 expr_stmt|;
-comment|/* so can later use full original size */
+comment|/* to later use full original size */
 if|if
 condition|(
 name|dbg
@@ -3302,7 +3323,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* 	Here beginneth all the stuff that really depends 	on the versatec  (we hope). */
+comment|/*******************************************************************************      Here beginneth all the stuff that really depends on the versatec (we hope).  *******************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -3443,7 +3464,7 @@ condition|;
 name|i
 operator|++
 control|)
-comment|/* find the line drawing character */
+comment|/* find the line drawing char */
 if|if
 condition|(
 name|strcmp
@@ -3748,9 +3769,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* flush out the buffer. Do it in a child proc */
-comment|/* this buffering was added by Bob Brown to stop the versatec */
-comment|/* from smearing while waiting for the next page */
+comment|/******* 	flush out the buffer. Do it in a child proc 	this buffering was added by Bob Brown to stop the versatec 	from smearing while waiting for the next page *******/
 name|waitchild
 argument_list|()
 expr_stmt|;
@@ -3809,10 +3828,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACCOUNT
 name|lines
 operator|+=
 name|maxX
 expr_stmt|;
+endif|#
+directive|endif
 name|size
 operator|=
 name|BYTES_PER_LINE
@@ -4076,7 +4100,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"can't set height on versatec \n"
+literal|"can't set height on versatec yet\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4376,9 +4400,12 @@ name|t_done
 argument_list|()
 end_macro
 
+begin_comment
+comment|/* clean up and get ready to die */
+end_comment
+
 begin_block
 block|{
-comment|/* clean up and get ready to die */
 name|waitchild
 argument_list|()
 expr_stmt|;
@@ -5260,6 +5287,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|fontdes
@@ -5330,6 +5358,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 comment|/* this is a new font */
 if|if
@@ -5514,11 +5543,15 @@ operator|&
 name|header
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|header
+argument_list|)
 argument_list|)
 operator|!=
 sizeof|sizeof
+argument_list|(
 name|header
+argument_list|)
 operator|||
 name|header
 operator|.
@@ -5843,7 +5876,6 @@ operator|)
 literal|0
 condition|)
 block|{
-comment|/* fprintf(stderr, "freeing position %d\n", newfont); */
 name|nfree
 argument_list|(
 name|fontdes
@@ -5867,10 +5899,9 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+comment|/* fprintf(stderr, "freeing position %d\n", newfont); */
 block|}
-else|else
-comment|/* fprintf(stderr, "taking without freeing position %d\n", newfont); */
-empty_stmt|;
+comment|/* else 	    fprintf(stderr, "taking without freeing position %d\n", newfont); */
 name|fontdes
 index|[
 name|newfont
@@ -6854,6 +6885,75 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACCOUNT
+end_ifdef
+
+begin_macro
+name|accounting
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*******************************************************************************  	graphics routines go here  *******************************************************************************/
+end_comment
+
+begin_macro
+name|drawline
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_macro
+name|drawcirc
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_macro
+name|drawellip
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_macro
+name|drawarc
+argument_list|()
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_macro
+name|drawwig
+argument_list|()
+end_macro
+
+begin_block
+block|{}
 end_block
 
 end_unit
