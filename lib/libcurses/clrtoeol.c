@@ -56,7 +56,7 @@ end_decl_stmt
 begin_block
 block|{
 name|reg
-name|char
+name|chtype
 modifier|*
 name|sp
 decl_stmt|,
@@ -70,7 +70,7 @@ decl_stmt|,
 name|x
 decl_stmt|;
 name|reg
-name|char
+name|chtype
 modifier|*
 name|maxx
 decl_stmt|;

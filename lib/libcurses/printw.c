@@ -336,6 +336,10 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|buf
 operator|++

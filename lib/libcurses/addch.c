@@ -62,13 +62,22 @@ end_decl_stmt
 
 begin_block
 block|{
+name|chtype
+name|ch
+init|=
+operator|(
+name|unsigned
+name|char
+operator|)
+name|c
+decl_stmt|;
 return|return
-name|waddbytes
+name|_waddbytes
 argument_list|(
 name|win
 argument_list|,
 operator|&
-name|c
+name|ch
 argument_list|,
 literal|1
 argument_list|)

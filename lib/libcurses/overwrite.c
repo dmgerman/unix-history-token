@@ -91,14 +91,6 @@ end_decl_stmt
 begin_block
 block|{
 name|reg
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-modifier|*
-name|end
-decl_stmt|;
-name|reg
 name|int
 name|x
 decl_stmt|,
@@ -288,6 +280,11 @@ name|_begx
 index|]
 argument_list|,
 name|x
+operator|*
+sizeof|sizeof
+argument_list|(
+name|chtype
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|touchline

@@ -530,6 +530,9 @@ name|soutcol
 decl_stmt|,
 name|soutline
 decl_stmt|;
+name|chtype
+name|ch
+decl_stmt|;
 name|plodcnt
 operator|=
 name|plodflg
@@ -1193,7 +1196,7 @@ operator|--
 expr_stmt|;
 else|else
 block|{
-name|i
+name|ch
 operator|=
 name|curscr
 operator|->
@@ -1208,7 +1211,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|i
+name|ch
 operator|&
 name|_STANDOUT
 operator|)
@@ -1223,9 +1226,7 @@ operator|)
 condition|)
 name|_putchar
 argument_list|(
-name|i
-operator|&
-literal|0177
+name|ch
 argument_list|)
 expr_stmt|;
 else|else

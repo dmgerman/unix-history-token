@@ -34,12 +34,6 @@ directive|include
 file|"curses.ext"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -91,7 +85,7 @@ end_decl_stmt
 begin_block
 block|{
 name|reg
-name|char
+name|chtype
 modifier|*
 name|sp
 decl_stmt|,
@@ -323,12 +317,10 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
-name|isspace
-argument_list|(
 operator|*
 name|sp
-argument_list|)
+operator|!=
+literal|' '
 condition|)
 name|mvwaddch
 argument_list|(

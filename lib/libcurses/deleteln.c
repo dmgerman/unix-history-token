@@ -56,7 +56,7 @@ end_decl_stmt
 begin_block
 block|{
 name|reg
-name|char
+name|chtype
 modifier|*
 name|temp
 decl_stmt|;
@@ -65,7 +65,7 @@ name|int
 name|y
 decl_stmt|;
 name|reg
-name|char
+name|chtype
 modifier|*
 name|end
 decl_stmt|;
@@ -164,6 +164,11 @@ argument_list|,
 name|win
 operator|->
 name|_maxx
+operator|*
+sizeof|sizeof
+argument_list|(
+name|chtype
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|touchline
@@ -236,9 +241,7 @@ name|touchline
 argument_list|(
 name|win
 argument_list|,
-name|win
-operator|->
-name|_cury
+name|y
 argument_list|,
 literal|0
 argument_list|,

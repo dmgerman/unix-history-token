@@ -78,7 +78,7 @@ decl_stmt|,
 name|endx
 decl_stmt|;
 name|reg
-name|char
+name|chtype
 modifier|*
 name|fp
 decl_stmt|,
@@ -140,6 +140,10 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|hor
 expr_stmt|;
 name|endx
@@ -179,6 +183,10 @@ index|[
 name|endx
 index|]
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|vert
 operator|)
 expr_stmt|;

@@ -47,6 +47,14 @@ name|reg
 value|register
 end_define
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|chtype
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -121,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|_STANDOUT
-value|0200
+value|0400
 end_define
 
 begin_define
@@ -449,7 +457,7 @@ decl_stmt|;
 name|bool
 name|_scroll
 decl_stmt|;
-name|char
+name|chtype
 modifier|*
 modifier|*
 name|_y
@@ -623,7 +631,7 @@ name|addstr
 parameter_list|(
 name|str
 parameter_list|)
-value|VOID(waddbytes(stdscr, str, strlen(str)))
+value|VOID(waddstr(stdscr, str))
 end_define
 
 begin_define
@@ -813,7 +821,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|VOID(wmove(win,y,x)==ERR?ERR:waddbytes(win,str,strlen(str)))
+value|VOID(wmove(win,y,x)==ERR?ERR:waddstr(win,str))
 end_define
 
 begin_define
@@ -1057,7 +1065,7 @@ name|winch
 parameter_list|(
 name|win
 parameter_list|)
-value|(win->_y[win->_cury][win->_curx]& 0177)
+value|(win->_y[win->_cury][win->_curx]& 0xFF)
 end_define
 
 begin_define

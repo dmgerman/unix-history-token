@@ -60,7 +60,7 @@ name|int
 name|y
 decl_stmt|;
 name|reg
-name|char
+name|chtype
 modifier|*
 name|sp
 decl_stmt|,

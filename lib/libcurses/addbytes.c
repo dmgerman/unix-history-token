@@ -34,10 +34,6 @@ directive|include
 file|"curses.ext"
 end_include
 
-begin_comment
-comment|/*  *	This routine adds the character to the current position  *  */
-end_comment
-
 begin_macro
 name|waddbytes
 argument_list|(
@@ -60,6 +56,100 @@ end_decl_stmt
 begin_decl_stmt
 name|reg
 name|char
+modifier|*
+name|bytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|count
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|chtype
+name|c
+decl_stmt|;
+name|reg
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|c
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
+operator|*
+name|bytes
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|_waddbytes
+argument_list|(
+name|win
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+name|ERR
+condition|)
+return|return
+name|ERR
+return|;
+block|}
+return|return
+name|OK
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  *	This routine adds the character to the current position  *  */
+end_comment
+
+begin_macro
+name|_waddbytes
+argument_list|(
+argument|win
+argument_list|,
+argument|bytes
+argument_list|,
+argument|count
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|reg
+name|WINDOW
+modifier|*
+name|win
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|reg
+name|chtype
 modifier|*
 name|bytes
 decl_stmt|;
@@ -97,24 +187,6 @@ decl_stmt|;
 name|SYNCH_IN
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FULLDEBUG
-name|fprintf
-argument_list|(
-name|outf
-argument_list|,
-literal|"ADDBYTES('%c') at (%d, %d)\n"
-argument_list|,
-name|c
-argument_list|,
-name|y
-argument_list|,
-name|x
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|count
@@ -122,15 +194,31 @@ operator|--
 condition|)
 block|{
 specifier|register
-name|int
+name|chtype
 name|c
 decl_stmt|;
 specifier|static
-name|char
+name|chtype
 name|blanks
 index|[]
 init|=
-literal|"        "
+block|{
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
 decl_stmt|;
 name|c
 operator|=
@@ -146,12 +234,12 @@ block|{
 case|case
 literal|'\t'
 case|:
-name|SYNCH_IN
+name|SYNCH_OUT
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|waddbytes
+name|_waddbytes
 argument_list|(
 name|win
 argument_list|,
@@ -173,7 +261,7 @@ return|return
 name|ERR
 return|;
 block|}
-name|SYNCH_OUT
+name|SYNCH_IN
 argument_list|()
 expr_stmt|;
 break|break;
@@ -427,6 +515,9 @@ operator|->
 name|_scroll
 condition|)
 block|{
+operator|--
+name|y
+expr_stmt|;
 name|SYNCH_OUT
 argument_list|()
 expr_stmt|;
@@ -437,9 +528,6 @@ argument_list|)
 expr_stmt|;
 name|SYNCH_IN
 argument_list|()
-expr_stmt|;
-operator|--
-name|y
 expr_stmt|;
 block|}
 else|else

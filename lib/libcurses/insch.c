@@ -64,7 +64,7 @@ end_decl_stmt
 begin_block
 block|{
 name|reg
-name|char
+name|chtype
 modifier|*
 name|temp1
 decl_stmt|,
@@ -72,7 +72,7 @@ modifier|*
 name|temp2
 decl_stmt|;
 name|reg
-name|char
+name|chtype
 modifier|*
 name|end
 decl_stmt|;
@@ -135,6 +135,10 @@ expr_stmt|;
 operator|*
 name|temp1
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 expr_stmt|;
 name|touchline

@@ -696,7 +696,7 @@ name|wy
 decl_stmt|;
 block|{
 name|reg
-name|char
+name|chtype
 modifier|*
 name|nsp
 decl_stmt|,
@@ -721,6 +721,21 @@ decl_stmt|,
 name|clsp
 decl_stmt|;
 comment|/* last space in lines		*/
+name|char
+modifier|*
+name|ce_tcap
+decl_stmt|;
+specifier|static
+name|chtype
+name|blank
+index|[]
+init|=
+block|{
+literal|' '
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
 name|wx
 operator|=
 name|win
@@ -810,7 +825,7 @@ name|curwin
 condition|)
 name|csp
 operator|=
-literal|" "
+name|blank
 expr_stmt|;
 else|else
 name|csp
@@ -911,12 +926,12 @@ condition|(
 operator|!
 name|curwin
 condition|)
-name|ce
+name|ce_tcap
 operator|=
 name|CE
 expr_stmt|;
 else|else
-name|ce
+name|ce_tcap
 operator|=
 name|NULL
 expr_stmt|;
@@ -994,7 +1009,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ce
+name|ce_tcap
 operator|!=
 name|NULL
 operator|&&
@@ -1130,7 +1145,7 @@ return|return
 name|OK
 return|;
 block|}
-name|ce
+name|ce_tcap
 operator|=
 name|NULL
 expr_stmt|;
@@ -1269,8 +1284,6 @@ operator|=
 operator|*
 name|nsp
 operator|)
-operator|&
-literal|0177
 argument_list|)
 expr_stmt|;
 else|else
@@ -1278,8 +1291,6 @@ name|_putchar
 argument_list|(
 operator|*
 name|nsp
-operator|&
-literal|0177
 argument_list|)
 expr_stmt|;
 if|if
@@ -1356,8 +1367,6 @@ operator|=
 operator|*
 name|nsp
 operator|)
-operator|&
-literal|0177
 argument_list|)
 expr_stmt|;
 else|else
@@ -1365,8 +1374,6 @@ name|_putchar
 argument_list|(
 operator|*
 name|nsp
-operator|&
-literal|0177
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1380,8 +1387,6 @@ literal|"MAKECH:putchar(%c)\n"
 argument_list|,
 operator|*
 name|nsp
-operator|&
-literal|0177
 argument_list|)
 expr_stmt|;
 endif|#
