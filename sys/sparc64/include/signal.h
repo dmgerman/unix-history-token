@@ -46,11 +46,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-end_if
+end_ifdef
 
 begin_typedef
 typedef|typedef
