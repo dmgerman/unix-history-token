@@ -799,10 +799,20 @@ operator|&
 name|tz
 expr_stmt|;
 block|}
-comment|/* if init, don't touch RTC at all */
+comment|/* if init and something will be changed, don't touch RTC at all */
 if|if
 condition|(
 name|init
+operator|&&
+operator|(
+name|stv
+operator|!=
+name|NULL
+operator|||
+name|kern_offset
+operator|!=
+name|offset
+operator|)
 condition|)
 block|{
 name|mib
