@@ -84,6 +84,61 @@ directive|include
 file|<rpcsvc/ypclnt.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|ERR_USAGE
+value|1
+end_define
+
+begin_comment
+comment|/* bad arguments - display 'usage' message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERR_NOSUCHHOST
+value|2
+end_define
+
+begin_comment
+comment|/* no such host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERR_NOBINDING
+value|3
+end_define
+
+begin_comment
+comment|/* error from ypbind -- domain not bound */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERR_NOYPBIND
+value|4
+end_define
+
+begin_comment
+comment|/* ypbind not running */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ERR_NOMASTER
+value|5
+end_define
+
+begin_comment
+comment|/* could not find master server */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|bool_t
@@ -189,7 +244,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERR_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -708,7 +763,7 @@ argument_list|)
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|ERR_NOBINDING
 argument_list|)
 expr_stmt|;
 break|break;
@@ -782,7 +837,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERR_NOSUCHHOST
 argument_list|)
 expr_stmt|;
 block|}
@@ -827,7 +882,7 @@ argument_list|)
 condition|)
 name|exit
 argument_list|(
-literal|1
+name|ERR_NOBINDING
 argument_list|)
 expr_stmt|;
 break|break;
@@ -963,7 +1018,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERR_NOYPBIND
 argument_list|)
 expr_stmt|;
 default|default:
@@ -983,7 +1038,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERR_NOMASTER
 argument_list|)
 expr_stmt|;
 block|}
@@ -1112,7 +1167,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERR_NOYPBIND
 argument_list|)
 expr_stmt|;
 default|default:
@@ -1132,7 +1187,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|ERR_NOMASTER
 argument_list|)
 expr_stmt|;
 block|}
