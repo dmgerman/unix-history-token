@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.14 1995/12/08 23:20:39 phk Exp $ */
+comment|/* $Id: scd.c,v 1.15 1995/12/10 19:44:52 bde Exp $ */
 end_comment
 
 begin_comment
@@ -1004,13 +1004,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_psize_t
-name|scdsize
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_strategy_t
 name|scdstrategy
 decl_stmt|;
@@ -1056,7 +1049,7 @@ block|,
 comment|/*16*/
 name|nodump
 block|,
-name|scdsize
+name|nopsize
 block|,
 literal|0
 block|,
@@ -2740,22 +2733,6 @@ return|return
 name|ENOTTY
 return|;
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|scdsize
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|-
-literal|1
-return|;
 block|}
 end_function
 
