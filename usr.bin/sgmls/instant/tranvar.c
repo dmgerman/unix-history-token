@@ -27,7 +27,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"$Header: /usr/src/docbook-to-man/Instant/RCS/tranvar.c,v 1.5 1996/06/11 22:43:15 fld Exp $"
+literal|"$Header: /home/ncvs/src/usr.bin/sgmls/instant/tranvar.c,v 1.2 1997/01/08 01:40:52 jfieber Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1874,7 +1874,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Do action on followed element if element has [relationship] with gi.      * Format: _followrel relationship gi action */
+comment|/* Do action on followed element if element has [relationship] with gi.      * If [relationship] is not met, do alternate action on this element.      * Format: _followrel relationship gi action [action] */
 elseif|else
 if|if
 condition|(
@@ -1895,9 +1895,10 @@ name|ntok
 operator|>=
 literal|4
 condition|)
-operator|(
-name|void
-operator|)
+block|{
+if|if
+condition|(
+operator|!
 name|CheckRelation
 argument_list|(
 name|e
@@ -1921,7 +1922,29 @@ name|fp
 argument_list|,
 name|RA_Related
 argument_list|)
+condition|)
+block|{
+comment|/* action not done, see if an alt action specified */
+if|if
+condition|(
+name|ntok
+operator|>=
+literal|5
+condition|)
+name|TranTByAction
+argument_list|(
+name|e
+argument_list|,
+name|tok
+index|[
+literal|4
+index|]
+argument_list|,
+name|fp
+argument_list|)
 expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* Find element with matching ID and do action.  If action not specified,      * choose the right one appropriate for its context.      * Format: _id id [action] */
 elseif|else
