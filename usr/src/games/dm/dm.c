@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.8 (Berkeley) %G%"
+literal|"@(#)dm.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -853,7 +853,7 @@ operator|&&
 name|ct
 operator|->
 name|tm_hour
-operator|<=
+operator|<
 name|stop
 condition|)
 block|{
