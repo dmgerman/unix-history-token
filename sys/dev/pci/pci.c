@@ -2892,9 +2892,7 @@ block|}
 comment|/* 			 * Check the user's buffer to make sure it's readable. 			 */
 if|if
 condition|(
-operator|(
-name|error
-operator|=
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -2910,9 +2908,6 @@ name|pat_buf_len
 argument_list|,
 name|B_READ
 argument_list|)
-operator|)
-operator|!=
-literal|1
 condition|)
 block|{
 name|printf
@@ -3031,9 +3026,7 @@ expr_stmt|;
 comment|/* 		 * Make sure we can write to the match buffer. 		 */
 if|if
 condition|(
-operator|(
-name|error
-operator|=
+operator|!
 name|useracc
 argument_list|(
 operator|(
@@ -3049,9 +3042,6 @@ name|match_buf_len
 argument_list|,
 name|B_WRITE
 argument_list|)
-operator|)
-operator|!=
-literal|1
 condition|)
 block|{
 name|printf
