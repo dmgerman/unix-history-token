@@ -90,7 +90,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mixer_hwinit
+name|mixer_hwvol_init
 parameter_list|(
 name|device_t
 name|dev
@@ -100,7 +100,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mixer_hwmute
+name|mixer_hwvol_mute
 parameter_list|(
 name|device_t
 name|dev
@@ -110,7 +110,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mixer_hwstep
+name|mixer_hwvol_step
 parameter_list|(
 name|device_t
 name|dev

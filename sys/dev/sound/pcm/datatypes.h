@@ -74,7 +74,7 @@ name|int
 name|busy
 decl_stmt|;
 name|int
-name|muted
+name|hwvol_muted
 decl_stmt|;
 name|int
 name|hwvol_mixer
@@ -83,7 +83,7 @@ name|int
 name|hwvol_step
 decl_stmt|;
 name|u_int32_t
-name|mute_level
+name|hwvol_mute_level
 decl_stmt|;
 name|u_int32_t
 name|devs
