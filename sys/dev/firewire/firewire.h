@@ -1612,6 +1612,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|FWOHCI_RDPHYREG
+value|_IOWR('S', 82, struct fw_reg_req_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FWOHCI_WRPHYREG
+value|_IOWR('S', 83, struct fw_reg_req_t)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DUMPDMA
 value|_IOWR('S', 82, u_int32_t)
 end_define
