@@ -1713,6 +1713,13 @@ name|fs
 operator|->
 name|fs_contigdirs
 expr_stmt|;
+comment|/* The file system is still read-only. */
+name|newfs
+operator|->
+name|fs_ronly
+operator|=
+literal|1
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|newfs
