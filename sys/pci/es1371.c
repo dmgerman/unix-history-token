@@ -3592,12 +3592,10 @@ name|es
 operator|->
 name|sh
 argument_list|,
-operator|(
 name|ES1371_REG_CODEC
+argument_list|)
 operator|&
 name|CODEC_WIP
-operator|)
-argument_list|)
 operator|)
 condition|)
 break|break;
