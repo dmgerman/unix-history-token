@@ -1775,7 +1775,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1810,7 +1811,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1874,7 +1876,8 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 if|if
@@ -2089,7 +2092,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -2124,7 +2128,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -2167,7 +2172,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
