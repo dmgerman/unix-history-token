@@ -171,7 +171,7 @@ name|ENCODING_LEN
 condition|)
 return|return
 operator|(
-name|EFAULT
+name|EINVAL
 operator|)
 return|;
 comment|/* 	 * The "C" and "POSIX" locale are always here. 	 */
