@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vax.c 1.7 %G%"
+literal|"@(#)vax.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2601,6 +2601,9 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+name|bpact
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2638,6 +2641,9 @@ name|stepto
 argument_list|(
 name|addr
 argument_list|)
+expr_stmt|;
+name|bpact
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
