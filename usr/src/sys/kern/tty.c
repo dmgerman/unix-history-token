@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.32	82/10/17	*/
+comment|/*	tty.c	4.33	82/10/31	*/
 end_comment
 
 begin_comment
@@ -922,9 +922,9 @@ literal|650
 block|,
 literal|650
 block|,
-literal|650
+literal|1300
 block|,
-literal|650
+literal|2000
 block|}
 decl_stmt|;
 end_decl_stmt
