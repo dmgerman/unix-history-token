@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kernel.h	4.7	82/10/21	*/
+comment|/*	kernel.h	4.8	83/05/30	*/
 end_comment
 
 begin_comment
@@ -73,6 +73,16 @@ name|int
 name|hz
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|phz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* alternate clock's frequency */
+end_comment
 
 begin_decl_stmt
 name|int
