@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_cd.c,v 1.10 1998/12/04 22:54:43 archie Exp $  */
+comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_cd.c,v 1.11 1998/12/22 20:05:22 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -7128,18 +7128,13 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|xpt_announce_periph
 argument_list|(
 name|periph
 argument_list|,
 name|announce_buf
 argument_list|)
-expr_stmt|;
-name|softc
-operator|->
-name|state
-operator|=
-name|CD_STATE_NORMAL
 expr_stmt|;
 if|if
 condition|(
@@ -7154,12 +7149,25 @@ argument_list|(
 name|softc
 argument_list|)
 expr_stmt|;
+block|}
+name|softc
+operator|->
+name|state
+operator|=
+name|CD_STATE_NORMAL
+expr_stmt|;
+comment|/* 		 * Since our peripheral may be invalidated by an error 		 * above or an external event, we must release our CCB 		 * before releasing the probe lock on the peripheral. 		 * The peripheral will only go away once the last lock 		 * is removed, and we need it around for the CCB release 		 * operation. 		 */
+name|xpt_release_ccb
+argument_list|(
+name|done_ccb
+argument_list|)
+expr_stmt|;
 name|cam_periph_unlock
 argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-break|break;
+return|return;
 block|}
 case|case
 name|CD_CCB_WAITING
@@ -7191,6 +7199,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+default|default:
+break|break;
 block|}
 name|xpt_release_ccb
 argument_list|(
