@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vdreg.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vdreg.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -877,7 +877,7 @@ begin_define
 define|#
 directive|define
 name|VDRF_NORMAL
-value|(VDRF_RTZ|VDRF_OCF|VDRF_OSP|VDRF_OSM|VDRF_DSE|VDRF_DSE)
+value|(VDRF_RTZ|VDRF_OCF|VDRF_OSP|VDRF_OSM|VDRF_DSE|VDRF_DSL)
 end_define
 
 begin_comment
@@ -2202,7 +2202,7 @@ value|df_reg[1]
 end_define
 
 begin_comment
-comment|/* alt. sect. header, in an int! */
+comment|/* alt. sect. dskadr, in an int! */
 end_comment
 
 begin_define
@@ -2234,12 +2234,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|dk_ecode
+name|dk_ecodecnt
 value|df_reg[1]
 end_define
 
 begin_comment
-comment|/* smd-e err_code */
+comment|/* smd-e ecode and error word count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dk_ecode
+parameter_list|(
+name|ecodecnt
+parameter_list|)
+value|((u_long)(ecodecnt)>> 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dk_errcnt
+parameter_list|(
+name|ecodecnt
+parameter_list|)
+value|(((ecodecnt)& 0xffff)<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|dk_erraddr
+value|df_reg[2]
+end_define
+
+begin_comment
+comment|/* error dskadr, in an int! */
 end_comment
 
 end_unit
