@@ -32,7 +32,7 @@ comment|/*  * Misc. definitions for the Sun ``Gem'' Ethernet controller family d
 end_comment
 
 begin_comment
-comment|/*  * Transmit descriptor list size.  This is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet.  */
+comment|/*  * Transmit descriptor list size.  This is arbitrary, but allocate  * enough descriptors for 64 pending transmissions and 16 segments  * per packet. This limit is not actually enforced (packets with more segments  * can be sent, depending on the busdma backend); it is however used as an  * estimate for the tx window size.  */
 end_comment
 
 begin_define

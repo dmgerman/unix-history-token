@@ -7,11 +7,22 @@ begin_comment
 comment|/*  * Driver for Sun GEM ethernet controllers.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|GEM_DEBUG
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -611,7 +622,7 @@ begin_define
 define|#
 directive|define
 name|GEM_NSEGS
-value|GEM_NTXSEGS
+value|GEM_NTXDESC
 end_define
 
 begin_comment
@@ -771,7 +782,7 @@ name|NULL
 argument_list|,
 name|GEM_TD_BUFSIZE
 argument_list|,
-name|GEM_NTXSEGS
+name|GEM_NTXDESC
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
@@ -2340,6 +2351,9 @@ name|nexttx
 argument_list|)
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR5
 argument_list|(
 name|KTR_GEM
@@ -2378,6 +2392,8 @@ name|ds_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|segs
@@ -2445,6 +2461,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -2457,6 +2476,8 @@ argument_list|,
 name|nexttx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|flags
 operator||=
 name|GEM_TD_START_OF_PACKET
@@ -2501,6 +2522,9 @@ operator|==
 name|totsz
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -2513,6 +2537,8 @@ argument_list|,
 name|nexttx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|flags
 operator||=
 name|GEM_TD_END_OF_PACKET
@@ -2754,6 +2780,9 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR1
 argument_list|(
 name|KTR_GEM
@@ -2768,6 +2797,8 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|gem_reset_rx
 argument_list|(
 name|sc
@@ -2966,6 +2997,9 @@ name|gem_txsoft
 modifier|*
 name|txs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR1
 argument_list|(
 name|KTR_GEM
@@ -2980,6 +3014,8 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|callout_stop
 argument_list|(
 operator|&
@@ -3971,6 +4007,9 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR1
 argument_list|(
 name|KTR_GEM
@@ -3985,6 +4024,8 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Initialization sequence. The numbered steps below correspond 	 * to the sequence outlined in section 6.3.5.1 in the Ethernet 	 * Channel Engine manual (part of the PCIO manual). 	 * See also the STP2002-STQ document from Sun Microsystems. 	 */
 comment|/* step 1& 2. Reset the Ethernet Channel */
 name|gem_stop
@@ -4004,6 +4045,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR1
 argument_list|(
 name|KTR_GEM
@@ -4018,6 +4062,8 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Re-initialize the MIF */
 name|gem_mifinit
 argument_list|(
@@ -4124,6 +4170,9 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR3
 argument_list|(
 name|KTR_GEM
@@ -4149,6 +4198,8 @@ operator|->
 name|sc_cddma
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* step 8. Global Configuration& Interrupt Mask */
 name|bus_space_write_4
 argument_list|(
@@ -4589,6 +4640,9 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR3
 argument_list|(
 name|KTR_GEM
@@ -4609,6 +4663,8 @@ operator|->
 name|txs_ndescs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -4657,6 +4713,9 @@ operator|)
 return|;
 name|fail
 label|:
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR1
 argument_list|(
 name|KTR_GEM
@@ -4666,6 +4725,8 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -5309,6 +5370,8 @@ name|int
 name|firsttx
 decl_stmt|,
 name|ntx
+init|=
+literal|0
 decl_stmt|,
 name|ofree
 decl_stmt|,
@@ -5344,6 +5407,9 @@ name|sc
 operator|->
 name|sc_txnext
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR3
 argument_list|(
 name|KTR_GEM
@@ -5362,21 +5428,14 @@ argument_list|,
 name|firsttx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Loop through the send queue, setting up transmit descriptors 	 * until we drain the queue, or use up all available transmit 	 * descriptors. 	 */
 name|txmfail
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|ntx
-operator|=
-literal|0
-init|;
-condition|;
-name|ntx
-operator|++
-control|)
+do|do
 block|{
 comment|/* 		 * Grab a packet off the queue. 		 */
 name|IF_DEQUEUE
@@ -5457,7 +5516,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|ntx
+operator|++
+expr_stmt|;
 comment|/* Kick the transmitter. */
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -5476,6 +5541,8 @@ operator|->
 name|sc_txnext
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bus_space_write_4
 argument_list|(
 name|sc
@@ -5511,6 +5578,11 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
+do|while
+condition|(
+literal|1
+condition|)
+do|;
 if|if
 condition|(
 name|txmfail
@@ -5547,6 +5619,9 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -5563,6 +5638,8 @@ argument_list|,
 name|firsttx
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Set a watchdog timer in case the chip flakes out. */
 name|ifp
 operator|->
@@ -5570,6 +5647,9 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -5588,6 +5668,8 @@ operator|->
 name|if_timer
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -5648,6 +5730,9 @@ name|progress
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR1
 argument_list|(
 name|KTR_GEM
@@ -5662,6 +5747,8 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Unload collision counters 	 */
 name|ifp
 operator|->
@@ -5890,6 +5977,9 @@ argument_list|,
 name|GEM_TX_COMPLETION
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR3
 argument_list|(
 name|KTR_GEM
@@ -5908,6 +5998,8 @@ argument_list|,
 name|txlast
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|txs
@@ -5962,6 +6054,9 @@ operator|)
 condition|)
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR0
 argument_list|(
 name|KTR_GEM
@@ -5969,6 +6064,8 @@ argument_list|,
 literal|"gem_tint: releasing a desc"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|STAILQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -6056,6 +6153,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR3
 argument_list|(
 name|KTR_GEM
@@ -6125,6 +6225,8 @@ name|GEM_TX_COMPLETION
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|progress
@@ -6176,6 +6278,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -6194,6 +6299,8 @@ operator|->
 name|if_timer
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -6285,6 +6392,9 @@ operator|->
 name|sc_rx_ch
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR1
 argument_list|(
 name|KTR_GEM
@@ -6299,6 +6409,8 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Read the completion register once.  This limits 	 * how long the following loop can execute. 	 */
 name|rxcomp
 operator|=
@@ -6311,6 +6423,9 @@ argument_list|,
 name|GEM_RX_COMPLETION
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -6324,6 +6439,8 @@ argument_list|,
 name|rxcomp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|GEM_CDSYNC
 argument_list|(
 name|sc
@@ -6639,6 +6756,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR2
 argument_list|(
 name|KTR_GEM
@@ -6659,6 +6779,8 @@ name|GEM_RX_COMPLETION
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -6994,6 +7116,9 @@ argument_list|,
 name|GEM_STATUS
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR3
 argument_list|(
 name|KTR_GEM
@@ -7019,6 +7144,8 @@ operator|)
 name|status
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -7214,6 +7341,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|GEM_DEBUG
 name|CTR3
 argument_list|(
 name|KTR_GEM
@@ -7308,6 +7438,8 @@ name|GEM_MAC_TX_CONFIG
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|device_printf
 argument_list|(
 name|sc
