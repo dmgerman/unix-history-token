@@ -68,6 +68,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|tms
@@ -3654,7 +3660,7 @@ name|fd
 operator|=
 name|fopen
 argument_list|(
-literal|"gnuchess.book"
+name|_PATH_CHESSBOOK
 argument_list|,
 literal|"r"
 argument_list|)
@@ -3823,6 +3829,23 @@ block|}
 name|fclose
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\nchess: can't read %s.\n"
+argument_list|,
+name|_PATH_CHESSBOOK
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
