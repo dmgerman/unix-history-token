@@ -81,6 +81,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -221,10 +227,10 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4273,7 +4279,7 @@ name|struct
 name|changer_move
 name|cmd
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|type
 decl_stmt|,
 name|element
@@ -4613,7 +4619,7 @@ operator|.
 name|cesr_element_type
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|type
 expr_stmt|;
@@ -4622,7 +4628,7 @@ operator|.
 name|cesr_element_base
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|element
 expr_stmt|;
@@ -4701,11 +4707,11 @@ name|char
 modifier|*
 name|voltag
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|et
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|eu
 parameter_list|)
