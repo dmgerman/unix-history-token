@@ -569,8 +569,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_cisco_ipaddr_type_info
+name|ng_parse_struct_field
+name|ng_cisco_ipaddr_type_fields
+index|[]
 init|=
 name|NG_CISCO_IPADDR_TYPE_INFO
 decl_stmt|;
@@ -588,7 +589,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_cisco_ipaddr_type_info
+name|ng_cisco_ipaddr_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

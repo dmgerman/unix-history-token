@@ -88,7 +88,7 @@ name|NG_KSOCKET_SOCKOPT_INFO
 parameter_list|(
 name|svtype
 parameter_list|)
-value|{			\ 	{							\ 	  { "level",&ng_parse_int32_type	},	\ 	  { "name",&ng_parse_int32_type	},	\ 	  { "value",		(svtype)		},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	  { "level",&ng_parse_int32_type	},	\ 	  { "name",&ng_parse_int32_type	},	\ 	  { "value",		(svtype)		},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|NGM_KSOCKET_ACCEPT_INFO
-value|{					\ 	{								\ 	  { "nodeid",&ng_parse_hint32_type		  },	\ 	  { "addr",&ng_ksocket_generic_sockaddr_type },	\ 	  { NULL }							\ 	}								\ }
+value|{					\ 	  { "nodeid",&ng_parse_hint32_type		  },	\ 	  { "addr",&ng_ksocket_generic_sockaddr_type },	\ 	  { NULL }							\ }
 end_define
 
 begin_comment

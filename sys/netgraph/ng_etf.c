@@ -195,8 +195,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_etf_stat_type_info
+name|ng_parse_struct_field
+name|ng_etf_stat_type_fields
+index|[]
 init|=
 name|NG_ETF_STATS_TYPE_INFO
 decl_stmt|;
@@ -214,7 +215,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_etf_stat_type_info
+name|ng_etf_stat_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -227,8 +228,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_etf_filter_type_info
+name|ng_parse_struct_field
+name|ng_etf_filter_type_fields
+index|[]
 init|=
 name|NG_ETF_FILTER_TYPE_INFO
 decl_stmt|;
@@ -246,7 +248,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_etf_filter_type_info
+name|ng_etf_filter_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

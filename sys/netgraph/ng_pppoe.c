@@ -232,8 +232,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ngpppoe_init_data_type_info
+name|ng_parse_struct_field
+name|ngpppoe_init_data_type_fields
+index|[]
 init|=
 name|NG_PPPOE_INIT_DATA_TYPE_INFO
 decl_stmt|;
@@ -251,7 +252,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ngpppoe_init_data_type_info
+name|ngpppoe_init_data_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -264,8 +265,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_pppoe_sts_type_info
+name|ng_parse_struct_field
+name|ng_pppoe_sts_type_fields
+index|[]
 init|=
 name|NG_PPPOE_STS_TYPE_INFO
 decl_stmt|;
@@ -283,7 +285,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_pppoe_sts_type_info
+name|ng_pppoe_sts_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

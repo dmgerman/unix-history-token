@@ -166,7 +166,7 @@ name|NG_ONE2MANY_CONFIG_TYPE_INFO
 parameter_list|(
 name|atype
 parameter_list|)
-value|{		\ 	{							\ 	  { "xmitAlg",&ng_parse_uint32_type	},	\ 	  { "failAlg",&ng_parse_uint32_type	},	\ 	  { "enabledLinks",	(atype)			},	\ 	  { NULL }						\ 	}							\ }
+value|{		\ 	  { "xmitAlg",&ng_parse_uint32_type	},	\ 	  { "failAlg",&ng_parse_uint32_type	},	\ 	  { "enabledLinks",	(atype)			},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -209,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|NG_ONE2MANY_LINK_STATS_TYPE_INFO
-value|{		\ 	{							\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvPackets",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "xmitPackets",&ng_parse_uint64_type	},	\ 	  { "memoryFailures",&ng_parse_uint64_type	},	\ 	  { NULL }						\ 	}							\ }
+value|{		\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvPackets",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { "xmitPackets",&ng_parse_uint64_type	},	\ 	  { "memoryFailures",&ng_parse_uint64_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment

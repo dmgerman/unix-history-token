@@ -180,8 +180,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_tee_hookstat_type_info
+name|ng_parse_struct_field
+name|ng_tee_hookstat_type_fields
+index|[]
 init|=
 name|NG_TEE_HOOKSTAT_INFO
 decl_stmt|;
@@ -199,8 +200,8 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_tee_hookstat_type_info
-block|, }
+name|ng_tee_hookstat_type_fields
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -212,8 +213,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_tee_stats_type_info
+name|ng_parse_struct_field
+name|ng_tee_stats_type_fields
+index|[]
 init|=
 name|NG_TEE_STATS_INFO
 argument_list|(
@@ -235,8 +237,8 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_tee_stats_type_info
-block|, }
+name|ng_tee_stats_type_fields
+block|}
 decl_stmt|;
 end_decl_stmt
 

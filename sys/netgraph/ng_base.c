@@ -1591,7 +1591,7 @@ parameter_list|,
 name|args
 parameter_list|)
 define|\
-value|static const struct ng_parse_struct_info				\ 	ng_ ## lo ## _type_info = NG_GENERIC_ ## up ## _INFO args;	\ static const struct ng_parse_type ng_generic_ ## lo ## _type = {	\&ng_parse_struct_type,						\&ng_ ## lo ## _type_info					\ }
+value|static const struct ng_parse_struct_field				\ 	ng_ ## lo ## _type_fields[] = NG_GENERIC_ ## up ## _INFO args;	\ static const struct ng_parse_type ng_generic_ ## lo ## _type = {	\&ng_parse_struct_type,						\&ng_ ## lo ## _type_fields					\ }
 end_define
 
 begin_expr_stmt

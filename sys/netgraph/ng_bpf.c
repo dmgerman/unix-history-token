@@ -241,10 +241,10 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_bpf_insn_type_info
+name|ng_parse_struct_field
+name|ng_bpf_insn_type_fields
+index|[]
 init|=
-block|{
 block|{
 block|{
 literal|"code"
@@ -278,7 +278,6 @@ block|{
 name|NULL
 block|}
 block|}
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -294,7 +293,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_bpf_insn_type_info
+name|ng_bpf_insn_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -403,8 +402,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_bpf_hookprog_type_info
+name|ng_parse_struct_field
+name|ng_bpf_hookprog_type_fields
+index|[]
 init|=
 name|NG_BPF_HOOKPROG_TYPE_INFO
 argument_list|(
@@ -426,7 +426,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_bpf_hookprog_type_info
+name|ng_bpf_hookprog_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -439,8 +439,9 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|struct
-name|ng_parse_struct_info
-name|ng_bpf_hookstat_type_info
+name|ng_parse_struct_field
+name|ng_bpf_hookstat_type_fields
+index|[]
 init|=
 name|NG_BPF_HOOKSTAT_TYPE_INFO
 decl_stmt|;
@@ -458,7 +459,7 @@ operator|&
 name|ng_parse_struct_type
 block|,
 operator|&
-name|ng_bpf_hookstat_type_info
+name|ng_bpf_hookstat_type_fields
 block|}
 decl_stmt|;
 end_decl_stmt

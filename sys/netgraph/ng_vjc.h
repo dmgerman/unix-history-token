@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|NG_VJC_CONFIG_TYPE_INFO
-value|{				\ 	{							\ 	  { "enableComp",&ng_parse_uint8_type	},	\ 	  { "enableDecomp",&ng_parse_uint8_type	},	\ 	  { "maxChannel",&ng_parse_uint8_type	},	\ 	  { "compressCID",&ng_parse_uint8_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{				\ 	  { "enableComp",&ng_parse_uint8_type	},	\ 	  { "enableDecomp",&ng_parse_uint8_type	},	\ 	  { "maxChannel",&ng_parse_uint8_type	},	\ 	  { "compressCID",&ng_parse_uint8_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment

@@ -211,7 +211,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPPOESTAT_TYPE_INFO
-value|{				\ 	{							\ 	  { "packets_in",&ng_parse_uint_type	},	\ 	  { "packets_out",&ng_parse_uint_type	},	\ 	  { NULL }						\ 	}							\ }
+value|{				\ 	  { "packets_in",&ng_parse_uint_type	},	\ 	  { "packets_out",&ng_parse_uint_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -254,7 +254,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPPOE_INIT_DATA_TYPE_INFO
-value|{		\ 	{						\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { "data",&ng_parse_sizedstring_type },	\ 	  { NULL }					\ 	}						\ }
+value|{		\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { "data",&ng_parse_sizedstring_type },	\ 	  { NULL }					\ }
 end_define
 
 begin_comment
@@ -286,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPPOE_STS_TYPE_INFO
-value|{		\ 	{						\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { NULL }					\ 	}						\ }
+value|{		\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { NULL }					\ }
 end_define
 
 begin_comment

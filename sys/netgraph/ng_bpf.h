@@ -106,7 +106,7 @@ name|NG_BPF_HOOKPROG_TYPE_INFO
 parameter_list|(
 name|bptype
 parameter_list|)
-value|{		\ 	{							\ 	  { "thisHook",&ng_parse_hookbuf_type	},	\ 	  { "ifMatch",&ng_parse_hookbuf_type	},	\ 	  { "ifNotMatch",&ng_parse_hookbuf_type	},	\ 	  { "bpf_prog_len",&ng_parse_int32_type	},	\ 	  { "bpf_prog",		(bptype)		},	\ 	  { NULL },						\ 	}							\ }
+value|{		\ 	  { "thisHook",&ng_parse_hookbuf_type	},	\ 	  { "ifMatch",&ng_parse_hookbuf_type	},	\ 	  { "ifNotMatch",&ng_parse_hookbuf_type	},	\ 	  { "bpf_prog_len",&ng_parse_int32_type	},	\ 	  { "bpf_prog",		(bptype)		},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|NG_BPF_HOOKSTAT_TYPE_INFO
-value|{			\ 	{							\ 	  { "recvFrames",&ng_parse_uint64_type	},	\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvMatchFrames",&ng_parse_uint64_type	},	\ 	  { "recvMatchOctets",&ng_parse_uint64_type	},	\ 	  { "xmitFrames",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { NULL },						\ 	}							\ }
+value|{			\ 	  { "recvFrames",&ng_parse_uint64_type	},	\ 	  { "recvOctets",&ng_parse_uint64_type	},	\ 	  { "recvMatchFrames",&ng_parse_uint64_type	},	\ 	  { "recvMatchOctets",&ng_parse_uint64_type	},	\ 	  { "xmitFrames",&ng_parse_uint64_type	},	\ 	  { "xmitOctets",&ng_parse_uint64_type	},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
