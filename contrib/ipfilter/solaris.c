@@ -11,7 +11,7 @@ begin_pragma
 pragma|#
 directive|pragma
 name|ident
-literal|"@(#)$Id: solaris.c,v 2.1.2.11 1999/12/04 03:33:59 darrenr Exp $"
+literal|"@(#)$Id: solaris.c,v 2.1.2.14 2000/01/25 15:32:03 darrenr Exp $"
 end_pragma
 
 begin_include
@@ -4792,6 +4792,13 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|fr_running
+operator|<
+literal|0
+condition|)
+return|return;
 name|READ_ENTER
 argument_list|(
 operator|&
@@ -6679,6 +6686,7 @@ name|il
 operator|->
 name|ill_next
 control|)
+block|{
 name|ip_natsync
 argument_list|(
 operator|(
@@ -6688,6 +6696,16 @@ operator|)
 name|il
 argument_list|)
 expr_stmt|;
+name|ip_statesync
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|il
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -7184,6 +7202,28 @@ operator|!=
 name|mb
 condition|)
 block|{
+name|mp
+operator|=
+operator|*
+name|mpp
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlinkb
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|mp
+operator|=
+operator|(
+operator|*
+name|mpp
+operator|)
+operator|->
+name|b_cont
+expr_stmt|;
 operator|(
 operator|*
 name|mpp
@@ -7207,6 +7247,11 @@ argument_list|(
 operator|*
 name|mpp
 argument_list|)
+expr_stmt|;
+operator|*
+name|mpp
+operator|=
+name|mp
 expr_stmt|;
 block|}
 name|ir
@@ -7714,6 +7759,11 @@ name|mp2
 expr_stmt|;
 block|}
 block|}
+operator|*
+name|mpp
+operator|=
+name|mb
+expr_stmt|;
 if|if
 condition|(
 name|ir
@@ -7752,6 +7802,12 @@ operator|->
 name|b_prev
 operator|=
 name|NULL
+expr_stmt|;
+name|mb
+operator|->
+name|b_queue
+operator|=
+name|q
 expr_stmt|;
 name|RWLOCK_EXIT
 argument_list|(

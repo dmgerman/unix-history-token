@@ -785,12 +785,12 @@ name|_net_inet_ipf
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ipl_inited
+name|fr_running
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|ipl_inited
+name|fr_running
 argument_list|,
 literal|0
 argument_list|,

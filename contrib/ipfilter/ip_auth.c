@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_auth.c,v 2.1.2.1 1999/09/28 11:44:04 darrenr Exp $"
+literal|"@(#)$Id: ip_auth.c,v 2.1.2.2 2000/01/16 10:12:14 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2217,9 +2217,16 @@ directive|else
 comment|/* SOLARIS */
 if|#
 directive|if
+operator|(
 name|_BSDI_VERSION
 operator|>=
 literal|199802
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|error
 operator|=
 name|ip_output

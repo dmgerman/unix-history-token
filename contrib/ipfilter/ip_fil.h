@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.3.2.6 1999/12/17 12:58:16 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 2.3.2.7 2000/01/27 08:49:41 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -1415,6 +1415,10 @@ name|u_long
 name|fr_nom
 decl_stmt|;
 comment|/* packets which don't match any rule */
+name|u_long
+name|fr_short
+decl_stmt|;
+comment|/* packets which are short */
 name|u_long
 name|fr_ppkl
 decl_stmt|;
@@ -3960,7 +3964,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ipl_inited
+name|fr_running
 decl_stmt|;
 end_decl_stmt
 

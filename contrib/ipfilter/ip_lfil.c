@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_lfil.c,v 2.1 1999/08/04 17:29:57 darrenr Exp $"
+literal|"@(#)$Id: ip_lfil.c,v 2.1.2.1 2000/01/16 10:13:02 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,7 +348,7 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|ipl_inited
+name|fr_running
 init|=
 literal|0
 decl_stmt|;
@@ -647,7 +647,7 @@ name|s
 decl_stmt|;
 if|if
 condition|(
-name|ipl_inited
+name|fr_running
 operator|||
 operator|(
 name|fr_checkp
@@ -665,7 +665,7 @@ return|return
 name|EBUSY
 return|;
 block|}
-name|ipl_inited
+name|fr_running
 operator|=
 literal|1
 expr_stmt|;
@@ -794,7 +794,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|ipl_inited
+name|fr_running
 condition|)
 block|{
 name|printk
@@ -819,7 +819,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|ipl_inited
+name|fr_running
 operator|=
 literal|0
 expr_stmt|;
