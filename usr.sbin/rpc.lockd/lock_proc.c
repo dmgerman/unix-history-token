@@ -147,6 +147,7 @@ specifier|static
 name|void
 name|log_from_addr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -202,6 +203,7 @@ name|fun_name
 parameter_list|,
 name|req
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|fun_name
