@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) %G%"
+literal|"@(#)main.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2600,7 +2600,7 @@ specifier|static
 name|char
 name|rawbuf
 index|[
-literal|32
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|char
