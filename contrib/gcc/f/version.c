@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|ffe_version_string
 init|=
-literal|"0.5.25 20010315 (release)"
+literal|"0.5.25 20020320 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 

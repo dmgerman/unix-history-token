@@ -1836,13 +1836,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|rtx_equal_function_value_matters
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 

@@ -5292,7 +5292,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -imacros<file>           Accept definition of marcos in<file>\n"
+literal|"  -imacros<file>           Accept definition of macros in<file>\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -5362,7 +5362,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -lang-c89                 Assume that the input is C89; depricated\n"
+literal|"  -lang-c89                 Assume that the input is C89; deprecated\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -20736,6 +20736,9 @@ modifier|*
 name|filename
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
 name|struct
 name|file_name_list
 modifier|*
@@ -20781,6 +20784,8 @@ name|c_system_include_path
 operator|+
 literal|1
 return|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;

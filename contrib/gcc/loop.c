@@ -6203,7 +6203,7 @@ name|regno
 index|]
 operator|||
 operator|(
-comment|/* Can combine regs with different modes loaded from the 		      same constant only if the modes are the same or 		      if both are integer modes with M wider or the same 		      width as M1.  The check for integer is redundant, but 		      safe, since the only case of differing destination 		      modes with equal sources is when both sources are 		      VOIDmode, i.e., CONST_INT.  */
+comment|/* Can combine regs with different modes loaded from the 		      same constant only if the modes are the same or 		      if both are integer modes with M wider or the same 		      width as M1.  The check for integer is redundant, but 		      safe, since the only case of differing destination 		      modes with equal sources is when both sources are 		      VOIDmode, i.e., CONST_INT. 		     		      For 2.95, don't do this if the mode of M1 is Pmode. 		      This prevents us from substituting SUBREGs for REGs 		      in memory accesses; not all targets are prepared to 		      handle this properly.  */
 operator|(
 name|GET_MODE
 argument_list|(
@@ -6243,6 +6243,15 @@ argument_list|)
 argument_list|)
 operator|==
 name|MODE_INT
+operator|&&
+name|GET_MODE
+argument_list|(
+name|m1
+operator|->
+name|set_dest
+argument_list|)
+operator|!=
+name|Pmode
 operator|&&
 operator|(
 name|GET_MODE_BITSIZE

@@ -3249,6 +3249,17 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* Nonzero if we need to distinguish between the return value of this function    and the return value of a function called by this function.  This helps    integrate.c.    This is 1 until after the rtl generation pass.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rtx_equal_function_value_matters
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Generally useful functions.  */
 end_comment
 

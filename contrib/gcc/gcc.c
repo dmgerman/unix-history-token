@@ -22841,6 +22841,7 @@ index|]
 operator|==
 literal|'#'
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"%s: %s compiler not installed on this system"
@@ -22859,6 +22860,13 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|this_file_error
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|input_basename
 operator|=
 name|input_filename
@@ -22889,7 +22897,7 @@ name|p
 operator|+
 literal|1
 expr_stmt|;
-comment|/* Find a suffix starting with the last period, 	     and set basename_length to exclude that suffix.  */
+comment|/* Find a suffix starting with the last period, 		 and set basename_length to exclude that suffix.  */
 name|basename_length
 operator|=
 name|strlen
@@ -23100,6 +23108,7 @@ name|this_file_error
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 comment|/* If this file's name does not contain a recognized suffix, 	 record it as explicit linker input.  */
 else|else

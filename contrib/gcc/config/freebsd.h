@@ -88,7 +88,7 @@ define|#
 directive|define
 name|FBSD_CPP_PREDEFINES
 define|\
-value|" -D__FreeBSD__=4 -D__FreeBSD_cc_version=440000 -Dunix -Asystem(unix) -Asystem(FreeBSD) "
+value|" -D__FreeBSD__=4 -D__FreeBSD_cc_version=460001 -Dunix -Asystem(unix) -Asystem(FreeBSD) "
 end_define
 
 begin_define
@@ -139,7 +139,7 @@ begin_define
 define|#
 directive|define
 name|LIB_SPEC
-value|"							\    %{!shared:								\      %{!pg: %{pthread:-lc_r} -lc}					\      %{pg:  %{pthread:-lc_r_p} -lc_p}					\    }"
+value|"							\   %{!shared:								\     %{!pg: %{pthread:-lc_r} -lc}					\     %{pg:  %{pthread:-lc_r_p} -lc_p}					\   }"
 end_define
 
 begin_else
@@ -472,7 +472,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {				 					\     if (!flag_no_ident)							\       fprintf ((FILE), "%s\"GCC: (GNU) %s %s\"\n",			\ 		IDENT_ASM_OP, lang_identify(), version_string);		\   } while (0)
+value|do {				 					\     if (!flag_no_ident)							\       fprintf ((FILE), "%s\"GCC: (GNU) %s %s\"\n",			\ 	       IDENT_ASM_OP, lang_identify(), version_string);		\   } while (0)
 end_define
 
 begin_comment

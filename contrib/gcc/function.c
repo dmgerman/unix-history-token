@@ -1551,7 +1551,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|boolean
 name|purge_addressof_1
 name|PROTO
 argument_list|(
@@ -1567,6 +1567,23 @@ name|int
 operator|,
 expr|struct
 name|hash_table
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|is_addressof
+name|PROTO
+argument_list|(
+operator|(
+name|rtx
+operator|*
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)
@@ -12509,12 +12526,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Helper function for purge_addressof.  See if the rtx expression at *LOC    in INSN needs to be changed.  If FORCE, always put any ADDRESSOFs into    the stack.  */
+comment|/* Helper function for purge_addressof.  See if the rtx expression at *LOC    in INSN needs to be changed.  If FORCE, always put any ADDRESSOFs into    the stack.  If the function returns FALSE then the replacement could not    be made.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|boolean
 name|purge_addressof_1
 parameter_list|(
 name|loc
@@ -12560,6 +12577,11 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
+name|boolean
+name|result
+init|=
+name|true
+decl_stmt|;
 comment|/* Re-start here to avoid recursion in common cases.  */
 name|restart
 label|:
@@ -12574,7 +12596,9 @@ name|x
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+name|true
+return|;
 name|code
 operator|=
 name|GET_CODE
@@ -12645,7 +12669,9 @@ argument_list|,
 name|insn
 argument_list|)
 condition|)
-return|return;
+return|return
+name|true
+return|;
 name|start_sequence
 argument_list|()
 expr_stmt|;
@@ -12700,7 +12726,9 @@ argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 elseif|else
 if|if
@@ -12831,7 +12859,9 @@ argument_list|,
 name|ht
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 elseif|else
 if|if
@@ -12923,7 +12953,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 comment|/* See comment for purge_addressof_replacements. */
 for|for
@@ -13125,12 +13157,14 @@ name|loc
 operator|=
 name|z
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
-comment|/* There should always be such a replacement.  */
-name|abort
-argument_list|()
-expr_stmt|;
+comment|/* Sometimes we may not be able to find the replacement.  For 		 example when the original insn was a MEM in a wider mode, 		 and the note is part of a sign extension of a narrowed 		 version of that MEM.  Gcc testcase compile/990829-1.c can 		 generate an example of this siutation.  Rather than complain 		 we return false, which will prompt our caller to remove the 		 offending note.  */
+return|return
+name|false
+return|;
 block|}
 name|size_x
 operator|=
@@ -13473,7 +13507,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* We replaced with a reg -- all done.  */
-return|return;
+return|return
+name|true
+return|;
 block|}
 block|}
 elseif|else
@@ -13570,7 +13606,9 @@ argument_list|)
 operator|=
 name|sub
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 name|purge_addressof_replacements
 operator|=
@@ -13597,7 +13635,9 @@ name|purge_addressof_replacements
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 goto|goto
 name|restart
@@ -13623,7 +13663,9 @@ argument_list|,
 name|ht
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|true
+return|;
 block|}
 elseif|else
 if|if
@@ -13633,6 +13675,8 @@ operator|==
 name|SET
 condition|)
 block|{
+name|result
+operator|=
 name|purge_addressof_1
 argument_list|(
 operator|&
@@ -13650,6 +13694,8 @@ argument_list|,
 name|ht
 argument_list|)
 expr_stmt|;
+name|result
+operator|&=
 name|purge_addressof_1
 argument_list|(
 operator|&
@@ -13667,7 +13713,9 @@ argument_list|,
 name|ht
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+name|result
+return|;
 block|}
 comment|/* Scan all subexpressions. */
 name|fmt
@@ -13704,6 +13752,8 @@ name|fmt
 operator|==
 literal|'e'
 condition|)
+name|result
+operator|&=
 name|purge_addressof_1
 argument_list|(
 operator|&
@@ -13749,6 +13799,8 @@ condition|;
 name|j
 operator|++
 control|)
+name|result
+operator|&=
 name|purge_addressof_1
 argument_list|(
 operator|&
@@ -13771,6 +13823,9 @@ name|ht
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|result
+return|;
 block|}
 end_function
 
@@ -14248,6 +14303,41 @@ block|}
 end_function
 
 begin_comment
+comment|/* Helper function for purge_addressof called through for_each_rtx.    Returns true iff the rtl is an ADDRESSOF.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|is_addressof
+parameter_list|(
+name|rtl
+parameter_list|,
+name|data
+parameter_list|)
+name|rtx
+modifier|*
+name|rtl
+decl_stmt|;
+name|void
+modifier|*
+name|data
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+block|{
+return|return
+name|GET_CODE
+argument_list|(
+operator|*
+name|rtl
+argument_list|)
+operator|==
+name|ADDRESSOF
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Eliminate all occurrences of ADDRESSOF from INSNS.  Elide any remaining    (MEM (ADDRESSOF)) patterns, and force any needed registers into the    stack.  */
 end_comment
 
@@ -14330,6 +14420,9 @@ operator|==
 name|CALL_INSN
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|purge_addressof_1
 argument_list|(
 operator|&
@@ -14355,7 +14448,14 @@ argument_list|,
 operator|&
 name|ht
 argument_list|)
+condition|)
+comment|/* If we could not replace the ADDRESSOFs in the insn, 	     something is wrong.  */
+name|abort
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|purge_addressof_1
 argument_list|(
 operator|&
@@ -14373,7 +14473,67 @@ argument_list|,
 operator|&
 name|ht
 argument_list|)
+condition|)
+block|{
+comment|/* If we could not replace the ADDRESSOFs in the insn's notes, 	       we can just remove the offending notes instead.  */
+name|rtx
+name|note
+decl_stmt|;
+for|for
+control|(
+name|note
+operator|=
+name|REG_NOTES
+argument_list|(
+name|insn
+argument_list|)
+init|;
+name|note
+condition|;
+name|note
+operator|=
+name|XEXP
+argument_list|(
+name|note
+argument_list|,
+literal|1
+argument_list|)
+control|)
+block|{
+comment|/* If we find a REG_RETVAL note then the insn is a libcall. 		   Such insns must have REG_EQUAL notes as well, in order 		   for later passes of the compiler to work.  So it is not 		   safe to delete the notes here, and instead we abort.  */
+if|if
+condition|(
+name|REG_NOTE_KIND
+argument_list|(
+name|note
+argument_list|)
+operator|==
+name|REG_RETVAL
+condition|)
+name|abort
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|for_each_rtx
+argument_list|(
+operator|&
+name|note
+argument_list|,
+name|is_addressof
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|remove_note
+argument_list|(
+name|insn
+argument_list|,
+name|note
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* Clean up.  */
 name|hash_table_free
@@ -21130,6 +21290,28 @@ block|}
 else|#
 directive|else
 comment|/* !ARGS_GROW_DOWNWARD */
+if|if
+condition|(
+operator|!
+name|in_regs
+ifdef|#
+directive|ifdef
+name|REG_PARM_STACK_SPACE
+operator|||
+name|REG_PARM_STACK_SPACE
+argument_list|(
+name|fndecl
+argument_list|)
+operator|>
+literal|0
+else|#
+directive|else
+comment|/* For the gcc-2_95-branch we want to make sure not to break something          on platforms which pass argument in registers but don't define          REG_PARM_STACK_SPACE. So we force the original behaviour here.  */
+operator|||
+literal|1
+endif|#
+directive|endif
+condition|)
 name|pad_to_arg_alignment
 argument_list|(
 name|initial_offset_ptr

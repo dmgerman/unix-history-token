@@ -4477,6 +4477,33 @@ name|specs
 decl_stmt|,
 name|attrs
 decl_stmt|;
+comment|/* This can happen after an __extension__ in pedantic mode.  */
+if|if
+condition|(
+name|specs_attrs
+operator|!=
+name|NULL_TREE
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|specs_attrs
+argument_list|)
+operator|==
+name|INTEGER_CST
+condition|)
+block|{
+operator|*
+name|declspecs
+operator|=
+name|NULL_TREE
+expr_stmt|;
+operator|*
+name|prefix_attributes
+operator|=
+name|NULL_TREE
+expr_stmt|;
+return|return;
+block|}
 comment|/* This can happen in c++ (eg: decl: typespec initdecls ';').  */
 if|if
 condition|(
@@ -9207,6 +9234,7 @@ argument_list|,
 name|format_char
 argument_list|)
 expr_stmt|;
+comment|/* Finally. . .check type of argument against desired type!  */
 if|if
 condition|(
 name|info

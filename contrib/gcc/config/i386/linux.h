@@ -416,5 +416,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__PIC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|USE_GNULIBC_1
+argument_list|)
+end_if
+
+begin_comment
+comment|/* This is a kludge. The i386 GNU/Linux dynamic linker needs ___brk_addr,    __environ and atexit (). We have to make sure they are in the .dynsym    section. We accomplish it by making a dummy call here. This    code is never reached.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRT_END_INIT_DUMMY
+define|\
+value|do					\     {					\       extern void *___brk_addr;		\       extern char **__environ;		\ 					\       ___brk_addr = __environ;		\       atexit (0);			\     }					\   while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

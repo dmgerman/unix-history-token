@@ -259,33 +259,6 @@ name|HAS_INIT_SECTION
 end_undef
 
 begin_comment
-comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  Under FreeBSD/Alpha, the assembler does    nothing special with -pg.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|FUNCTION_PROFILER
-end_undef
-
-begin_define
-define|#
-directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|fputs ("\tjsr $28,_mcount\n", (FILE))
-end_define
-
-begin_comment
-comment|/* at */
-end_comment
-
-begin_comment
 comment|/* Show that we need a GP when profiling.  */
 end_comment
 

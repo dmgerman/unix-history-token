@@ -9728,6 +9728,9 @@ operator|==
 name|REG_LABEL
 condition|)
 block|{
+name|int
+name|n_forced
+decl_stmt|;
 name|rtx
 name|label
 init|=
@@ -9747,6 +9750,21 @@ name|label
 argument_list|)
 operator|--
 expr_stmt|;
+comment|/* The label may be forced if it has been put in the 		         constant pool.  We can't delete it in this case, but 		         we still must discard a jump table following it.  */
+name|n_forced
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|LABEL_PRESERVE_P
+argument_list|(
+name|label
+argument_list|)
+condition|)
+name|n_forced
+operator|++
+expr_stmt|;
 comment|/* If this label was attached to an ADDR_VEC, it's 			 safe to delete the ADDR_VEC.  In fact, it's pretty much 			 mandatory to delete it, because the ADDR_VEC may 			 be referencing labels that no longer exist.  */
 if|if
 condition|(
@@ -9755,7 +9773,7 @@ argument_list|(
 name|label
 argument_list|)
 operator|==
-literal|0
+name|n_forced
 operator|&&
 operator|(
 name|next

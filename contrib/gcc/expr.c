@@ -2049,6 +2049,24 @@ return|return
 name|temp
 return|;
 block|}
+comment|/* Copy the address into a pseudo, so that the returned value 	     remains correct across calls to emit_queue.  */
+name|XEXP
+argument_list|(
+name|new
+argument_list|,
+literal|0
+argument_list|)
+operator|=
+name|copy_to_reg
+argument_list|(
+name|XEXP
+argument_list|(
+name|new
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 name|new
 return|;
@@ -2200,7 +2218,7 @@ return|return
 name|x
 return|;
 block|}
-comment|/* If the increment has not happened, use the variable itself.  */
+comment|/* If the increment has not happened, use the variable itself.  Copy it      into a new pseudo so that the value remains correct across calls to      emit_queue.  */
 if|if
 condition|(
 name|QUEUED_INSN
@@ -2211,9 +2229,12 @@ operator|==
 literal|0
 condition|)
 return|return
+name|copy_to_reg
+argument_list|(
 name|QUEUED_VAR
 argument_list|(
 name|x
+argument_list|)
 argument_list|)
 return|;
 comment|/* If the increment has happened and a pre-increment copy exists,      use that copy.  */
@@ -37236,13 +37257,14 @@ condition|)
 return|return
 name|op0
 return|;
+comment|/* Pass 1 for MODIFY, so that protect_from_queue doesn't get 	     clever and returns a REG when given a MEM.  */
 name|op0
 operator|=
 name|protect_from_queue
 argument_list|(
 name|op0
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* We would like the object in memory.  If it is a constant, 	     we can have it be statically allocated into memory.  For 	     a non-constant (REG, SUBREG or CONCAT), we need to allocate some 	     memory and store the value into it.  */

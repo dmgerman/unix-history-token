@@ -7216,9 +7216,14 @@ name|traditional_type
 else|:
 name|ansi_type
 expr_stmt|;
+comment|/* We assume that constants specified in a non-decimal 	       base are bit patterns, and that the programmer really 	       meant what they wrote.  */
 if|if
 condition|(
 name|warn_traditional
+operator|&&
+name|base
+operator|==
+literal|10
 operator|&&
 name|traditional_type
 operator|!=
