@@ -518,6 +518,8 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|<
@@ -824,6 +826,8 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|<
@@ -1167,6 +1171,8 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|<
@@ -1410,6 +1416,8 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|<

@@ -580,6 +580,8 @@ name|VECSIZE
 argument_list|(
 name|argv
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|<

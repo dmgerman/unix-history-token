@@ -6038,6 +6038,8 @@ argument_list|,
 name|argv
 argument_list|,
 name|MAXARGS
+argument_list|,
+literal|1
 argument_list|)
 return|;
 block|}

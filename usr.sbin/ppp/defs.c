@@ -1056,6 +1056,9 @@ name|p
 parameter_list|,
 name|int
 name|instring
+parameter_list|,
+name|int
+name|reduce
 parameter_list|)
 block|{
 while|while
@@ -1070,6 +1073,11 @@ operator|*
 name|p
 operator|==
 literal|'\\'
+condition|)
+block|{
+if|if
+condition|(
+name|reduce
 condition|)
 block|{
 name|memmove
@@ -1093,6 +1101,11 @@ operator|*
 name|p
 condition|)
 break|break;
+block|}
+else|else
+name|p
+operator|++
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1156,6 +1169,9 @@ name|pvect
 parameter_list|,
 name|int
 name|maxargs
+parameter_list|,
+name|int
+name|reduce
 parameter_list|)
 block|{
 name|int
@@ -1250,6 +1266,8 @@ argument_list|(
 name|script
 argument_list|,
 name|instring
+argument_list|,
+name|reduce
 argument_list|)
 expr_stmt|;
 if|if

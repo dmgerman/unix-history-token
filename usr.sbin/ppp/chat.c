@@ -3256,6 +3256,8 @@ name|c
 operator|->
 name|argv
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3875,6 +3877,8 @@ name|VECSIZE
 argument_list|(
 name|vector
 argument_list|)
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 operator|<=
