@@ -7724,6 +7724,21 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|guest
+operator|||
+name|dochroot
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"session root changed to %s"
+argument_list|,
+name|chrootdir
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
@@ -15506,32 +15521,6 @@ operator|<=
 literal|1
 condition|)
 return|return;
-comment|/* If either filename isn't absolute, get current dir for log message. */
-if|if
-condition|(
-operator|(
-name|file1
-operator|&&
-name|file1
-index|[
-literal|0
-index|]
-operator|!=
-literal|'/'
-operator|)
-operator|||
-operator|(
-name|file2
-operator|&&
-name|file2
-index|[
-literal|0
-index|]
-operator|!=
-literal|'/'
-operator|)
-condition|)
-block|{
 if|if
 condition|(
 name|getcwd
@@ -15557,15 +15546,6 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|wd
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|appendf
 argument_list|(
@@ -15624,19 +15604,12 @@ operator|)
 name|cnt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|wd
-index|[
-literal|0
-index|]
-condition|)
 name|appendf
 argument_list|(
 operator|&
 name|msg
 argument_list|,
-literal|" (wd: %s)"
+literal|" (wd: %s"
 argument_list|,
 name|wd
 argument_list|)
@@ -15652,9 +15625,15 @@ argument_list|(
 operator|&
 name|msg
 argument_list|,
-literal|" (chroot: %s)"
+literal|"; chrooted"
+argument_list|)
+expr_stmt|;
+name|appendf
+argument_list|(
+operator|&
+name|msg
 argument_list|,
-name|chrootdir
+literal|")"
 argument_list|)
 expr_stmt|;
 name|syslog
