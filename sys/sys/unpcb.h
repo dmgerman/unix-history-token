@@ -21,6 +21,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/ucred.h>
+end_include
+
 begin_comment
 comment|/*  * Protocol control block for an active  * instance of a UNIX internal protocol.  *  * A socket may be associated with an vnode in the  * file system.  If so, the unp_vnode pointer holds  * a reference count to this vnode, which should be irele'd  * when the socket goes away.  *  * A socket may be connected to another socket, in which  * case the control block of the socket to which it is connected  * is given by unp_conn.  *  * A socket may be referenced by a number of sockets (e.g. several  * sockets may be connected to a datagram socket.)  These sockets  * are in a linked list starting with unp_refs, linked through  * unp_nextref and null-terminated.  Note that a socket may be referenced  * by a number of other sockets and may also reference a socket (not  * necessarily one which is referencing it).  This generates  * the need for unp_refs and unp_nextref to be separate fields.  *  * Stream sockets keep copies of receive sockbuf sb_cc and sb_mbcnt  * so that changes in the sockbuf may be computed to modify  * back pressure on the sender accordingly.  */
 end_comment
@@ -111,9 +117,36 @@ name|unp_gen_t
 name|unp_gencnt
 decl_stmt|;
 comment|/* generation count of this instance */
+name|int
+name|unp_flags
+decl_stmt|;
+comment|/* flags */
+name|struct
+name|xucred
+name|unp_peercred
+decl_stmt|;
+comment|/* peer credentials, if applicable */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Flags in unp_flags.  *  * UNP_HAVEPC - indicates that the unp_peercred member is filled in  * and is really the credentials of the connected peer.  This is used  * to determine whether the contents should be sent to the user or  * not.  *  * UNP_HAVEPCCACHED - indicates that the unp_peercred member is filled  * in, but does *not* contain the credentials of the connected peer  * (there may not even be a peer).  This is set in unp_listen() when  * it fills in unp_peercred for later consumption by unp_connect().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNP_HAVEPC
+value|0x001
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNP_HAVEPCCACHED
+value|0x002
+end_define
 
 begin_define
 define|#
