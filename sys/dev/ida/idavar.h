@@ -617,6 +617,9 @@ name|ida_access
 modifier|*
 name|accessor
 decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
 block|}
 struct|;
 end_struct

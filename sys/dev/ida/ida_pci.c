@@ -500,6 +500,8 @@ literal|"Compaq SMART-2/P array controller"
 block|,
 operator|&
 name|ida_v3_access
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -509,6 +511,8 @@ literal|"Compaq SMART-2SL array controller"
 block|,
 operator|&
 name|ida_v3_access
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -518,6 +522,8 @@ literal|"Compaq Smart Array 3200 controller"
 block|,
 operator|&
 name|ida_v3_access
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -527,6 +533,8 @@ literal|"Compaq Smart Array 3100ES controller"
 block|,
 operator|&
 name|ida_v3_access
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -536,6 +544,8 @@ literal|"Compaq Smart Array 221 controller"
 block|,
 operator|&
 name|ida_v3_access
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -545,6 +555,8 @@ literal|"Compaq Integrated Array controller"
 block|,
 operator|&
 name|ida_v4_access
+block|,
+name|IDA_FIRMWARE
 block|}
 block|,
 block|{
@@ -554,6 +566,8 @@ literal|"Compaq RAID LC2 controller"
 block|,
 operator|&
 name|ida_v4_access
+block|,
+name|IDA_FIRMWARE
 block|}
 block|,
 block|{
@@ -563,6 +577,8 @@ literal|"Compaq Smart Array 4200 controller"
 block|,
 operator|&
 name|ida_v4_access
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -572,6 +588,8 @@ literal|"Compaq Smart Array 4250ES controller"
 block|,
 operator|&
 name|ida_v4_access
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -581,12 +599,16 @@ literal|"Compaq Smart Array 431 controller"
 block|,
 operator|&
 name|ida_v4_access
+block|,
+literal|0
 block|}
 block|,
 block|{
 literal|0
 block|,
 literal|""
+block|,
+literal|0
 block|,
 literal|0
 block|}
@@ -940,6 +962,14 @@ name|accessor
 expr_stmt|;
 name|ida
 operator|->
+name|flags
+operator|=
+name|board
+operator|->
+name|flags
+expr_stmt|;
+name|ida
+operator|->
 name|regs_res_type
 operator|=
 name|SYS_RES_MEMORY
@@ -1181,12 +1211,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-name|ida
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
 name|error
 operator|=
 name|ida_init
