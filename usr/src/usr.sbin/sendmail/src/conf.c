@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.89 (Berkeley) %G%"
+literal|"@(#)conf.c	8.90 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1618,6 +1618,17 @@ name|sa_handler
 operator|=
 name|handler
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SA_RESTART
+name|n
+operator|.
+name|sa_flags
+operator|=
+name|SA_RESTART
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sigaction
@@ -6174,6 +6185,25 @@ else|#
 directive|else
 if|#
 directive|if
+name|SFS_TYPE
+operator|==
+name|SFS_STATVFS
+if|if
+condition|(
+name|statvfs
+argument_list|(
+name|dir
+argument_list|,
+operator|&
+name|fs
+argument_list|)
+operator|==
+literal|0
+condition|)
+else|#
+directive|else
+if|#
+directive|if
 name|defined
 argument_list|(
 name|ultrix
@@ -6204,6 +6234,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+endif|#
+directive|endif
 endif|#
 directive|endif
 endif|#
