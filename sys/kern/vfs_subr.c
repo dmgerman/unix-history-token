@@ -1918,6 +1918,12 @@ argument_list|,
 literal|"VOP_LOCK"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|==
+literal|0
+condition|)
 name|ASSERT_VOP_LOCKED
 argument_list|(
 name|a
