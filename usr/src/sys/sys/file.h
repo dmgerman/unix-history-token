@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.18	83/06/12	*/
+comment|/*	file.h	4.19	83/06/13	*/
 end_comment
 
 begin_ifdef
@@ -17,7 +17,7 @@ begin_struct
 struct|struct
 name|file
 block|{
-name|short
+name|int
 name|f_flag
 decl_stmt|;
 comment|/* see below */
@@ -200,6 +200,28 @@ end_define
 
 begin_comment
 comment|/* signal pgrp when data ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSHLOCK
+value|00200
+end_define
+
+begin_comment
+comment|/* shared lock present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEXLOCK
+value|00400
+end_define
+
+begin_comment
+comment|/* exclusive lock present */
 end_comment
 
 begin_comment
