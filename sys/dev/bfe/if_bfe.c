@@ -303,6 +303,14 @@ literal|"Broadcom BCM4401 Fast Ethernet"
 block|}
 block|,
 block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM4401B0
+block|,
+literal|"Broadcom BCM4401-B0 Fast Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
