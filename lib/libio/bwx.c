@@ -1066,7 +1066,7 @@ name|h
 init|=
 name|handle
 decl_stmt|;
-name|stb
+name|stb_nb
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -1106,7 +1106,7 @@ name|h
 init|=
 name|handle
 decl_stmt|;
-name|stw
+name|stw_nb
 argument_list|(
 operator|(
 name|vm_offset_t
@@ -1146,7 +1146,7 @@ name|h
 init|=
 name|handle
 decl_stmt|;
-name|stl
+name|stl_nb
 argument_list|(
 operator|(
 name|vm_offset_t
