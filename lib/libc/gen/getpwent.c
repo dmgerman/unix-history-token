@@ -1380,6 +1380,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Fix for PR #12008 */
+name|_yp_enabled
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 endif|#
 directive|endif
 block|}
