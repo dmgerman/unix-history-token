@@ -4260,7 +4260,7 @@ name|ending_track
 condition|)
 return|return
 operator|(
-name|ENODEV
+name|EIO
 operator|)
 return|;
 name|bcopy
@@ -4329,7 +4329,7 @@ name|ending_track
 condition|)
 return|return
 operator|(
-name|ENODEV
+name|EIO
 operator|)
 return|;
 if|if
@@ -5090,7 +5090,7 @@ name|ending_track
 condition|)
 return|return
 operator|(
-name|ENODEV
+name|EIO
 operator|)
 return|;
 comment|/* Ignore index fields, 		 * play from start_track to end_track inclusive. */
@@ -5687,6 +5687,15 @@ name|t
 operator|->
 name|aumask
 argument_list|)
+expr_stmt|;
+comment|/* Sony-55E requires the data length field to be zeroed. */
+name|t
+operator|->
+name|au
+operator|.
+name|data_length
+operator|=
+literal|0
 expr_stmt|;
 name|t
 operator|->
@@ -6437,6 +6446,15 @@ operator|(
 name|EIO
 operator|)
 return|;
+comment|/* Sony-55E requires the data length field to be zeroed. */
+name|t
+operator|->
+name|au
+operator|.
+name|data_length
+operator|=
+literal|0
+expr_stmt|;
 name|t
 operator|->
 name|au
