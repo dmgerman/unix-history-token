@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: init.c,v 1.33 1999/06/18 09:08:09 ru Exp $"
+literal|"$Id: init.c,v 1.31.2.1 1999/06/23 10:24:11 ru Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3994,9 +3994,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|free
+argument_list|(
+name|argv
+argument_list|)
+expr_stmt|;
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
+block|}
 while|while
 condition|(
 operator|(
