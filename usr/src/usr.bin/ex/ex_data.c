@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_data.c	7.7 (Berkeley) %G%"
+literal|"@(#)ex_data.c	7.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +70,14 @@ end_else
 
 begin_block
 block|{
+literal|'/'
+operator|,
+literal|'v'
+operator|,
+literal|'a'
+operator|,
+literal|'r'
+operator|,
 literal|'/'
 operator|,
 literal|'t'
