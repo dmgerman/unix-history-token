@@ -1442,6 +1442,9 @@ decl_stmt|;
 name|size_t
 name|re_off
 decl_stmt|;
+name|size_t
+name|re_eoff
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -1586,6 +1589,15 @@ index|]
 operator|.
 name|rm_so
 expr_stmt|;
+name|re_eoff
+operator|=
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_eo
+expr_stmt|;
 comment|/* Copy leading retained string. */
 name|cspace
 argument_list|(
@@ -1632,7 +1644,7 @@ condition|(
 operator|*
 name|s
 operator|&&
-name|re_off
+name|re_eoff
 operator|&&
 name|regexec_e
 argument_list|(
@@ -1655,7 +1667,7 @@ operator|>
 literal|0
 operator|&&
 operator|!
-name|re_off
+name|re_eoff
 condition|)
 name|err
 argument_list|(
