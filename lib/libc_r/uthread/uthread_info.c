@@ -147,6 +147,12 @@ literal|"Waiting process"
 block|}
 block|,
 block|{
+name|PS_SIGSUSPEND
+block|,
+literal|"Suspended, waiting for a signal"
+block|}
+block|,
+block|{
 name|PS_SIGWAIT
 block|,
 literal|"Waiting for a signal"
@@ -189,7 +195,7 @@ block|{
 name|char
 name|s
 index|[
-literal|128
+literal|512
 index|]
 decl_stmt|;
 name|int
@@ -311,9 +317,14 @@ name|state
 condition|)
 break|break;
 comment|/* Output a record for the current thread: */
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
 argument_list|,
 literal|"--------------------\nThread %p (%s) prio %3d state %s [%s:%d]\n"
 argument_list|,
@@ -445,9 +456,14 @@ case|case
 name|PS_FDW_WAIT
 case|:
 comment|/* Write the lock details: */
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
 argument_list|,
 literal|"fd %d[%s:%d]"
 argument_list|,
@@ -488,9 +504,14 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
 argument_list|,
 literal|"owner %pr/%pw\n"
 argument_list|,
@@ -537,9 +558,14 @@ break|break;
 case|case
 name|PS_SIGWAIT
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
 argument_list|,
 literal|"sigmask 0x%08lx\n"
 argument_list|,
@@ -637,13 +663,18 @@ name|pthread
 operator|=
 name|pthread
 operator|->
-name|nxt
+name|nxt_dead
 control|)
 block|{
 comment|/* Output a record for the current thread: */
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
 argument_list|,
 literal|"Thread %p prio %3d [%s:%d]\n"
 argument_list|,
@@ -730,9 +761,14 @@ name|NULL
 condition|)
 block|{
 comment|/* Report the file descriptor lock status: */
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
 argument_list|,
 literal|"fd[%3d] read owner %p count %d [%s:%d]\n        write owner %p count %d [%s:%d]\n"
 argument_list|,
