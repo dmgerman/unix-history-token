@@ -223,7 +223,7 @@ name|hook
 decl_stmt|;
 comment|/* Upstream hook */
 name|struct
-name|callout_handle
+name|callout
 name|timo
 decl_stmt|;
 comment|/* See man timeout(9) */
