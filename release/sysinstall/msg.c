@@ -1571,6 +1571,8 @@ parameter_list|)
 block|{
 name|msgConfirm
 argument_list|(
+literal|"%s"
+argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
@@ -1591,6 +1593,8 @@ parameter_list|)
 block|{
 name|msgNotify
 argument_list|(
+literal|"%s"
+argument_list|,
 name|str
 argument_list|)
 expr_stmt|;

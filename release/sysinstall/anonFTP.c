@@ -766,6 +766,8 @@ name|fprintf
 argument_list|(
 name|fptr
 argument_list|,
+literal|"%s"
+argument_list|,
 name|pwline
 argument_list|)
 expr_stmt|;

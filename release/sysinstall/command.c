@@ -785,6 +785,8 @@ name|ret
 operator|=
 name|vsystem
 argument_list|(
+literal|"%s"
+argument_list|,
 operator|(
 name|char
 operator|*

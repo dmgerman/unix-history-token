@@ -672,6 +672,8 @@ name|msgGetInput
 argument_list|(
 name|cp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|prompt
 argument_list|)
 operator|)
