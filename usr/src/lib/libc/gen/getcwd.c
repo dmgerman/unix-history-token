@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)getcwd.c	4.6	(Berkeley)	%G%	*/
+comment|/*	@(#)getcwd.c	4.7	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -59,13 +59,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PATHSIZE
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
 name|ROOTDIR
 value|"/"
 end_define
@@ -96,7 +89,7 @@ block|{
 name|char
 name|pathbuf
 index|[
-name|PATHSIZE
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* temporary pathname buffer */
@@ -542,7 +535,7 @@ operator|+=
 name|i
 operator|)
 operator|<
-name|PATHSIZE
+name|MAXPATHLEN
 condition|)
 while|while
 condition|(
