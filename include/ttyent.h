@@ -71,6 +71,20 @@ name|_TTYS_NOGROUP
 value|"none"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_TTYS_DIALUP
+value|"dialup"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_TTYS_NETWORK
+value|"network"
+end_define
+
 begin_struct
 struct|struct
 name|ttyent
@@ -100,6 +114,16 @@ directive|define
 name|TTY_SECURE
 value|0x02
 comment|/* allow uid of 0 to login */
+define|#
+directive|define
+name|TTY_DIALUP
+value|0x04
+comment|/* is a dialup tty */
+define|#
+directive|define
+name|TTY_NETWORK
+value|0x08
+comment|/* is a network tty */
 name|int
 name|ty_status
 decl_stmt|;
@@ -179,6 +203,34 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|isdialuptty
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|isnettty
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
