@@ -4598,6 +4598,9 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+return|;
 block|}
 end_function
 
