@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.30	82/10/13	*/
+comment|/*	tty.c	4.31	82/10/17	*/
 end_comment
 
 begin_comment
@@ -1655,6 +1655,9 @@ specifier|extern
 name|int
 name|nldisp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* 	 * If the ioctl involves modification, 	 * insist on being able to write the device, 	 * and hang if in the background. 	 */
 switch|switch
 condition|(
@@ -1691,7 +1694,6 @@ case|:
 case|case
 name|TIOCLSET
 case|:
-comment|/* this is reasonable, but impractical...  		if ((flag& FWRITE) == 0) { 			u.u_error = EBADF; 			return (1); 		}  */
 while|while
 condition|(
 name|tp
@@ -1745,7 +1747,6 @@ name|SIGTTOU
 index|]
 operator|!=
 name|SIG_HOLD
-comment|/*&& 		   (u.u_procp->p_flag&SDETACH)==0) { */
 condition|)
 block|{
 name|gsignal
@@ -1773,13 +1774,12 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* 	 * Process the ioctl. 	 */
 switch|switch
 condition|(
 name|com
 condition|)
 block|{
-comment|/* 	 * Get discipline number 	 */
+comment|/* get discipline number */
 case|case
 name|TIOCGETD
 case|:
@@ -1795,7 +1795,7 @@ operator|->
 name|t_line
 expr_stmt|;
 break|break;
-comment|/* 	 * Set line discipline 	 */
+comment|/* set line discipline */
 case|case
 name|TIOCSETD
 case|:
@@ -1811,24 +1811,22 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|t
 operator|>=
 name|nldisp
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENXIO
-expr_stmt|;
-break|break;
-block|}
+return|return
 operator|(
-name|void
+name|ENXIO
 operator|)
+return|;
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1857,6 +1855,8 @@ if|if
 condition|(
 name|t
 condition|)
+name|error
+operator|=
 operator|(
 operator|*
 name|linesw
@@ -1872,29 +1872,29 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
-operator|==
-literal|0
+name|error
 condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|tp
 operator|->
 name|t_line
 operator|=
 name|t
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
-expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Prevent more opens on channel 	 */
+comment|/* prevent more opens on channel */
 case|case
 name|TIOCEXCL
 case|:
@@ -1916,7 +1916,7 @@ operator|~
 name|TS_XCLUDE
 expr_stmt|;
 break|break;
-comment|/* 	 * Set new parameters 	 */
+comment|/* set new parameters */
 case|case
 name|TIOCSETP
 case|:
@@ -2118,7 +2118,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Send current parameters to user 	 */
+comment|/* send current parameters to user */
 case|case
 name|TIOCGETP
 case|:
@@ -2178,7 +2178,7 @@ name|t_flags
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Hang up line on last close 	 */
+comment|/* hang up line on last close */
 case|case
 name|TIOCHPCL
 case|:
@@ -2286,7 +2286,7 @@ operator|~
 name|TS_ASYNC
 expr_stmt|;
 break|break;
-comment|/* 	 * Set and fetch special characters 	 */
+comment|/* set and fetch special characters */
 case|case
 name|TIOCSETC
 case|:
@@ -2329,8 +2329,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* local ioctls */
-comment|/* 	 * Set/get local special characters. 	 */
+comment|/* set/get local special characters */
 case|case
 name|TIOCSLTC
 case|:
@@ -2373,7 +2372,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Return number of characters immediately available. 	 */
+comment|/* return number of characters immediately available */
 case|case
 name|FIONREAD
 case|:
@@ -2390,7 +2389,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Should allow SPGRP and GPGRP only if tty open for reading. 	 */
+comment|/* should allow SPGRP and GPGRP only if tty open for reading */
 case|case
 name|TIOCSPGRP
 case|:
@@ -2421,7 +2420,7 @@ operator|->
 name|t_pgrp
 expr_stmt|;
 break|break;
-comment|/* 	 * Modify local mode word. 	 */
+comment|/* Modify local mode word */
 case|case
 name|TIOCLBIS
 case|:
@@ -2598,17 +2597,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* end of locals */
 default|default:
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -3004,6 +3003,11 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
