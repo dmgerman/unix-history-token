@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dr.c	1.3	86/11/23	*/
+comment|/*	dr.c	1.4	86/11/25	*/
 end_comment
 
 begin_include
@@ -360,6 +360,20 @@ specifier|register
 name|ushort
 name|status
 decl_stmt|;
+if|if
+condition|(
+name|badaddr
+argument_list|(
+name|reg
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|dr
 operator|=
 operator|(
