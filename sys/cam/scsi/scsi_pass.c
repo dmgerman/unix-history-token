@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/cam_extend.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/cam_periph.h>
 end_include
 
@@ -460,15 +454,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|extend_array
-modifier|*
-name|passperiphs
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -485,26 +470,6 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
-comment|/* 	 * Create our extend array for storing the devices we attach to. 	 */
-name|passperiphs
-operator|=
-name|cam_extend_new
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|passperiphs
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"passm: Failed to alloc extend array!\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Install a global async callback.  This callback will 	 * receive async callbacks like "new device found". 	 */
 name|status
 operator|=
@@ -769,15 +734,6 @@ argument_list|(
 name|softc
 operator|->
 name|dev
-argument_list|)
-expr_stmt|;
-name|cam_extend_release
-argument_list|(
-name|passperiphs
-argument_list|,
-name|periph
-operator|->
-name|unit_number
 argument_list|)
 expr_stmt|;
 if|if
@@ -1118,17 +1074,6 @@ name|softc
 operator|=
 name|softc
 expr_stmt|;
-name|cam_extend_set
-argument_list|(
-name|passperiphs
-argument_list|,
-name|periph
-operator|->
-name|unit_number
-argument_list|,
-name|periph
-argument_list|)
-expr_stmt|;
 comment|/* 	 * We pass in 0 for a blocksize, since we don't  	 * know what the blocksize of this device is, if  	 * it even has a blocksize. 	 */
 name|no_tags
 operator|=
@@ -1210,6 +1155,14 @@ name|periph
 operator|->
 name|unit_number
 argument_list|)
+expr_stmt|;
+name|softc
+operator|->
+name|dev
+operator|->
+name|si_drv1
+operator|=
+name|periph
 expr_stmt|;
 comment|/* 	 * Add an async callback so that we get 	 * notified if this device goes away. 	 */
 name|xpt_setup_ccb
@@ -1314,8 +1267,6 @@ modifier|*
 name|softc
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 decl_stmt|;
 name|int
@@ -1326,25 +1277,16 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* default to no error */
-comment|/* unit = dkunit(dev); */
-comment|/* XXX KDM fix this */
-name|unit
-operator|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-literal|0xff
-expr_stmt|;
 name|periph
 operator|=
-name|cam_extend_get
-argument_list|(
-name|passperiphs
-argument_list|,
-name|unit
-argument_list|)
+operator|(
+expr|struct
+name|cam_periph
+operator|*
+operator|)
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 if|if
 condition|(
@@ -1603,29 +1545,18 @@ modifier|*
 name|softc
 decl_stmt|;
 name|int
-name|unit
-decl_stmt|,
 name|error
 decl_stmt|;
-comment|/* unit = dkunit(dev); */
-comment|/* XXX KDM fix this */
-name|unit
-operator|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-literal|0xff
-expr_stmt|;
 name|periph
 operator|=
-name|cam_extend_get
-argument_list|(
-name|passperiphs
-argument_list|,
-name|unit
-argument_list|)
+operator|(
+expr|struct
+name|cam_periph
+operator|*
+operator|)
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 if|if
 condition|(
@@ -1903,31 +1834,19 @@ name|pass_softc
 modifier|*
 name|softc
 decl_stmt|;
-name|u_int8_t
-name|unit
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* unit = dkunit(dev); */
-comment|/* XXX KDM fix this */
-name|unit
-operator|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|&
-literal|0xff
-expr_stmt|;
 name|periph
 operator|=
-name|cam_extend_get
-argument_list|(
-name|passperiphs
-argument_list|,
-name|unit
-argument_list|)
+operator|(
+expr|struct
+name|cam_periph
+operator|*
+operator|)
+name|dev
+operator|->
+name|si_drv1
 expr_stmt|;
 if|if
 condition|(
