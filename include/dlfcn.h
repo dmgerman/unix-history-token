@@ -76,6 +76,17 @@ begin_comment
 comment|/* Opposite of RTLD_GLOBAL, and the default */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTLD_TRACE
+value|0x200
+end_define
+
+begin_comment
+comment|/* Trace loaded objects and exit */
+end_comment
+
 begin_comment
 comment|/*  * Special handle arguments for dlsym().  */
 end_comment
