@@ -252,7 +252,9 @@ name|archive_entry_header_ustar
 name|template_header
 init|=
 block|{
-block|{ }
+block|{
+literal|""
+block|}
 block|,
 comment|/* name */
 block|{
@@ -316,7 +318,9 @@ literal|'0'
 block|}
 block|,
 comment|/* default: regular file */
-block|{ }
+block|{
+literal|""
+block|}
 block|,
 comment|/* linkname */
 block|{
@@ -331,10 +335,14 @@ literal|'0'
 block|}
 block|,
 comment|/* version */
-block|{ }
+block|{
+literal|""
+block|}
 block|,
 comment|/* uname */
-block|{ }
+block|{
+literal|""
+block|}
 block|,
 comment|/* gname */
 block|{
@@ -359,10 +367,14 @@ literal|'\0'
 block|}
 block|,
 comment|/* rdevminor, space-null termination */
-block|{ }
+block|{
+literal|""
+block|}
 block|,
 comment|/* prefix */
-block|{ }
+block|{
+literal|""
+block|}
 comment|/* padding */
 block|}
 decl_stmt|;
