@@ -786,7 +786,18 @@ name|int
 name|f
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|pos
 decl_stmt|;
+name|pos
+operator|=
+name|strlen
+argument_list|(
+name|snp
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|opt_write
@@ -822,7 +833,7 @@ control|)
 block|{
 name|snp
 index|[
-literal|8
+name|pos
 index|]
 operator|=
 name|c
