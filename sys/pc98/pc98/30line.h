@@ -286,6 +286,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINE30
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -295,6 +301,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -316,6 +327,12 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINE30
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -349,6 +366,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -358,6 +380,12 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINE30
+end_ifdef
 
 begin_function_decl
 specifier|static
@@ -377,6 +405,11 @@ init|=
 name|_25L
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -399,6 +432,12 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINE30
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -905,6 +944,11 @@ name|_LF
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
