@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kernel.h	4.3	82/09/08	*/
+comment|/*	kernel.h	4.4	82/09/12	*/
 end_comment
 
 begin_comment
@@ -89,15 +89,60 @@ begin_comment
 comment|/* awoken once a second */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|unsel
-argument_list|()
-decl_stmt|,
-name|unrto
-argument_list|()
+name|selitexpire
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|realitexpire
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|profiling
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|s_lowpc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|s_textsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_short
+modifier|*
+name|kcount
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

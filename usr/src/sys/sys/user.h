@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.19	82/09/08	*/
+comment|/*	user.h	4.20	82/09/12	*/
 end_comment
 
 begin_include
@@ -69,7 +69,7 @@ comment|/* syscall parameters, results and catches */
 name|int
 name|u_arg
 index|[
-literal|5
+literal|8
 index|]
 decl_stmt|;
 comment|/* arguments to current system call */
@@ -201,7 +201,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* disposition of signals */
-name|int
+name|long
 name|u_sigmask
 index|[
 name|NSIG
@@ -216,6 +216,9 @@ name|caddr_t
 name|u_sigstack
 decl_stmt|;
 comment|/* 0 means no sigstack */
+name|int
+name|u_onsigstack
+decl_stmt|;
 comment|/* on SIGILL code passes compatibility mode fault address  */
 comment|/* on SIGFPE code passes more specific kind of floating point fault */
 comment|/* 1.4 - descriptor management */
@@ -311,7 +314,7 @@ name|struct
 name|rlimit
 name|u_rlimit
 index|[
-literal|5
+name|RLIM_NLIMITS
 index|]
 decl_stmt|;
 name|struct
@@ -438,6 +441,12 @@ name|u_pdir
 decl_stmt|;
 comment|/* inode of parent directory of dirp */
 comment|/* END TRASH */
+name|int
+name|u_stack
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
