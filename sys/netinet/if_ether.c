@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.c	8.1 (Berkeley) 6/10/93  * $Id: if_ether.c,v 1.5 1994/10/02 17:48:36 phk Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.c	8.1 (Berkeley) 6/10/93  * $Id: if_ether.c,v 1.6 1994/10/11 23:16:37 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -396,6 +396,84 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Support: format an IP address.  There should be a standard kernel routine  * to do this.  */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|arp_ntoa
+parameter_list|(
+name|struct
+name|in_addr
+modifier|*
+name|x
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|4
+operator|*
+sizeof|sizeof
+expr|"123"]
+expr_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|ucp
+init|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|x
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%d.%d.%d.%d"
+argument_list|,
+name|ucp
+index|[
+literal|0
+index|]
+operator|&
+literal|0xff
+argument_list|,
+name|ucp
+index|[
+literal|1
+index|]
+operator|&
+literal|0xff
+argument_list|,
+name|ucp
+index|[
+literal|2
+index|]
+operator|&
+literal|0xff
+argument_list|,
+name|ucp
+index|[
+literal|3
+index|]
+operator|&
+literal|0xff
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Timeout routine.  Age arp_tab entries periodically.  */
@@ -2282,13 +2360,12 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: ether address is broadcast for IP address %x!\n"
+literal|"arp: ether address is broadcast for IP address %s!\n"
 argument_list|,
-name|ntohl
+name|arp_ntoa
 argument_list|(
+operator|&
 name|isaddr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2311,13 +2388,12 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"duplicate IP address %x!! sent from ethernet address: %s\n"
+literal|"duplicate IP address %s! sent from ethernet address: %s\n"
 argument_list|,
-name|ntohl
+name|arp_ntoa
 argument_list|(
+operator|&
 name|isaddr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|,
 name|ether_sprintf
@@ -2408,11 +2484,13 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"arp info overwritten for %x by %s\n"
+literal|"arp info overwritten for %s by %s\n"
 argument_list|,
+name|arp_ntoa
+argument_list|(
+operator|&
 name|isaddr
-operator|.
-name|s_addr
+argument_list|)
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -2757,18 +2835,22 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_PROXY
 name|printf
 argument_list|(
-literal|"arp: proxying for %x\n"
+literal|"arp: proxying for %s\n"
 argument_list|,
-name|ntohl
+name|arp_ntoa
 argument_list|(
+operator|&
 name|itaddr
-operator|.
-name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 goto|goto
@@ -3168,6 +3250,13 @@ block|,
 name|AF_INET
 block|}
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|why
+init|=
+literal|0
+decl_stmt|;
 name|sin
 operator|.
 name|sin_addr
@@ -3219,14 +3308,19 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|rt
 operator|->
 name|rt_flags
 operator|&
 name|RTF_GATEWAY
-operator|)
-operator|||
+condition|)
+name|why
+operator|=
+literal|"host is not on local network"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|rt
 operator|->
@@ -3236,7 +3330,14 @@ name|RTF_LLINFO
 operator|)
 operator|==
 literal|0
-operator|||
+condition|)
+name|why
+operator|=
+literal|"could not allocate llinfo"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|rt
 operator|->
 name|rt_gateway
@@ -3245,27 +3346,46 @@ name|sa_family
 operator|!=
 name|AF_LINK
 condition|)
-block|{
+name|why
+operator|=
+literal|"gateway route is not ours"
+expr_stmt|;
 if|if
 condition|(
+name|why
+operator|&&
 name|create
 condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"arptnew failed on %x\n"
+literal|"arplookup %s failed: %s\n"
 argument_list|,
-name|ntohl
+name|arp_ntoa
 argument_list|(
-name|addr
+operator|&
+name|sin
+operator|.
+name|sin_addr
 argument_list|)
+argument_list|,
+name|why
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|why
+condition|)
+block|{
+return|return
+literal|0
 return|;
 block|}
 return|return
