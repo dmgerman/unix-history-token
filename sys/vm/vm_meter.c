@@ -415,11 +415,18 @@ argument_list|,
 argument|object_list
 argument_list|)
 block|{
-name|VM_OBJECT_LOCK
+if|if
+condition|(
+operator|!
+name|VM_OBJECT_TRYLOCK
 argument_list|(
 name|object
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|/* 			 * Avoid a lock-order reversal.  Consequently, 			 * the reported number of active pages may be 			 * greater than the actual number. 			 */
+continue|continue;
+block|}
 name|vm_object_clear_flag
 argument_list|(
 name|object
@@ -724,12 +731,7 @@ argument_list|,
 argument|object_list
 argument_list|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-comment|/* 		 * devices, like /dev/mem, will badly skew our totals 		 */
+comment|/* 		 * Perform unsynchronized reads on the object to avoid 		 * a lock-order reversal.  In this case, the lack of 		 * synchronization should not impair the accuracy of 		 * the reported statistics.  		 */
 if|if
 condition|(
 name|object
@@ -739,11 +741,7 @@ operator|==
 name|OBJT_DEVICE
 condition|)
 block|{
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Devices, like /dev/mem, will badly skew our totals. 			 */
 continue|continue;
 block|}
 name|totalp
@@ -841,11 +839,6 @@ name|resident_page_count
 expr_stmt|;
 block|}
 block|}
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
