@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sleep.c	4.5 (Berkeley) %G%"
+literal|"@(#)sleep.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,6 +254,10 @@ operator|&
 name|ovec
 argument_list|)
 expr_stmt|;
+name|ringring
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -270,10 +274,6 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-expr_stmt|;
-name|ringring
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
