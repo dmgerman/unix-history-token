@@ -95,10 +95,6 @@ name|struct
 name|ttysize
 name|ts
 decl_stmt|;
-name|OnVTY
-operator|=
-name|FALSE
-expr_stmt|;
 name|term
 operator|=
 name|getenv
@@ -161,9 +157,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|OnVTY
+operator|||
+operator|(
 name|stat
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -377,10 +378,6 @@ literal|1
 return|;
 block|}
 block|}
-name|OnVTY
-operator|=
-name|TRUE
-expr_stmt|;
 block|}
 if|if
 condition|(
