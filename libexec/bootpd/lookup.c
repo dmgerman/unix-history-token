@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lookup.c - Lookup IP address, HW address, netmask  *  *	$Id$  */
+comment|/*  * lookup.c - Lookup IP address, HW address, netmask  *  *	$Id: lookup.c,v 1.2 1996/09/22 21:52:21 wosch Exp $  */
 end_comment
 
 begin_include
@@ -15,12 +15,6 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX32
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -30,11 +24,6 @@ end_include
 begin_comment
 comment|/* for struct timeval in net/if.h */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -57,7 +46,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
+file|<net/ethernet.h>
 end_include
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * getif.c : get an interface structure  *  *	$Id$  */
+comment|/*  * getif.c : get an interface structure  *  *	$Id: getif.c,v 1.3 1996/09/22 21:52:12 wosch Exp $  */
 end_comment
 
 begin_include
@@ -63,12 +63,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_AIX32
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -78,11 +72,6 @@ end_include
 begin_comment
 comment|/* for struct timeval in net/if.h */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

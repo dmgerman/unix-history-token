@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * getether.c : get the ethernet address of an interface  *  * All of this code is quite system-specific.  As you may well  * guess, it took a good bit of detective work to figure out!  *  * If you figure out how to do this on another system,  * please let me know.<gwr@mc.com>  *  *	$Id: getether.c,v 1.4 1996/09/22 21:52:09 wosch Exp $  */
+comment|/*  * getether.c : get the ethernet address of an interface  *  * All of this code is quite system-specific.  As you may well  * guess, it took a good bit of detective work to figure out!  *  * If you figure out how to do this on another system,  * please let me know.<gwr@mc.com>  *  *	$Id: getether.c,v 1.4.2.1 1997/12/24 18:58:02 imp Exp $  */
 end_comment
 
 begin_include
@@ -538,6 +538,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
