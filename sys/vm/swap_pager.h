@@ -288,6 +288,35 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* choose underlying swap device and queue up I/O */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|buf
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+name|void
+name|swstrategy
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+name|bp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* probably needs to move elsewhere */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
