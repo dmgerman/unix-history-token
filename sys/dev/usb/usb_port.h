@@ -195,6 +195,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|USBGETSOFTC
+parameter_list|(
+name|d
+parameter_list|)
+value|((void *)(d))
+end_define
+
+begin_define
+define|#
+directive|define
 name|DECLARE_USB_DMA_T
 define|\
 value|struct usb_dma_block; \ 	typedef struct { \ 		struct usb_dma_block *block; \ 		u_int offs; \ 	} usb_dma_t
@@ -706,6 +716,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|USBGETSOFTC
+parameter_list|(
+name|d
+parameter_list|)
+value|((void *)(d))
+end_define
+
+begin_define
+define|#
+directive|define
 name|DECLARE_USB_DMA_T
 define|\
 value|struct usb_dma_block; \ 	typedef struct { \ 		struct usb_dma_block *block; \ 		u_int offs; \ 	} usb_dma_t
@@ -1066,6 +1086,16 @@ parameter_list|(
 name|bdev
 parameter_list|)
 value|device_get_unit(bdev)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USBGETSOFTC
+parameter_list|(
+name|bdev
+parameter_list|)
+value|(device_get_softc(bdev))
 end_define
 
 begin_define
