@@ -209,15 +209,6 @@ begin_comment
 comment|/* i386 */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* VINUMDEBUG */
-end_comment
-
 begin_comment
 comment|/* find the base name of a path name */
 end_comment
@@ -261,6 +252,15 @@ return|;
 comment|/* skip the / */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VINUMDEBUG */
+end_comment
 
 begin_ifdef
 ifdef|#
