@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.3	81/02/15	*/
+comment|/*	autoconf.c	4.4	81/02/15	*/
 end_comment
 
 begin_define
@@ -707,6 +707,9 @@ name|nexcsr
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ubawatch
+argument_list|()
 decl_stmt|;
 for|for
 control|(
@@ -1140,6 +1143,15 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+name|timeout
+argument_list|(
+name|ubawatch
+argument_list|,
+literal|0
+argument_list|,
+name|HZ
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
