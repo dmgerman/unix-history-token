@@ -62,6 +62,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCKF
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -80,7 +97,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.27 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.28 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,7 +118,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.27 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.28 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.27 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.28 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1312,6 +1329,31 @@ argument_list|(
 name|NEWDB
 argument_list|)
 comment|/* see if someone else is rebuilding the alias file already */
+ifdef|#
+directive|ifdef
+name|LOCKF
+if|if
+condition|(
+name|lockf
+argument_list|(
+name|fileno
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+name|F_TEST
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EACCES
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|flock
@@ -1332,6 +1374,8 @@ name|errno
 operator|==
 name|EWOULDBLOCK
 condition|)
+endif|#
+directive|endif
 block|{
 comment|/* yes, they are -- wait until done and then return */
 name|message
@@ -1349,6 +1393,26 @@ name|MD_INITALIAS
 condition|)
 block|{
 comment|/* wait for other rebuild to complete */
+ifdef|#
+directive|ifdef
+name|LOCKF
+operator|(
+name|void
+operator|)
+name|lockf
+argument_list|(
+name|fileno
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+name|F_LOCK
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|(
 name|void
 operator|)
@@ -1362,6 +1426,8 @@ argument_list|,
 name|LOCK_EX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 operator|(
 name|void

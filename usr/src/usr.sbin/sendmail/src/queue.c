@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.32 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.33 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.32 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.33 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,23 @@ ifdef|#
 directive|ifdef
 name|QUEUE
 end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCKF
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* **  Work queue. */
@@ -285,6 +302,49 @@ block|}
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|LOCKF
+if|if
+condition|(
+name|lockf
+argument_list|(
+name|fd
+argument_list|,
+name|F_TLOCK
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EACCES
+condition|)
+name|syserr
+argument_list|(
+literal|"cannot lockf(%s)"
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|#
+directive|else
 if|if
 condition|(
 name|flock
@@ -323,6 +383,8 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 block|}
 do|while
@@ -2713,6 +2775,27 @@ return|return
 name|NULL
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|LOCKF
+if|if
+condition|(
+name|lockf
+argument_list|(
+name|fileno
+argument_list|(
+name|qfp
+argument_list|)
+argument_list|,
+name|F_TLOCK
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|flock
@@ -2729,6 +2812,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
 block|{
 ifdef|#
 directive|ifdef
@@ -3323,6 +3408,27 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOCKF
+if|if
+condition|(
+name|flock
+argument_list|(
+name|fileno
+argument_list|(
+name|f
+argument_list|)
+argument_list|,
+name|F_TEST
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|flock
@@ -3339,6 +3445,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"*"
