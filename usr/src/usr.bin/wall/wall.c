@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wall.c	4.5 (Berkeley) 81/06/12"
+literal|"@(#)wall.c	4.6 (Berkeley) 82/03/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<whoami.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -56,6 +50,15 @@ directive|define
 name|IGNOREUSER
 value|"sleeper"
 end_define
+
+begin_decl_stmt
+name|char
+name|hostname
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -171,6 +174,16 @@ name|FILE
 modifier|*
 name|mf
 decl_stmt|;
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -428,7 +441,6 @@ literal|0
 operator|)
 condition|)
 continue|continue;
-comment|/***		this might be nice, but utmp gets so out of date !! 		sleep(1); 	***/
 name|sendmes
 argument_list|(
 name|p
@@ -490,7 +502,6 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-comment|/***			you can't do this with lots of users& MAXUPROC 	i = fork(); 	if(i == -1) { 		fprintf(stderr, "Try again\n"); 		return; 	}  ***/
 while|while
 condition|(
 operator|(
@@ -604,7 +615,7 @@ argument_list|,
 literal|"\n
 literal|Broadcast Message from %s!%s (%.*s) at %d:%02d ...\r\n\n"
 argument_list|,
-name|sysname
+name|hostname
 argument_list|,
 name|who
 argument_list|,

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)who.c	4.3 (Berkeley) %G%"
+literal|"@(#)who.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<whoami.h>
 end_include
 
 begin_include
@@ -83,6 +77,15 @@ end_function_decl
 
 begin_decl_stmt
 name|char
+name|hostname
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 modifier|*
 name|ttyname
 argument_list|()
@@ -108,6 +111,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -296,13 +302,16 @@ operator|==
 literal|3
 condition|)
 block|{
-specifier|static
-name|char
-name|myname
-index|[]
-init|=
-name|sysname
-decl_stmt|;
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -319,7 +328,7 @@ name|printf
 argument_list|(
 literal|"%s!"
 argument_list|,
-name|myname
+name|hostname
 argument_list|)
 expr_stmt|;
 name|putline

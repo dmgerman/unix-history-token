@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.4 (Berkeley) %G%"
+literal|"@(#)write.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<whoami.h>
 end_include
 
 begin_define
@@ -208,6 +202,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -818,6 +815,23 @@ argument_list|(
 name|eof
 argument_list|)
 expr_stmt|;
+block|{
+name|char
+name|hostname
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|tf
@@ -825,18 +839,6 @@ argument_list|,
 literal|"\r\nMessage from "
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|interdata
-name|fprintf
-argument_list|(
-name|tf
-argument_list|,
-literal|"(Interdata) "
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|fprintf
 argument_list|(
 name|tf
@@ -844,7 +846,7 @@ argument_list|,
 literal|"%s!%s on %s at %d:%02d ...\r\n
 literal|"
 argument_list|,
-name|sysname
+name|hostname
 argument_list|,
 name|me
 argument_list|,
@@ -859,6 +861,7 @@ operator|->
 name|tm_min
 argument_list|)
 expr_stmt|;
+block|}
 name|fflush
 argument_list|(
 name|tf

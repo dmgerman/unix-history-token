@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.11 (Berkeley) 82/02/01"
+literal|"@(#)shutdown.c	4.13 (Berkeley) 82/03/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<whoami.h>
 end_include
 
 begin_comment
@@ -150,6 +144,15 @@ directive|define
 name|IGNOREUSER
 value|"sleeper"
 end_define
+
+begin_decl_stmt
+name|char
+name|hostname
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -475,6 +478,16 @@ name|shutter
 operator|=
 name|getlogin
 argument_list|()
+expr_stmt|;
+name|gethostname
+argument_list|(
+name|hostname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|argc
 operator|--
@@ -1612,7 +1625,7 @@ name|term
 argument_list|,
 literal|"\007\007*** System shutdown message from %s!%s ***\n"
 argument_list|,
-name|sysname
+name|hostname
 argument_list|,
 name|shutter
 argument_list|)
@@ -2075,7 +2088,7 @@ name|fp
 argument_list|,
 literal|" (by %s!%s)"
 argument_list|,
-name|sysname
+name|hostname
 argument_list|,
 name|shutter
 argument_list|)
