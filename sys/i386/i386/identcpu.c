@@ -4419,7 +4419,8 @@ literal|"\023RSVD"
 comment|/* Reserved, unknown */
 literal|"\024MP"
 comment|/* Multiprocessor Capable */
-literal|"\025<b20>"
+literal|"\025NX"
+comment|/* Has EFER.NXE, NX (no execute pte bit) */
 literal|"\026<b21>"
 literal|"\027AMIE"
 comment|/* AMD MMX Instruction Extensions */
@@ -4430,10 +4431,12 @@ literal|"\032<b25>"
 literal|"\033<b26>"
 literal|"\034<b27>"
 literal|"\035<b28>"
-literal|"\036<b29>"
+literal|"\036LM"
+comment|/* Long mode */
 literal|"\037DSP"
 comment|/* AMD 3DNow! Instruction Extensions */
 literal|"\0403DNow!"
+comment|/* AMD 3DNow! Instructions */
 argument_list|)
 expr_stmt|;
 block|}
