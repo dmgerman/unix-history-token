@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttinit.c	3.3 83/08/15"
+literal|"@(#)ttinit.c	3.4 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tt.h"
 end_include
 
 begin_macro
@@ -200,28 +206,12 @@ return|return
 operator|-
 literal|1
 return|;
-if|if
-condition|(
+return|return
 call|(
 modifier|*
 name|tp
 operator|->
 name|tt_func
-call|)
-argument_list|()
-operator|<
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-return|return
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_init
 call|)
 argument_list|()
 return|;

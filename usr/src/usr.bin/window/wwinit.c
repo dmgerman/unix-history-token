@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwinit.c	3.2 83/08/12"
+literal|"@(#)wwinit.c	3.3 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tt.h"
 end_include
 
 begin_decl_stmt
@@ -269,15 +275,7 @@ call|(
 modifier|*
 name|tt
 operator|.
-name|tt_reset
-call|)
-argument_list|()
-expr_stmt|;
-call|(
-modifier|*
-name|tt
-operator|.
-name|tt_clreos
+name|tt_init
 call|)
 argument_list|()
 expr_stmt|;

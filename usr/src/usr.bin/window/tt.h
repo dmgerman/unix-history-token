@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tt.h	3.2 83/08/11  */
+comment|/*  *	@(#)tt.h	3.3 83/08/15  */
 end_comment
 
 begin_struct
@@ -17,21 +17,7 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|tt_reset
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tt_cleanup
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tt_move
+name|tt_end
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -46,6 +32,13 @@ name|int
 function_decl|(
 modifier|*
 name|tt_setmodes
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|tt_move
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -109,20 +102,6 @@ name|int
 function_decl|(
 modifier|*
 name|tt_clear
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tt_window
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|tt_flash
 function_decl|)
 parameter_list|()
 function_decl|;

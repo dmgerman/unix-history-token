@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwscroll.c	3.1 83/08/12"
+literal|"@(#)wwscroll.c	3.2 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tt.h"
 end_include
 
 begin_comment

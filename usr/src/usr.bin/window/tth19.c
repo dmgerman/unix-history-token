@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tth19.c	3.3 83/08/12"
+literal|"@(#)tth19.c	3.4 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"ww.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tt.h"
 end_include
 
 begin_comment
@@ -790,82 +796,6 @@ end_macro
 
 begin_block
 block|{
-name|float
-name|cpms
-init|=
-operator|(
-name|float
-operator|)
-name|wwbaud
-operator|/
-literal|10000
-decl_stmt|;
-comment|/* char per ms */
-name|h19_msp10c
-operator|=
-literal|10
-operator|/
-name|cpms
-expr_stmt|;
-comment|/* ms per 10 char */
-ifdef|#
-directive|ifdef
-name|notdef
-name|tt
-operator|.
-name|tt_ILmf
-operator|=
-name|cpms
-expr_stmt|;
-comment|/* 1 ms */
-name|tt
-operator|.
-name|tt_ILov
-operator|=
-literal|2
-expr_stmt|;
-name|tt
-operator|.
-name|tt_ICmf
-operator|=
-name|cpms
-operator|*
-literal|1.5
-expr_stmt|;
-comment|/* 1.5 ms */
-name|tt
-operator|.
-name|tt_ICov
-operator|=
-literal|2
-expr_stmt|;
-name|tt
-operator|.
-name|tt_DCmf
-operator|=
-literal|0
-expr_stmt|;
-name|tt
-operator|.
-name|tt_DCov
-operator|=
-literal|2
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-literal|0
-return|;
-block|}
-end_block
-
-begin_macro
-name|h19_reset
-argument_list|()
-end_macro
-
-begin_block
-block|{
 name|esc
 argument_list|()
 expr_stmt|;
@@ -917,7 +847,7 @@ block|}
 end_block
 
 begin_macro
-name|h19_cleanup
+name|h19_end
 argument_list|()
 end_macro
 
@@ -1041,6 +971,24 @@ end_macro
 
 begin_block
 block|{
+name|float
+name|cpms
+init|=
+operator|(
+name|float
+operator|)
+name|wwbaud
+operator|/
+literal|10000
+decl_stmt|;
+comment|/* char per ms */
+name|h19_msp10c
+operator|=
+literal|10
+operator|/
+name|cpms
+expr_stmt|;
+comment|/* ms per 10 char */
 name|tt
 operator|.
 name|tt_setinsert
@@ -1085,9 +1033,9 @@ name|h19_init
 expr_stmt|;
 name|tt
 operator|.
-name|tt_cleanup
+name|tt_end
 operator|=
-name|h19_cleanup
+name|h19_end
 expr_stmt|;
 name|tt
 operator|.
@@ -1112,12 +1060,6 @@ operator|.
 name|tt_move
 operator|=
 name|h19_move
-expr_stmt|;
-name|tt
-operator|.
-name|tt_reset
-operator|=
-name|h19_reset
 expr_stmt|;
 name|tt
 operator|.
