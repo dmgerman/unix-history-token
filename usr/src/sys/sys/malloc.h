@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -673,6 +673,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_ISOFSMNT
+value|57
+end_define
+
+begin_comment
+comment|/* ISOFS mount structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ISOFSNODE
+value|58
+end_define
+
+begin_comment
+comment|/* ISOFS vnode private part */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
 value|74
 end_define
@@ -810,7 +832,11 @@ value|\ 	"ether_multi",
 comment|/* 55 M_IFMADDR */
 value|\ 	"mrt",
 comment|/* 56 M_MRTABLE */
-value|\ 	NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	"temp",
+value|\ 	"ISOFS mount",
+comment|/* 57 M_ISOFSMNT */
+value|\ 	"ISOFS node",
+comment|/* 58 M_ISOFSNODE */
+value|\ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	"temp",
 comment|/* 74 M_TEMP */
 value|\ }
 end_define
