@@ -3,6 +3,10 @@ begin_comment
 comment|/* Code for the buffer data structure.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -5243,15 +5247,6 @@ name|buf_empty_p
 argument_list|(
 name|buf
 argument_list|)
-operator|||
-name|getc
-argument_list|(
-name|bc
-operator|->
-name|fp
-argument_list|)
-operator|!=
-name|EOF
 condition|)
 block|{
 ifdef|#
