@@ -581,6 +581,12 @@ operator|->
 name|ni_queue
 argument_list|)
 expr_stmt|;
+name|ni
+operator|->
+name|ni_queue
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
