@@ -1922,7 +1922,7 @@ block|{
 case|case
 name|PCIC_I82365SL_DF
 case|:
-comment|/*  		 * Check to see if the power on bit is clear.  If so, we're 		 * using the wrong voltage and should try 3.3V instead. 		 */
+comment|/*  		 * Look at the VS[12]# bits on the card.  If VS1 is clear 		 * then we should apply 3.3 volts.  Maybe we should do this 		 * with other cards too. Cirrus logic cards (PD67[12]*) do 		 * things like this in a different way. 		 */
 name|c
 operator|=
 name|sp
@@ -1939,7 +1939,7 @@ condition|(
 operator|(
 name|c
 operator|&
-name|PCIC_POW
+name|PCIC_VS1STAT
 operator|)
 operator|==
 literal|0
@@ -2041,6 +2041,7 @@ break|break;
 case|case
 literal|33
 case|:
+comment|/* 			 * The wildboar code has comments that state that 			 * the IBM KING controller doesn't support 3.3V 			 * on the "IBM Smart PC card drive".  The code 			 * intemates that's the only place they have seen 			 * it used and that there's a boatload of issues 			 * with it. 			 */
 if|if
 condition|(
 name|sp

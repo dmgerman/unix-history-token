@@ -1061,6 +1061,28 @@ begin_comment
 comment|/* s/w card detect interrupt */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PCIC_VS1STAT
+value|0x40
+end_define
+
+begin_comment
+comment|/* 0 VS1# low, 1 VS1# high */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_VS2STAT
+value|0x80
+end_define
+
+begin_comment
+comment|/* 0 VS2# low, 1 VS2# high */
+end_comment
+
 begin_comment
 comment|/* CL-PD67[12]x: For 3.3V cards, etc. (PCIC_MISC1) */
 end_comment
