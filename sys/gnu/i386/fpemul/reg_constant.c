@@ -18,18 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -49,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<gnu/i386/fpemul/status_w.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<gnu/i386/fpemul/reg_constant.h>
 end_include
 
 begin_decl_stmt
