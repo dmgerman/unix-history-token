@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.2 1994/10/03 23:14:48 phk Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  */
+comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.3 1994/10/04 03:09:13 phk Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  */
 end_comment
 
 begin_include
@@ -130,10 +130,8 @@ name|unsigned
 name|gz_wp
 decl_stmt|;
 name|u_char
+modifier|*
 name|gz_slide
-index|[
-name|WSIZE
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -296,7 +294,7 @@ sizeof|sizeof
 expr|*
 name|gz
 argument_list|,
-name|M_TEMP
+name|M_GZIP
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -319,6 +317,38 @@ name|gz
 argument_list|)
 expr_stmt|;
 comment|/* waste of time ? */
+name|gz
+operator|->
+name|gz_slide
+operator|=
+name|malloc
+argument_list|(
+name|WSIZE
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|gz
+operator|->
+name|gz_slide
+condition|)
+block|{
+name|free
+argument_list|(
+name|gz
+argument_list|,
+name|M_GZIP
+argument_list|)
+expr_stmt|;
+return|return
+name|ENOMEM
+return|;
+block|}
 name|gz
 operator|->
 name|ip
@@ -540,8 +570,17 @@ expr_stmt|;
 name|free
 argument_list|(
 name|gz
+operator|->
+name|gz_slide
 argument_list|,
 name|M_TEMP
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|gz
+argument_list|,
+name|M_GZIP
 argument_list|)
 expr_stmt|;
 return|return
@@ -1812,7 +1851,7 @@ name|malloc
 argument_list|(
 name|size
 argument_list|,
-name|M_TEMP
+name|M_GZIP
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1841,7 +1880,7 @@ name|free
 argument_list|(
 name|ptr
 argument_list|,
-name|M_TEMP
+name|M_GZIP
 argument_list|)
 expr_stmt|;
 block|}
