@@ -874,7 +874,6 @@ operator|->
 name|lun
 operator|=
 name|wfdnlun
-operator|++
 expr_stmt|;
 name|t
 operator|->
@@ -1236,7 +1235,9 @@ name|device_stats
 argument_list|,
 literal|"wfd"
 argument_list|,
-name|wfdnlun
+name|t
+operator|->
+name|lun
 argument_list|,
 name|t
 operator|->
@@ -1252,6 +1253,9 @@ name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
 name|DEVSTAT_PRIORITY_WFD
 argument_list|)
+expr_stmt|;
+name|wfdnlun
+operator|++
 expr_stmt|;
 return|return
 operator|(
