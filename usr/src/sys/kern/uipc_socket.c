@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_socket.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1405,7 +1405,6 @@ argument_list|,
 name|control
 argument_list|,
 name|flags
-comment|/*, sbwait_func, sbwait_arg*/
 argument_list|)
 specifier|register
 expr|struct
@@ -1452,10 +1451,6 @@ name|int
 name|flags
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* 	int (*sbwait_func)(); 	caddr_t sbwait_arg; */
-end_comment
 
 begin_block
 block|{
@@ -1769,7 +1764,6 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-comment|/* 			if (sbwait_func) 				error = (*sbwait_func)(&so->so_snd, sbwait_arg); 			else */
 name|error
 operator|=
 name|sbwait
@@ -1810,6 +1804,8 @@ name|space
 operator|-=
 name|clen
 expr_stmt|;
+do|do
+block|{
 if|if
 condition|(
 name|uio
@@ -1836,8 +1832,6 @@ name|M_EOR
 expr_stmt|;
 block|}
 else|else
-do|do
-block|{
 do|do
 block|{
 if|if
@@ -2251,7 +2245,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Implement receive operations on a socket.  * We depend on the way that records are added to the sockbuf  * by sbappend*.  In particular, each record (mbufs linked through m_next)  * must begin with an address if the protocol so specifies,  * followed by an optional mbuf or mbufs containing ancillary data,  * and then zero or more mbufs of data.  * In order to avoid blocking network interrupts for the entire time here,  * we splx() while doing the actual copy to user space.  * Although the sockbuf is locked, new data may still be appended,  * and thus we must maintain consistency of the sockbuf during that time.  *   * The caller may receive the data as a single mbuf chain by supplying  * an mbuf **mp for use in returning the chain.  The uio is then used  * only for the count in uio_resid.  */
+comment|/*  * Implement receive operations on a socket.  * We depend on the way that records are added to the sockbuf  * by sbappend*.  In particular, each record (mbufs linked through m_next)  * must begin with an address if the protocol so specifies,  * followed by an optional mbuf or mbufs containing ancillary data,  * and then zero or more mbufs of data.  * In order to avoid blocking network interrupts for the entire time here,  * we splx() while doing the actual copy to user space.  * Although the sockbuf is locked, new data may still be appended,  * and thus we must maintain consistency of the sockbuf during that time.  *   * The caller may receive the data as a single mbuf chain by supplying  * an mbuf **mp0 for use in returning the chain.  The uio is then used  * only for the count in uio_resid.  */
 end_comment
 
 begin_expr_stmt
@@ -2263,12 +2257,11 @@ name|paddr
 argument_list|,
 name|uio
 argument_list|,
-name|mp
+name|mp0
 argument_list|,
 name|controlp
 argument_list|,
 name|flagsp
-comment|/*, sbwait_func, sbwait_arg*/
 argument_list|)
 specifier|register
 expr|struct
@@ -2300,7 +2293,7 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
-name|mp
+name|mp0
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,10 +2313,6 @@ name|flagsp
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* 	int (*sbwait_func)(); 	caddr_t sbwait_arg; */
-end_comment
-
 begin_block
 block|{
 specifier|register
@@ -2331,11 +2320,13 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+decl_stmt|,
+modifier|*
+modifier|*
+name|mp
 decl_stmt|;
 specifier|register
 name|int
-name|resid
-decl_stmt|,
 name|flags
 decl_stmt|,
 name|len
@@ -2365,6 +2356,10 @@ name|moff
 decl_stmt|,
 name|type
 decl_stmt|;
+name|mp
+operator|=
+name|mp0
+expr_stmt|;
 if|if
 condition|(
 name|paddr
@@ -2539,12 +2534,6 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-name|resid
-operator|=
-name|uio
-operator|->
-name|uio_resid
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -2553,7 +2542,9 @@ name|so_state
 operator|&
 name|SS_ISCONFIRMING
 operator|&&
-name|resid
+name|uio
+operator|->
+name|uio_resid
 condition|)
 call|(
 modifier|*
@@ -2633,7 +2624,9 @@ name|so_rcv
 operator|.
 name|sb_cc
 operator|<
-name|resid
+name|uio
+operator|->
+name|uio_resid
 operator|&&
 name|so
 operator|->
@@ -2646,6 +2639,40 @@ operator|->
 name|so_rcv
 operator|.
 name|sb_lowat
+operator|)
+operator|||
+operator|(
+operator|(
+name|flags
+operator|&
+name|MSG_WAITALL
+operator|)
+operator|&&
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_cc
+operator|<
+name|uio
+operator|->
+name|uio_resid
+operator|&&
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_hiwat
+operator|>=
+name|uio
+operator|->
+name|uio_resid
+operator|&&
+operator|!
+name|sosendallatonce
+argument_list|(
+name|so
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -2742,7 +2769,9 @@ goto|;
 block|}
 if|if
 condition|(
-name|resid
+name|uio
+operator|->
+name|uio_resid
 operator|==
 literal|0
 condition|)
@@ -2774,7 +2803,6 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-comment|/* 		if (sbwait_func) 			error = (*sbwait_func)(&so->so_rcv, sbwait_arg); 		else */
 name|error
 operator|=
 name|sbwait
@@ -3167,7 +3195,9 @@ name|m_type
 operator|==
 name|type
 operator|&&
-name|resid
+name|uio
+operator|->
+name|uio_resid
 operator|>
 literal|0
 operator|&&
@@ -3228,7 +3258,9 @@ name|SS_RCVATMARK
 expr_stmt|;
 name|len
 operator|=
-name|resid
+name|uio
+operator|->
+name|uio_resid
 expr_stmt|;
 if|if
 condition|(
@@ -3304,18 +3336,19 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
-name|resid
-operator|=
-name|uio
-operator|->
-name|uio_resid
-expr_stmt|;
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
 block|}
+else|else
+name|uio
+operator|->
+name|uio_resid
+operator|-=
+name|len
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -3392,11 +3425,27 @@ name|m
 operator|->
 name|m_next
 expr_stmt|;
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_mb
+operator|=
 name|m
 operator|=
 name|m
 operator|->
 name|m_next
+expr_stmt|;
+operator|*
+name|mp
+operator|=
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 block|}
 else|else
@@ -3447,6 +3496,24 @@ name|len
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|mp
+condition|)
+operator|*
+name|mp
+operator|=
+name|m_copym
+argument_list|(
+name|m
+argument_list|,
+literal|0
+argument_list|,
+name|len
+argument_list|,
+name|M_WAIT
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_data
@@ -3524,7 +3591,7 @@ operator|&
 name|MSG_EOR
 condition|)
 break|break;
-comment|/* 		 * If the MSG_WAITALL flag is set (for non-atomic socket), 		 * we must not quit until "resid == 0" or an error 		 * termination.  If a signal/timeout occurs, return 		 * prematurely but without error. 		 * Keep sockbuf locked against other readers. 		 */
+comment|/* 		 * If the MSG_WAITALL flag is set (for non-atomic socket), 		 * we must not quit until "uio->uio_resid == 0" or an error 		 * termination.  If a signal/timeout occurs, return 		 * with a short count but without error. 		 * Keep sockbuf locked against other readers. 		 */
 while|while
 condition|(
 name|flags
@@ -3535,7 +3602,9 @@ name|m
 operator|==
 literal|0
 operator|&&
-name|resid
+name|uio
+operator|->
+name|uio_resid
 operator|>
 literal|0
 operator|&&
@@ -3573,20 +3642,6 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mp
-condition|)
-operator|*
-name|mp
-operator|=
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -3626,20 +3681,6 @@ break|break;
 continue|continue;
 block|}
 block|}
-if|if
-condition|(
-name|mp
-condition|)
-operator|*
-name|mp
-operator|=
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
