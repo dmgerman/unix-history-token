@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)mout.c	4.1	%G%	*/
+comment|/*	@(#)mout.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -783,6 +783,8 @@ name|x
 expr_stmt|;
 if|if
 condition|(
+name|qlen
+operator|&&
 name|qval
 index|[
 name|qlen
