@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 87 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1277,11 +1277,11 @@ operator|==
 name|AE_AML_NO_RETURN_VALUE
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Invoked method did not return a value, %s\n"
 operator|,
 name|AcpiFormatException
@@ -1292,11 +1292,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"GetPredicate Failed, %s\n"
 operator|,
 name|AcpiFormatException
@@ -1338,11 +1338,11 @@ operator|&
 name|ArgCount
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Popped scope, Op=%p\n"
 operator|,
 name|Op
@@ -1479,11 +1479,11 @@ case|case
 name|ACPI_OP_TYPE_UNKNOWN
 case|:
 comment|/* The opcode is unrecognized.  Just skip unknown opcodes */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Found unknown opcode %lX at AML offset %X, ignoring\n"
 operator|,
 name|Opcode
@@ -1886,11 +1886,11 @@ condition|(
 name|OpInfo
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Op=%p Opcode=%4.4lX Aml %p Oft=%5.5lX\n"
 operator|,
 name|Op
@@ -1942,6 +1942,10 @@ case|case
 name|AML_DWORD_OP
 case|:
 comment|/* AML_DWORDATA_ARG */
+case|case
+name|AML_QWORD_OP
+case|:
+comment|/* AML_QWORDATA_ARG */
 case|case
 name|AML_STRING_OP
 case|:
@@ -2535,11 +2539,11 @@ operator|&
 name|ArgCount
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Popped scope, Op=%p\n"
 operator|,
 name|Op
@@ -2578,11 +2582,11 @@ block|}
 block|}
 comment|/* while ParserState->Aml */
 comment|/*      * Complete the last Op (if not completed), and clear the scope stack.      * It is easily possible to end an AML "package" with an unbounded number      * of open scopes (such as when several AML blocks are closed with      * sequential closing braces).  We want to terminate each one cleanly.      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Package complete at Op %p\n"
 operator|,
 name|Op
@@ -2844,11 +2848,11 @@ argument_list|(
 literal|"PsParseAml"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Entered with Scope=%p Aml=%p size=%lX\n"
 operator|,
 name|StartScope
@@ -3100,11 +3104,11 @@ operator|=
 name|AE_OK
 expr_stmt|;
 comment|/*      * Execute the walk loop as long as there is a valid Walk State.  This      * handles nested control method invocations without recursion.      */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"State=%p\n"
 operator|,
 name|WalkState
@@ -3132,11 +3136,11 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"Completed one call to walk loop, State=%p\n"
 operator|,
 name|WalkState
@@ -3221,11 +3225,11 @@ name|EffectiveReturnDesc
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_PARSE
-argument_list|,
 operator|(
+name|ACPI_DB_PARSE
+operator|,
 literal|"ReturnValue=%p, State=%p\n"
 operator|,
 name|WalkState

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -101,7 +101,6 @@ argument_list|,
 name|FieldDatumByteOffset
 argument_list|)
 expr_stmt|;
-comment|/* Parameter validation */
 name|RgnDesc
 operator|=
 name|ObjDesc
@@ -110,30 +109,6 @@ name|CommonField
 operator|.
 name|RegionObj
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-operator|||
-operator|!
-name|RgnDesc
-condition|)
-block|{
-name|DEBUG_PRINTP
-argument_list|(
-name|ACPI_ERROR
-argument_list|,
-operator|(
-literal|"Internal error - null handle\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_NO_OPERAND
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ACPI_TYPE_REGION
@@ -145,11 +120,11 @@ operator|.
 name|Type
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Needed Region, found type %x %s\n"
 operator|,
 name|RgnDesc
@@ -254,11 +229,11 @@ name|AccessByteWidth
 condition|)
 block|{
 comment|/*               * This is the case where the AccessType (AccWord, etc.) is wider              * than the region itself.  For example, a region of length one              * byte, and a field with Dword access specified.              */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Field access width (%d bytes) too large for region size (%X)\n"
 operator|,
 name|ObjDesc
@@ -277,11 +252,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * Offset rounded up to next multiple of field width          * exceeds region length, indicate an error          */
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Field base+offset+width %X+%X+%X exceeds region size (%X bytes) field=%p region=%p\n"
 operator|,
 name|ObjDesc
@@ -492,11 +467,11 @@ name|BaseByteOffset
 operator|+
 name|FieldDatumByteOffset
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_BFIELD
-argument_list|,
 operator|(
+name|ACPI_DB_BFIELD
+operator|,
 literal|"Region %s(%X) width %X base:off %X:%X at %8.8lX%8.8lX\n"
 operator|,
 name|AcpiUtGetRegionName
@@ -567,11 +542,11 @@ operator|==
 name|AE_NOT_IMPLEMENTED
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Region %s(%X) not implemented\n"
 operator|,
 name|AcpiUtGetRegionName
@@ -600,11 +575,11 @@ operator|==
 name|AE_NOT_EXIST
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"Region %s(%X) has no handler\n"
 operator|,
 name|AcpiUtGetRegionName
@@ -627,11 +602,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%p, wrong source type - %s\n"
 operator|,
 name|ObjDesc
@@ -653,11 +628,11 @@ name|AE_AML_INTERNAL
 expr_stmt|;
 break|break;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_BFIELD
-argument_list|,
 operator|(
+name|ACPI_DB_BFIELD
+operator|,
 literal|"Returned value=%08lX \n"
 operator|,
 operator|*
@@ -942,11 +917,11 @@ operator|>
 name|BufferLength
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Field size %X (bytes) too large for buffer (%X)\n"
 operator|,
 name|ByteFieldLength
@@ -975,11 +950,11 @@ operator|.
 name|AccessByteWidth
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"ByteLen=%x, DatumLen=%x, BitGran=%x, ByteGran=%x\n"
 operator|,
 name|ByteFieldLength
@@ -1465,11 +1440,11 @@ name|BaseByteOffset
 operator|+
 name|FieldDatumByteOffset
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_BFIELD
-argument_list|,
 operator|(
+name|ACPI_DB_BFIELD
+operator|,
 literal|"Store %X in Region %s(%X) at %8.8lX%8.8lX width %X\n"
 operator|,
 name|Value
@@ -1535,11 +1510,11 @@ operator|==
 name|AE_NOT_IMPLEMENTED
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"**** Region type %s(%X) not implemented\n"
 operator|,
 name|AcpiUtGetRegionName
@@ -1568,11 +1543,11 @@ operator|==
 name|AE_NOT_EXIST
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"**** Region type %s(%X) does not have a handler\n"
 operator|,
 name|AcpiUtGetRegionName
@@ -1595,11 +1570,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"%p, wrong source type - %s\n"
 operator|,
 name|ObjDesc
@@ -1621,11 +1596,11 @@ name|AE_AML_INTERNAL
 expr_stmt|;
 break|break;
 block|}
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_BFIELD
-argument_list|,
 operator|(
+name|ACPI_DB_BFIELD
+operator|,
 literal|"Value written=%08lX \n"
 operator|,
 name|Value
@@ -1775,11 +1750,11 @@ name|Mask
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
-argument_list|,
 operator|(
+name|ACPI_DB_ERROR
+operator|,
 literal|"WriteWithUpdateRule: Unknown UpdateRule setting: %x\n"
 operator|,
 name|ObjDesc
@@ -1810,11 +1785,11 @@ argument_list|,
 name|MergedValue
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|TRACE_BFIELD
-argument_list|,
 operator|(
+name|ACPI_DB_BFIELD
+operator|,
 literal|"Mask %X DatumOffset %X Value %X, MergedValue %X\n"
 operator|,
 name|Mask
@@ -1906,11 +1881,11 @@ operator|<
 name|ByteFieldLength
 condition|)
 block|{
-name|DEBUG_PRINTP
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"Buffer length %X too small for field %X\n"
 operator|,
 name|BufferLength
@@ -1940,11 +1915,11 @@ operator|.
 name|AccessByteWidth
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|ACPI_DEBUG_PRINT
 argument_list|(
-name|ACPI_INFO
-argument_list|,
 operator|(
+name|ACPI_DB_INFO
+operator|,
 literal|"ByteLen=%x, DatumLen=%x, BitGran=%x, ByteGran=%x\n"
 operator|,
 name|ByteFieldLength
