@@ -1269,7 +1269,7 @@ expr_stmt|;
 if|if
 condition|(
 name|dk_ndrive
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -2091,7 +2091,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3lu %3lu "
+literal|"%3lu "
 argument_list|,
 name|rate
 argument_list|(
@@ -2113,8 +2113,6 @@ operator|.
 name|v_vnodeout
 operator|)
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2128,11 +2126,30 @@ name|rate
 argument_list|(
 name|sum
 operator|.
-name|v_scan
+name|v_tfree
 operator|-
 name|osum
 operator|.
-name|v_scan
+name|v_tfree
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%3lu "
+argument_list|,
+name|rate
+argument_list|(
+name|sum
+operator|.
+name|v_pdpages
+operator|-
+name|osum
+operator|.
+name|v_pdpages
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2754,11 +2771,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u swap pager pageouts\n"
+literal|"%9u swap pager pages paged in\n"
 argument_list|,
 name|sum
 operator|.
-name|v_swapout
+name|v_swappgsin
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2766,11 +2783,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u swap pager pages paged in\n"
+literal|"%9u swap pager pageouts\n"
 argument_list|,
 name|sum
 operator|.
-name|v_swappgsin
+name|v_swapout
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2802,18 +2819,6 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u vnode pager pageouts\n"
-argument_list|,
-name|sum
-operator|.
-name|v_vnodeout
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
 literal|"%9u vnode pager pages paged in\n"
 argument_list|,
 name|sum
@@ -2826,11 +2831,71 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%9u vnode pager pageouts\n"
+argument_list|,
+name|sum
+operator|.
+name|v_vnodeout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
 literal|"%9u vnode pager pages paged out\n"
 argument_list|,
 name|sum
 operator|.
 name|v_vnodepgsout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u VM object cache lookups\n"
+argument_list|,
+name|sum
+operator|.
+name|v_lookups
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u VM object hits\n"
+argument_list|,
+name|sum
+operator|.
+name|v_hits
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u page daemon wakeups\n"
+argument_list|,
+name|sum
+operator|.
+name|v_pdwakeups
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u pages examined by the page daemon\n"
+argument_list|,
+name|sum
+operator|.
+name|v_pdpages
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2886,47 +2951,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u pages examined by the clock daemon\n"
+literal|"%9u copy-on-write faults\n"
 argument_list|,
 name|sum
 operator|.
-name|v_scan
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%9u revolutions of the clock hand\n"
-argument_list|,
-name|sum
-operator|.
-name|v_rev
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%9u VM object cache lookups\n"
-argument_list|,
-name|sum
-operator|.
-name|v_lookups
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%9u VM object hits\n"
-argument_list|,
-name|sum
-operator|.
-name|v_hits
+name|v_cow_faults
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2946,11 +2975,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u copy-on-write faults\n"
+literal|"%9u pages freed\n"
 argument_list|,
 name|sum
 operator|.
-name|v_cow_faults
+name|v_tfree
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2982,11 +3011,23 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u pages free\n"
+literal|"%9u pages active\n"
 argument_list|,
 name|sum
 operator|.
-name|v_free_count
+name|v_active_count
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u pages inactive\n"
+argument_list|,
+name|sum
+operator|.
+name|v_inactive_count
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3006,23 +3047,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u pages active\n"
+literal|"%9u pages free\n"
 argument_list|,
 name|sum
 operator|.
-name|v_active_count
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%9u pages inactive\n"
-argument_list|,
-name|sum
-operator|.
-name|v_inactive_count
+name|v_free_count
 argument_list|)
 expr_stmt|;
 operator|(
