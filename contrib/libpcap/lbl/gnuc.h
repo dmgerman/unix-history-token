@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: gnuc.h,v 1.3 95/10/09 02:47:01 leres Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/libpcap/lbl/gnuc.h,v 1.3.1.1 1999/10/07 23:46:41 mcr Exp $ (LBL) */
 end_comment
 
 begin_comment
