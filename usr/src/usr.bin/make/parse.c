@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.19 (Berkeley) %G%"
+literal|"@(#)parse.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -797,6 +797,19 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ParseUnreadc
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5819,6 +5832,55 @@ block|}
 end_function
 
 begin_comment
+comment|/*-  *---------------------------------------------------------------------  * ParseUnreadc  --  *	Put back a character to the current file   *  * Results:  *	None.  *  * Side Effects:  *---------------------------------------------------------------------  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ParseUnreadc
+parameter_list|(
+name|c
+parameter_list|)
+name|int
+name|c
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|curFILE
+condition|)
+block|{
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|curFILE
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|curPTR
+condition|)
+block|{
+operator|*
+operator|--
+operator|(
+name|curPTR
+operator|->
+name|ptr
+operator|)
+operator|=
+name|c
+expr_stmt|;
+return|return;
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/* ParseSkipLine():  *	Grab the next line  */
 end_comment
 
@@ -6121,17 +6183,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|c
 operator|==
 literal|'\t'
-operator|)
-operator|||
-operator|(
-name|c
-operator|==
-literal|'.'
-operator|)
 condition|)
 block|{
 name|ignComment
@@ -6257,7 +6311,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 		     * Check for comments, semiNL's, etc. -- easier than 		     * ungetc(c, curFILE); continue; 		     */
+comment|/* 		     * Check for comments, semiNL's, etc. -- easier than 		     * ParseUnreadc(c); continue; 		     */
 goto|goto
 name|test_char
 goto|;
@@ -6274,11 +6328,9 @@ name|semiNL
 condition|)
 block|{
 comment|/* 		     * To make sure the command that may be following this 		     * semi-colon begins with a tab, we push one back into the 		     * input stream. This will overwrite the semi-colon in the 		     * buffer. If there is no command following, this does no 		     * harm, since the newline remains in the buffer and the 		     * whole line is ignored. 		     */
-name|ungetc
+name|ParseUnreadc
 argument_list|(
 literal|'\t'
-argument_list|,
-name|curFILE
 argument_list|)
 expr_stmt|;
 goto|goto
