@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.30 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.31 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.30 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.31 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,6 +258,11 @@ parameter_list|()
 function_decl|;
 specifier|extern
 name|void
+name|esmtp_check
+parameter_list|()
+function_decl|;
+specifier|extern
+name|void
 name|helo_options
 parameter_list|()
 function_decl|;
@@ -397,7 +402,7 @@ name|TimeOuts
 operator|.
 name|to_initial
 argument_list|,
-name|NULL
+name|esmtp_check
 argument_list|)
 expr_stmt|;
 if|if
@@ -779,6 +784,79 @@ expr_stmt|;
 return|return;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  ESMTP_CHECK -- check to see if this implementation likes ESMTP protocol ** ** **	Parameters: **		line -- the response line. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|esmtp_check
+parameter_list|(
+name|line
+parameter_list|,
+name|m
+parameter_list|,
+name|mci
+parameter_list|,
+name|e
+parameter_list|)
+name|char
+modifier|*
+name|line
+decl_stmt|;
+name|MAILER
+modifier|*
+name|m
+decl_stmt|;
+specifier|register
+name|MCI
+modifier|*
+name|mci
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+operator|<
+literal|5
+condition|)
+return|return;
+name|line
+operator|+=
+literal|4
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"ESMTP "
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_ESMTP
+expr_stmt|;
+block|}
+end_function
 
 begin_escape
 end_escape
