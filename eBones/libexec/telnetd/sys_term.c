@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -67,6 +68,26 @@ modifier|*
 name|altlogin
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|cleanopen
+parameter_list|(
+name|char
+modifier|*
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|scrub_env
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -268,6 +289,12 @@ end_endif
 begin_comment
 comment|/* PARENT_DOES_UTMP */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -4975,7 +5002,7 @@ comment|/*  * getptyslave()  *  * Open the slave side of the pty, and do any ini
 end_comment
 
 begin_function
-name|int
+name|void
 name|getptyslave
 parameter_list|()
 block|{
@@ -6396,12 +6423,6 @@ name|long
 name|time
 parameter_list|()
 function_decl|;
-name|char
-name|name
-index|[
-literal|256
-index|]
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NEWINIT
@@ -7100,6 +7121,7 @@ name|envinit
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|envp
 operator|=
@@ -7107,6 +7129,7 @@ name|getenv
 argument_list|(
 literal|"TZ"
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|envp
@@ -7178,11 +7201,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -7927,12 +7945,14 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|user
 operator|=
 name|getenv
 argument_list|(
 literal|"USER"
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -8375,12 +8395,10 @@ begin_comment
 comment|/*  * scrub_env()  *  * Remove a few things from the environment that  * don't need to be there.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|scrub_env
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -8492,7 +8510,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * cleanup()  *  * This is the routine to call when we are all through, to  * clean up anything that needs to be cleaned up.  */

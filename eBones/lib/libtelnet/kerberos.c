@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -190,27 +191,6 @@ block|,
 literal|0
 block|,
 name|AUTHTYPE_KERBEROS_V4
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-name|str_name
-index|[
-literal|1024
-index|]
-init|=
-block|{
-name|IAC
-block|,
-name|SB
-block|,
-name|TELOPT_AUTHENTICATION
-block|,
-name|TELQUAL_NAME
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -679,15 +659,6 @@ block|{
 name|KTEXT_ST
 name|auth
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|Block
-name|enckey
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 name|char
 name|instance
 index|[
@@ -756,12 +727,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|realm
 operator|=
 name|krb_get_phost
 argument_list|(
 name|RemoteHostName
 argument_list|)
+operator|)
 condition|)
 name|strncpy
 argument_list|(
@@ -819,6 +792,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|r
 operator|=
 name|krb_mk_req
@@ -834,6 +808,7 @@ name|realm
 argument_list|,
 literal|0L
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
@@ -854,6 +829,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|r
 operator|=
 name|krb_get_cred
@@ -867,6 +843,7 @@ argument_list|,
 operator|&
 name|cred
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
@@ -1351,6 +1328,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|r
 operator|=
 name|krb_rd_req
@@ -1369,6 +1347,7 @@ name|adat
 argument_list|,
 literal|""
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if

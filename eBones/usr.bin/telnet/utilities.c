@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -61,7 +62,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -99,6 +112,46 @@ include|#
 directive|include
 file|"externs.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/auth.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|FILE
@@ -427,7 +480,6 @@ decl_stmt|;
 name|int
 name|offset
 decl_stmt|;
-extern|extern pettydump;
 name|offset
 operator|=
 literal|0
@@ -4248,8 +4300,6 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
-name|def_case
-label|:
 if|if
 condition|(
 name|isprint

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -56,6 +57,46 @@ include|#
 directive|include
 file|"telnetd.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/auth.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * utility functions performing io related tasks  */
@@ -4274,8 +4315,6 @@ literal|2
 expr_stmt|;
 break|break;
 default|default:
-name|def_case
-label|:
 if|if
 condition|(
 name|isprint
@@ -5185,11 +5224,6 @@ argument_list|(
 name|nfrontp
 argument_list|,
 literal|" ENC_KEYID"
-argument_list|,
-name|pointer
-index|[
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|nfrontp
@@ -5210,11 +5244,6 @@ argument_list|(
 name|nfrontp
 argument_list|,
 literal|" DEC_KEYID"
-argument_list|,
-name|pointer
-index|[
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|nfrontp

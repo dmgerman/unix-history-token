@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -31,7 +32,31 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"encrypt.h"
 end_include
 
 begin_decl_stmt

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -166,6 +167,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arpa/telnet.h>
 end_include
 
@@ -198,6 +211,46 @@ include|#
 directive|include
 file|"types.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/auth.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -381,12 +434,54 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
+name|int
+name|help
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|call
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|cmdrc
+parameter_list|(
+name|char
+modifier|*
+name|m1
+parameter_list|,
+name|char
+modifier|*
+name|m2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|quit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_typedef
 typedef|typedef
@@ -522,10 +617,12 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
+operator|)
 condition|)
 block|{
 specifier|register
@@ -697,20 +794,18 @@ begin_comment
 comment|/*  * Make a character string into a number.  *  * Todo:  1.  Could take random integers (12, 0x12, 012, 0b1).  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|special
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -771,7 +866,7 @@ return|return
 name|c
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Construct a control character sequence  * for a special character.  */
@@ -1516,12 +1611,6 @@ comment|/* how many bytes we are going to need to send */
 name|int
 name|i
 decl_stmt|;
-name|int
-name|question
-init|=
-literal|0
-decl_stmt|;
-comment|/* was at least one argument a question */
 name|struct
 name|sendlist
 modifier|*
@@ -5300,7 +5389,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int
+name|void
 name|dokludgemode
 parameter_list|()
 block|{
@@ -5507,7 +5596,7 @@ end_function
 
 begin_function
 name|int
-name|setmode
+name|setmod
 parameter_list|(
 name|bit
 parameter_list|)
@@ -5657,7 +5746,7 @@ literal|"isig"
 block|,
 literal|"Enable signal trapping"
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -5669,7 +5758,7 @@ literal|"+isig"
 block|,
 literal|0
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -5693,7 +5782,7 @@ literal|"edit"
 block|,
 literal|"Enable character editing"
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -5705,7 +5794,7 @@ literal|"+edit"
 block|,
 literal|0
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -5729,7 +5818,7 @@ literal|"softtabs"
 block|,
 literal|"Enable tab expansion"
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -5741,7 +5830,7 @@ literal|"+softtabs"
 block|,
 literal|0
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -5765,7 +5854,7 @@ literal|"litecho"
 block|,
 literal|"Enable literal character echo"
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -5777,7 +5866,7 @@ literal|"+litecho"
 block|,
 literal|0
 block|,
-name|setmode
+name|setmod
 block|,
 literal|1
 block|,
@@ -6903,36 +6992,25 @@ begin_comment
 comment|/*VARARGS*/
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|bye
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+decl_stmt|;
 comment|/* Number of arguments */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* arguments */
-end_comment
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -7048,18 +7126,16 @@ literal|1
 return|;
 comment|/* Keep lint, etc., happy */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*VARARGS*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|quit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -7082,7 +7158,7 @@ argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*VARARGS*/
@@ -7321,28 +7397,23 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|slccmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|slclist
@@ -7443,7 +7514,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -7816,30 +7887,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|env_cmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|envlist
@@ -7995,7 +8058,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_struct
 struct|struct
@@ -8163,6 +8226,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strchr
@@ -8172,6 +8236,7 @@ name|epp
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -8451,12 +8516,14 @@ name|ep
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|env_find
 argument_list|(
 name|var
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -8619,12 +8686,14 @@ name|ep
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|env_find
 argument_list|(
 name|var
 argument_list|)
+operator|)
 condition|)
 block|{
 name|ep
@@ -8708,12 +8777,14 @@ name|ep
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|env_find
 argument_list|(
 name|var
 argument_list|)
+operator|)
 condition|)
 name|ep
 operator|->
@@ -8744,12 +8815,14 @@ name|ep
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|env_find
 argument_list|(
 name|var
 argument_list|)
+operator|)
 condition|)
 name|ep
 operator|->
@@ -8935,7 +9008,11 @@ operator|=
 operator|&
 name|envlisthead
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -8944,11 +9021,13 @@ condition|)
 block|{
 while|while
 condition|(
+operator|(
 name|nep
 operator|=
 name|nep
 operator|->
 name|next
+operator|)
 condition|)
 block|{
 if|if
@@ -9004,12 +9083,14 @@ name|ep
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|ep
 operator|=
 name|env_find
 argument_list|(
 name|var
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -9457,30 +9538,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|auth_cmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|authlist
@@ -9654,7 +9727,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -10063,30 +10136,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|encrypt_cmd
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|encryptlist
@@ -10386,7 +10451,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -10542,28 +10607,23 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|status
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -10945,7 +11005,7 @@ return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -10957,12 +11017,10 @@ begin_comment
 comment|/*  * Function that gets called when SIGINFO is received.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ayt_status
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -10979,7 +11037,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -12265,6 +12323,7 @@ operator|==
 name|NULL
 operator|||
 operator|(
+operator|(
 name|pw
 operator|=
 name|getpwnam
@@ -12279,10 +12338,12 @@ name|pw_uid
 operator|!=
 name|getuid
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwuid
@@ -12290,6 +12351,7 @@ argument_list|(
 name|getuid
 argument_list|()
 argument_list|)
+operator|)
 condition|)
 name|user
 operator|=
@@ -12527,14 +12589,6 @@ init|=
 literal|"try to enter line or character mode ('mode ?' for more)"
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|int
-name|help
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -12790,7 +12844,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -12852,7 +12914,15 @@ block|,
 literal|0
 block|}
 block|,
+block|{
 literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -12865,17 +12935,18 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|call
-argument_list|(
-argument|va_alist
-argument_list|)
-name|va_dcl
+parameter_list|(
+name|va_alist
+parameter_list|)
+function|va_dcl
 block|{
 name|va_list
 name|ap
-block|;
+decl_stmt|;
 typedef|typedef
 name|int
 function_decl|(
@@ -12886,10 +12957,7 @@ parameter_list|()
 function_decl|;
 name|intrtn_t
 name|routine
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|args
@@ -12897,25 +12965,16 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|argno
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|va_start
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|routine
 operator|=
 operator|(
@@ -12927,9 +12986,6 @@ name|intrtn_t
 argument_list|)
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|(
@@ -12953,17 +13009,11 @@ condition|)
 block|{
 empty_stmt|;
 block|}
-end_while
-
-begin_expr_stmt
 name|va_end
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 call|(
 modifier|*
@@ -12977,10 +13027,11 @@ argument_list|,
 name|args
 argument_list|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}       static
+specifier|static
 name|Command
 modifier|*
 name|getcmd
@@ -12998,6 +13049,7 @@ name|cm
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|cm
 operator|=
 operator|(
@@ -13020,6 +13072,7 @@ argument_list|(
 name|Command
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 return|return
 name|cm
@@ -13437,28 +13490,23 @@ begin_comment
 comment|/*  * Help command.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|help
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|Command
@@ -13513,10 +13561,8 @@ name|help
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-literal|0
-return|;
 block|}
+else|else
 while|while
 condition|(
 operator|--
@@ -13587,10 +13633,12 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -13612,24 +13660,22 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|cmdrc
-argument_list|(
-argument|m1
-argument_list|,
-argument|m2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m1
+parameter_list|,
+name|m2
+parameter_list|)
 name|char
 modifier|*
 name|m1
 decl_stmt|,
-modifier|*
+decl|*
 name|m2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -14362,10 +14408,12 @@ name|cp2
 operator|=
 name|cp
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|cp2
+operator|)
 condition|;
 name|cp2
 operator|++
@@ -14463,12 +14511,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|host
 operator|=
 name|gethostbyname
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 condition|)
 block|{
 if|#

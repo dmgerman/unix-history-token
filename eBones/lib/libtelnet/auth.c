@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -81,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_endif
@@ -363,6 +370,31 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|auth_onoff
+parameter_list|(
+name|char
+modifier|*
+name|type
+parameter_list|,
+name|int
+name|on
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|auth_encrypt_user
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Authentication types supported.  Plese note that these are stored  * in priority order, i.e. try the first one first.  */
@@ -1905,6 +1937,7 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|ap
 operator|=
 name|findauthenticator
@@ -1919,6 +1952,7 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -1994,6 +2028,7 @@ condition|)
 return|return;
 if|if
 condition|(
+operator|(
 name|ap
 operator|=
 name|findauthenticator
@@ -2008,6 +2043,7 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -2070,10 +2106,6 @@ name|int
 name|cnt
 decl_stmt|;
 block|{
-name|Authenticator
-modifier|*
-name|ap
-decl_stmt|;
 name|unsigned
 name|char
 name|savename

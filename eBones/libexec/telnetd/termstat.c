@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -33,6 +34,26 @@ include|#
 directive|include
 file|"telnetd.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * local variables  */
@@ -1126,12 +1147,14 @@ name|MODE_ACK
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|changed
 operator|=
 operator|(
 name|useeditmode
 operator|^
 name|editmode
+operator|)
 operator|)
 condition|)
 block|{

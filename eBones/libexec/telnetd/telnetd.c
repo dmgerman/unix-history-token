@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -264,6 +266,32 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|ENCRYPTION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/encrypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<libtelnet/misc.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SecurID
 argument_list|)
 end_if
@@ -420,13 +448,6 @@ name|strbufd
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|readstream
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_else
 else|#
 directive|else
@@ -462,6 +483,70 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<termcap.h>
+end_include
+
+begin_function_decl
+name|int
+name|readstream
+parameter_list|(
+name|int
+name|p
+parameter_list|,
+name|char
+modifier|*
+name|ibuf
+parameter_list|,
+name|int
+name|bufsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|doit
+parameter_list|(
+name|struct
+name|sockaddr_in
+modifier|*
+name|who
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|terminaltypeok
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|startslave
+parameter_list|(
+name|char
+modifier|*
+name|host
+parameter_list|,
+name|int
+name|autologin
+parameter_list|,
+name|char
+modifier|*
+name|autoname
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1476,6 +1561,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|sp
 operator|=
 name|getservbyname
@@ -1485,6 +1571,7 @@ name|argv
 argument_list|,
 literal|"tcp"
 argument_list|)
+operator|)
 condition|)
 block|{
 name|sin
@@ -3488,22 +3575,17 @@ begin_comment
 comment|/*  * Get a pty, scan input lines.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|doit
-argument_list|(
-argument|who
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|who
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|who
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -3512,9 +3594,6 @@ decl_stmt|,
 modifier|*
 name|inet_ntoa
 argument_list|()
-decl_stmt|;
-name|int
-name|t
 decl_stmt|;
 name|struct
 name|hostent
@@ -3958,7 +4037,7 @@ expr_stmt|;
 comment|/* begin server process */
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of doit */
