@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.11	(Berkeley) 83/12/08  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.12	(Berkeley) 84/05/25  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -76,6 +76,14 @@ specifier|extern
 name|int
 name|tsize
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|stipple
 decl_stmt|;
 end_decl_stmt
 
@@ -163,13 +171,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*----------------------------------------------------------------------------*  | Routine:	HGPrintElt (element_pointer)  |  | Results:	examines a picture element and calls the appropriate  |		routine(s) to print them according to their type.  |		After the picture is drawn, current position is (lastx, lasty).  *----------------------------------------------------------------------------*/
+comment|/*----------------------------------------------------------------------------*  | Routine:	HGPrintElt (element_pointer, baseline)  |  | Results:	examines a picture element and calls the appropriate  |		routine(s) to print them according to their type.  |		After the picture is drawn, current position is (lastx, lasty).  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_macro
 name|HGPrintElt
 argument_list|(
 argument|element
+argument_list|,
+argument|baseline
 argument_list|)
 end_macro
 
@@ -177,6 +187,12 @@ begin_decl_stmt
 name|ELT
 modifier|*
 name|element
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|baseline
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +212,14 @@ specifier|register
 name|int
 name|length
 decl_stmt|;
+specifier|static
+name|int
+name|didstipple
+init|=
+literal|1
+decl_stmt|;
+comment|/* flag to prevent multipe messages about no */
+comment|/* stipple font requested from being printed */
 if|if
 condition|(
 operator|!
@@ -256,6 +280,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|element
+operator|->
+name|brushf
+condition|)
+block|{
+comment|/* if there is a brush, the */
 name|HGSetBrush
 argument_list|(
 name|element
@@ -263,7 +295,8 @@ operator|->
 name|brushf
 argument_list|)
 expr_stmt|;
-comment|/* graphics need brush set */
+comment|/* graphics need it set */
+block|}
 switch|switch
 condition|(
 name|element
@@ -439,6 +472,126 @@ expr_stmt|;
 block|}
 block|}
 comment|/* end while */
+name|cr
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|POLYGON
+case|:
+name|tmove
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stipple
+condition|)
+block|{
+name|didstipple
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|element
+operator|->
+name|brushf
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\\D'p %d"
+argument_list|,
+name|element
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\\D'P %d"
+argument_list|,
+name|element
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|didstipple
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"no stipple font requested for picture at line %d"
+argument_list|,
+name|baseline
+argument_list|)
+expr_stmt|;
+name|didstipple
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\\D'p 0"
+argument_list|)
+expr_stmt|;
+block|}
+while|while
+condition|(
+operator|!
+name|Nullpoint
+argument_list|(
+operator|(
+name|p1
+operator|=
+name|PTNextPoint
+argument_list|(
+name|p1
+argument_list|)
+operator|)
+argument_list|)
+condition|)
+block|{
+name|dx
+argument_list|(
+operator|(
+name|double
+operator|)
+name|p1
+operator|->
+name|x
+argument_list|)
+expr_stmt|;
+name|dy
+argument_list|(
+operator|(
+name|double
+operator|)
+name|p1
+operator|->
+name|y
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* end while */
+empty_stmt|;
+name|putchar
+argument_list|(
+literal|'\''
+argument_list|)
+expr_stmt|;
 name|cr
 argument_list|()
 expr_stmt|;
