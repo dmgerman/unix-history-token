@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/* $Id: if_lmc_fbsd.c,v 1.3 1999/01/12 13:27:42 explorer Exp $ */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1994-1997 Matt Thomas (matt@3am-software.com)  * Copyright (c) LAN Media Corporation 1998, 1999.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1994-1997 Matt Thomas (matt@3am-software.com)  * Copyright (c) LAN Media Corporation 1998, 1999.  * Copyright (c) 2000 Stephen Kiernan (sk-ports@vegamuse.org)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  *	$Id: if_lmc_fbsd.c,v 1.3 1999/01/12 13:27:42 explorer Exp $  */
 end_comment
 
 begin_comment
@@ -47,20 +39,17 @@ parameter_list|)
 value|(sc)->lmc_pci_busno = (config_id->bus), \ 			      (sc)->lmc_pci_devno = (config_id->slot)
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|lmc_shutdown
-parameter_list|(
-name|int
-name|howto
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void lmc_shutdown(int howto, void * arg);
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -142,6 +131,7 @@ end_endif
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|lmc_pci_probe
@@ -335,6 +325,27 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_PCI_DRIVER
+end_ifdef
+
+begin_expr_stmt
+name|COMPAT_PCI_DRIVER
+argument_list|(
+name|ti
+argument_list|,
+name|lmcdevice
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|DATA_SET
 argument_list|(
@@ -344,6 +355,15 @@ name|lmcdevice
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_PCI_DRIVER */
+end_comment
 
 begin_function
 specifier|static
@@ -363,8 +383,6 @@ name|sc
 decl_stmt|;
 name|int
 name|retval
-decl_stmt|,
-name|idx
 decl_stmt|;
 name|u_int32_t
 name|revinfo
@@ -403,18 +421,6 @@ decl_stmt|;
 name|lmc_spl_t
 name|s
 decl_stmt|;
-name|lmc_intrfunc_t
-function_decl|(
-modifier|*
-name|intr_rtn
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-init|=
-name|lmc_intr_normal
-function_decl|;
 if|if
 condition|(
 name|unit
@@ -760,21 +766,6 @@ name|revinfo
 expr_stmt|;
 if|#
 directive|if
-name|BSD
-operator|>=
-literal|199506
-name|sc
-operator|->
-name|lmc_if
-operator|.
-name|if_softc
-operator|=
-name|sc
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
 name|defined
 argument_list|(
 name|LMC_IOMAPPED
@@ -1010,9 +1001,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"pass %d.%d, serial "
+literal|"lmc%d: pass %d.%d, serial "
 name|LMC_EADDR_FMT
 literal|"\n"
+argument_list|,
+name|unit
 argument_list|,
 operator|(
 name|sc
@@ -1045,7 +1038,7 @@ name|pci_map_int
 argument_list|(
 name|config_id
 argument_list|,
-name|intr_rtn
+name|lmc_intr_normal
 argument_list|,
 operator|(
 name|void
@@ -1070,20 +1063,17 @@ return|return;
 block|}
 if|#
 directive|if
+literal|0
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
 name|LMC_DEVCONF
 argument_list|)
-name|at_shutdown
-argument_list|(
-name|lmc_shutdown
-argument_list|,
-name|sc
-argument_list|,
-name|SHUTDOWN_POST_SYNC
-argument_list|)
-expr_stmt|;
+block|at_shutdown(lmc_shutdown, sc, SHUTDOWN_POST_SYNC);
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|s
@@ -1114,61 +1104,22 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|lmc_shutdown
-parameter_list|(
-name|int
-name|howto
-parameter_list|,
-name|void
-modifier|*
-name|arg
-parameter_list|)
-block|{
-name|lmc_softc_t
-modifier|*
-specifier|const
-name|sc
-init|=
-name|arg
-decl_stmt|;
-name|LMC_CSR_WRITE
-argument_list|(
-name|sc
-argument_list|,
-name|csr_busmode
-argument_list|,
-name|TULIP_BUSMODE_SWRESET
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|lmc_miireg16
-operator|=
+begin_if
+if|#
+directive|if
 literal|0
-expr_stmt|;
+end_if
+
+begin_comment
+unit|static void lmc_shutdown(int howto, void * arg) { 	lmc_softc_t * const sc = arg; 	LMC_CSR_WRITE(sc, csr_busmode, TULIP_BUSMODE_SWRESET); 	DELAY(10);  	sc->lmc_miireg16 = 0;
 comment|/* deassert ready, and all others too */
-name|printf
-argument_list|(
-literal|"lmc: 5\n"
-argument_list|)
-expr_stmt|;
-name|lmc_led_on
-argument_list|(
-name|sc
-argument_list|,
-name|LMC_MII16_LED_ALL
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|printf("lmc: 5\n"); 	lmc_led_on(sc, LMC_MII16_LED_ALL); }
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
