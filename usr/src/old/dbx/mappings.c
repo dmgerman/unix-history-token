@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mappings.c	5.1 (Berkeley) %G%"
+literal|"@(#)mappings.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,7 +395,17 @@ operator|.
 name|nlines
 operator|==
 literal|0
-name|or
+condition|)
+block|{
+name|r
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|addr
 operator|<
 name|linetab
@@ -408,8 +418,12 @@ condition|)
 block|{
 name|r
 operator|=
+name|exact
+condition|?
 operator|-
 literal|1
+else|:
+literal|0
 expr_stmt|;
 block|}
 else|else
