@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	main.c	1.14	(Berkeley) 84/01/18  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values (font, size, scale, thickness) may be  * overridden with a "default" command and are further overridden by  * commands in the input.  A description of the command-line options are  * listed below.  A space is NOT required for the operand of an option.  *  *	command options are:  *  *	-L dir	set the library directory to dir.  If a file is not found  *		in the current directory, it is looked for in dir (default  *		is /usr/lib/gremlib).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *	-P dev	and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *		Inside the GS and GE, commands are accepted to reconfigure  *	    the picture.  At most one command may reside on each line, and  *	    each command is followed by a parameter separated by white space.  *	    The commands are as follows, and may be abbreviated down to one  *	    character (with exception of "scale" down to "sc") and may be  *	    upper or lower case.  *  *			      default  -  make all settings in the current  *					  .GS/.GE the global defaults.  *					  Height, width and file are NOT saved.  *			   1, 2, 3, 4  -  set size 1, 2, 3, or 4 (followed  *					  by an integer point size).  *	roman, italics, bold, special  -  set gremlin's fonts to any other  *					  troff font (one or two characters)  *			     scale, x  -  scale is IN ADDITION to the global  *					  scale factor from the default.  *			   pointscale  -  turn on scaling point sizes to  *					  match "scale" commands.  (optional  *					  operand "off" to turn it off)  *		narrow, medium, thick  -  set pixel widths of lines.  *				 file  -  set the file name to read the  *					  gremlin picture from.  If the file  *					  isn't in the current directory, the  *					  gremlin library is tried.  *			width, height  -  these two commands override any  *					  scaling factor that is in effect,  *					  and forces the picture to fit into  *					  either the height or width specified,  *					  whichever makes the picture smaller.  *					  The operand for these two commands is  *					  a floating-point number in units of  *					  inches  *  *	Troff number registers used:  g1 through g9.  g1 is the width of the  *	picture, and g2 is the height.  g3, and g4, save information, g8  *	and g9 are used for text processing and g5-g7 are reserved.  */
+comment|/*	main.c	1.15	(Berkeley) 84/03/15  *  *	This file contains the main and file system dependent routines  * for processing gremlin files into troff input.  The program watches  * input go by to standard output, only interpretting things between .GS  * and .GE lines.  Default values (font, size, scale, thickness) may be  * overridden with a "default" command and are further overridden by  * commands in the input.  A description of the command-line options are  * listed below.  A space is NOT required for the operand of an option.  *  *	command options are:  *  *	-L dir	set the library directory to dir.  If a file is not found  *		in the current directory, it is looked for in dir (default  *		is /usr/lib/gremlib).  *  *	-T dev	Prepare output for "dev" printer.  Default is for the varian  *	-P dev	and versatec printers.  Devices acceptable are:  ver, var, ip.  *  *		Inside the GS and GE, commands are accepted to reconfigure  *	    the picture.  At most one command may reside on each line, and  *	    each command is followed by a parameter separated by white space.  *	    The commands are as follows, and may be abbreviated down to one  *	    character (with exception of "scale" down to "sc") and may be  *	    upper or lower case.  *  *			      default  -  make all settings in the current  *					  .GS/.GE the global defaults.  *					  Height, width and file are NOT saved.  *			   1, 2, 3, 4  -  set size 1, 2, 3, or 4 (followed  *					  by an integer point size).  *	roman, italics, bold, special  -  set gremlin's fonts to any other  *					  troff font (one or two characters)  *			     scale, x  -  scale is IN ADDITION to the global  *					  scale factor from the default.  *			   pointscale  -  turn on scaling point sizes to  *					  match "scale" commands.  (optional  *					  operand "off" to turn it off)  *		narrow, medium, thick  -  set pixel widths of lines.  *				 file  -  set the file name to read the  *					  gremlin picture from.  If the file  *					  isn't in the current directory, the  *					  gremlin library is tried.  *			width, height  -  these two commands override any  *					  scaling factor that is in effect,  *					  and forces the picture to fit into  *					  either the height or width specified,  *					  whichever makes the picture smaller.  *					  The operand for these two commands is  *					  a floating-point number in units of  *					  inches  *  *	Troff number registers used:  g1 through g9.  g1 is the width of the  *	picture, and g2 is the height.  g3, and g4, save information, g8  *	and g9 are used for text processing and g5-g7 are reserved.  */
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"main.c	1.14	84/01/18"
+literal|"main.c	1.15	84/03/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -865,7 +865,11 @@ name|k
 index|]
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -1054,7 +1058,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -1431,27 +1435,37 @@ name|gfp
 init|=
 name|NULL
 decl_stmt|;
+comment|/* input file pointer */
 specifier|register
 name|int
 name|done
 init|=
 literal|0
 decl_stmt|;
+comment|/* flag to remember if finished */
 specifier|register
 name|ELT
 modifier|*
 name|e
 decl_stmt|;
+comment|/* current element pointer */
 name|ELT
 modifier|*
 name|PICTURE
 decl_stmt|;
+comment|/* whole picture data base pointer */
 name|double
 name|temp
 decl_stmt|;
+comment|/* temporary calculating area */
 name|POINT
 name|ptr
 decl_stmt|;
+comment|/* coordinates of a point to pass to "mov" routine */
+name|int
+name|flyback
+decl_stmt|;
+comment|/* flag "want to end up at the top of the picture?" */
 name|initpic
 argument_list|()
 expr_stmt|;
@@ -1478,6 +1492,14 @@ name|NULL
 operator|)
 expr_stmt|;
 comment|/* test for EOF */
+name|flyback
+operator|=
+operator|*
+name|c3
+operator|==
+literal|'F'
+expr_stmt|;
+comment|/* and .GE or .GF */
 name|done
 operator||=
 operator|(
@@ -1491,13 +1513,16 @@ name|c2
 operator|==
 literal|'G'
 operator|&&
+operator|(
 operator|*
 name|c3
 operator|==
 literal|'E'
+operator|||
+name|flyback
+operator|)
 operator|)
 expr_stmt|;
-comment|/*  and .GE */
 if|if
 condition|(
 name|done
@@ -1524,10 +1549,8 @@ condition|(
 operator|!
 name|setdefault
 condition|)
-name|fprintf
+name|error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"at line %d: no picture filename.\n"
 argument_list|,
 name|baseline
@@ -1810,7 +1833,7 @@ comment|/*   starts on left), and put out the */
 comment|/*   user's ".GS" line. */
 name|printf
 argument_list|(
-literal|".nr g1 %d\n.nr g2 %d\n"
+literal|".br\n\\0\n.sp -1\n.nr g1 %du\n.nr g2 %du\n%s.nr g3 \\n(.f\n.nr g4 \\n(.s\n"
 argument_list|,
 name|xright
 operator|-
@@ -1819,11 +1842,6 @@ argument_list|,
 name|ybottom
 operator|-
 name|ytop
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|".br\n%s.nr g3 \\n(.f\n.nr g4 \\n(.s\n"
 argument_list|,
 name|GScommand
 argument_list|)
@@ -1867,6 +1885,28 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* decide where to end picture */
+if|if
+condition|(
+name|flyback
+condition|)
+block|{
+comment|/* end piture at upper left */
+name|ptr
+operator|.
+name|x
+operator|=
+name|leftpoint
+expr_stmt|;
+name|ptr
+operator|.
+name|y
+operator|=
+name|toppoint
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* end picture at lower left */
 name|ptr
 operator|.
@@ -1880,6 +1920,7 @@ name|y
 operator|=
 name|bottompoint
 expr_stmt|;
+block|}
 name|tmove
 argument_list|(
 operator|&
@@ -1887,9 +1928,18 @@ name|ptr
 argument_list|)
 expr_stmt|;
 comment|/* restore default line parameters, */
-comment|/* put out the ".GE" line from user */
-comment|/* then restore everything to the way */
-comment|/* it was before the .GS */
+comment|/* restore everything to the way */
+comment|/* it was before the .GS, then put */
+comment|/* out the ".GE" line from user */
+if|if
+condition|(
+name|flyback
+condition|)
+name|printf
+argument_list|(
+literal|".sp -1\n"
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\\D't %du'\\D's %du'\n"
@@ -2640,6 +2690,20 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
+name|error
+argument_list|(
+literal|"unknown command, %s, on line %d"
+argument_list|,
+name|str1
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 empty_stmt|;
