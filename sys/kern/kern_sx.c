@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2001 Jason Evans<jasone@freebsd.org>.  All rights re
 end_comment
 
 begin_comment
-comment|/*  * Shared/exclusive locks.  This implementation assures deterministic lock  * granting behavior, so that slocks and xlocks are interleaved.  *  * Priority propagation will not generally raise the priority of lock holders,  * so should not be relied upon in combination with sx locks.  *  * The witness code can not detect lock cycles.  *  *   slock --> xlock (deadlock)  *   slock --> slock (slock recursion, not fatal)  *   xlock --> xlock (deadlock)  *   xlock --> slock (deadlock)  */
+comment|/*  * Shared/exclusive locks.  This implementation assures deterministic lock  * granting behavior, so that slocks and xlocks are interleaved.  *  * Priority propagation will not generally raise the priority of lock holders,  * so should not be relied upon in combination with sx locks.  *  * The witness code can not detect lock cycles (yet).  *  * XXX: When witness is made to function with sx locks, it will need to  * XXX: be taught to deal with these situations, as they are more involved:  *   slock --> xlock (deadlock)  *   slock --> slock (slock recursion, not fatal)  */
 end_comment
 
 begin_include
@@ -104,9 +104,21 @@ argument_list|)
 expr_stmt|;
 name|sx
 operator|->
+name|sx_descr
+operator|=
+name|description
+expr_stmt|;
+name|sx
+operator|->
 name|sx_excl_wcnt
 operator|=
 literal|0
+expr_stmt|;
+name|sx
+operator|->
+name|sx_xholder
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -144,9 +156,13 @@ literal|0
 operator|)
 argument_list|,
 operator|(
-literal|"%s: holders or waiters\n"
+literal|"%s (%s): holders or waiters\n"
 operator|,
 name|__FUNCTION__
+operator|,
+name|sx
+operator|->
+name|sx_descr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -193,6 +209,25 @@ operator|&
 name|sx
 operator|->
 name|sx_lock
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|sx
+operator|->
+name|sx_xholder
+operator|!=
+name|curproc
+argument_list|,
+operator|(
+literal|"%s (%s): trying to get slock while xlock is held\n"
+operator|,
+name|__FUNCTION__
+operator|,
+name|sx
+operator|->
+name|sx_descr
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Loop in case we lose the race for lock acquisition. 	 */
@@ -264,6 +299,26 @@ operator|->
 name|sx_lock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * With sx locks, we're absolutely not permitted to recurse on 	 * xlocks, as it is fatal (deadlock). Normally, recursion is handled 	 * by WITNESS, but as it is not semantically correct to hold the 	 * xlock while in here, we consider it API abuse and put it under 	 * INVARIANTS. 	 */
+name|KASSERT
+argument_list|(
+name|sx
+operator|->
+name|sx_xholder
+operator|!=
+name|curproc
+argument_list|,
+operator|(
+literal|"%s (%s): xlock already held"
+operator|,
+name|__FUNCTION__
+operator|,
+name|sx
+operator|->
+name|sx_descr
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Loop in case we lose the race for lock acquisition. */
 while|while
 condition|(
@@ -298,11 +353,26 @@ name|sx_excl_wcnt
 operator|--
 expr_stmt|;
 block|}
+name|MPASS
+argument_list|(
+name|sx
+operator|->
+name|sx_cnt
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Acquire an exclusive lock. */
 name|sx
 operator|->
 name|sx_cnt
 operator|--
+expr_stmt|;
+name|sx
+operator|->
+name|sx_xholder
+operator|=
+name|curproc
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
@@ -333,21 +403,9 @@ operator|->
 name|sx_lock
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|SX_ASSERT_SLOCKED
 argument_list|(
-operator|(
 name|sx
-operator|->
-name|sx_cnt
-operator|>
-literal|0
-operator|)
-argument_list|,
-operator|(
-literal|"%s: lacking slock\n"
-operator|,
-name|__FUNCTION__
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Release. */
@@ -429,22 +487,19 @@ operator|->
 name|sx_lock
 argument_list|)
 expr_stmt|;
-name|KASSERT
+name|SX_ASSERT_XLOCKED
 argument_list|(
-operator|(
+name|sx
+argument_list|)
+expr_stmt|;
+name|MPASS
+argument_list|(
 name|sx
 operator|->
 name|sx_cnt
 operator|==
 operator|-
 literal|1
-operator|)
-argument_list|,
-operator|(
-literal|"%s: lacking xlock\n"
-operator|,
-name|__FUNCTION__
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Release. */
@@ -452,6 +507,12 @@ name|sx
 operator|->
 name|sx_cnt
 operator|++
+expr_stmt|;
+name|sx
+operator|->
+name|sx_xholder
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 	 * Wake up waiters if there are any.  Give precedence to slock waiters. 	 */
 if|if

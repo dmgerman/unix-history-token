@@ -41,7 +41,13 @@ name|struct
 name|mtx
 name|sx_lock
 decl_stmt|;
-comment|/* General protection lock and xlock. */
+comment|/* General protection lock. */
+specifier|const
+name|char
+modifier|*
+name|sx_descr
+decl_stmt|;
+comment|/* sx lock description. */
 name|int
 name|sx_cnt
 decl_stmt|;
@@ -64,6 +70,12 @@ name|int
 name|sx_excl_wcnt
 decl_stmt|;
 comment|/* Number of xlock waiters. */
+name|struct
+name|proc
+modifier|*
+name|sx_xholder
+decl_stmt|;
+comment|/* Thread presently holding xlock. */
 block|}
 struct|;
 end_struct
@@ -168,11 +180,11 @@ name|SX_ASSERT_SLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	KASSERT(((sx)->sx_cnt> 0), ("%s: lacking slock\n",		\ 	    __FUNCTION__));						\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
+value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	KASSERT(((sx)->sx_cnt> 0), ("%s: lacking slock %s\n",		\ 	    __FUNCTION__, (sx)->sx_descr));				\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
 end_define
 
 begin_comment
-comment|/*  * SX_ASSERT_XLOCKED() can only detect that at least *some* thread owns an  * xlock, but it cannot guarantee that *this* thread owns an xlock.  */
+comment|/*  * SX_ASSERT_XLOCKED() detects and guarantees that *we* own the xlock.  */
 end_comment
 
 begin_define
@@ -182,7 +194,7 @@ name|SX_ASSERT_XLOCKED
 parameter_list|(
 name|sx
 parameter_list|)
-value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	KASSERT(((sx)->sx_cnt == -1), ("%s: lacking xlock\n",		\ 	    __FUNCTION__));						\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
+value|do {					\ 	mtx_lock(&(sx)->sx_lock);					\ 	KASSERT(((sx)->sx_xholder == curproc),				\ 	    ("%s: thread %p lacking xlock %s\n", __FUNCTION__,		\ 	    (sx)->sx_descr, curproc));					\ 	mtx_unlock(&(sx)->sx_lock);					\ } while (0)
 end_define
 
 begin_else
