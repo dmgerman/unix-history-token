@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c 4.1 %G%"
+literal|"@(#)readdir.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +202,16 @@ argument_list|,
 name|ODIRSIZ
 argument_list|)
 expr_stmt|;
+name|dir
+operator|.
+name|d_name
+index|[
+name|ODIRSIZ
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* insure null termination */
 name|dir
 operator|.
 name|d_namlen
