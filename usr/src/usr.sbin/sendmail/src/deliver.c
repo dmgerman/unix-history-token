@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.35 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2725,14 +2725,42 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|curhost
+operator|==
+name|NULL
+operator|||
+name|curhost
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"null signature"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
 operator|!
 name|clever
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"554 non-clever IPC"
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 name|pvp
