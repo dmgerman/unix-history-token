@@ -72,7 +72,10 @@ end_comment
 
 begin_function
 name|int
-name|ofw_elf_loadfile
+name|__elfN
+function|(
+name|ofw_loadfile
+function|)
 parameter_list|(
 name|char
 modifier|*
@@ -97,7 +100,10 @@ name|addr
 decl_stmt|;
 name|r
 operator|=
-name|elf_loadfile
+name|__elfN
+argument_list|(
+name|loadfile
+argument_list|)
 argument_list|(
 name|filename
 argument_list|,
@@ -127,7 +133,10 @@ end_function
 
 begin_function
 name|int
-name|ofw_elf_exec
+name|__elfN
+function|(
+name|ofw_exec
+function|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -271,9 +280,15 @@ name|file_format
 name|ofw_elf
 init|=
 block|{
-name|ofw_elf_loadfile
+name|__elfN
+argument_list|(
+name|ofw_loadfile
+argument_list|)
 block|,
-name|ofw_elf_exec
+name|__elfN
+argument_list|(
+argument|ofw_exec
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt

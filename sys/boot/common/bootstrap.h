@@ -858,7 +858,7 @@ name|char
 modifier|*
 name|filename
 parameter_list|,
-name|vm_offset_t
+name|u_int64_t
 name|dest
 parameter_list|,
 name|struct
@@ -1060,15 +1060,24 @@ begin_comment
 comment|/* MI module loaders */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__elfN
+end_ifdef
+
 begin_function_decl
 name|int
-name|elf_loadfile
+name|__elfN
+function_decl|(
+name|loadfile
+function_decl|)
 parameter_list|(
 name|char
 modifier|*
 name|filename
 parameter_list|,
-name|vm_offset_t
+name|u_int64_t
 name|dest
 parameter_list|,
 name|struct
@@ -1079,6 +1088,11 @@ name|result
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Support for commands   */

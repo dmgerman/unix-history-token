@@ -77,6 +77,50 @@ parameter_list|)
 value|archsw.arch_copyout((vm_offset_t)(s), d, l)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|&&
+name|__ELF_WORD_SIZE
+operator|==
+literal|64
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|ELF_TARG_CLASS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ELF_TARG_MACH
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_CLASS
+value|ELFCLASS64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_MACH
+value|EM_X86_64
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -138,7 +182,7 @@ decl_stmt|;
 name|int
 name|kernel
 decl_stmt|;
-name|vm_offset_t
+name|u_int64_t
 name|off
 decl_stmt|;
 block|}
@@ -150,7 +194,10 @@ end_typedef
 begin_function_decl
 specifier|static
 name|int
-name|elf_loadimage
+name|__elfN
+function_decl|(
+name|loadimage
+function_decl|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -160,7 +207,7 @@ parameter_list|,
 name|elf_file_t
 name|ef
 parameter_list|,
-name|vm_offset_t
+name|u_int64_t
 name|loadaddr
 parameter_list|)
 function_decl|;
@@ -169,7 +216,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|elf_lookup_symbol
+name|__elfN
+function_decl|(
+name|lookup_symbol
+function_decl|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -200,7 +250,10 @@ end_ifdef
 begin_function_decl
 specifier|static
 name|void
-name|elf_reloc_ptr
+name|__elfN
+function_decl|(
+name|reloc_ptr
+function_decl|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -232,7 +285,10 @@ end_endif
 begin_function_decl
 specifier|static
 name|int
-name|elf_parse_modmetadata
+name|__elfN
+function_decl|(
+name|parse_modmetadata
+function_decl|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -259,25 +315,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
-name|elf_kerneltype
+name|__elfN
+parameter_list|(
+name|kerneltype
+parameter_list|)
 init|=
 literal|"elf kernel"
-decl_stmt|;
-end_decl_stmt
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
-name|elf_moduletype
+name|__elfN
+parameter_list|(
+name|moduletype
+parameter_list|)
 init|=
 literal|"elf module"
-decl_stmt|;
-end_decl_stmt
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Attempt to load the file (file) as an ELF module.  It will be stored at  * (dest), and a pointer to a module structure describing the loaded object  * will be saved in (result).  */
@@ -285,13 +347,16 @@ end_comment
 
 begin_function
 name|int
-name|elf_loadfile
+name|__elfN
+function|(
+name|loadfile
+function|)
 parameter_list|(
 name|char
 modifier|*
 name|filename
 parameter_list|,
-name|vm_offset_t
+name|u_int64_t
 name|dest
 parameter_list|,
 name|struct
@@ -573,7 +638,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"elf_loadfile: can't load module before kernel\n"
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadfile: can't load module before kernel\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -588,7 +658,10 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|elf_kerneltype
+name|__elfN
+argument_list|(
+name|kerneltype
+argument_list|)
 argument_list|,
 name|kfp
 operator|->
@@ -598,7 +671,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"elf_loadfile: can't load module with kernel type '%s'\n"
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadfile: can't load module with kernel type '%s'\n"
 argument_list|,
 name|kfp
 operator|->
@@ -669,7 +747,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"elf_loadfile: kernel already loaded\n"
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadfile: kernel already loaded\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -683,9 +766,6 @@ block|}
 comment|/*  	 * Calculate destination address based on kernel entrypoint 	 	 */
 name|dest
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|ehdr
 operator|->
 name|e_entry
@@ -699,7 +779,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"elf_loadfile: not a kernel (maybe static binary?)\n"
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadfile: not a kernel (maybe static binary?)\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -742,7 +827,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"elf_loadfile: cannot allocate module info\n"
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadfile: cannot allocate module info\n"
 argument_list|)
 expr_stmt|;
 name|err
@@ -787,9 +877,15 @@ name|ef
 operator|.
 name|kernel
 condition|?
-name|elf_kerneltype
+name|__elfN
+argument_list|(
+name|kerneltype
+argument_list|)
 else|:
-name|elf_moduletype
+name|__elfN
+argument_list|(
+name|moduletype
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -803,13 +899,12 @@ name|kernel
 condition|)
 name|printf
 argument_list|(
-literal|"%s entry at %p\n"
+literal|"%s entry at 0x%jx\n"
 argument_list|,
 name|filename
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|dest
 argument_list|)
@@ -829,7 +924,10 @@ name|fp
 operator|->
 name|f_size
 operator|=
-name|elf_loadimage
+name|__elfN
+argument_list|(
+name|loadimage
+argument_list|)
 argument_list|(
 name|fp
 argument_list|,
@@ -940,7 +1038,10 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|elf_loadimage
+name|__elfN
+function|(
+name|loadimage
+function|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -950,7 +1051,7 @@ parameter_list|,
 name|elf_file_t
 name|ef
 parameter_list|,
-name|vm_offset_t
+name|u_int64_t
 name|off
 parameter_list|)
 block|{
@@ -999,7 +1100,7 @@ decl_stmt|;
 name|vm_offset_t
 name|dest
 decl_stmt|;
-name|vm_offset_t
+name|Elf_Addr
 name|ssym
 decl_stmt|,
 name|esym
@@ -1007,6 +1108,9 @@ decl_stmt|;
 name|Elf_Dyn
 modifier|*
 name|dp
+decl_stmt|;
+name|Elf_Addr
+name|adp
 decl_stmt|;
 name|int
 name|ndp
@@ -1017,7 +1121,7 @@ decl_stmt|;
 name|int
 name|symtabindex
 decl_stmt|;
-name|long
+name|Elf_Size
 name|size
 decl_stmt|;
 name|u_int
@@ -1057,6 +1161,23 @@ block|{
 ifdef|#
 directive|ifdef
 name|__i386__
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|64
+name|off
+operator|=
+operator|-
+operator|(
+name|off
+operator|&
+literal|0xffffffffff000000ull
+operator|)
+expr_stmt|;
+comment|/* x86_64 relocates after locore */
+else|#
+directive|else
 name|off
 operator|=
 operator|-
@@ -1067,6 +1188,8 @@ literal|0xff000000u
 operator|)
 expr_stmt|;
 comment|/* i386 relocates after locore */
+endif|#
+directive|endif
 else|#
 directive|else
 name|off
@@ -1108,7 +1231,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"elf_loadimage: program header not within first page\n"
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadimage: program header not within first page\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1426,7 +1554,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nelf_loadexec: cannot seek\n"
+literal|"\nelf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadexec: cannot seek\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1481,7 +1614,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nelf_loadexec: archsw.readin failed\n"
+literal|"\nelf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadexec: archsw.readin failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1578,7 +1716,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nelf_loadimage: malloc() failed\n"
+literal|"\nelf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadimage: malloc() failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1831,7 +1974,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nelf_loadimage: cannot lseek() to section headers"
+literal|"\nelf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadimage: cannot lseek() to section headers"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1867,7 +2015,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nelf_loadimage: read section headers failed"
+literal|"\nelf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadimage: read section headers failed"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2160,7 +2313,7 @@ name|lastaddr
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|long
+name|size
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2223,6 +2376,9 @@ argument_list|(
 name|size
 argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -2255,7 +2411,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nelf_loadimage: could not seek for symbols - skipped!"
+literal|"\nelf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadimage: could not seek for symbols - skipped!"
 argument_list|)
 expr_stmt|;
 name|lastaddr
@@ -2311,7 +2472,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nelf_loadimage: could not read symbols - skipped!"
+literal|"\nelf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_loadimage: could not read symbols - skipped!"
 argument_list|)
 expr_stmt|;
 name|lastaddr
@@ -2344,7 +2510,7 @@ name|lastaddr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|long
+name|size
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2473,17 +2639,11 @@ name|phdr
 operator|+
 name|i
 expr_stmt|;
-name|dp
+name|adp
 operator|=
-operator|(
-name|Elf_Dyn
-operator|*
-operator|)
-operator|(
 name|php
 operator|->
 name|p_vaddr
-operator|)
 expr_stmt|;
 name|file_addmetadata
 argument_list|(
@@ -2493,16 +2653,12 @@ name|MODINFOMD_DYNAMIC
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|dp
+name|adp
 argument_list|)
 argument_list|,
 operator|&
-name|dp
+name|adp
 argument_list|)
-expr_stmt|;
-name|dp
-operator|=
-name|NULL
 expr_stmt|;
 break|break;
 block|}
@@ -2625,7 +2781,10 @@ operator|(
 name|Elf_Hashelt
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|dp
 index|[
 name|i
@@ -2636,7 +2795,7 @@ operator|.
 name|d_ptr
 operator|+
 name|off
-operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2650,7 +2809,10 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|dp
 index|[
 name|i
@@ -2661,7 +2823,7 @@ operator|.
 name|d_ptr
 operator|+
 name|off
-operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2692,7 +2854,10 @@ operator|(
 name|Elf_Sym
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|dp
 index|[
 name|i
@@ -2703,7 +2868,7 @@ operator|.
 name|d_ptr
 operator|+
 name|off
-operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2717,7 +2882,10 @@ operator|(
 name|Elf_Rela
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|dp
 index|[
 name|i
@@ -2728,7 +2896,7 @@ operator|.
 name|d_ptr
 operator|+
 name|off
-operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2845,7 +3013,10 @@ name|nbuckets
 expr_stmt|;
 if|if
 condition|(
-name|elf_parse_modmetadata
+name|__elfN
+argument_list|(
+name|parse_modmetadata
+argument_list|)
 argument_list|(
 name|fp
 argument_list|,
@@ -3046,7 +3217,10 @@ end_function
 
 begin_function
 name|int
-name|elf_parse_modmetadata
+name|__elfN
+function|(
+name|parse_modmetadata
+function|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -3078,9 +3252,6 @@ modifier|*
 name|s
 decl_stmt|,
 modifier|*
-name|v
-decl_stmt|,
-modifier|*
 modifier|*
 name|p
 decl_stmt|,
@@ -3093,9 +3264,15 @@ name|modcnt
 decl_stmt|,
 name|minfolen
 decl_stmt|;
+name|Elf_Addr
+name|v
+decl_stmt|;
 if|if
 condition|(
-name|elf_lookup_symbol
+name|__elfN
+argument_list|(
+name|lookup_symbol
+argument_list|)
 argument_list|(
 name|fp
 argument_list|,
@@ -3119,7 +3296,10 @@ name|char
 operator|*
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|sym
 operator|.
 name|st_value
@@ -3127,11 +3307,14 @@ operator|+
 name|ef
 operator|->
 name|off
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|elf_lookup_symbol
+name|__elfN
+argument_list|(
+name|lookup_symbol
+argument_list|)
 argument_list|(
 name|fp
 argument_list|,
@@ -3155,7 +3338,10 @@ name|char
 operator|*
 operator|*
 operator|)
-operator|(
+call|(
+name|uintptr_t
+call|)
+argument_list|(
 name|sym
 operator|.
 name|st_value
@@ -3163,7 +3349,7 @@ operator|+
 name|ef
 operator|->
 name|off
-operator|)
+argument_list|)
 expr_stmt|;
 name|modcnt
 operator|=
@@ -3192,7 +3378,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__sparc64__
-name|elf_reloc_ptr
+name|__elfN
+argument_list|(
+name|reloc_ptr
+argument_list|)
 argument_list|(
 name|fp
 argument_list|,
@@ -3235,7 +3424,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__sparc64__
-name|elf_reloc_ptr
+name|__elfN
+argument_list|(
+name|reloc_ptr
+argument_list|)
 argument_list|(
 name|fp
 argument_list|,
@@ -3577,16 +3769,27 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|elf_bad_symtable
-index|[]
+name|__elfN
+argument_list|(
+name|bad_symtable
+argument_list|)
+decl|[]
 init|=
-literal|"elf_lookup_symbol: corrupt symbol table\n"
+literal|"elf"
+name|__XSTRING
+argument_list|(
+name|__ELF_WORD_SIZE
+argument_list|)
+literal|"_lookup_symbol: corrupt symbol table\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_function
 name|int
-name|elf_lookup_symbol
+name|__elfN
+function|(
+name|lookup_symbol
+function|)
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -3668,7 +3871,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-name|elf_bad_symtable
+name|__elfN
+argument_list|(
+name|bad_symtable
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3703,7 +3909,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-name|elf_bad_symtable
+name|__elfN
+argument_list|(
+name|bad_symtable
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3828,7 +4037,10 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|elf_reloc_ptr
+name|__elfN
+function|(
+name|reloc_ptr
+function|)
 parameter_list|(
 name|struct
 name|preloaded_file

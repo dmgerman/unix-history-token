@@ -96,7 +96,7 @@ end_define
 begin_function_decl
 specifier|static
 name|int
-name|elf_exec
+name|elf64_exec
 parameter_list|(
 name|struct
 name|preloaded_file
@@ -112,9 +112,9 @@ name|file_format
 name|ia64_elf
 init|=
 block|{
-name|elf_loadfile
+name|elf64_loadfile
 block|,
-name|elf_exec
+name|elf64_exec
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -213,7 +213,7 @@ end_asm
 begin_function
 unit|}  static
 name|int
-name|elf_exec
+name|elf64_exec
 parameter_list|(
 name|struct
 name|preloaded_file

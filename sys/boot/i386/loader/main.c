@@ -487,6 +487,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* optional */
+name|bios_getsmap
+argument_list|()
+expr_stmt|;
 name|archsw
 operator|.
 name|arch_autoload
