@@ -852,19 +852,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNT_CMDFLAGS
-value|(MNT_UPDATE	| MNT_DELEXPORT	| MNT_RELOAD	| \ 			MNT_FORCE	| MNT_SNAPSHOT)
+name|MNT_BYFSID
+value|0x08000000
 end_define
 
 begin_comment
-comment|/*  * Still available  */
+comment|/* specify filesystem by ID. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MNT_SPARE3
-value|0x08000000
+name|MNT_CMDFLAGS
+value|(MNT_UPDATE	| MNT_DELEXPORT	| MNT_RELOAD	| \ 			MNT_FORCE	| MNT_SNAPSHOT	| MNT_BYFSID)
 end_define
 
 begin_comment
