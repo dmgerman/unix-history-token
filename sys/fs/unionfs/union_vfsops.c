@@ -706,7 +706,7 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|td
 operator|->
@@ -730,7 +730,7 @@ name|p_fd
 operator|->
 name|fd_cmask
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|td
 operator|->
