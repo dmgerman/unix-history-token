@@ -1483,7 +1483,7 @@ return|;
 block|}
 comment|/* enque packet */
 comment|/* XXX should we check IF_QFULL() ? */
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -2048,7 +2048,7 @@ init|;
 condition|;
 control|)
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -2537,7 +2537,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -2581,7 +2581,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-name|IF_PREPEND
+name|_IF_PREPEND
 argument_list|(
 operator|&
 name|sc
@@ -2608,7 +2608,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|sc
@@ -2624,7 +2624,7 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* queue the copy for sending at smplimp */
-name|IF_ENQUEUE
+name|_IF_ENQUEUE
 argument_list|(
 operator|&
 name|tmp_queue
@@ -2648,7 +2648,7 @@ init|;
 condition|;
 control|)
 block|{
-name|IF_DEQUEUE
+name|_IF_DEQUEUE
 argument_list|(
 operator|&
 name|tmp_queue
