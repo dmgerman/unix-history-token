@@ -2440,7 +2440,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|devfs_link
+name|devfs_makelink
 argument_list|(
 name|tmp
 argument_list|,
@@ -2509,7 +2509,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|devfs_link
+name|devfs_makelink
 argument_list|(
 name|tmp
 argument_list|,
@@ -2555,7 +2555,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|devfs_link
+name|devfs_makelink
 argument_list|(
 name|tmp
 argument_list|,
@@ -2598,7 +2598,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|devfs_link
+name|devfs_makelink
 argument_list|(
 name|tmp
 argument_list|,
@@ -2641,7 +2641,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|devfs_link
+name|devfs_makelink
 argument_list|(
 name|tmp
 argument_list|,
@@ -2684,7 +2684,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|devfs_link
+name|devfs_makelink
 argument_list|(
 name|tmp
 argument_list|,
@@ -2727,7 +2727,7 @@ if|if
 condition|(
 name|tmp
 condition|)
-name|devfs_link
+name|devfs_makelink
 argument_list|(
 name|tmp
 argument_list|,
