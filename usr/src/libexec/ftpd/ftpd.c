@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.37 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -697,6 +697,18 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+comment|/* 	 * LOG_NDELAY sets up the logging connection immediately, 	 * necessary for anonymous ftp's that chroot and can't do it later. 	 */
+name|openlog
+argument_list|(
+literal|"ftpd"
+argument_list|,
+name|LOG_PID
+operator||
+name|LOG_NDELAY
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 name|addrlen
 operator|=
 sizeof|sizeof
@@ -849,15 +861,6 @@ expr_stmt|;
 name|debug
 operator|=
 literal|0
-expr_stmt|;
-name|openlog
-argument_list|(
-literal|"ftpd"
-argument_list|,
-name|LOG_PID
-argument_list|,
-name|LOG_DAEMON
-argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
