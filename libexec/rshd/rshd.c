@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: rshd.c,v 1.20 1997/12/02 12:30:04 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -660,7 +660,7 @@ argument_list|,
 literal|"getpeername: %m"
 argument_list|)
 expr_stmt|;
-name|_exit
+name|exit
 argument_list|(
 literal|1
 argument_list|)
