@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -178,8 +182,8 @@ operator|<=
 literal|4096
 condition|;
 name|i
-operator|+=
-name|i
+operator|*=
+literal|2
 control|)
 block|{
 for|for
@@ -299,6 +303,26 @@ else|:
 name|k
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|k
+operator|&
+literal|1
+operator|||
+name|k
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * Workaround because realloc return bogus pointer rather than 		 * NULL if passed zero length. 		 */
+name|foo
+index|[
+name|j
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|foo
