@@ -1048,14 +1048,14 @@ end_struct
 begin_define
 define|#
 directive|define
-name|BT848SCAPAREA
+name|BT848_SCAPAREA
 value|_IOW('x', 69, struct bktr_capture_area)
 end_define
 
 begin_define
 define|#
 directive|define
-name|BT848GCAPAREA
+name|BT848_GCAPAREA
 value|_IOR('x', 69, struct bktr_capture_area)
 end_define
 

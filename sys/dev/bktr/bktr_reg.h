@@ -131,6 +131,10 @@ name|BT848_DSTATUS_CSEL
 value|(1<<3)
 define|#
 directive|define
+name|BT848_DSTATUS_PLOCK
+value|(1<<2)
+define|#
+directive|define
 name|BT848_DSTATUS_LOF
 value|(1<<1)
 define|#
@@ -459,11 +463,45 @@ argument_list|)
 expr_stmt|;
 comment|/* 7c, 7d,7e,7f */
 name|u_char
+name|filler1
+index|[
+literal|0x84
+operator|-
+literal|0x80
+index|]
+decl_stmt|;
+name|BTBYTE
+argument_list|(
+name|tgctrl
+argument_list|)
+expr_stmt|;
+comment|/* 84, 85,86,87 */
+define|#
+directive|define
+name|BT848_TGCTRL_TGCKI
+value|(3<<3)
+define|#
+directive|define
+name|BT848_TGCTRL_TGCKI_XTAL
+value|(0<<3)
+define|#
+directive|define
+name|BT848_TGCTRL_TGCKI_PLL
+value|(1<<3)
+define|#
+directive|define
+name|BT848_TGCTRL_TGCKI_GPCLK
+value|(2<<3)
+define|#
+directive|define
+name|BT848_TGCTRL_TGCKI_GPCLK_I
+value|(3<<3)
+name|u_char
 name|filler
 index|[
 literal|0x8c
 operator|-
-literal|0x80
+literal|0x88
 index|]
 decl_stmt|;
 name|BTBYTE
@@ -723,12 +761,38 @@ name|o_vtc
 argument_list|)
 expr_stmt|;
 comment|/* ec, ed,ee,ef */
+name|BTBYTE
+argument_list|(
+name|pll_f_lo
+argument_list|)
+expr_stmt|;
+comment|/* f0, f1,f2,f3 */
+name|BTBYTE
+argument_list|(
+name|pll_f_hi
+argument_list|)
+expr_stmt|;
+comment|/* f4, f5,f6,f7 */
+name|BTBYTE
+argument_list|(
+name|pll_f_xci
+argument_list|)
+expr_stmt|;
+comment|/* f8, f9,fa,fb */
+define|#
+directive|define
+name|BT848_PLL_F_C
+value|(1<<6)
+define|#
+directive|define
+name|BT848_PLL_F_X
+value|(1<<7)
 name|u_char
 name|filler2
 index|[
 literal|0x100
 operator|-
-literal|0xf0
+literal|0xfc
 index|]
 decl_stmt|;
 name|BTLONG
