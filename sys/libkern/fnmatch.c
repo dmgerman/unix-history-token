@@ -50,13 +50,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<locale.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"collate.h"
+file|<string.h>
 end_include
 
 begin_define
@@ -698,7 +698,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|c
 argument_list|,
@@ -707,7 +707,7 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|test
 argument_list|,
