@@ -32409,8 +32409,7 @@ decl_stmt|;
 name|uint32_t
 name|resid
 decl_stmt|;
-comment|/* 	 * 4 cases. 	 * 1) No residual. 	 *    SG_RESID_VALID clear in sgptr. 	 * 2) Transferless command 	 * 3) Never performed any transfers. 	 *    sgptr has SG_FULL_RESID set. 	 * 4) We have a partial residual. 	 *    Use residual_sgptr to determine 	 *    where we are. 	 */
-comment|/* Cases 1, 2& 3 are easy.  Check them first. */
+comment|/* 	 * 5 cases. 	 * 1) No residual. 	 *    SG_RESID_VALID clear in sgptr. 	 * 2) Transferless command 	 * 3) Never performed any transfers. 	 *    sgptr has SG_FULL_RESID set. 	 * 4) No residual but target did not 	 *    save data pointers after the 	 *    last transfer, so sgptr was 	 *    never updated. 	 * 5) We have a partial residual. 	 *    Use residual_sgptr to determine 	 *    where we are. 	 */
 name|hscb
 operator|=
 name|scb
@@ -32429,6 +32428,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+comment|/* Case 1 */
 return|return;
 name|hscb
 operator|->
@@ -32449,6 +32449,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+comment|/* Case 2 */
 return|return;
 name|spkt
 operator|=
@@ -32471,6 +32472,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+comment|/* Case 3 */
 name|resid
 operator|=
 name|scb
@@ -32485,25 +32487,17 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|hscb
+name|spkt
 operator|->
-name|sgptr
+name|residual_sg_ptr
 operator|&
-operator|~
-name|SG_PTR_MASK
+name|SG_LIST_NULL
 operator|)
 operator|!=
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"Bogus sgptr value 0x%x\n"
-argument_list|,
-name|hscb
-operator|->
-name|sgptr
-argument_list|)
-expr_stmt|;
+comment|/* Case 4 */
+return|return;
 elseif|else
 if|if
 condition|(
