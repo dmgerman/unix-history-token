@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6058,7 +6058,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing  * interface without forcing IP to fragment; if bigger than  * an mbuf cluster (MCLBYTES), round down to nearest multiple of MCLBYTES  * to utilize large mbufs.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  * We must also take into account that timestamp options may be placed in  * each segment.  */
+comment|/*  * Determine a reasonable value for maxseg size.  * If the route is known, check route for mtu.  * If none, use an mss that can be handled on the outgoing  * interface without forcing IP to fragment; if bigger than  * an mbuf cluster (MCLBYTES), round down to nearest multiple of MCLBYTES  * to utilize large mbufs.  If no route is found, route has no mtu,  * or the destination isn't local, use a default, hopefully conservative  * size (usually 512 or the default IP max size, but no more than the mtu  * of the interface), as we can't discover anything about intervening  * gateways or networks.  We also initialize the congestion/slow start  * window to be a single segment if the destination isn't local.  * While looking at the routing entry, we also initialize other path-dependent  * parameters from pre-set or cached values in the routing entry.  */
 end_comment
 
 begin_expr_stmt
@@ -6125,24 +6125,6 @@ name|tcp_mssdflt
 decl_stmt|,
 name|tcp_rttdflt
 decl_stmt|;
-name|int
-name|room_for_options
-init|=
-literal|0
-decl_stmt|;
-comment|/* Leave room for timestamping */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TF_REQ_TSTMP
-condition|)
-name|room_for_options
-operator|+=
-name|TCPOLEN_TSTAMP_APPA
-expr_stmt|;
 name|inp
 operator|=
 name|tp
@@ -6251,8 +6233,6 @@ condition|)
 return|return
 operator|(
 name|tcp_mssdflt
-operator|-
-name|room_for_options
 operator|)
 return|;
 block|}
@@ -6425,8 +6405,6 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
-operator|-
-name|room_for_options
 expr_stmt|;
 else|else
 endif|#
@@ -6444,8 +6422,6 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
-operator|-
-name|room_for_options
 expr_stmt|;
 if|#
 directive|if
@@ -6510,8 +6486,6 @@ argument_list|(
 name|mss
 argument_list|,
 name|tcp_mssdflt
-operator|-
-name|room_for_options
 argument_list|)
 expr_stmt|;
 block|}
