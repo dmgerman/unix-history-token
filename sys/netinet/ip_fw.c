@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.39 1996/06/13 17:35:28 gpalmer Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.40 1996/06/17 00:00:35 alex Exp $  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ACTUALLY_LKM_NOT_KERNEL
+name|IPFIREWALL_MODULE
 end_ifndef
 
 begin_include
@@ -525,7 +525,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACTUALLY_LKM_NOT_KERNEL
+name|IPFIREWALL_MODULE
 end_ifdef
 
 begin_decl_stmt
@@ -3806,7 +3806,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACTUALLY_LKM_NOT_KERNEL
+name|IPFIREWALL_MODULE
 end_ifdef
 
 begin_include
