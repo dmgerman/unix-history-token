@@ -14820,13 +14820,6 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_PKTHDR
-expr_stmt|;
-name|m
-operator|->
 name|m_len
 operator|-=
 name|hlen
@@ -15026,13 +15019,6 @@ name|mh
 argument_list|,
 name|hlen
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_PKTHDR
 expr_stmt|;
 name|m
 operator|->

@@ -10511,13 +10511,6 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|m_flags
-operator|&=
-operator|~
-name|M_PKTHDR
-expr_stmt|;
-name|m
-operator|->
 name|m_len
 operator|-=
 sizeof|sizeof
