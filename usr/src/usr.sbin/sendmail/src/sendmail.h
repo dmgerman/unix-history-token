@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.97		%G%"
+literal|"@(#)sendmail.h	3.98		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"useful.h"
 end_include
 
@@ -103,123 +109,6 @@ endif|#
 directive|endif
 endif|LOG
 end_endif
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  Configuration constants. **	There shouldn't be much need to change these.... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXLINE
-value|256
-end_define
-
-begin_comment
-comment|/* max line length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXNAME
-value|128
-end_define
-
-begin_comment
-comment|/* max length of a name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXFIELD
-value|2500
-end_define
-
-begin_comment
-comment|/* max total length of a hdr field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXPV
-value|40
-end_define
-
-begin_comment
-comment|/* max # of parms to mailers */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXHOP
-value|30
-end_define
-
-begin_comment
-comment|/* max value of HopCount */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXATOM
-value|100
-end_define
-
-begin_comment
-comment|/* max atoms per address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXMAILERS
-value|25
-end_define
-
-begin_comment
-comment|/* maximum mailers known to system */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXRWSETS
-value|30
-end_define
-
-begin_comment
-comment|/* max # of sets of rewriting rules */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXPRIORITIES
-value|25
-end_define
-
-begin_comment
-comment|/* max values for Precedence: field */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXTRUST
-value|30
-end_define
-
-begin_comment
-comment|/* maximum number of trusted users */
-end_comment
 
 begin_escape
 end_escape
@@ -1734,6 +1623,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MD_INITALIAS
+value|'i'
+end_define
+
+begin_comment
+comment|/* initialize alias database */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_PRINT
+value|'p'
+end_define
+
+begin_comment
+comment|/* print the queue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_FREEZE
+value|'z'
+end_define
+
+begin_comment
+comment|/* freeze the configuration file */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MD_DEFAULT
 value|MD_DELIVER
 end_define
@@ -1989,6 +1911,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* alias file must have "@:@" to be complete */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|AutoRebuild
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* auto-rebuild the alias database as needed */
 end_comment
 
 begin_decl_stmt
