@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)waitpid.c	5.2 (Berkeley) %G%"
+literal|"@(#)waitpid.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,38 +61,27 @@ directive|include
 file|<sys/resource.h>
 end_include
 
-begin_macro
+begin_function
+name|pid_t
 name|waitpid
-argument_list|(
-argument|pid
-argument_list|,
-argument|pstat
-argument_list|,
-argument|options
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pid
+parameter_list|,
+name|pstat
+parameter_list|,
+name|options
+parameter_list|)
 name|int
 name|pid
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|union
 name|wait
 modifier|*
 name|pstat
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|options
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -114,7 +103,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
