@@ -7816,7 +7816,7 @@ end_comment
 
 begin_function
 name|void
-name|pmap_zero_page_area
+name|pmap_zero_page_idle
 parameter_list|(
 name|vm_page_t
 name|m
@@ -7847,7 +7847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* /*  *	pmap_copy_page copies the specified (machine independent)  *	page by mapping the page into virtual memory and using  *	bcopy to copy the page, one machine dependent page at a  *	time.  */
+comment|/*  *	pmap_copy_page copies the specified (machine independent)  *	page by mapping the page into virtual memory and using  *	bcopy to copy the page, one machine dependent page at a  *	time.  */
 end_comment
 
 begin_function
