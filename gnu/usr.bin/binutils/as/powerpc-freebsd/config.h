@@ -3,6 +3,13 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_GETOPT
+value|1
+end_define
+
 begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
