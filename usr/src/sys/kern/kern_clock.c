@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.6	%H%	*/
+comment|/*	kern_clock.c	3.7	%H%	*/
 end_comment
 
 begin_include
@@ -115,12 +115,12 @@ begin_decl_stmt
 name|int
 name|rintvl
 init|=
-literal|4
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* every 1/15'th of sec check receivers */
+comment|/* every 1/60'th of sec check receivers */
 end_comment
 
 begin_decl_stmt
