@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.24 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6962,6 +6962,14 @@ modifier|*
 name|b
 decl_stmt|;
 block|{
+specifier|register
+name|ADDRESS
+modifier|*
+name|ca
+decl_stmt|,
+modifier|*
+name|cb
+decl_stmt|;
 comment|/* if they don't have the same mailer, forget it */
 if|if
 condition|(
@@ -6997,27 +7005,41 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* if we have good uids for both but the differ, these are different */
+comment|/* if we have good uids for both but they differ, these are different */
+name|ca
+operator|=
+name|getctladdr
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|cb
+operator|=
+name|getctladdr
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bitset
 argument_list|(
 name|QGOODUID
 argument_list|,
-name|a
+name|ca
 operator|->
 name|q_flags
 operator|&
-name|b
+name|cb
 operator|->
 name|q_flags
 argument_list|)
 operator|&&
-name|a
+name|ca
 operator|->
 name|q_uid
 operator|!=
-name|b
+name|cb
 operator|->
 name|q_uid
 condition|)
