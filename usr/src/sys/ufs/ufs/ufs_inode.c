@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.2	%G%	*/
+comment|/*	ufs_inode.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -284,7 +284,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up an inode by device,inumber.  * If it is in core (in the inode structure),  * honor the locking protocol.  * If it is not in core, read it in from the  * specified device.  * If the inode is mounted on, perform  * the indicated indirection.  * In all cases, a pointer to a locked  * inode structure is returned.  *  * printf warning: no inodes -- if the inode  *	structure is full  * panic: no imt -- if the mounted file  *	system is not in the mount table.  *	"cannot happen"  */
+comment|/*  * Look up an inode by device,inumber.  * If it is in core (in the inode structure),  * honor the locking protocol.  * If it is not in core, read it in from the  * specified device.  * If the inode is mounted on, perform  * the indicated indirection.  * In all cases, a pointer to a locked  * inode structure is returned.  *  * panic: no imt -- if the mounted file  *	system is not in the mount table.  *	"cannot happen"  */
 end_comment
 
 begin_function
@@ -512,9 +512,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|tablefull
 argument_list|(
-literal|"Inode table overflow\n"
+literal|"inode"
 argument_list|)
 expr_stmt|;
 name|u
