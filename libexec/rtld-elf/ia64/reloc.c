@@ -480,7 +480,6 @@ name|target
 decl_stmt|,
 name|gp
 decl_stmt|;
-comment|/* 		 * Not sure why the call to find_symdef() doesn't work  		 * properly (it fails if the symbol is local). Perhaps  		 * this is a toolchain issue - revisit after we 		 * upgrade the ia64 toolchain. 		 */
 name|def
 operator|=
 name|find_symdef
@@ -508,27 +507,10 @@ name|def
 operator|==
 name|NULL
 condition|)
-block|{
-name|def
-operator|=
-operator|&
-name|obj
-operator|->
-name|symtab
-index|[
-name|ELF_R_SYM
-argument_list|(
-name|rela
-operator|->
-name|r_info
-argument_list|)
-index|]
-expr_stmt|;
-name|defobj
-operator|=
-name|obj
-expr_stmt|;
-block|}
+return|return
+operator|-
+literal|1
+return|;
 comment|/* 		 * If this is an undefined weak reference, we need to 		 * have a zero target,gp fptr, not pointing to relocbase. 		 * This isn't quite right.  Maybe we should check 		 * explicitly for def ==&sym_zero. 		 */
 if|if
 condition|(
