@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setlocale.c	5.1 (Berkeley) %G%"
+literal|"@(#)setlocale.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -69,6 +75,7 @@ parameter_list|)
 name|int
 name|category
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|locale
@@ -78,6 +85,7 @@ if|if
 condition|(
 operator|(
 name|unsigned
+name|int
 operator|)
 name|category
 operator|>=
@@ -99,25 +107,18 @@ operator|(
 name|C
 operator|)
 return|;
-if|if
-condition|(
+return|return
+operator|(
 name|strcmp
 argument_list|(
 name|locale
 argument_list|,
 name|C
 argument_list|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|C
-operator|)
-return|;
-return|return
-operator|(
+condition|?
 name|NULL
+else|:
+name|C
 operator|)
 return|;
 block|}
