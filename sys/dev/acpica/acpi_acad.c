@@ -585,6 +585,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Get initial status after whole system is up. */
+name|sc
+operator|->
+name|status
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_LO
