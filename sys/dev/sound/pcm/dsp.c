@@ -4774,6 +4774,13 @@ operator|!=
 name|NODEV
 condition|)
 return|return;
+if|if
+condition|(
+name|pcm_devclass
+operator|==
+name|NULL
+condition|)
+return|return;
 name|unit
 operator|=
 operator|-
