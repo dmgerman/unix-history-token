@@ -1144,7 +1144,7 @@ name|hci_role_discovery
 block|}
 block|,
 block|{
-literal|"switch_role<bdaddr><role>"
+literal|"switch_role<BD_ADDR><role>"
 block|,
 literal|"\nThe Switch_Role command is used for a Bluetooth device to switch the\n"
 expr|\
@@ -1159,9 +1159,9 @@ expr|\
 literal|"command parameter must specify a Bluetooth device for which a connection\n"
 literal|"already exists.\n\n"
 expr|\
-literal|"\t<bdaddr> - xx:xx:xx:xx:xx:xx; device bdaddr\n"
+literal|"\t<BD_ADDR> - xx:xx:xx:xx:xx:xx BD_ADDR or name\n"
 expr|\
-literal|"\t<role>   - dd; role; 0 - Master, 1 - Slave"
+literal|"\t<role>    - dd; role; 0 - Master, 1 - Slave"
 block|,
 operator|&
 name|hci_switch_role

@@ -1837,7 +1837,7 @@ literal|"Usage: %s options\n"
 expr|\
 literal|"Where options are:\n"
 expr|\
-literal|"\t-a bdaddr  BDADDR to connect to (required)\n"
+literal|"\t-a address Address to connect to (required)\n"
 expr|\
 literal|"\t-b         Run in background\n"
 expr|\

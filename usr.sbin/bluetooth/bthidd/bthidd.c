@@ -938,7 +938,7 @@ literal|"Usage: %s [options]\n"
 expr|\
 literal|"Where options are:\n"
 expr|\
-literal|"	-a bdaddr	specify BDADDR to listen on (default ANY)\n"
+literal|"	-a address	specify address to listen on (default ANY)\n"
 expr|\
 literal|"	-c file		specify config file name\n"
 expr|\

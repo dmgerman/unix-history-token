@@ -4210,7 +4210,7 @@ literal|"create_connection<BD_ADDR><pkt><rep_mode><ps_mode><clck_off><role_sw>"
 block|,
 literal|""
 expr|\
-literal|"\t<BD_ADDR> - remote unit address\n\n"
+literal|"\t<BD_ADDR> - xx:xx:xx:xx:xx:xx BD_ADDR or name\n\n"
 expr|\
 literal|"\t<pkt>     - xxxx; packet type\n"
 expr|\
@@ -4402,13 +4402,13 @@ name|hci_change_connection_packet_type
 block|}
 block|,
 block|{
-literal|"remote_name_request<bdaddr><ps_rep_mode><ps_mode><clock_offset>"
+literal|"remote_name_request<BD_ADDR><ps_rep_mode><ps_mode><clock_offset>"
 block|,
 literal|"\nThe Remote_Name_Request command is used to obtain the user-friendly\n"
 expr|\
 literal|"name of another Bluetooth unit.\n\n"
 expr|\
-literal|"\t<bdaddr>       - xx:xx:xx:xx:xx:xx remote unit BD_ADDR\n"
+literal|"\t<BD_ADDR>      - xx:xx:xx:xx:xx:xx BD_ADDR or name\n"
 expr|\
 literal|"\t<ps_rep_mode>  - dd; page scan repetition mode [0-2]\n"
 expr|\

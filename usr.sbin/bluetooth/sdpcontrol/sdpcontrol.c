@@ -869,7 +869,7 @@ argument_list|,
 literal|"Usage: sdpcontrol options command\n"
 expr|\
 literal|"Where options are:\n"
-literal|"	-a bdaddr	specify bdaddr\n"
+literal|"	-a address	address to connect to\n"
 expr|\
 literal|"	-c path		path to the control socket (default is %s)\n"
 expr|\

@@ -7482,7 +7482,7 @@ name|hci_write_pin_type
 block|}
 block|,
 block|{
-literal|"read_stored_link_key [<bdaddr>]"
+literal|"read_stored_link_key [<BD_ADDR>]"
 block|,
 literal|"\nThe Read_Stored_Link_Key command provides the ability to read one or\n"
 expr|\
@@ -7492,14 +7492,14 @@ literal|"Controller can store a limited number of link keys for other Bluetooth\
 expr|\
 literal|"devices.\n\n"
 expr|\
-literal|"\t<bdaddr> - xx:xx:xx:xx:xx:xx BD_ADDR"
+literal|"\t<BD_ADDR> - xx:xx:xx:xx:xx:xx BD_ADDR or name"
 block|,
 operator|&
 name|hci_read_stored_link_key
 block|}
 block|,
 block|{
-literal|"write_stored_link_key<bdaddr><key>"
+literal|"write_stored_link_key<BD_ADDR><key>"
 block|,
 literal|"\nThe Write_Stored_Link_Key command provides the ability to write one\n"
 expr|\
@@ -7511,16 +7511,16 @@ literal|"Bluetooth devices. If no additional space is available in the Bluetooth
 expr|\
 literal|"Host Controller then no additional link keys will be stored.\n\n"
 expr|\
-literal|"\t<bdaddr> - xx:xx:xx:xx:xx:xx BD_ADDR\n"
+literal|"\t<BD_ADDR> - xx:xx:xx:xx:xx:xx BD_ADDR or name\n"
 expr|\
-literal|"\t<key>    - xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx up to 16 bytes link key"
+literal|"\t<key>     - xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx up to 16 bytes link key"
 block|,
 operator|&
 name|hci_write_stored_link_key
 block|}
 block|,
 block|{
-literal|"delete_stored_link_key [<bdaddr>]"
+literal|"delete_stored_link_key [<BD_ADDR>]"
 block|,
 literal|"\nThe Delete_Stored_Link_Key command provides the ability to remove one\n"
 expr|\
@@ -7530,7 +7530,7 @@ literal|"Bluetooth Host Controller can store a limited number of link keys for o
 expr|\
 literal|"Bluetooth devices.\n\n"
 expr|\
-literal|"\t<bdaddr> - xx:xx:xx:xx:xx:xx BD_ADDR"
+literal|"\t<BD_ADDR> - xx:xx:xx:xx:xx:xx BD_ADDR or name"
 block|,
 operator|&
 name|hci_delete_stored_link_key

@@ -1918,7 +1918,7 @@ literal|"Usage: %s options\n"
 expr|\
 literal|"Where options are:\n"
 expr|\
-literal|"\t-a bdaddr    BDADDR to listen on or connect to (required for client)\n"
+literal|"\t-a address   Address to listen on or connect to (required for client)\n"
 expr|\
 literal|"\t-c           Act as a clinet (default)\n"
 expr|\
