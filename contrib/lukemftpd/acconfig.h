@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.9 2001/04/28 07:11:06 lukem Exp $ */
+comment|/* $Id: acconfig.h,v 1.10 2002/05/23 02:42:55 lukem Exp $ */
 end_comment
 
 begin_expr_stmt
@@ -149,6 +149,16 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_FCLOSE_D
+end_undef
+
+begin_comment
+comment|/* Define if FNM_CASEFOLD is declared in<fnmatch.h> */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_FNM_CASEFOLD
 end_undef
 
 begin_comment
