@@ -101,10 +101,12 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|t
 operator|=
 name|getttyent
 argument_list|()
+operator|)
 condition|)
 if|if
 condition|(
@@ -495,6 +497,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|index
@@ -503,6 +506,7 @@ name|p
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|p
@@ -770,6 +774,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|tf
 operator|=
 name|fopen
@@ -778,6 +783,7 @@ name|_PATH_TTYS
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

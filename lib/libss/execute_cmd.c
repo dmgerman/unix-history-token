@@ -21,6 +21,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -432,31 +438,23 @@ begin_comment
 comment|/*  * ss_execute_command(sci_idx, argv)  *  * Function:  *	Executes a parsed command list within the subsystem.  * Arguments:  *	sci_idx (int)  *		ss-internal index for subsystem control info structure  *	argv (char *[])  *		parsed argument list  * Returns:  *	(int)  *		Zero if successful, ss_et_command_not_found otherwise.  * Notes:  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ss_execute_command
-argument_list|(
-argument|sci_idx
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sci_idx
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|sci_idx
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -556,7 +554,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ss_execute_line(sci_idx, line_ptr)  *  * Function:  *      Parses and executes a command line within a subsystem.  * Arguments:  *      sci_idx (int)  *              ss-internal index for subsystem control info structure  *      line_ptr (char *)  *              Pointer to command line to be parsed.  * Returns:  *      (int)  *      	Error code.  * Notes:  */

@@ -806,11 +806,13 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|src
 operator|++
+operator|)
 condition|)
 block|{
 name|again

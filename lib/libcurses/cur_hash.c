@@ -93,11 +93,13 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|g
 operator|=
 name|h
 operator|&
 literal|0xf0000000
+operator|)
 condition|)
 block|{
 name|h

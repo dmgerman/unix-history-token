@@ -532,21 +532,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|sevenbit
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* make sure there are only 7 bit code in the line*/
 while|while
@@ -565,7 +560,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.6 1995/08/21 09:15:40 bde Exp $"
+literal|"$Id: res_send.c,v 1.7 1996/01/07 09:15:02 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2988,7 +2988,9 @@ end_comment
 begin_function
 name|void
 name|_res_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(

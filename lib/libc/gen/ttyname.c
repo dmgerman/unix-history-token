@@ -828,6 +828,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|db
 operator|=
 name|dbopen
@@ -842,6 +843,7 @@ name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 condition|)
 block|{
 name|memset
@@ -1027,12 +1029,14 @@ operator|)
 return|;
 while|while
 condition|(
+operator|(
 name|dirp
 operator|=
 name|readdir
 argument_list|(
 name|dp
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if

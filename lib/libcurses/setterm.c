@@ -723,6 +723,7 @@ expr_stmt|;
 name|__usecs
 operator|=
 operator|(
+operator|(
 name|AL
 operator|==
 name|NULL
@@ -730,7 +731,9 @@ operator|&&
 name|al
 operator|==
 name|NULL
+operator|)
 operator|||
+operator|(
 name|DL
 operator|==
 name|NULL
@@ -739,10 +742,12 @@ name|dl
 operator|==
 name|NULL
 operator|)
+operator|)
 operator|&&
 operator|!
 name|NS
 operator|&&
+operator|(
 operator|(
 name|SC
 operator|!=
@@ -751,6 +756,7 @@ operator|&&
 name|RC
 operator|!=
 name|NULL
+operator|)
 operator|||
 name|HO
 operator|!=
@@ -778,6 +784,7 @@ operator|!
 name|__usecs
 operator|&&
 operator|(
+operator|(
 name|AL
 operator|==
 name|NULL
@@ -785,7 +792,9 @@ operator|&&
 name|al
 operator|==
 name|NULL
+operator|)
 operator|||
+operator|(
 name|DL
 operator|==
 name|NULL
@@ -793,6 +802,7 @@ operator|&&
 name|dl
 operator|==
 name|NULL
+operator|)
 operator|)
 expr_stmt|;
 return|return

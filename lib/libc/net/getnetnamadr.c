@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetnamadr.c,v 1.3 1995/03/24 15:51:30 ache Exp $"
+literal|"@(#)$Id: getnetnamadr.c,v 1.4 1995/05/30 05:40:48 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetnamadr.c,v 1.3 1995/03/24 15:51:30 ache Exp $"
+literal|"$Id: getnetnamadr.c,v 1.4 1995/05/30 05:40:48 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,84 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_setnetent
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_endnetent
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_setnethtent
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_endnethtent
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_setnetdnsent
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_endnetdnsent
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

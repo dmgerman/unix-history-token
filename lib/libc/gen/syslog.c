@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslog.c,v 1.7 1995/10/22 14:37:08 phk Exp $"
+literal|"$Id: syslog.c,v 1.8 1996/03/02 19:56:16 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -849,10 +849,12 @@ comment|/* Substitute error message for %m. */
 for|for
 control|(
 init|;
+operator|(
 name|ch
 operator|=
 operator|*
 name|fmt
+operator|)
 condition|;
 operator|++
 name|fmt

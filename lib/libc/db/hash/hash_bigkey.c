@@ -2873,6 +2873,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ret
 operator|->
 name|next_addr
@@ -2884,6 +2885,7 @@ argument_list|,
 operator|&
 name|big_keyp
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if

@@ -301,12 +301,6 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 name|char
-name|expanded_input
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-name|char
 name|buffer
 index|[
 name|BUFSIZ
@@ -676,6 +670,8 @@ name|code
 parameter_list|)
 name|int
 name|sci_idx
+decl_stmt|,
+name|code
 decl_stmt|;
 block|{
 name|ss_info
@@ -700,7 +696,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|ss_quit
 parameter_list|(
 name|argc

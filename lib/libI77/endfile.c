@@ -276,6 +276,7 @@ name|tf
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|tf
 operator|=
 name|fopen
@@ -287,6 +288,7 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 condition|)
 name|fclose
 argument_list|(
@@ -394,8 +396,6 @@ end_endif
 begin_block
 block|{
 name|int
-name|k
-decl_stmt|,
 name|len1
 decl_stmt|;
 name|char

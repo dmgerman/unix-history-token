@@ -49,49 +49,34 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_if
+begin_function
+name|int
 if|#
 directive|if
 name|__STDC__
-end_if
-
-begin_macro
 name|setpgrp
-argument_list|(
-argument|pid_t pid
-argument_list|,
-argument|pid_t pgid
-argument_list|)
-end_macro
-
-begin_else
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|,
+name|pid_t
+name|pgid
+parameter_list|)
 else|#
 directive|else
-end_else
-
-begin_macro
-name|setpgrp
-argument_list|(
-argument|pid
-argument_list|,
-argument|pgid
-argument_list|)
-end_macro
-
-begin_decl_stmt
+function|setpgrp
+parameter_list|(
+name|pid
+parameter_list|,
+name|pgid
+parameter_list|)
 name|pid_t
 name|pid
 decl_stmt|,
 name|pgid
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 return|return
 operator|(
@@ -104,7 +89,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

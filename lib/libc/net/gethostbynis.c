@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: gethostbynis.c,v 1.1 1994/09/25 02:12:14 pst Exp $"
+literal|"@(#)$Id: gethostbynis.c,v 1.2 1996/03/16 21:25:58 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbynis.c,v 1.1 1994/09/25 02:12:14 pst Exp $"
+literal|"$Id: gethostbynis.c,v 1.2 1996/03/16 21:25:58 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include

@@ -34,21 +34,16 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|yyerror
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -68,7 +63,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

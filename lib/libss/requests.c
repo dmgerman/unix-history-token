@@ -35,14 +35,12 @@ begin_comment
 comment|/*  * ss_self_identify -- assigned by default to the "." request  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|DECLARE
-argument_list|(
-argument|ss_self_identify
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|ss_self_identify
+parameter_list|)
 block|{
 specifier|register
 name|ss_data
@@ -68,20 +66,18 @@ name|subsystem_version
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ss_subsystem_name -- print name of subsystem  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|DECLARE
-argument_list|(
-argument|ss_subsystem_name
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|ss_subsystem_name
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -96,20 +92,18 @@ name|subsystem_name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ss_subsystem_version -- print version of subsystem  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|DECLARE
-argument_list|(
-argument|ss_subsystem_version
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|ss_subsystem_version
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -124,20 +118,18 @@ name|subsystem_version
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ss_unimplemented -- routine not implemented (should be  * set up as (dont_list,dont_summarize))  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|DECLARE
-argument_list|(
-argument|ss_unimplemented
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|ss_unimplemented
+parameter_list|)
 block|{
 name|ss_perror
 argument_list|(
@@ -149,7 +141,7 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

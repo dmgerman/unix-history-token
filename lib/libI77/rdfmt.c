@@ -180,11 +180,13 @@ literal|"0123456789"
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|ch
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 name|hex
 index|[
@@ -203,11 +205,13 @@ literal|"ABCDEF"
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|ch
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 name|hex
 index|[
@@ -392,9 +396,11 @@ name|s0
 expr_stmt|;
 name|w2
 operator|=
+operator|(
 name|w1
 operator|+
 literal|1
+operator|)
 operator|>>
 literal|1
 expr_stmt|;
@@ -519,6 +525,8 @@ block|{
 operator|*
 name|t
 operator|=
+operator|(
+operator|(
 name|hex
 index|[
 operator|*
@@ -528,9 +536,12 @@ literal|0xff
 index|]
 operator|-
 literal|1
+operator|)
 operator|<<
 literal|4
+operator|)
 operator||
+operator|(
 name|hex
 index|[
 name|s0
@@ -542,6 +553,7 @@ literal|0xff
 index|]
 operator|-
 literal|1
+operator|)
 expr_stmt|;
 name|t
 operator|+=
@@ -2325,19 +2337,17 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|rd_ed
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|ptr
+name|ptr
 argument_list|,
-argument|len
+name|len
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|syl
 modifier|*
 name|p
@@ -2362,23 +2372,24 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|rd_ed
-argument_list|(
-argument|struct syl *p
-argument_list|,
-argument|char *ptr
-argument_list|,
-argument|ftnlen len
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|struct
+name|syl
+modifier|*
+name|p
+parameter_list|,
+name|char
+modifier|*
+name|ptr
+parameter_list|,
+name|ftnlen
+name|len
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|int
 name|ch
@@ -2732,7 +2743,7 @@ name|errno
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2740,15 +2751,13 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|rd_ned
 argument_list|(
-argument|p
+name|p
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|syl
 modifier|*
 name|p
@@ -2760,19 +2769,17 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|rd_ned
-argument_list|(
-argument|struct syl *p
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|struct
+name|syl
+modifier|*
+name|p
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -2920,7 +2927,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

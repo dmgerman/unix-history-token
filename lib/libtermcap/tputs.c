@@ -106,18 +106,27 @@ begin_comment
 comment|/*  * Put the character string cp out, with padding.  * The number of affected lines is affcnt, and the routine  * used to output one character is outc.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tputs
-argument_list|(
-argument|const char *cp
-argument_list|,
-argument|int affcnt
-argument_list|,
-argument|int (*outc)(int)
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|cp
+parameter_list|,
+name|int
+name|affcnt
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|outc
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -307,7 +316,7 @@ name|PC
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

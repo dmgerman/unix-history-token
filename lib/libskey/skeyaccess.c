@@ -320,6 +320,24 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|int
+name|_skeyaccess
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+expr|struct
+name|login_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* skeyaccess - find out if UNIX passwords are permitted */
 end_comment
@@ -668,6 +686,7 @@ comment|/* _skeyaccess - find out if UNIX passwords are permitted */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|_skeyaccess
 parameter_list|(
@@ -700,6 +719,8 @@ name|match
 decl_stmt|;
 name|int
 name|permission
+init|=
+name|DENY
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1445,9 +1466,11 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|prev_token
+operator|)
 condition|)
 block|{
 name|prev_token

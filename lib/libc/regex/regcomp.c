@@ -567,6 +567,9 @@ name|cp
 operator|)
 argument_list|)
 decl_stmt|;
+if|#
+directive|if
+name|used
 specifier|static
 name|void
 name|mcsub
@@ -616,6 +619,8 @@ name|cp
 operator|)
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 specifier|static
 name|void
 name|mcinvert
@@ -1866,6 +1871,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|HERE
@@ -2048,6 +2056,9 @@ block|{
 case|case
 literal|'('
 case|:
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -2146,6 +2157,9 @@ argument_list|,
 name|subno
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|MUSTEAT
 argument_list|(
 literal|')'
@@ -2289,6 +2303,9 @@ break|break;
 case|case
 literal|'\\'
 case|:
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -2314,6 +2331,9 @@ case|case
 literal|'{'
 case|:
 comment|/* okay as ordinary except if digit follows */
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 operator|!
@@ -2391,6 +2411,9 @@ comment|/* no repetition, we're done */
 name|NEXT
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 operator|!
@@ -2540,6 +2563,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|count
@@ -2597,6 +2623,9 @@ condition|)
 name|NEXT
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -2684,6 +2713,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -2853,6 +2885,9 @@ name|neol
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|HERE
@@ -2945,6 +2980,9 @@ operator|==
 literal|'\\'
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -3120,6 +3158,9 @@ argument_list|,
 name|subno
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|EATTWO
@@ -3345,6 +3386,9 @@ break|break;
 case|case
 literal|'*'
 case|:
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|starordinary
@@ -3450,6 +3494,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|count
@@ -3512,6 +3559,9 @@ condition|)
 name|NEXT
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -3616,6 +3666,9 @@ name|ndigits
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|ndigits
@@ -3831,6 +3884,9 @@ argument_list|,
 literal|'-'
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|MUSTEAT
 argument_list|(
 literal|']'
@@ -4181,6 +4237,9 @@ comment|/* character class */
 name|NEXT2
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -4194,6 +4253,9 @@ operator|=
 name|PEEK
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|c
@@ -4214,6 +4276,9 @@ argument_list|,
 name|cs
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -4222,6 +4287,9 @@ argument_list|,
 name|REG_EBRACK
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|EATTWO
@@ -4242,6 +4310,9 @@ comment|/* equivalence class */
 name|NEXT2
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -4255,6 +4326,9 @@ operator|=
 name|PEEK
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|c
@@ -4275,6 +4349,9 @@ argument_list|,
 name|cs
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -4283,6 +4360,9 @@ argument_list|,
 name|REG_EBRACK
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|EATTWO
@@ -4352,6 +4432,9 @@ operator|=
 name|start
 expr_stmt|;
 comment|/* xxx what about signed chars here... */
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|start
@@ -4652,6 +4735,9 @@ specifier|register
 name|char
 name|value
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|MORE
@@ -4686,6 +4772,9 @@ argument_list|,
 literal|'.'
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|REQUIRE
 argument_list|(
 name|EATTWO
@@ -6760,6 +6849,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|used
+end_if
+
 begin_comment
 comment|/*  - mcsub - subtract a collating element from a cset  == static void mcsub(register cset *cs, register char *cp);  */
 end_comment
@@ -7026,6 +7121,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  - mcinvert - invert the list of collating elements in a cset  == static void mcinvert(register struct parse *p, register cset *cs);  *  * This would have to know the set of possibilities.  Implementation  * is deferred.  */

@@ -34,31 +34,22 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|x_putc
 argument_list|(
-argument|c
+name|c
 argument_list|)
-end_macro
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_macro
+name|int
 name|x_putc
 argument_list|(
-argument|int c
+name|int
+name|c
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 comment|/* this uses \n as an indicator of record-end */
 if|if
@@ -154,16 +145,14 @@ name|f__cf
 argument_list|)
 return|;
 block|}
-end_block
+end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|x_wSL
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 call|(
 modifier|*
@@ -191,16 +180,14 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|xw_end
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -230,16 +217,14 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|xw_rev
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -269,7 +254,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -323,12 +308,14 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|c_sfe
 argument_list|(
 name|a
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

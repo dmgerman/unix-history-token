@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/lib/libpcap/pcap.c,v 1.2 1995/02/23 06:55:14 phk Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/lib/libpcap/pcap.c,v 1.3 1995/05/30 05:47:24 rgrimes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include

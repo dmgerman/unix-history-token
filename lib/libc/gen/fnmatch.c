@@ -564,6 +564,7 @@ decl_stmt|;
 comment|/* 	 * A bracket expression starting with an unquoted circumflex 	 * character produces unspecified results (IEEE 1003.2-1992, 	 * 3.13.2).  This implementation treats it like '!', for 	 * consistency with the regular expression syntax. 	 * J.T. Conklin (conklin@ngai.kaleida.com) 	 */
 if|if
 condition|(
+operator|(
 name|negate
 operator|=
 operator|(
@@ -576,6 +577,7 @@ operator|*
 name|pattern
 operator|==
 literal|'^'
+operator|)
 operator|)
 condition|)
 operator|++

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ftime.c,v 1.3 1994/05/06 06:42:21 cgd Exp $"
+literal|"$Id: ftime.c,v 1.1.1.1 1994/05/27 10:33:22 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,22 +46,17 @@ directive|include
 file|<sys/timeb.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|ftime
-argument_list|(
-argument|tbp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tbp
+parameter_list|)
 name|struct
 name|timeb
 modifier|*
 name|tbp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|timezone
@@ -130,7 +125,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

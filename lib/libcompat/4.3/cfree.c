@@ -37,6 +37,12 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_function
 name|void
 name|cfree

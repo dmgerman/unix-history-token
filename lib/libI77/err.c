@@ -519,14 +519,12 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|f__canseek
 argument_list|(
-argument|f
+name|f
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|f
@@ -542,23 +540,17 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|f__canseek
-argument_list|(
-argument|FILE *f
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|FILE
+modifier|*
+name|f
+parameter_list|)
 comment|/*SYSDEP*/
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -788,7 +780,7 @@ comment|/* who knows what it is? */
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1154,14 +1146,12 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|f__nowreading
 argument_list|(
-argument|x
+name|x
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|unit
 modifier|*
 name|x
@@ -1173,19 +1163,16 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|f__nowreading
-argument_list|(
-argument|unit *x
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|unit
+modifier|*
+name|x
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|long
 name|loc
@@ -1283,7 +1270,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1291,14 +1278,12 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|f__nowwriting
 argument_list|(
-argument|x
+name|x
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|unit
 modifier|*
 name|x
@@ -1310,19 +1295,16 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|f__nowwriting
-argument_list|(
-argument|unit *x
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|unit
+modifier|*
+name|x
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|long
 name|loc
@@ -1583,7 +1565,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_cosh.c,v 1.1.1.1 1994/08/19 09:39:43 jkh Exp $"
+literal|"$Id: e_cosh.c,v 1.2 1995/05/30 05:48:07 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -266,6 +266,7 @@ operator|<
 literal|0x408633CE
 operator|||
 operator|(
+operator|(
 name|ix
 operator|==
 literal|0x408633ce
@@ -278,6 +279,7 @@ operator|(
 name|u_int32_t
 operator|)
 literal|0x8fb9f87d
+operator|)
 operator|)
 condition|)
 block|{

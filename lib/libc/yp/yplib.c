@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.21 1996/06/03 13:19:10 jraynard Exp $"
+literal|"$Id: yplib.c,v 1.22 1996/06/04 17:35:15 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -907,8 +907,6 @@ name|clnt_sin
 decl_stmt|;
 name|int
 name|clnt_sock
-decl_stmt|,
-name|lfd
 decl_stmt|,
 name|fd
 decl_stmt|;

@@ -160,108 +160,142 @@ name|rerrs
 index|[]
 init|=
 block|{
+block|{
 name|REG_NOMATCH
 block|,
 literal|"REG_NOMATCH"
 block|,
 literal|"regexec() failed to match"
+block|}
 block|,
+block|{
 name|REG_BADPAT
 block|,
 literal|"REG_BADPAT"
 block|,
 literal|"invalid regular expression"
+block|}
 block|,
+block|{
 name|REG_ECOLLATE
 block|,
 literal|"REG_ECOLLATE"
 block|,
 literal|"invalid collating element"
+block|}
 block|,
+block|{
 name|REG_ECTYPE
 block|,
 literal|"REG_ECTYPE"
 block|,
 literal|"invalid character class"
+block|}
 block|,
+block|{
 name|REG_EESCAPE
 block|,
 literal|"REG_EESCAPE"
 block|,
 literal|"trailing backslash (\\)"
+block|}
 block|,
+block|{
 name|REG_ESUBREG
 block|,
 literal|"REG_ESUBREG"
 block|,
 literal|"invalid backreference number"
+block|}
 block|,
+block|{
 name|REG_EBRACK
 block|,
 literal|"REG_EBRACK"
 block|,
 literal|"brackets ([ ]) not balanced"
+block|}
 block|,
+block|{
 name|REG_EPAREN
 block|,
 literal|"REG_EPAREN"
 block|,
 literal|"parentheses not balanced"
+block|}
 block|,
+block|{
 name|REG_EBRACE
 block|,
 literal|"REG_EBRACE"
 block|,
 literal|"braces not balanced"
+block|}
 block|,
+block|{
 name|REG_BADBR
 block|,
 literal|"REG_BADBR"
 block|,
 literal|"invalid repetition count(s)"
+block|}
 block|,
+block|{
 name|REG_ERANGE
 block|,
 literal|"REG_ERANGE"
 block|,
 literal|"invalid character range"
+block|}
 block|,
+block|{
 name|REG_ESPACE
 block|,
 literal|"REG_ESPACE"
 block|,
 literal|"out of memory"
+block|}
 block|,
+block|{
 name|REG_BADRPT
 block|,
 literal|"REG_BADRPT"
 block|,
 literal|"repetition-operator operand invalid"
+block|}
 block|,
+block|{
 name|REG_EMPTY
 block|,
 literal|"REG_EMPTY"
 block|,
 literal|"empty (sub)expression"
+block|}
 block|,
+block|{
 name|REG_ASSERT
 block|,
 literal|"REG_ASSERT"
 block|,
 literal|"\"can't happen\" -- you found a bug"
+block|}
 block|,
+block|{
 name|REG_INVARG
 block|,
 literal|"REG_INVARG"
 block|,
 literal|"invalid argument to regex routine"
+block|}
 block|,
+block|{
 literal|0
 block|,
 literal|""
 block|,
 literal|"*** unknown regexp error code ***"
-block|, }
+block|}
+block|}
 struct|;
 end_struct
 

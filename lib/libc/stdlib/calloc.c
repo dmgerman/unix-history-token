@@ -77,12 +77,14 @@ name|num
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|malloc
 argument_list|(
 name|size
 argument_list|)
+operator|)
 condition|)
 name|bzero
 argument_list|(

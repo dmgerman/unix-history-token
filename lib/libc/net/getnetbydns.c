@@ -38,7 +38,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbydns.c,v 1.4 1995/10/22 14:39:04 phk Exp $"
+literal|"$Id: getnetbydns.c,v 1.5 1996/01/13 09:03:51 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,6 +134,19 @@ include|#
 directive|include
 file|"res_config.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_res_close
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -49,6 +49,22 @@ directive|include
 file|<dirent.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|_seekdir
+name|__P
+argument_list|(
+operator|(
+name|DIR
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Seek to an entry in a directory.  * _seekdir is in telldir.c so that it can share opaque data structures.  */
 end_comment

@@ -1050,12 +1050,15 @@ goto|;
 comment|/* 	 * If it will be cheaper, or if we can't back up, then send a return 	 * preliminarily. 	 */
 if|if
 condition|(
+operator|(
 name|j
 operator|>
 name|i
 operator|+
 literal|1
+operator|)
 operator|||
+operator|(
 name|outcol
 operator|>
 name|destcol
@@ -1065,6 +1068,7 @@ name|BS
 operator|&&
 operator|!
 name|BC
+operator|)
 condition|)
 block|{
 comment|/* 		 * BUG: this doesn't take the (possibly long) length of CR 		 * into account. 		 */

@@ -31,6 +31,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"termcap.h"
 end_include
 
@@ -154,11 +160,13 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 if|if

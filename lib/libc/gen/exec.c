@@ -381,6 +381,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|argv
 operator|=
 name|buildargv
@@ -391,6 +392,7 @@ name|arg
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 condition|)
 operator|(
 name|void
@@ -510,6 +512,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|argv
 operator|=
 name|buildargv
@@ -521,6 +524,7 @@ argument_list|,
 operator|&
 name|envp
 argument_list|)
+operator|)
 condition|)
 operator|(
 name|void
@@ -636,6 +640,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|argv
 operator|=
 name|buildargv
@@ -646,6 +651,7 @@ name|arg
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 condition|)
 operator|(
 name|void
@@ -850,6 +856,7 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|strsep
@@ -859,6 +866,7 @@ name|cur
 argument_list|,
 literal|":"
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* 		 * It's a SHELL path -- double, leading and trailing colons 		 * mean the current directory. 		 */

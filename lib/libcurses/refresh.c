@@ -4378,18 +4378,21 @@ comment|/* Scroll up the screen. */
 if|if
 condition|(
 operator|(
+operator|(
 operator|!
 name|DB
 operator|&&
 name|SF
 operator|!=
 name|NULL
+operator|)
 operator|||
 name|n
 operator|==
 literal|1
 operator|)
 operator|&&
+operator|(
 name|bot
 operator|==
 name|curscr
@@ -4397,6 +4400,7 @@ operator|->
 name|maxy
 operator|-
 literal|1
+operator|)
 operator|&&
 name|top
 operator|==
@@ -4865,6 +4869,7 @@ name|SR
 operator|==
 name|NULL
 operator|||
+operator|(
 name|sr
 operator|!=
 name|NULL
@@ -4873,6 +4878,7 @@ operator|-
 name|n
 operator|==
 literal|1
+operator|)
 condition|)
 block|{
 for|for

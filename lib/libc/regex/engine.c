@@ -728,8 +728,8 @@ name|char
 modifier|*
 name|dp
 decl_stmt|;
-specifier|const
 specifier|register
+specifier|const
 name|sopno
 name|gf
 init|=
@@ -740,8 +740,8 @@ operator|+
 literal|1
 decl_stmt|;
 comment|/* +1 for OEND */
-specifier|const
 specifier|register
+specifier|const
 name|sopno
 name|gl
 init|=

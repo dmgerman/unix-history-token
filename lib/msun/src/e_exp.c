@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_exp.c,v 1.1.1.1 1994/08/19 09:39:43 jkh Exp $"
+literal|"$Id: e_exp.c,v 1.2 1995/05/30 05:48:08 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,8 +192,12 @@ name|double
 name|y
 decl_stmt|,
 name|hi
+init|=
+literal|0.0
 decl_stmt|,
 name|lo
+init|=
+literal|0.0
 decl_stmt|,
 name|c
 decl_stmt|,
@@ -201,6 +205,8 @@ name|t
 decl_stmt|;
 name|int32_t
 name|k
+init|=
+literal|0
 decl_stmt|,
 name|xsb
 decl_stmt|;

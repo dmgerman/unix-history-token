@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: pcap-bpf.c,v 1.14 94/06/03 19:58:49 leres Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/lib/libpcap/pcap-bpf.c,v 1.1.1.1 1995/01/20 04:13:03 jkh Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include

@@ -59,53 +59,35 @@ begin_comment
 comment|/*  * Backwards-compatible killpg().  */
 end_comment
 
-begin_if
+begin_function
+name|int
 if|#
 directive|if
 name|__STDC__
-end_if
-
-begin_macro
 name|killpg
-argument_list|(
-argument|pid_t pgid
-argument_list|,
-argument|int sig
-argument_list|)
-end_macro
-
-begin_else
+parameter_list|(
+name|pid_t
+name|pgid
+parameter_list|,
+name|int
+name|sig
+parameter_list|)
 else|#
 directive|else
-end_else
-
-begin_macro
-name|killpg
-argument_list|(
-argument|pgid
-argument_list|,
-argument|sig
-argument_list|)
-end_macro
-
-begin_decl_stmt
+function|killpg
+parameter_list|(
+name|pgid
+parameter_list|,
+name|sig
+parameter_list|)
 name|pid_t
 name|pgid
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|sig
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 if|if
 condition|(
@@ -137,7 +119,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

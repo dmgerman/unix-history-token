@@ -47,24 +47,19 @@ begin_comment
 comment|/*  * Set signal state to prevent restart of system calls  * after an instance of the indicated signal.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|siginterrupt
-argument_list|(
-argument|sig
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sig
+parameter_list|,
+name|flag
+parameter_list|)
 name|int
 name|sig
 decl_stmt|,
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|sigset_t
@@ -162,7 +157,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

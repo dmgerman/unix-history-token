@@ -2,6 +2,12 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"f2c.h"
 end_include
 
@@ -333,19 +339,23 @@ name|NULL
 condition|)
 if|if
 condition|(
+operator|(
 name|byfile
 operator|&&
 name|x
 operator|!=
 operator|-
 literal|1
+operator|)
 operator|||
+operator|(
 operator|!
 name|byfile
 operator|&&
 name|p
 operator|!=
 name|NULL
+operator|)
 condition|)
 operator|*
 name|a
@@ -432,6 +442,7 @@ if|if
 condition|(
 name|byfile
 operator|||
+operator|(
 name|p
 operator|!=
 name|NULL
@@ -441,6 +452,7 @@ operator|->
 name|ufnm
 operator|!=
 name|NULL
+operator|)
 condition|)
 operator|*
 name|a

@@ -648,10 +648,12 @@ name|start
 operator|=
 name|dst
 init|;
+operator|(
 name|c
 operator|=
 operator|*
 name|src
+operator|)
 condition|;
 control|)
 name|dst

@@ -85,6 +85,7 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|getcwd
@@ -93,6 +94,7 @@ name|buf
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

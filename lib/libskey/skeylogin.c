@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -784,14 +790,6 @@ modifier|*
 name|response
 decl_stmt|;
 block|{
-name|struct
-name|timeval
-name|startval
-decl_stmt|;
-name|struct
-name|timeval
-name|endval
-decl_stmt|;
 name|char
 name|key
 index|[
@@ -823,20 +821,6 @@ name|tbuf
 index|[
 literal|27
 index|]
-decl_stmt|,
-name|buf
-index|[
-literal|60
-index|]
-decl_stmt|;
-name|char
-name|me
-index|[
-literal|80
-index|]
-decl_stmt|;
-name|int
-name|rval
 decl_stmt|;
 name|char
 modifier|*
@@ -1267,22 +1251,23 @@ begin_comment
 comment|/* Convert 8-byte hex-ascii string to binary array  * Returns 0 on success, -1 on error  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|atob8
-argument_list|(
+parameter_list|(
 name|out
-argument_list|,
+parameter_list|,
 name|in
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|out
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|in
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{

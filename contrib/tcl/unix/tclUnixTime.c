@@ -229,7 +229,7 @@ init|=
 name|localtime
 argument_list|(
 operator|&
-name|currentTime
+name|curTime
 argument_list|)
 decl_stmt|;
 name|int

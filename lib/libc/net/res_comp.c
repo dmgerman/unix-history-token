@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 1.3 1995/05/30 05:40:54 rgrimes Exp $"
+literal|"$Id: res_comp.c,v 1.4 1996/01/07 09:14:54 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -218,11 +218,13 @@ expr_stmt|;
 comment|/* 	 * fetch next label in domain name 	 */
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 comment|/* 		 * Check for indirection 		 */
@@ -1193,11 +1195,13 @@ name|cpp
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 comment|/* 			 * check for indirection 			 */

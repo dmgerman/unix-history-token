@@ -146,6 +146,7 @@ expr_stmt|;
 comment|/* 	 * First, figure out what he intends as a field separtor. 	 * Despite the way this routine is written, the prefered 	 * form  2-272.AA001234H.01777, i.e. XDE standard. 	 * Great efforts are made to insure backward compatability. 	 */
 if|if
 condition|(
+operator|(
 name|hostname
 operator|=
 name|strchr
@@ -154,6 +155,7 @@ name|buf
 argument_list|,
 literal|'#'
 argument_list|)
+operator|)
 condition|)
 name|separator
 operator|=

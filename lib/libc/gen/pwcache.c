@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|MASK
-value|NCACHE - 1
+value|(NCACHE - 1)
 end_define
 
 begin_comment

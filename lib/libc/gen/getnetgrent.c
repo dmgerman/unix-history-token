@@ -962,6 +962,7 @@ name|list
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|ptr
 operator|=
 name|strstr
@@ -970,6 +971,7 @@ name|ptr
 argument_list|,
 name|group
 argument_list|)
+operator|)
 condition|)
 block|{
 name|ptr
@@ -1159,6 +1161,7 @@ name|user
 parameter_list|,
 name|dom
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|group

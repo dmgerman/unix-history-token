@@ -23,18 +23,16 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|do_us
 argument_list|(
-argument|number
+name|number
 argument_list|,
-argument|ptr
+name|ptr
 argument_list|,
-argument|len
+name|len
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|ftnint
 modifier|*
 name|number
@@ -59,23 +57,23 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|do_us
-argument_list|(
-argument|ftnint *number
-argument_list|,
-argument|char *ptr
-argument_list|,
-argument|ftnlen len
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|ftnint
+modifier|*
+name|number
+parameter_list|,
+name|char
+modifier|*
+name|ptr
+parameter_list|,
+name|ftnlen
+name|len
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 if|if
 condition|(
@@ -191,8 +189,13 @@ literal|0
 operator|)
 return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#

@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -161,6 +173,12 @@ directive|include
 file|"kvm_private.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|used
+end_if
+
 begin_function
 specifier|static
 name|char
@@ -218,6 +236,11 @@ directive|endif
 comment|/* __FreeBSD__ */
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -381,6 +404,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+call|(
+name|void
+call|)
+argument_list|(
 name|KREAD
 argument_list|(
 name|kd
@@ -398,6 +425,7 @@ operator|&
 name|eproc
 operator|.
 name|e_ucred
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3187,6 +3215,7 @@ modifier|*
 name|kd
 decl_stmt|;
 specifier|register
+specifier|const
 name|struct
 name|proc
 modifier|*

@@ -254,7 +254,7 @@ name|ISDOT
 parameter_list|(
 name|a
 parameter_list|)
-value|(a[0] == '.'&& (!a[1] || a[1] == '.'&& !a[2]))
+value|(a[0] == '.'&& (!a[1] || (a[1] == '.'&& !a[2])) )
 end_define
 
 begin_define
@@ -1363,6 +1363,7 @@ name|instr
 operator|==
 name|FTS_SKIP
 operator|||
+operator|(
 name|ISSET
 argument_list|(
 name|FTS_XDEV
@@ -1375,6 +1376,7 @@ operator|!=
 name|sp
 operator|->
 name|fts_dev
+operator|)
 condition|)
 block|{
 if|if
@@ -1585,11 +1587,13 @@ name|p
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|p
 operator|->
 name|fts_link
+operator|)
 condition|)
 block|{
 name|free
@@ -2668,12 +2672,14 @@ name|nitems
 operator|=
 literal|0
 init|;
+operator|(
 name|dp
 operator|=
 name|readdir
 argument_list|(
 name|dirp
 argument_list|)
+operator|)
 condition|;
 control|)
 block|{
@@ -2890,6 +2896,7 @@ ifdef|#
 directive|ifdef
 name|DT_DIR
 operator|||
+operator|(
 name|nlinks
 operator|>
 literal|0
@@ -2905,6 +2912,7 @@ operator|->
 name|d_type
 operator|!=
 name|DT_UNKNOWN
+operator|)
 endif|#
 directive|endif
 condition|)
@@ -3912,9 +3920,11 @@ decl_stmt|;
 comment|/* Free a linked list of structures. */
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|head
+operator|)
 condition|)
 block|{
 name|head

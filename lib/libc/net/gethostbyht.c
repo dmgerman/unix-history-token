@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbyht.c,v 1.2 1995/05/30 05:40:44 rgrimes Exp $"
+literal|"$Id: gethostbyht.c,v 1.3 1996/01/13 09:03:45 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +486,7 @@ name|host_aliases
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strpbrk
@@ -494,6 +495,7 @@ name|cp
 argument_list|,
 literal|" \t"
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cp
@@ -547,6 +549,7 @@ name|cp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strpbrk
@@ -555,6 +558,7 @@ name|cp
 argument_list|,
 literal|" \t"
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cp
@@ -613,10 +617,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|gethostent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -714,10 +720,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|gethostent
 argument_list|()
+operator|)
 condition|)
 if|if
 condition|(

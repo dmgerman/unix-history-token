@@ -44,22 +44,14 @@ name|f__icptr
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|mv_cur
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|Void
+parameter_list|)
 comment|/* shouldn't use fseek because it insists on calling fflush */
-end_comment
-
-begin_comment
 comment|/* instead we know too much about stdio */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -511,7 +503,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1646,18 +1638,16 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|wrt_L
 argument_list|(
-argument|n
+name|n
 argument_list|,
-argument|len
+name|len
 argument_list|,
-argument|sz
+name|sz
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|Uint
 modifier|*
 name|n
@@ -1675,23 +1665,22 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|wrt_L
-argument_list|(
-argument|Uint *n
-argument_list|,
-argument|int len
-argument_list|,
-argument|ftnlen sz
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|Uint
+modifier|*
+name|n
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|ftnlen
+name|sz
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|int
 name|i
@@ -1787,7 +1776,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -2187,19 +2176,17 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|w_ed
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|ptr
+name|ptr
 argument_list|,
-argument|len
+name|len
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|syl
 modifier|*
 name|p
@@ -2224,23 +2211,24 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|w_ed
-argument_list|(
-argument|struct syl *p
-argument_list|,
-argument|char *ptr
-argument_list|,
-argument|ftnlen len
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|struct
+name|syl
+modifier|*
+name|p
+parameter_list|,
+name|char
+modifier|*
+name|ptr
+parameter_list|,
+name|ftnlen
+name|len
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2578,7 +2566,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2586,15 +2574,13 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|w_ned
 argument_list|(
-argument|p
+name|p
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|syl
 modifier|*
 name|p
@@ -2606,19 +2592,17 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|w_ned
-argument_list|(
-argument|struct syl *p
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|struct
+name|syl
+modifier|*
+name|p
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -2766,7 +2750,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

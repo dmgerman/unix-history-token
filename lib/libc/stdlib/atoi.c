@@ -49,22 +49,17 @@ directive|include
 file|<stddef.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|atoi
-argument_list|(
-argument|str
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|str
+parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|str
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -87,7 +82,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

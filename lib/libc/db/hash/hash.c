@@ -4587,12 +4587,14 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|malloc
 argument_list|(
 name|newsize
 argument_list|)
+operator|)
 condition|)
 block|{
 name|memmove

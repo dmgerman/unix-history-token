@@ -153,6 +153,7 @@ name|pid
 decl_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|type
 operator|!=
@@ -162,6 +163,7 @@ operator|*
 name|type
 operator|!=
 literal|'w'
+operator|)
 operator|||
 name|type
 index|[

@@ -21,14 +21,12 @@ directive|include
 file|"fmt.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|xrd_SL
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -80,16 +78,14 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|x_getc
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -191,16 +187,14 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|x_endp
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -214,16 +208,14 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|x_rev
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -237,7 +229,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -291,12 +283,14 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|c_sfe
 argument_list|(
 name|a
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

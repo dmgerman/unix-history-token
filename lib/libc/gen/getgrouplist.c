@@ -148,10 +148,12 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|grp
 operator|=
 name|getgrent
 argument_list|()
+operator|)
 condition|)
 block|{
 for|for

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strftime.c,v 1.7 1996/05/27 04:10:27 scrappy Exp $"
+literal|"$Id: strftime.c,v 1.8 1996/05/27 06:54:01 scrappy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,21 +233,6 @@ specifier|static
 name|struct
 name|lc_time_T
 name|localebuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|lc_time_T
-modifier|*
-name|_loc
-name|P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 

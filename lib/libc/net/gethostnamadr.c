@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: gethostnamadr.c,v 1.6 1995/03/24 15:38:54 ache Exp $"
+literal|"@(#)$Id: gethostnamadr.c,v 1.7 1995/05/30 05:40:45 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostnamadr.c,v 1.6 1995/03/24 15:38:54 ache Exp $"
+literal|"$Id: gethostnamadr.c,v 1.7 1995/05/30 05:40:45 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,6 +100,58 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_sethosthtent
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_endhosthtent
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_sethostdnsent
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_endhostdnsent
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbydns.c,v 1.7 1995/10/22 14:39:02 phk Exp $"
+literal|"$Id: gethostbydns.c,v 1.8 1996/01/13 09:03:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,6 +131,19 @@ directive|include
 file|"res_config.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|_res_close
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -205,25 +218,6 @@ specifier|static
 name|struct
 name|in_addr
 name|host_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|FILE
-modifier|*
-name|hostf
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|stayopen
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

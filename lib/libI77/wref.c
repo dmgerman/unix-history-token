@@ -87,22 +87,20 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|wrt_E
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|w
+name|w
 argument_list|,
-argument|d
+name|d
 argument_list|,
-argument|e
+name|e
 argument_list|,
-argument|len
+name|len
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|ufloat
 modifier|*
 name|p
@@ -120,27 +118,28 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|wrt_E
-argument_list|(
-argument|ufloat *p
-argument_list|,
-argument|int w
-argument_list|,
-argument|int d
-argument_list|,
-argument|int e
-argument_list|,
-argument|ftnlen len
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|ufloat
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|w
+parameter_list|,
+name|int
+name|d
+parameter_list|,
+name|int
+name|e
+parameter_list|,
+name|ftnlen
+name|len
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|char
 name|buf
@@ -688,6 +687,7 @@ name|e1
 operator|=
 literal|2
 init|;
+operator|(
 name|s
 index|[
 literal|0
@@ -697,6 +697,7 @@ name|s
 index|[
 literal|1
 index|]
+operator|)
 condition|;
 name|s
 operator|++
@@ -996,7 +997,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1004,20 +1005,18 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|wrt_F
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|w
+name|w
 argument_list|,
-argument|d
+name|d
 argument_list|,
-argument|len
+name|len
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|ufloat
 modifier|*
 name|p
@@ -1035,25 +1034,25 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|wrt_F
-argument_list|(
-argument|ufloat *p
-argument_list|,
-argument|int w
-argument_list|,
-argument|int d
-argument_list|,
-argument|ftnlen len
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|ufloat
+modifier|*
+name|p
+parameter_list|,
+name|int
+name|w
+parameter_list|,
+name|int
+name|d
+parameter_list|,
+name|ftnlen
+name|len
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|int
 name|d1
@@ -1163,9 +1162,11 @@ directive|endif
 block|}
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|f__scale
+operator|)
 condition|)
 if|if
 condition|(
@@ -1414,11 +1415,13 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|b
 operator|++
+operator|)
 condition|)
 name|PUT
 argument_list|(
@@ -1441,7 +1444,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

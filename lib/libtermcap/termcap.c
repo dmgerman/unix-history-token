@@ -251,12 +251,14 @@ block|{
 comment|/* no TERMCAP or it holds an entry */
 if|if
 condition|(
+operator|(
 name|termpath
 operator|=
 name|getenv
 argument_list|(
 literal|"TERMPATH"
 argument_list|)
+operator|)
 condition|)
 name|strncpy
 argument_list|(
@@ -271,12 +273,14 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|home
 operator|=
 name|getenv
 argument_list|(
 literal|"HOME"
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* set up default */

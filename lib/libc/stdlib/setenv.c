@@ -77,39 +77,31 @@ begin_comment
 comment|/*  * setenv --  *	Set the value of the environmental variable "name" to be  *	"value".  If rewrite is set, replace any current value.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|setenv
-argument_list|(
+parameter_list|(
 name|name
-argument_list|,
+parameter_list|,
 name|value
-argument_list|,
+parameter_list|,
 name|rewrite
-argument_list|)
+parameter_list|)
 specifier|register
 specifier|const
 name|char
-operator|*
+modifier|*
 name|name
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 specifier|const
 name|char
 modifier|*
 name|value
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|rewrite
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|char
@@ -189,6 +181,7 @@ block|{
 comment|/* old larger; copy over */
 while|while
 condition|(
+operator|(
 operator|*
 name|c
 operator|++
@@ -196,6 +189,7 @@ operator|=
 operator|*
 name|value
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 return|return
@@ -460,6 +454,7 @@ operator|++
 operator|=
 literal|'='
 init|;
+operator|(
 operator|*
 name|c
 operator|++
@@ -467,6 +462,7 @@ operator|=
 operator|*
 name|value
 operator|++
+operator|)
 condition|;
 control|)
 empty_stmt|;
@@ -476,7 +472,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * unsetenv(name) --  *	Delete environmental variable "name".  */

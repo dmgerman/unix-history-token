@@ -49,20 +49,15 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_macro
+begin_function
+name|int
 name|raise
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|int
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -76,7 +71,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

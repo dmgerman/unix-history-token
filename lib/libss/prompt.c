@@ -32,29 +32,21 @@ literal|"Header: prompt.c,v 1.2 89/01/18 18:27:02 raeburn Exp "
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|ss_set_prompt
-argument_list|(
-argument|sci_idx
-argument_list|,
-argument|new_prompt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sci_idx
+parameter_list|,
+name|new_prompt
+parameter_list|)
 name|int
 name|sci_idx
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|new_prompt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|ss_info
 argument_list|(
@@ -66,7 +58,7 @@ operator|=
 name|new_prompt
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char

@@ -266,43 +266,37 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|op_gen
 argument_list|(
-argument|a
+name|a
 argument_list|,
-argument|b
+name|b
 argument_list|,
-argument|c
+name|c
 argument_list|,
-argument|d
+name|d
 argument_list|)
-end_macro
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_macro
+name|int
 name|op_gen
 argument_list|(
-argument|int a
+name|int
+name|a
 argument_list|,
-argument|int b
+name|int
+name|b
 argument_list|,
-argument|int c
+name|int
+name|c
 argument_list|,
-argument|int d
+name|int
+name|d
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|struct
 name|syl
@@ -368,7 +362,7 @@ operator|++
 operator|)
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -653,16 +647,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|ne_d
 argument_list|(
-argument|s
+name|s
 argument_list|,
-argument|p
+name|p
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|s
@@ -678,21 +670,21 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|ne_d
-argument_list|(
-argument|char *s
-argument_list|,
-argument|char **p
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|p
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|int
 name|n
@@ -1290,7 +1282,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1298,16 +1290,14 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|e_d
 argument_list|(
-argument|s
+name|s
 argument_list|,
-argument|p
+name|p
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|s
@@ -1323,21 +1313,21 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|e_d
-argument_list|(
-argument|char *s
-argument_list|,
-argument|char **p
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|p
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|int
 name|i
@@ -1946,7 +1936,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2240,14 +2230,12 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|pars_f
 argument_list|(
-argument|s
+name|s
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|s
@@ -2259,19 +2247,16 @@ else|#
 directive|else
 end_else
 
-begin_macro
+begin_function
+name|int
 name|pars_f
-argument_list|(
-argument|char *s
-argument_list|)
-end_macro
-
-begin_endif
+parameter_list|(
+name|char
+modifier|*
+name|s
+parameter_list|)
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 name|f__parenlvl
 operator|=
@@ -2306,7 +2291,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2347,31 +2332,22 @@ directive|ifdef
 name|KR_headers
 end_ifdef
 
-begin_macro
+begin_decl_stmt
+name|int
 name|type_f
 argument_list|(
-argument|n
+name|n
 argument_list|)
-end_macro
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_macro
+name|int
 name|type_f
 argument_list|(
-argument|int n
+name|int
+name|n
 argument_list|)
-end_macro
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -2494,7 +2470,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -3009,14 +2985,12 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|en_fio
-argument_list|(
-argument|Void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|Void
+parameter_list|)
 block|{
 name|ftnint
 name|one
@@ -3044,7 +3018,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|VOID

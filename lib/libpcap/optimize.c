@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: optimize.c,v 1.45 94/06/20 19:07:55 leres Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/lib/libpcap/optimize.c,v 1.1.1.1 1995/01/20 04:13:03 jkh Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_ifdef

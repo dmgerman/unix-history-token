@@ -22,8 +22,8 @@ file|"copyright.h"
 end_include
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]

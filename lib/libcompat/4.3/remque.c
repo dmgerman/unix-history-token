@@ -60,20 +60,18 @@ block|}
 struct|;
 end_struct
 
-begin_expr_stmt
+begin_function
+name|void
 name|remque
-argument_list|(
+parameter_list|(
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vaxque
-operator|*
+modifier|*
 name|e
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|e
 operator|->
@@ -96,7 +94,7 @@ operator|->
 name|vq_prev
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

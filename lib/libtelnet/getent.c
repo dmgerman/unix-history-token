@@ -28,6 +28,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -40,24 +46,22 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getent
-argument_list|(
-argument|cp
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cp
+parameter_list|,
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|cp
 decl_stmt|,
-modifier|*
+decl|*
 name|name
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

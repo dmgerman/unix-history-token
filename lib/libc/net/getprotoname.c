@@ -90,10 +90,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|getprotoent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: e_asinf.c,v 1.1.1.1 1994/08/19 09:39:44 jkh Exp $"
+literal|"$Id: e_asinf.c,v 1.2 1995/05/30 05:47:56 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,6 +167,8 @@ directive|endif
 block|{
 name|float
 name|t
+init|=
+literal|0.0
 decl_stmt|,
 name|w
 decl_stmt|,

@@ -9,6 +9,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
 comment|/*  * Our standalone dpANS environment on the RT doesn't include any  * header files.  */
 end_comment
@@ -86,6 +92,18 @@ undef|#
 directive|undef
 name|ss_error
 end_undef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|com_err_va
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|char

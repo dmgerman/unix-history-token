@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_debug.c,v 1.6 1996/01/07 09:14:55 peter Exp $"
+literal|"$Id: res_debug.c,v 1.7 1996/02/06 20:35:48 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -662,12 +662,14 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|ntohs
 argument_list|(
 name|cnt
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -1328,6 +1330,7 @@ block|}
 comment|/* 	 * Print question records. 	 */
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|ntohs
@@ -1336,6 +1339,7 @@ name|hp
 operator|->
 name|qdcount
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -2498,11 +2502,13 @@ name|dlen
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 name|fprintf
@@ -2951,6 +2957,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 operator|(
@@ -2960,6 +2967,7 @@ operator|)
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 for|for

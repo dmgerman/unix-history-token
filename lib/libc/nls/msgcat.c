@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.3 1995/06/17 03:02:21 ache Exp $ */
+comment|/*	$Id: msgcat.c,v 1.4 1995/10/22 14:39:22 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1453,7 +1453,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s is version %d, we need %d.\n"
+literal|"%s: %s is version %ld, we need %ld.\n"
 argument_list|,
 name|ERRNAME
 argument_list|,
@@ -1485,7 +1485,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s has %d sets!\n"
+literal|"%s: %s has %ld sets!\n"
 argument_list|,
 name|ERRNAME
 argument_list|,

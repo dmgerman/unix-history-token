@@ -150,10 +150,12 @@ operator|++
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|cp
+operator|)
 condition|)
 block|{
 if|if

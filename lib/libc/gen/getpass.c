@@ -267,9 +267,6 @@ name|FILE
 modifier|*
 name|outfp
 decl_stmt|;
-name|long
-name|omask
-decl_stmt|;
 specifier|static
 name|char
 name|buf

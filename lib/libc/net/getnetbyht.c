@@ -521,10 +521,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|getnetent
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -623,10 +625,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|getnetent
 argument_list|()
+operator|)
 condition|)
 if|if
 condition|(

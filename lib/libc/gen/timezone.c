@@ -125,17 +125,20 @@ name|end
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|beg
 operator|=
 name|getenv
 argument_list|(
 literal|"TZNAME"
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* set in environment */
 if|if
 condition|(
+operator|(
 name|end
 operator|=
 name|index
@@ -144,6 +147,7 @@ name|beg
 argument_list|,
 literal|','
 argument_list|)
+operator|)
 condition|)
 block|{
 comment|/* "PST,PDT" */
@@ -243,6 +247,7 @@ name|zonetab
 index|[]
 init|=
 block|{
+block|{
 operator|-
 literal|1
 operator|*
@@ -251,8 +256,10 @@ block|,
 literal|"MET"
 block|,
 literal|"MET DST"
+block|}
 block|,
 comment|/* Middle European */
+block|{
 operator|-
 literal|2
 operator|*
@@ -261,8 +268,10 @@ block|,
 literal|"EET"
 block|,
 literal|"EET DST"
+block|}
 block|,
 comment|/* Eastern European */
+block|{
 literal|4
 operator|*
 literal|60
@@ -270,8 +279,10 @@ block|,
 literal|"AST"
 block|,
 literal|"ADT"
+block|}
 block|,
 comment|/* Atlantic */
+block|{
 literal|5
 operator|*
 literal|60
@@ -279,8 +290,10 @@ block|,
 literal|"EST"
 block|,
 literal|"EDT"
+block|}
 block|,
 comment|/* Eastern */
+block|{
 literal|6
 operator|*
 literal|60
@@ -288,8 +301,10 @@ block|,
 literal|"CST"
 block|,
 literal|"CDT"
+block|}
 block|,
 comment|/* Central */
+block|{
 literal|7
 operator|*
 literal|60
@@ -297,8 +312,10 @@ block|,
 literal|"MST"
 block|,
 literal|"MDT"
+block|}
 block|,
 comment|/* Mountain */
+block|{
 literal|8
 operator|*
 literal|60
@@ -306,21 +323,25 @@ block|,
 literal|"PST"
 block|,
 literal|"PDT"
+block|}
 block|,
 comment|/* Pacific */
 ifdef|#
 directive|ifdef
 name|notdef
 comment|/* there's no way to distinguish this from WET */
+block|{
 literal|0
 block|,
 literal|"GMT"
 block|,
 literal|0
+block|}
 block|,
 comment|/* Greenwich */
 endif|#
 directive|endif
+block|{
 literal|0
 operator|*
 literal|60
@@ -328,8 +349,10 @@ block|,
 literal|"WET"
 block|,
 literal|"WET DST"
+block|}
 block|,
 comment|/* Western European */
+block|{
 operator|-
 literal|10
 operator|*
@@ -338,8 +361,10 @@ block|,
 literal|"EST"
 block|,
 literal|"EST"
+block|}
 block|,
 comment|/* Aust: Eastern */
+block|{
 operator|-
 literal|10
 operator|*
@@ -350,8 +375,10 @@ block|,
 literal|"CST"
 block|,
 literal|"CST"
+block|}
 block|,
 comment|/* Aust: Central */
+block|{
 operator|-
 literal|8
 operator|*
@@ -360,10 +387,13 @@ block|,
 literal|"WST"
 block|,
 literal|0
+block|}
 block|,
 comment|/* Aust: Western */
+block|{
 operator|-
 literal|1
+block|}
 block|}
 struct|;
 end_struct
