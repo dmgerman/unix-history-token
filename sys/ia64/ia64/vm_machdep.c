@@ -528,7 +528,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_eflag
+name|pcb_ar_eflag
 operator|&=
 operator|~
 name|PSL_C
@@ -681,7 +681,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_bspstore
+name|pcb_ar_bsp
 operator|=
 operator|(
 name|u_int64_t
@@ -698,7 +698,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_rnat
+name|pcb_ar_rnat
 operator|=
 name|rnat
 expr_stmt|;
@@ -706,7 +706,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_pfs
+name|pcb_ar_pfs
 operator|=
 literal|0
 expr_stmt|;
@@ -714,7 +714,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_pmap
+name|pcb_current_pmap
 operator|=
 operator|(
 name|u_int64_t
@@ -746,7 +746,10 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_r4
+name|pcb_r
+index|[
+name|PCB_R4
+index|]
 operator|=
 operator|(
 name|u_int64_t
@@ -757,7 +760,10 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_r5
+name|pcb_r
+index|[
+name|PCB_R5
+index|]
 operator|=
 name|FDESC_FUNC
 argument_list|(
@@ -768,7 +774,10 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_r6
+name|pcb_r
+index|[
+name|PCB_R6
+index|]
 operator|=
 operator|(
 name|u_int64_t
@@ -779,7 +788,7 @@ name|td2
 operator|->
 name|td_pcb
 operator|->
-name|pcb_b0
+name|pcb_rp
 operator|=
 name|FDESC_FUNC
 argument_list|(
@@ -836,7 +845,10 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_r4
+name|pcb_r
+index|[
+name|PCB_R4
+index|]
 operator|=
 operator|(
 name|u_int64_t
@@ -847,7 +859,10 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_r6
+name|pcb_r
+index|[
+name|PCB_R6
+index|]
 operator|=
 operator|(
 name|u_int64_t
