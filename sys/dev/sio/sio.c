@@ -3361,6 +3361,16 @@ argument_list|,
 name|irqs
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"sio%d: port may not be enabled in BIOS\n"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -4384,7 +4394,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" 8250"
+literal|" 8250 or not responding"
 argument_list|)
 expr_stmt|;
 goto|goto
