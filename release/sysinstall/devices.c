@@ -156,7 +156,7 @@ literal|"cd%dc"
 block|,
 literal|"SCSI CDROM drive"
 block|,
-literal|6
+literal|15
 block|,
 literal|2
 block|,
@@ -164,7 +164,7 @@ literal|8
 block|,
 literal|4
 block|,
-literal|'b'
+literal|'c'
 block|}
 block|,
 block|{
@@ -174,7 +174,7 @@ literal|"mcd%da"
 block|,
 literal|"Mitsumi (old model) CDROM drive"
 block|,
-literal|7
+literal|29
 block|,
 literal|0
 block|,
@@ -182,7 +182,7 @@ literal|8
 block|,
 literal|4
 block|,
-literal|'b'
+literal|'c'
 block|}
 block|,
 block|{
@@ -192,7 +192,7 @@ literal|"scd%da"
 block|,
 literal|"Sony CDROM drive - CDU31/33A type"
 block|,
-literal|16
+literal|45
 block|,
 literal|0
 block|,
@@ -200,7 +200,7 @@ literal|8
 block|,
 literal|4
 block|,
-literal|'b'
+literal|'c'
 block|}
 block|,
 ifdef|#
@@ -213,7 +213,7 @@ literal|"matcd%da"
 block|,
 literal|"Matsushita CDROM ('sound blaster' type)"
 block|,
-literal|17
+literal|46
 block|,
 literal|0
 block|,
@@ -221,7 +221,7 @@ literal|8
 block|,
 literal|4
 block|,
-literal|'b'
+literal|'c'
 block|}
 block|,
 endif|#
@@ -233,7 +233,7 @@ literal|"acd%dc"
 block|,
 literal|"ATAPI/IDE CDROM"
 block|,
-literal|31
+literal|117
 block|,
 literal|2
 block|,
@@ -241,7 +241,7 @@ literal|8
 block|,
 literal|4
 block|,
-literal|'b'
+literal|'c'
 block|}
 block|,
 block|{
@@ -287,24 +287,6 @@ literal|"da%d"
 block|,
 literal|"SCSI disk device"
 block|,
-literal|4
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|16
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"rda%d"
-block|,
-literal|"SCSI disk device"
-block|,
 literal|13
 block|,
 literal|65538
@@ -323,24 +305,6 @@ literal|"ad%d"
 block|,
 literal|"ATA/IDE disk device"
 block|,
-literal|30
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|16
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"rad%d"
-block|,
-literal|"ATA/IDE disk device"
-block|,
 literal|116
 block|,
 literal|65538
@@ -356,24 +320,6 @@ block|{
 name|DEVICE_TYPE_DISK
 block|,
 literal|"fla%d"
-block|,
-literal|"M-Systems DiskOnChip Flash device"
-block|,
-literal|28
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|16
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"rfla%d"
 block|,
 literal|"M-Systems DiskOnChip Flash devicee"
 block|,
@@ -395,24 +341,6 @@ literal|"afd%d"
 block|,
 literal|"ATAPI/IDE floppy device"
 block|,
-literal|32
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|4
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"rafd%d"
-block|,
-literal|"ATAPI/IDE floppy device"
-block|,
 literal|118
 block|,
 literal|65538
@@ -428,24 +356,6 @@ block|{
 name|DEVICE_TYPE_DISK
 block|,
 literal|"mlxd%d"
-block|,
-literal|"Mylex RAID disk"
-block|,
-literal|27
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|4
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"rmlxd%d"
 block|,
 literal|"Mylex RAID disk"
 block|,
@@ -467,24 +377,6 @@ literal|"amrd%d"
 block|,
 literal|"AMI MegaRAID drive"
 block|,
-literal|35
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|4
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"ramrd%d"
-block|,
-literal|"AMI MegaRAID drive"
-block|,
 literal|133
 block|,
 literal|65538
@@ -500,24 +392,6 @@ block|{
 name|DEVICE_TYPE_DISK
 block|,
 literal|"idad%d"
-block|,
-literal|"Compaq RAID array"
-block|,
-literal|29
-block|,
-literal|65538
-block|,
-literal|8
-block|,
-literal|4
-block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_DISK
-block|,
-literal|"ridad%d"
 block|,
 literal|"Compaq RAID array"
 block|,
@@ -557,7 +431,7 @@ literal|"fd%d"
 block|,
 literal|"floppy drive unit A"
 block|,
-literal|2
+literal|9
 block|,
 literal|0
 block|,
@@ -565,25 +439,7 @@ literal|64
 block|,
 literal|4
 block|,
-literal|'b'
-block|}
-block|,
-block|{
-name|DEVICE_TYPE_FLOPPY
-block|,
-literal|"worm%d"
-block|,
-literal|"SCSI optical disk / CDR"
-block|,
-literal|23
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|4
-block|,
-literal|'b'
+literal|'c'
 block|}
 block|,
 block|{
