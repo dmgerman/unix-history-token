@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.6 1997/08/27 01:11:32 ShimonR Exp $"
+empty|#ident "$Id: dpt.h,v 1.1.2.1 1998/03/06 23:44:05 julian Exp $"
 end_empty
 
 begin_ifndef
@@ -23,11 +23,22 @@ directive|define
 name|_DPT_H
 end_define
 
+begin_comment
+comment|/* till we have the CAM stuff, use our own */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
 name|DPT_USE_DPT_SWI
 end_undef
+
+begin_define
+define|#
+directive|define
+name|DPT_USE_DPT_SWI
+value|1
+end_define
 
 begin_decl_stmt
 specifier|extern
