@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.24 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6378,11 +6378,30 @@ continue|continue;
 if|if
 condition|(
 name|boffset
-operator|>
+operator|<=
 name|pp
 operator|->
 name|p_offset
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|pp
+operator|->
+name|p_fstype
+operator|==
+name|FS_BOOT
+condition|)
+name|pp
+operator|->
+name|p_fstype
+operator|=
+name|FS_UNUSED
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|pp
 operator|->
 name|p_fstype
@@ -6431,21 +6450,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-elseif|else
-if|if
-condition|(
-name|pp
-operator|->
-name|p_fstype
-operator|==
-name|FS_BOOT
-condition|)
-name|pp
-operator|->
-name|p_fstype
-operator|=
-name|FS_UNUSED
-expr_stmt|;
 block|}
 if|if
 condition|(
