@@ -639,8 +639,37 @@ begin_comment
 comment|/* Next Hop Resolution */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_MOBILE
+value|55
+end_define
+
 begin_comment
-comment|/* 55-57: Unassigned */
+comment|/* IP Mobility */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_TLSP
+value|56
+end_define
+
+begin_comment
+comment|/* Transport Layer Security */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_SKIP
+value|57
+end_define
+
+begin_comment
+comment|/* SKIP */
 end_comment
 
 begin_define
