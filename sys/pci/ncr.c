@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.43 1995/09/05 22:37:59 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.44 1995/09/07 20:53:40 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -212,6 +212,34 @@ begin_comment
 comment|/*========================================================== ** **      Include files ** **========================================================== */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -385,19 +413,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/pci/ncr_reg.h>
+file|<dev/pci/ncr_reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/pci/pcireg.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_define
@@ -1157,16 +1185,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRINT_ADDR
-parameter_list|(
-name|xp
-parameter_list|)
-value|sc_print_addr(xp->sc_link)
-end_define
-
-begin_define
-define|#
-directive|define
 name|INT32
 value|int32
 end_define
@@ -1193,6 +1211,16 @@ end_endif
 begin_comment
 comment|/*__NetBSD__*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PRINT_ADDR
+parameter_list|(
+name|xp
+parameter_list|)
+value|sc_print_addr(xp->sc_link)
+end_define
 
 begin_comment
 comment|/*========================================================== ** **	Declaration of structs. ** **========================================================== */
@@ -1926,8 +1954,8 @@ name|struct
 name|device
 name|sc_dev
 decl_stmt|;
-name|struct
-name|intrhand
+name|void
+modifier|*
 name|sc_ih
 decl_stmt|;
 else|#
@@ -2630,6 +2658,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|ncr_intr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__NetBSD__ */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -2640,6 +2694,15 @@ name|np
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __NetBSD__ */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -2962,8 +3025,7 @@ name|struct
 name|device
 modifier|*
 parameter_list|,
-name|struct
-name|device
+name|void
 modifier|*
 parameter_list|,
 name|void
@@ -3057,7 +3119,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.43 1995/09/05 22:37:59 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.44 1995/09/07 20:53:40 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -3148,6 +3210,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !__NetBSD__ */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -3293,10 +3359,17 @@ literal|0
 block|,
 literal|0
 block|,
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 name|ncr_info
 block|,
 literal|"ncr"
-block|, }
+block|,
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -3318,8 +3391,15 @@ comment|/* have no async handler */
 name|NULL
 block|,
 comment|/* Use default 'done' routine */
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 literal|"ncr"
-block|, }
+block|,
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -8304,7 +8384,7 @@ name|ncr_probe
 parameter_list|(
 name|parent
 parameter_list|,
-name|self
+name|match
 parameter_list|,
 name|aux
 parameter_list|)
@@ -8312,18 +8392,15 @@ name|struct
 name|device
 modifier|*
 name|parent
-decl_stmt|,
-decl|*
-name|self
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|void
 modifier|*
+name|match
+decl_stmt|,
+decl|*
 name|aux
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -8332,9 +8409,7 @@ name|cfdata
 modifier|*
 name|cf
 init|=
-name|self
-operator|->
-name|dv_cfdata
+name|match
 decl_stmt|;
 name|struct
 name|pci_attach_args
@@ -8343,6 +8418,9 @@ name|pa
 init|=
 name|aux
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|0
 if|if
 condition|(
 operator|!
@@ -8356,6 +8434,8 @@ condition|)
 return|return
 literal|0
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pa
@@ -8569,28 +8649,6 @@ return|return;
 name|np
 operator|->
 name|sc_ih
-operator|.
-name|ih_fun
-operator|=
-name|ncr_intr
-expr_stmt|;
-name|np
-operator|->
-name|sc_ih
-operator|.
-name|ih_arg
-operator|=
-name|np
-expr_stmt|;
-name|np
-operator|->
-name|sc_ih
-operator|.
-name|ih_level
-operator|=
-name|IPL_BIO
-expr_stmt|;
-name|retval
 operator|=
 name|pci_map_int
 argument_list|(
@@ -8598,15 +8656,20 @@ name|pa
 operator|->
 name|pa_tag
 argument_list|,
-operator|&
+name|PCI_IPL_BIO
+argument_list|,
+name|ncr_intr
+argument_list|,
 name|np
-operator|->
-name|sc_ih
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|retval
+name|np
+operator|->
+name|sc_ih
+operator|==
+name|NULL
 condition|)
 return|return;
 else|#
@@ -8778,6 +8841,7 @@ condition|)
 block|{
 else|#
 directive|else
+comment|/* !__NetBSD__ */
 switch|switch
 condition|(
 name|pci_conf_read
@@ -8790,6 +8854,7 @@ condition|)
 block|{
 endif|#
 directive|endif
+comment|/* __NetBSD__ */
 case|case
 name|NCR_825_ID
 case|:
@@ -8934,6 +8999,7 @@ name|pa_tag
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* __NetBSD__ */
 for|for
 control|(
 name|reg
@@ -9060,6 +9126,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __NetBSD__ */
 comment|/* 	**	After SCSI devices have been opened, we cannot 	**	reset the bus safely, so we do it here. 	**	Interrupt handler does the real work. 	*/
 name|OUTB
 argument_list|(
@@ -9097,6 +9164,24 @@ name|adapter_softc
 operator|=
 name|np
 expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|adapter_target
+operator|=
+name|np
+operator|->
+name|myaddr
+expr_stmt|;
+name|np
+operator|->
+name|sc_link
+operator|.
+name|openings
+operator|=
+literal|1
+expr_stmt|;
 else|#
 directive|else
 comment|/* !__NetBSD__ */
@@ -9108,9 +9193,6 @@ name|adapter_unit
 operator|=
 name|unit
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !__NetBSD__ */
 name|np
 operator|->
 name|sc_link
@@ -9121,6 +9203,9 @@ name|np
 operator|->
 name|myaddr
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
 name|np
 operator|->
 name|sc_link
@@ -9346,6 +9431,27 @@ comment|/* 	**  Done. 	*/
 return|return;
 block|}
 comment|/*========================================================== ** ** **	Process pending device interrupts. ** ** **========================================================== */
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|int
+name|ncr_intr
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
+block|{
+name|ncb_p
+name|np
+init|=
+name|arg
+decl_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 name|int
 name|ncr_intr
 parameter_list|(
@@ -9355,6 +9461,9 @@ name|ncb_p
 name|np
 decl_stmt|;
 block|{
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|int
 name|n
 init|=
@@ -9625,7 +9734,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -9695,7 +9804,7 @@ name|XS_DRIVER_STUFFUP
 expr_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -10648,7 +10757,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -11305,6 +11414,22 @@ name|oldspl
 argument_list|)
 expr_stmt|;
 comment|/* 	**	If interrupts are enabled, return now. 	**	Command is successfully queued. 	*/
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCSI_POLL
+operator|)
+condition|)
+block|{
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 if|if
 condition|(
 operator|!
@@ -11315,6 +11440,9 @@ name|SCSI_NOMASK
 operator|)
 condition|)
 block|{
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 if|if
 condition|(
 name|np
@@ -11562,6 +11690,21 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SCSI_POLL
+operator|)
+condition|)
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 if|if
 condition|(
 operator|!
@@ -11571,6 +11714,9 @@ operator|&
 name|SCSI_NOMASK
 operator|)
 condition|)
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 return|return
 operator|(
 name|SUCCESSFULLY_QUEUED
@@ -11603,7 +11749,7 @@ block|}
 empty_stmt|;
 return|return
 operator|(
-name|HAD_ERROR
+name|COMPLETE
 operator|)
 return|;
 block|}
@@ -11873,6 +12019,24 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/* 	**	Check the status. 	*/
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+name|xp
+operator|->
+name|error
+operator|!=
+name|XS_NOERROR
+condition|)
+block|{
+comment|/*                               **      Don't override the error value.                 */
+block|}
+elseif|else
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 if|if
 condition|(
 operator|(
@@ -12013,6 +12177,9 @@ operator|->
 name|transfers
 operator|++
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 block|}
 elseif|else
 if|if
@@ -12031,6 +12198,9 @@ name|resid
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !__NetBSD__ */
 block|}
 elseif|else
 if|if
@@ -12637,6 +12807,9 @@ name|code
 argument_list|)
 expr_stmt|;
 comment|/* 	**	Init chip. 	*/
+ifndef|#
+directive|ifndef
+name|__NetBSD__
 if|if
 condition|(
 name|pci_max_burst_len
@@ -12674,6 +12847,16 @@ name|burstlen
 operator|=
 literal|0xc0
 expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
+name|burstlen
+operator|=
+literal|0xc0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|OUTB
 argument_list|(
 name|nc_istat
@@ -19565,6 +19748,38 @@ operator|!
 name|diff
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+if|if
+condition|(
+name|diff
+operator|>
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+condition|)
+name|diff
+operator|=
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+expr_stmt|;
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+operator|-=
+name|diff
+expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 if|if
 condition|(
 name|diff
@@ -19591,6 +19806,9 @@ name|opennings
 operator|-=
 name|diff
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|lp
 operator|->
 name|actlink
@@ -19649,6 +19867,20 @@ name|lp
 operator|->
 name|actlink
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+name|xp
+operator|->
+name|sc_link
+operator|->
+name|openings
+operator|+=
+name|diff
+expr_stmt|;
+else|#
+directive|else
+comment|/* !__NetBSD__ */
 name|xp
 operator|->
 name|sc_link
@@ -19657,6 +19889,9 @@ name|opennings
 operator|+=
 name|diff
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 name|lp
 operator|->
 name|actlink
