@@ -309,6 +309,10 @@ block|,
 name|IXON
 operator||
 name|IXOFF
+operator||
+name|INLCR
+operator||
+name|ICRNL
 block|}
 block|,
 block|{
@@ -4512,6 +4516,14 @@ operator|.
 name|t_mode
 operator|==
 name|ED_IO
+operator|||
+name|el
+operator|->
+name|el_tty
+operator|.
+name|t_mode
+operator|==
+name|QU_IO
 condition|)
 return|return
 operator|(
