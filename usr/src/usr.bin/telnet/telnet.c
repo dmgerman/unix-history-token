@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.9 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -752,10 +752,18 @@ block|}
 end_function
 
 begin_decl_stmt
-name|struct
-name|hostent
+name|char
 modifier|*
-name|host
+name|hostname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|hnamebuf
+index|[
+literal|32
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -788,6 +796,12 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+specifier|register
+name|struct
+name|hostent
+modifier|*
+name|host
+decl_stmt|;
 if|if
 condition|(
 name|connected
@@ -797,9 +811,7 @@ name|printf
 argument_list|(
 literal|"?Already connected to %s\n"
 argument_list|,
-name|host
-operator|->
-name|h_name
+name|hostname
 argument_list|)
 expr_stmt|;
 return|return;
@@ -879,22 +891,8 @@ expr_stmt|;
 if|if
 condition|(
 name|host
-operator|==
-literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: unknown host\n"
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|bcopy
 argument_list|(
 name|host
@@ -911,6 +909,68 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
+name|hostname
+operator|=
+name|host
+operator|->
+name|h_name
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|inet_addr
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: unknown host\n"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|strcpy
+argument_list|(
+name|hnamebuf
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|hostname
+operator|=
+name|hnamebuf
+expr_stmt|;
+block|}
 name|sin
 operator|.
 name|sin_port
@@ -1106,9 +1166,7 @@ name|printf
 argument_list|(
 literal|"Connected to %s.\n"
 argument_list|,
-name|host
-operator|->
-name|h_name
+name|hostname
 argument_list|)
 expr_stmt|;
 else|else
@@ -3647,9 +3705,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-name|host
-operator|->
-name|h_name
+name|hostname
 argument_list|)
 expr_stmt|;
 name|close
