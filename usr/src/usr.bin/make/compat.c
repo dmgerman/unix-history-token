@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compat.c	5.11 (Berkeley) %G%"
+literal|"@(#)compat.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -193,6 +199,10 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|GNode
 modifier|*
 name|gn
@@ -225,6 +235,22 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|stat
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|&&
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
 name|unlink
 argument_list|(
 name|file
