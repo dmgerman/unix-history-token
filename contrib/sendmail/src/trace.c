@@ -117,6 +117,7 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
+name|unsigned
 name|int
 name|first
 decl_stmt|,
