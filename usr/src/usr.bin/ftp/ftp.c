@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.13 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2745,6 +2745,11 @@ name|result
 decl_stmt|,
 name|len
 decl_stmt|;
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
 name|noport
 label|:
 name|data_addr
@@ -2823,9 +2828,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_REUSEADDR
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -2887,9 +2896,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	4.8 83/06/10"
+literal|"@(#)rsh.c	4.9 84/12/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,9 +715,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|&
+name|one
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|one
+argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -737,9 +741,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|&
+name|one
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|one
+argument_list|)
 argument_list|)
 operator|<
 literal|0

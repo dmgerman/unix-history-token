@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.15 (Berkeley) 83/07/02"
+literal|"@(#)rlogin.c	4.16 (Berkeley) 84/12/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,6 +250,11 @@ decl_stmt|,
 name|options
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|on
+init|=
+literal|1
 decl_stmt|;
 name|host
 operator|=
@@ -635,9 +640,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_DEBUG
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0
