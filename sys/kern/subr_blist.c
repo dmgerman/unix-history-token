@@ -1850,16 +1850,28 @@ name|radix
 condition|)
 name|panic
 argument_list|(
-literal|"blst_meta_free: freeing already free blocks (%d) %d/%d"
+literal|"blst_meta_free: freeing already free blocks (%lld) %lld/%lld"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|count
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|scan
 operator|->
 name|u
 operator|.
 name|bmu_avail
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|radix
 argument_list|)
 expr_stmt|;
