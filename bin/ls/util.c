@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: util.c,v 1.16 1998/04/25 00:10:24 ache Exp $"
+literal|"$Id: util.c,v 1.17 1998/04/25 00:12:32 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,7 +401,7 @@ operator|>>
 literal|3
 operator|)
 operator|&
-literal|3
+literal|7
 operator|)
 argument_list|)
 expr_stmt|;
@@ -412,7 +412,7 @@ operator|+
 operator|(
 name|ch
 operator|&
-literal|3
+literal|7
 operator|)
 argument_list|)
 expr_stmt|;
@@ -456,7 +456,7 @@ operator|>>
 literal|3
 operator|)
 operator|&
-literal|3
+literal|7
 operator|)
 argument_list|)
 expr_stmt|;
@@ -467,7 +467,7 @@ operator|+
 operator|(
 name|ch
 operator|&
-literal|3
+literal|7
 operator|)
 argument_list|)
 expr_stmt|;
