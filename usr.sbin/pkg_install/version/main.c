@@ -354,7 +354,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_version [-hv] [-l limchar] [-L limchar] [[-X] -s string] index"
+literal|"usage: pkg_version [-hqv] [-l limchar] [-L limchar] [[-X] -s string] [index]"
 argument_list|,
 literal|"       pkg_version -t v1 v2"
 argument_list|,
