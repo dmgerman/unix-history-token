@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.4 1998/12/15 08:22:41 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx.h,v 1.5 1999/01/14 06:14:15 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -387,6 +387,12 @@ block|,
 name|AHC_RESOURCE_SHORTAGE
 init|=
 literal|0x8000
+block|,
+name|AHC_TQINFIFO_BLOCKED
+init|=
+literal|0x10000
+block|,
+comment|/* Blocked waiting for ATIOs */
 block|}
 name|ahc_flag
 typedef|;
@@ -693,8 +699,92 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|AHC_TRANS_CUR
+value|0x01
+end_define
+
 begin_comment
-comment|/*  * Per target mode enabled target state.  Esentially just an array of  * pointers to lun target state.  */
+comment|/* Modify current neogtiation status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_TRANS_ACTIVE
+value|0x03
+end_define
+
+begin_comment
+comment|/* Assume this is the active target */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_TRANS_GOAL
+value|0x04
+end_define
+
+begin_comment
+comment|/* Modify negotiation goal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHC_TRANS_USER
+value|0x08
+end_define
+
+begin_comment
+comment|/* Modify user negotiation settings */
+end_comment
+
+begin_struct
+struct|struct
+name|ahc_transinfo
+block|{
+name|u_int8_t
+name|width
+decl_stmt|;
+name|u_int8_t
+name|period
+decl_stmt|;
+name|u_int8_t
+name|offset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ahc_initiator_tinfo
+block|{
+name|u_int8_t
+name|scsirate
+decl_stmt|;
+name|struct
+name|ahc_transinfo
+name|current
+decl_stmt|;
+name|struct
+name|ahc_transinfo
+name|goal
+decl_stmt|;
+name|struct
+name|ahc_transinfo
+name|user
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Per target mode enabled target state.  Esentially just an array of  * pointers to lun target state as well as sync/wide negotiation information  * for each initiator<->target mapping (including the mapping for when we  * are the initiator).  */
 end_comment
 
 begin_struct
@@ -709,6 +799,26 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+name|struct
+name|ahc_initiator_tinfo
+name|transinfo
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* 	 * Per initiator state bitmasks. 	 */
+name|u_int16_t
+name|ultraenb
+decl_stmt|;
+comment|/* Using ultra sync rate  */
+name|u_int16_t
+name|discenable
+decl_stmt|;
+comment|/* Disconnection allowed  */
+name|u_int16_t
+name|tagenable
+decl_stmt|;
+comment|/* Tagged Queuing allowed */
 block|}
 struct|;
 end_struct
@@ -922,90 +1032,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|AHC_TRANS_CUR
-value|0x01
-end_define
-
-begin_comment
-comment|/* Modify current neogtiation status */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AHC_TRANS_ACTIVE
-value|0x03
-end_define
-
-begin_comment
-comment|/* Assume this is the active target */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AHC_TRANS_GOAL
-value|0x04
-end_define
-
-begin_comment
-comment|/* Modify negotiation goal */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AHC_TRANS_USER
-value|0x08
-end_define
-
-begin_comment
-comment|/* Modify user negotiation settings */
-end_comment
-
-begin_struct
-struct|struct
-name|ahc_transinfo
-block|{
-name|u_int8_t
-name|width
-decl_stmt|;
-name|u_int8_t
-name|period
-decl_stmt|;
-name|u_int8_t
-name|offset
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ahc_target_tinfo
-block|{
-name|u_int8_t
-name|scsirate
-decl_stmt|;
-name|struct
-name|ahc_transinfo
-name|current
-decl_stmt|;
-name|struct
-name|ahc_transinfo
-name|goal
-decl_stmt|;
-name|struct
-name|ahc_transinfo
-name|user
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 struct|struct
 name|ahc_syncrate
@@ -1087,7 +1113,7 @@ argument|ccb_hdr
 argument_list|)
 name|pending_ccbs
 expr_stmt|;
-comment|/* 	 * Target mode related state kept on a per enabled lun basis. 	 * Targets that are not enabled will have null entries. 	 */
+comment|/* 	 * Target mode related state kept on a per enabled lun basis. 	 * Targets that are not enabled will have null entries. 	 * As an initiator, we keep one target entry for our initiator 	 * ID to store our sync/wide transfer settings. 	 */
 name|struct
 name|tmode_tstate
 modifier|*
@@ -1151,31 +1177,6 @@ index|[
 literal|256
 index|]
 decl_stmt|;
-comment|/* 	 * User/Current/Active Negotiation settings 	 */
-name|struct
-name|ahc_target_tinfo
-name|transinfo
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* 	 * Per target state bitmasks. 	 */
-name|u_int16_t
-name|ultraenb
-decl_stmt|;
-comment|/* Using ultra sync rate  */
-name|u_int16_t
-name|discenable
-decl_stmt|;
-comment|/* Disconnection allowed  */
-name|u_int16_t
-name|tagenable
-decl_stmt|;
-comment|/* Tagged Queuing allowed */
-name|u_int16_t
-name|targ_msg_req
-decl_stmt|;
-comment|/* Need negotiation messages */
 comment|/* 	 * Hooks into the XPT. 	 */
 name|struct
 name|cam_sim
@@ -1213,6 +1214,10 @@ name|our_id
 decl_stmt|;
 name|u_int8_t
 name|our_id_b
+decl_stmt|;
+comment|/* Targets that need negotiation messages */
+name|u_int16_t
+name|targ_msg_req
 decl_stmt|;
 comment|/* 	 * PCI error detection and data for running the 	 * PCI error interrupt handler. 	 */
 name|int
@@ -1263,6 +1268,7 @@ name|u_int
 name|msgin_index
 decl_stmt|;
 comment|/* Current index in msgin */
+comment|/* Number of enabled target mode device on this card */
 name|u_int
 name|enabled_luns
 decl_stmt|;
