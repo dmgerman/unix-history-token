@@ -727,5 +727,207 @@ begin_comment
 comment|/* Time domain reflectometry */
 end_comment
 
+begin_comment
+comment|/* C-NET(98)S port addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_RDP
+value|0x400
+end_define
+
+begin_comment
+comment|/* Register Data Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_RAP
+value|0x402
+end_define
+
+begin_comment
+comment|/* Register Address Port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_RESET
+value|0x404
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNET98S_IDP
+value|0x406
+end_define
+
+begin_define
+define|#
+directive|define
+name|CNET98S_EEPROM
+value|0x40e
+end_define
+
+begin_comment
+comment|/*  * XXX - The I/O address range is fragmented in the C-NET(98)S.  *       This is the number of regs at iobase.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CNET98S_IOSIZE
+value|16
+end_define
+
+begin_comment
+comment|/* # of i/o addresses used. */
+end_comment
+
+begin_comment
+comment|/* ISA Bus Configuration Registers */
+end_comment
+
+begin_comment
+comment|/* XXX - Should be in ic/Am7990.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSRDA
+value|0x0000
+end_define
+
+begin_comment
+comment|/* ISACSR0: Master Mode Read Activity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSWRA
+value|0x0001
+end_define
+
+begin_comment
+comment|/* ISACSR1: Master Mode Write Activity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MC
+value|0x0002
+end_define
+
+begin_comment
+comment|/* ISACSR2: Miscellaneous Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED1
+value|0x0005
+end_define
+
+begin_comment
+comment|/* ISACSR5: LED1 Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED2
+value|0x0006
+end_define
+
+begin_comment
+comment|/* ISACSR6: LED2 Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED3
+value|0x0007
+end_define
+
+begin_comment
+comment|/* ISACSR7: LED3 Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED_PSE
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Pulse Stretcher */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED_XMTE
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Transmit Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED_RVPOLE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Receive Polarity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED_RCVE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Receive Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED_JABE
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Jabber */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LED_COLE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Collision */
+end_comment
+
 end_unit
 
