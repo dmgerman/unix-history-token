@@ -703,6 +703,17 @@ name|MAP_DISABLE_COREDUMP
 value|0x0100
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAP_PREFAULT_MADVISE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* from (user) madvise request */
+end_comment
+
 begin_comment
 comment|/*  * vm_fault option flags  */
 end_comment
