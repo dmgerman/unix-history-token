@@ -61,6 +61,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|EFI_PHYSICAL_ADDRESS
+name|efimd_va2pa
+parameter_list|(
+name|EFI_VIRTUAL_ADDRESS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|EFI_STATUS
 name|main
 parameter_list|(
