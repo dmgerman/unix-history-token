@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusnap.c	5.5 (Berkeley) %G%"
+literal|"@(#)uusnap.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -1125,9 +1131,33 @@ operator|>
 literal|0
 condition|)
 block|{
+name|char
+name|c
+decl_stmt|;
 name|fnamlen
 operator|-=
 name|flen
+expr_stmt|;
+name|c
+operator|=
+name|fnam
+index|[
+name|fnamlen
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|islower
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|c
+operator|=
+name|toupper
+argument_list|(
+name|c
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1136,17 +1166,11 @@ operator|==
 name|DATTYPE
 operator|&&
 operator|(
-name|fnam
-index|[
-name|fnamlen
-index|]
+name|c
 operator|!=
 literal|'S'
 operator|&&
-name|fnam
-index|[
-name|fnamlen
-index|]
+name|c
 operator|!=
 literal|'B'
 operator|)
@@ -1369,6 +1393,10 @@ name|struct
 name|stat
 name|stbuf
 decl_stmt|;
+name|long
+name|atol
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|chdir
@@ -1949,9 +1977,6 @@ index|]
 operator|.
 name|st_lastime
 operator|=
-operator|(
-name|time_t
-operator|)
 name|atol
 argument_list|(
 name|tp
@@ -1977,9 +2002,6 @@ index|]
 operator|.
 name|st_retry
 operator|=
-operator|(
-name|time_t
-operator|)
 name|atol
 argument_list|(
 name|tp
