@@ -1026,17 +1026,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_short
-name|dkcksum
-parameter_list|(
-name|struct
-name|disklabel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|chunk
 modifier|*

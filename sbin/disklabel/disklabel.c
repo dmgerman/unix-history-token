@@ -495,21 +495,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|u_short
-name|dkcksum
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|disklabel
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|disklabel
 modifier|*
