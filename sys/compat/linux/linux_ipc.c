@@ -2739,6 +2739,14 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|bsd_args
+operator|.
+name|cmd
+operator|==
+name|SEM_STAT
+operator|)
+condition|?
 name|IXSEQ_TO_IPCID
 argument_list|(
 name|bsd_args
@@ -2751,6 +2759,8 @@ name|buf
 operator|->
 name|sem_perm
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 name|bsd_to_linux_semid_ds
 argument_list|(
