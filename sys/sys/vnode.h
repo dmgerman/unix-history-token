@@ -2133,6 +2133,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|cache_leaf_test
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|cvtstat
 name|__P

@@ -603,6 +603,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nameileafonly
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nameileafonly
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nameileafonly
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -977,6 +1007,34 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|minvnodes
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|KERN_MAXVNODES
+argument_list|,
+name|minvnodes
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|minvnodes
+argument_list|,
+literal|0
+argument_list|,
+literal|"Minimum number of vnodes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|vfs_free_addrlist
 name|__P
@@ -1053,6 +1111,12 @@ operator|+
 name|cnt
 operator|.
 name|v_page_count
+operator|/
+literal|4
+expr_stmt|;
+name|minvnodes
+operator|=
+name|desiredvnodes
 operator|/
 literal|4
 expr_stmt|;
@@ -2383,7 +2447,6 @@ argument|vnode
 argument_list|)
 name|vnode_tmp_list
 expr_stmt|;
-comment|/* 	 * We take the least recently used vnode from the freelist 	 * if we can get it and it has no cached pages, and no 	 * namecache entries are relative to it. 	 * Otherwise we allocate a new vnode 	 */
 name|s
 operator|=
 name|splbio
@@ -2401,6 +2464,7 @@ operator|&
 name|vnode_tmp_list
 argument_list|)
 expr_stmt|;
+comment|/* 	 * First free vnodes on the pending-free list 	 */
 for|for
 control|(
 name|vp
@@ -2502,10 +2566,9 @@ name|freevnodes
 operator|++
 expr_stmt|;
 block|}
+comment|/* 	 * Attempt to reuse a vnode already on the free list, allocating 	 * a new vnode if we can't find one or if we have not reached a 	 * good minimum for good LRU performance. 	 */
 if|if
 condition|(
-name|wantfreevnodes
-operator|&&
 name|freevnodes
 operator|<
 name|wantfreevnodes
@@ -2519,21 +2582,10 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|wantfreevnodes
-operator|&&
-name|freevnodes
-operator|<=
-name|desiredvnodes
+name|numvnodes
+operator|>=
+name|minvnodes
 condition|)
-block|{
-comment|/*  		 * XXX: this is only here to be backwards compatible 		 */
-name|vp
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
 block|{
 for|for
 control|(
@@ -2643,7 +2695,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-elseif|else
 if|if
 condition|(
 name|LIST_FIRST
@@ -2655,7 +2706,25 @@ name|v_cache_src
 argument_list|)
 condition|)
 block|{
-comment|/* Don't recycle if active in the namecache */
+comment|/* 				 * note: nameileafonly sysctl is temporary, 				 * for debugging only, and will eventually be 				 * removed. 				 */
+if|if
+condition|(
+name|nameileafonly
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* 					 * Do not reuse namei-cached directory 					 * vnodes that have cached 					 * subdirectories. 					 */
+if|if
+condition|(
+name|cache_leaf_test
+argument_list|(
+name|vp
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
 name|simple_unlock
 argument_list|(
 operator|&
@@ -2666,10 +2735,32 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-else|else
-block|{
-break|break;
 block|}
+elseif|else
+if|if
+condition|(
+name|nameileafonly
+operator|<
+literal|0
+operator|||
+name|vmiodirenable
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 					 * Do not reuse namei-cached directory 					 * vnodes if nameileafonly is -1 or 					 * if VMIO backing for directories is 					 * turned off (otherwise we reuse them 					 * too quickly). 					 */
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+block|}
+break|break;
 block|}
 block|}
 for|for
