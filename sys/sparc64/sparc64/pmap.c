@@ -4506,6 +4506,8 @@ name|pm_tsb_obj
 argument_list|,
 name|i
 argument_list|,
+name|VM_ALLOC_NOBUSY
+operator||
 name|VM_ALLOC_RETRY
 operator||
 name|VM_ALLOC_WIRED
@@ -4515,13 +4517,6 @@ argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
-expr_stmt|;
-name|vm_page_flag_clear
-argument_list|(
-name|m
-argument_list|,
-name|PG_BUSY
-argument_list|)
 expr_stmt|;
 name|m
 operator|->
