@@ -704,7 +704,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"rman_reserve_resource:<%s> request: [%#lx, %#lx], length "
-literal|"%#lx, flags %u, device %s%d\n"
+literal|"%#lx, flags %u, device %s\n"
 operator|,
 name|rm
 operator|->
@@ -718,12 +718,13 @@ name|count
 operator|,
 name|flags
 operator|,
-name|device_get_name
-argument_list|(
 name|dev
-argument_list|)
-operator|,
-name|device_get_unit
+operator|==
+name|NULL
+condition|?
+literal|"<null>"
+else|:
+name|device_get_nameunit
 argument_list|(
 name|dev
 argument_list|)
