@@ -2633,6 +2633,16 @@ control|)
 block|{
 if|if
 condition|(
+name|iff_find
+argument_list|(
+name|ifcp
+argument_list|,
+literal|'N'
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
 name|ifcp
 operator|->
 name|ifc_index
