@@ -45,6 +45,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -255,64 +261,52 @@ define|\
 value|((sizeof (int) * CHAR_BIT - 1) * 302 / 1000 + 2)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|filter
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
-decl|main
-name|__P
-argument_list|(
-operator|(
+name|main
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 index|[]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|parse_numbering
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Pointer to dynamically allocated input line buffer, and its size.  */
@@ -513,7 +507,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: this implementation strictly conforms to the XBD Utility 	 * Syntax Guidelines and does not permit the optional `file' operand 	 * to be intermingled with the options, which is defined in the 	 * XCU specification (Issue 5) but declared an obsolescent feature that 	 * will be removed from a future issue.  It shouldn't matter, though. 	 */
 while|while
 condition|(
 operator|(
@@ -609,21 +602,13 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"nl: invalid delim argument -- %s\n"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|EXIT_FAILURE
+argument_list|,
+literal|"invalid delim argument -- %s"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -699,25 +684,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid incr argument -- %s\n"
+literal|"invalid incr argument -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|incr
 operator|=
 operator|(
@@ -768,25 +743,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid num argument -- %s\n"
+literal|"invalid num argument -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|nblank
 operator|=
 operator|(
@@ -853,25 +818,15 @@ name|FORMAT_RZ
 expr_stmt|;
 block|}
 else|else
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: illegal format -- %s\n"
+literal|"illegal format -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'s'
@@ -929,25 +884,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid startnum value -- %s\n"
+literal|"invalid startnum value -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|startnum
 operator|=
 operator|(
@@ -1004,25 +949,15 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"invalid width value -- %s\n"
+literal|"invalid width value -- %s"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|width
 operator|=
 operator|(
@@ -1039,25 +974,15 @@ operator|>
 literal|0
 operator|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: width argument must be> 0 -- %d\n"
+literal|"width argument must be> 0 -- %d"
 argument_list|,
 name|width
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'?'
@@ -1105,21 +1030,18 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"%s"
+argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 default|default:
 name|usage
@@ -1170,18 +1092,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"cannot allocate input line buffer"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Allocate a buffer suitable for preformatting line number. */
 name|intbuffersize
 operator|=
@@ -1208,18 +1125,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"cannot allocate preformatting buffer"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Do the work. */
 name|filter
 argument_list|()
@@ -1561,18 +1473,13 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"output error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|nextline
 label|:
 empty_stmt|;
@@ -1584,18 +1491,13 @@ argument_list|(
 name|stdin
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|EXIT_FAILURE
+argument_list|,
 literal|"input error"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1767,14 +1669,11 @@ name|errorbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: %s expr: %s -- %s\n"
+literal|"%s expr: %s -- %s"
 argument_list|,
 name|numbering_properties
 index|[
@@ -1792,22 +1691,14 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EXIT_FAILURE
 argument_list|,
-literal|"nl: illegal %s line numbering type -- %s\n"
+literal|"illegal %s line numbering type -- %s"
 argument_list|,
 name|numbering_properties
 index|[
@@ -1817,11 +1708,6 @@ operator|.
 name|name
 argument_list|,
 name|argstr
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
 argument_list|)
 expr_stmt|;
 block|}
