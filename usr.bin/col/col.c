@@ -412,12 +412,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|usage
+name|int
+decl|main
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
+operator|,
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -425,7 +429,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|wrerr
+name|usage
 name|__P
 argument_list|(
 operator|(
@@ -518,6 +522,16 @@ begin_comment
 comment|/* if not to output any backspaces */
 end_comment
 
+begin_decl_stmt
+name|int
+name|pass_unknown_seqs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pass unknown control sequences */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -526,7 +540,7 @@ parameter_list|(
 name|ch
 parameter_list|)
 define|\
-value|do {				\ 		if (putchar(ch) == EOF) \ 			wrerr();	\ 	} while (0)
+value|do {					\ 		if (putchar(ch) == EOF)		\ 			errx(1, "write error");	\ 	} while (0)
 end_define
 
 begin_function
@@ -623,7 +637,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"bfhl:x"
+literal|"bfhl:px"
 argument_list|)
 operator|)
 operator|!=
@@ -687,6 +701,15 @@ literal|"bad -l argument %s"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+comment|/* pass unknown control sequences */
+name|pass_unknown_seqs
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -911,6 +934,11 @@ literal|2
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|!
+name|pass_unknown_seqs
+condition|)
 continue|continue;
 block|}
 comment|/* Must stuff ch in a line - are we at the right one? */
@@ -1190,16 +1218,8 @@ name|l
 operator|->
 name|l_line
 operator|=
-operator|(
-name|CHAR
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|l
 operator|->
 name|l_line
@@ -1431,10 +1451,6 @@ name|void
 operator|)
 name|free
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|l
 operator|->
 name|l_line
@@ -1641,16 +1657,8 @@ name|l_lsize
 expr_stmt|;
 name|sorted
 operator|=
-operator|(
-name|CHAR
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|sorted
 argument_list|,
 operator|(
@@ -1684,16 +1692,8 @@ literal|1
 expr_stmt|;
 name|count
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|count
 argument_list|,
 operator|(
@@ -1710,10 +1710,6 @@ expr_stmt|;
 block|}
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|count
 argument_list|,
 literal|0
@@ -2105,16 +2101,8 @@ condition|)
 block|{
 name|l
 operator|=
-operator|(
-name|LINE
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|NULL
 argument_list|,
 sizeof|sizeof
@@ -2237,10 +2225,6 @@ operator|!
 operator|(
 name|p
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|p
@@ -2253,6 +2237,10 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2276,27 +2264,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: col [-bfhx] [-l nline]\n"
+literal|"usage: col [-bfhpx] [-l nline]\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|wrerr
-parameter_list|()
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"write error"
 argument_list|)
 expr_stmt|;
 block|}
