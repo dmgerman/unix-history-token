@@ -216,6 +216,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|SC_NO_SUSPEND_VTYSWITCH
 name|int
 name|retry
 init|=
@@ -280,6 +283,8 @@ name|retry
 operator|--
 condition|)
 do|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -297,6 +302,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|SC_NO_SUSPEND_VTYSWITCH
 name|sc_softc_t
 modifier|*
 name|sc
@@ -313,6 +321,8 @@ argument_list|,
 name|sc_cur_scr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
