@@ -173,19 +173,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
-name|ddb_trap
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Call into trap_subr.S */
-end_comment
-
-begin_function_decl
 name|int
 name|ddb_trap_glue
 parameter_list|(
