@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|MDNPAD
-value|99
+value|97
 end_define
 
 begin_struct
@@ -79,6 +79,14 @@ name|int
 name|md_secsize
 decl_stmt|;
 comment|/* sectorsize */
+name|int
+name|md_fwheads
+decl_stmt|;
+comment|/* firmware heads */
+name|int
+name|md_fwsectors
+decl_stmt|;
+comment|/* firmware sectors */
 name|int
 name|md_pad
 index|[
