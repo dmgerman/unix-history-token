@@ -392,6 +392,16 @@ modifier|*
 name|cdata
 decl_stmt|;
 comment|/* Controller specific data */
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|void
+modifier|*
+name|devfs_token
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS*/
 block|}
 struct|;
 end_struct
