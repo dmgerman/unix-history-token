@@ -301,7 +301,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-v] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
+literal|"usage: %s [-a] [-v] [-d crashdir] [-c core | -n dumpnr | -r device]\n"
 literal|"\t[kernel [core]]\n"
 argument_list|,
 name|getprogname
@@ -923,7 +923,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:d:n:r:v"
+literal|"ac:d:n:r:v"
 argument_list|)
 operator|)
 operator|!=
@@ -936,6 +936,13 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+name|annotation_level
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'c'
 case|:
