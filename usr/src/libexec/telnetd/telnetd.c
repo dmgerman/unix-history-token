@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	4.23 (Berkeley) 83/07/02"
+literal|"@(#)telnetd.c	4.24 (Berkeley) 83/07/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,17 +84,18 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<getty.h>
-end_include
-
 begin_define
 define|#
 directive|define
 name|BELL
 value|'\07'
+end_define
+
+begin_define
+define|#
+directive|define
+name|BANNER
+value|"\r\n\r\n4.2 BSD UNIX (%s)\r\n\r\r\n\r%s"
 end_define
 
 begin_decl_stmt
