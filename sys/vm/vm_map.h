@@ -86,6 +86,16 @@ modifier|*
 name|next
 decl_stmt|;
 comment|/* next entry */
+name|struct
+name|vm_map_entry
+modifier|*
+name|left
+decl_stmt|;
+name|struct
+name|vm_map_entry
+modifier|*
+name|right
+decl_stmt|;
 name|vm_offset_t
 name|start
 decl_stmt|;
@@ -275,9 +285,8 @@ name|infork
 decl_stmt|;
 comment|/* Am I in fork processing? */
 name|vm_map_entry_t
-name|hint
+name|root
 decl_stmt|;
-comment|/* hint for quick lookups */
 name|unsigned
 name|int
 name|timestamp
