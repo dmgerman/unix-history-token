@@ -409,6 +409,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|void
 name|multiencap_decap
 name|__P
 argument_list|(
@@ -647,7 +648,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 function_decl|(
 modifier|*
 name|encap_oldrawip
@@ -1659,17 +1660,6 @@ operator|==
 literal|0
 condition|)
 block|{
-specifier|extern
-name|struct
-name|protosw
-name|inetsw
-index|[]
-decl_stmt|;
-specifier|extern
-name|u_char
-name|ip_protox
-index|[]
-decl_stmt|;
 specifier|register
 name|int
 name|pr
@@ -4406,28 +4396,24 @@ begin_comment
 comment|/*  * De-encapsulate a packet and feed it back through ip input (this  * routine is called whenever IP gets a packet with proto type  * ENCAP_PROTO and a local destination address).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|multiencap_decap
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|hlen
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|hlen
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ifnet
@@ -4721,7 +4707,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
