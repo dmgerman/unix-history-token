@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.46 (Berkeley) %G%"
+literal|"@(#)map.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ ifdef|#
 directive|ifdef
 name|NIS
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/yp_prot.h>
+end_include
 
 begin_include
 include|#
