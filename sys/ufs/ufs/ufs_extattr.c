@@ -2387,7 +2387,14 @@ block|{
 comment|/* 		 * The inode itself has a different generation number 		 * than the attribute data.  For now, the best solution 		 * is to coerce this to undefined, and let it get cleaned 		 * up by the next write or extattrctl clean. 		 */
 name|printf
 argument_list|(
-literal|"ufs_extattr: inode number inconsistency (%d, %d)\n"
+literal|"ufs_extattr_get: inode %lu inconsistency (%d, %d)\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|ip
+operator|->
+name|i_number
 argument_list|,
 name|ueh
 operator|.
@@ -3492,6 +3499,47 @@ operator|==
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+goto|goto
+name|vopunlock_exit
+goto|;
+block|}
+comment|/* Valid for the current inode generation? */
+if|if
+condition|(
+name|ueh
+operator|.
+name|ueh_i_gen
+operator|!=
+name|ip
+operator|->
+name|i_gen
+condition|)
+block|{
+comment|/* 		 * The inode itself has a different generation number than 		 * the attribute data.  For now, the best solution is to  		 * coerce this to undefined, and let it get cleaned up by 		 * the next write or extattrctl clean. 		 */
+name|printf
+argument_list|(
+literal|"ufs_extattr_rm: inode %lu inconsistency (%d, %d)\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|ueh
+operator|.
+name|ueh_i_gen
+argument_list|,
+name|ip
+operator|->
+name|i_gen
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ENOENT
