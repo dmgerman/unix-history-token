@@ -2748,27 +2748,14 @@ condition|(
 name|drive
 operator|->
 name|vp
-operator|!=
-name|NULL
 condition|)
-comment|/* device open */
-name|vn_close
+comment|/* it's open, */
+name|close_locked_drive
 argument_list|(
 name|drive
-operator|->
-name|vp
-argument_list|,
-name|FREAD
-operator||
-name|FWRITE
-argument_list|,
-name|FSCRED
-argument_list|,
-name|drive
-operator|->
-name|p
 argument_list|)
 expr_stmt|;
+comment|/* close it */
 if|if
 condition|(
 name|drive
