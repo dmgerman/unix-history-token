@@ -97,6 +97,12 @@ directive|define
 name|_NLIST_DO_AOUT
 end_define
 
+begin_define
+define|#
+directive|define
+name|_NLIST_DO_ELF
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
