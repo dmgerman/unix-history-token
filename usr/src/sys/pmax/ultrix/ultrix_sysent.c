@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux_sysent.c 1.1 90/07/09$  *  *	@(#)ultrix_sysent.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -88,13 +88,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|unlink
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ultrixexecv
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -465,7 +458,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ultrixsigreturn
+name|sigreturn
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -683,13 +676,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|utimes
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ultrixsigcleanup
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1292,7 +1278,7 @@ block|,
 comment|/* 102 = recv */
 literal|1
 block|,
-name|ultrixsigreturn
+name|sigreturn
 block|,
 comment|/* 103 = sigreturn */
 literal|3
@@ -1472,7 +1458,7 @@ block|,
 comment|/* 138 = utimes */
 literal|1
 block|,
-name|ultrixsigcleanup
+name|sigreturn
 block|,
 comment|/* 139 = internal (4.2 sigreturn) */
 literal|2
