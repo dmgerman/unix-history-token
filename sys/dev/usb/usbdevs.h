@@ -2867,6 +2867,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_CSR
+value|0x0a12
+end_define
+
+begin_comment
+comment|/* Cambridge Silicon Radio Ltd. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_TREK
 value|0x0a16
 end_define
@@ -3060,6 +3071,17 @@ end_define
 
 begin_comment
 comment|/* PNY */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_MSI
+value|0x0db0
+end_define
+
+begin_comment
+comment|/* Micro Star International */
 end_comment
 
 begin_define
@@ -3299,6 +3321,17 @@ end_define
 
 begin_comment
 comment|/* HomeConnect USB Camera */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_3COM_3CREB96
+value|0x00a0
+end_define
+
+begin_comment
+comment|/* Bluetooth USB dongle */
 end_comment
 
 begin_define
@@ -4275,6 +4308,21 @@ comment|/* Keyboard with mouse port */
 end_comment
 
 begin_comment
+comment|/* Broadcom products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_BROADCOM_BCM2033
+value|0x2033
+end_define
+
+begin_comment
+comment|/* BCM2033 Bluetooth USB dongle */
+end_comment
+
+begin_comment
 comment|/* Canon, Inc. products */
 end_comment
 
@@ -4543,6 +4591,21 @@ end_define
 
 begin_comment
 comment|/* Nomad II MP3 player */
+end_comment
+
+begin_comment
+comment|/* Cambridge Silicon Radio Ltd. products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_CSR_BT_DONGLE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Bluetooth USB dongle */
 end_comment
 
 begin_comment
@@ -7360,6 +7423,21 @@ comment|/* Dimage 5400 */
 end_comment
 
 begin_comment
+comment|/* Micro Star International products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MSI_BT_DONGLE
+value|0x1967
+end_define
+
+begin_comment
+comment|/* Bluetooth USB dongle */
+end_comment
+
+begin_comment
 comment|/* Mitsumi products */
 end_comment
 
@@ -7372,6 +7450,17 @@ end_define
 
 begin_comment
 comment|/* CD-R/RW Drive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MITSUMI_BT_DONGLE
+value|0x641f
+end_define
+
+begin_comment
+comment|/* Bluetooth USB dongle */
 end_comment
 
 begin_comment
@@ -9271,6 +9360,17 @@ end_define
 
 begin_comment
 comment|/* USB-PHS Adapter UPA6400 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_TDK_BT_DONGLE
+value|0x0309
+end_define
+
+begin_comment
+comment|/* Bluetooth USB dongle */
 end_comment
 
 begin_comment

@@ -34,6 +34,18 @@ block|,
 block|{
 name|USB_VENDOR_3COM
 block|,
+name|USB_PRODUCT_3COM_3CREB96
+block|,
+literal|0
+block|,
+literal|"3Com"
+block|,
+literal|"Bluetooth USB dongle"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_3COM
+block|,
 name|USB_PRODUCT_3COM_3C19250
 block|,
 literal|0
@@ -980,6 +992,18 @@ literal|"Keyboard with mouse port"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_BROADCOM
+block|,
+name|USB_PRODUCT_BROADCOM_BCM2033
+block|,
+literal|0
+block|,
+literal|"Broadcom"
+block|,
+literal|"BCM2033 Bluetooth USB dongle"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_CANON
 block|,
 name|USB_PRODUCT_CANON_N656U
@@ -1229,6 +1253,18 @@ block|,
 literal|"Creative"
 block|,
 literal|"Nomad II MP3 player"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_CSR
+block|,
+name|USB_PRODUCT_CSR_BT_DONGLE
+block|,
+literal|0
+block|,
+literal|"Cambridge Silicon Radio Ltd."
+block|,
+literal|"Bluetooth USB dongle"
 block|, 	}
 block|,
 block|{
@@ -3992,6 +4028,18 @@ literal|"Dimage 5400"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_MSI
+block|,
+name|USB_PRODUCT_MSI_BT_DONGLE
+block|,
+literal|0
+block|,
+literal|"Micro Star International"
+block|,
+literal|"Bluetooth USB dongle"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_MITSUMI
 block|,
 name|USB_PRODUCT_MITSUMI_CDRRW
@@ -4001,6 +4049,18 @@ block|,
 literal|"Mitsumi"
 block|,
 literal|"CD-R/RW Drive"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MITSUMI
+block|,
+name|USB_PRODUCT_MITSUMI_BT_DONGLE
+block|,
+literal|0
+block|,
+literal|"Mitsumi"
+block|,
+literal|"Bluetooth USB dongle"
 block|, 	}
 block|,
 block|{
@@ -5837,6 +5897,18 @@ block|,
 literal|"TDK"
 block|,
 literal|"USB-PHS Adapter UPA6400"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_TDK
+block|,
+name|USB_PRODUCT_TDK_BT_DONGLE
+block|,
+literal|0
+block|,
+literal|"TDK"
+block|,
+literal|"Bluetooth USB dongle"
 block|, 	}
 block|,
 block|{
@@ -9440,6 +9512,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_CSR
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Cambridge Silicon Radio Ltd."
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_TREK
 block|,
 literal|0
@@ -9651,6 +9735,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"PNY"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MSI
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Micro Star International"
 block|,
 name|NULL
 block|, 	}
