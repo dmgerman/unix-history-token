@@ -1025,6 +1025,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|VOP_CLOSE
 argument_list|(
 name|vp
@@ -1039,6 +1040,7 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 block|}
 if|if
 condition|(
