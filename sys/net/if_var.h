@@ -73,6 +73,16 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_comment
+comment|/* struct label */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -512,6 +522,11 @@ modifier|*
 name|if_broadcastaddr
 decl_stmt|;
 comment|/* linklevel broadcast bytestring */
+name|struct
+name|label
+name|if_label
+decl_stmt|;
+comment|/* interface MAC label */
 block|}
 struct|;
 end_struct
