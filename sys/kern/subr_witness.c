@@ -1293,6 +1293,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"taskqueue_fast"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"ithread table lock"
 block|,
 operator|&
