@@ -1129,7 +1129,8 @@ name|error
 decl_stmt|;
 name|int
 name|kv
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|kvlen
 init|=
 sizeof|sizeof

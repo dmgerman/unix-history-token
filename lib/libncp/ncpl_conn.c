@@ -1226,7 +1226,8 @@ decl_stmt|,
 name|cnt
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
 init|=
 sizeof|sizeof
@@ -1738,7 +1739,8 @@ decl_stmt|,
 name|cnt
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|len
 decl_stmt|;
 name|void
