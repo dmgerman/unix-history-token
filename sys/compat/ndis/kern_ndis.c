@@ -2923,9 +2923,6 @@ name|__FreeBSD_version
 operator|<
 literal|600022
 argument|SLIST_INIT(&brl_rev);
-else|#
-directive|else
-argument|STAILQ_INIT(&brl_rev);
 endif|#
 directive|endif
 argument|rl = malloc(sizeof(ndis_resource_list) + 	    (sizeof(cm_partial_resource_desc) * (sc->ndis_rescnt -
@@ -2944,20 +2941,20 @@ comment|/* 		 * We have a small problem. Some PCI devices have 		 * multiple I/O
 argument|SLIST_FOREACH(brle, brl, link) { 			n = malloc(sizeof(struct resource_list_entry), 			    M_TEMP, M_NOWAIT); 			if (n == NULL) { 				error = ENOMEM; 				goto bad; 			} 			bcopy((char *)brle, (char *)n, 			    sizeof(struct resource_list_entry)); 			SLIST_INSERT_HEAD(&brl_rev, n, link); 		}  		SLIST_FOREACH(brle,&brl_rev, link) {
 else|#
 directive|else
-argument|STAILQ_FOREACH(brle,&brl, link) {
+argument|STAILQ_FOREACH(brle, brl, link) {
 endif|#
 directive|endif
 argument|switch (brle->type) { 			case SYS_RES_IOPORT: 				prd->cprd_type = CmResourceTypePort; 				prd->cprd_flags = CM_RESOURCE_PORT_IO; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_MEMORY: 				prd->cprd_type = CmResourceTypeMemory; 				prd->cprd_flags = 				    CM_RESOURCE_MEMORY_READ_WRITE; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_port.cprd_start.np_quad = 				    brle->start; 				prd->u.cprd_port.cprd_len = brle->count; 				break; 			case SYS_RES_IRQ: 				prd->cprd_type = CmResourceTypeInterrupt; 				prd->cprd_flags =
 literal|0
 argument|; 				prd->cprd_sharedisp = 				    CmResourceShareDeviceExclusive; 				prd->u.cprd_intr.cprd_level = brle->start; 				prd->u.cprd_intr.cprd_vector = brle->start; 				prd->u.cprd_intr.cprd_affinity =
 literal|0
-argument|; 				break; 			default: 				break; 			} 			prd++; 		} 	}  	block->nmb_rlist = rl;  bad:
+argument|; 				break; 			default: 				break; 			} 			prd++; 		} 	}  	block->nmb_rlist = rl;
 if|#
 directive|if
 name|__FreeBSD_version
 operator|<
 literal|600022
-argument|while (!SLIST_EMPTY(&brl_rev)) { 		n = SLIST_FIRST(&brl_rev); 		SLIST_REMOVE_HEAD(&brl_rev, link); 		free (n, M_TEMP); 	}
+argument|bad:  	while (!SLIST_EMPTY(&brl_rev)) { 		n = SLIST_FIRST(&brl_rev); 		SLIST_REMOVE_HEAD(&brl_rev, link); 		free (n, M_TEMP); 	}
 endif|#
 directive|endif
 argument|return(error); }
