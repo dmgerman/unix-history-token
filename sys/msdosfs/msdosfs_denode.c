@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.9 1995/03/16 18:14:18 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.10 1995/03/19 12:11:13 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -392,45 +392,6 @@ name|depp
 operator|=
 name|dep
 expr_stmt|;
-if|if
-condition|(
-name|dep
-operator|->
-name|de_flag
-operator|&
-name|DE_LOCKED
-condition|)
-name|panic
-argument_list|(
-literal|"msdosfs_hashins: already locked"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|curproc
-condition|)
-name|dep
-operator|->
-name|de_lockholder
-operator|=
-name|curproc
-operator|->
-name|p_pid
-expr_stmt|;
-else|else
-name|dep
-operator|->
-name|de_lockholder
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|dep
-operator|->
-name|de_flag
-operator||=
-name|DE_LOCKED
-expr_stmt|;
 block|}
 end_function
 
@@ -779,6 +740,11 @@ argument_list|)
 expr_stmt|;
 comment|/* init the fat cache for this denode */
 comment|/* 	 * Insert the denode into the hash queue and lock the denode so it 	 * can't be accessed until we've read it in and have done what we 	 * need to it. 	 */
+name|VOP_LOCK
+argument_list|(
+name|nvp
+argument_list|)
+expr_stmt|;
 name|msdosfs_hashins
 argument_list|(
 name|ldep
