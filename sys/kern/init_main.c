@@ -1787,7 +1787,7 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
-name|microuptime
+name|binuptime
 argument_list|(
 name|PCPU_PTR
 argument_list|(
