@@ -2240,6 +2240,9 @@ goto|goto
 name|success
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|statb
@@ -2311,6 +2314,8 @@ goto|goto
 name|loop
 goto|;
 block|}
+endif|#
+directive|endif
 name|TRACE
 argument_list|(
 operator|(
