@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.112 1998/10/28 13:41:43 dg Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.113 1998/11/11 15:07:57 dg Exp $  */
 end_comment
 
 begin_comment
@@ -1446,7 +1446,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_hash:  *  *	Distributes the object/offset key pair among hash buckets.  *  *	NOTE:  This macro depends on vm_page_bucket_count being a power of 2.  */
+comment|/*  *	vm_page_hash:  *  *	Distributes the object/offset key pair among hash buckets.  *  *	NOTE:  This macro depends on vm_page_bucket_count being a power of 2.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -1492,7 +1492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object/object-page  *	table and object list.  *  *	The object and page must be locked, and must be splhigh.  */
+comment|/*  *	vm_page_insert:		[ internal use only ]  *  *	Inserts the given mem entry into the object and object list.  *  *	The pagetables are not updated but will presumably fault the page  *	in if necessary, or if a kernel page the caller will at some point  *	enter the page into the kernel's pmap.  We are not allowed to block  *	here so we *can't* do this anyway.  *  *	The object and page must be locked, and must be splhigh.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -1644,7 +1644,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_remove:		[ internal use only ]  *				NOTE: used by device pager as well -wfj  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list.  *  *	The object and page must be locked, and at splhigh.  */
+comment|/*  *	vm_page_remove:		[ internal use only ]  *				NOTE: used by device pager as well -wfj  *  *	Removes the given mem entry from the object/offset-page  *	table and the object page list.  *  *	The object and page must be locked, and at splhigh.  *	This routine may not block.  *  *	I do not think the underlying pmap entry (if any) is removed here.  */
 end_comment
 
 begin_function
@@ -1847,7 +1847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	The object must be locked.  No side effects.  */
+comment|/*  *	vm_page_lookup:  *  *	Returns the page associated with the object/offset  *	pair specified; if none is found, NULL is returned.  *  *	The object must be locked.  No side effects.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2015,7 +2015,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	The object must be locked.  */
+comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	The object must be locked.  *	This routine may not block.  *  *	Note: this routine will raise itself to splvm(), the caller need not.   */
 end_comment
 
 begin_function
@@ -2071,7 +2071,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_unqueue without any wakeup  */
+comment|/*  * vm_page_unqueue_nowakeup:  *  * 	vm_page_unqueue() without any wakeup  *  *	This routine must be called at splhigh().  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2176,7 +2176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_unqueue must be called at splhigh();  */
+comment|/*  * vm_page_unqueue:  *  *	Remove a page from its queue.  *  *	This routine must be called at splhigh().  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2306,7 +2306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a page on the specified queue with color optimization.  */
+comment|/*  *	vm_page_list_find:  *  *	Find a page on the specified queue with color optimization.  *  *	This routine must be called at splvm().  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2542,7 +2542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a page on the specified queue with color optimization.  */
+comment|/*  *	vm_page_select:  *  *	Find a page on the specified queue with color optimization.  *  *	This routine must be called at splvm().  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2612,7 +2612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a page on the cache queue with color optimization.  As pages  * might be found, but not applicable, they are deactivated.  This  * keeps us from using potentially busy cached pages.  */
+comment|/*  *	vm_page_select_cache:  *  *	Find a page on the cache queue with color optimization.  As pages  *	might be found, but not applicable, they are deactivated.  This  *	keeps us from using potentially busy cached pages.  *  *	This routine must be called at splvm().  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -2725,7 +2725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a free or zero page, with specified preference.  */
+comment|/*  *	vm_page_select_free:  *  *	Find a free or zero page, with specified preference.  *  *	This routine must be called at splvm().  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -3221,7 +3221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_alloc:  *  *	Allocate and return a memory cell associated  *	with this VM object/offset pair.  *  *	page_req classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *	VM_ALLOC_ZERO		zero page  *  *	Object must be locked.  */
+comment|/*  *	vm_page_alloc:  *  *	Allocate and return a memory cell associated  *	with this VM object/offset pair.  *  *	page_req classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *	VM_ALLOC_ZERO		zero page  *  *	Object must be locked.  *	This routine may not block.  *  *	Additional special handling is required when called from an  *	interrupt (VM_ALLOC_INTERRUPT).  We are not allowed to mess with  *	the page cache in this case.  */
 end_comment
 
 begin_function
@@ -3904,7 +3904,7 @@ name|queue
 operator|=
 name|PQ_NONE
 expr_stmt|;
-comment|/* XXX before splx until vm_page_insert is safe */
+comment|/* 	 * vm_page_insert() is safe prior to the splx().  Note also that 	 * inserting a page here does not insert it into the pmap (which 	 * could cause us to block allocating memory).  We cannot block  	 * anywhere. 	 */
 name|vm_page_insert
 argument_list|(
 name|m
@@ -4074,6 +4074,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *	vm_wait:	(also see VM_WAIT macro)  *  *	Block until free pages are available for allocation  */
+end_comment
+
 begin_function
 name|void
 name|vm_wait
@@ -4151,6 +4155,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  *	vm_page_sleep:  *  *	Block until page is no longer busy.  */
+end_comment
 
 begin_function
 name|int
@@ -4253,7 +4261,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_activate:  *  *	Put the specified page on the active list (if appropriate).  *  *	The page queues must be locked.  */
+comment|/*  *	vm_page_activate:  *  *	Put the specified page on the active list (if appropriate).  *  *	The page queues must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -4391,7 +4399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * helper routine for vm_page_free and vm_page_free_zero  */
+comment|/*  * helper routine for vm_page_free and vm_page_free_zero.  *  * This routine may not block.  */
 end_comment
 
 begin_function
@@ -4720,7 +4728,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * helper routine for vm_page_free and vm_page_free_zero  */
+comment|/*  * helper routine for vm_page_free and vm_page_free_zero.  *  * This routine may not block.  */
 end_comment
 
 begin_function
@@ -4786,7 +4794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_free:  *  *	Returns the given page to the free list,  *	disassociating it with any VM object.  *  *	Object and page must be locked prior to entry.  */
+comment|/*  *	vm_page_free:  *  *	Returns the given page to the free list,  *	disassociating it with any VM object.  *  *	Object and page must be locked prior to entry.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5022,7 +5030,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	The page queues must be locked.  */
+comment|/*  *	vm_page_wire:  *  *	Mark this page as wired down by yet  *	another map, removing it from paging queues  *	as necessary.  *  *	The page queues must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5109,7 +5117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	The page queues must be locked.  */
+comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	The page queues must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5282,7 +5290,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the specified page to the inactive queue.  */
+comment|/*  * Move the specified page to the inactive queue.  *  * This routine may not block.  */
 end_comment
 
 begin_function
@@ -5389,7 +5397,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_page_cache  *  * Put the specified page onto the page cache queue (if appropriate).  */
+comment|/*  * vm_page_cache  *  * Put the specified page onto the page cache queue (if appropriate).   * This routine may not block.  */
 end_comment
 
 begin_function
@@ -5564,7 +5572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, allocate it.  */
+comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, allocate it.  *  * This routine may block.  */
 end_comment
 
 begin_function
@@ -5773,7 +5781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mapping function for valid bits or for dirty bits in  * a page  */
+comment|/*  * mapping function for valid bits or for dirty bits in  * a page.  May not block.  */
 end_comment
 
 begin_function
@@ -5873,7 +5881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set a page valid and clean  */
+comment|/*  * set a page valid and clean.  May not block.  */
 end_comment
 
 begin_function
@@ -5941,7 +5949,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set a page (partially) invalid  */
+comment|/*  * set a page (partially) invalid.  May not block.  */
 end_comment
 
 begin_function
@@ -6009,7 +6017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * is (partial) page valid?  */
+comment|/*  * is (partial) page valid?  May not block.  */
 end_comment
 
 begin_function
@@ -6069,6 +6077,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * update dirty bits from pmap/mmu.  May not block.  */
+end_comment
 
 begin_function
 name|void
