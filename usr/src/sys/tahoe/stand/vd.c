@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	7.9	88/05/24	*/
+comment|/*	vd.c	7.10	88/06/14	*/
 end_comment
 
 begin_comment
@@ -2269,6 +2269,21 @@ name|dkcompat
 index|[]
 init|=
 block|{
+block|{
+literal|64
+block|,
+literal|20
+block|,
+literal|842
+block|,
+literal|512
+block|,
+literal|0
+block|,
+literal|61440
+block|}
+block|,
+comment|/* 2361a eagle */
 block|{
 literal|48
 block|,

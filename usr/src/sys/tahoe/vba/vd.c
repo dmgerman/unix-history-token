@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -7741,6 +7741,74 @@ literal|1290300
 block|}
 block|,
 comment|/* a cyl   0 - 849 */
+block|}
+block|,
+block|{
+literal|64
+block|,
+literal|20
+block|,
+literal|842
+block|,
+literal|512
+block|,
+literal|"2361a"
+block|,
+block|{
+literal|0
+block|,
+literal|61440
+block|}
+block|,
+comment|/* a cyl   0 - 47 */
+block|{
+literal|61440
+block|,
+literal|67840
+block|}
+block|,
+comment|/* b cyl  48 - 100 */
+block|{
+literal|129280
+block|,
+literal|942080
+block|}
+block|,
+comment|/* c cyl 101 - 836 */
+block|{
+literal|0
+block|,
+literal|1071360
+block|}
+block|,
+comment|/* d cyl   0 - 836 */
+block|{
+literal|449280
+block|,
+literal|311040
+block|}
+block|,
+comment|/* e cyl 351 - 593 */
+block|{
+literal|760320
+block|,
+literal|311040
+block|}
+block|,
+comment|/* f cyl 594 - 836 */
+block|{
+literal|449280
+block|,
+literal|622080
+block|}
+block|,
+comment|/* g cyl 351 - 836 */
+block|{
+literal|129280
+block|,
+literal|320000
+block|}
+comment|/* h cyl 101 - 350 */
 block|}
 block|,
 block|{
