@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwscroll.c	3.14 %G%"
+literal|"@(#)wwscroll.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
