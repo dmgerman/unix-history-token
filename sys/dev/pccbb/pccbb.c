@@ -6362,6 +6362,7 @@ name|align
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * This looks somewhat bogus, and doesn't seem to really respect 	 * alignment.  The alignment stuff is happening too late (it 	 * should happen at allocation time, not activation time) and 	 * this code looks generally to be too complex for the purpose 	 * it surves. 	 */
 name|SLIST_FOREACH
 argument_list|(
 argument|rle
