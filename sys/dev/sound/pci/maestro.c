@@ -4448,7 +4448,7 @@ block|{
 case|case
 name|HWVOL_MUTE
 case|:
-name|mixer_hwmute
+name|mixer_hwvol_mute
 argument_list|(
 name|ess
 operator|->
@@ -4459,7 +4459,7 @@ break|break;
 case|case
 name|HWVOL_UP
 case|:
-name|mixer_hwstep
+name|mixer_hwvol_step
 argument_list|(
 name|ess
 operator|->
@@ -4474,7 +4474,7 @@ break|break;
 case|case
 name|HWVOL_DOWN
 case|:
-name|mixer_hwstep
+name|mixer_hwvol_step
 argument_list|(
 name|ess
 operator|->
@@ -5410,7 +5410,7 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|mixer_hwinit
+name|mixer_hwvol_init
 argument_list|(
 name|dev
 argument_list|)
