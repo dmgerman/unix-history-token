@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.9 (Berkeley) %G%"
+literal|"@(#)popen.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -152,18 +158,6 @@ name|vv
 index|[
 literal|2
 index|]
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|ftpglob
-argument_list|()
-decl_stmt|,
-modifier|*
-modifier|*
-name|copyblk
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -710,21 +704,16 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|ftpd_pclose
-argument_list|(
-argument|iop
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|iop
+parameter_list|)
 name|FILE
 modifier|*
 name|iop
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -851,7 +840,7 @@ name|w_status
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logwtmp.c	5.7 (Berkeley) %G%"
+literal|"@(#)logwtmp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_decl_stmt
@@ -84,29 +96,27 @@ begin_comment
 comment|/*  * Modified version of logwtmp that holds wtmp file open  * after first call, for use with ftp (which may chroot  * after login, but before logout).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|logwtmp
-argument_list|(
-argument|line
-argument_list|,
-argument|name
-argument_list|,
-argument|host
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|,
+name|name
+parameter_list|,
+name|host
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|,
-modifier|*
+decl|*
 name|name
 decl_stmt|,
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -118,15 +128,6 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|strncpy
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|fd
