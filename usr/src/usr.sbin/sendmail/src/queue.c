@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.2 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.3 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.2 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.3 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3452,6 +3452,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -3646,6 +3650,31 @@ name|e
 operator|->
 name|e_df
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|)
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|e
+operator|->
+name|e_msgsize
+operator|=
+name|st
+operator|.
+name|st_size
 expr_stmt|;
 break|break;
 case|case

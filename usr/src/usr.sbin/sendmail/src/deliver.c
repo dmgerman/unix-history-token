@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.7 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3194,6 +3194,13 @@ decl_stmt|;
 name|int
 name|saveerrno
 decl_stmt|;
+name|char
+modifier|*
+name|env
+index|[
+literal|2
+index|]
+decl_stmt|;
 specifier|extern
 name|int
 name|DtableSize
@@ -3534,6 +3541,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* try to execute the mailer */
+name|env
+index|[
+literal|0
+index|]
+operator|=
+literal|"AGENT=sendmail"
+expr_stmt|;
+name|env
+index|[
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|execve
 argument_list|(
 name|m
@@ -3542,7 +3563,7 @@ name|m_mailer
 argument_list|,
 name|pvp
 argument_list|,
-name|UserEnviron
+name|env
 argument_list|)
 expr_stmt|;
 name|saveerrno

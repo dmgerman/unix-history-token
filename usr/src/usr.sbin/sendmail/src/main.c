@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.5 (Berkeley) %G%"
+literal|"@(#)main.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,15 +487,6 @@ name|arpadate
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -957,76 +948,6 @@ name|argv0
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_comment
-comment|/* strip out "dangerous" environment variables */
-end_comment
-
-begin_expr_stmt
-operator|(
-name|void
-operator|)
-name|unsetenv
-argument_list|(
-literal|"FS"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_for
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-operator|(
-name|p
-operator|=
-name|envp
-index|[
-name|i
-operator|++
-index|]
-operator|)
-operator|!=
-name|NULL
-condition|;
-control|)
-block|{
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|p
-argument_list|,
-literal|"LD_"
-argument_list|,
-literal|3
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* hack: change this name to be non-special */
-name|p
-index|[
-literal|0
-index|]
-operator|=
-literal|'\201'
-expr_stmt|;
-continue|continue;
-block|}
-block|}
-end_for
-
-begin_expr_stmt
-name|environ
-operator|=
-name|envp
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#
