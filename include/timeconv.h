@@ -28,27 +28,27 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_TIME_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_TIME_T_
+name|__time_t
 name|time_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_TIME_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_TIME_T_DECLARED
+end_define
 
 begin_endif
 endif|#

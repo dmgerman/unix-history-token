@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ansi.h>
 end_include
 
@@ -90,72 +96,72 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_CLOCK_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CLOCK_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_CLOCK_T_
+name|__clock_t
 name|clock_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_CLOCK_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_CLOCK_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_TIME_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_TIME_T_
+name|__time_t
 name|time_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_TIME_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_TIME_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SIZE_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_SIZE_T_
+name|__size_t
 name|size_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SIZE_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -174,48 +180,48 @@ begin_comment
 comment|/*  * New in POSIX 1003.1b-1993.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_CLOCKID_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CLOCKID_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_CLOCKID_T_
+name|__clockid_t
 name|clockid_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_CLOCKID_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_CLOCKID_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_TIMER_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIMER_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_TIMER_T_
+name|__timer_t
 name|timer_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_TIMER_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_TIMER_T_DECLARED
+end_define
 
 begin_endif
 endif|#

@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
 begin_include
@@ -120,7 +120,7 @@ begin_function_decl
 name|int
 name|kill
 parameter_list|(
-name|_BSD_PID_T_
+name|__pid_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -264,7 +264,7 @@ name|__BEGIN_DECLS
 name|int
 name|sigqueue
 parameter_list|(
-name|_BSD_PID_T_
+name|__pid_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -318,7 +318,7 @@ name|_POSIX_SOURCE
 name|int
 name|killpg
 parameter_list|(
-name|_BSD_PID_T_
+name|__pid_t
 parameter_list|,
 name|int
 parameter_list|)

@@ -24,43 +24,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<machine/_types.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_BSD_FSBLKCNT_T_
-value|__uint64_t
-end_define
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__fsblkcnt_t
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|_BSD_FSFILCNT_T_
-value|__uint64_t
-end_define
+begin_typedef
+typedef|typedef
+name|__uint64_t
+name|__fsfilcnt_t
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|_BSD_GID_T_
-value|__uint32_t
-end_define
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|__gid_t
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|_BSD_SA_FAMILY_T_
-value|__uint8_t
-end_define
+begin_typedef
+typedef|typedef
+name|__uint8_t
+name|__sa_family_t
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|_BSD_UID_T_
-value|__uint32_t
-end_define
+begin_typedef
+typedef|typedef
+name|__uint32_t
+name|__uid_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#

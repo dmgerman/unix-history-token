@@ -84,7 +84,7 @@ modifier|*
 name|__restrict
 name|fmt
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 name|ap
 parameter_list|)
 block|{

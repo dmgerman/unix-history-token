@@ -36,7 +36,7 @@ name|___runetype
 parameter_list|(
 name|c
 parameter_list|)
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|c
 decl_stmt|;
 block|{

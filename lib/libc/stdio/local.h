@@ -347,7 +347,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|;
 end_function_decl

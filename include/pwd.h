@@ -27,72 +27,72 @@ directive|include
 file|<sys/_types.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_GID_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GID_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_GID_T_
+name|__gid_t
 name|gid_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_GID_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_GID_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_TIME_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_TIME_T_
+name|__time_t
 name|time_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_TIME_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_TIME_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_UID_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UID_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_UID_T_
+name|__uid_t
 name|uid_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_UID_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_UID_T_DECLARED
+end_define
 
 begin_endif
 endif|#

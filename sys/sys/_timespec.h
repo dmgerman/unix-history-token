@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/*  * Prerequisites:<sys/cdefs.h>,<machine/ansi.h>  *  * This file must be kept synchronized with<sys/timespec.h>.  * It defines a structure which must be a type pun for  * `struct timespec'; this structure is used in header files where  * the ABI uses a `struct timespec' but standards prohibit its  * definition.  (Currently only<sys/stat.h>.)  */
+comment|/*  * Prerequisites:<sys/cdefs.h>,<sys/_types.h>  *  * This file must be kept synchronized with<sys/timespec.h>.  * It defines a structure which must be a type pun for  * `struct timespec'; this structure is used in header files where  * the ABI uses a `struct timespec' but standards prohibit its  * definition.  (Currently only<sys/stat.h>.)  */
 end_comment
 
 begin_ifndef
@@ -23,10 +23,10 @@ begin_struct
 struct|struct
 name|__timespec
 block|{
-ifdef|#
-directive|ifdef
-name|_BSD_TIME_T_
-name|_BSD_TIME_T_
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+name|__time_t
 name|__tv_sec
 decl_stmt|;
 comment|/* seconds, but time_t is not yet defined */

@@ -29,12 +29,12 @@ end_if
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
 begin_typedef
 typedef|typedef
-name|_BSD_VA_LIST_
+name|__va_list
 name|va_list
 typedef|;
 end_typedef

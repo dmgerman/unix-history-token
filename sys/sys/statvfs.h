@@ -43,14 +43,14 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|_BSD_FSBLKCNT_T_
+name|__fsblkcnt_t
 name|fsblkcnt_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_BSD_FSFILCNT_T_
+name|__fsfilcnt_t
 name|fsfilcnt_t
 typedef|;
 end_typedef

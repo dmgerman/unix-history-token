@@ -65,7 +65,7 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
-name|_BSD_VA_LIST_
+name|__va_list
 name|ap
 decl_stmt|;
 block|{

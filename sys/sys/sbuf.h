@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
 begin_comment
@@ -238,7 +238,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printflike
 parameter_list|(

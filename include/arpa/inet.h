@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
 begin_comment
@@ -157,24 +157,24 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SIZE_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_SIZE_T_
+name|__size_t
 name|size_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SIZE_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -190,24 +190,24 @@ begin_comment
 comment|/*  * XXX socklen_t is used by a POSIX.1-2001 interface, but not required by  * POSIX.1-2001.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SOCKLEN_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SOCKLEN_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_SOCKLEN_T_
+name|__socklen_t
 name|socklen_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SOCKLEN_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_SOCKLEN_T_DECLARED
+end_define
 
 begin_endif
 endif|#

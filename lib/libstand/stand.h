@@ -1191,7 +1191,7 @@ name|char
 modifier|*
 name|fmt
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1238,7 +1238,7 @@ name|char
 modifier|*
 name|cfmt
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|;
 end_function_decl

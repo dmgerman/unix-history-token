@@ -632,31 +632,31 @@ parameter_list|)
 value|((c)& 0x7F)
 endif|#
 directive|endif
-comment|/* See comments in<machine/ansi.h> about _BSD_CT_RUNE_T_. */
+comment|/* See comments in<machine/_types.h> about __ct_rune_t. */
 name|__BEGIN_DECLS
 name|unsigned
 name|long
 name|___runetype
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|___tolower
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|___toupper
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -709,7 +709,7 @@ name|__inline
 name|int
 name|__maskrune
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|_c
 parameter_list|,
 name|unsigned
@@ -753,7 +753,7 @@ name|__inline
 name|int
 name|__istype
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|_c
 parameter_list|,
 name|unsigned
@@ -782,7 +782,7 @@ name|__inline
 name|int
 name|__isctype
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|_c
 parameter_list|,
 name|unsigned
@@ -822,10 +822,10 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|__toupper
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|_c
 parameter_list|)
 block|{
@@ -858,10 +858,10 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|__tolower
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|_c
 parameter_list|)
 block|{
@@ -905,7 +905,7 @@ name|__BEGIN_DECLS
 name|int
 name|__maskrune
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|,
 name|unsigned
 name|long
@@ -917,7 +917,7 @@ begin_function_decl
 name|int
 name|__istype
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|,
 name|unsigned
 name|long
@@ -929,7 +929,7 @@ begin_function_decl
 name|int
 name|__isctype
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|,
 name|unsigned
 name|long
@@ -938,19 +938,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|__toupper
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 name|__tolower
 parameter_list|(
-name|_BSD_CT_RUNE_T_
+name|__ct_rune_t
 parameter_list|)
 function_decl|;
 end_function_decl

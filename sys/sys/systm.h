@@ -799,7 +799,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
@@ -953,7 +953,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
@@ -980,7 +980,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
@@ -1006,7 +1006,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
@@ -1075,7 +1075,7 @@ name|char
 specifier|const
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|;
 end_function_decl

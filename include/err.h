@@ -16,19 +16,19 @@ name|_ERR_H_
 end_define
 
 begin_comment
-comment|/*  * Don't use va_list in the err/warn prototypes.   Va_list is typedef'd in two  * places (<machine/varargs.h> and<machine/stdarg.h>), so if we include one  * of them here we may collide with the utility's includes.  It's unreasonable  * for utilities to have to include one of them to include err.h, so we get  * _BSD_VA_LIST_ from<machine/ansi.h> and use it.  */
+comment|/*  * Don't use va_list in the err/warn prototypes.   Va_list is typedef'd in two  * places (<machine/varargs.h> and<machine/stdarg.h>), so if we include one  * of them here we may collide with the utility's includes.  It's unreasonable  * for utilities to have to include one of them to include err.h, so we get  * __va_list from<sys/_types.h> and use it.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/_types.h>
 end_include
 
 begin_decl_stmt
@@ -64,7 +64,7 @@ specifier|const
 name|char
 operator|*
 argument_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 argument_list|)
 name|__dead2
 name|__printf0like
@@ -112,7 +112,7 @@ specifier|const
 name|char
 operator|*
 argument_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 argument_list|)
 name|__dead2
 name|__printf0like
@@ -156,7 +156,7 @@ specifier|const
 name|char
 operator|*
 argument_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 argument_list|)
 name|__dead2
 name|__printf0like
@@ -198,7 +198,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printf0like
 parameter_list|(
@@ -246,7 +246,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printf0like
 parameter_list|(
@@ -290,7 +290,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|_BSD_VA_LIST_
+name|__va_list
 parameter_list|)
 function_decl|__printflike
 parameter_list|(

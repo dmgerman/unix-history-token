@@ -33,24 +33,24 @@ directive|ifndef
 name|__cplusplus
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_WCHAR_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WCHAR_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_WCHAR_T_
+name|__wchar_t
 name|wchar_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_WCHAR_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_WCHAR_T_DECLARED
+end_define
 
 begin_endif
 endif|#

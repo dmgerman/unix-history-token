@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/*  * Prerequisites:<sys/cdefs.h>,<machine/ansi.h>  */
+comment|/*  * Prerequisites:<sys/cdefs.h>,<sys/_types.h>  */
 end_comment
 
 begin_ifndef
@@ -19,24 +19,24 @@ directive|define
 name|_SYS_TIMESPEC_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_TIME_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_TIME_T_
+name|__time_t
 name|time_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_TIME_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_TIME_T_DECLARED
+end_define
 
 begin_endif
 endif|#

@@ -219,24 +219,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SA_FAMILY_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SA_FAMILY_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_SA_FAMILY_T_
+name|__sa_family_t
 name|sa_family_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SA_FAMILY_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_SA_FAMILY_T_DECLARED
+end_define
 
 begin_endif
 endif|#

@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
 begin_typedef

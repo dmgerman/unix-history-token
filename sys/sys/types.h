@@ -28,19 +28,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/endian.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/types.h>
 end_include
 
 begin_include
@@ -445,6 +433,17 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|__critical_t
+name|critical_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Critical section value */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|int64_t
 name|daddr_t
 typedef|;
@@ -465,15 +464,15 @@ begin_comment
 comment|/* fixed point number */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_GID_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_GID_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_GID_T_
+name|__gid_t
 name|gid_t
 typedef|;
 end_typedef
@@ -482,11 +481,11 @@ begin_comment
 comment|/* group id */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_GID_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_GID_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -502,6 +501,17 @@ end_typedef
 
 begin_comment
 comment|/* inode number */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__intrmask_t
+name|intrmask_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Interrupt mask (spl, xxx_imask...) */
 end_comment
 
 begin_typedef
@@ -539,7 +549,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|_BSD_OFF_T_
+name|__off_t
 name|off_t
 typedef|;
 end_typedef
@@ -550,7 +560,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|_BSD_PID_T_
+name|__pid_t
 name|pid_t
 typedef|;
 end_typedef
@@ -558,6 +568,13 @@ end_typedef
 begin_comment
 comment|/* process id */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|__register_t
+name|register_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -570,15 +587,9 @@ begin_comment
 comment|/* resource limit */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SEGSZ_T_
-end_ifdef
-
 begin_typedef
 typedef|typedef
-name|_BSD_SEGSZ_T_
+name|__segsz_t
 name|segsz_t
 typedef|;
 end_typedef
@@ -586,17 +597,6 @@ end_typedef
 begin_comment
 comment|/* segment size (in pages) */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SEGSZ_T_
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -609,15 +609,22 @@ begin_comment
 comment|/* swap offset */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_UID_T_
-end_ifdef
+begin_typedef
+typedef|typedef
+name|__u_register_t
+name|u_register_t
+typedef|;
+end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UID_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_UID_T_
+name|__uid_t
 name|uid_t
 typedef|;
 end_typedef
@@ -626,16 +633,44 @@ begin_comment
 comment|/* user id */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_UID_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_UID_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_typedef
+typedef|typedef
+name|__vm_offset_t
+name|vm_offset_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__vm_ooffset_t
+name|vm_ooffset_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__vm_pindex_t
+name|vm_pindex_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__vm_size_t
+name|vm_size_t
+typedef|;
+end_typedef
 
 begin_ifdef
 ifdef|#
@@ -647,6 +682,20 @@ begin_typedef
 typedef|typedef
 name|int
 name|boolean_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__intfptr_t
+name|intfptr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__uintfptr_t
+name|uintfptr_t
 typedef|;
 end_typedef
 
@@ -803,63 +852,63 @@ begin_comment
 comment|/* !_KERNEL */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_CLOCK_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CLOCK_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_CLOCK_T_
+name|__clock_t
 name|clock_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_CLOCK_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_CLOCK_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_CLOCKID_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CLOCKID_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_CLOCKID_T_
+name|__clockid_t
 name|clockid_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_CLOCKID_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_CLOCKID_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_FFLAGS_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FFLAGS_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_FFLAGS_T_
+name|__fflags_t
 name|fflags_t
 typedef|;
 end_typedef
@@ -868,11 +917,11 @@ begin_comment
 comment|/* file flags */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_FFLAGS_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_FFLAGS_T_DECLARED
+end_define
 
 begin_endif
 endif|#
@@ -891,14 +940,14 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|_BSD_FSBLKCNT_T_
+name|__fsblkcnt_t
 name|fsblkcnt_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|_BSD_FSFILCNT_T_
+name|__fsfilcnt_t
 name|fsfilcnt_t
 typedef|;
 end_typedef
@@ -914,96 +963,96 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SIZE_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIZE_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_SIZE_T_
+name|__size_t
 name|size_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SIZE_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_SIZE_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SSIZE_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SSIZE_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_SSIZE_T_
+name|__ssize_t
 name|ssize_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SSIZE_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_SSIZE_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_TIME_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIME_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_TIME_T_
+name|__time_t
 name|time_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_TIME_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_TIME_T_DECLARED
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_TIMER_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TIMER_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_TIMER_T_
+name|__timer_t
 name|timer_t
 typedef|;
 end_typedef
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_TIMER_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_TIMER_T_DECLARED
+end_define
 
 begin_endif
 endif|#

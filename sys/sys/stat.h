@@ -24,18 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/_types.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_FFLAGS_T_
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FFLAGS_T_DECLARED
+end_ifndef
 
 begin_typedef
 typedef|typedef
-name|_BSD_FFLAGS_T_
+name|__fflags_t
 name|fflags_t
 typedef|;
 end_typedef
@@ -44,11 +44,11 @@ begin_comment
 comment|/* file flags */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|_BSD_FFLAGS_T_
-end_undef
+begin_define
+define|#
+directive|define
+name|_FFLAGS_T_DECLARED
+end_define
 
 begin_endif
 endif|#
