@@ -1073,7 +1073,7 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nsyncing disks... "
+literal|"\nsyncing disks, buffers remaining... "
 argument_list|)
 expr_stmt|;
 name|sync
