@@ -1542,11 +1542,9 @@ operator|->
 name|dirty
 condition|)
 block|{
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|mt
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_deactivate
@@ -2153,13 +2151,11 @@ comment|/* 				 * get rid of the unnecessary page 				 */
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|fs
 operator|.
 name|first_m
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free

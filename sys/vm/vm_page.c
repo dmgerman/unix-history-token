@@ -1047,11 +1047,9 @@ name|PG_WRITEABLE
 operator|)
 condition|)
 block|{
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|mem
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_flag_clear
@@ -2612,11 +2610,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|m
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -4199,11 +4195,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|m
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -4288,11 +4282,9 @@ name|PQ_CACHE
 condition|)
 return|return;
 comment|/* 	 * Remove all pmaps and indicate that the page is not 	 * writeable or mapped. 	 */
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|m
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 if|if

@@ -2007,11 +2007,9 @@ operator|)
 operator|)
 condition|)
 block|{
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|p
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_deactivate
@@ -2078,11 +2076,9 @@ operator|==
 name|PQ_INACTIVE
 condition|)
 block|{
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|p
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2439,11 +2435,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|m
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_free
@@ -3771,11 +3765,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|m
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4610,11 +4602,9 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * We turn off page access, so that we have 				 * more accurate RSS stats.  We don't do this 				 * in the normal page deactivation when the 				 * system is loaded VM wise, because the 				 * cost of the large number of page protect 				 * operations would be higher than the value 				 * of doing the operation. 				 */
-name|pmap_page_protect
+name|pmap_remove_all
 argument_list|(
 name|m
-argument_list|,
-name|VM_PROT_NONE
 argument_list|)
 expr_stmt|;
 name|vm_page_deactivate
