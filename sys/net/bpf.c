@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.c	8.2 (Berkeley) 3/28/94  *  * $Id: bpf.c,v 1.31 1997/03/24 12:12:35 bde Exp $  */
+comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.c	8.2 (Berkeley) 3/28/94  *  * $Id: bpf.c,v 1.32 1997/09/02 01:18:28 bde Exp $  */
 end_comment
 
 begin_include
@@ -152,6 +152,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -685,8 +691,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|bpfselect
+name|d_poll_t
+name|bpfpoll
 decl_stmt|;
 end_decl_stmt
 
@@ -722,7 +728,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* bpf */
-name|bpfselect
+name|bpfpoll
 block|,
 name|nommap
 block|,
@@ -3663,58 +3669,13 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-comment|/*  * The new select interface passes down the proc pointer; the old select  * stubs had to grab it out of the user struct.  This glue allows either case.  */
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199103
-define|#
-directive|define
-name|bpf_select
-value|bpfselect
-else|#
-directive|else
-specifier|static
+comment|/*  * Support for select() and poll() system calls  *  * Return true iff the specific operation will not block indefinitely.  * Otherwise, return false but make a note that a selwakeup() must be done.  */
 name|int
-name|bpfselect
+name|bpfpoll
 parameter_list|(
 name|dev
 parameter_list|,
-name|rw
-parameter_list|)
-specifier|register
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|rw
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|bpf_select
-argument_list|(
-name|dev
-argument_list|,
-name|rw
-argument_list|,
-name|u
-operator|.
-name|u_procp
-argument_list|)
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/*  * Support for select() system call  *  * Return true iff the specific operation will not block indefinitely.  * Otherwise, return false but make a note that a selwakeup() must be done.  */
-name|int
-name|bpf_select
-parameter_list|(
-name|dev
-parameter_list|,
-name|rw
+name|events
 parameter_list|,
 name|p
 parameter_list|)
@@ -3723,7 +3684,7 @@ name|dev_t
 name|dev
 decl_stmt|;
 name|int
-name|rw
+name|events
 decl_stmt|;
 name|struct
 name|proc
@@ -3741,17 +3702,11 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|rw
-operator|!=
-name|FREAD
-condition|)
-return|return
-operator|(
+name|int
+name|revents
+init|=
 literal|0
-operator|)
-return|;
+decl_stmt|;
 comment|/* 	 * An imitation of the FIONREAD ioctl code. 	 */
 name|d
 operator|=
@@ -3769,6 +3724,16 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
 if|if
 condition|(
 name|d
@@ -3789,24 +3754,17 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
-comment|/* 		 * There is data waiting. 		 */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
+name|revents
+operator||=
+name|events
+operator|&
 operator|(
-literal|1
+name|POLLIN
+operator||
+name|POLLRDNORM
 operator|)
-return|;
-block|}
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199103
+expr_stmt|;
+else|else
 name|selrecord
 argument_list|(
 name|p
@@ -3817,42 +3775,6 @@ operator|->
 name|bd_sel
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* 	 * No data ready.  If there's already a select() waiting on this 	 * minor device then this is a collision.  This shouldn't happen 	 * because minors really should not be shared, but if a process 	 * forks while one of these is open, it is possible that both 	 * processes could select on the same descriptor. 	 */
-if|if
-condition|(
-name|d
-operator|->
-name|bd_selproc
-operator|&&
-name|d
-operator|->
-name|bd_selproc
-operator|->
-name|p_wchan
-operator|==
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|selwait
-condition|)
-name|d
-operator|->
-name|bd_selcoll
-operator|=
-literal|1
-expr_stmt|;
-else|else
-name|d
-operator|->
-name|bd_selproc
-operator|=
-name|p
-expr_stmt|;
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -3860,7 +3782,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|revents
 operator|)
 return|;
 block|}
