@@ -456,7 +456,8 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|caught
 decl_stmt|;
 end_decl_stmt
@@ -467,13 +468,14 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+specifier|volatile
+name|sig_atomic_t
 name|ready
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* have we reached the lock point without having */
+comment|/* reached the lock point without having */
 end_comment
 
 begin_comment
