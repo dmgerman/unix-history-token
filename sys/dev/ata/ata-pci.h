@@ -994,6 +994,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SIS661
+value|0x06611039
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SIS730
 value|0x07301039
 end_define
