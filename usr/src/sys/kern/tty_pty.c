@@ -1795,7 +1795,7 @@ condition|)
 block|{
 name|cc
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|uio
 operator|->
@@ -2118,7 +2118,7 @@ name|t_outq
 argument_list|,
 name|buf
 argument_list|,
-name|MIN
+name|min
 argument_list|(
 name|uio
 operator|->
