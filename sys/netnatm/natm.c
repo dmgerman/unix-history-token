@@ -1335,7 +1335,7 @@ operator|*
 name|aph
 argument_list|)
 argument_list|,
-name|M_WAITOK
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2675,7 +2675,7 @@ operator|*
 name|aph
 argument_list|)
 argument_list|,
-name|M_WAITOK
+name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 if|if
