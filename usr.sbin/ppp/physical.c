@@ -2383,8 +2383,19 @@ block|{
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|EAGAIN
+condition|)
+name|result
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOBUFS
 condition|)
 block|{
 name|log_Printf
@@ -2419,10 +2430,6 @@ name|CLOSE_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-name|result
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* else we shouldn't really have been called !  select() is broken ! */
 block|}
