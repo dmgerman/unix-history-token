@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.18 (Berkeley) %G%"
+literal|"@(#)finger.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
