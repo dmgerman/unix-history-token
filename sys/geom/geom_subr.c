@@ -1111,7 +1111,7 @@ argument_list|(
 operator|&
 name|gp
 operator|->
-name|consumer
+name|provider
 argument_list|)
 operator|)
 argument_list|)
