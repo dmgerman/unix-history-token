@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.195 2001/04/15 16:58:03 markus Exp $"
+literal|"$OpenBSD: sshd.c,v 1.228 2002/02/27 21:23:13 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/hmac.h>
+file|<openssl/md5.h>
 end_include
 
 begin_include
@@ -185,6 +185,12 @@ directive|include
 file|"dispatch.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"channels.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -296,6 +302,18 @@ end_comment
 begin_decl_stmt
 name|int
 name|debug_flag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Flag indicating that the daemon should only test the configuration and keys. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|test_flag
 init|=
 literal|0
 decl_stmt|;
@@ -455,7 +473,9 @@ comment|/*  * Flag indicating whether the RSA server key needs to be regenerated
 end_comment
 
 begin_decl_stmt
-name|int
+specifier|static
+specifier|volatile
+name|sig_atomic_t
 name|key_do_regen
 init|=
 literal|0
@@ -463,12 +483,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is set to true when SIGHUP is received. */
+comment|/* This is set to true when a signal is received. */
 end_comment
 
 begin_decl_stmt
-name|int
+specifier|static
+specifier|volatile
+name|sig_atomic_t
 name|received_sighup
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|sig_atomic_t
+name|received_sigterm
 init|=
 literal|0
 decl_stmt|;
@@ -521,10 +553,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* options.max_startup sized array of fd ints */
+end_comment
+
+begin_decl_stmt
+name|int
+modifier|*
+name|startup_pipes
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|startup_pipe
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in child */
+end_comment
+
+begin_comment
 comment|/* Prototypes for various functions defined later in this file. */
 end_comment
 
 begin_function_decl
+name|void
+name|destroy_sensitive_data
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|do_ssh1_kex
 parameter_list|(
@@ -534,44 +599,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|do_ssh2_kex
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ssh_dh1_server
-parameter_list|(
-name|Kex
-modifier|*
-parameter_list|,
-name|Buffer
-modifier|*
-name|_kexinit
-parameter_list|,
-name|Buffer
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ssh_dhgex_server
-parameter_list|(
-name|Kex
-modifier|*
-parameter_list|,
-name|Buffer
-modifier|*
-name|_kexinit
-parameter_list|,
-name|Buffer
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -581,6 +613,7 @@ comment|/*  * Close all listening sockets  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|close_listen_socks
 parameter_list|(
@@ -619,11 +652,63 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|close_startup_pipes
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|startup_pipes
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|options
+operator|.
+name|max_startups
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|startup_pipes
+index|[
+name|i
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|startup_pipes
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Signal handler for SIGHUP.  Sshd execs itself when it receives SIGHUP;  * the effect is to reread the configuration file (and to regenerate  * the server key).  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sighup_handler
 parameter_list|(
@@ -631,6 +716,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 name|received_sighup
 operator|=
 literal|1
@@ -642,6 +732,10 @@ argument_list|,
 name|sighup_handler
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 block|}
 end_function
 
@@ -650,6 +744,7 @@ comment|/*  * Called from the main program after receiving SIGHUP.  * Restarts t
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sighup_restart
 parameter_list|(
@@ -662,6 +757,9 @@ literal|"Received SIGHUP; restarting."
 argument_list|)
 expr_stmt|;
 name|close_listen_socks
+argument_list|()
+expr_stmt|;
+name|close_startup_pipes
 argument_list|()
 expr_stmt|;
 name|execv
@@ -698,10 +796,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generic signal handler for terminating signals in the master daemon.  * These close the listen socket; not closing it seems to cause "Address  * already in use" problems on some machines, which is inconvenient.  */
+comment|/*  * Generic signal handler for terminating signals in the master daemon.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sigterm_handler
 parameter_list|(
@@ -709,36 +808,19 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|log
-argument_list|(
-literal|"Received signal %d; terminating."
-argument_list|,
+name|received_sigterm
+operator|=
 name|sig
-argument_list|)
-expr_stmt|;
-name|close_listen_socks
-argument_list|()
-expr_stmt|;
-name|unlink
-argument_list|(
-name|options
-operator|.
-name|pid_file
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|255
-argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * SIGCHLD handler.  This is called whenever a child dies.  This will then  * reap any zombies left by exited c.  */
+comment|/*  * SIGCHLD handler.  This is called whenever a child dies.  This will then  * reap any zombies left by exited children.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|main_sigchld_handler
 parameter_list|(
@@ -789,6 +871,7 @@ comment|/*  * Signal handler for the alarm after the login grace period has expi
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|grace_alarm_handler
 parameter_list|(
@@ -796,6 +879,7 @@ name|int
 name|sig
 parameter_list|)
 block|{
+comment|/* XXX no idea how fix this signal handler */
 comment|/* Close the connection. */
 name|packet_close
 argument_list|()
@@ -817,6 +901,7 @@ comment|/*  * Signal handler for the key regeneration alarm.  Note that this  * 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|generate_ephemeral_server_key
 parameter_list|(
@@ -931,6 +1016,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|key_regeneration_alarm
 parameter_list|(
@@ -962,6 +1048,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sshd_exchange_identification
 parameter_list|(
@@ -1118,7 +1205,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-literal|"Could not write ident string to %s."
+literal|"Could not write ident string to %s"
 argument_list|,
 name|get_remote_ipaddr
 argument_list|()
@@ -1182,7 +1269,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-literal|"Did not receive identification string from %s."
+literal|"Did not receive identification string from %s"
 argument_list|,
 name|get_remote_ipaddr
 argument_list|()
@@ -1545,13 +1632,6 @@ name|fatal_cleanup
 argument_list|()
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|compat20
-condition|)
-name|packet_set_ssh2_format
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -1658,6 +1738,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|list_hostkey_types
@@ -1665,22 +1746,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|static
+name|Buffer
+name|b
+decl_stmt|;
 name|char
-name|buf
-index|[
-literal|1024
-index|]
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|buf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
+name|buffer_init
+argument_list|(
+operator|&
+name|b
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1729,77 +1809,91 @@ case|:
 case|case
 name|KEY_DSA
 case|:
-name|strlcat
+if|if
+condition|(
+name|buffer_len
 argument_list|(
-name|buf
+operator|&
+name|b
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|buffer_append
+argument_list|(
+operator|&
+name|b
 argument_list|,
+literal|","
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
 name|key_ssh_name
 argument_list|(
 name|key
 argument_list|)
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|)
 expr_stmt|;
-name|strlcat
+name|buffer_append
 argument_list|(
-name|buf
+operator|&
+name|b
 argument_list|,
-literal|","
+name|p
 argument_list|,
-sizeof|sizeof
-name|buf
+name|strlen
+argument_list|(
+name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
-name|i
-operator|=
-name|strlen
+name|buffer_append
 argument_list|(
-name|buf
+operator|&
+name|b
+argument_list|,
+literal|"\0"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|>
-literal|0
-operator|&&
-name|buf
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|==
-literal|','
-condition|)
-name|buf
-index|[
-name|i
-operator|-
-literal|1
-index|]
+name|p
 operator|=
-literal|'\0'
+name|xstrdup
+argument_list|(
+name|buffer_ptr
+argument_list|(
+operator|&
+name|b
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|b
+argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
 literal|"list_hostkey_types: %s"
 argument_list|,
-name|buf
+name|p
 argument_list|)
 expr_stmt|;
 return|return
-name|buf
+name|p
 return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|Key
 modifier|*
 name|get_hostkey_by_type
@@ -1865,6 +1959,7 @@ comment|/*  * returns 1 if connection should be dropped, 0 otherwise.  * droppin
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|drop_connection
 parameter_list|(
@@ -1984,28 +2079,155 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-name|int
-modifier|*
-name|startup_pipes
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* options.max_startup sized array of fd ints */
-end_comment
-
-begin_decl_stmt
-name|int
-name|startup_pipe
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in child */
-end_comment
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"sshd version %s\n"
+argument_list|,
+name|SSH_VERSION
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: %s [options]\n"
+argument_list|,
+name|__progname
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Options:\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -f file    Configuration file (default %s)\n"
+argument_list|,
+name|_PATH_SERVER_CONFIG_FILE
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -d         Debugging mode (multiple -d means more debugging)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -i         Started from inetd\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -D         Do not fork into daemon mode\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -t         Only test configuration file and keys\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -q         Quiet (no logging)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -p port    Listen on the specified port (default: 22)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -k seconds Regenerate server key every this many seconds (default: 3600)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -g seconds Grace period for authentication (default: 600)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -b bits    Size of server RSA key (default: 768 bits)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -h file    File from which to read host key (default: %s)\n"
+argument_list|,
+name|_PATH_HOST_KEY_FILE
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -u len     Maximum hostname length for utmp recording\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -4         Use IPv4 only\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -6         Use IPv6 only\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -o option  Process the option as if it was read from a configuration file.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Main program for the daemon.  */
@@ -2153,7 +2375,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"f:p:b:k:h:g:V:u:dDeiqQ46"
+literal|"f:p:b:k:h:g:V:u:o:dDeiqtQ46"
 argument_list|)
 operator|)
 operator|!=
@@ -2374,28 +2596,70 @@ break|break;
 case|case
 literal|'g'
 case|:
+if|if
+condition|(
+operator|(
 name|options
 operator|.
 name|login_grace_time
 operator|=
-name|atoi
+name|convtime
 argument_list|(
 name|optarg
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Invalid login grace time.\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'k'
 case|:
+if|if
+condition|(
+operator|(
 name|options
 operator|.
 name|key_regeneration_time
 operator|=
-name|atoi
+name|convtime
 argument_list|(
 name|optarg
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Invalid key regeneration interval.\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'h'
@@ -2449,6 +2713,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|test_flag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'u'
 case|:
 name|utmp_len
@@ -2460,138 +2732,47 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'?'
+literal|'o'
 case|:
-default|default:
-name|fprintf
+if|if
+condition|(
+name|process_server_config_line
 argument_list|(
-name|stderr
+operator|&
+name|options
 argument_list|,
-literal|"sshd version %s\n"
+name|optarg
 argument_list|,
-name|SSH_VERSION
+literal|"command-line"
+argument_list|,
+literal|0
 argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: %s [options]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -f file    Configuration file (default %s)\n"
-argument_list|,
-name|_PATH_SERVER_CONFIG_FILE
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -d         Debugging mode (multiple -d means more debugging)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -i         Started from inetd\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -D         Do not fork into daemon mode\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -q         Quiet (no logging)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -p port    Listen on the specified port (default: 22)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -k seconds Regenerate server key every this many seconds (default: 3600)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -g seconds Grace period for authentication (default: 600)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -b bits    Size of server RSA key (default: 768 bits)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -h file    File from which to read host key (default: %s)\n"
-argument_list|,
-name|_PATH_HOST_KEY_FILE
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -u len     Maximum hostname length for utmp recording\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -4         Use IPv4 only\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -6         Use IPv6 only\n"
-argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|SSLeay_add_all_algorithms
 argument_list|()
+expr_stmt|;
+name|channel_set_af
+argument_list|(
+name|IPv4or6
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Force logging to stderr until we have loaded the private host 	 * key (unless started from inetd) 	 */
 name|log_init
@@ -2602,8 +2783,7 @@ name|options
 operator|.
 name|log_level
 operator|==
-operator|-
-literal|1
+name|SYSLOG_LEVEL_NOT_SET
 condition|?
 name|SYSLOG_LEVEL_INFO
 else|:
@@ -2615,8 +2795,7 @@ name|options
 operator|.
 name|log_facility
 operator|==
-operator|-
-literal|1
+name|SYSLOG_FACILITY_NOT_SET
 condition|?
 name|SYSLOG_FACILITY_AUTH
 else|:
@@ -3057,6 +3236,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Configuration looks good, so exit if in test mode. */
+if|if
+condition|(
+name|test_flag
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Initialize the log (it is reinitialized below in case we forked). */
 if|if
 condition|(
@@ -3429,10 +3618,6 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_REUSEADDR
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|on
 argument_list|,
@@ -3462,10 +3647,6 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_LINGER
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|linger
 argument_list|,
@@ -3585,6 +3766,48 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|options
+operator|.
+name|protocol
+operator|&
+name|SSH_PROTO_1
+condition|)
+name|generate_ephemeral_server_key
+argument_list|()
+expr_stmt|;
+comment|/* 		 * Arrange to restart on SIGHUP.  The handler needs 		 * listen_sock. 		 */
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|sighup_handler
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|sigterm_handler
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|sigterm_handler
+argument_list|)
+expr_stmt|;
+comment|/* Arrange SIGCHLD to be caught. */
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|main_sigchld_handler
+argument_list|)
+expr_stmt|;
+comment|/* Write out the pid file after the sigterm handler is setup */
+if|if
+condition|(
 operator|!
 name|debug_flag
 condition|)
@@ -3626,47 +3849,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|options
-operator|.
-name|protocol
-operator|&
-name|SSH_PROTO_1
-condition|)
-name|generate_ephemeral_server_key
-argument_list|()
-expr_stmt|;
-comment|/* Arrange to restart on SIGHUP.  The handler needs listen_sock. */
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|sighup_handler
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|sigterm_handler
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|sigterm_handler
-argument_list|)
-expr_stmt|;
-comment|/* Arrange SIGCHLD to be caught. */
-name|signal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|main_sigchld_handler
-argument_list|)
-expr_stmt|;
 comment|/* setup fd set for listen */
 name|fdset
 operator|=
@@ -3902,6 +4084,37 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|received_sigterm
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Received signal %d; terminating."
+argument_list|,
+operator|(
+name|int
+operator|)
+name|received_sigterm
+argument_list|)
+expr_stmt|;
+name|close_listen_socks
+argument_list|()
+expr_stmt|;
+name|unlink
+argument_list|(
+name|options
+operator|.
+name|pid_file
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|255
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|key_used
 operator|&&
 name|key_do_regen
@@ -4092,6 +4305,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|newsock
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -4251,38 +4469,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|options
-operator|.
-name|max_startups
-condition|;
-name|j
-operator|++
-control|)
-if|if
-condition|(
-name|startup_pipes
-index|[
-name|j
-index|]
-operator|!=
-operator|-
-literal|1
-condition|)
-name|close
-argument_list|(
-name|startup_pipes
-index|[
-name|j
-index|]
-argument_list|)
+name|close_startup_pipes
+argument_list|()
 expr_stmt|;
 name|close_listen_socks
 argument_list|()
@@ -4466,10 +4654,6 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_LINGER
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|linger
 argument_list|,
@@ -4494,10 +4678,6 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_KEEPALIVE
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|on
 argument_list|,
@@ -4537,11 +4717,10 @@ operator|=
 name|get_remote_ipaddr
 argument_list|()
 expr_stmt|;
-comment|/* Check whether logins are denied from this host. */
 ifdef|#
 directive|ifdef
 name|LIBWRAP
-comment|/* XXX LIBWRAP noes not know about IPv6 */
+comment|/* Check whether logins are denied from this host. */
 block|{
 name|struct
 name|request_info
@@ -4560,7 +4739,7 @@ name|RQ_FILE
 argument_list|,
 name|sock_in
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 name|fromhost
@@ -4579,24 +4758,24 @@ name|req
 argument_list|)
 condition|)
 block|{
+name|debug
+argument_list|(
+literal|"Connection refused by tcp wrapper"
+argument_list|)
+expr_stmt|;
 name|refuse
 argument_list|(
 operator|&
 name|req
 argument_list|)
 expr_stmt|;
-name|close
+comment|/* NOTREACHED */
+name|fatal
 argument_list|(
-name|sock_in
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|sock_out
+literal|"libwrap refuse returns"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*XXX IPv6 verbose("Connection from %.500s port %d", eval_client(&req), remote_port); */
 block|}
 endif|#
 directive|endif
@@ -4641,6 +4820,11 @@ expr_stmt|;
 comment|/* 	 * Check that the connection comes from a privileged port. 	 * Rhosts-Authentication only makes sense from priviledged 	 * programs.  Of course, if the intruder has root access on his local 	 * machine, he can connect from any port.  So do not use these 	 * authentication methods from machines that you do not trust. 	 */
 if|if
 condition|(
+name|options
+operator|.
+name|rhosts_authentication
+operator|&&
+operator|(
 name|remote_port
 operator|>=
 name|IPPORT_RESERVED
@@ -4650,12 +4834,15 @@ operator|<
 name|IPPORT_RESERVED
 operator|/
 literal|2
+operator|)
 condition|)
 block|{
 name|debug
 argument_list|(
 literal|"Rhosts Authentication disabled, "
-literal|"originating port not trusted."
+literal|"originating port %d not trusted."
+argument_list|,
+name|remote_port
 argument_list|)
 expr_stmt|;
 name|options
@@ -4665,9 +4852,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KRB4
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 if|if
 condition|(
 operator|!
@@ -4693,7 +4889,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* KRB4 */
+comment|/* KRB4&& !KRB5 */
 ifdef|#
 directive|ifdef
 name|AFS
@@ -4740,25 +4936,6 @@ name|do_authentication
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|KRB4
-comment|/* Cleanup user's ticket cache file. */
-if|if
-condition|(
-name|options
-operator|.
-name|kerberos_ticket_cleanup
-condition|)
-operator|(
-name|void
-operator|)
-name|dest_tkt
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* KRB4 */
 comment|/* The connection has been terminated. */
 name|verbose
 argument_list|(
@@ -4783,6 +4960,7 @@ comment|/*  * SSH1 key exchange  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_ssh1_kex
 parameter_list|(
@@ -4793,11 +4971,6 @@ name|int
 name|i
 decl_stmt|,
 name|len
-decl_stmt|;
-name|int
-name|plen
-decl_stmt|,
-name|slen
 decl_stmt|;
 name|int
 name|rsafail
@@ -5031,9 +5204,17 @@ literal|1
 operator|<<
 name|SSH_AUTH_RSA
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 if|if
 condition|(
 name|options
@@ -5048,9 +5229,17 @@ name|SSH_AUTH_KERBEROS
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|AFS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 if|if
 condition|(
 name|options
@@ -5063,6 +5252,11 @@ literal|1
 operator|<<
 name|SSH_PASS_KERBEROS_TGT
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|AFS
 if|if
 condition|(
 name|options
@@ -5081,7 +5275,7 @@ if|if
 condition|(
 name|options
 operator|.
-name|challenge_reponse_authentication
+name|challenge_response_authentication
 operator|==
 literal|1
 condition|)
@@ -5145,9 +5339,6 @@ expr_stmt|;
 comment|/* Read clients reply (cipher type and session key). */
 name|packet_read_expect
 argument_list|(
-operator|&
-name|plen
-argument_list|,
 name|SSH_CMSG_SESSION_KEY
 argument_list|)
 expr_stmt|;
@@ -5218,17 +5409,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Get the encrypted integer. */
+if|if
+condition|(
+operator|(
 name|session_key_int
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"do_ssh1_kex: BN_new failed"
+argument_list|)
 expr_stmt|;
 name|packet_get_bignum
 argument_list|(
 name|session_key_int
-argument_list|,
-operator|&
-name|slen
 argument_list|)
 expr_stmt|;
 name|protocol_flags
@@ -5241,20 +5440,8 @@ argument_list|(
 name|protocol_flags
 argument_list|)
 expr_stmt|;
-name|packet_integrity_check
-argument_list|(
-name|plen
-argument_list|,
-literal|1
-operator|+
-literal|8
-operator|+
-name|slen
-operator|+
-literal|4
-argument_list|,
-name|SSH_CMSG_SESSION_KEY
-argument_list|)
+name|packet_check_eom
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Decrypt it using our private server key and private host key (key 	 * with larger modulus first). 	 */
 if|if
@@ -5640,7 +5827,7 @@ argument_list|(
 name|session_key_int
 argument_list|)
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|buf
 init|=
@@ -5851,6 +6038,7 @@ comment|/*  * SSH2 key exchange: diffie-hellman-group1-sha1  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_ssh2_kex
 parameter_list|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.104 2001/04/12 19:15:25 markus Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.119 2002/01/21 15:13:51 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -107,6 +107,12 @@ directive|include
 file|"misc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"readpass.h"
+end_include
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -140,22 +146,108 @@ name|__progname
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* AF_UNSPEC or AF_INET or AF_INET6 */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|IPv4or6
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|sockaddr_ntop
+parameter_list|(
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|addr
 decl_stmt|;
-end_decl_stmt
+specifier|static
+name|char
+name|addrbuf
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+switch|switch
+condition|(
+name|sa
+operator|->
+name|sa_family
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
+name|addr
+operator|=
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|sa
+operator|)
+operator|->
+name|sin_addr
+expr_stmt|;
+break|break;
+case|case
+name|AF_INET6
+case|:
+name|addr
+operator|=
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+name|sa
+operator|)
+operator|->
+name|sin6_addr
+expr_stmt|;
+break|break;
+default|default:
+comment|/* This case should be protected against elsewhere */
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* XXX abort is bad -- do something else */
+block|}
+name|inet_ntop
+argument_list|(
+name|sa
+operator|->
+name|sa_family
+argument_list|,
+name|addr
+argument_list|,
+name|addrbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addrbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|addrbuf
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Connect to the given ssh server using a proxy command.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ssh_proxy_connect
 parameter_list|(
@@ -627,8 +719,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* Indicate OK return */
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -638,6 +731,7 @@ comment|/*  * Creates a (possibly privileged) socket for use as the ssh connecti
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ssh_create_socket
 parameter_list|(
@@ -655,6 +749,15 @@ parameter_list|)
 block|{
 name|int
 name|sock
+decl_stmt|,
+name|gaierr
+decl_stmt|;
+name|struct
+name|addrinfo
+name|hints
+decl_stmt|,
+modifier|*
+name|res
 decl_stmt|;
 comment|/* 	 * If we are running as root and want to connect to a privileged 	 * port, bind our own socket to a privileged port. 	 */
 if|if
@@ -705,10 +808,11 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+return|return
+name|sock
+return|;
 block|}
-else|else
-block|{
-comment|/* 		 * Just create an ordinary socket on arbitrary port.  We use 		 * the user's uid to create the socket. 		 */
+comment|/* 	 * Just create an ordinary socket on arbitrary port.  We use 	 * the user's uid to create the socket. 	 */
 name|temporarily_use_uid
 argument_list|(
 name|pw
@@ -744,7 +848,147 @@ expr_stmt|;
 name|restore_uid
 argument_list|()
 expr_stmt|;
+comment|/* Bind the socket to an alternative local IP address */
+if|if
+condition|(
+name|options
+operator|.
+name|bind_address
+operator|==
+name|NULL
+condition|)
+return|return
+name|sock
+return|;
+name|memset
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hints
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_family
+operator|=
+name|family
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_STREAM
+expr_stmt|;
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_PASSIVE
+expr_stmt|;
+name|gaierr
+operator|=
+name|getaddrinfo
+argument_list|(
+name|options
+operator|.
+name|bind_address
+argument_list|,
+literal|"0"
+argument_list|,
+operator|&
+name|hints
+argument_list|,
+operator|&
+name|res
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gaierr
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"getaddrinfo: %s: %s"
+argument_list|,
+name|options
+operator|.
+name|bind_address
+argument_list|,
+name|gai_strerror
+argument_list|(
+name|gaierr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 block|}
+if|if
+condition|(
+name|bind
+argument_list|(
+name|sock
+argument_list|,
+name|res
+operator|->
+name|ai_addr
+argument_list|,
+name|res
+operator|->
+name|ai_addrlen
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"bind: %s: %s"
+argument_list|,
+name|options
+operator|.
+name|bind_address
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|sock
+argument_list|)
+expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 return|return
 name|sock
 return|;
@@ -752,7 +996,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If anonymous is zero,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if anonymous is false.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  */
+comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If anonymous is zero,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if anonymous is false.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  * Return values:  *    0 for OK  *    ECONNREFUSED if we got a "Connection Refused" by the peer on any address  *    ECONNABORTED if we failed without a "Connection refused"  * Suitable error messages for the connection failure will already have been  * printed.  */
 end_comment
 
 begin_function
@@ -771,6 +1015,9 @@ name|hostaddr
 parameter_list|,
 name|u_short
 name|port
+parameter_list|,
+name|int
+name|family
 parameter_list|,
 name|int
 name|connection_attempts
@@ -834,6 +1081,12 @@ name|struct
 name|servent
 modifier|*
 name|sp
+decl_stmt|;
+comment|/* 	 * Did we get only other errors than "Connection refused" (which 	 * should block fallback to rsh and similar), or did we get at least 	 * one "Connection refused"? 	 */
+name|int
+name|full_failure
+init|=
+literal|1
 decl_stmt|;
 name|debug
 argument_list|(
@@ -927,7 +1180,7 @@ name|hints
 operator|.
 name|ai_family
 operator|=
-name|IPv4or6
+name|family
 expr_stmt|;
 name|hints
 operator|.
@@ -982,19 +1235,14 @@ name|gaierr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to connect several times.  On some machines, the first time 	 * will sometimes fail.  In general socket code appears to behave 	 * quite magically on many machines. 	 */
+comment|/* 	 * Try to connect several times.  On some machines, the first time 	 * will sometimes fail.  In general socket code appears to behave 	 * quite magically on many machines. 		 */
 for|for
 control|(
 name|attempt
 operator|=
 literal|0
 init|;
-name|attempt
-operator|<
-name|connection_attempts
 condition|;
-name|attempt
-operator|++
 control|)
 block|{
 if|if
@@ -1117,6 +1365,7 @@ name|sock
 operator|<
 literal|0
 condition|)
+comment|/* Any error is already output */
 continue|continue;
 comment|/* Connect to the host.  We use the user's uid in the 			 * hope that it will help with tcp_wrappers showing 			 * the remote uid as root. 			 */
 name|temporarily_use_uid
@@ -1163,9 +1412,28 @@ break|break;
 block|}
 else|else
 block|{
-name|debug
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNREFUSED
+condition|)
+name|full_failure
+operator|=
+literal|0
+expr_stmt|;
+name|log
 argument_list|(
-literal|"connect: %.100s"
+literal|"ssh: connect to address %s port %s: %s"
+argument_list|,
+name|sockaddr_ntop
+argument_list|(
+name|ai
+operator|->
+name|ai_addr
+argument_list|)
+argument_list|,
+name|strport
 argument_list|,
 name|strerror
 argument_list|(
@@ -1177,13 +1445,6 @@ name|restore_uid
 argument_list|()
 expr_stmt|;
 comment|/* 				 * Close the failed socket; there appear to 				 * be some problems when reusing a socket for 				 * which connect() has already returned an 				 * error. 				 */
-name|shutdown
-argument_list|(
-name|sock
-argument_list|,
-name|SHUT_RDWR
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|sock
@@ -1197,6 +1458,16 @@ name|ai
 condition|)
 break|break;
 comment|/* Successful connection. */
+name|attempt
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|attempt
+operator|>=
+name|connection_attempts
+condition|)
+break|break;
 comment|/* Sleep a moment before retrying. */
 name|sleep
 argument_list|(
@@ -1217,7 +1488,11 @@ operator|>=
 name|connection_attempts
 condition|)
 return|return
-literal|0
+name|full_failure
+condition|?
+name|ECONNABORTED
+else|:
+name|ECONNREFUSED
 return|;
 name|debug
 argument_list|(
@@ -1308,7 +1583,7 @@ name|sock
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -1318,6 +1593,7 @@ comment|/*  * Waits for the server identification string, and sends our own  * i
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ssh_exchange_identification
 parameter_list|(
@@ -1729,13 +2005,6 @@ argument_list|,
 name|remote_major
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|compat20
-condition|)
-name|packet_set_ssh2_format
-argument_list|()
-expr_stmt|;
 comment|/* Send our own protocol version identification. */
 name|snprintf
 argument_list|(
@@ -1824,30 +2093,32 @@ comment|/* defaults to 'no' */
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|read_yes_or_no
+name|confirm
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|prompt
-parameter_list|,
-name|int
-name|defval
 parameter_list|)
 block|{
+specifier|const
 name|char
-name|buf
-index|[
-literal|1024
-index|]
-decl_stmt|;
-name|FILE
 modifier|*
-name|f
+name|msg
+decl_stmt|,
+modifier|*
+name|again
+init|=
+literal|"Please type 'yes' or 'no': "
+decl_stmt|;
+name|char
+modifier|*
+name|p
 decl_stmt|;
 name|int
-name|retval
+name|ret
 init|=
 operator|-
 literal|1
@@ -1861,196 +2132,113 @@ condition|)
 return|return
 literal|0
 return|;
-if|if
-condition|(
-name|isatty
-argument_list|(
-name|STDIN_FILENO
-argument_list|)
-condition|)
-name|f
+for|for
+control|(
+name|msg
 operator|=
-name|stdin
-expr_stmt|;
-else|else
-name|f
-operator|=
-name|fopen
-argument_list|(
-name|_PATH_TTY
-argument_list|,
-literal|"rw"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|f
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s"
-argument_list|,
 name|prompt
+init|;
+condition|;
+name|msg
+operator|=
+name|again
+control|)
+block|{
+name|p
+operator|=
+name|read_passphrase
+argument_list|(
+name|msg
+argument_list|,
+name|RP_ECHO
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fgets
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-name|f
-argument_list|)
+name|p
 operator|==
 name|NULL
-condition|)
-block|{
-comment|/* Print a newline (the prompt probably didn\'t have one). */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|strlcpy
-argument_list|(
-name|buf
-argument_list|,
-literal|"no"
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Remove newline from response. */
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|buf
-argument_list|,
-literal|'\n'
-argument_list|)
-condition|)
-operator|*
-name|strchr
-argument_list|(
-name|buf
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|buf
+operator|||
+operator|(
+name|p
 index|[
 literal|0
 index|]
 operator|==
+literal|'\0'
+operator|)
+operator|||
+operator|(
+name|p
+index|[
 literal|0
-condition|)
-name|retval
-operator|=
-name|defval
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
+index|]
+operator|==
+literal|'\n'
+operator|)
+operator|||
+name|strncasecmp
 argument_list|(
-name|buf
+name|p
 argument_list|,
-literal|"yes"
+literal|"no"
+argument_list|,
+literal|2
 argument_list|)
 operator|==
 literal|0
 condition|)
-name|retval
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|strncasecmp
+argument_list|(
+name|p
+argument_list|,
+literal|"yes"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ret
 operator|=
 literal|1
 expr_stmt|;
-elseif|else
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|buf
-argument_list|,
-literal|"no"
-argument_list|)
-operator|==
-literal|0
+name|p
 condition|)
-name|retval
-operator|=
-literal|0
-expr_stmt|;
-else|else
-name|fprintf
+name|xfree
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Please type 'yes' or 'no'.\n"
+name|p
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|retval
+name|ret
 operator|!=
 operator|-
 literal|1
 condition|)
-block|{
-if|if
-condition|(
-name|f
-operator|!=
-name|stdin
-condition|)
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
 return|return
-name|retval
+name|ret
 return|;
-block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * check whether the supplied host key is valid, return only if ok.  */
+comment|/*  * check whether the supplied host key is valid, return -1 if the key  * is not valid. the user_hostfile will not be updated if 'readonly' is true.  */
 end_comment
 
 begin_function
-name|void
+specifier|static
+name|int
 name|check_host_key
 parameter_list|(
 name|char
@@ -2065,6 +2253,9 @@ parameter_list|,
 name|Key
 modifier|*
 name|host_key
+parameter_list|,
+name|int
+name|readonly
 parameter_list|,
 specifier|const
 name|char
@@ -2129,7 +2320,15 @@ index|[
 name|NI_MAXHOST
 index|]
 decl_stmt|;
+name|char
+name|msg
+index|[
+literal|1024
+index|]
+decl_stmt|;
 name|int
+name|len
+decl_stmt|,
 name|host_line
 decl_stmt|,
 name|ip_line
@@ -2215,6 +2414,12 @@ break|break;
 block|}
 if|if
 condition|(
+name|options
+operator|.
+name|no_host_authentication_for_localhost
+operator|==
+literal|1
+operator|&&
 name|local
 operator|&&
 name|options
@@ -2230,7 +2435,9 @@ literal|"Forcing accepting of host key for "
 literal|"loopback/localhost."
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* 	 * We don't have the remote ip-address for connections 	 * using a proxy command 	 */
 if|if
@@ -2553,6 +2760,21 @@ condition|)
 block|{
 if|if
 condition|(
+name|readonly
+condition|)
+name|log
+argument_list|(
+literal|"%s host key for IP address "
+literal|"'%.128s' not in list of known hosts."
+argument_list|,
+name|type
+argument_list|,
+name|ip
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|!
 name|add_host_to_hostfile
 argument_list|(
@@ -2565,7 +2787,9 @@ argument_list|)
 condition|)
 name|log
 argument_list|(
-literal|"Failed to add the %s host key for IP address '%.128s' to the list of known hosts (%.30s)."
+literal|"Failed to add the %s host key for IP "
+literal|"address '%.128s' to the list of known "
+literal|"hosts (%.30s)."
 argument_list|,
 name|type
 argument_list|,
@@ -2577,7 +2801,9 @@ expr_stmt|;
 else|else
 name|log
 argument_list|(
-literal|"Warning: Permanently added the %s host key for IP address '%.128s' to the list of known hosts."
+literal|"Warning: Permanently added the %s host "
+literal|"key for IP address '%.128s' to the list "
+literal|"of known hosts."
 argument_list|,
 name|type
 argument_list|,
@@ -2589,6 +2815,13 @@ break|break;
 case|case
 name|HOST_NEW
 case|:
+if|if
+condition|(
+name|readonly
+condition|)
+goto|goto
+name|fail
+goto|;
 comment|/* The host is new. */
 if|if
 condition|(
@@ -2599,16 +2832,20 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* User has requested strict host key checking.  We will not add the host key 			   automatically.  The only alternative left is to abort. */
-name|fatal
+comment|/* 			 * User has requested strict host key checking.  We 			 * will not add the host key automatically.  The only 			 * alternative left is to abort. 			 */
+name|error
 argument_list|(
-literal|"No %s host key is known for %.200s and you have requested strict checking."
+literal|"No %s host key is known for %.200s and you "
+literal|"have requested strict checking."
 argument_list|,
 name|type
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 elseif|else
 if|if
@@ -2621,12 +2858,6 @@ literal|2
 condition|)
 block|{
 comment|/* The default */
-name|char
-name|prompt
-index|[
-literal|1024
-index|]
-decl_stmt|;
 name|fp
 operator|=
 name|key_fingerprint
@@ -2640,16 +2871,18 @@ argument_list|)
 expr_stmt|;
 name|snprintf
 argument_list|(
-name|prompt
+name|msg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|prompt
+name|msg
 argument_list|)
 argument_list|,
-literal|"The authenticity of host '%.200s (%s)' can't be established.\n"
+literal|"The authenticity of host '%.200s (%s)' can't be "
+literal|"established.\n"
 literal|"%s key fingerprint is %s.\n"
-literal|"Are you sure you want to continue connecting (yes/no)? "
+literal|"Are you sure you want to continue connecting "
+literal|"(yes/no)? "
 argument_list|,
 name|host
 argument_list|,
@@ -2668,19 +2901,14 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|read_yes_or_no
+name|confirm
 argument_list|(
-name|prompt
-argument_list|,
-operator|-
-literal|1
+name|msg
 argument_list|)
 condition|)
-name|fatal
-argument_list|(
-literal|"Aborted by user!"
-argument_list|)
-expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 if|if
 condition|(
@@ -2719,7 +2947,7 @@ name|hostp
 operator|=
 name|host
 expr_stmt|;
-comment|/* If not in strict mode, add the key automatically to the local known_hosts file. */
+comment|/* 		 * If not in strict mode, add the key automatically to the 		 * local known_hosts file. 		 */
 if|if
 condition|(
 operator|!
@@ -2734,7 +2962,8 @@ argument_list|)
 condition|)
 name|log
 argument_list|(
-literal|"Failed to add the host to the list of known hosts (%.500s)."
+literal|"Failed to add the host to the list of known "
+literal|"hosts (%.500s)."
 argument_list|,
 name|user_hostfile
 argument_list|)
@@ -2742,7 +2971,8 @@ expr_stmt|;
 else|else
 name|log
 argument_list|(
-literal|"Warning: Permanently added '%.200s' (%s) to the list of known hosts."
+literal|"Warning: Permanently added '%.200s' (%s) to the "
+literal|"list of known hosts."
 argument_list|,
 name|hostp
 argument_list|,
@@ -2942,15 +3172,21 @@ name|options
 operator|.
 name|strict_host_key_checking
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
-literal|"%s host key for %.200s has changed and you have requested strict checking."
+literal|"%s host key for %.200s has changed and you have "
+literal|"requested strict checking."
 argument_list|,
 name|type
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* 		 * If strict host key checking has not been requested, allow 		 * the connection but without password authentication or 		 * agent forwarding. 		 */
 if|if
 condition|(
@@ -2961,7 +3197,8 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Password authentication is disabled to avoid trojan horses."
+literal|"Password authentication is disabled to avoid "
+literal|"man-in-the-middle attacks."
 argument_list|)
 expr_stmt|;
 name|options
@@ -2980,7 +3217,8 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Agent forwarding is disabled to avoid trojan horses."
+literal|"Agent forwarding is disabled to avoid "
+literal|"man-in-the-middle attacks."
 argument_list|)
 expr_stmt|;
 name|options
@@ -2999,7 +3237,8 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"X11 forwarding is disabled to avoid trojan horses."
+literal|"X11 forwarding is disabled to avoid "
+literal|"man-in-the-middle attacks."
 argument_list|)
 expr_stmt|;
 name|options
@@ -3026,7 +3265,8 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Port forwarding is disabled to avoid trojan horses."
+literal|"Port forwarding is disabled to avoid "
+literal|"man-in-the-middle attacks."
 argument_list|)
 expr_stmt|;
 name|options
@@ -3058,16 +3298,28 @@ operator|==
 name|HOST_CHANGED
 condition|)
 block|{
-name|log
+name|snprintf
 argument_list|(
+name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
 literal|"Warning: the %s host key for '%.200s' "
 literal|"differs from the key for the IP address '%.128s'"
+literal|"\nOffending key for IP in %s:%d"
 argument_list|,
 name|type
 argument_list|,
 name|host
 argument_list|,
 name|ip
+argument_list|,
+name|ip_file
+argument_list|,
+name|ip_line
 argument_list|)
 expr_stmt|;
 if|if
@@ -3076,24 +3328,35 @@ name|host_status
 operator|==
 name|HOST_OK
 condition|)
-name|log
+block|{
+name|len
+operator|=
+name|strlen
 argument_list|(
-literal|"Matching host key in %s:%d"
+name|msg
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|msg
+operator|+
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
+operator|-
+name|len
+argument_list|,
+literal|"\nMatching host key in %s:%d"
 argument_list|,
 name|host_file
 argument_list|,
 name|host_line
 argument_list|)
 expr_stmt|;
-name|log
-argument_list|(
-literal|"Offending key for IP in %s:%d"
-argument_list|,
-name|ip_file
-argument_list|,
-name|ip_line
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|options
@@ -3103,11 +3366,19 @@ operator|==
 literal|1
 condition|)
 block|{
-name|fatal
+name|log
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+name|error
 argument_list|(
 literal|"Exiting, you have requested strict checking."
 argument_list|)
 expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 elseif|else
 if|if
@@ -3119,22 +3390,36 @@ operator|==
 literal|2
 condition|)
 block|{
+name|strlcat
+argument_list|(
+name|msg
+argument_list|,
+literal|"\nAre you sure you want "
+literal|"to continue connecting (yes/no)? "
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|read_yes_or_no
+name|confirm
 argument_list|(
-literal|"Are you sure you want "
-expr|\
-literal|"to continue connecting (yes/no)? "
-argument_list|,
-operator|-
-literal|1
+name|msg
 argument_list|)
 condition|)
-name|fatal
+goto|goto
+name|fail
+goto|;
+block|}
+else|else
+block|{
+name|log
 argument_list|(
-literal|"Aborted by user!"
+name|msg
 argument_list|)
 expr_stmt|;
 block|}
@@ -3144,6 +3429,122 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+name|fail
+label|:
+name|xfree
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|verify_host_key
+parameter_list|(
+name|char
+modifier|*
+name|host
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|hostaddr
+parameter_list|,
+name|Key
+modifier|*
+name|host_key
+parameter_list|)
+block|{
+name|struct
+name|stat
+name|st
+decl_stmt|;
+comment|/* return ok if the key can be found in an old keyfile */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|options
+operator|.
+name|system_hostfile2
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|stat
+argument_list|(
+name|options
+operator|.
+name|user_hostfile2
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|check_host_key
+argument_list|(
+name|host
+argument_list|,
+name|hostaddr
+argument_list|,
+name|host_key
+argument_list|,
+comment|/*readonly*/
+literal|1
+argument_list|,
+name|options
+operator|.
+name|user_hostfile2
+argument_list|,
+name|options
+operator|.
+name|system_hostfile2
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+block|}
+return|return
+name|check_host_key
+argument_list|(
+name|host
+argument_list|,
+name|hostaddr
+argument_list|,
+name|host_key
+argument_list|,
+comment|/*readonly*/
+literal|0
+argument_list|,
+name|options
+operator|.
+name|user_hostfile
+argument_list|,
+name|options
+operator|.
+name|system_hostfile
+argument_list|)
+return|;
 block|}
 end_function
 
@@ -3336,14 +3737,9 @@ operator|&
 name|SSH_BUG_PASSWORDPAD
 condition|)
 block|{
-name|packet_put_string
+name|packet_put_cstring
 argument_list|(
 name|password
-argument_list|,
-name|strlen
-argument_list|(
-name|password
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh-dss.h,v 1.3 2001/01/29 01:58:18 niklas Exp $	*/
+comment|/*	$OpenBSD: ssh-dss.h,v 1.6 2002/02/24 19:14:59 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -25,23 +25,18 @@ name|ssh_dss_sign
 parameter_list|(
 name|Key
 modifier|*
-name|key
 parameter_list|,
 name|u_char
 modifier|*
 modifier|*
-name|sigp
 parameter_list|,
-name|int
+name|u_int
 modifier|*
-name|lenp
 parameter_list|,
 name|u_char
 modifier|*
-name|data
 parameter_list|,
-name|int
-name|datalen
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -52,21 +47,16 @@ name|ssh_dss_verify
 parameter_list|(
 name|Key
 modifier|*
-name|key
 parameter_list|,
 name|u_char
 modifier|*
-name|signature
 parameter_list|,
-name|int
-name|signaturelen
+name|u_int
 parameter_list|,
 name|u_char
 modifier|*
-name|data
 parameter_list|,
-name|int
-name|datalen
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

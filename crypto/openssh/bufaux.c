@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.17 2001/01/21 19:05:45 markus Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.22 2002/01/18 18:14:17 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -179,7 +179,7 @@ comment|/*  * Retrieves an BIGNUM from the buffer.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|buffer_get_bignum
 parameter_list|(
 name|Buffer
@@ -253,10 +253,6 @@ argument_list|)
 expr_stmt|;
 name|bin
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 name|buffer
@@ -278,11 +274,6 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-return|return
-literal|2
-operator|+
-name|bytes
-return|;
 block|}
 end_function
 
@@ -478,7 +469,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|buffer_get_bignum2
 parameter_list|(
 name|Buffer
@@ -498,10 +489,6 @@ name|u_char
 modifier|*
 name|bin
 init|=
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_get_string
 argument_list|(
 name|buffer
@@ -528,9 +515,6 @@ argument_list|(
 name|bin
 argument_list|)
 expr_stmt|;
-return|return
-name|len
-return|;
 block|}
 end_function
 
@@ -695,7 +679,7 @@ comment|/*  * Returns an arbitrary binary string from the buffer.  The string ca
 end_comment
 
 begin_function
-name|char
+name|void
 modifier|*
 name|buffer_get_string
 parameter_list|(
@@ -711,7 +695,7 @@ block|{
 name|u_int
 name|len
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|value
 decl_stmt|;

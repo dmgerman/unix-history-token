@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: myproposal.h,v 1.12 2001/03/05 15:56:16 deraadt Exp $	*/
+comment|/*	$OpenBSD: myproposal.h,v 1.13 2002/01/21 22:30:12 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ define|#
 directive|define
 name|KEX_DEFAULT_ENCRYPT
 define|\
-value|"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,arcfour," \ 	"aes192-cbc,aes256-cbc," \ 	"rijndael128-cbc,rijndael192-cbc,rijndael256-cbc," \ 	"rijndael-cbc@lysator.liu.se"
+value|"aes128-cbc,3des-cbc,blowfish-cbc,cast128-cbc,arcfour," \ 	"aes192-cbc,aes256-cbc"
 end_define
 
 begin_define

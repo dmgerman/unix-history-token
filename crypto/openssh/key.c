@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * read_bignum():  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * read_bignum():  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: key.c,v 1.25 2001/04/17 10:53:24 markus Exp $"
+literal|"$OpenBSD: key.c,v 1.41 2002/02/28 15:46:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -117,6 +117,12 @@ name|type
 expr_stmt|;
 name|k
 operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+name|k
+operator|->
 name|dsa
 operator|=
 name|NULL
@@ -140,24 +146,57 @@ case|:
 case|case
 name|KEY_RSA
 case|:
+if|if
+condition|(
+operator|(
 name|rsa
 operator|=
 name|RSA_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: RSA_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|rsa
 operator|->
 name|n
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|rsa
 operator|->
 name|e
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: BN_new failed"
+argument_list|)
 expr_stmt|;
 name|k
 operator|->
@@ -169,38 +208,93 @@ break|break;
 case|case
 name|KEY_DSA
 case|:
+if|if
+condition|(
+operator|(
 name|dsa
 operator|=
 name|DSA_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: DSA_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|dsa
 operator|->
 name|p
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|dsa
 operator|->
 name|q
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|dsa
 operator|->
 name|g
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|dsa
 operator|->
 name|pub_key
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new: BN_new failed"
+argument_list|)
 expr_stmt|;
 name|k
 operator|->
@@ -262,6 +356,9 @@ case|:
 case|case
 name|KEY_RSA
 case|:
+if|if
+condition|(
+operator|(
 name|k
 operator|->
 name|rsa
@@ -270,7 +367,18 @@ name|d
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new_private: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|k
 operator|->
 name|rsa
@@ -279,7 +387,18 @@ name|iqmp
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new_private: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|k
 operator|->
 name|rsa
@@ -288,7 +407,18 @@ name|q
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new_private: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|k
 operator|->
 name|rsa
@@ -297,7 +427,18 @@ name|p
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new_private: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|k
 operator|->
 name|rsa
@@ -306,7 +447,18 @@ name|dmq1
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new_private: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|k
 operator|->
 name|rsa
@@ -315,11 +467,22 @@ name|dmp1
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new_private: BN_new failed"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|KEY_DSA
 case|:
+if|if
+condition|(
+operator|(
 name|k
 operator|->
 name|dsa
@@ -328,6 +491,14 @@ name|priv_key
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"key_new_private: BN_new failed"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -635,6 +806,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_char
 modifier|*
 name|key_fingerprint_raw
@@ -647,11 +819,12 @@ name|enum
 name|fp_type
 name|dgst_type
 parameter_list|,
-name|size_t
+name|u_int
 modifier|*
 name|dgst_raw_length
 parameter_list|)
 block|{
+specifier|const
 name|EVP_MD
 modifier|*
 name|md
@@ -673,7 +846,7 @@ name|retval
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|u_int
 name|len
 init|=
 literal|0
@@ -866,15 +1039,8 @@ name|ctx
 argument_list|,
 name|retval
 argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-operator|*
 name|dgst_raw_length
-operator|=
-name|md
-operator|->
-name|md_size
+argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
@@ -906,6 +1072,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|key_fingerprint_hex
@@ -914,7 +1081,7 @@ name|u_char
 modifier|*
 name|dgst_raw
 parameter_list|,
-name|size_t
+name|u_int
 name|dgst_raw_len
 parameter_list|)
 block|{
@@ -1012,6 +1179,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|key_fingerprint_bubblebabble
@@ -1020,7 +1188,7 @@ name|u_char
 modifier|*
 name|dgst_raw
 parameter_list|,
-name|size_t
+name|u_int
 name|dgst_raw_len
 parameter_list|)
 block|{
@@ -1538,7 +1706,7 @@ name|u_char
 modifier|*
 name|dgst_raw
 decl_stmt|;
-name|size_t
+name|u_int
 name|dgst_raw_len
 decl_stmt|;
 name|dgst_raw
@@ -1629,6 +1797,7 @@ comment|/*  * Reads a multiple-precision integer in decimal from the buffer, and
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|read_bignum
 parameter_list|(
@@ -1757,6 +1926,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|write_bignum
 parameter_list|(
@@ -1803,7 +1973,7 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|xfree
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -1815,7 +1985,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* returns 1 ok, -1 error, 0 type mismatch */
+comment|/* returns 1 ok, -1 error */
 end_comment
 
 begin_function
@@ -2109,7 +2279,8 @@ literal|"key_read: type mismatch"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|-
+literal|1
 return|;
 block|}
 name|len
@@ -2153,6 +2324,11 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
+name|xfree
+argument_list|(
+name|blob
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -2165,6 +2341,11 @@ argument_list|(
 name|blob
 argument_list|,
 name|n
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|blob
 argument_list|)
 expr_stmt|;
 if|if
@@ -2186,11 +2367,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|xfree
-argument_list|(
-name|blob
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|k
@@ -2328,6 +2504,11 @@ endif|#
 directive|endif
 block|}
 comment|/*XXXX*/
+name|key_free
+argument_list|(
+name|k
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|success
@@ -2335,11 +2516,6 @@ operator|!=
 literal|1
 condition|)
 break|break;
-name|key_free
-argument_list|(
-name|k
-argument_list|)
-expr_stmt|;
 comment|/* advance cp: skip whitespace and data */
 while|while
 condition|(
@@ -2414,14 +2590,25 @@ name|f
 parameter_list|)
 block|{
 name|int
+name|n
+decl_stmt|,
 name|success
 init|=
 literal|0
 decl_stmt|;
 name|u_int
+name|len
+decl_stmt|,
 name|bits
 init|=
 literal|0
+decl_stmt|;
+name|u_char
+modifier|*
+name|blob
+decl_stmt|,
+modifier|*
+name|uu
 decl_stmt|;
 if|if
 condition|(
@@ -2530,18 +2717,6 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|int
-name|len
-decl_stmt|,
-name|n
-decl_stmt|;
-name|u_char
-modifier|*
-name|blob
-decl_stmt|,
-modifier|*
-name|uu
-decl_stmt|;
 name|key_to_blob
 argument_list|(
 name|key
@@ -2758,6 +2933,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|RSA
 modifier|*
 name|rsa_generate_private_key
@@ -2801,6 +2977,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|DSA
 modifier|*
 name|dsa_generate_private_key
@@ -3341,7 +3518,7 @@ name|Key
 modifier|*
 name|key_from_blob
 parameter_list|(
-name|char
+name|u_char
 modifier|*
 name|blob
 parameter_list|,
@@ -3770,14 +3947,22 @@ break|break;
 default|default:
 name|error
 argument_list|(
-literal|"key_to_blob: illegal key type %d"
+literal|"key_to_blob: unsupported key type %d"
 argument_list|,
 name|key
 operator|->
 name|type
 argument_list|)
 expr_stmt|;
-break|break;
+name|buffer_free
+argument_list|(
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 name|len
 operator|=
@@ -3867,7 +4052,7 @@ modifier|*
 modifier|*
 name|sigp
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 name|lenp
 parameter_list|,
@@ -3875,7 +4060,7 @@ name|u_char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|u_int
 name|datalen
 parameter_list|)
 block|{
@@ -3953,17 +4138,27 @@ name|u_char
 modifier|*
 name|signature
 parameter_list|,
-name|int
+name|u_int
 name|signaturelen
 parameter_list|,
 name|u_char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|u_int
 name|datalen
 parameter_list|)
 block|{
+if|if
+condition|(
+name|signaturelen
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 switch|switch
 condition|(
 name|key

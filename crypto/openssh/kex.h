@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: kex.h,v 1.22 2001/04/04 20:25:37 markus Exp $	*/
+comment|/*	$OpenBSD: kex.h,v 1.29 2002/02/14 23:41:01 markus Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -172,6 +172,12 @@ decl_stmt|;
 name|int
 name|enabled
 decl_stmt|;
+name|u_int
+name|key_len
+decl_stmt|;
+name|u_int
+name|block_size
+decl_stmt|;
 name|u_char
 modifier|*
 name|key
@@ -305,12 +311,11 @@ decl_stmt|;
 name|int
 function_decl|(
 modifier|*
-name|check_host_key
+name|verify_host_key
 function_decl|)
 parameter_list|(
 name|Key
 modifier|*
-name|hostkey
 parameter_list|)
 function_decl|;
 name|Key
@@ -321,7 +326,6 @@ name|load_host_key
 function_decl|)
 parameter_list|(
 name|int
-name|type
 parameter_list|)
 function_decl|;
 block|}
@@ -335,7 +339,6 @@ name|kex_setup
 parameter_list|(
 name|char
 modifier|*
-name|proposal
 index|[
 name|PROPOSAL_MAX
 index|]
@@ -349,7 +352,6 @@ name|kex_finish
 parameter_list|(
 name|Kex
 modifier|*
-name|kex
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -360,7 +362,6 @@ name|kex_send_kexinit
 parameter_list|(
 name|Kex
 modifier|*
-name|kex
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -370,14 +371,11 @@ name|void
 name|kex_input_kexinit
 parameter_list|(
 name|int
-name|type
 parameter_list|,
-name|int
-name|plen
+name|u_int32_t
 parameter_list|,
 name|void
 modifier|*
-name|ctxt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -388,15 +386,12 @@ name|kex_derive_keys
 parameter_list|(
 name|Kex
 modifier|*
-name|k
 parameter_list|,
 name|u_char
 modifier|*
-name|hash
 parameter_list|,
 name|BIGNUM
 modifier|*
-name|shared_secret
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -427,7 +422,6 @@ modifier|*
 name|kex_get_newkeys
 parameter_list|(
 name|int
-name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -452,14 +446,11 @@ name|dump_digest
 parameter_list|(
 name|char
 modifier|*
-name|msg
 parameter_list|,
 name|u_char
 modifier|*
-name|digest
 parameter_list|,
 name|int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl

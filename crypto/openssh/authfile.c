@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.32 2001/04/18 23:44:51 markus Exp $"
+literal|"$OpenBSD: authfile.c,v 1.48 2002/02/28 15:46:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -83,6 +83,12 @@ directive|include
 file|"authfile.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rsa.h"
+end_include
+
 begin_comment
 comment|/* Version identification string for SSH v1 identity files. */
 end_comment
@@ -103,6 +109,7 @@ comment|/*  * Saves the authentication (private) key in a file, encrypting it wi
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|key_save_private_rsa1
 parameter_list|(
@@ -131,7 +138,7 @@ name|buffer
 decl_stmt|,
 name|encrypted
 decl_stmt|;
-name|char
+name|u_char
 name|buf
 index|[
 literal|100
@@ -144,6 +151,8 @@ name|int
 name|fd
 decl_stmt|,
 name|i
+decl_stmt|,
+name|cipher_num
 decl_stmt|;
 name|CipherContext
 name|ciphercontext
@@ -156,8 +165,9 @@ name|u_int32_t
 name|rand
 decl_stmt|;
 comment|/* 	 * If the passphrase is empty, use SSH_CIPHER_NONE to ease converting 	 * to another cipher; otherwise use SSH_AUTHFILE_CIPHER. 	 */
-if|if
-condition|(
+name|cipher_num
+operator|=
+operator|(
 name|strcmp
 argument_list|(
 name|passphrase
@@ -166,25 +176,22 @@ literal|""
 argument_list|)
 operator|==
 literal|0
-condition|)
-name|cipher
-operator|=
-name|cipher_by_number
-argument_list|(
+operator|)
+condition|?
 name|SSH_CIPHER_NONE
-argument_list|)
-expr_stmt|;
-else|else
-name|cipher
-operator|=
-name|cipher_by_number
-argument_list|(
+else|:
 name|SSH_AUTHFILE_CIPHER
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cipher
+operator|=
+name|cipher_by_number
+argument_list|(
+name|cipher_num
+argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -377,9 +384,7 @@ argument_list|(
 operator|&
 name|encrypted
 argument_list|,
-name|cipher
-operator|->
-name|number
+name|cipher_num
 argument_list|)
 expr_stmt|;
 name|buffer_put_int
@@ -431,27 +436,21 @@ operator|->
 name|e
 argument_list|)
 expr_stmt|;
-name|buffer_put_string
+name|buffer_put_cstring
 argument_list|(
 operator|&
 name|encrypted
 argument_list|,
 name|comment
-argument_list|,
-name|strlen
-argument_list|(
-name|comment
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Allocate space for the private part of the key in the buffer. */
+name|cp
+operator|=
 name|buffer_append_space
 argument_list|(
 operator|&
 name|encrypted
-argument_list|,
-operator|&
-name|cp
 argument_list|,
 name|buffer_len
 argument_list|(
@@ -468,23 +467,17 @@ argument_list|,
 name|cipher
 argument_list|,
 name|passphrase
+argument_list|,
+name|CIPHER_ENCRYPT
 argument_list|)
 expr_stmt|;
-name|cipher_encrypt
+name|cipher_crypt
 argument_list|(
 operator|&
 name|ciphercontext
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|cp
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 operator|&
@@ -496,6 +489,12 @@ argument_list|(
 operator|&
 name|buffer
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|cipher_cleanup
+argument_list|(
+operator|&
+name|ciphercontext
 argument_list|)
 expr_stmt|;
 name|memset
@@ -648,6 +647,7 @@ comment|/* save SSH v2 key in OpenSSL PEM format */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|key_save_private_pem
 parameter_list|(
@@ -691,7 +691,7 @@ argument_list|(
 name|_passphrase
 argument_list|)
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|passphrase
 init|=
@@ -702,13 +702,14 @@ literal|0
 operator|)
 condition|?
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 name|_passphrase
 else|:
 name|NULL
 decl_stmt|;
+specifier|const
 name|EVP_CIPHER
 modifier|*
 name|cipher
@@ -979,6 +980,7 @@ comment|/*  * Loads the public part of the ssh v1 key file.  Returns NULL if an 
 end_comment
 
 begin_function
+specifier|static
 name|Key
 modifier|*
 name|key_load_public_rsa1
@@ -1046,13 +1048,12 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
 name|buffer_append_space
 argument_list|(
 operator|&
 name|buffer
-argument_list|,
-operator|&
-name|cp
 argument_list|,
 name|len
 argument_list|)
@@ -1112,7 +1113,7 @@ condition|)
 block|{
 name|debug3
 argument_list|(
-literal|"No RSA1 key file %.200s."
+literal|"Not a RSA1 key file %.200s."
 argument_list|,
 name|filename
 argument_list|)
@@ -1160,7 +1161,7 @@ condition|)
 block|{
 name|debug3
 argument_list|(
-literal|"No RSA1 key file %.200s."
+literal|"Not a RSA1 key file %.200s."
 argument_list|,
 name|filename
 argument_list|)
@@ -1348,6 +1349,7 @@ comment|/*  * Loads the private key from the file.  Returns 0 if an error is enc
 end_comment
 
 begin_function
+specifier|static
 name|Key
 modifier|*
 name|key_load_private_rsa1
@@ -1388,7 +1390,7 @@ name|buffer
 decl_stmt|,
 name|decrypted
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|;
@@ -1398,14 +1400,6 @@ decl_stmt|;
 name|Cipher
 modifier|*
 name|cipher
-decl_stmt|;
-name|BN_CTX
-modifier|*
-name|ctx
-decl_stmt|;
-name|BIGNUM
-modifier|*
-name|aux
 decl_stmt|;
 name|Key
 modifier|*
@@ -1445,13 +1439,12 @@ operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
 name|buffer_append_space
 argument_list|(
 operator|&
 name|buffer
-argument_list|,
-operator|&
-name|cp
 argument_list|,
 name|len
 argument_list|)
@@ -1516,7 +1509,7 @@ condition|)
 block|{
 name|debug3
 argument_list|(
-literal|"No RSA1 key file %.200s."
+literal|"Not a RSA1 key file %.200s."
 argument_list|,
 name|filename
 argument_list|)
@@ -1569,7 +1562,7 @@ condition|)
 block|{
 name|debug3
 argument_list|(
-literal|"No RSA1 key file %.200s."
+literal|"Not a RSA1 key file %.200s."
 argument_list|,
 name|filename
 argument_list|)
@@ -1714,13 +1707,12 @@ operator|&
 name|decrypted
 argument_list|)
 expr_stmt|;
+name|cp
+operator|=
 name|buffer_append_space
 argument_list|(
 operator|&
 name|decrypted
-argument_list|,
-operator|&
-name|cp
 argument_list|,
 name|buffer_len
 argument_list|(
@@ -1738,23 +1730,17 @@ argument_list|,
 name|cipher
 argument_list|,
 name|passphrase
+argument_list|,
+name|CIPHER_DECRYPT
 argument_list|)
 expr_stmt|;
-name|cipher_decrypt
+name|cipher_crypt
 argument_list|(
 operator|&
 name|ciphercontext
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|cp
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|buffer_ptr
 argument_list|(
 operator|&
@@ -1766,6 +1752,12 @@ argument_list|(
 operator|&
 name|buffer
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|cipher_cleanup
+argument_list|(
+operator|&
+name|ciphercontext
 argument_list|)
 expr_stmt|;
 name|memset
@@ -1905,90 +1897,11 @@ argument_list|)
 expr_stmt|;
 comment|/* q */
 comment|/* calculate p-1 and q-1 */
-name|ctx
-operator|=
-name|BN_CTX_new
-argument_list|()
-expr_stmt|;
-name|aux
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
-name|BN_sub
-argument_list|(
-name|aux
-argument_list|,
-name|prv
-operator|->
-name|rsa
-operator|->
-name|q
-argument_list|,
-name|BN_value_one
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|BN_mod
+name|rsa_generate_additional_parameters
 argument_list|(
 name|prv
 operator|->
 name|rsa
-operator|->
-name|dmq1
-argument_list|,
-name|prv
-operator|->
-name|rsa
-operator|->
-name|d
-argument_list|,
-name|aux
-argument_list|,
-name|ctx
-argument_list|)
-expr_stmt|;
-name|BN_sub
-argument_list|(
-name|aux
-argument_list|,
-name|prv
-operator|->
-name|rsa
-operator|->
-name|p
-argument_list|,
-name|BN_value_one
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|BN_mod
-argument_list|(
-name|prv
-operator|->
-name|rsa
-operator|->
-name|dmp1
-argument_list|,
-name|prv
-operator|->
-name|rsa
-operator|->
-name|d
-argument_list|,
-name|aux
-argument_list|,
-name|ctx
-argument_list|)
-expr_stmt|;
-name|BN_clear_free
-argument_list|(
-name|aux
-argument_list|)
-expr_stmt|;
-name|BN_CTX_free
-argument_list|(
-name|ctx
 argument_list|)
 expr_stmt|;
 name|buffer_free
@@ -2034,6 +1947,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Key
 modifier|*
 name|key_load_private_pem
@@ -2340,6 +2254,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|key_perm_ok
 parameter_list|(
@@ -2356,7 +2271,6 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* check owner and modes */
 if|if
 condition|(
 name|fstat
@@ -2368,27 +2282,22 @@ name|st
 argument_list|)
 operator|<
 literal|0
-operator|||
+condition|)
+return|return
+literal|0
+return|;
+comment|/* 	 * if a key owned by the user is accessed, then we check the 	 * permissions of the file. if the key owned by a different user, 	 * then we don't care. 	 */
+if|if
+condition|(
 operator|(
 name|st
 operator|.
 name|st_uid
-operator|!=
-literal|0
-operator|&&
-name|getuid
-argument_list|()
-operator|!=
-literal|0
-operator|&&
-name|st
-operator|.
-name|st_uid
-operator|!=
+operator|==
 name|getuid
 argument_list|()
 operator|)
-operator|||
+operator|&&
 operator|(
 name|st
 operator|.
@@ -2400,11 +2309,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 name|error
 argument_list|(
 literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2422,7 +2326,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"Bad ownership or mode(0%3.3o) for '%s'."
+literal|"Permissions 0%3.3o for '%s' are too open."
 argument_list|,
 name|st
 operator|.
@@ -2608,6 +2512,9 @@ block|{
 name|Key
 modifier|*
 name|pub
+decl_stmt|,
+modifier|*
+name|prv
 decl_stmt|;
 name|int
 name|fd
@@ -2689,7 +2596,8 @@ name|NULL
 condition|)
 block|{
 comment|/* closes fd */
-return|return
+name|prv
+operator|=
 name|key_load_private_pem
 argument_list|(
 name|fd
@@ -2700,7 +2608,22 @@ name|passphrase
 argument_list|,
 name|NULL
 argument_list|)
-return|;
+expr_stmt|;
+comment|/* use the filename as a comment for PEM */
+if|if
+condition|(
+name|commentp
+operator|&&
+name|prv
+condition|)
+operator|*
+name|commentp
+operator|=
+name|xstrdup
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2711,7 +2634,8 @@ name|pub
 argument_list|)
 expr_stmt|;
 comment|/* closes fd */
-return|return
+name|prv
+operator|=
 name|key_load_private_rsa1
 argument_list|(
 name|fd
@@ -2722,12 +2646,16 @@ name|passphrase
 argument_list|,
 name|NULL
 argument_list|)
-return|;
+expr_stmt|;
 block|}
+return|return
+name|prv
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|key_try_load_public
 parameter_list|(

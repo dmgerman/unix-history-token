@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: rsa.c,v 1.22 2001/03/26 23:23:23 markus Exp $"
+literal|"$OpenBSD: rsa.c,v 1.24 2001/12/27 18:22:16 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -335,9 +335,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* calculate p-1 and q-1 */
+end_comment
+
 begin_function
 name|void
-name|generate_additional_parameters
+name|rsa_generate_additional_parameters
 parameter_list|(
 name|RSA
 modifier|*
@@ -352,16 +356,37 @@ name|BN_CTX
 modifier|*
 name|ctx
 decl_stmt|;
-comment|/* Generate additional parameters */
+if|if
+condition|(
+operator|(
 name|aux
 operator|=
 name|BN_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"rsa_generate_additional_parameters: BN_new failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|ctx
 operator|=
 name|BN_CTX_new
 argument_list|()
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"rsa_generate_additional_parameters: BN_CTX_new failed"
+argument_list|)
 expr_stmt|;
 name|BN_sub
 argument_list|(

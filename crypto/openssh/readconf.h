@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Functions for reading the configuration file.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+comment|/*	$OpenBSD: readconf.h,v 1.42 2002/03/04 17:27:39 stevesk Exp $	*/
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: readconf.h,v 1.30 2001/04/17 10:53:25 markus Exp $"); */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Functions for reading the configuration file.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_ifndef
@@ -101,25 +101,46 @@ name|hostbased_authentication
 decl_stmt|;
 comment|/* ssh2's rhosts_rsa */
 name|int
-name|challenge_reponse_authentication
+name|challenge_response_authentication
 decl_stmt|;
 comment|/* Try S/Key or TIS, authentication. */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|KRB4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
 name|int
 name|kerberos_authentication
 decl_stmt|;
-comment|/* Try Kerberos 						 * authentication. */
+comment|/* Try Kerberos authentication. */
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AFS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+name|int
+name|kerberos_tgt_passing
+decl_stmt|;
+comment|/* Try Kerberos TGT passing. */
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|AFS
-name|int
-name|kerberos_tgt_passing
-decl_stmt|;
-comment|/* Try Kerberos tgt passing. */
 name|int
 name|afs_token_passing
 decl_stmt|;
@@ -238,7 +259,7 @@ name|char
 modifier|*
 name|system_hostfile
 decl_stmt|;
-comment|/* Path for /etc/ssh_known_hosts. */
+comment|/* Path for /etc/ssh/ssh_known_hosts. */
 name|char
 modifier|*
 name|user_hostfile
@@ -256,6 +277,16 @@ name|char
 modifier|*
 name|preferred_authentications
 decl_stmt|;
+name|char
+modifier|*
+name|bind_address
+decl_stmt|;
+comment|/* local socket address for connection to sshd */
+name|char
+modifier|*
+name|smartcard_device
+decl_stmt|;
+comment|/* Smartcard reader device */
 name|int
 name|num_identity_files
 decl_stmt|;
@@ -294,14 +325,16 @@ index|[
 name|SSH_MAX_FORWARDS_PER_DIRECTION
 index|]
 decl_stmt|;
+name|int
+name|clear_forwardings
+decl_stmt|;
+name|int
+name|no_host_authentication_for_localhost
+decl_stmt|;
 block|}
 name|Options
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Initializes options to special values that indicate that they have not yet  * been set.  Read_config_file will only set options with this value. Options  * are processed in the following order: command line, user config file,  * system config file.  Last, fill_default_options is called.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -309,14 +342,9 @@ name|initialize_options
 parameter_list|(
 name|Options
 modifier|*
-name|options
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Called after processing other sources of option data, this fills those  * options for which no value has been specified with their default values.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -324,14 +352,27 @@ name|fill_default_options
 parameter_list|(
 name|Options
 modifier|*
-name|options
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Processes a single option line as used in the configuration files. This  * only sets those values that have not already been set. Returns 0 for legal  * options  */
-end_comment
+begin_function_decl
+name|int
+name|read_config_file
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|Options
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -339,60 +380,25 @@ name|process_config_line
 parameter_list|(
 name|Options
 modifier|*
-name|options
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|host
 parameter_list|,
 name|char
 modifier|*
-name|line
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|filename
 parameter_list|,
 name|int
-name|linenum
 parameter_list|,
 name|int
 modifier|*
-name|activep
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Reads the config file and modifies the options accordingly.  Options  * should already be initialized before this call.  This never returns if  * there is an error.  If the file does not exist, this returns immediately.  */
-end_comment
-
-begin_function_decl
-name|void
-name|read_config_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|host
-parameter_list|,
-name|Options
-modifier|*
-name|options
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Adds a local TCP/IP port forward to options.  Never returns if there is an  * error.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -400,25 +406,17 @@ name|add_local_forward
 parameter_list|(
 name|Options
 modifier|*
-name|options
 parameter_list|,
 name|u_short
-name|port
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|host
 parameter_list|,
 name|u_short
-name|host_port
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Adds a remote TCP/IP port forward to options.  Never returns if there is  * an error.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -426,18 +424,14 @@ name|add_remote_forward
 parameter_list|(
 name|Options
 modifier|*
-name|options
 parameter_list|,
 name|u_short
-name|port
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|host
 parameter_list|,
 name|u_short
-name|host_port
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: log.h,v 1.2 2001/01/29 01:58:16 niklas Exp $	*/
+comment|/*	$OpenBSD: log.h,v 1.6 2002/02/22 12:20:34 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -48,7 +48,12 @@ block|,
 name|SYSLOG_FACILITY_LOCAL6
 block|,
 name|SYSLOG_FACILITY_LOCAL7
-block|}
+block|,
+name|SYSLOG_FACILITY_NOT_SET
+init|=
+operator|-
+literal|1
+block|, }
 name|SyslogFacility
 typedef|;
 end_typedef
@@ -72,14 +77,15 @@ block|,
 name|SYSLOG_LEVEL_DEBUG2
 block|,
 name|SYSLOG_LEVEL_DEBUG3
-block|}
+block|,
+name|SYSLOG_LEVEL_NOT_SET
+init|=
+operator|-
+literal|1
+block|, }
 name|LogLevel
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* Initializes logging. */
-end_comment
 
 begin_function_decl
 name|void
@@ -87,45 +93,15 @@ name|log_init
 parameter_list|(
 name|char
 modifier|*
-name|av0
 parameter_list|,
 name|LogLevel
-name|level
 parameter_list|,
 name|SyslogFacility
-name|facility
 parameter_list|,
 name|int
-name|on_stderr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Logging implementation, depending on server or client */
-end_comment
-
-begin_function_decl
-name|void
-name|do_log
-parameter_list|(
-name|LogLevel
-name|level
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-name|va_list
-name|args
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* name to facility/level */
-end_comment
 
 begin_function_decl
 name|SyslogFacility
@@ -133,7 +109,6 @@ name|log_facility_number
 parameter_list|(
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -144,14 +119,9 @@ name|log_level_number
 parameter_list|(
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Output a message to syslog or stderr */
-end_comment
 
 begin_function_decl
 name|void
@@ -160,7 +130,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -187,7 +156,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -214,7 +182,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -241,7 +208,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -268,7 +234,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -295,7 +260,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -322,7 +286,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -342,10 +305,6 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
-begin_comment
-comment|/* same as fatal() but w/o logging */
-end_comment
-
 begin_function_decl
 name|void
 name|fatal_cleanup
@@ -355,10 +314,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * Registers a cleanup function to be called by fatal()/fatal_cleanup()  * before exiting. It is permissible to call fatal_remove_cleanup for the  * function itself from the function.  */
-end_comment
-
 begin_function_decl
 name|void
 name|fatal_add_cleanup
@@ -366,24 +321,17 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|*
-name|proc
 function_decl|)
 parameter_list|(
 name|void
 modifier|*
-name|context
 parameter_list|)
 parameter_list|,
 name|void
 modifier|*
-name|context
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Removes a cleanup function to be called at fatal(). */
-end_comment
 
 begin_function_decl
 name|void
@@ -392,17 +340,29 @@ parameter_list|(
 name|void
 function_decl|(
 modifier|*
-name|proc
 function_decl|)
 parameter_list|(
 name|void
 modifier|*
-name|context
 parameter_list|)
 parameter_list|,
 name|void
 modifier|*
-name|context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|do_log
+parameter_list|(
+name|LogLevel
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
 parameter_list|)
 function_decl|;
 end_function_decl

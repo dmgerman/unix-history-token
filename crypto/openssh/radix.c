@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: radix.c,v 1.15 2001/01/16 23:58:09 deraadt Exp $"
+literal|"$OpenBSD: radix.c,v 1.17 2001/11/19 19:02:16 mpech Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<krb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<radix.h>
 end_include
 
 begin_typedef
@@ -69,7 +75,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	(s) = (((my_u_short)t_cp[0])<< 8) \ 	    | (((my_u_short)t_cp[1])) \ 	    ; \ 	(cp) += 2; \ }
+value|{ \ 	my_u_char *t_cp = (my_u_char *)(cp); \ 	(s) = (((my_u_short)t_cp[0])<< 8) \ 	    | (((my_u_short)t_cp[1])) \ 	    ; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -81,7 +87,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	(l) = (((my_u_int32_t)t_cp[0])<< 24) \ 	    | (((my_u_int32_t)t_cp[1])<< 16) \ 	    | (((my_u_int32_t)t_cp[2])<< 8) \ 	    | (((my_u_int32_t)t_cp[3])) \ 	    ; \ 	(cp) += 4; \ }
+value|{ \ 	my_u_char *t_cp = (my_u_char *)(cp); \ 	(l) = (((my_u_int32_t)t_cp[0])<< 24) \ 	    | (((my_u_int32_t)t_cp[1])<< 16) \ 	    | (((my_u_int32_t)t_cp[2])<< 8) \ 	    | (((my_u_int32_t)t_cp[3])) \ 	    ; \ 	(cp) += 4; \ }
 end_define
 
 begin_define
@@ -93,7 +99,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_short t_s = (my_u_short)(s); \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
+value|{ \ 	my_u_short t_s = (my_u_short)(s); \ 	my_u_char *t_cp = (my_u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -105,7 +111,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_int32_t t_l = (my_u_int32_t)(l); \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
+value|{ \ 	my_u_int32_t t_l = (my_u_int32_t)(l); \ 	my_u_char *t_cp = (my_u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
 end_define
 
 begin_define
@@ -119,7 +125,7 @@ name|p
 parameter_list|,
 name|p_l
 parameter_list|)
-value|{			\     register char *p_targ = (p) + p_l;		\     register char *s_c = (s);			\     register char *p_c = (p);			\     while (*p_c&& (p_c< p_targ)) {		\ 	*s_c++ = *p_c++;			\     }						\     if (p_c == p_targ) {			\ 	return 1;				\     }						\     *s_c = *p_c++;				\     (p_l) = (p_l) - (p_c - (p));		\     (p) = p_c;					\ }
+value|{			\     char *p_targ = (p) + p_l;		\     char *s_c = (s);			\     char *p_c = (p);			\     while (*p_c&& (p_c< p_targ)) {		\ 	*s_c++ = *p_c++;			\     }						\     if (p_c == p_targ) {			\ 	return 1;				\     }						\     *s_c = *p_c++;				\     (p_l) = (p_l) - (p_c - (p));		\     (p) = p_c;					\ }
 end_define
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RCSID("$OpenBSD: ttymodes.h,v 1.11 2001/04/14 16:33:20 stevesk Exp $"); */
+comment|/*	$OpenBSD: ttymodes.h,v 1.12 2002/03/04 17:27:39 stevesk Exp $	*/
 end_comment
 
 begin_comment

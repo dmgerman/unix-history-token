@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: key.h,v 1.12 2001/04/17 10:53:24 markus Exp $	*/
+comment|/*	$OpenBSD: key.h,v 1.18 2002/02/24 19:14:59 markus Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000, 2001 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -76,12 +76,26 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* key is stored in external hardware */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KEY_FLAG_EXT
+value|0x0001
+end_define
+
 begin_struct
 struct|struct
 name|Key
 block|{
 name|int
 name|type
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 name|RSA
 modifier|*
@@ -101,7 +115,6 @@ modifier|*
 name|key_new
 parameter_list|(
 name|int
-name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -112,7 +125,6 @@ modifier|*
 name|key_new_private
 parameter_list|(
 name|int
-name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -123,7 +135,6 @@ name|key_free
 parameter_list|(
 name|Key
 modifier|*
-name|k
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -134,11 +145,9 @@ name|key_equal
 parameter_list|(
 name|Key
 modifier|*
-name|a
 parameter_list|,
 name|Key
 modifier|*
-name|b
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -150,15 +159,12 @@ name|key_fingerprint
 parameter_list|(
 name|Key
 modifier|*
-name|k
 parameter_list|,
 name|enum
 name|fp_type
-name|dgst_type
 parameter_list|,
 name|enum
 name|fp_rep
-name|dgst_rep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -170,7 +176,6 @@ name|key_type
 parameter_list|(
 name|Key
 modifier|*
-name|k
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -181,11 +186,9 @@ name|key_write
 parameter_list|(
 name|Key
 modifier|*
-name|key
 parameter_list|,
 name|FILE
 modifier|*
-name|f
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -196,12 +199,10 @@ name|key_read
 parameter_list|(
 name|Key
 modifier|*
-name|key
 parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|cpp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -212,7 +213,6 @@ name|key_size
 parameter_list|(
 name|Key
 modifier|*
-name|k
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -223,10 +223,8 @@ modifier|*
 name|key_generate
 parameter_list|(
 name|int
-name|type
 parameter_list|,
 name|u_int
-name|bits
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -238,7 +236,6 @@ name|key_from_private
 parameter_list|(
 name|Key
 modifier|*
-name|k
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -249,7 +246,6 @@ name|key_type_from_name
 parameter_list|(
 name|char
 modifier|*
-name|name
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -259,12 +255,10 @@ name|Key
 modifier|*
 name|key_from_blob
 parameter_list|(
-name|char
+name|u_char
 modifier|*
-name|blob
 parameter_list|,
 name|int
-name|blen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -275,16 +269,13 @@ name|key_to_blob
 parameter_list|(
 name|Key
 modifier|*
-name|key
 parameter_list|,
 name|u_char
 modifier|*
 modifier|*
-name|blobp
 parameter_list|,
 name|u_int
 modifier|*
-name|lenp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -296,7 +287,6 @@ name|key_ssh_name
 parameter_list|(
 name|Key
 modifier|*
-name|k
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -308,7 +298,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|names
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -319,23 +308,18 @@ name|key_sign
 parameter_list|(
 name|Key
 modifier|*
-name|key
 parameter_list|,
 name|u_char
 modifier|*
 modifier|*
-name|sigp
 parameter_list|,
-name|int
+name|u_int
 modifier|*
-name|lenp
 parameter_list|,
 name|u_char
 modifier|*
-name|data
 parameter_list|,
-name|int
-name|datalen
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -346,21 +330,16 @@ name|key_verify
 parameter_list|(
 name|Key
 modifier|*
-name|key
 parameter_list|,
 name|u_char
 modifier|*
-name|signature
 parameter_list|,
-name|int
-name|signaturelen
+name|u_int
 parameter_list|,
 name|u_char
 modifier|*
-name|data
 parameter_list|,
-name|int
-name|datalen
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

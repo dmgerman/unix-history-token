@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2001,2002 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-int.c,v 1.36 2001/04/15 08:43:46 markus Exp $"
+literal|"$OpenBSD: sftp-int.c,v 1.44 2002/02/13 00:59:23 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -98,12 +98,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Version of server we are speaking to */
+comment|/* Size of buffer used when copying files */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|size_t
+name|copy_buffer_len
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of concurrent outstanding requests */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
-name|version
+name|num_requests
 decl_stmt|;
 end_decl_stmt
 
@@ -302,6 +314,12 @@ index|[]
 init|=
 block|{
 block|{
+literal|"bye"
+block|,
+name|I_QUIT
+block|}
+block|,
+block|{
 literal|"cd"
 block|,
 name|I_CHDIR
@@ -492,6 +510,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|help
 parameter_list|(
@@ -637,6 +656,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|local_do_shell
 parameter_list|(
@@ -737,6 +757,10 @@ literal|"-c"
 argument_list|,
 name|args
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -756,6 +780,10 @@ name|shell
 argument_list|,
 name|shell
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -840,6 +868,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|local_do_ls
 parameter_list|(
@@ -918,6 +947,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|path_append
@@ -966,6 +996,17 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|p1
+argument_list|,
+literal|"/"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|strlcat
 argument_list|(
 name|ret
@@ -993,6 +1034,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|make_absolute
@@ -1053,6 +1095,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|infer_path
 parameter_list|(
@@ -1141,6 +1184,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|parse_getput_flags
 parameter_list|(
@@ -1253,6 +1297,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_pathname
 parameter_list|(
@@ -1493,6 +1538,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|is_dir
 parameter_list|(
@@ -1537,14 +1583,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|remote_is_dir
 parameter_list|(
-name|int
-name|in
-parameter_list|,
-name|int
-name|out
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
 parameter_list|,
 name|char
 modifier|*
@@ -1563,9 +1609,7 @@ name|a
 operator|=
 name|do_stat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path
 argument_list|,
@@ -1609,14 +1653,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|process_get
 parameter_list|(
-name|int
-name|in
-parameter_list|,
-name|int
-name|out
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
 parameter_list|,
 name|char
 modifier|*
@@ -1701,9 +1745,7 @@ if|if
 condition|(
 name|remote_glob
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|abs_src
 argument_list|,
@@ -1855,9 +1897,7 @@ name|err
 operator|=
 name|do_download
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -1988,9 +2028,7 @@ if|if
 condition|(
 name|do_download
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -2053,14 +2091,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|process_put
 parameter_list|(
-name|int
-name|in
-parameter_list|,
-name|int
-name|out
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
 parameter_list|,
 name|char
 modifier|*
@@ -2205,9 +2243,7 @@ if|if
 condition|(
 name|remote_is_dir
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|tmp_dst
 argument_list|)
@@ -2316,9 +2352,7 @@ name|err
 operator|=
 name|do_upload
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -2344,9 +2378,7 @@ operator|&&
 operator|!
 name|remote_is_dir
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|tmp_dst
 argument_list|)
@@ -2458,9 +2490,7 @@ if|if
 condition|(
 name|do_upload
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -2512,6 +2542,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|parse_args
 parameter_list|(
@@ -3198,14 +3229,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|parse_dispatch_command
 parameter_list|(
-name|int
-name|in
-parameter_list|,
-name|int
-name|out
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
 parameter_list|,
 specifier|const
 name|char
@@ -3316,9 +3347,7 @@ name|err
 operator|=
 name|process_get
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -3338,9 +3367,7 @@ name|err
 operator|=
 name|process_put
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -3380,9 +3407,7 @@ name|err
 operator|=
 name|do_rename
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -3393,29 +3418,6 @@ break|break;
 case|case
 name|I_SYMLINK
 case|:
-if|if
-condition|(
-name|version
-operator|<
-literal|3
-condition|)
-block|{
-name|error
-argument_list|(
-literal|"The server (version %d) does not support "
-literal|"this operation"
-argument_list|,
-name|version
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
 name|path2
 operator|=
 name|make_absolute
@@ -3430,16 +3432,13 @@ name|err
 operator|=
 name|do_symlink
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
 name|path2
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|I_RM
@@ -3456,9 +3455,7 @@ argument_list|)
 expr_stmt|;
 name|remote_glob
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -3503,9 +3500,7 @@ if|if
 condition|(
 name|do_rm
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -3560,9 +3555,7 @@ name|err
 operator|=
 name|do_mkdir
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -3588,9 +3581,7 @@ name|err
 operator|=
 name|do_rmdir
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|)
@@ -3616,9 +3607,7 @@ name|tmp
 operator|=
 name|do_realpath
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|)
@@ -3640,9 +3629,7 @@ name|aa
 operator|=
 name|do_stat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|tmp
 argument_list|,
@@ -3745,9 +3732,7 @@ condition|)
 block|{
 name|do_ls
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 operator|*
 name|pwd
@@ -3772,9 +3757,7 @@ name|tmp
 operator|=
 name|do_realpath
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|)
@@ -3799,9 +3782,7 @@ name|aa
 operator|=
 name|do_stat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -3842,9 +3823,7 @@ break|break;
 block|}
 name|do_ls
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|)
@@ -3985,9 +3964,7 @@ name|n_arg
 expr_stmt|;
 name|remote_glob
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -4030,9 +4007,7 @@ argument_list|)
 expr_stmt|;
 name|do_setstat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -4062,9 +4037,7 @@ argument_list|)
 expr_stmt|;
 name|remote_glob
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -4101,9 +4074,7 @@ name|aa
 operator|=
 name|do_stat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -4170,9 +4141,7 @@ name|n_arg
 expr_stmt|;
 name|do_setstat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -4201,9 +4170,7 @@ argument_list|)
 expr_stmt|;
 name|remote_glob
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|path1
 argument_list|,
@@ -4240,9 +4207,7 @@ name|aa
 operator|=
 name|do_stat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -4309,9 +4274,7 @@ name|n_arg
 expr_stmt|;
 name|do_setstat
 argument_list|(
-name|in
-argument_list|,
-name|out
+name|conn
 argument_list|,
 name|g
 operator|.
@@ -4395,7 +4358,10 @@ name|printf
 argument_list|(
 literal|"SFTP protocol version %d\n"
 argument_list|,
-name|version
+name|sftp_proto_version
+argument_list|(
+name|conn
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4496,21 +4462,29 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
-name|version
+name|struct
+name|sftp_conn
+modifier|*
+name|conn
+decl_stmt|;
+name|conn
 operator|=
 name|do_init
 argument_list|(
 name|fd_in
 argument_list|,
 name|fd_out
+argument_list|,
+name|copy_buffer_len
+argument_list|,
+name|num_requests
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|version
+name|conn
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 name|fatal
 argument_list|(
@@ -4521,9 +4495,7 @@ name|pwd
 operator|=
 name|do_realpath
 argument_list|(
-name|fd_in
-argument_list|,
-name|fd_out
+name|conn
 argument_list|,
 literal|"."
 argument_list|)
@@ -4566,9 +4538,7 @@ if|if
 condition|(
 name|remote_is_dir
 argument_list|(
-name|fd_in
-argument_list|,
-name|fd_out
+name|conn
 argument_list|,
 name|dir
 argument_list|)
@@ -4599,9 +4569,7 @@ argument_list|)
 expr_stmt|;
 name|parse_dispatch_command
 argument_list|(
-name|fd_in
-argument_list|,
-name|fd_out
+name|conn
 argument_list|,
 name|cmd
 argument_list|,
@@ -4647,9 +4615,7 @@ argument_list|)
 expr_stmt|;
 name|parse_dispatch_command
 argument_list|(
-name|fd_in
-argument_list|,
-name|fd_out
+name|conn
 argument_list|,
 name|cmd
 argument_list|,
@@ -4759,9 +4725,7 @@ if|if
 condition|(
 name|parse_dispatch_command
 argument_list|(
-name|fd_in
-argument_list|,
-name|fd_out
+name|conn
 argument_list|,
 name|cmd
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: includes.h,v 1.14 2001/01/29 01:58:16 niklas Exp $	*/
+comment|/*	$OpenBSD: includes.h,v 1.17 2002/01/26 16:44:22 stevesk Exp $	*/
 end_comment
 
 begin_comment
@@ -235,17 +235,6 @@ include|#
 directive|include
 file|"version.h"
 end_include
-
-begin_comment
-comment|/* Define this to be the path of the xauth program. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XAUTH_PATH
-value|"/usr/X11R6/bin/xauth"
-end_define
 
 begin_comment
 comment|/*  * Define this to use pipes instead of socketpairs for communicating with the  * client program.  Socketpairs do not seem to work on all systems.  */

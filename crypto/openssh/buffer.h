@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Code for manipulating FIFO buffers.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+comment|/*	$OpenBSD: buffer.h,v 1.11 2002/03/04 17:27:39 stevesk Exp $	*/
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: buffer.h,v 1.7 2000/12/19 23:17:55 markus Exp $"); */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Code for manipulating FIFO buffers.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
+name|u_char
 modifier|*
 name|buf
 decl_stmt|;
@@ -45,39 +45,15 @@ name|Buffer
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* Initializes the buffer structure. */
-end_comment
-
 begin_function_decl
 name|void
 name|buffer_init
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Frees any memory used for the buffer. */
-end_comment
-
-begin_function_decl
-name|void
-name|buffer_free
-parameter_list|(
-name|Buffer
-modifier|*
-name|buffer
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Clears any data from the buffer, making it empty.  This does not actually    zero the memory. */
-end_comment
 
 begin_function_decl
 name|void
@@ -85,60 +61,19 @@ name|buffer_clear
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Appends data to the buffer, expanding it if necessary. */
-end_comment
 
 begin_function_decl
 name|void
-name|buffer_append
+name|buffer_free
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|data
-parameter_list|,
-name|u_int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * Appends space to the buffer, expanding the buffer if necessary. This does  * not actually copy the data into the buffer, but instead returns a pointer  * to the allocated region.  */
-end_comment
-
-begin_function_decl
-name|void
-name|buffer_append_space
-parameter_list|(
-name|Buffer
-modifier|*
-name|buffer
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|datap
-parameter_list|,
-name|u_int
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Returns the number of bytes of data in the buffer. */
-end_comment
 
 begin_function_decl
 name|u_int
@@ -146,14 +81,49 @@ name|buffer_len
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Gets data from the beginning of the buffer. */
-end_comment
+begin_function_decl
+name|void
+modifier|*
+name|buffer_ptr
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|buffer_append
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|buffer_append_space
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -161,21 +131,14 @@ name|buffer_get
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
 parameter_list|,
-name|char
+name|void
 modifier|*
-name|buf
 parameter_list|,
 name|u_int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Consumes the given number of bytes from the beginning of the buffer. */
-end_comment
 
 begin_function_decl
 name|void
@@ -183,17 +146,11 @@ name|buffer_consume
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
 parameter_list|,
 name|u_int
-name|bytes
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Consumes the given number of bytes from the end of the buffer. */
-end_comment
 
 begin_function_decl
 name|void
@@ -201,33 +158,11 @@ name|buffer_consume_end
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
 parameter_list|,
 name|u_int
-name|bytes
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Returns a pointer to the first used byte in the buffer. */
-end_comment
-
-begin_function_decl
-name|char
-modifier|*
-name|buffer_ptr
-parameter_list|(
-name|Buffer
-modifier|*
-name|buffer
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Dumps the contents of the buffer to stderr in hex.  This intended for  * debugging purposes only.  */
-end_comment
 
 begin_function_decl
 name|void
@@ -235,7 +170,6 @@ name|buffer_dump
 parameter_list|(
 name|Buffer
 modifier|*
-name|buffer
 parameter_list|)
 function_decl|;
 end_function_decl

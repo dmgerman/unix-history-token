@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sftp-common.h,v 1.1 2001/02/04 11:11:54 djm Exp $	*/
+comment|/*	$OpenBSD: sftp-common.h,v 1.3 2001/06/26 17:27:24 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -48,24 +48,15 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Clear contents of attributes structure */
-end_comment
-
 begin_function_decl
 name|void
 name|attrib_clear
 parameter_list|(
 name|Attrib
 modifier|*
-name|a
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Convert from struct stat to filexfer attribs */
-end_comment
 
 begin_function_decl
 name|void
@@ -74,18 +65,12 @@ parameter_list|(
 name|struct
 name|stat
 modifier|*
-name|st
 parameter_list|,
 name|Attrib
 modifier|*
-name|a
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Decode attributes in buffer */
-end_comment
 
 begin_function_decl
 name|Attrib
@@ -94,14 +79,9 @@ name|decode_attrib
 parameter_list|(
 name|Buffer
 modifier|*
-name|b
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Encode attributes to buffer */
-end_comment
 
 begin_function_decl
 name|void
@@ -109,18 +89,12 @@ name|encode_attrib
 parameter_list|(
 name|Buffer
 modifier|*
-name|b
 parameter_list|,
 name|Attrib
 modifier|*
-name|a
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Convert from SSH2_FX_ status to text error message */
-end_comment
 
 begin_function_decl
 specifier|const
@@ -129,7 +103,6 @@ modifier|*
 name|fx2txt
 parameter_list|(
 name|int
-name|status
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.39 2001/04/05 10:42:48 markus Exp $"
+literal|"$OpenBSD: authfd.c,v 1.48 2002/02/24 19:14:59 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -127,7 +127,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((x == SSH_AGENT_FAILURE) || (x == SSH_COM_AGENT2_FAILURE))
+value|((x == SSH_AGENT_FAILURE) || (x == SSH_COM_AGENT2_FAILURE) || \      (x == SSH2_AGENT_FAILURE))
 end_define
 
 begin_comment
@@ -148,8 +148,6 @@ name|authsocket
 decl_stmt|;
 name|int
 name|sock
-decl_stmt|,
-name|len
 decl_stmt|;
 name|struct
 name|sockaddr_un
@@ -192,22 +190,6 @@ operator|.
 name|sun_path
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|len
-operator|=
-name|SUN_LEN
-argument_list|(
-operator|&
-name|sunaddr
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
-name|sunaddr
-operator|.
-name|sun_len
-operator|=
-name|len
 expr_stmt|;
 name|sock
 operator|=
@@ -270,7 +252,8 @@ operator|)
 operator|&
 name|sunaddr
 argument_list|,
-name|len
+sizeof|sizeof
+name|sunaddr
 argument_list|)
 operator|<
 literal|0
@@ -293,6 +276,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ssh_request_reply
 parameter_list|(
@@ -1308,10 +1292,6 @@ argument_list|(
 operator|&
 name|buffer
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|session_id
 argument_list|,
 literal|16
@@ -1454,7 +1434,7 @@ modifier|*
 modifier|*
 name|sigp
 parameter_list|,
-name|int
+name|u_int
 modifier|*
 name|lenp
 parameter_list|,
@@ -1462,7 +1442,7 @@ name|u_char
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|u_int
 name|datalen
 parameter_list|)
 block|{
@@ -1669,6 +1649,7 @@ comment|/* Encode key for a message to the agent. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|ssh_encode_identity_rsa1
 parameter_list|(
@@ -1768,22 +1749,18 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* ssh key->q, SSL key->p */
-name|buffer_put_string
+name|buffer_put_cstring
 argument_list|(
 name|b
 argument_list|,
 name|comment
-argument_list|,
-name|strlen
-argument_list|(
-name|comment
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ssh_encode_identity_ssh2
 parameter_list|(
@@ -2310,6 +2287,104 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|ssh_update_card
+parameter_list|(
+name|AuthenticationConnection
+modifier|*
+name|auth
+parameter_list|,
+name|int
+name|add
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|reader_id
+parameter_list|)
+block|{
+name|Buffer
+name|msg
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+name|buffer_init
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
+name|buffer_put_char
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|add
+condition|?
+name|SSH_AGENTC_ADD_SMARTCARD_KEY
+else|:
+name|SSH_AGENTC_REMOVE_SMARTCARD_KEY
+argument_list|)
+expr_stmt|;
+name|buffer_put_cstring
+argument_list|(
+operator|&
+name|msg
+argument_list|,
+name|reader_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ssh_request_reply
+argument_list|(
+name|auth
+argument_list|,
+operator|&
+name|msg
+argument_list|,
+operator|&
+name|msg
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|type
+operator|=
+name|buffer_get_char
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
+return|return
+name|decode_reply
+argument_list|(
+name|type
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Removes all identities from the agent.  This call is not meant to be used  * by normal applications.  */
 end_comment
@@ -2426,6 +2501,9 @@ name|SSH_AGENT_FAILURE
 case|:
 case|case
 name|SSH_COM_AGENT2_FAILURE
+case|:
+case|case
+name|SSH2_AGENT_FAILURE
 case|:
 name|log
 argument_list|(
