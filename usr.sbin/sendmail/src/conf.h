@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.267 (Berkeley) 10/17/96  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.272 (Berkeley) 11/16/96  */
 end_comment
 
 begin_comment
 comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	Send updates to sendmail@Sendmail.ORG so they will be **	included in the next release. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct
@@ -16,6 +22,11 @@ end_struct_decl
 begin_comment
 comment|/* forward declaration to get gcc to shut up in wait.h */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -885,13 +896,48 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* seteuid(2) works */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TZ_TYPE
+value|TZ_NAME
+end_define
+
+begin_comment
+comment|/* use tzname[] vector */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_AIX4
+operator|>=
+literal|40200
+end_if
+
+begin_define
+define|#
+directive|define
 name|HASSETREUID
 value|1
 end_define
 
 begin_comment
-comment|/* setreuid(2) works */
+comment|/* setreuid(2) works as of AIX 4.2 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2093,6 +2139,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_KSTAT
+end_define
+
+begin_comment
+comment|/* use kstat(3k) -- may work in< 2.5 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -3057,6 +3125,17 @@ end_define
 
 begin_comment
 comment|/* ditto for gid_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MODE_T
+value|int
+end_define
+
+begin_comment
+comment|/* and mode_t */
 end_comment
 
 begin_define
@@ -4179,6 +4258,10 @@ begin_comment
 comment|/* **  SCO Unix ** **	This includes three parts: ** **	The first is for SCO OpenServer 5. **	(Contributed by Keith Reynolds<keithr@sco.COM>). ** **		SCO OpenServer 5 has a compiler version number macro, **		which we can use to figure out what version we're on. **		This may have to change in future releases. ** **	The second is for SCO UNIX 3.2v4.2/Open Desktop 3.0. **	(Contributed by Philippe Brand<phb@colombo.telesys-innov.fr>). ** **	The third is for SCO UNIX 3.2v4.0/Open Desktop 2.0 and earlier. */
 end_comment
 
+begin_comment
+comment|/* SCO OpenServer 5 */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -4207,7 +4290,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has snprintf() call */
+comment|/* has snprintf(3) call */
 end_comment
 
 begin_define
@@ -4218,7 +4301,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has fchmod() call */
+comment|/* has fchmod(2) call */
 end_comment
 
 begin_define
@@ -4229,7 +4312,40 @@ value|1
 end_define
 
 begin_comment
-comment|/* has setrlimit() call */
+comment|/* has setrlimit(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* has seteuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETDTABLESIZE
+value|1
+end_define
+
+begin_comment
+comment|/* has getdtablesize(2) call */
 end_comment
 
 begin_define
@@ -4239,10 +4355,39 @@ name|RLIMIT_NEEDS_SYS_TIME_H
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_DEVSHORT
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|_PATH_AVENRUN
+value|"/dev/table/avenrun"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SCO UNIX 3.2v4.2/Open Desktop 3.0 */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4271,6 +4416,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SCO UNIX 3.2v4.0 Open Desktop 2.0 and earlier */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4313,15 +4462,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXPATHLEN
-value|PATHSIZE
+name|NOFTRUNCATE
+value|0
 end_define
+
+begin_comment
+comment|/* has (simulated) ftruncate call */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|LA_TYPE
-value|LA_SHORT
+name|MAXPATHLEN
+value|PATHSIZE
 end_define
 
 begin_define
@@ -4367,6 +4520,27 @@ end_define
 begin_comment
 comment|/* use tm->tm_name */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UID_T
+value|uid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|GID_T
+value|gid_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
 
 begin_define
 define|#
@@ -4435,12 +4609,12 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|NOFTRUNCATE
-value|0
+name|ftruncate
+value|chsize
 end_define
 
 begin_comment
-comment|/* does not have ftruncate(3) call */
+comment|/* use chsize(2) to emulate ftruncate */
 end_comment
 
 begin_define
@@ -4464,6 +4638,13 @@ end_define
 begin_comment
 comment|/* no unix domain socket support */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SHORT
+end_define
 
 begin_endif
 endif|#
@@ -9874,6 +10055,24 @@ define|#
 directive|define
 name|SIZE_T
 value|size_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MODE_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MODE_T
+value|mode_t
 end_define
 
 begin_endif

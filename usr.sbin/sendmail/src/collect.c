@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.58 (Berkeley) 9/18/96"
+literal|"@(#)collect.c	8.60 (Berkeley) 11/15/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1770,8 +1770,7 @@ name|eatheader
 argument_list|(
 name|e
 argument_list|,
-operator|!
-name|requeueflag
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2033,6 +2032,12 @@ operator|>
 name|MaxMessageSize
 condition|)
 block|{
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_NO_BODY_RETN
+expr_stmt|;
 name|e
 operator|->
 name|e_status

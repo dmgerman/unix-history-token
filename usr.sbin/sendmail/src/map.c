@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.140 (Berkeley) 10/12/96"
+literal|"@(#)map.c	8.144 (Berkeley) 11/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,10 +234,7 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
 name|O_EXLOCK
-argument_list|)
 operator|&&
 name|HASFLOCK
 end_if
@@ -2558,6 +2555,14 @@ condition|)
 break|break;
 if|if
 condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+if|if
+condition|(
 name|cbuf
 index|[
 literal|0
@@ -4301,10 +4306,62 @@ operator|,
 name|int
 operator|,
 name|DBTYPE
+operator|,
+specifier|const
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* these should be K line arguments */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DB_CACHE_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DB_CACHE_SIZE
+value|(1024 * 1024)
+end_define
+
+begin_comment
+comment|/* database memory cache size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DB_HASH_NELEM
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DB_HASH_NELEM
+value|4096
+end_define
+
+begin_comment
+comment|/* (starting) size of hash table */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|bool
@@ -4322,6 +4379,9 @@ name|int
 name|mode
 decl_stmt|;
 block|{
+name|BTREEINFO
+name|btinfo
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -4346,6 +4406,21 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|btinfo
+argument_list|,
+sizeof|sizeof
+name|btinfo
+argument_list|)
+expr_stmt|;
+name|btinfo
+operator|.
+name|cachesize
+operator|=
+name|DB_CACHE_SIZE
+expr_stmt|;
 return|return
 name|db_map_open
 argument_list|(
@@ -4354,6 +4429,9 @@ argument_list|,
 name|mode
 argument_list|,
 name|DB_BTREE
+argument_list|,
+operator|&
+name|btinfo
 argument_list|)
 return|;
 block|}
@@ -4375,6 +4453,9 @@ name|int
 name|mode
 decl_stmt|;
 block|{
+name|HASHINFO
+name|hinfo
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -4399,6 +4480,27 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|hinfo
+argument_list|,
+sizeof|sizeof
+name|hinfo
+argument_list|)
+expr_stmt|;
+name|hinfo
+operator|.
+name|nelem
+operator|=
+name|DB_HASH_NELEM
+expr_stmt|;
+name|hinfo
+operator|.
+name|cachesize
+operator|=
+name|DB_CACHE_SIZE
+expr_stmt|;
 return|return
 name|db_map_open
 argument_list|(
@@ -4407,6 +4509,9 @@ argument_list|,
 name|mode
 argument_list|,
 name|DB_HASH
+argument_list|,
+operator|&
+name|hinfo
 argument_list|)
 return|;
 block|}
@@ -4421,6 +4526,8 @@ parameter_list|,
 name|mode
 parameter_list|,
 name|dbtype
+parameter_list|,
+name|openinfo
 parameter_list|)
 name|MAP
 modifier|*
@@ -4431,6 +4538,11 @@ name|mode
 decl_stmt|;
 name|DBTYPE
 name|dbtype
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|openinfo
 decl_stmt|;
 block|{
 name|DB
@@ -4666,7 +4778,7 @@ name|DBMMODE
 argument_list|,
 name|dbtype
 argument_list|,
-name|NULL
+name|openinfo
 argument_list|)
 expr_stmt|;
 name|saveerrno

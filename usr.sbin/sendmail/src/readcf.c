@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.174 (Berkeley) 10/9/96"
+literal|"@(#)readcf.c	8.176 (Berkeley) 11/10/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -2600,7 +2600,7 @@ decl_stmt|;
 name|int
 name|sff
 decl_stmt|;
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 specifier|register
@@ -3989,6 +3989,33 @@ expr_stmt|;
 name|p
 operator|=
 name|q
+expr_stmt|;
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+name|p
+operator|++
 expr_stmt|;
 block|}
 while|while

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.17 (Berkeley) 9/25/96"
+literal|"@(#)makemap.c	8.18 (Berkeley) 11/13/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,13 @@ decl_stmt|;
 name|int
 name|putflags
 decl_stmt|;
+name|long
+name|dbcachesize
+init|=
+literal|1024
+operator|*
+literal|1024
+decl_stmt|;
 name|enum
 name|type
 name|type
@@ -323,6 +330,9 @@ name|NEWDB
 name|BTREEINFO
 name|bti
 decl_stmt|;
+name|HASHINFO
+name|hinfo
+decl_stmt|;
 endif|#
 directive|endif
 name|char
@@ -364,6 +374,21 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FFR_CFLAG
+define|#
+directive|define
+name|OPTIONS
+value|"Nc:dforv"
+else|#
+directive|else
+define|#
+directive|define
+name|OPTIONS
+value|"Ndforv"
+endif|#
+directive|endif
 while|while
 condition|(
 operator|(
@@ -375,7 +400,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Ndforv"
+name|OPTIONS
 argument_list|)
 operator|)
 operator|!=
@@ -395,6 +420,22 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|FFR_CFLAG
+case|case
+literal|'c'
+case|:
+name|dbcachesize
+operator|=
+name|atol
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'d'
 case|:
@@ -564,6 +605,20 @@ block|{
 case|case
 name|T_ERR
 case|:
+ifdef|#
+directive|ifdef
+name|FFR_CFLAG
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: %s [-N] [-c cachesize] [-d] [-f] [-o] [-r] [-v] type mapname\n"
+argument_list|,
+name|progname
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -573,6 +628,8 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|EX_USAGE
@@ -935,6 +992,30 @@ name|NEWDB
 case|case
 name|T_HASH
 case|:
+comment|/* tweak some parameters for performance */
+name|bzero
+argument_list|(
+operator|&
+name|hinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hinfo
+operator|.
+name|nelem
+operator|=
+literal|4096
+expr_stmt|;
+name|hinfo
+operator|.
+name|cachesize
+operator|=
+name|dbcachesize
+expr_stmt|;
 name|dbp
 operator|.
 name|db
@@ -949,7 +1030,8 @@ literal|0644
 argument_list|,
 name|DB_HASH
 argument_list|,
-name|NULL
+operator|&
+name|hinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1009,6 +1091,13 @@ break|break;
 case|case
 name|T_BTREE
 case|:
+comment|/* tweak some parameters for performance */
+name|bti
+operator|.
+name|cachesize
+operator|=
+name|dbcachesize
+expr_stmt|;
 name|dbp
 operator|.
 name|db
