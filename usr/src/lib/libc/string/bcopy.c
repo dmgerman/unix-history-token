@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcopy.c	5.2 (Berkeley) %G%"
+literal|"@(#)bcopy.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_comment
 comment|/*  * bcopy -- vax movc3 instruction  */
@@ -51,7 +57,7 @@ argument_list|,
 name|length
 argument_list|)
 specifier|register
-name|char
+name|long
 operator|*
 name|src
 operator|,
