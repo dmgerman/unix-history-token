@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.15 81/10/30 */
+comment|/* tcp_usrreq.c 1.16 81/10/30 */
 end_comment
 
 begin_include
@@ -626,7 +626,7 @@ case|case
 name|SSS_RCV
 case|:
 comment|/* 42 */
-name|send_ctl
+name|send_win
 argument_list|(
 name|tp
 argument_list|)

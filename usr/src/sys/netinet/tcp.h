@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.9 81/10/29 */
+comment|/* tcp.h 1.10 81/10/30 */
 end_comment
 
 begin_comment
@@ -373,6 +373,10 @@ name|u_char
 name|t_xmt
 decl_stmt|;
 comment|/* round trip transmission time */
+name|seq_t
+name|rcv_adv
+decl_stmt|;
+comment|/* advertised window */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.7 81/10/29 */
+comment|/* tcp_input.c 1.8 81/10/30 */
 end_comment
 
 begin_include
@@ -2763,6 +2763,10 @@ name|TC_ACK_DUE
 expr_stmt|;
 block|}
 comment|/* respond */
+name|sent
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -2787,6 +2791,60 @@ name|tc_flags
 operator|&
 name|TC_NEW_WINDOW
 condition|)
+block|{
+name|seq_t
+name|last
+init|=
+name|tp
+operator|->
+name|snd_off
+decl_stmt|;
+name|up
+operator|=
+name|tp
+operator|->
+name|t_ucb
+expr_stmt|;
+for|for
+control|(
+name|m
+operator|=
+name|up
+operator|->
+name|uc_sbuf
+init|;
+name|m
+operator|!=
+name|NULL
+condition|;
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+control|)
+name|last
+operator|+=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|snd_nxt
+operator|<=
+name|last
+operator|||
+operator|(
+name|tp
+operator|->
+name|tc_flags
+operator|&
+name|TC_SND_FIN
+operator|)
+condition|)
 name|sent
 operator|=
 name|send
@@ -2794,11 +2852,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-else|else
-name|sent
-operator|=
-literal|0
-expr_stmt|;
+block|}
 comment|/* set for retrans */
 if|if
 condition|(
