@@ -3563,9 +3563,20 @@ operator|/
 literal|1000.0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * 13NOV93 GRS 	 * added code to return 1 if no packets were returned to the receiver. 	 * Originally PING returned 0 regardless of how many packets were  	 * returned, thus the only way to test the return value of PING in a  	 * shell script was to do something like: 	 * 	 *   if ping -n -c 1 -r $IP_ADDR | grep '0 packets received'>/dev/null 	 * 	 * now, all that is needed is: 	 * 	 *   if ping -n -c 1 -r $IP_ADDR>/dev/null 	 */
+if|if
+condition|(
+name|nreceived
+condition|)
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
