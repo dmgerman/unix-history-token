@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)socketvar.h	8.3 (Berkeley) 2/19/95  * $Id: socketvar.h,v 1.24 1998/02/01 20:08:38 bde Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)socketvar.h	8.3 (Berkeley) 2/19/95  *	$Id: socketvar.h,v 1.25 1998/03/01 19:39:29 guido Exp $  */
 end_comment
 
 begin_ifndef
@@ -39,10 +39,23 @@ begin_comment
 comment|/*  * Kernel structure per socket.  * Contains send and receive buffer queues,  * handle on protocol and pointer to protocol  * private data and error information.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|u_quad_t
+name|so_gen_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|socket
 block|{
+name|struct
+name|vm_zone
+modifier|*
+name|so_zone
+decl_stmt|;
+comment|/* zone we were allocated from */
 name|short
 name|so_type
 decl_stmt|;
@@ -214,10 +227,6 @@ directive|define
 name|SB_NOINTR
 value|0x40
 comment|/* operations not interruptible */
-name|caddr_t
-name|so_tpcb
-decl_stmt|;
-comment|/* Wisc. protocol control block XXX */
 name|void
 argument_list|(
 argument|*so_upcall
@@ -246,6 +255,10 @@ name|uid_t
 name|so_uid
 decl_stmt|;
 comment|/* who opened the socket */
+name|so_gen_t
+name|so_gencnt
+decl_stmt|;
+comment|/* generation count */
 block|}
 struct|;
 end_struct
@@ -389,6 +402,104 @@ end_define
 begin_comment
 comment|/* unaccepted, complete connection */
 end_comment
+
+begin_comment
+comment|/*  * Externalized form of struct socket used by the sysctl(3) interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|xsocket
+block|{
+name|size_t
+name|xso_len
+decl_stmt|;
+comment|/* length of this structure */
+name|struct
+name|socket
+modifier|*
+name|xso_so
+decl_stmt|;
+comment|/* makes a convenient handle sometimes */
+name|short
+name|so_type
+decl_stmt|;
+name|short
+name|so_options
+decl_stmt|;
+name|short
+name|so_linger
+decl_stmt|;
+name|short
+name|so_state
+decl_stmt|;
+name|caddr_t
+name|so_pcb
+decl_stmt|;
+comment|/* another convenient handle */
+name|int
+name|xso_protocol
+decl_stmt|;
+name|int
+name|xso_family
+decl_stmt|;
+name|short
+name|so_qlen
+decl_stmt|;
+name|short
+name|so_incqlen
+decl_stmt|;
+name|short
+name|so_qlimit
+decl_stmt|;
+name|short
+name|so_timeo
+decl_stmt|;
+name|u_short
+name|so_error
+decl_stmt|;
+name|pid_t
+name|so_pgid
+decl_stmt|;
+name|u_long
+name|so_oobmark
+decl_stmt|;
+struct|struct
+name|xsockbuf
+block|{
+name|u_long
+name|sb_cc
+decl_stmt|;
+name|u_long
+name|sb_hiwat
+decl_stmt|;
+name|u_long
+name|sb_mbcnt
+decl_stmt|;
+name|u_long
+name|sb_mbmax
+decl_stmt|;
+name|long
+name|sb_lowat
+decl_stmt|;
+name|short
+name|sb_flags
+decl_stmt|;
+name|short
+name|sb_timeo
+decl_stmt|;
+block|}
+name|so_rcv
+struct|,
+name|so_snd
+struct|;
+name|uid_t
+name|so_uid
+decl_stmt|;
+comment|/* XXX */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Macros for sockets and socket buffering.  */
@@ -559,14 +670,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
-name|M_SOCKET
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
 name|M_SONAME
 argument_list|)
 expr_stmt|;
@@ -579,8 +682,31 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|maxsockets
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|u_long
 name|sb_max
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vm_zone
+modifier|*
+name|socket_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|so_gen_t
+name|so_gencnt
 decl_stmt|;
 end_decl_stmt
 
@@ -1060,6 +1186,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|sbtoxsockbuf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockbuf
+operator|*
+name|sb
+operator|,
+expr|struct
+name|xsockbuf
+operator|*
+name|xsb
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|sbwait
 name|__P
@@ -1120,6 +1266,21 @@ name|sockaddr
 operator|*
 operator|*
 name|nam
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|socket
+modifier|*
+name|soalloc
+name|__P
+argument_list|(
+operator|(
+name|int
+name|waitok
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1265,6 +1426,21 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sodealloc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1660,6 +1836,26 @@ name|so
 operator|,
 name|int
 name|how
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sotoxsocket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|socket
+operator|*
+name|so
+operator|,
+expr|struct
+name|xsocket
+operator|*
+name|xso
 operator|)
 argument_list|)
 decl_stmt|;

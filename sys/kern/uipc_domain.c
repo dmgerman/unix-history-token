@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_domain.c	8.2 (Berkeley) 10/18/93  * $Id: uipc_domain.c,v 1.17 1997/04/27 20:00:42 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)uipc_domain.c	8.2 (Berkeley) 10/18/93  *	$Id: uipc_domain.c,v 1.18 1997/09/16 11:43:36 bde Exp $  */
 end_comment
 
 begin_include
@@ -42,7 +42,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_zone.h>
 end_include
 
 begin_comment
@@ -233,6 +245,26 @@ name|protosw
 modifier|*
 name|pr
 decl_stmt|;
+comment|/* 	 * Before we do any setup, make sure to initialize the 	 * zone allocator we get struct sockets from.  The obvious 	 * maximum number of sockets is `maxfiles', but it is possible 	 * to have a socket without an open file (e.g., a connection waiting 	 * to be accept(2)ed).  Rather than think up and define a 	 * better value, we just use nmbclusters, since that's what people 	 * are told to increase first when the network runs out of memory. 	 * Perhaps we should have two pools, one of unlimited size 	 * for use during socreate(), and one ZONE_INTERRUPT pool for 	 * use in sonewconn(). 	 */
+name|socket_zone
+operator|=
+name|zinit
+argument_list|(
+literal|"socket"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|socket
+argument_list|)
+argument_list|,
+name|maxsockets
+argument_list|,
+name|ZONE_INTERRUPT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * NB - local domain is always present. 	 */
 name|ADDDOMAIN
 argument_list|(
@@ -276,7 +308,6 @@ operator|*
 name|dpp
 expr_stmt|;
 block|}
-comment|/* - not in our sources #ifdef ISDN 	ADDDOMAIN(isdn); #endif */
 for|for
 control|(
 name|dp
@@ -324,31 +355,6 @@ name|pr
 operator|++
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|PRU_OLDSTYLE
-comment|/* See comments in uipc_socket2.c. */
-if|if
-condition|(
-name|pr
-operator|->
-name|pr_usrreqs
-operator|==
-literal|0
-operator|&&
-name|pr
-operator|->
-name|pr_ousrreq
-condition|)
-name|pr
-operator|->
-name|pr_usrreqs
-operator|=
-operator|&
-name|pru_oldstyle
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|pr
@@ -377,8 +383,6 @@ name|dom_protosw
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|pr
