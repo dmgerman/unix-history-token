@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	6.2	84/01/11	*/
+comment|/*	socketvar.h	6.3	84/03/22	*/
 end_comment
 
 begin_comment
@@ -307,7 +307,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|(((so)->so_state& SS_NBIO) || ((so)->so_proto->pr_flags& PR_ATOMIC))
+value|((so)->so_proto->pr_flags& PR_ATOMIC)
 end_define
 
 begin_comment
