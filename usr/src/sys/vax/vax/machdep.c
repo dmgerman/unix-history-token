@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.25	81/03/09	*/
+comment|/*	machdep.c	4.26	81/03/17	*/
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VAX/UNIX (Berkeley Version 4.25) 81/03/09 01:47:29 \n"
+literal|"VAX/UNIX (Berkeley Version 4.26) 81/03/17 05:49:33 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,6 +595,29 @@ argument_list|,
 name|ncmap
 argument_list|,
 name|ecmap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+operator|(
+name|int
+operator|)
+name|ecmap
+operator|)
+operator|&
+operator|~
+literal|0x80000000
+operator|)
+operator|>
+name|SYSPTSIZE
+operator|*
+name|NBPG
+condition|)
+name|panic
+argument_list|(
+literal|"sys pt too small"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear allocated space, and make r/w entries 	 * for the space in the kernel map. 	 */
