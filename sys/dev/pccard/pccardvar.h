@@ -523,10 +523,6 @@ name|struct
 name|pccard_card
 name|card
 decl_stmt|;
-name|void
-modifier|*
-name|ih
-decl_stmt|;
 name|int
 name|sc_enabled_count
 decl_stmt|;

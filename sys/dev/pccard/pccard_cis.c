@@ -354,11 +354,6 @@ name|pf
 operator|=
 name|NULL
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Calling scan_cis\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|pccard_scan_cis
