@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.104.2.5 1997/05/31 10:36:23 dfr Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.104.2.6 1997/06/21 13:32:58 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2039,6 +2039,14 @@ operator|->
 name|v_tag
 operator|!=
 name|VT_NFS
+operator|||
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|==
+name|VBLK
 operator|||
 operator|(
 name|bp
@@ -6600,6 +6608,12 @@ name|v_tag
 operator|==
 name|VT_NFS
 operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VBLK
+operator|&&
 name|bp
 operator|->
 name|b_validend
@@ -7998,6 +8012,14 @@ operator|->
 name|v_tag
 operator|==
 name|VT_NFS
+operator|&&
+name|bp
+operator|->
+name|b_vp
+operator|->
+name|v_type
+operator|!=
+name|VBLK
 condition|)
 block|{
 name|vm_offset_t
@@ -8217,6 +8239,12 @@ operator|->
 name|v_tag
 operator|==
 name|VT_NFS
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VBLK
 condition|)
 block|{
 name|vm_ooffset_t
