@@ -541,21 +541,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|fdused
-parameter_list|(
-name|struct
-name|filedesc
-modifier|*
-name|fdp
-parameter_list|,
-name|int
-name|fd
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|filedesc_to_leader
 modifier|*

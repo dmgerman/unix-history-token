@@ -791,23 +791,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|fdrop_locked
-parameter_list|(
-name|struct
-name|file
-modifier|*
-name|fp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * The socket operations are used a couple of places.  * XXX: This is wrong, they should go through the operations vector for  * XXX: sockets instead of going directly for the individual functions. /phk  */
 end_comment

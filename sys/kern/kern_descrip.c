@@ -321,8 +321,42 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|fdrop_locked
+parameter_list|(
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|fdunused
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|int
+name|fd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fdused
 parameter_list|(
 name|struct
 name|filedesc
@@ -897,6 +931,7 @@ comment|/*  * Mark a file descriptor as used.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fdused
 parameter_list|(
@@ -9544,6 +9579,7 @@ comment|/*  * Drop reference on struct file passed in, may call closef if the  *
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fdrop_locked
 parameter_list|(
