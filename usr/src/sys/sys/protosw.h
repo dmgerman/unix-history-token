@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	4.16.1.1	83/09/09	*/
+comment|/*	protosw.h	4.16.1.2	83/09/09	*/
 end_comment
 
 begin_comment
@@ -630,8 +630,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PRC_UNREACH_SRCFAIL
+name|PRC_UNREACH_NEEDFRAG
 value|12
+end_define
+
+begin_comment
+comment|/* IP_DF caused drop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRC_UNREACH_SRCFAIL
+value|13
 end_define
 
 begin_comment
@@ -642,7 +653,7 @@ begin_define
 define|#
 directive|define
 name|PRC_REDIRECT_NET
-value|13
+value|14
 end_define
 
 begin_comment
@@ -653,7 +664,7 @@ begin_define
 define|#
 directive|define
 name|PRC_REDIRECT_HOST
-value|14
+value|15
 end_define
 
 begin_comment
@@ -664,7 +675,7 @@ begin_define
 define|#
 directive|define
 name|PRC_REDIRECT_TOSNET
-value|15
+value|16
 end_define
 
 begin_comment
@@ -675,7 +686,7 @@ begin_define
 define|#
 directive|define
 name|PRC_REDIRECT_TOSHOST
-value|16
+value|17
 end_define
 
 begin_comment
@@ -686,7 +697,7 @@ begin_define
 define|#
 directive|define
 name|PRC_TIMXCEED_INTRANS
-value|17
+value|18
 end_define
 
 begin_comment
@@ -697,7 +708,7 @@ begin_define
 define|#
 directive|define
 name|PRC_TIMXCEED_REASS
-value|18
+value|19
 end_define
 
 begin_comment
@@ -708,7 +719,7 @@ begin_define
 define|#
 directive|define
 name|PRC_PARAMPROB
-value|19
+value|20
 end_define
 
 begin_comment
@@ -719,7 +730,7 @@ begin_define
 define|#
 directive|define
 name|PRC_NCMDS
-value|20
+value|21
 end_define
 
 begin_ifdef
@@ -758,6 +769,8 @@ block|,
 literal|"PROTO-UNREACH"
 block|,
 literal|"PORT-UNREACH"
+block|,
+literal|"FRAG-UNREACH"
 block|,
 literal|"SRCFAIL-UNREACH"
 block|,
