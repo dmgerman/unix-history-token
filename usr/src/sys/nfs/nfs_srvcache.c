@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,61 +10,61 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_ifdef
@@ -76,7 +76,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netiso/iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_endif
@@ -87,37 +87,37 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"nfsm_subs.h"
+file|<nfs/nfsm_subs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"rpcv2.h"
+file|<nfs/rpcv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsv2.h"
+file|<nfs/nfsv2.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfsrvcache.h"
+file|<nfs/nfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nfs.h"
+file|<nfs/nfsrvcache.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"nqnfs.h"
+file|<nfs/nqnfs.h>
 end_include
 
 begin_if
