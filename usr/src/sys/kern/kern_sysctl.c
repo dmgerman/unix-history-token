@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sysctl.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sysctl.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -74,6 +74,9 @@ name|kinfo_doproc
 argument_list|()
 decl_stmt|,
 name|kinfo_rtable
+argument_list|()
+decl_stmt|,
+name|kinfo_vnode
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -193,6 +196,14 @@ case|:
 name|server
 operator|=
 name|kinfo_rtable
+expr_stmt|;
+break|break;
+case|case
+name|KINFO_VNODE
+case|:
+name|server
+operator|=
+name|kinfo_vnode
 expr_stmt|;
 break|break;
 default|default:
@@ -330,6 +341,13 @@ argument_list|(
 name|ENOMEM
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|server
+operator|!=
+name|kinfo_vnode
+condition|)
+comment|/* XXX */
 name|vslock
 argument_list|(
 name|uap
@@ -369,6 +387,13 @@ operator|&
 name|needed
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|server
+operator|!=
+name|kinfo_vnode
+condition|)
+comment|/* XXX */
 name|vsunlock
 argument_list|(
 name|uap
