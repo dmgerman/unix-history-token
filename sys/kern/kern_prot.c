@@ -80,22 +80,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|change_ruid
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|uid_t
-name|ruid
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5065,7 +5049,6 @@ comment|/*  * Helper function to change the real uid of a process  *  * The per-
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|change_ruid
 parameter_list|(
