@@ -109,6 +109,9 @@ name|gd_prv_PADDR1
 decl_stmt|;
 endif|#
 directive|endif
+name|u_int
+name|gd_astpending
+decl_stmt|;
 block|}
 struct|;
 end_struct

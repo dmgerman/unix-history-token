@@ -97,6 +97,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * NOT MP SAFE due to p_pptr access  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -231,7 +235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get process group ID; note that POSIX getpgrp takes no parameter */
+comment|/*   * Get process group ID; note that POSIX getpgrp takes no parameter   *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -527,6 +531,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * MP SAFE  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -683,6 +691,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MP SAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */

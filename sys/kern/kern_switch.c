@@ -519,7 +519,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * procrunnable() returns a boolean true (non-zero) value if there are  * any runnable processes.  This is intended to be called from the idle  * loop to avoid the more expensive (and destructive) chooseproc().  */
+comment|/*  * procrunnable() returns a boolean true (non-zero) value if there are  * any runnable processes.  This is intended to be called from the idle  * loop to avoid the more expensive (and destructive) chooseproc().  *  * MP SAFE.  CALLED WITHOUT THE MP LOCK  */
 end_comment
 
 begin_function

@@ -7479,11 +7479,13 @@ name|mp_lock
 operator|=
 literal|0x00000001
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* ISR uses its own "giant lock" */
-name|isr_lock
-operator|=
-name|FREE_LOCK
-expr_stmt|;
+block|isr_lock = FREE_LOCK;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined

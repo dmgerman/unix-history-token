@@ -341,6 +341,8 @@ block|}
 block|,
 comment|/* 23 = setuid */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(
@@ -591,6 +593,8 @@ block|}
 block|,
 comment|/* 46 = old sigaction */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(
@@ -732,6 +736,8 @@ block|}
 block|,
 comment|/* 59 = execve */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|1
 block|,
 operator|(
@@ -959,6 +965,8 @@ block|}
 block|,
 comment|/* 80 = setgroups */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(

@@ -1254,6 +1254,10 @@ parameter_list|)
 value|{							\ 	if (--(s)->s_count == 0)					\ 		FREE(s, M_SESSION);					\ }
 end_define
 
+begin_comment
+comment|/*  * STOPEVENT is MP SAFE.  */
+end_comment
+
 begin_function_decl
 specifier|extern
 name|void
@@ -1283,7 +1287,8 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do { \ 	if ((p)->p_stops& (e)) stopevent(p,e,v); } while (0)
+define|\
+value|do {					\ 		if ((p)->p_stops& (e)) {	\ 			get_mplock();		\ 			stopevent(p,e,v);	\ 			rel_mplock(); 		\ 		}				\ 	} while (0)
 end_define
 
 begin_comment

@@ -50,6 +50,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/ipl.h>
+end_include
+
+begin_comment
+comment|/* For need_resched */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<posix4/posix4.h>
 end_include
 

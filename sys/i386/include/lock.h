@@ -35,45 +35,20 @@ value|lock ;
 end_define
 
 begin_comment
-comment|/*  * Some handy macros to allow logical organization and  * convenient reassignment of various locks.  */
+comment|/*  * Some handy macros to allow logical organization.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FPU_LOCK
-value|call	_get_fpu_lock
+name|MP_LOCK
+value|call	_get_mplock
 end_define
 
 begin_define
 define|#
 directive|define
-name|ALIGN_LOCK
-value|call	_get_align_lock
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCALL_LOCK
-value|call	_get_syscall_lock
-end_define
-
-begin_define
-define|#
-directive|define
-name|ALTSYSCALL_LOCK
-value|call	_get_altsyscall_lock
-end_define
-
-begin_comment
-comment|/*  * Protects INTR() ISRs.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISR_TRYLOCK
+name|MP_TRYLOCK
 define|\
 value|pushl	$_mp_lock ;
 comment|/* GIANT_LOCK */
@@ -85,7 +60,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISR_RELLOCK
+name|MP_RELLOCK
 define|\
 value|movl	$_mp_lock,%edx ;
 comment|/* GIANT_LOCK */
@@ -116,54 +91,6 @@ define|\
 value|movl	$0, _imen_lock
 end_define
 
-begin_comment
-comment|/*  * Variations of CPL_LOCK protect spl updates as a critical region.  * Items within this 'region' include:  *  cpl  *  cml  *  cil  *  ipending  */
-end_comment
-
-begin_comment
-comment|/*  * Bottom half routines, ie. those already protected from INTs.  *  * Used in:  *  sys/i386/isa/ipl.s:		_doreti  *  sys/i386/isa/apic_vector.s:	_Xintr0, ..., _Xintr23  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPL_LOCK
-define|\
-value|pushl	$_cpl_lock ;
-comment|/* address of lock */
-value|\ 	call	_s_lock ;
-comment|/* MP-safe */
-value|\ 	addl	$4, %esp
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPL_UNLOCK
-define|\
-value|movl	$0, _cpl_lock
-end_define
-
-begin_comment
-comment|/*  * INT safe version for top half of kernel.  *  * Used in:  *  sys/i386/i386/exception.s:	_Xfpu, _Xalign, _Xsyscall, _Xint0x80_syscall  *  sys/i386/isa/apic_ipl.s:	splz()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCPL_LOCK
-define|\
-value|pushl	$_cpl_lock ;						\ 	call	_ss_lock ;						\ 	addl	$4, %esp
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCPL_UNLOCK
-define|\
-value|pushl	$_cpl_lock ;						\ 	call	_ss_unlock ;						\ 	addl	$4, %esp
-end_define
-
 begin_else
 else|#
 directive|else
@@ -186,37 +113,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FPU_LOCK
-end_define
-
-begin_comment
-comment|/* NOP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ALIGN_LOCK
-end_define
-
-begin_comment
-comment|/* NOP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYSCALL_LOCK
-end_define
-
-begin_comment
-comment|/* NOP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ALTSYSCALL_LOCK
+name|MP_LOCK
 end_define
 
 begin_comment
@@ -310,50 +207,6 @@ end_endif
 begin_comment
 comment|/* USE_MPINTRLOCK */
 end_comment
-
-begin_comment
-comment|/*  * Protects cpl/cml/cil/ipending data as a critical region.  *  * Used in:  *  sys/i386/isa/ipl_funcs.c:	DO_SETBITS, softclockpending(), GENSPL,  *				spl0(), splx(), splq()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPL_LOCK
-parameter_list|()
-value|s_lock(&cpl_lock)
-end_define
-
-begin_comment
-comment|/* Bottom end */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPL_UNLOCK
-parameter_list|()
-value|s_unlock(&cpl_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCPL_LOCK
-parameter_list|()
-value|ss_lock(&cpl_lock)
-end_define
-
-begin_comment
-comment|/* INT safe: top end */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCPL_UNLOCK
-parameter_list|()
-value|ss_unlock(&cpl_lock)
-end_define
 
 begin_comment
 comment|/*  * sio/cy lock.  * XXX should rc (RISCom/8) use this?  */
@@ -551,34 +404,6 @@ begin_define
 define|#
 directive|define
 name|MPINTR_UNLOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPL_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CPL_UNLOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCPL_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCPL_UNLOCK
 parameter_list|()
 end_define
 
