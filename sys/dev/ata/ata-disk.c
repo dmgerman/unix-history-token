@@ -895,6 +895,10 @@ name|DEV_BSIZE
 expr_stmt|;
 name|secsperint
 operator|=
+name|max
+argument_list|(
+literal|1
+argument_list|,
 name|min
 argument_list|(
 name|adp
@@ -904,6 +908,7 @@ operator|->
 name|nsecperint
 argument_list|,
 literal|16
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
