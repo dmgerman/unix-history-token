@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chflags.c	8.2 (Berkeley) %G%"
+literal|"@(#)chflags.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,6 +658,17 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|errno
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"fts_read"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|rval
