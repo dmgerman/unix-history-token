@@ -1027,7 +1027,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%cchmod %s\n"
+literal|"%cmode %s\n"
 argument_list|,
 name|CMD_CHAR
 argument_list|,
@@ -1050,7 +1050,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%cchown %s\n"
+literal|"%cowner %s\n"
 argument_list|,
 name|CMD_CHAR
 argument_list|,
@@ -1073,7 +1073,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%cchgrp %s\n"
+literal|"%cgroup %s\n"
 argument_list|,
 name|CMD_CHAR
 argument_list|,
