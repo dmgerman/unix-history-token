@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mbuf.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -435,7 +435,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_type = MT_FREE; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~CLOFSET); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); \ 	  splx(ms); \ 	  if (m_want) { \ 		  m_want = 0; \ 		  wakeup((caddr_t)mfree); \ 	  } \ 	}
+value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_type = MT_FREE; \ 	  if ((m)->m_off>= MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~CLOFSET); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); \ 	  splx(ms); \ 	  if (m_want) { \ 		  m_want = 0; \ 		  wakeup((caddr_t)mfree); \ 	  } \ 	}
 end_define
 
 begin_comment
