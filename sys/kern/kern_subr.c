@@ -2317,17 +2317,6 @@ name|iov
 init|=
 name|NULL
 decl_stmt|;
-if|if
-condition|(
-name|iovcnt
-operator|<
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"iovcnt< 0!\n"
-argument_list|)
-expr_stmt|;
 comment|/* note: can't use iovlen until iovcnt is validated */
 name|iovlen
 operator|=
