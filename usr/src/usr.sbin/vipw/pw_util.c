@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pw_util.c	5.1 (Berkeley) %G%"
+literal|"@(#)pw_util.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +345,8 @@ argument_list|(
 name|lockfd
 argument_list|,
 name|LOCK_EX
+operator||
+name|LOCK_NB
 argument_list|)
 condition|)
 block|{
@@ -706,12 +708,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|pw_error
+name|_exit
 argument_list|(
-name|editor
-argument_list|,
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -732,20 +730,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
 name|pid
 operator|==
 operator|-
 literal|1
-condition|?
-literal|1
-else|:
+operator|||
 name|pstat
 operator|.
 name|w_status
-operator|)
-return|;
+condition|)
+name|pw_error
+argument_list|(
+name|editor
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
