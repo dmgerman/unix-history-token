@@ -539,7 +539,7 @@ name|ACPI_EVENT_SLEEP_BUTTON
 else|:
 name|ACPI_EVENT_POWER_BUTTON
 expr_stmt|;
-comment|/* Install the appropriate new handler. */
+comment|/*       * Install the new handler.  We could remove any fixed handlers added      * from the FADT once we have a duplicate from the AML but some systems      * only return events on one or the other so we have to keep both.      */
 if|if
 condition|(
 name|sc
@@ -617,45 +617,6 @@ operator|->
 name|button_handle
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-comment|/*      * If we have fixed buttons defined in the FADT, remove them now that      * we have found one in the AML.  Some systems define buttons both ways      * but only deliver events to the AML object.      */
-if|if
-condition|(
-name|event
-operator|==
-name|ACPI_EVENT_POWER_BUTTON
-operator|&&
-name|AcpiGbl_FADT
-operator|->
-name|PwrButton
-operator|==
-literal|0
-condition|)
-name|AcpiRemoveFixedEventHandler
-argument_list|(
-name|event
-argument_list|,
-name|acpi_event_power_button_sleep
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|event
-operator|==
-name|ACPI_EVENT_SLEEP_BUTTON
-operator|&&
-name|AcpiGbl_FADT
-operator|->
-name|SleepButton
-operator|==
-literal|0
-condition|)
-name|AcpiRemoveFixedEventHandler
-argument_list|(
-name|event
-argument_list|,
-name|acpi_event_sleep_button_sleep
 argument_list|)
 expr_stmt|;
 name|return_VALUE
