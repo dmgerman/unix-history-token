@@ -64,16 +64,6 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|dead_badop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|dead_bmap
 parameter_list|(
 name|struct
@@ -247,7 +237,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -291,7 +281,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -324,7 +314,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -335,7 +325,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -435,7 +425,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -446,7 +436,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -457,7 +447,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -479,7 +469,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|dead_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -939,25 +929,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Empty vnode bad operation  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|dead_badop
-parameter_list|()
-block|{
-name|panic
-argument_list|(
-literal|"dead_badop called"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 

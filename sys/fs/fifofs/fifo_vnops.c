@@ -158,16 +158,6 @@ end_struct
 begin_function_decl
 specifier|static
 name|int
-name|fifo_badop
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|fifo_print
 parameter_list|(
 name|struct
@@ -459,7 +449,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -525,7 +515,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -547,7 +537,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -558,7 +548,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -624,7 +614,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -635,7 +625,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -646,7 +636,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -668,7 +658,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -679,7 +669,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -690,7 +680,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -712,7 +702,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|fifo_badop
+name|vop_panic
 block|}
 block|,
 block|{
@@ -3010,25 +3000,6 @@ else|:
 name|EINVAL
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Fifo bad operation  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|fifo_badop
-parameter_list|()
-block|{
-name|panic
-argument_list|(
-literal|"fifo_badop called"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
