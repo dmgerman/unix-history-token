@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.38 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.39 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -743,20 +743,6 @@ name|ap
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|vp
-value|(ap->a_vp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|p
-value|(ap->a_p)
-end_define
-
 begin_block
 block|{
 specifier|register
@@ -779,14 +765,18 @@ name|np
 operator|=
 name|VTONFS
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|prtactive
 operator|&&
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_usecount
 operator|!=
@@ -796,7 +786,9 @@ name|vprint
 argument_list|(
 literal|"nfs_inactive: pushing active"
 argument_list|,
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 name|sp
@@ -826,7 +818,9 @@ name|nfs_removeit
 argument_list|(
 name|sp
 argument_list|,
-name|p
+name|ap
+operator|->
+name|a_p
 argument_list|)
 expr_stmt|;
 name|crfree
@@ -873,18 +867,6 @@ return|;
 block|}
 end_block
 
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|p
-end_undef
-
 begin_comment
 comment|/*  * Reclaim an nfsnode so that it can be used for other purposes.  */
 end_comment
@@ -904,13 +886,6 @@ name|ap
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|vp
-value|(ap->a_vp)
-end_define
-
 begin_block
 block|{
 specifier|register
@@ -921,7 +896,9 @@ name|np
 init|=
 name|VTONFS
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 decl_stmt|;
 specifier|register
@@ -932,7 +909,9 @@ name|nmp
 init|=
 name|VFSTONFS
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_mount
 argument_list|)
@@ -945,7 +924,9 @@ if|if
 condition|(
 name|prtactive
 operator|&&
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_usecount
 operator|!=
@@ -955,7 +936,9 @@ name|vprint
 argument_list|(
 literal|"nfs_reclaim: pushing active"
 argument_list|,
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the nfsnode from its hash chain. 	 */
@@ -1047,19 +1030,25 @@ expr_stmt|;
 block|}
 name|cache_purge
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_data
 argument_list|,
 name|M_NFSNODE
 argument_list|)
 expr_stmt|;
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_data
 operator|=
@@ -1076,12 +1065,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
 
 begin_comment
 comment|/*  * Lock an nfsnode  */
@@ -1102,13 +1085,6 @@ name|ap
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|vp
-value|(ap->a_vp)
-end_define
-
 begin_block
 block|{
 return|return
@@ -1118,12 +1094,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
 
 begin_comment
 comment|/*  * Unlock an nfsnode  */
@@ -1144,13 +1114,6 @@ name|ap
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|vp
-value|(ap->a_vp)
-end_define
-
 begin_block
 block|{
 return|return
@@ -1160,12 +1123,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
 
 begin_comment
 comment|/*  * Check for a locked nfsnode  */
@@ -1186,13 +1143,6 @@ name|ap
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|vp
-value|(ap->a_vp)
-end_define
-
 begin_block
 block|{
 return|return
@@ -1202,12 +1152,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
 
 begin_comment
 comment|/*  * Nfs abort op, called after namei() when a CREATE/DELETE isn't actually  * done. Currently nothing to do.  */
@@ -1228,19 +1172,13 @@ name|vop_abortop_args
 modifier|*
 name|ap
 decl_stmt|;
-define|#
-directive|define
-name|dvp
-value|(ap->a_dvp)
-define|#
-directive|define
-name|cnp
-value|(ap->a_cnp)
 block|{
 if|if
 condition|(
 operator|(
-name|cnp
+name|ap
+operator|->
+name|a_cnp
 operator|->
 name|cn_flags
 operator|&
@@ -1255,7 +1193,9 @@ name|HASBUF
 condition|)
 name|FREE
 argument_list|(
-name|cnp
+name|ap
+operator|->
+name|a_cnp
 operator|->
 name|cn_pnbuf
 argument_list|,
@@ -1269,18 +1209,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|dvp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|cnp
-end_undef
 
 end_unit
 

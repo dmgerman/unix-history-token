@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.45 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -107,22 +107,6 @@ name|vop_valloc_args
 modifier|*
 name|ap
 decl_stmt|;
-define|#
-directive|define
-name|pvp
-value|(ap->a_pvp)
-define|#
-directive|define
-name|notused
-value|(ap->a_mode)
-define|#
-directive|define
-name|cred
-value|(ap->a_cred)
-define|#
-directive|define
-name|vpp
-value|(ap->a_vpp)
 block|{
 name|struct
 name|lfs
@@ -178,7 +162,9 @@ name|fs
 operator|=
 name|VTOI
 argument_list|(
-name|pvp
+name|ap
+operator|->
+name|a_pvp
 argument_list|)
 operator|->
 name|i_lfs
@@ -314,7 +300,9 @@ name|LOG_ERR
 argument_list|,
 literal|"uid %d on %s: out of inodes\n"
 argument_list|,
-name|cred
+name|ap
+operator|->
+name|a_cred
 operator|->
 name|cr_uid
 argument_list|,
@@ -484,7 +472,9 @@ name|error
 operator|=
 name|lfs_vcreate
 argument_list|(
-name|pvp
+name|ap
+operator|->
+name|a_pvp
 operator|->
 name|v_mount
 argument_list|,
@@ -500,7 +490,9 @@ name|error
 operator|)
 return|;
 operator|*
-name|vpp
+name|ap
+operator|->
+name|a_vpp
 operator|=
 name|vp
 expr_stmt|;
@@ -587,30 +579,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|pvp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|notused
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|cred
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|vpp
-end_undef
 
 begin_comment
 comment|/* Create a new vnode/inode pair and initialize what fields we can. */
@@ -869,18 +837,6 @@ name|vop_vfree_args
 modifier|*
 name|ap
 decl_stmt|;
-define|#
-directive|define
-name|vp
-value|(ap->a_pvp)
-define|#
-directive|define
-name|notused1
-value|(ap->a_ino)
-define|#
-directive|define
-name|notused2
-value|(ap->a_mode)
 block|{
 name|SEGUSE
 modifier|*
@@ -916,7 +872,9 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_pvp
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1081,24 +1039,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|notused1
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|notused2
-end_undef
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	7.46 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -229,10 +229,6 @@ name|vop_reclaim_args
 modifier|*
 name|ap
 decl_stmt|;
-define|#
-directive|define
-name|vp
-value|(ap->a_vp)
 block|{
 specifier|register
 name|struct
@@ -249,7 +245,9 @@ if|if
 condition|(
 name|prtactive
 operator|&&
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_usecount
 operator|!=
@@ -259,7 +257,9 @@ name|vprint
 argument_list|(
 literal|"ufs_reclaim: pushing active"
 argument_list|,
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the inode from its hash chain. 	 */
@@ -267,7 +267,9 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 name|remque
@@ -278,7 +280,9 @@ expr_stmt|;
 comment|/* 	 * Purge old data structures associated with the inode. 	 */
 name|cache_purge
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -333,7 +337,9 @@ condition|)
 block|{
 name|dqrele
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|,
 name|ip
 operator|->
@@ -358,7 +364,9 @@ endif|#
 directive|endif
 switch|switch
 condition|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_mount
 operator|->
@@ -400,14 +408,18 @@ expr_stmt|;
 block|}
 name|FREE
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_data
 argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|vp
+name|ap
+operator|->
+name|a_vp
 operator|->
 name|v_data
 operator|=
@@ -420,12 +432,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
 
 begin_comment
 comment|/*  * Lock an inode. If its already locked, set the WANT bit and sleep.  */

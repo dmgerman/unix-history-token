@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -94,10 +94,6 @@ name|vop_bwrite_args
 modifier|*
 name|ap
 decl_stmt|;
-define|#
-directive|define
-name|bp
-value|(ap->a_bp)
 block|{
 name|int
 name|s
@@ -117,7 +113,9 @@ if|if
 condition|(
 operator|!
 operator|(
-name|bp
+name|ap
+operator|->
+name|a_bp
 operator|->
 name|b_flags
 operator|&
@@ -128,7 +126,9 @@ block|{
 operator|++
 name|locked_queue_count
 expr_stmt|;
-name|bp
+name|ap
+operator|->
+name|a_bp
 operator|->
 name|b_flags
 operator||=
@@ -136,7 +136,9 @@ name|B_DELWRI
 operator||
 name|B_LOCKED
 expr_stmt|;
-name|bp
+name|ap
+operator|->
+name|a_bp
 operator|->
 name|b_flags
 operator|&=
@@ -169,7 +171,9 @@ name|ufsmount
 operator|*
 operator|)
 operator|(
-name|bp
+name|ap
+operator|->
+name|a_bp
 operator|->
 name|b_vp
 operator|->
@@ -183,7 +187,9 @@ name|um_lfs
 operator|->
 name|lfs_ivnode
 operator|!=
-name|bp
+name|ap
+operator|->
+name|a_bp
 operator|->
 name|b_vp
 condition|)
@@ -191,9 +197,13 @@ endif|#
 directive|endif
 name|reassignbuf
 argument_list|(
-name|bp
+name|ap
+operator|->
+name|a_bp
 argument_list|,
-name|bp
+name|ap
+operator|->
+name|a_bp
 operator|->
 name|b_vp
 argument_list|)
@@ -206,7 +216,9 @@ expr_stmt|;
 block|}
 name|brelse
 argument_list|(
-name|bp
+name|ap
+operator|->
+name|a_bp
 argument_list|)
 expr_stmt|;
 return|return
@@ -216,12 +228,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|bp
-end_undef
 
 begin_comment
 comment|/*  * XXX  * This routine flushes buffers out of the B_LOCKED queue when LFS has too  * many locked down.  Eventually the pageout daemon will simply call LFS  * when pages need to be reclaimed.  Note, we have one static count of locked  * buffers, so we can't have more than a single file system.  To make this  * work for multiple file systems, put the count into the mount structure.  */

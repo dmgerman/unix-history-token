@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_subr.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,22 +66,6 @@ name|vop_blkatoff_args
 modifier|*
 name|ap
 decl_stmt|;
-define|#
-directive|define
-name|vp
-value|(ap->a_vp)
-define|#
-directive|define
-name|offset
-value|(ap->a_offset)
-define|#
-directive|define
-name|res
-value|(ap->a_res)
-define|#
-directive|define
-name|bpp
-value|(ap->a_bpp)
 block|{
 specifier|register
 name|struct
@@ -111,7 +95,9 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|)
 expr_stmt|;
 name|fs
@@ -126,7 +112,9 @@ name|lblkno
 argument_list|(
 name|fs
 argument_list|,
-name|offset
+name|ap
+operator|->
+name|a_offset
 argument_list|)
 expr_stmt|;
 name|bsize
@@ -137,7 +125,9 @@ name|fs
 argument_list|)
 expr_stmt|;
 operator|*
-name|bpp
+name|ap
+operator|->
+name|a_bpp
 operator|=
 name|NULL
 expr_stmt|;
@@ -147,7 +137,9 @@ name|error
 operator|=
 name|bread
 argument_list|(
-name|vp
+name|ap
+operator|->
+name|a_vp
 argument_list|,
 name|lbn
 argument_list|,
@@ -173,10 +165,14 @@ return|;
 block|}
 if|if
 condition|(
-name|res
+name|ap
+operator|->
+name|a_res
 condition|)
 operator|*
-name|res
+name|ap
+operator|->
+name|a_res
 operator|=
 name|bp
 operator|->
@@ -188,11 +184,15 @@ name|blkoff
 argument_list|(
 name|fs
 argument_list|,
-name|offset
+name|ap
+operator|->
+name|a_offset
 argument_list|)
 expr_stmt|;
 operator|*
-name|bpp
+name|ap
+operator|->
+name|a_bpp
 operator|=
 name|bp
 expr_stmt|;
@@ -203,30 +203,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|vp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|offset
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|res
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|bpp
-end_undef
 
 end_unit
 

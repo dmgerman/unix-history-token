@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1537,34 +1537,6 @@ name|ap
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|pvp
-value|(ap->a_pvp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mode
-value|(ap->a_mode)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cred
-value|(ap->a_cred)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vpp
-value|(ap->a_vpp)
-end_define
-
 begin_block
 block|{
 name|USES_VOP_VFREE
@@ -1600,7 +1572,9 @@ decl_stmt|,
 name|error
 decl_stmt|;
 operator|*
-name|vpp
+name|ap
+operator|->
+name|a_vpp
 operator|=
 name|NULL
 expr_stmt|;
@@ -1608,7 +1582,9 @@ name|pip
 operator|=
 name|VTOI
 argument_list|(
-name|pvp
+name|ap
+operator|->
+name|a_pvp
 argument_list|)
 expr_stmt|;
 name|fs
@@ -1633,7 +1609,9 @@ goto|;
 if|if
 condition|(
 operator|(
-name|mode
+name|ap
+operator|->
+name|a_mode
 operator|&
 name|IFMT
 operator|)
@@ -1695,7 +1673,9 @@ name|long
 operator|)
 name|ipref
 argument_list|,
-name|mode
+name|ap
+operator|->
+name|a_mode
 argument_list|,
 name|ffs_ialloccg
 argument_list|)
@@ -1713,13 +1693,17 @@ name|error
 operator|=
 name|FFS_VGET
 argument_list|(
-name|pvp
+name|ap
+operator|->
+name|a_pvp
 operator|->
 name|v_mount
 argument_list|,
 name|ino
 argument_list|,
-name|vpp
+name|ap
+operator|->
+name|a_vpp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1729,11 +1713,15 @@ condition|)
 block|{
 name|VOP_VFREE
 argument_list|(
-name|pvp
+name|ap
+operator|->
+name|a_pvp
 argument_list|,
 name|ino
 argument_list|,
-name|mode
+name|ap
+operator|->
+name|a_mode
 argument_list|)
 expr_stmt|;
 return|return
@@ -1747,7 +1735,9 @@ operator|=
 name|VTOI
 argument_list|(
 operator|*
-name|vpp
+name|ap
+operator|->
+name|a_vpp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1759,7 +1749,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mode = 0%o, inum = %d, fs = %s\n"
+literal|"ap->a_mode = 0%o, inum = %d, fs = %s\n"
 argument_list|,
 name|ip
 operator|->
@@ -1852,7 +1842,9 @@ name|ffs_fserr
 argument_list|(
 name|fs
 argument_list|,
-name|cred
+name|ap
+operator|->
+name|a_cred
 operator|->
 name|cr_uid
 argument_list|,
@@ -1875,30 +1867,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_undef
-undef|#
-directive|undef
-name|pvp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|mode
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|cred
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|vpp
-end_undef
 
 begin_comment
 comment|/*  * Find a cylinder to place a directory.  *  * The policy implemented by this algorithm is to select from  * among those cylinder groups with above the average number of  * free inodes, the one with the smallest number of directories.  */
@@ -5550,18 +5518,6 @@ name|vop_vfree_args
 modifier|*
 name|ap
 decl_stmt|;
-define|#
-directive|define
-name|pvp
-value|(ap->a_pvp)
-define|#
-directive|define
-name|ino
-value|(ap->a_ino)
-define|#
-directive|define
-name|mode
-value|(ap->a_mode)
 block|{
 specifier|register
 name|struct
@@ -5595,7 +5551,9 @@ name|pip
 operator|=
 name|VTOI
 argument_list|(
-name|pvp
+name|ap
+operator|->
+name|a_pvp
 argument_list|)
 expr_stmt|;
 name|fs
@@ -5609,7 +5567,9 @@ condition|(
 operator|(
 name|u_int
 operator|)
-name|ino
+name|ap
+operator|->
+name|a_ino
 operator|>=
 name|fs
 operator|->
@@ -5621,13 +5581,15 @@ name|fs_ncg
 condition|)
 name|panic
 argument_list|(
-literal|"ifree: range: dev = 0x%x, ino = %d, fs = %s\n"
+literal|"ifree: range: dev = 0x%x, ap->a_ino = %d, fs = %s\n"
 argument_list|,
 name|pip
 operator|->
 name|i_dev
 argument_list|,
-name|ino
+name|ap
+operator|->
+name|a_ino
 argument_list|,
 name|fs
 operator|->
@@ -5640,7 +5602,9 @@ name|itog
 argument_list|(
 name|fs
 argument_list|,
-name|ino
+name|ap
+operator|->
+name|a_ino
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5769,7 +5733,9 @@ name|time
 operator|.
 name|tv_sec
 expr_stmt|;
-name|ino
+name|ap
+operator|->
+name|a_ino
 operator|%=
 name|fs
 operator|->
@@ -5784,19 +5750,23 @@ argument_list|(
 name|cgp
 argument_list|)
 argument_list|,
-name|ino
+name|ap
+operator|->
+name|a_ino
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = 0x%x, ino = %d, fs = %s\n"
+literal|"dev = 0x%x, ap->a_ino = %d, fs = %s\n"
 argument_list|,
 name|pip
 operator|->
 name|i_dev
 argument_list|,
-name|ino
+name|ap
+operator|->
+name|a_ino
 argument_list|,
 name|fs
 operator|->
@@ -5824,12 +5794,16 @@ argument_list|(
 name|cgp
 argument_list|)
 argument_list|,
-name|ino
+name|ap
+operator|->
+name|a_ino
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ino
+name|ap
+operator|->
+name|a_ino
 operator|<
 name|cgp
 operator|->
@@ -5839,7 +5813,9 @@ name|cgp
 operator|->
 name|cg_irotor
 operator|=
-name|ino
+name|ap
+operator|->
+name|a_ino
 expr_stmt|;
 name|cgp
 operator|->
@@ -5870,7 +5846,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|mode
+name|ap
+operator|->
+name|a_mode
 operator|&
 name|IFMT
 operator|)
@@ -5923,24 +5901,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|pvp
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|ino
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|mode
-end_undef
 
 begin_comment
 comment|/*  * Find a block of the specified size in the specified cylinder group.  *  * It is a panic if a request is made to find a block if none are  * available.  */
