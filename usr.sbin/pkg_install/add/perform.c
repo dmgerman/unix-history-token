@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.25 1995/05/30 03:49:54 rgrimes Exp $"
+literal|"$Id: perform.c,v 1.25.2.1 1995/06/10 08:14:08 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -953,7 +953,7 @@ name|path
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"%s/%s"
+literal|"%s/%s.tgz"
 argument_list|,
 name|Home
 argument_list|,
