@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bcopy.c	5.9 (Berkeley) %G%"
+literal|"@(#)bcopy.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,7 +129,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|char
+name|void
 modifier|*
 name|dst0
 decl_stmt|;
@@ -137,7 +137,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|const
-name|char
+name|void
 modifier|*
 name|src0
 decl_stmt|;
