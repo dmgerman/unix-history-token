@@ -139,12 +139,8 @@ name|promcnputc
 block|,
 name|NULL
 block|,
-name|makedev
-argument_list|(
-literal|97
-argument_list|,
 literal|0
-argument_list|)
+comment|/* makedev(97,0) */
 block|,
 name|CN_NORMAL
 block|}
@@ -416,6 +412,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* XXX fake out the console routines, for now */
+name|promcons
+operator|.
+name|cn_dev
+operator|=
+name|makedev
+argument_list|(
+literal|97
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|cn_tab
 operator|=
 operator|&
