@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.43 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3636,12 +3636,6 @@ expr_stmt|;
 block|}
 name|vap
 operator|->
-name|va_size_rsv
-operator|=
-literal|0
-expr_stmt|;
-name|vap
-operator|->
 name|va_blocksize
 operator|=
 name|fxdr_unsigned
@@ -3676,12 +3670,6 @@ name|fa_blocks
 argument_list|)
 operator|*
 name|NFS_FABLKSIZE
-expr_stmt|;
-name|vap
-operator|->
-name|va_bytes_rsv
-operator|=
-literal|0
 expr_stmt|;
 name|vap
 operator|->
@@ -3799,6 +3787,23 @@ operator|.
 name|tv_usec
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_NOQUAD
+name|vap
+operator|->
+name|va_size_rsv
+operator|=
+literal|0
+expr_stmt|;
+name|vap
+operator|->
+name|va_bytes_rsv
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|np
 operator|->
 name|n_attrstamp
