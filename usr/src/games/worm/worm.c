@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worm.c	5.5 (Berkeley) %G%"
+literal|"@(#)worm.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,9 +347,6 @@ argument_list|,
 name|leave
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
 name|signal
 argument_list|(
 name|SIGTSTP
@@ -358,8 +355,6 @@ name|suspend
 argument_list|)
 expr_stmt|;
 comment|/* process control signal */
-endif|#
-directive|endif
 name|initscr
 argument_list|()
 expr_stmt|;
@@ -1313,7 +1308,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Well you ran into something and the game is over.\n"
+literal|"Well, you ran into something and the game is over.\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1360,9 +1355,6 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
 name|kill
 argument_list|(
 name|getpid
@@ -1378,32 +1370,6 @@ argument_list|,
 name|suspend
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sh
-operator|=
-name|getenv
-argument_list|(
-literal|"SHELL"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sh
-operator|==
-name|NULL
-condition|)
-name|sh
-operator|=
-literal|"/bin/sh"
-expr_stmt|;
-name|system
-argument_list|(
-name|sh
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|crmode
 argument_list|()
 expr_stmt|;
