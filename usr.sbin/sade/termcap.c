@@ -192,6 +192,14 @@ name|i
 decl_stmt|,
 name|on
 decl_stmt|;
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|==
+literal|1
+condition|)
+block|{
 name|DebugFD
 operator|=
 name|open
@@ -244,6 +252,7 @@ name|OnVTY
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ColorDisplay

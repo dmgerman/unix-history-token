@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.28 1995/12/04 02:22:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: package.c,v 1.29 1996/03/18 15:28:05 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -79,6 +79,8 @@ argument_list|(
 name|mediaDevice
 argument_list|,
 name|name
+argument_list|,
+name|FALSE
 argument_list|)
 return|;
 block|}
@@ -99,6 +101,9 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|Boolean
+name|depended
 parameter_list|)
 block|{
 name|char
@@ -179,9 +184,10 @@ return|return
 name|RET_FAIL
 return|;
 block|}
+comment|/* Be initially optimistic */
 name|ret
 operator|=
-name|RET_FAIL
+name|RET_SUCCESS
 expr_stmt|;
 comment|/* Make a couple of paranoid locations for temp files to live if user specified none */
 if|if
@@ -236,17 +242,6 @@ else|:
 literal|".tgz"
 argument_list|)
 expr_stmt|;
-name|msgNotify
-argument_list|(
-literal|"Adding %s\nfrom %s"
-argument_list|,
-name|path
-argument_list|,
-name|dev
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|fd
 operator|=
 name|dev
@@ -280,6 +275,26 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|msgNotify
+argument_list|(
+literal|"Adding %s%s\nfrom %s"
+argument_list|,
+name|path
+argument_list|,
+name|depended
+condition|?
+literal|" (as a dependency)"
+else|:
+literal|""
+argument_list|,
+name|dev
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|pipe
 argument_list|(
 name|pfd
@@ -370,9 +385,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|tot
 operator|=
 literal|0
@@ -444,7 +456,18 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|mvprintw
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Package %s read successfully - waiting for pkg_add"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|refresh
 argument_list|()
 expr_stmt|;
 name|i
@@ -526,6 +549,10 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+name|ret
+operator|=
+name|RET_FAIL
+expr_stmt|;
 block|}
 return|return
 name|ret
