@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.38 (Berkeley) %G%"
+literal|"@(#)conf.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2152,7 +2152,11 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
+operator|&
 name|Argv
+index|[
+literal|0
+index|]
 index|[
 name|i
 index|]
