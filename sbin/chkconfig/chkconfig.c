@@ -9,7 +9,7 @@ name|char
 name|chkconfig_c_rcsid
 index|[]
 init|=
-literal|"$Id: chkconfig.c,v 1.2 1993/11/11 23:30:34 wollman Exp $"
+literal|"$Id: chkconfig.c,v 1.3 1993/11/11 23:53:04 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,7 +76,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|getflags
+name|printflags
 parameter_list|(
 specifier|const
 name|char
@@ -369,7 +369,7 @@ case|:
 return|return
 name|doflags
 condition|?
-name|getflags
+name|printflags
 argument_list|(
 name|argv
 index|[
@@ -758,7 +758,8 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|char
+modifier|*
 name|getflags
 parameter_list|(
 specifier|const
@@ -780,11 +781,31 @@ name|char
 modifier|*
 name|fname
 decl_stmt|;
-name|int
+name|char
+modifier|*
 name|rv
 init|=
-literal|0
+name|strdup
+argument_list|(
+literal|""
+argument_list|)
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|rv
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|die
+argument_list|(
+literal|"getflags: strdup"
+argument_list|)
+expr_stmt|;
+block|}
 name|fname
 operator|=
 name|confname
@@ -841,20 +862,34 @@ condition|(
 name|line
 condition|)
 block|{
-name|fputs
+name|free
+argument_list|(
+name|rv
+argument_list|)
+expr_stmt|;
+name|rv
+operator|=
+name|strdup
 argument_list|(
 name|line
-argument_list|,
-name|stdout
 argument_list|)
 expr_stmt|;
-name|fputc
+if|if
+condition|(
+operator|!
+name|rv
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|die
 argument_list|(
-literal|'\n'
-argument_list|,
-name|stdout
+literal|"getflags: strdup"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|fclose
 argument_list|(
@@ -869,6 +904,58 @@ name|void
 operator|*
 operator|)
 name|fname
+argument_list|)
+expr_stmt|;
+return|return
+name|rv
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|printflags
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|int
+name|rv
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
+name|flags
+decl_stmt|;
+name|flags
+operator|=
+name|getflags
+argument_list|(
+name|str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+index|[
+literal|0
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -1046,6 +1133,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|char
+modifier|*
+name|flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1139,6 +1230,15 @@ name|state
 operator|=
 operator|!
 name|testvalue
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
+name|q
+operator|->
+name|flags
+operator|=
+name|getflags
 argument_list|(
 name|fname
 argument_list|)
@@ -1341,7 +1441,7 @@ comment|/*    * Now we're done reading the file names, so we can print them out.
 define|#
 directive|define
 name|FORMAT
-value|"%15s %-3s\n"
+value|"%15s %-5s %s\n"
 if|if
 condition|(
 name|sortbystate
@@ -1349,20 +1449,24 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%15s %s\n"
+literal|"%15s %s %s\n"
 argument_list|,
 literal|"Option"
 argument_list|,
 literal|"State"
+argument_list|,
+literal|"Flags"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%15s %s\n"
+literal|"%15s %s %s\n"
 argument_list|,
-literal|"======"
+literal|"==============="
 argument_list|,
 literal|"====="
+argument_list|,
+literal|"===================="
 argument_list|)
 expr_stmt|;
 name|doneheader
@@ -1387,6 +1491,10 @@ operator|->
 name|name
 argument_list|,
 literal|"off"
+argument_list|,
+name|temp
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 name|free
@@ -1394,6 +1502,13 @@ argument_list|(
 name|temp
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|temp
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 name|offhead
@@ -1417,20 +1532,24 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%15s %s\n"
+literal|"%15s %s %s\n"
 argument_list|,
 literal|"Option"
 argument_list|,
 literal|"State"
+argument_list|,
+literal|"Flags"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%15s %s\n"
+literal|"%15s %s %s\n"
 argument_list|,
-literal|"======"
+literal|"==============="
 argument_list|,
 literal|"====="
+argument_list|,
+literal|"===================="
 argument_list|)
 expr_stmt|;
 block|}
@@ -1458,6 +1577,10 @@ condition|?
 literal|"on"
 else|:
 literal|"off"
+argument_list|,
+name|temp
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 name|free
@@ -1465,6 +1588,13 @@ argument_list|(
 name|temp
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|temp
+operator|->
+name|flags
 argument_list|)
 expr_stmt|;
 name|onhead
