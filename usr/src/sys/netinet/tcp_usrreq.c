@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.56	82/04/10	*/
+comment|/*	tcp_usrreq.c	1.57	82/04/30	*/
 end_comment
 
 begin_include
@@ -1009,7 +1009,7 @@ name|tcp_recvspace
 init|=
 literal|1024
 operator|*
-literal|3
+literal|2
 decl_stmt|;
 end_decl_stmt
 
