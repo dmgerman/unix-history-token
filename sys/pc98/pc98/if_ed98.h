@@ -2052,7 +2052,7 @@ literal|0x0000
 expr_stmt|;
 name|ED_NOVELL_RESET
 operator|=
-literal|0xc100
+literal|0xc000
 expr_stmt|;
 name|nports
 operator|=
