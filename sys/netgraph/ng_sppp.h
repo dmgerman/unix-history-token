@@ -48,13 +48,6 @@ name|NG_SPPP_IFACE_NAME
 value|"sppp"
 end_define
 
-begin_define
-define|#
-directive|define
-name|NG_SPPP_IFACE_NAME_MAX
-value|15
-end_define
-
 begin_comment
 comment|/* My hook names */
 end_comment
@@ -81,22 +74,6 @@ comment|/* returns struct ng_sppp_ifname */
 block|}
 enum|;
 end_enum
-
-begin_struct
-struct|struct
-name|ng_sppp_ifname
-block|{
-name|char
-name|ngif_name
-index|[
-name|NG_SPPP_IFACE_NAME_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_endif
 endif|#
