@@ -444,30 +444,13 @@ block|,
 literal|1
 block|}
 block|,
+if|#
+directive|if
+literal|0
 comment|/* use igain for the mic 20dB boost */
-index|[
-name|SOUND_MIXER_IGAIN
-index|]
-operator|=
-block|{
-operator|-
-name|AC97_MIX_MIC
-block|,
-literal|1
-block|,
-literal|6
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|1
-block|}
-block|,
+block|[SOUND_MIXER_IGAIN] 	= { -AC97_MIX_MIC, 	1, 6, 0, 0, 0, 1, 1 },
+endif|#
+directive|endif
 index|[
 name|SOUND_MIXER_CD
 index|]
