@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* socket.h 4.2 81/10/29 */
+comment|/* socket.h 4.3 81/11/07 */
 end_comment
 
 begin_comment
@@ -23,47 +23,24 @@ modifier|*
 name|uc_proc
 decl_stmt|;
 comment|/* user proc */
-union|union
-block|{
+name|caddr_t
+name|uc_pcb
+decl_stmt|;
 comment|/* protocol control block */
-name|char
-modifier|*
-name|unull
-decl_stmt|;
-comment|/* general */
 name|struct
-name|tcb
+name|protosw
 modifier|*
-name|utcb
+name|uc_proto
 decl_stmt|;
-comment|/* for tcp */
-block|}
-name|U_cp
-union|;
-define|#
-directive|define
-name|uc_tcb
-value|U_cp.utcb
+comment|/* protocol handle */
+comment|/* sbuf and rbuf should be uc_s and uc_r which are structures with */
+comment|/* fields: s_buf, s_mbmax, s_mbcnt, s_cc, s_ccmax */
 name|struct
 name|mbuf
 modifier|*
 name|uc_sbuf
 decl_stmt|;
 comment|/* user send buffer */
-name|struct
-name|mbuf
-modifier|*
-name|uc_rbuf
-decl_stmt|;
-comment|/* user receive buffer */
-name|u_char
-name|uc_lolink
-decl_stmt|;
-comment|/* lowest link no. in range (raw) */
-name|u_char
-name|uc_hilink
-decl_stmt|;
-comment|/* highest link no. in range (raw) */
 name|u_char
 name|uc_snd
 decl_stmt|;
@@ -72,17 +49,38 @@ name|u_char
 name|uc_ssize
 decl_stmt|;
 comment|/* # bufs on send buffer */
-define|#
-directive|define
-name|uc_timeo
-value|uc_ssize
-comment|/* user timeout parameter */
+name|short
+name|uc_scc
+decl_stmt|;
+comment|/* not used yet */
+name|short
+name|uc_shiwat
+decl_stmt|;
+comment|/* not used yet */
+name|struct
+name|mbuf
+modifier|*
+name|uc_rbuf
+decl_stmt|;
+comment|/* user receive buffer */
+name|u_char
+name|uc_rcv
+decl_stmt|;
+comment|/* not used now */
+name|u_char
+name|uc_rsize
+decl_stmt|;
+comment|/* not used now */
+name|short
+name|uc_rcc
+decl_stmt|;
 name|short
 name|uc_rhiwat
 decl_stmt|;
 name|short
-name|uc_rcc
+name|uc_timeo
 decl_stmt|;
+comment|/* open timeout */
 name|u_char
 name|uc_state
 decl_stmt|;
@@ -97,26 +95,16 @@ modifier|*
 name|uc_rsel
 decl_stmt|;
 comment|/* read selecting proc */
-name|struct
-name|th
-modifier|*
-name|uc_template
-decl_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|struct
-name|th
-modifier|*
-name|tcp_template
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* uc_flags field definitions */
+end_comment
+
+begin_comment
+comment|/* these belong within TCP */
 end_comment
 
 begin_define
@@ -141,6 +129,10 @@ begin_comment
 comment|/* urgent data sent */
 end_comment
 
+begin_comment
+comment|/* end belong in TCP */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -160,29 +152,7 @@ value|00020
 end_define
 
 begin_comment
-comment|/* this is a TCP connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UIP
-value|00040
-end_define
-
-begin_comment
-comment|/* this is a raw IP connection */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|URAW
-value|00100
-end_define
-
-begin_comment
-comment|/* this is a raw 1822 connection */
+comment|/* SHOULD BE IMPLIED BY uc_proto */
 end_comment
 
 begin_define
@@ -195,24 +165,6 @@ end_define
 begin_comment
 comment|/* awaiting a connection */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|UCTL
-value|00400
-end_define
-
-begin_comment
-comment|/* this is a control port only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|URMSK
-value|00560
-end_define
 
 begin_define
 define|#
