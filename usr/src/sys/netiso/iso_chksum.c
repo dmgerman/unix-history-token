@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mbuf.h"
 end_include
 
@@ -129,7 +135,7 @@ name|len
 expr_stmt|;
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|m
 operator|->
@@ -251,7 +257,7 @@ argument_list|)
 decl_stmt|;
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|m
 operator|->
@@ -449,7 +455,7 @@ condition|)
 block|{
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|m
 operator|->
@@ -461,7 +467,7 @@ expr_stmt|;
 comment|/* RAH: don't cksum more than l bytes */
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|len
 argument_list|,
@@ -1050,7 +1056,7 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|len
 argument_list|,
