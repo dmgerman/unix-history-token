@@ -576,8 +576,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * If no IPX addresses have been set yet but the interfaces 	 * are receiving, can't do anything with incoming packets yet. 	 */
 if|if
 condition|(
