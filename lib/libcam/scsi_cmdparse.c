@@ -190,7 +190,7 @@ parameter_list|(
 name|ARG
 parameter_list|)
 define|\
-value|do \ 	{ \ 		if (!suppress) \ 		{ \ 			if (arg_put) \ 				(*arg_put)(puthook, (letter == 't' ? \ 					'b' : letter), \ 					(void *)((long)(ARG)), 1, field_name); \ 			else \ 				*(va_arg(ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
+value|do \ 	{ \ 		if (!suppress) \ 		{ \ 			if (arg_put) \ 				(*arg_put)(puthook, (letter == 't' ? \ 					'b' : letter), \ 					(void *)((long)(ARG)), width, \ 					field_name); \ 			else \ 				*(va_arg(ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
 name|u_char
 name|bits
 init|=

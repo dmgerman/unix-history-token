@@ -487,7 +487,7 @@ literal|"modepage"
 block|,
 name|CAM_ARG_MODE_PAGE
 block|,
-literal|"dem:P:"
+literal|"bdelm:P:"
 block|}
 block|,
 block|{
@@ -7213,6 +7213,15 @@ name|page_control
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|binary
+init|=
+literal|0
+decl_stmt|,
+name|list
+init|=
+literal|0
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -7238,6 +7247,14 @@ name|c
 condition|)
 block|{
 case|case
+literal|'b'
+case|:
+name|binary
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'d'
 case|:
 name|arglist
@@ -7251,6 +7268,14 @@ case|:
 name|arglist
 operator||=
 name|CAM_ARG_MODE_EDIT
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|list
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -7335,6 +7360,10 @@ name|mode_page
 operator|==
 operator|-
 literal|1
+operator|&&
+name|list
+operator|==
+literal|0
 condition|)
 name|errx
 argument_list|(
@@ -7343,6 +7372,29 @@ argument_list|,
 literal|"you must specify a mode page!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|list
+condition|)
+block|{
+name|mode_list
+argument_list|(
+name|device
+argument_list|,
+name|page_control
+argument_list|,
+name|arglist
+operator|&
+name|CAM_ARG_DBD
+argument_list|,
+name|retry_count
+argument_list|,
+name|timeout
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|mode_edit
 argument_list|(
 name|device
@@ -7359,11 +7411,14 @@ name|arglist
 operator|&
 name|CAM_ARG_MODE_EDIT
 argument_list|,
+name|binary
+argument_list|,
 name|retry_count
 argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -13337,8 +13392,8 @@ literal|"        camcontrol eject      [dev_id][generic args]\n"
 literal|"        camcontrol rescan<bus[:target:lun]>\n"
 literal|"        camcontrol reset<bus[:target:lun]>\n"
 literal|"        camcontrol defects    [dev_id][generic args]<-f format> [-P][-G]\n"
-literal|"        camcontrol modepage   [dev_id][generic args]<-m page> [-P pagectl]\n"
-literal|"                              [-e][-d]\n"
+literal|"        camcontrol modepage   [dev_id][generic args]<-m page | -l>\n"
+literal|"                              [-P pagectl][-e | -b][-d]\n"
 literal|"        camcontrol cmd        [dev_id][generic args]<-c cmd [args]>\n"
 literal|"                              [-i len fmt|-o len fmt [args]]\n"
 literal|"        camcontrol debug      [-I][-T][-S][-c]<all|bus[:target[:lun]]|off>\n"
@@ -13391,8 +13446,10 @@ literal|"-u unit           specify unit number, e.g. \"0\", \"5\"\n"
 literal|"-E                have the kernel attempt to perform SCSI error recovery\n"
 literal|"-C count          specify the SCSI command retry count (needs -E to work)\n"
 literal|"modepage arguments:\n"
+literal|"-l                list all available mode pages\n"
 literal|"-m page           specify the mode page to view or edit\n"
 literal|"-e                edit the specified mode page\n"
+literal|"-b                force view to binary mode\n"
 literal|"-d                disable block descriptors for mode sense\n"
 literal|"-P pgctl          page control field 0-3\n"
 literal|"defects arguments:\n"
