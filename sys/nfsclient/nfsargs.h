@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.27 1997/05/19 14:36:46 dfr Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs.h	8.4 (Berkeley) 5/1/95  * $Id: nfs.h,v 1.28 1997/06/03 17:22:45 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -2318,6 +2318,61 @@ define|\
 value|(((o)->nd_flag& ND_KERBAUTH) == ((n)->nd_flag& ND_KERBAUTH)&& \  	 !bcmp((caddr_t)&(o)->nd_cr, (caddr_t)&(n)->nd_cr, \ 		sizeof (struct ucred)))
 end_define
 
+begin_comment
+comment|/*  * Defines for WebNFS  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WEBNFS_ESC_CHAR
+value|'%'
+end_define
+
+begin_define
+define|#
+directive|define
+name|WEBNFS_SPECCHAR_START
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|WEBNFS_NATIVE_CHAR
+value|0x80
+end_define
+
+begin_comment
+comment|/*  * ..  * Possibly more here in the future.  */
+end_comment
+
+begin_comment
+comment|/*  * Macro for converting escape characters in WebNFS pathnames.  * Should really be in libkern.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEXTOC
+parameter_list|(
+name|c
+parameter_list|)
+define|\
+value|((c)>= 'a' ? ((c) - ('a' - 10)) : \ 	    ((c)>= 'A' ? ((c) - ('A' - 10)) : ((c) - '0')))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEXSTRTOI
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|((HEXTOC(p[0])<< 4) + HEXTOC(p[1]))
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3014,6 +3069,8 @@ operator|,
 expr|struct
 name|proc
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)
@@ -3742,6 +3799,43 @@ name|int
 operator|*
 operator|,
 name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfsrv_setpublicfs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+operator|,
+expr|struct
+name|netexport
+operator|*
+operator|,
+expr|struct
+name|export_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nfs_ispublicfh
+name|__P
+argument_list|(
+operator|(
+name|fhandle_t
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
