@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.15	82/07/01	*/
+comment|/*	ufs_inode.c	4.16	82/07/01	*/
 end_comment
 
 begin_include
@@ -1371,6 +1371,31 @@ name|IACC
 operator||
 name|ICHG
 operator|)
+expr_stmt|;
+name|dp
+operator|=
+name|bp
+operator|->
+name|b_un
+operator|.
+name|b_dino
+operator|+
+name|itoo
+argument_list|(
+name|fp
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|di_ic
+operator|=
+name|ip
+operator|->
+name|i_ic
 expr_stmt|;
 if|if
 condition|(
