@@ -63,9 +63,9 @@ directive|ifndef
 name|HZ
 end_ifndef
 
-begin_elif
-elif|#
-directive|elif
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__amd64__
@@ -80,7 +80,7 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
