@@ -81,9 +81,11 @@ begin_comment
 comment|// 0
 end_comment
 
-begin_empty
-empty|#include_next<string.h>
-end_empty
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_if
 if|#
