@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.13 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,10 +680,7 @@ name|buf_ptr
 argument_list|)
 condition|)
 block|{
-name|check_size
-argument_list|(
-name|token
-argument_list|)
+name|CHECK_SIZE_TOKEN
 expr_stmt|;
 operator|*
 name|e_token
@@ -717,10 +714,7 @@ else|else
 name|seendot
 operator|++
 expr_stmt|;
-name|check_size
-argument_list|(
-name|token
-argument_list|)
+name|CHECK_SIZE_TOKEN
 expr_stmt|;
 operator|*
 name|e_token
@@ -769,10 +763,7 @@ expr_stmt|;
 name|seendot
 operator|++
 expr_stmt|;
-name|check_size
-argument_list|(
-name|token
-argument_list|)
+name|CHECK_SIZE_TOKEN
 expr_stmt|;
 operator|*
 name|e_token
@@ -838,10 +829,7 @@ name|alphanum
 condition|)
 block|{
 comment|/* copy it over */
-name|check_size
-argument_list|(
-name|token
-argument_list|)
+name|CHECK_SIZE_TOKEN
 expr_stmt|;
 operator|*
 name|e_token
@@ -1503,12 +1491,9 @@ goto|goto
 name|stop_lit
 goto|;
 block|}
-name|check_size
-argument_list|(
-name|token
-argument_list|)
+name|CHECK_SIZE_TOKEN
 expr_stmt|;
-comment|/* Only have to do this once in this loop, 					 * since check_size guarantees that there 					 * are at least 5 entries left */
+comment|/* Only have to do this once in this loop, 					 * since CHECK_SIZE guarantees that there 					 * are at least 5 entries left */
 operator|*
 name|e_token
 operator|=

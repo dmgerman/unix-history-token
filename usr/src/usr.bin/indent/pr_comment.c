@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_comment.c	5.9 (Berkeley) %G%"
+literal|"@(#)pr_comment.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -508,10 +508,7 @@ name|last_nl
 operator|=
 literal|0
 expr_stmt|;
-name|check_size
-argument_list|(
-name|com
-argument_list|)
+name|CHECK_SIZE_COM
 expr_stmt|;
 switch|switch
 condition|(
@@ -764,10 +761,7 @@ block|}
 name|dump_line
 argument_list|()
 expr_stmt|;
-name|check_size
-argument_list|(
-name|com
-argument_list|)
+name|CHECK_SIZE_COM
 expr_stmt|;
 operator|*
 name|e_com
@@ -940,10 +934,7 @@ name|last_bl
 operator|=
 name|e_com
 expr_stmt|;
-name|check_size
-argument_list|(
-name|com
-argument_list|)
+name|CHECK_SIZE_COM
 expr_stmt|;
 operator|*
 name|e_com
@@ -1237,10 +1228,7 @@ operator|.
 name|com_col
 expr_stmt|;
 block|}
-name|check_size
-argument_list|(
-name|com
-argument_list|)
+name|CHECK_SIZE_COM
 expr_stmt|;
 operator|*
 name|e_com

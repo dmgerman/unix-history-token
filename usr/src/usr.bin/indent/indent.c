@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.13 (Berkeley) %G%"
+literal|"@(#)indent.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1925,10 +1925,7 @@ operator|++
 name|t_ptr
 control|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -1976,10 +1973,7 @@ name|false
 expr_stmt|;
 comment|/* cancel forced newline after newline, form 				 * feed, etc */
 comment|/*-----------------------------------------------------*\ 	|	   do switch on type of token scanned		| 	\*-----------------------------------------------------*/
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 switch|switch
 condition|(
@@ -2179,10 +2173,7 @@ operator|<
 name|dec_ind
 condition|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -2604,10 +2595,7 @@ name|i
 operator|)
 condition|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -2653,10 +2641,7 @@ operator|++
 name|t_ptr
 control|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -2805,10 +2790,7 @@ operator|++
 name|t_ptr
 control|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -3128,10 +3110,7 @@ literal|1
 operator|)
 condition|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -4161,10 +4140,7 @@ operator|<
 name|dec_ind
 condition|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -4286,10 +4262,7 @@ operator|++
 name|t_ptr
 control|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -4343,10 +4316,7 @@ operator|++
 name|t_ptr
 control|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -4426,10 +4396,7 @@ literal|1
 operator|)
 condition|)
 block|{
-name|check_size
-argument_list|(
-name|code
-argument_list|)
+name|CHECK_SIZE_CODE
 expr_stmt|;
 operator|*
 name|e_code
@@ -4588,10 +4555,7 @@ operator|||
 name|in_comment
 condition|)
 block|{
-name|check_size
-argument_list|(
-name|lab
-argument_list|)
+name|CHECK_SIZE_LAB
 expr_stmt|;
 operator|*
 name|e_lab

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)indent_globs.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985 Sun Microsystems, Inc.  * Copyright (c) 1980 The Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley, the University of Illinois,  * Urbana, and Sun Microsystems, Inc.  The name of either University  * or Sun Microsystems may not be used to endorse or promote products  * derived from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)indent_globs.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -110,40 +110,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|check_size
-parameter_list|(
-name|name
-parameter_list|)
+name|CHECK_SIZE_CODE
 define|\
-value|if (e_
-comment|/**/
-value|name>= l_
-comment|/**/
-value|name) { \ 	    register nsize = l_
-comment|/**/
-value|name-s_
-comment|/**/
-value|name+400; \ 	    name
-comment|/**/
-value|buf = (char *) realloc(name
-comment|/**/
-value|buf, nsize); \ 	    e_
-comment|/**/
-value|name = name
-comment|/**/
-value|buf + (e_
-comment|/**/
-value|name-s_
-comment|/**/
-value|name) + 1; \ 	    l_
-comment|/**/
-value|name = name
-comment|/**/
-value|buf + nsize - 5; \ 	    s_
-comment|/**/
-value|name = name
-comment|/**/
-value|buf + 1; \ 	}
+value|if (e_code>= l_code) { \ 	    register nsize = l_code-s_code+400; \ 	    codebuf = (char *) realloc(codebuf, nsize); \ 	    e_code = codebuf + (e_code-s_code) + 1; \ 	    l_code = codebuf + nsize - 5; \ 	    s_code = codebuf + 1; \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK_SIZE_COM
+define|\
+value|if (e_com>= l_com) { \ 	    register nsize = l_com-s_com+400; \ 	    combuf = (char *) realloc(combuf, nsize); \ 	    e_com = combuf + (e_com-s_com) + 1; \ 	    l_com = combuf + nsize - 5; \ 	    s_com = combuf + 1; \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK_SIZE_LAB
+define|\
+value|if (e_lab>= l_lab) { \ 	    register nsize = l_lab-s_lab+400; \ 	    labbuf = (char *) realloc(labbuf, nsize); \ 	    e_lab = labbuf + (e_lab-s_lab) + 1; \ 	    l_lab = labbuf + nsize - 5; \ 	    s_lab = labbuf + 1; \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECK_SIZE_TOKEN
+define|\
+value|if (e_token>= l_token) { \ 	    register nsize = l_token-s_token+400; \ 	    tokenbuf = (char *) realloc(tokenbuf, nsize); \ 	    e_token = tokenbuf + (e_token-s_token) + 1; \ 	    l_token = tokenbuf + nsize - 5; \ 	    s_token = tokenbuf + 1; \ 	}
 end_define
 
 begin_decl_stmt
