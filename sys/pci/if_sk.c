@@ -357,6 +357,14 @@ literal|"Marvell Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_MARVELL
+block|,
+name|DEVICEID_BELKIN_5005
+block|,
+literal|"Belkin F5D5005 Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|VENDORID_3COM
 block|,
 name|DEVICEID_3COM_3C940
@@ -6939,6 +6947,9 @@ expr_stmt|;
 break|break;
 case|case
 name|DEVICEID_SK_V2
+case|:
+case|case
+name|DEVICEID_BELKIN_5005
 case|:
 case|case
 name|DEVICEID_3COM_3C940
