@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm.c	5.29 (Berkeley) %G%"
+literal|"@(#)kvm.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2240,7 +2240,7 @@ name|u_long
 name|kva
 decl_stmt|;
 specifier|register
-name|char
+name|void
 modifier|*
 name|buf
 decl_stmt|;
@@ -2254,7 +2254,7 @@ name|int
 name|cc
 decl_stmt|;
 specifier|register
-name|char
+name|void
 modifier|*
 name|cp
 decl_stmt|;
@@ -2492,6 +2492,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+operator|(
+name|char
+operator|*
+operator|)
 name|cp
 operator|+=
 name|cc
@@ -2507,8 +2511,16 @@ expr_stmt|;
 block|}
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|cp
 operator|-
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|)
 return|;
@@ -2539,7 +2551,7 @@ name|kva
 decl_stmt|;
 specifier|register
 specifier|const
-name|char
+name|void
 modifier|*
 name|buf
 decl_stmt|;
