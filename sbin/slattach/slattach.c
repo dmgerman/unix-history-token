@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,17 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)slattach.c	4.6 (Berkeley) 6/1/90";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "from: @(#)slattach.c	4.6 (Berkeley) 6/1/90";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.32 1998/06/28 20:33:36 bde Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -268,7 +272,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* get tty device as controling terminal */
+comment|/* get tty device as controlling terminal */
 end_comment
 
 begin_decl_stmt
@@ -486,7 +490,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* allready running exit_handler */
+comment|/* already running exit_handler */
 end_comment
 
 begin_decl_stmt
@@ -601,15 +605,6 @@ parameter_list|)
 block|{
 name|int
 name|option
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 while|while
 condition|(
@@ -988,7 +983,7 @@ expr_stmt|;
 name|acquire_line
 argument_list|()
 expr_stmt|;
-comment|/* get tty device as controling terminal */
+comment|/* get tty device as controlling terminal */
 name|setup_line
 argument_list|(
 literal|0
@@ -1548,7 +1543,7 @@ name|fd
 operator|=
 name|STDIN_FILENO
 expr_stmt|;
-comment|/* acquire the serial line as a controling terminal. */
+comment|/* acquire the serial line as a controlling terminal. */
 if|if
 condition|(
 name|ioctl
@@ -2065,7 +2060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* configure the interface, eg. by passing the unit number to a script. */
+comment|/* configure the interface, e.g. by passing the unit number to a script. */
 end_comment
 
 begin_function
@@ -2134,6 +2129,26 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|s
@@ -2151,7 +2166,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Configuring %s (sl%d):"
+literal|"configuring %s (sl%d):"
 argument_list|,
 name|dev
 argument_list|,
@@ -2283,6 +2298,7 @@ operator|*
 name|redial_cmd
 condition|)
 block|{
+comment|/* Non-empty redial command */
 name|syslog
 argument_list|(
 name|LOG_NOTICE
@@ -2521,7 +2537,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Waiting for carrier on %s (sl%d)"
+literal|"waiting for carrier on %s (sl%d)"
 argument_list|,
 name|dev
 argument_list|,
@@ -2566,7 +2582,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Carrier now present on %s (sl%d)"
+literal|"carrier now present on %s (sl%d)"
 argument_list|,
 name|dev
 argument_list|,
@@ -2848,6 +2864,26 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|s
@@ -2863,7 +2899,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Deconfiguring %s (sl%d):"
+literal|"deconfiguring %s (sl%d):"
 argument_list|,
 name|dev
 argument_list|,
