@@ -468,7 +468,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.11.2" */
+comment|/* #define VERSION "2.12" */
 end_comment
 
 begin_comment
@@ -488,22 +488,6 @@ comment|/* #undef STRICTCOFF */
 end_comment
 
 begin_comment
-comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
-end_comment
-
-begin_comment
-comment|/* #undef MIPS_STABS_ELF */
-end_comment
-
-begin_comment
-comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
-end_comment
-
-begin_comment
-comment|/* #undef MIPS_STABS_ELF */
-end_comment
-
-begin_comment
 comment|/* Define if default target is PowerPC Solaris. */
 end_comment
 
@@ -520,11 +504,11 @@ comment|/* #undef TARGET_BYTES_BIG_ENDIAN */
 end_comment
 
 begin_comment
-comment|/* Default architecture. */
+comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
 end_comment
 
 begin_comment
-comment|/* #undef DEFAULT_ARCH */
+comment|/* #undef MIPS_STABS_ELF */
 end_comment
 
 begin_comment
@@ -703,7 +687,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"ia64-unknown-freebsd5"
+value|"ia64-obrien-freebsd5.0"
 end_define
 
 begin_comment
@@ -714,7 +698,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CANONICAL
-value|"ia64-unknown-freebsd5"
+value|"ia64-obrien-freebsd5.0"
 end_define
 
 begin_comment
@@ -736,7 +720,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_VENDOR
-value|"unknown"
+value|"obrien"
 end_define
 
 begin_comment
@@ -774,7 +758,7 @@ comment|/* Define to 1 if NLS is requested */
 end_comment
 
 begin_comment
-comment|/* #undef ENABLE_NLS */
+comment|/* #define ENABLE_NLS 1 */
 end_comment
 
 begin_comment
@@ -790,7 +774,7 @@ comment|/* Compiling cross-assembler? */
 end_comment
 
 begin_comment
-comment|/* #define CROSS_COMPILE 1 */
+comment|/* #undef CROSS_COMPILE */
 end_comment
 
 begin_comment

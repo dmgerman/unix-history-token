@@ -468,7 +468,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "000427" */
+comment|/* #define VERSION "2.12" */
 end_comment
 
 begin_comment
@@ -480,11 +480,11 @@ comment|/* #undef SCO_ELF */
 end_comment
 
 begin_comment
-comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
+comment|/* Using strict COFF? */
 end_comment
 
 begin_comment
-comment|/* #undef MIPS_STABS_ELF */
+comment|/* #undef STRICTCOFF */
 end_comment
 
 begin_comment
@@ -501,6 +501,14 @@ end_comment
 
 begin_comment
 comment|/* #undef TARGET_BYTES_BIG_ENDIAN */
+end_comment
+
+begin_comment
+comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
+end_comment
+
+begin_comment
+comment|/* #undef MIPS_STABS_ELF */
 end_comment
 
 begin_comment
@@ -679,7 +687,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"powerpc-unknown-freebsd5.0"
+value|"powerpc-obrien-freebsd5.0"
 end_define
 
 begin_comment
@@ -690,7 +698,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CANONICAL
-value|"powerpc-unknown-freebsd5.0"
+value|"powerpc-obrien-freebsd5.0"
 end_define
 
 begin_comment
@@ -712,7 +720,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_VENDOR
-value|"unknown"
+value|"obrien"
 end_define
 
 begin_comment

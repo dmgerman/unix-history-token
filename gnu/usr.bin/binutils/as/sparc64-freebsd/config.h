@@ -468,7 +468,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.11" */
+comment|/* #define VERSION "2.12" */
 end_comment
 
 begin_comment
@@ -488,14 +488,6 @@ comment|/* #undef STRICTCOFF */
 end_comment
 
 begin_comment
-comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
-end_comment
-
-begin_comment
-comment|/* #undef MIPS_STABS_ELF */
-end_comment
-
-begin_comment
 comment|/* Define if default target is PowerPC Solaris. */
 end_comment
 
@@ -512,11 +504,15 @@ comment|/* #undef TARGET_BYTES_BIG_ENDIAN */
 end_comment
 
 begin_comment
-comment|/* Default architecture. */
+comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
 end_comment
 
 begin_comment
-comment|/* #undef DEFAULT_ARCH */
+comment|/* #undef MIPS_STABS_ELF */
+end_comment
+
+begin_comment
+comment|/* Default architecture. */
 end_comment
 
 begin_define
@@ -694,7 +690,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"sparc54-obrien-freebsd5.0"
+value|"sparc64-obrien-freebsd5.0"
 end_define
 
 begin_comment

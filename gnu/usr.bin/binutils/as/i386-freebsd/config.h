@@ -82,6 +82,14 @@ comment|/* #undef off_t */
 end_comment
 
 begin_comment
+comment|/* Define if you need to in order for stat and other things to work.  */
+end_comment
+
+begin_comment
+comment|/* #undef _POSIX_SOURCE */
+end_comment
+
+begin_comment
 comment|/* Define to `unsigned' if<sys/types.h> doesn't define.  */
 end_comment
 
@@ -460,7 +468,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.11" */
+comment|/* #define VERSION "2.12" */
 end_comment
 
 begin_comment
@@ -480,14 +488,6 @@ comment|/* #undef STRICTCOFF */
 end_comment
 
 begin_comment
-comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
-end_comment
-
-begin_comment
-comment|/* #undef MIPS_STABS_ELF */
-end_comment
-
-begin_comment
 comment|/* Define if default target is PowerPC Solaris. */
 end_comment
 
@@ -501,6 +501,14 @@ end_comment
 
 begin_comment
 comment|/* #undef TARGET_BYTES_BIG_ENDIAN */
+end_comment
+
+begin_comment
+comment|/* Use ELF stabs for MIPS, not ECOFF stabs */
+end_comment
+
+begin_comment
+comment|/* #undef MIPS_STABS_ELF */
 end_comment
 
 begin_comment
@@ -680,7 +688,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_ALIAS
-value|"i386-unknown-freebsd5.0"
+value|"i386-obrien-freebsd5.0"
 end_define
 
 begin_comment
@@ -691,7 +699,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_CANONICAL
-value|"i386-unknown-freebsd5.0"
+value|"i386-obrien-freebsd5.0"
 end_define
 
 begin_comment
@@ -713,7 +721,7 @@ begin_define
 define|#
 directive|define
 name|TARGET_VENDOR
-value|"unknown"
+value|"obrien"
 end_define
 
 begin_comment
