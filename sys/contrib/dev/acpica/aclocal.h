@@ -2670,7 +2670,7 @@ define|#
 directive|define
 name|ACPI_COMMON_DEBUG_MEM_HEADER
 define|\
-value|struct acpi_debug_mem_block *Previous; \     struct acpi_debug_mem_block *Next; \     UINT32                      Size; \     UINT32                      Component; \     UINT32                      Line; \     char                        Module[ACPI_MAX_MODULE_NAME]; \     UINT8                       AllocType;
+value|struct acpi_debug_mem_block *Previous; \     struct acpi_debug_mem_block *Next; \     UINT32                      Size; \     UINT32                      Component; \     UINT32                      Line; \     char                        Module[ACPI_MAX_MODULE_NAME]; \     UINT8                       AllocType; \     UINT8                       Padding[3];
 end_define
 
 begin_typedef
