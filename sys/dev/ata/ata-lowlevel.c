@@ -291,6 +291,12 @@ condition|)
 block|{
 name|request
 operator|->
+name|retries
+operator|=
+literal|0
+expr_stmt|;
+name|request
+operator|->
 name|result
 operator|=
 name|ENXIO
@@ -2356,6 +2362,10 @@ operator|&&
 name|ostat0
 operator|!=
 literal|0xa5
+operator|&&
+name|ostat0
+operator|!=
+literal|0x7f
 condition|)
 block|{
 name|stat0
@@ -2418,6 +2428,10 @@ operator|&&
 name|ostat1
 operator|!=
 literal|0xa5
+operator|&&
+name|ostat1
+operator|!=
+literal|0x7f
 condition|)
 block|{
 name|stat1
