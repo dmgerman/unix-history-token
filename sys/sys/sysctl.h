@@ -330,17 +330,6 @@ name|char
 modifier|*
 name|oid_fmt
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_SYSCTL_DESCRIPTIONS
-specifier|const
-name|char
-modifier|*
-name|oid_descr
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* !NO_SYSCTL_DESCRIPTIONS */
 block|}
 struct|;
 end_struct
@@ -412,44 +401,6 @@ begin_comment
 comment|/* This constructs a "raw" MIB oid. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_SYSCTL_DESCRIPTIONS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_OID
-parameter_list|(
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|kind
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|,
-name|handler
-parameter_list|,
-name|fmt
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|static struct sysctl_oid sysctl__##parent##_##name = { \ 		nbr, kind, a1, a2, #name, handler, fmt, descr }; \ 	DATA_SET(sysctl_##parent, sysctl__##parent##_##name)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -476,15 +427,6 @@ parameter_list|)
 define|\
 value|static struct sysctl_oid sysctl__##parent##_##name = { \ 		nbr, kind, a1, a2, #name, handler, fmt }; \ 	DATA_SET(sysctl_##parent, sysctl__##parent##_##name)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !NO_SYSCTL_DESCRIPTIONS */
-end_comment
 
 begin_comment
 comment|/* This constructs a node from which other oids can hang. */
