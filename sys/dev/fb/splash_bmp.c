@@ -149,7 +149,6 @@ specifier|static
 name|int
 name|bmp_Init
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|data
@@ -2295,7 +2294,6 @@ specifier|static
 name|int
 name|bmp_Init
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|data
