@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	6.1	83/07/29	*/
+comment|/*	types.h	6.2	84/06/09	*/
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TYPES_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_TYPES_
+end_define
 
 begin_comment
 comment|/*  * Basic system types and major/minor device constructing/busting macros.  */
@@ -227,6 +239,11 @@ block|}
 name|fd_set
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
