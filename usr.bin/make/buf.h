@@ -249,6 +249,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|Buf_ReplaceLastByte
+name|__P
+argument_list|(
+operator|(
+name|Buffer
+operator|,
+name|Byte
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

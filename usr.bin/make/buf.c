@@ -1247,5 +1247,61 @@ expr_stmt|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/*-  *-----------------------------------------------------------------------  * Buf_ReplaceLastByte --  *     Replace the last byte in a buffer.  *  * Results:  *     None.  *  * Side Effects:  *     If the buffer was empty intially, then a new byte will be added.  *     Otherwise, the last byte is overwritten.  *  *-----------------------------------------------------------------------  */
+end_comment
+
+begin_function
+name|void
+name|Buf_ReplaceLastByte
+parameter_list|(
+name|buf
+parameter_list|,
+name|byte
+parameter_list|)
+name|Buffer
+name|buf
+decl_stmt|;
+comment|/* buffer to augment */
+name|Byte
+name|byte
+decl_stmt|;
+comment|/* byte to be written */
+block|{
+if|if
+condition|(
+name|buf
+operator|->
+name|inPtr
+operator|==
+name|buf
+operator|->
+name|outPtr
+condition|)
+name|Buf_AddByte
+argument_list|(
+name|buf
+argument_list|,
+name|byte
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+operator|(
+name|buf
+operator|->
+name|inPtr
+operator|-
+literal|1
+operator|)
+operator|=
+name|byte
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
