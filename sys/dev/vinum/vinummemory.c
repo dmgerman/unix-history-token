@@ -161,6 +161,18 @@ argument_list|,
 literal|"vinum: Can't expand table\n"
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|temp
+argument_list|,
+name|newsize
+argument_list|)
+expr_stmt|;
+comment|/* clean it all out */
 if|if
 condition|(
 operator|*
@@ -302,8 +314,10 @@ name|MALLOCENTRIES
 condition|)
 block|{
 comment|/* too many */
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: can't allocate table space to trace memory allocation"
 argument_list|)
 expr_stmt|;
@@ -330,8 +344,10 @@ name|result
 operator|==
 name|NULL
 condition|)
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"vinum: can't allocate %d bytes from %s:%d\n"
 argument_list|,
 name|size
@@ -697,8 +713,10 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_ERR
+argument_list|,
 literal|"Freeing unallocated data at 0x%08x from %s, line %d\n"
 argument_list|,
 operator|(
