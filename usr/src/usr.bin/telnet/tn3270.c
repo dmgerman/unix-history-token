@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	5.3 (Berkeley) %G%"
+literal|"@(#)tn3270.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -575,7 +575,12 @@ end_if
 begin_function
 name|void
 name|inputAvailable
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|HaveInput
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	5.10 (Berkeley) %G%"
+literal|"@(#)commands.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6876,6 +6876,23 @@ return|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !defined(TN3270) */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|shell
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -10397,6 +10414,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"\tFlags are 0x%x: %s\n"
@@ -10409,6 +10429,8 @@ name|res
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
