@@ -3699,16 +3699,12 @@ argument_list|(
 name|rdch
 argument_list|)
 expr_stmt|;
-name|chn_rdupdate
-argument_list|(
-name|rdch
-argument_list|)
-expr_stmt|;
+comment|/* chn_rdupdate(rdch); */
 name|a
 operator|->
 name|bytes
 operator|=
-name|sndbuf_getfree
+name|sndbuf_getready
 argument_list|(
 name|bs
 argument_list|)
