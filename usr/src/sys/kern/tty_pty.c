@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty_pty.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -13,13 +13,9 @@ directive|include
 file|"pty.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NPTY
-operator|>
-literal|0
-end_if
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_include
 include|#
@@ -142,6 +138,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_struct
 struct|struct
 name|pt_ioctl
@@ -172,6 +172,10 @@ name|NPTY
 index|]
 struct|;
 end_struct
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -329,6 +333,117 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Establish n (or default if n is 1) ptys in the system.  *  * XXX cdevsw& pstat require the array `pty[]' to be an array  */
+end_comment
+
+begin_function
+name|void
+name|ptyattach
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|notyet
+name|char
+modifier|*
+name|mem
+decl_stmt|;
+specifier|register
+name|u_long
+name|ntb
+decl_stmt|;
+define|#
+directive|define
+name|DEFAULT_NPTY
+value|32
+comment|/* maybe should allow 0 => none? */
+if|if
+condition|(
+name|n
+operator|<=
+literal|1
+condition|)
+name|n
+operator|=
+name|DEFAULT_NPTY
+expr_stmt|;
+name|ntb
+operator|=
+name|n
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tty
+argument_list|)
+expr_stmt|;
+name|mem
+operator|=
+name|malloc
+argument_list|(
+name|ntb
+operator|+
+name|ALIGNBYTES
+operator|+
+name|n
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pt_ioctl
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|pt_tty
+operator|=
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|mem
+expr_stmt|;
+name|mem
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|ALIGN
+argument_list|(
+name|mem
+operator|+
+name|ntb
+argument_list|)
+expr_stmt|;
+name|pt_ioctl
+operator|=
+operator|(
+expr|struct
+name|pt_ioctl
+operator|*
+operator|)
+name|mem
+expr_stmt|;
+name|npty
+operator|=
+name|n
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
@@ -378,15 +493,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|npty
-operator|=
-name|npty
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|minor
@@ -394,7 +500,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NPTY
+name|npty
 condition|)
 return|return
 operator|(
@@ -1462,7 +1568,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|>=
-name|NPTY
+name|npty
 condition|)
 return|return
 operator|(
@@ -4777,11 +4883,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
