@@ -628,12 +628,6 @@ argument_list|,
 literal|"vnode_destroy_vobject"
 argument_list|)
 expr_stmt|;
-name|vp
-operator|->
-name|v_object
-operator|=
-name|NULL
-expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|obj
@@ -687,6 +681,12 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
+name|vp
+operator|->
+name|v_object
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
