@@ -83,6 +83,8 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* Remember: '1' here is minimum, not maximum. */
+comment|/* Read-ahead function will return as much as is convenient. */
 name|bytes_read
 operator|=
 call|(
@@ -96,9 +98,7 @@ argument_list|,
 operator|&
 name|buff
 argument_list|,
-name|a
-operator|->
-name|entry_bytes_remaining
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -129,6 +129,23 @@ operator|)
 name|a
 operator|->
 name|entry_bytes_remaining
+expr_stmt|;
+comment|/* Don't copy more than 1 megabyte at a time. */
+if|if
+condition|(
+name|bytes_read
+operator|>
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|)
+condition|)
+name|bytes_read
+operator|=
+literal|1024
+operator|*
+literal|1024
 expr_stmt|;
 name|bytes_written
 operator|=
@@ -173,6 +190,26 @@ operator|->
 name|entry_bytes_remaining
 operator|-=
 name|bytes_written
+expr_stmt|;
+if|if
+condition|(
+name|a
+operator|->
+name|extract_progress
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|a
+operator|->
+name|extract_progress
+call|)
+argument_list|(
+name|a
+operator|->
+name|extract_progress_user_data
+argument_list|)
 expr_stmt|;
 block|}
 return|return

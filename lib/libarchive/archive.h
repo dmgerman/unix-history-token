@@ -709,6 +709,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|archive_read_extract_set_progress_callback
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|_progress_func
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|_user_data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Close the file, release any resources, and destroy the object. */
 end_comment
