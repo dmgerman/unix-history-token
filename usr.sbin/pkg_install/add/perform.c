@@ -473,7 +473,7 @@ argument_list|,
 name|pkg
 argument_list|)
 expr_stmt|;
-comment|/* copy for sanity's sake, could remove pkg_fullname */
+comment|/* 						 * Copy for sanity's sake, 						 * could remove pkg_fullname 						 */
 if|if
 condition|(
 name|strcmp
@@ -1482,7 +1482,7 @@ comment|/* close enough for government work */
 block|}
 block|}
 block|}
-comment|/* Test whether to use the old method of passing tokens to installation      * scripts, and set appropriate variables..      */
+comment|/*      * Test whether to use the old method of passing tokens to installation      * scripts, and set appropriate variables..      */
 if|if
 condition|(
 name|fexists

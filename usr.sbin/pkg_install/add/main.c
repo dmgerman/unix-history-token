@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  *  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the add module.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -20,10 +24,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  *  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the add module.  *  */
-end_comment
 
 begin_include
 include|#
@@ -238,7 +238,7 @@ block|{
 name|int
 name|ch
 decl_stmt|,
-name|err
+name|error
 decl_stmt|;
 name|char
 modifier|*
@@ -741,7 +741,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|err
+name|error
 operator|=
 name|pkg_perform
 argument_list|(
@@ -760,11 +760,11 @@ name|warnx
 argument_list|(
 literal|"%d package addition(s) failed"
 argument_list|,
-name|err
+name|error
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+name|error
 return|;
 block|}
 else|else

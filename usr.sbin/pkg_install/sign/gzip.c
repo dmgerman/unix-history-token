@@ -66,7 +66,7 @@ file|"pgp.h"
 end_include
 
 begin_comment
-comment|/* Signatures follow a simple format    (endianess was chosen to conform to gzip header format)  */
+comment|/*  * Signatures follow a simple format  * (endianess was chosen to conform to gzip header format)  */
 end_comment
 
 begin_decl_stmt
