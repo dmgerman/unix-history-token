@@ -6107,6 +6107,7 @@ name|CBB_SOCKET_STATE
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|PCI_MASK_CONFIG
 argument_list|(
 name|brdev
@@ -6126,10 +6127,11 @@ name|delay_us
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|cbb_cardbus_power_enable_socket
 parameter_list|(
