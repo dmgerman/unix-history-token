@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.4 1998/09/16 13:24:37 gibbs Exp $  */
+comment|/*  * Implementation of the Common Access Method Transport (XPT) layer.  *  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * Copyright (c) 1997, 1998 Kenneth D. Merry.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: cam_xpt.c,v 1.5 1998/09/16 23:30:01 ken Exp $  */
 end_comment
 
 begin_include
@@ -325,6 +325,42 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * If someone sets this to 0, we assume that they want the minimum  * allowable bus settle delay.  All devices need _some_ sort of bus settle  * delay, so we'll set it to a minimum value of 100ms.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|SCSI_DELAY
+operator|==
+literal|0
+operator|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SCSI_DELAY
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SCSI_DELAY
+value|100
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Make sure the user isn't using seconds instead of milliseconds.  */
+end_comment
 
 begin_if
 if|#
@@ -22846,33 +22882,23 @@ parameter_list|)
 block|{
 name|union
 name|ccb
-modifier|*
-name|done_ccb
+name|work_ccb
+decl_stmt|;
+name|struct
+name|cam_path
+name|path
 decl_stmt|;
 name|cam_status
 name|status
 decl_stmt|;
-name|done_ccb
-operator|=
-operator|(
-expr|union
-name|ccb
-operator|*
-operator|)
-name|arg
-expr_stmt|;
 if|if
 condition|(
 operator|(
 name|status
 operator|=
-name|xpt_create_path
+name|xpt_compile_path
 argument_list|(
 operator|&
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
 name|path
 argument_list|,
 name|xpt_periph
@@ -22902,8 +22928,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"xptfinishconfig: xpt_create_path failed with status"
-literal|" %#x, halting bus configuration\n"
+literal|"xptfinishconfig: xpt_compile_path failed with status"
+literal|" %#x, halting device registration\n"
 argument_list|,
 name|status
 argument_list|)
@@ -22917,22 +22943,19 @@ block|}
 name|xpt_setup_ccb
 argument_list|(
 operator|&
-name|done_ccb
-operator|->
+name|work_ccb
+operator|.
 name|ccb_h
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
+operator|&
 name|path
 argument_list|,
 comment|/*priority*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|done_ccb
-operator|->
+name|work_ccb
+operator|.
 name|ccb_h
 operator|.
 name|func_code
@@ -22941,20 +22964,25 @@ name|XPT_GDEV_TYPE
 expr_stmt|;
 name|xpt_action
 argument_list|(
-name|done_ccb
+operator|&
+name|work_ccb
 argument_list|)
 expr_stmt|;
 name|xpt_async
 argument_list|(
 name|AC_FOUND_DEVICE
 argument_list|,
-name|done_ccb
-operator|->
-name|ccb_h
-operator|.
+operator|&
 name|path
 argument_list|,
-name|done_ccb
+operator|&
+name|work_ccb
+argument_list|)
+expr_stmt|;
+name|xpt_release_path
+argument_list|(
+operator|&
+name|path
 argument_list|)
 expr_stmt|;
 return|return
@@ -23268,7 +23296,7 @@ name|xpt_for_all_devices
 argument_list|(
 name|xptfinishconfigfunc
 argument_list|,
-name|done_ccb
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Check for devices with no "standard" peripheral driver 		 * attached.  For any devices like that, announce the 		 * passthrough driver so the user will see something. 		 */
