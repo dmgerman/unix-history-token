@@ -896,15 +896,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPCTL_MAXID
+name|IPCTL_SOURCEROUTE
 value|8
+end_define
+
+begin_comment
+comment|/* may perform source routes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPCTL_MAXID
+value|9
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "rtexpire", CTLTYPE_INT }, \ 	{ "rtminexpire", CTLTYPE_INT }, \ 	{ "rtmaxcache", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ 	{ "rtexpire", CTLTYPE_INT }, \ 	{ "rtminexpire", CTLTYPE_INT }, \ 	{ "rtmaxcache", CTLTYPE_INT }, \ 	{ "sourceroute", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
