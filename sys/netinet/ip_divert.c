@@ -2105,7 +2105,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|dip_sockaddr
+name|div_sockaddr
 parameter_list|(
 name|struct
 name|socket
@@ -2142,7 +2142,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|dip_peeraddr
+name|div_peeraddr
 parameter_list|(
 name|struct
 name|socket
