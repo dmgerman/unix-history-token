@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: script.c,v 1.5 1997/08/08 12:24:49 charnier Exp $"
+literal|"$Id: script.c,v 1.6 1997/12/29 13:31:46 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,7 +372,7 @@ break|break;
 case|case
 literal|'q'
 case|:
-name|aflg
+name|qflg
 operator|=
 literal|1
 expr_stmt|;
@@ -1016,7 +1016,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|execv
+name|execvp
 argument_list|(
 name|av
 index|[
