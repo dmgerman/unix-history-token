@@ -1459,7 +1459,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (mp->flags& MDF_16BITS == 1) {
+block|if ((mp->flags& MDF_16BITS) == 1) {
 comment|/* 16bit */
 block|outb(PCIC98_REG2, inb(PCIC98_REG2)& (~PCIC98_8BIT)); 		}else{
 comment|/* 8bit */
