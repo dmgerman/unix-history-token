@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.16 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.17 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.16 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.17 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -284,7 +284,20 @@ decl_stmt|,
 name|localpref
 decl_stmt|,
 name|type
-decl_stmt|,
+decl_stmt|;
+name|char
+modifier|*
+name|fallbackMX
+init|=
+name|FallBackMX
+decl_stmt|;
+specifier|static
+name|bool
+name|firsttime
+init|=
+name|TRUE
+decl_stmt|;
+name|u_short
 name|prefer
 index|[
 name|MAXMXHOSTS
@@ -296,6 +309,71 @@ index|[
 name|MAXMXHOSTS
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|fallbackMX
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|firsttime
+operator|&&
+name|res_query
+argument_list|(
+name|FallBackMX
+argument_list|,
+name|C_IN
+argument_list|,
+name|T_A
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|answer
+argument_list|,
+sizeof|sizeof
+name|answer
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* this entry is bogus */
+name|fallbackMX
+operator|=
+name|FallBackMX
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|fallbackMX
+argument_list|,
+name|localhost
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* don't use fallback for this pass */
+name|fallbackMX
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|firsttime
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 name|errno
 operator|=
 literal|0
@@ -1039,6 +1117,9 @@ condition|(
 name|FallBackMX
 operator|!=
 name|NULL
+operator|&&
+operator|!
+name|seenlocal
 condition|)
 name|mxhosts
 index|[
