@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ name|struct
 name|clist
 name|t_outq
 decl_stmt|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|t_oproc
@@ -64,7 +64,20 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* device */
-name|int
+ifdef|#
+directive|ifdef
+name|sun4c
+name|void
+function_decl|(
+modifier|*
+name|t_stop
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* device */
+endif|#
+directive|endif
+name|void
 function_decl|(
 modifier|*
 name|t_param
