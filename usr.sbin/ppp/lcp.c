@@ -2724,7 +2724,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Truncating E164 data to %u octets (oops!)\n"
+literal|"Truncating E164 data to %zu octets (oops!)\n"
 argument_list|,
 name|sz
 argument_list|)
@@ -6317,6 +6317,9 @@ literal|"%s Dialstring %.*s\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6338,6 +6341,9 @@ literal|"%s Location %.*s\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6359,6 +6365,9 @@ literal|"%s E.164 (%.*s)\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6380,6 +6389,9 @@ literal|"%s Name %.*s\n"
 argument_list|,
 name|request
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sz
 argument_list|,
 name|opt
@@ -6578,7 +6590,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Truncating option arg to %u octets\n"
+literal|"Truncating option arg to %zu octets\n"
 argument_list|,
 name|sz
 argument_list|)

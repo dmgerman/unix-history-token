@@ -7772,7 +7772,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed recvmsg: Got %d, not %u\n"
+literal|"Failed recvmsg: Got %zd, not %u\n"
 argument_list|,
 name|got
 argument_list|,
@@ -8069,7 +8069,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed write: Got %d, not %d\n"
+literal|"Failed write: Got %zd, not %d\n"
 argument_list|,
 name|got
 argument_list|,
@@ -8161,7 +8161,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Failed write: Got %d, not %d\n"
+literal|"Failed write: Got %zd, not %d\n"
 argument_list|,
 name|got
 argument_list|,
@@ -8933,7 +8933,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed initial sendmsg: Only sent %d of %u\n"
+literal|"%s: Failed initial sendmsg: Only sent %zd of %u\n"
 argument_list|,
 name|sun
 operator|->
@@ -9085,7 +9085,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed writev: Wrote %d of %d\n"
+literal|"%s: Failed writev: Wrote %zd of %d\n"
 argument_list|,
 name|sun
 operator|->
@@ -9127,7 +9127,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"%s: Failed socketpair read: Got %d of %d\n"
+literal|"%s: Failed socketpair read: Got %zd of %d\n"
 argument_list|,
 name|sun
 operator|->

@@ -2519,6 +2519,9 @@ name|path
 argument_list|,
 literal|"%.*s:"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ifacelen
 argument_list|,
 name|iface

@@ -3163,7 +3163,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"MP: Reassembled frags %lu-%lu, length %d\n"
+literal|"MP: Reassembled frags %lu-%lu, length %zd\n"
 argument_list|,
 operator|(
 name|u_long
@@ -3606,7 +3606,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"MP[frag %d]: Send %d bytes on link `%s'\n"
+literal|"MP[frag %d]: Send %zd bytes on link `%s'\n"
 argument_list|,
 name|mp
 operator|->
@@ -5026,6 +5026,9 @@ name|result
 argument_list|,
 literal|"Local Addr: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|address
@@ -5068,7 +5071,7 @@ name|sprintf
 argument_list|(
 name|result
 argument_list|,
-literal|"IP[%d] ???"
+literal|"IP[%zd] ???"
 argument_list|,
 name|len
 argument_list|)
@@ -5142,7 +5145,7 @@ name|sprintf
 argument_list|(
 name|result
 argument_list|,
-literal|"MAC[%d] ???"
+literal|"MAC[%zd] ???"
 argument_list|,
 name|len
 argument_list|)
@@ -5229,6 +5232,9 @@ name|result
 argument_list|,
 literal|"PSN: %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|address

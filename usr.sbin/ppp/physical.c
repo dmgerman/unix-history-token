@@ -2460,7 +2460,7 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"%s: write (fd %d, len %d): %s\n"
+literal|"%s: write (fd %d, len %zd): %s\n"
 argument_list|,
 name|p
 operator|->

@@ -2419,7 +2419,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadHeader: Short packet (%u> %u) !\n"
+literal|"auth_ReadHeader: Short packet (%u> %zu) !\n"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -2455,7 +2455,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadHeader: Short packet header (%u> %u) !\n"
+literal|"auth_ReadHeader: Short packet header (%u> %zu) !\n"
 argument_list|,
 call|(
 name|int
@@ -2521,7 +2521,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadName: Name too long (%u) !\n"
+literal|"auth_ReadName: Name too long (%zu) !\n"
 argument_list|,
 name|len
 argument_list|)
@@ -2546,7 +2546,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"auth_ReadName: Short packet (%u> %u) !\n"
+literal|"auth_ReadName: Short packet (%zu> %zu) !\n"
 argument_list|,
 name|len
 argument_list|,

@@ -574,7 +574,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"lqr_RecvEcho: Got packet size %d, expecting %ld !\n"
+literal|"lqr_RecvEcho: Got packet size %zd, expecting %ld !\n"
 argument_list|,
 name|m_length
 argument_list|(

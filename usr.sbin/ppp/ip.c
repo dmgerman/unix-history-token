@@ -5168,7 +5168,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"ip_Input: %s: Packet too large (got %d, max %d)\n"
+literal|"ip_Input: %s: Packet too large (got %zd, max %d)\n"
 argument_list|,
 name|l
 operator|->
@@ -5371,7 +5371,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ip_Input: %s: wrote %d, got %s\n"
+literal|"ip_Input: %s: wrote %zd, got %s\n"
 argument_list|,
 name|l
 operator|->
@@ -5390,7 +5390,7 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"ip_Input: %s: wrote %d, got %d\n"
+literal|"ip_Input: %s: wrote %zd, got %zd\n"
 argument_list|,
 name|l
 operator|->

@@ -5882,7 +5882,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s: Oops: Got %u bytes but %d byte payload "
+literal|"%s: Oops: Got %zu bytes but %d byte payload "
 literal|"- dropped\n"
 argument_list|,
 name|fp

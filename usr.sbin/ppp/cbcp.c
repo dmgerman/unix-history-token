@@ -3608,7 +3608,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Corrupt CBCP packet (code %d, length %u not %u)"
+literal|"Corrupt CBCP packet (code %d, length %u not %zu)"
 literal|" - ignored\n"
 argument_list|,
 name|head
@@ -4176,7 +4176,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"Unrecognised CBCP packet (code %d, length %d)\n"
+literal|"Unrecognised CBCP packet (code %d, length %zd)\n"
 argument_list|,
 name|head
 operator|->
