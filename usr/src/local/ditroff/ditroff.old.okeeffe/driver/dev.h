@@ -57,11 +57,11 @@ name|lchname
 decl_stmt|;
 comment|/* length of chname table */
 name|short
-name|spare1
+name|nstips
 decl_stmt|;
 comment|/* in case of expansion */
 name|short
-name|spare2
+name|spare1
 decl_stmt|;
 block|}
 struct|;
