@@ -9317,7 +9317,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Unparameterized. */
 name|mbs
 operator|.
 name|param
@@ -9326,6 +9325,15 @@ literal|1
 index|]
 operator|=
 literal|10
+expr_stmt|;
+name|mbs
+operator|.
+name|param
+index|[
+literal|2
+index|]
+operator|=
+literal|0
 expr_stmt|;
 name|bus
 operator|=
