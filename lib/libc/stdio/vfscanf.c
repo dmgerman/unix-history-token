@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfscanf.c,v 1.11 1997/07/01 17:46:39 jkh Exp $"
+literal|"$Id: vfscanf.c,v 1.12 1997/11/23 06:02:47 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -578,31 +578,23 @@ name|c
 argument_list|)
 condition|)
 block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
+while|while
 condition|(
+operator|(
 name|fp
 operator|->
 name|_r
-operator|<=
+operator|>
 literal|0
-operator|&&
+operator|||
 name|__srefill
 argument_list|(
 name|fp
 argument_list|)
-condition|)
-goto|goto
-name|input_failure
-goto|;
-if|if
-condition|(
-operator|!
+operator|==
+literal|0
+operator|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -611,7 +603,6 @@ operator|->
 name|_p
 argument_list|)
 condition|)
-break|break;
 name|nread
 operator|++
 operator|,
@@ -625,7 +616,6 @@ operator|->
 name|_p
 operator|++
 expr_stmt|;
-block|}
 continue|continue;
 block|}
 if|if
