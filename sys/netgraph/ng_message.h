@@ -139,9 +139,7 @@ name|header
 struct|;
 name|char
 name|data
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* placeholder for actual data */
 block|}
@@ -842,9 +840,7 @@ comment|/* node information */
 name|struct
 name|linkinfo
 name|link
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 comment|/* info about each hook */
 block|}
@@ -881,9 +877,7 @@ decl_stmt|;
 name|struct
 name|nodeinfo
 name|nodeinfo
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
@@ -950,9 +944,7 @@ decl_stmt|;
 name|struct
 name|typeinfo
 name|typeinfo
-index|[
-literal|0
-index|]
+index|[]
 decl_stmt|;
 block|}
 struct|;
