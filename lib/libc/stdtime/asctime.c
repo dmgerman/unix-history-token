@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* ** This file is in the public domain, so clarified as of ** June 5, 1996 by Arthur David Olson (arthur_david_olson@nih.gov). */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -17,7 +21,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)asctime.c	7.5"
+literal|"@(#)asctime.c	7.7"
 decl_stmt|;
 end_decl_stmt
 
