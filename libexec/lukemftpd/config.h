@@ -12,7 +12,7 @@ comment|/* config.h.in.  Generated automatically from configure.in by autoheader
 end_comment
 
 begin_comment
-comment|/* $Id: config.h.in,v 1.15 2001/04/28 07:11:46 lukem Exp $ */
+comment|/* $Id: config.h.in,v 1.16 2002/05/23 02:42:55 lukem Exp $ */
 end_comment
 
 begin_comment
@@ -157,12 +157,9 @@ begin_comment
 comment|/* Define if you have the fparseln function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_FPARSELN
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_FPARSELN */
+end_comment
 
 begin_comment
 comment|/* Define if you have the fts_open function.  */
@@ -757,6 +754,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if FNM_CASEFOLD is declared in<fnmatch.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FNM_CASEFOLD
+value|1
+end_define
+
+begin_comment
 comment|/* Define if optarg is declared in<stdlib.h> or<unistd.h> */
 end_comment
 
@@ -929,17 +937,6 @@ end_comment
 begin_comment
 comment|/* #undef	write */
 end_comment
-
-begin_comment
-comment|/* Define if you have the<arpa/ftp.h> header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_FTP_NAMES
-value|1
-end_define
 
 end_unit
 
