@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: err.c,v 1.4 1997/02/22 14:01:48 peter Exp $"
+literal|"$Id: err.c,v 1.5 1997/08/07 21:42:06 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -913,9 +913,14 @@ name|id
 operator|=
 name|ERR_INVALID
 expr_stmt|;
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|berr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|berr
+argument_list|)
 argument_list|,
 name|errorlist
 index|[
