@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.5 (Berkeley) %G%"
+literal|"@(#)w.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1021,6 +1021,10 @@ name|now
 operator|-
 name|bootime
 expr_stmt|;
+name|uptime
+operator|+=
+literal|30
+expr_stmt|;
 name|days
 operator|=
 name|uptime
@@ -1063,10 +1067,9 @@ operator|)
 expr_stmt|;
 name|mins
 operator|=
-name|DIV60
-argument_list|(
 name|uptime
-argument_list|)
+operator|/
+literal|60
 expr_stmt|;
 name|printf
 argument_list|(
