@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.48 1996/09/06 23:06:50 phk Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.49 1996/09/07 17:41:22 nate Exp $  */
 end_comment
 
 begin_include
@@ -160,11 +160,12 @@ end_include
 begin_decl_stmt
 specifier|static
 name|int
-name|apm_display_off
+name|apm_display
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
+name|newstate
 operator|)
 argument_list|)
 decl_stmt|;
@@ -662,15 +663,18 @@ unit|static
 name|int
 name|apm_enable_disable_pm
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
-name|sc
-parameter_list|,
 name|int
 name|enable
 parameter_list|)
 block|{
+name|struct
+name|apm_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|apm_softc
+decl_stmt|;
 name|u_long
 name|eax
 decl_stmt|,
@@ -701,20 +705,16 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-block|{
 name|ebx
 operator|=
 name|PMDV_ALLDEV
 expr_stmt|;
-block|}
 else|else
-block|{
 name|ebx
 operator|=
 literal|0xffff
 expr_stmt|;
 comment|/* APM version 1.0 only */
-block|}
 name|ecx
 operator|=
 name|enable
@@ -768,6 +768,7 @@ name|ebx
 operator|=
 literal|0x0
 expr_stmt|;
+comment|/* XXX - The APM 1.1 specification is only supported for now */
 name|ecx
 operator|=
 literal|0x0101
@@ -805,11 +806,6 @@ specifier|static
 name|int
 name|apm_engage_disengage_pm
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
-name|sc
-parameter_list|,
 name|int
 name|engage
 parameter_list|)
@@ -866,10 +862,7 @@ specifier|static
 name|u_int
 name|apm_getevent
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
-name|sc
+name|void
 parameter_list|)
 block|{
 name|u_long
@@ -931,10 +924,7 @@ specifier|static
 name|int
 name|apm_suspend_system
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
-name|sc
+name|void
 parameter_list|)
 block|{
 name|u_long
@@ -1005,15 +995,16 @@ comment|/* Display control */
 end_comment
 
 begin_comment
-comment|/*  * Experimental implementation: My laptop machine can't handle this function  * If your laptop can control the display via APM, please inform me.  *                            HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  */
+comment|/*  * Experimental implementation: My laptop machine can't handle this function  * If your laptop can control the display via APM, please inform me.  *                            HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|apm_display_off
+name|apm_display
 parameter_list|(
-name|void
+name|int
+name|newstate
 parameter_list|)
 block|{
 name|u_long
@@ -1035,11 +1026,15 @@ name|APM_SETPWSTATE
 expr_stmt|;
 name|ebx
 operator|=
-name|PMDV_2NDSTORAGE0
+name|PMDV_DISP0
 expr_stmt|;
 name|ecx
 operator|=
-name|PMST_STANDBY
+name|newstate
+condition|?
+name|PMST_APMENABLED
+else|:
+name|PMST_SUSPEND
 expr_stmt|;
 if|if
 condition|(
@@ -1088,10 +1083,7 @@ specifier|static
 name|void
 name|apm_battery_low
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
-name|sc
+name|void
 parameter_list|)
 block|{
 name|printf
@@ -1161,13 +1153,11 @@ name|ah
 operator|==
 name|NULL
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"illegal apm_hook!"
 argument_list|)
 expr_stmt|;
-block|}
 name|prev
 operator|=
 name|NULL
@@ -1193,7 +1183,6 @@ name|p
 operator|->
 name|ah_next
 control|)
-block|{
 if|if
 condition|(
 name|p
@@ -1204,10 +1193,7 @@ name|ah
 operator|->
 name|ah_order
 condition|)
-block|{
 break|break;
-block|}
-block|}
 if|if
 condition|(
 name|prev
@@ -1314,19 +1300,15 @@ name|p
 operator|->
 name|ah_next
 control|)
-block|{
 if|if
 condition|(
 name|p
 operator|==
 name|ah
 condition|)
-block|{
 goto|goto
 name|deleteit
 goto|;
-block|}
-block|}
 name|panic
 argument_list|(
 literal|"Tried to delete unregistered apm_hook."
@@ -1343,7 +1325,6 @@ name|prev
 operator|!=
 name|NULL
 condition|)
-block|{
 name|prev
 operator|->
 name|ah_next
@@ -1352,9 +1333,7 @@ name|p
 operator|->
 name|ah_next
 expr_stmt|;
-block|}
 else|else
-block|{
 operator|*
 name|list
 operator|=
@@ -1362,7 +1341,6 @@ name|p
 operator|->
 name|ah_next
 expr_stmt|;
-block|}
 name|nosuchnode
 label|:
 name|splx
@@ -1440,7 +1418,6 @@ operator|->
 name|ah_arg
 operator|)
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"Warning: APM hook \"%s\" failed"
@@ -1450,7 +1427,6 @@ operator|->
 name|ah_name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
@@ -1736,9 +1712,7 @@ specifier|static
 name|void
 name|apm_processevent
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1784,14 +1758,10 @@ index|]
 argument_list|)
 expr_stmt|;
 name|apm_suspend_system
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|apm_processevent
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -1824,7 +1794,6 @@ name|sc
 operator|->
 name|initialized
 condition|)
-block|{
 name|apm_execute_hook
 argument_list|(
 name|hook
@@ -1833,7 +1802,6 @@ name|APM_HOOK_RESUME
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1846,15 +1814,18 @@ specifier|static
 name|int
 name|apm_get_info
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
-name|sc
-parameter_list|,
 name|apm_info_t
 name|aip
 parameter_list|)
 block|{
+name|struct
+name|apm_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|apm_softc
+decl_stmt|;
 name|u_long
 name|eax
 decl_stmt|,
@@ -2038,10 +2009,8 @@ name|sc
 operator|->
 name|always_halt_cpu
 condition|)
-block|{
 asm|__asm("hlt");
 comment|/* wait for interrupt */
-block|}
 block|}
 end_function
 
@@ -2126,7 +2095,7 @@ name|apm_timeout
 parameter_list|(
 name|void
 modifier|*
-name|arg
+name|dummy
 parameter_list|)
 block|{
 name|struct
@@ -2134,12 +2103,11 @@ name|apm_softc
 modifier|*
 name|sc
 init|=
-name|arg
+operator|&
+name|apm_softc
 decl_stmt|;
 name|apm_processevent
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2149,16 +2117,11 @@ name|active
 operator|==
 literal|1
 condition|)
-block|{
 name|timeout
 argument_list|(
 name|apm_timeout
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|sc
+name|NULL
 argument_list|,
 name|hz
 operator|-
@@ -2166,7 +2129,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* More than 1 Hz */
-block|}
 block|}
 end_function
 
@@ -2179,12 +2141,17 @@ specifier|static
 name|void
 name|apm_event_enable
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|struct
 name|apm_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+operator|&
+name|apm_softc
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|APM_DEBUG
@@ -2226,12 +2193,17 @@ specifier|static
 name|void
 name|apm_event_disable
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|struct
 name|apm_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+operator|&
+name|apm_softc
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|APM_DEBUG
@@ -2275,26 +2247,29 @@ specifier|static
 name|void
 name|apm_halt_cpu
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|struct
 name|apm_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+operator|&
+name|apm_softc
+decl_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
 name|initialized
 condition|)
-block|{
 name|sc
 operator|->
 name|always_halt_cpu
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2307,26 +2282,29 @@ specifier|static
 name|void
 name|apm_not_halt_cpu
 parameter_list|(
+name|void
+parameter_list|)
+block|{
 name|struct
 name|apm_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+operator|&
+name|apm_softc
+decl_stmt|;
 if|if
 condition|(
 name|sc
 operator|->
 name|initialized
 condition|)
-block|{
 name|sc
 operator|->
 name|always_halt_cpu
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2374,7 +2352,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * probe APM (dummy):  *  * APM probing routine is placed on locore.s and apm_init.S because  * this process forces the CPU to turn to real mode or V86 mode.  * Current version uses real mode, but on future version, we want  * to use V86 mode in APM initialization.  */
+comment|/*  * probe APM (dummy):  *  * APM probing routine is placed on locore.s and apm_init.S because  * this process forces the CPU to turn to real mode or V86 mode.  * Current version uses real mode, but in a future version, we want  * to use V86 mode in APM initialization.  */
 end_comment
 
 begin_function
@@ -2388,6 +2366,17 @@ modifier|*
 name|dvp
 parameter_list|)
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|apm_softc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|apm_softc
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dvp
@@ -2466,10 +2455,7 @@ specifier|static
 name|void
 name|apm_processevent
 parameter_list|(
-name|struct
-name|apm_softc
-modifier|*
-name|sc
+name|void
 parameter_list|)
 block|{
 name|int
@@ -2501,9 +2487,7 @@ block|{
 name|apm_event
 operator|=
 name|apm_getevent
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
@@ -2579,9 +2563,7 @@ name|PMEV_BATTERYLOW
 argument_list|)
 expr_stmt|;
 name|apm_battery_low
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|apm_suspend
 argument_list|()
@@ -2844,22 +2826,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* APM_DEBUG */
-ifdef|#
-directive|ifdef
-name|0
+if|#
+directive|if
+literal|0
 comment|/* Workaround for some buggy APM BIOS implementations */
-name|sc
-operator|->
-name|cs_limit
-operator|=
-literal|0xffff
-expr_stmt|;
-name|sc
-operator|->
-name|ds_limit
-operator|=
-literal|0xffff
-expr_stmt|;
+block|sc->cs_limit = 0xffff; 	sc->ds_limit = 0xffff;
 endif|#
 directive|endif
 comment|/* setup GDT */
@@ -3018,6 +2989,9 @@ operator|->
 name|minorversion
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|APM_DEBUG
 if|if
 condition|(
 name|sc
@@ -3031,10 +3005,6 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
 name|printf
 argument_list|(
 literal|"apm: Engaged control %s\n"
@@ -3050,7 +3020,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 name|printf
 argument_list|(
 literal|"apm: found APM BIOS version %d.%d\n"
@@ -3096,8 +3065,6 @@ if|if
 condition|(
 name|apm_enable_disable_pm
 argument_list|(
-name|sc
-argument_list|,
 literal|1
 argument_list|)
 condition|)
@@ -3139,8 +3106,6 @@ if|if
 condition|(
 name|apm_engage_disengage_pm
 argument_list|(
-name|sc
-argument_list|,
 literal|1
 argument_list|)
 condition|)
@@ -3251,9 +3216,7 @@ name|sc_resume
 argument_list|)
 expr_stmt|;
 name|apm_event_enable
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|sc
 operator|->
@@ -3409,6 +3372,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|newstate
+decl_stmt|;
 if|if
 condition|(
 name|minor
@@ -3454,18 +3420,14 @@ name|sc
 operator|->
 name|active
 condition|)
-block|{
 name|apm_suspend
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|APMIO_GETINFO
@@ -3474,71 +3436,68 @@ if|if
 condition|(
 name|apm_get_info
 argument_list|(
-name|sc
-argument_list|,
 operator|(
 name|apm_info_t
 operator|)
 name|addr
 argument_list|)
 condition|)
-block|{
 name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|APMIO_ENABLE
 case|:
 name|apm_event_enable
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
 name|APMIO_DISABLE
 case|:
 name|apm_event_disable
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
 name|APMIO_HALTCPU
 case|:
 name|apm_halt_cpu
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
 name|APMIO_NOTHALTCPU
 case|:
 name|apm_not_halt_cpu
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
-name|APMIO_DISPLAYOFF
+name|APMIO_DISPLAY
 case|:
+name|newstate
+operator|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|addr
+expr_stmt|;
 if|if
 condition|(
-name|apm_display_off
-argument_list|()
+name|apm_display
+argument_list|(
+name|newstate
+argument_list|)
 condition|)
-block|{
 name|error
 operator|=
 name|ENXIO
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|error
