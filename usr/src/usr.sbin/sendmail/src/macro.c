@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	1.2	%G%"
+literal|"@(#)macro.c	1.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|bool
+name|int
 name|Debug
 decl_stmt|;
 end_decl_stmt
@@ -81,6 +81,8 @@ name|DEBUG
 if|if
 condition|(
 name|Debug
+operator|>
+literal|3
 condition|)
 name|printf
 argument_list|(
@@ -248,6 +250,8 @@ name|DEBUG
 if|if
 condition|(
 name|Debug
+operator|>
+literal|3
 condition|)
 name|printf
 argument_list|(
@@ -304,6 +308,8 @@ name|DEBUG
 if|if
 condition|(
 name|Debug
+operator|>
+literal|3
 condition|)
 name|printf
 argument_list|(
