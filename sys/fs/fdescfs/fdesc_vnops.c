@@ -182,19 +182,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|fdesc_badop
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|fdesc_getattr
 name|__P
 argument_list|(
@@ -2344,25 +2331,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * /dev/fd "should never get here" operation  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|fdesc_badop
-parameter_list|()
-block|{
-name|panic
-argument_list|(
-literal|"fdesc: bad op"
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
