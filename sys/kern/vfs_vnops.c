@@ -4024,8 +4024,6 @@ name|vp
 argument_list|)
 argument_list|,
 name|PINOD
-operator||
-name|PDROP
 argument_list|,
 literal|"vn_lock"
 argument_list|,
