@@ -4038,6 +4038,10 @@ literal|1
 operator|&&
 name|fetchLastErrCode
 operator|!=
+name|FETCH_PROTO
+operator|&&
+name|fetchLastErrCode
+operator|!=
 name|FETCH_UNAVAIL
 condition|)
 return|return
