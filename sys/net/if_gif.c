@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -632,6 +638,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_link
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_link
+argument_list|,
+name|IFT_GIF
+argument_list|,
+name|gif
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"Generic Tunnel Interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -639,7 +671,7 @@ name|MAX_GIF_NEST
 end_ifndef
 
 begin_comment
-comment|/*  * This macro controls the upper limitation on nesting of gif tunnels.  * Since, setting a large value to this macro with a careless configuration  * may introduce system crash, we don't allow any nestings by default.  * If you need to configure nested gif tunnels, you can define this macro  * in your kernel configuration file. However, if you do so, please be  * careful to configure the tunnels so that it won't make a loop.  */
+comment|/*  * This macro controls the default upper limitation on nesting of gif tunnels.  * Since, setting a large value to this macro with a careless configuration  * may introduce system crash, we don't allow any nestings by default.  * If you need to configure nested gif tunnels, you can define this macro  * in your kernel configuration file. However, if you do so, please be  * careful to configure the tunnels so that it won't make a loop.  */
 end_comment
 
 begin_define
@@ -662,6 +694,86 @@ init|=
 name|MAX_GIF_NEST
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_gif
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_nesting
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|max_gif_nesting
+argument_list|,
+literal|0
+argument_list|,
+literal|"Max nested tunnels"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * By default, we disallow creation of multiple tunnels between the same  * pair of addresses.  Some applications require this functionality so  * we allow control over this check here.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XBONEHACK
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|parallel_tunnels
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|parallel_tunnels
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_link_gif
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|parallel_tunnels
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|parallel_tunnels
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow parallel tunnels?"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -2871,12 +2983,12 @@ operator|->
 name|sa_len
 condition|)
 continue|continue;
-ifndef|#
-directive|ifndef
-name|XBONEHACK
-comment|/* can't configure same pair of address onto two gifs */
+comment|/* 			 * Disallow parallel tunnels unless instructed 			 * otherwise. 			 */
 if|if
 condition|(
+operator|!
+name|parallel_tunnels
+operator|&&
 name|bcmp
 argument_list|(
 name|sc2
@@ -2916,8 +3028,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-endif|#
-directive|endif
 comment|/* can't configure multiple multi-dest interfaces */
 define|#
 directive|define
