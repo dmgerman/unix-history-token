@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -809,7 +809,7 @@ name|ifu
 operator|->
 name|iff_hlen
 decl_stmt|,
-name|p
+name|pp
 decl_stmt|;
 name|top
 operator|=
@@ -978,8 +978,8 @@ condition|)
 goto|goto
 name|copy
 goto|;
-comment|/* 			 * Switch pages mapped to UNIBUS with new page p, 			 * as quick form of copy.  Remap UNIBUS and invalidate. 			 */
-name|p
+comment|/* 			 * Switch pages mapped to UNIBUS with new page pp, 			 * as quick form of copy.  Remap UNIBUS and invalidate. 			 */
+name|pp
 operator|=
 name|mtod
 argument_list|(
@@ -1009,7 +1009,7 @@ name|Mbmap
 index|[
 name|mtocl
 argument_list|(
-name|p
+name|pp
 argument_list|)
 operator|*
 name|CLSIZE
@@ -1106,10 +1106,10 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|pp
 argument_list|)
 expr_stmt|;
-name|p
+name|pp
 operator|+=
 name|NBPG
 expr_stmt|;

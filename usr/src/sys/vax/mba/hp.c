@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -3327,12 +3327,6 @@ operator|.
 name|b_actf
 decl_stmt|;
 specifier|register
-name|struct
-name|hpst
-modifier|*
-name|st
-decl_stmt|;
-specifier|register
 name|int
 name|er1
 decl_stmt|,
@@ -3355,8 +3349,6 @@ name|int
 name|retry
 init|=
 literal|0
-decl_stmt|,
-name|i
 decl_stmt|;
 name|int
 name|npf
@@ -3378,16 +3370,6 @@ name|mi_mba
 operator|->
 name|mba_bcr
 argument_list|)
-expr_stmt|;
-name|st
-operator|=
-operator|&
-name|hpst
-index|[
-name|mi
-operator|->
-name|mi_type
-index|]
 expr_stmt|;
 if|if
 condition|(
