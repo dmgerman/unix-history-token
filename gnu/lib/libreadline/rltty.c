@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -59,6 +53,60 @@ end_endif
 
 begin_comment
 comment|/* HAVE_UNISTD_H */
+end_comment
+
+begin_comment
+comment|/* This is needed to include support for TIOCGWINSZ and window resizing. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OSF1
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BSD386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NetBSD
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|FreeBSD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_386BSD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|AIX
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OSF1 || BSD386 */
 end_comment
 
 begin_include
@@ -1607,6 +1655,9 @@ modifier|*
 name|tiop
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|TIOCGWINSZ
 comment|/* XXX this prevents to got editing mode from tcsh. Ache */
 name|struct
 name|winsize
@@ -1639,6 +1690,8 @@ operator|&
 name|w
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 while|while
 condition|(
 name|GETATTR
