@@ -1638,13 +1638,11 @@ specifier|static
 name|void
 name|dc_delay
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|idx
@@ -1683,13 +1681,11 @@ specifier|static
 name|void
 name|dc_eeprom_width
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2005,15 +2001,12 @@ specifier|static
 name|void
 name|dc_eeprom_idle
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2153,7 +2146,6 @@ argument_list|,
 literal|0x00000000
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2166,20 +2158,15 @@ specifier|static
 name|void
 name|dc_eeprom_putbyte
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|d
 decl_stmt|,
@@ -2330,7 +2317,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2343,26 +2329,19 @@ specifier|static
 name|void
 name|dc_eeprom_getword_pnic
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|,
-name|dest
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
+parameter_list|,
 name|u_int16_t
 modifier|*
 name|dest
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2433,7 +2412,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2446,24 +2424,18 @@ specifier|static
 name|void
 name|dc_eeprom_getword_xircom
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|,
-name|dest
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
+parameter_list|,
 name|u_int16_t
 modifier|*
 name|dest
-decl_stmt|;
+parameter_list|)
 block|{
 name|SIO_SET
 argument_list|(
@@ -2543,7 +2515,6 @@ operator||
 name|DC_SIO_ROMCTL_READ
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2556,26 +2527,19 @@ specifier|static
 name|void
 name|dc_eeprom_getword
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|,
-name|dest
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
+parameter_list|,
 name|u_int16_t
 modifier|*
 name|dest
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2721,7 +2685,6 @@ name|dest
 operator|=
 name|word
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2734,33 +2697,23 @@ specifier|static
 name|void
 name|dc_read_eeprom
 parameter_list|(
-name|sc
-parameter_list|,
-name|dest
-parameter_list|,
-name|off
-parameter_list|,
-name|cnt
-parameter_list|,
-name|swap
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|dest
-decl_stmt|;
+parameter_list|,
 name|int
 name|off
-decl_stmt|;
+parameter_list|,
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|,
 name|int
 name|swap
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2874,7 +2827,6 @@ operator|=
 name|word
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -2891,18 +2843,14 @@ specifier|static
 name|void
 name|dc_mii_writebit
 parameter_list|(
-name|sc
-parameter_list|,
-name|bit
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|bit
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2947,7 +2895,6 @@ argument_list|,
 name|DC_SIO_MII_CLK
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2960,13 +2907,11 @@ specifier|static
 name|int
 name|dc_mii_readbit
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|CSR_WRITE_4
 argument_list|(
@@ -3037,15 +2982,12 @@ specifier|static
 name|void
 name|dc_mii_sync
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -3078,7 +3020,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3091,23 +3032,17 @@ specifier|static
 name|void
 name|dc_mii_send
 parameter_list|(
-name|sc
-parameter_list|,
-name|bits
-parameter_list|,
-name|cnt
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|u_int32_t
 name|bits
-decl_stmt|;
+parameter_list|,
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3153,20 +3088,16 @@ specifier|static
 name|int
 name|dc_mii_readreg
 parameter_list|(
-name|sc
-parameter_list|,
-name|frame
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|dc_mii_frame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3274,7 +3205,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Check for ack */
+comment|/* Check for ack. */
 name|ack
 operator|=
 name|dc_mii_readbit
@@ -3301,13 +3232,11 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|dc_mii_readbit
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|fail
 goto|;
@@ -3393,20 +3322,16 @@ specifier|static
 name|int
 name|dc_mii_writereg
 parameter_list|(
-name|sc
-parameter_list|,
-name|frame
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|dc_mii_frame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 block|{
 name|DC_LOCK
 argument_list|(
@@ -3537,20 +3462,15 @@ specifier|static
 name|int
 name|dc_miibus_readreg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|phy
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_mii_frame
@@ -3579,10 +3499,6 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|frame
 argument_list|,
@@ -4008,24 +3924,18 @@ specifier|static
 name|int
 name|dc_miibus_writereg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|,
-name|data
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|phy
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg
-decl_stmt|,
+parameter_list|,
+name|int
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -4052,10 +3962,6 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|frame
 argument_list|,
@@ -4354,11 +4260,9 @@ specifier|static
 name|void
 name|dc_miibus_statchg
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -4461,7 +4365,6 @@ operator|->
 name|mii_media_active
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4474,11 +4377,9 @@ specifier|static
 name|void
 name|dc_miibus_mediainit
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -4558,7 +4459,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4595,18 +4495,14 @@ specifier|static
 name|u_int32_t
 name|dc_crc_le
 parameter_list|(
-name|sc
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int32_t
 name|idx
@@ -4755,6 +4651,7 @@ literal|0x180
 condition|)
 return|return
 operator|(
+operator|(
 name|crc
 operator|&
 literal|0x0F
@@ -4773,9 +4670,11 @@ literal|14
 operator|<<
 literal|4
 operator|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 operator|(
 name|crc
 operator|&
@@ -4798,6 +4697,7 @@ operator|(
 literal|12
 operator|<<
 literal|4
+operator|)
 operator|)
 return|;
 block|}
@@ -4828,11 +4728,9 @@ specifier|static
 name|u_int32_t
 name|dc_crc_be
 parameter_list|(
-name|addr
-parameter_list|)
 name|caddr_t
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int32_t
 name|crc
@@ -4934,7 +4832,7 @@ name|carry
 expr_stmt|;
 block|}
 block|}
-comment|/* return the filter bit position */
+comment|/* Return the filter bit position. */
 return|return
 operator|(
 operator|(
@@ -4958,13 +4856,11 @@ specifier|static
 name|void
 name|dc_setfilt_21143
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_desc
@@ -5052,10 +4948,6 @@ name|dc_sbuf
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|sp
 argument_list|,
 name|DC_SFRAME_LEN
@@ -5347,7 +5239,6 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5356,18 +5247,21 @@ specifier|static
 name|void
 name|dc_setfilt_admtek
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
 modifier|*
 name|ifp
+decl_stmt|;
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma
 decl_stmt|;
 name|int
 name|h
@@ -5386,11 +5280,6 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-name|struct
-name|ifmultiaddr
-modifier|*
-name|ifma
-decl_stmt|;
 name|ifp
 operator|=
 operator|&
@@ -5400,7 +5289,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* Init our MAC address */
+comment|/* Init our MAC address. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5504,7 +5393,7 @@ argument_list|,
 name|DC_NETCFG_RX_ALLMULTI
 argument_list|)
 expr_stmt|;
-comment|/* first, zot all the existing hash bits */
+comment|/* First, zot all the existing hash bits. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5537,7 +5426,7 @@ name|IFF_ALLMULTI
 operator|)
 condition|)
 return|return;
-comment|/* now program new ones */
+comment|/* Now program new ones. */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -5660,7 +5549,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5669,18 +5557,21 @@ specifier|static
 name|void
 name|dc_setfilt_asix
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
 modifier|*
 name|ifp
+decl_stmt|;
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma
 decl_stmt|;
 name|int
 name|h
@@ -5698,11 +5589,6 @@ literal|0
 block|,
 literal|0
 block|}
-decl_stmt|;
-name|struct
-name|ifmultiaddr
-modifier|*
-name|ifma
 decl_stmt|;
 name|ifp
 operator|=
@@ -6028,7 +5914,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6037,14 +5922,22 @@ specifier|static
 name|void
 name|dc_setfilt_xircom
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifma
+decl_stmt|;
 name|struct
 name|dc_desc
 modifier|*
@@ -6055,16 +5948,6 @@ name|h
 decl_stmt|,
 modifier|*
 name|sp
-decl_stmt|;
-name|struct
-name|ifmultiaddr
-modifier|*
-name|ifma
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
 decl_stmt|;
 name|int
 name|i
@@ -6144,10 +6027,6 @@ name|dc_sbuf
 expr_stmt|;
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|sp
 argument_list|,
 name|DC_SFRAME_LEN
@@ -6451,7 +6330,7 @@ argument_list|,
 literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * wait some time... 	 */
+comment|/* 	 * Wait some time... 	 */
 name|DELAY
 argument_list|(
 literal|1000
@@ -6463,7 +6342,6 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6472,13 +6350,11 @@ specifier|static
 name|void
 name|dc_setfilt
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6553,12 +6429,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/*  * In order to fiddle with the  * 'full-duplex' and '100Mbps' bits in the netconfig register, we  * first have to put the transmit and/or receive logic in the idle state.  */
+comment|/*  * In order to fiddle with the 'full-duplex' and '100Mbps' bits in  * the netconfig register, we first have to put the transmit and/or  * receive logic in the idle state.  */
 end_comment
 
 begin_function
@@ -6566,18 +6441,14 @@ specifier|static
 name|void
 name|dc_setcfg
 parameter_list|(
-name|sc
-parameter_list|,
-name|media
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|media
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -6585,6 +6456,8 @@ decl_stmt|,
 name|restart
 init|=
 literal|0
+decl_stmt|,
+name|watchdogreg
 decl_stmt|;
 name|u_int32_t
 name|isr
@@ -6740,9 +6613,6 @@ operator|==
 name|DC_PMODE_MII
 condition|)
 block|{
-name|int
-name|watchdogreg
-decl_stmt|;
 if|if
 condition|(
 name|DC_IS_INTEL
@@ -6751,7 +6621,7 @@ name|sc
 argument_list|)
 condition|)
 block|{
-comment|/* there's a write enable bit here that reads as 1 */
+comment|/* There's a write enable bit here that reads as 1. */
 name|watchdogreg
 operator|=
 name|CSR_READ_4
@@ -6995,10 +6865,7 @@ operator|==
 name|DC_PMODE_MII
 condition|)
 block|{
-name|int
-name|watchdogreg
-decl_stmt|;
-comment|/* there's a write enable bit here that reads as 1 */
+comment|/* There's a write enable bit here that reads as 1. */
 if|if
 condition|(
 name|DC_IS_INTEL
@@ -7421,7 +7288,6 @@ operator||
 name|DC_NETCFG_RX_ON
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7430,15 +7296,12 @@ specifier|static
 name|void
 name|dc_reset
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -7618,7 +7481,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -7629,11 +7491,9 @@ name|dc_type
 modifier|*
 name|dc_devtype
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_type
@@ -7827,11 +7687,9 @@ specifier|static
 name|int
 name|dc_probe
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_type
@@ -7880,14 +7738,19 @@ specifier|static
 name|void
 name|dc_acpi
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|unit
+decl_stmt|;
+name|u_int32_t
+name|iobase
+decl_stmt|,
+name|membase
+decl_stmt|,
+name|irq
 decl_stmt|;
 name|unit
 operator|=
@@ -7906,13 +7769,6 @@ operator|!=
 name|PCI_POWERSTATE_D0
 condition|)
 block|{
-name|u_int32_t
-name|iobase
-decl_stmt|,
-name|membase
-decl_stmt|,
-name|irq
-decl_stmt|;
 comment|/* Save important PCI config data. */
 name|iobase
 operator|=
@@ -8003,7 +7859,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8012,18 +7867,14 @@ specifier|static
 name|void
 name|dc_apply_fixup
 parameter_list|(
-name|sc
-parameter_list|,
-name|media
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|media
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_mediainfo
@@ -8188,7 +8039,6 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8197,20 +8047,16 @@ specifier|static
 name|void
 name|dc_decode_leaf_sia
 parameter_list|(
-name|sc
-parameter_list|,
-name|l
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|dc_eblock_sia
 modifier|*
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_mediainfo
@@ -8230,17 +8076,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dc_mediainfo
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -8340,7 +8177,6 @@ name|dc_pmode
 operator|=
 name|DC_PMODE_SIA
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8349,20 +8185,16 @@ specifier|static
 name|void
 name|dc_decode_leaf_sym
 parameter_list|(
-name|sc
-parameter_list|,
-name|l
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|dc_eblock_sym
 modifier|*
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_mediainfo
@@ -8382,17 +8214,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dc_mediainfo
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -8464,7 +8287,6 @@ name|dc_pmode
 operator|=
 name|DC_PMODE_SYM
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8473,29 +8295,25 @@ specifier|static
 name|void
 name|dc_decode_leaf_mii
 parameter_list|(
-name|sc
-parameter_list|,
-name|l
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|dc_eblock_mii
 modifier|*
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
-name|u_int8_t
-modifier|*
-name|p
-decl_stmt|;
 name|struct
 name|dc_mediainfo
 modifier|*
 name|m
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|p
 decl_stmt|;
 name|m
 operator|=
@@ -8510,17 +8328,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|m
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dc_mediainfo
-argument_list|)
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* We abuse IFM_AUTO to represent MII. */
@@ -8598,7 +8407,6 @@ name|dc_mi
 operator|=
 name|m
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8607,18 +8415,14 @@ specifier|static
 name|void
 name|dc_read_srom
 parameter_list|(
-name|sc
-parameter_list|,
-name|bits
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|bits
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|size
@@ -8672,13 +8476,11 @@ specifier|static
 name|void
 name|dc_parse_21143_srom
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_leaf_hdr
@@ -8691,6 +8493,8 @@ modifier|*
 name|hdr
 decl_stmt|;
 name|int
+name|have_mii
+decl_stmt|,
 name|i
 decl_stmt|,
 name|loff
@@ -8698,9 +8502,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
-name|int
-name|have_mii
 decl_stmt|;
 name|have_mii
 operator|=
@@ -8928,7 +8729,6 @@ name|ptr
 operator|++
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8941,11 +8741,9 @@ specifier|static
 name|int
 name|dc_attach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|tmp
@@ -9107,7 +8905,7 @@ operator|->
 name|dc_res
 argument_list|)
 expr_stmt|;
-comment|/* Allocate interrupt */
+comment|/* Allocate interrupt. */
 name|rid
 operator|=
 literal|0
@@ -9994,17 +9792,12 @@ name|DC_TYPE_AN985
 case|:
 name|bcopy
 argument_list|(
-operator|&
 name|sc
 operator|->
 name|dc_srom
-index|[
+operator|+
 name|DC_AL_EE_NODEADDR
-index|]
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|eaddr
 argument_list|,
@@ -10043,14 +9836,14 @@ argument_list|,
 operator|&
 name|eaddr
 argument_list|,
-literal|6
+name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|DC_TYPE_XIRCOM
 case|:
-comment|/* The MAC comes from the CIS */
+comment|/* The MAC comes from the CIS. */
 name|mac
 operator|=
 name|pci_get_ether
@@ -10131,10 +9924,6 @@ name|bcopy
 argument_list|(
 name|eaddr
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sc
 operator|->
@@ -10256,12 +10045,6 @@ operator|->
 name|if_ioctl
 operator|=
 name|dc_ioctl
-expr_stmt|;
-name|ifp
-operator|->
-name|if_output
-operator|=
-name|ether_output
 expr_stmt|;
 name|ifp
 operator|->
@@ -10730,11 +10513,9 @@ specifier|static
 name|int
 name|dc_detach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -10986,13 +10767,11 @@ specifier|static
 name|int
 name|dc_list_tx_init
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_chain_data
@@ -11137,13 +10916,11 @@ specifier|static
 name|int
 name|dc_list_rx_init
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_chain_data
@@ -11267,25 +11044,19 @@ specifier|static
 name|int
 name|dc_newbuf
 parameter_list|(
-name|sc
-parameter_list|,
-name|i
-parameter_list|,
-name|m
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|i
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -11431,10 +11202,6 @@ name|DC_PNIC_RX_BUG_WAR
 condition|)
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|mtod
 argument_list|(
 name|m_new
@@ -11503,7 +11270,7 @@ begin_define
 define|#
 directive|define
 name|DC_WHOLEFRAME
-value|(DC_RXSTAT_FIRSTFRAG|DC_RXSTAT_LASTFRAG)
+value|(DC_RXSTAT_FIRSTFRAG | DC_RXSTAT_LASTFRAG)
 end_define
 
 begin_function
@@ -11511,18 +11278,14 @@ specifier|static
 name|void
 name|dc_pnic_rx_bug_war
 parameter_list|(
-name|sc
-parameter_list|,
-name|idx
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_desc
@@ -11764,7 +11527,6 @@ name|rxstat
 operator||
 name|DC_RXSTAT_FIRSTFRAG
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -11777,23 +11539,21 @@ specifier|static
 name|int
 name|dc_rx_resync
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|pos
-decl_stmt|;
 name|struct
 name|dc_desc
 modifier|*
 name|cur_rx
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|pos
 decl_stmt|;
 name|pos
 operator|=
@@ -11887,13 +11647,11 @@ specifier|static
 name|void
 name|dc_rxeof
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -11985,7 +11743,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DEVICE_POLLING */
 name|cur_rx
 operator|=
 operator|&
@@ -12107,7 +11864,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 		 * comes up in the ring.  However, don't report long 		 * frames as errors since they could be vlans 		 */
+comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 		 * comes up in the ring.  However, don't report long 		 * frames as errors since they could be vlans. 		 */
 if|if
 condition|(
 operator|(
@@ -12353,13 +12110,11 @@ specifier|static
 name|void
 name|dc_txeof
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_desc
@@ -12375,6 +12130,9 @@ name|ifp
 decl_stmt|;
 name|int
 name|idx
+decl_stmt|;
+name|u_int32_t
+name|txstat
 decl_stmt|;
 name|ifp
 operator|=
@@ -12405,9 +12163,6 @@ operator|.
 name|dc_tx_prod
 condition|)
 block|{
-name|u_int32_t
-name|txstat
-decl_stmt|;
 name|cur_tx
 operator|=
 operator|&
@@ -12720,7 +12475,7 @@ operator|.
 name|dc_tx_cons
 condition|)
 block|{
-comment|/* some buffers have been freed */
+comment|/* Some buffers have been freed. */
 name|sc
 operator|->
 name|dc_cdata
@@ -12755,7 +12510,6 @@ literal|0
 else|:
 literal|5
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -12764,12 +12518,10 @@ specifier|static
 name|void
 name|dc_tick
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -13072,7 +12824,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13085,13 +12836,11 @@ specifier|static
 name|void
 name|dc_tx_underrun
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int32_t
 name|isr
@@ -13271,7 +13020,6 @@ argument_list|,
 name|DC_NETCFG_TX_ON
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13559,12 +13307,10 @@ specifier|static
 name|void
 name|dc_intr
 parameter_list|(
-name|arg
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -13589,9 +13335,7 @@ name|sc
 operator|->
 name|suspended
 condition|)
-block|{
 return|return;
-block|}
 if|if
 condition|(
 operator|(
@@ -13662,7 +13406,6 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* DEVICE_POLLING */
 comment|/* Suppress unwanted interrupts */
 if|if
 condition|(
@@ -13954,13 +13697,11 @@ name|done
 label|:
 endif|#
 directive|endif
-comment|/* DEVICE_POLLING */
 name|DC_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -13973,26 +13714,20 @@ specifier|static
 name|int
 name|dc_encap
 parameter_list|(
-name|sc
-parameter_list|,
-name|m_head
-parameter_list|,
-name|txidx
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m_head
-decl_stmt|;
+parameter_list|,
 name|u_int32_t
 modifier|*
 name|txidx
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_desc
@@ -14436,13 +14171,11 @@ specifier|static
 name|void
 name|dc_start
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -14714,7 +14447,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14723,12 +14455,10 @@ specifier|static
 name|void
 name|dc_init
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -15471,7 +15201,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15484,13 +15213,11 @@ specifier|static
 name|int
 name|dc_ifmedia_upd
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -15583,20 +15310,16 @@ specifier|static
 name|void
 name|dc_ifmedia_sts
 parameter_list|(
-name|ifp
-parameter_list|,
-name|ifmr
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
 name|ifmr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -15693,7 +15416,6 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15702,23 +15424,17 @@ specifier|static
 name|int
 name|dc_ioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|command
-parameter_list|,
-name|data
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|command
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -15952,13 +15668,11 @@ specifier|static
 name|void
 name|dc_watchdog
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -16025,7 +15739,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16038,15 +15751,12 @@ specifier|static
 name|void
 name|dc_stop
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|dc_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -16206,10 +15916,6 @@ block|}
 block|}
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sc
 operator|->
@@ -16312,10 +16018,6 @@ block|}
 block|}
 name|bzero
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sc
 operator|->
@@ -16338,7 +16040,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -16351,23 +16052,19 @@ specifier|static
 name|int
 name|dc_suspend
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|dc_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|s
 decl_stmt|;
 name|s
 operator|=
@@ -16499,19 +16196,10 @@ specifier|static
 name|int
 name|dc_resume
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|dc_softc
 modifier|*
@@ -16521,6 +16209,11 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|s
 decl_stmt|;
 name|s
 operator|=
@@ -16689,11 +16382,9 @@ specifier|static
 name|void
 name|dc_shutdown
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|dc_softc
@@ -16712,7 +16403,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
