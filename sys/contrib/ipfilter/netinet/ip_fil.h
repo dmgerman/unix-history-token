@@ -821,7 +821,8 @@ comment|/* IP packet id field */
 name|u_int
 name|fin_misc
 decl_stmt|;
-name|void
+name|mb_t
+modifier|*
 modifier|*
 name|fin_mp
 decl_stmt|;
@@ -4379,7 +4380,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|fr_makefrip
 name|__P
 argument_list|(

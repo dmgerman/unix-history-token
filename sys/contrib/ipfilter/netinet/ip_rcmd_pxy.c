@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: ip_rcmd_pxy.c,v 1.4.2.6 2002/10/01 15:24:59 darrenr Exp $  */
+comment|/*  * $Id: ip_rcmd_pxy.c,v 1.4.2.7 2003/04/26 05:59:39 darrenr Exp $  */
 end_comment
 
 begin_comment
@@ -442,15 +442,6 @@ name|mb_t
 modifier|*
 name|m
 decl_stmt|;
-if|#
-directive|if
-name|SOLARIS
-name|mb_t
-modifier|*
-name|m1
-decl_stmt|;
-endif|#
-directive|endif
 name|tcp
 operator|=
 operator|(

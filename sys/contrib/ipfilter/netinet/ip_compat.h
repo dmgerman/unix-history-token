@@ -947,6 +947,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|M_BLEN
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->b_wptr - (m)->b_rptr)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -980,6 +990,11 @@ name|queue_t
 modifier|*
 name|qf_out
 decl_stmt|;
+name|void
+modifier|*
+name|qf_data
+decl_stmt|;
+comment|/* layer 3 header pointer */
 name|struct
 name|qinit
 modifier|*
@@ -3373,6 +3388,16 @@ parameter_list|,
 name|t
 parameter_list|)
 value|mtod(m,t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_BLEN
+parameter_list|(
+name|m
+parameter_list|)
+value|(m)->m_len
 end_define
 
 begin_define
@@ -6539,7 +6564,7 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|vax
+name|__vax__
 argument_list|)
 name|__u8
 name|th_res
@@ -6627,7 +6652,7 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|vax
+name|__vax__
 argument_list|)
 name|__u8
 name|ip_hl
@@ -7764,14 +7789,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|ICMP6ERR_MINPKTLEN
+name|ICMP6ERR_IPICMPHLEN
 value|(40 + 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ICMP6ERR_IPICMPHLEN
+name|ICMP6ERR_MINPKTLEN
 value|(40 + 8 + 40)
 end_define
 

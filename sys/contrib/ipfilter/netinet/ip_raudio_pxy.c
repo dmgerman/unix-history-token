@@ -341,15 +341,6 @@ name|mb_t
 modifier|*
 name|m
 decl_stmt|;
-if|#
-directive|if
-name|SOLARIS
-name|mb_t
-modifier|*
-name|m1
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * If we've already processed the start messages, then nothing left 	 * for the proxy to do. 	 */
 if|if
 condition|(
@@ -961,15 +952,6 @@ name|mb_t
 modifier|*
 name|m
 decl_stmt|;
-if|#
-directive|if
-name|SOLARIS
-name|mb_t
-modifier|*
-name|m1
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Wait until we've seen the end of the start messages and even then 	 * only proceed further if we're using UDP.  If they want to use TCP 	 * then data is sent back on the same channel that is already open. 	 */
 if|if
 condition|(
