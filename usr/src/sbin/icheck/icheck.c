@@ -1,19 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*###1 [lint] static variable sccsid unused%%%*/
-end_comment
-
-begin_comment
-comment|/*###1 [lint] sccsid defined( icheck.c(1) ), but never used%%%*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.7 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -651,8 +643,6 @@ name|n
 operator|++
 control|)
 block|{
-comment|/*###148 [lint] calloc value declared inconsistently llib-lc(58) :: icheck.c(148)%%%*/
-comment|/*###148 [lint] calloc value used inconsistently llib-lc(58) :: icheck.c(148)%%%*/
 name|sblock
 operator|.
 name|fs_csp
@@ -1482,14 +1472,7 @@ name|i
 operator|==
 literal|0
 condition|)
-block|{
-name|sblock
-operator|.
-name|fs_nifree
-operator|++
-expr_stmt|;
 return|return;
-block|}
 switch|switch
 condition|(
 name|i
@@ -2230,7 +2213,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*###402 [lint] lseek value declared inconsistently llib-lc(31) :: icheck.c(402)%%%*/
 if|if
 condition|(
 operator|(

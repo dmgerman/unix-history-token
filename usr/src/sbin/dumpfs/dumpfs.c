@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	1.4 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +213,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"blocks\t%d\n"
+argument_list|,
+name|afs
+operator|.
+name|fs_dsize
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"ncg\t%d\n"
 argument_list|,
 name|afs
@@ -278,19 +287,31 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"nffree\t%d\nnbfree\t%d\nnifree\t%d\n"
+literal|"ndir\t%d\nnffree\t%d\nnbfree\t%d\nnifree\t%d\n"
 argument_list|,
 name|afs
 operator|.
-name|fs_nffree
+name|fs_cstotal
+operator|.
+name|cs_ndir
 argument_list|,
 name|afs
 operator|.
-name|fs_nbfree
+name|fs_cstotal
+operator|.
+name|cs_nffree
 argument_list|,
 name|afs
 operator|.
-name|fs_nifree
+name|fs_cstotal
+operator|.
+name|cs_nbfree
+argument_list|,
+name|afs
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nifree
 argument_list|)
 expr_stmt|;
 name|printf
@@ -392,7 +413,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"\ncs[].cs_(nbfree,ndir,nifree):\n\t"
+literal|"\ncs[].cs_(nbfree,ndir,nifree,nffree):\n\t"
 argument_list|)
 expr_stmt|;
 for|for
@@ -527,7 +548,7 @@ name|i
 operator|&&
 name|i
 operator|%
-literal|5
+literal|4
 operator|==
 literal|0
 condition|)
@@ -538,7 +559,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%d,%d,%d) "
+literal|"(%d,%d,%d,%d) "
 argument_list|,
 name|cs
 operator|->
@@ -551,6 +572,10 @@ argument_list|,
 name|cs
 operator|->
 name|cs_nifree
+argument_list|,
+name|cs
+operator|->
+name|cs_nffree
 argument_list|)
 expr_stmt|;
 block|}
@@ -737,19 +762,27 @@ literal|"nifree\t%d\nndir\t%d\nnffree\t%d\nnbfree\t%d\n"
 argument_list|,
 name|acg
 operator|.
-name|cg_nifree
+name|cg_cs
+operator|.
+name|cs_nifree
 argument_list|,
 name|acg
 operator|.
-name|cg_ndir
+name|cg_cs
+operator|.
+name|cs_ndir
 argument_list|,
 name|acg
 operator|.
-name|cg_nffree
+name|cg_cs
+operator|.
+name|cs_nffree
 argument_list|,
 name|acg
 operator|.
-name|cg_nbfree
+name|cg_cs
+operator|.
+name|cs_nbfree
 argument_list|)
 expr_stmt|;
 name|printf
