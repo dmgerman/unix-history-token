@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.21 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3588,7 +3588,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|notdef
+name|BERKNET_WAS_A_LONG_TIME_AGO
 case|case
 name|NETLDISC
 case|:
@@ -3765,6 +3765,9 @@ literal|"term\n"
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|BERKNET_WAS_A_LONG_TIME_AGO
 case|case
 name|NETLDISC
 case|:
@@ -3774,6 +3777,8 @@ literal|"berknet\n"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|TABLDISC
 case|:
