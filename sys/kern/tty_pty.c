@@ -510,13 +510,6 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-name|devc
-operator|->
-name|si_flags
-operator|&=
-operator|~
-name|SI_CHEAPCLONE
-expr_stmt|;
 name|n
 operator|=
 name|minor
@@ -537,6 +530,13 @@ operator|(
 name|NODEV
 operator|)
 return|;
+name|devc
+operator|->
+name|si_flags
+operator|&=
+operator|~
+name|SI_CHEAPCLONE
+expr_stmt|;
 name|pt
 operator|=
 name|malloc
