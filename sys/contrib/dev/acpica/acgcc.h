@@ -85,12 +85,27 @@ parameter_list|()
 value|__sti()
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_comment
+comment|/* XXX conflicts with inline in cpufunc.h */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|wbinvd
 parameter_list|()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*! [Begin] no source code translation */
@@ -210,12 +225,27 @@ parameter_list|()
 value|__asm__ __volatile__ ("sti; hlt":::"memory")
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
+begin_comment
+comment|/* XXX conflicts with inline in cpufunc.h */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|wbinvd
 parameter_list|()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*! [Begin] no source code translation  *  * A brief explanation as GNU inline assembly is a bit hairy  *  %0 is the output parameter in EAX ("=a")  *  %1 and %2 are the input parameters in ECX ("c")  *  and an immediate value ("i") respectively  *  All actual register references are preceded with "%%" as in "%%edx"  *  Immediate values in the assembly are preceded by "$" as in "$0x1"  *  The final asm parameter are the operation altered non-output registers.  */
