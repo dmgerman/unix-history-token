@@ -32,12 +32,6 @@ define|#
 directive|define
 name|tap_if
 value|arpcom.ac_if
-name|struct
-name|resource
-modifier|*
-name|tap_unit
-decl_stmt|;
-comment|/* unit                      */
 name|u_short
 name|tap_flags
 decl_stmt|;

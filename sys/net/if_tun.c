@@ -226,9 +226,6 @@ argument|tun_softc
 argument_list|)
 name|tun_list
 expr_stmt|;
-name|int
-name|tun_unit
-decl_stmt|;
 name|dev_t
 name|tun_dev
 decl_stmt|;
