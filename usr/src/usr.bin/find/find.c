@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	5.2 (Berkeley) %G%"
+literal|"@(#)find.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,9 +370,14 @@ case|:
 case|case
 name|FTS_NS
 case|:
-name|err
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"%s: %s"
+name|stderr
+argument_list|,
+literal|"find: %s: %s\n"
 argument_list|,
 name|entry
 operator|->
