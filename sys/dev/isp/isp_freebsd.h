@@ -1628,7 +1628,7 @@ name|PRIBIO
 argument_list|,
 literal|"isp_mboxwaiting"
 argument_list|,
-literal|5
+literal|10
 operator|*
 name|hz
 argument_list|)
@@ -1651,7 +1651,7 @@ name|PRIBIO
 argument_list|,
 literal|"isp_mboxwaiting"
 argument_list|,
-literal|5
+literal|10
 operator|*
 name|hz
 argument_list|)
@@ -1673,7 +1673,14 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"interrupting mbox timeout"
+literal|"Interrupting Mailbox Command (0x%x) Timeout"
+argument_list|,
+name|isp
+operator|->
+name|isp_mboxtmp
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|isp
@@ -1707,7 +1714,7 @@ name|j
 operator|<
 literal|60
 operator|*
-literal|2000
+literal|10000
 condition|;
 name|j
 operator|++
@@ -1756,7 +1763,14 @@ name|isp
 argument_list|,
 name|ISP_LOGWARN
 argument_list|,
-literal|"polled mbox timeout"
+literal|"Polled Mailbox Command (0x%x) Timeout"
+argument_list|,
+name|isp
+operator|->
+name|isp_mboxtmp
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
