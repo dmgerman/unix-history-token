@@ -379,6 +379,12 @@ name|int
 name|sc_id_vendor
 decl_stmt|;
 comment|/* vendor ID for root hub */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|void
 modifier|*
 name|sc_powerhook
@@ -389,6 +395,8 @@ modifier|*
 name|sc_shutdownhook
 decl_stmt|;
 comment|/* cookie from shutdown hook */
+endif|#
+directive|endif
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
