@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.12 (Berkeley) %G%"
+literal|"@(#)command.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,6 +658,9 @@ name|current_name
 block|,
 operator|*
 name|firstsearch
+block|,
+operator|*
+name|next_name
 block|;
 name|off_t
 name|len
@@ -960,6 +963,30 @@ if|if
 condition|(
 name|hit_eof
 condition|)
+if|if
+condition|(
+name|next_name
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|pbuf
+argument_list|,
+literal|": END (%s)"
+argument_list|,
+name|next_name
+argument_list|)
+expr_stmt|;
+name|putstr
+argument_list|(
+name|pbuf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|putstr
 argument_list|(
 literal|": END"

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +108,9 @@ name|previous_file
 decl_stmt|,
 modifier|*
 name|current_name
+decl_stmt|,
+modifier|*
+name|next_name
 decl_stmt|;
 end_decl_stmt
 
@@ -606,6 +609,26 @@ operator|+
 literal|1
 else|:
 name|filename
+expr_stmt|;
+if|if
+condition|(
+name|curr_ac
+operator|>=
+name|ac
+condition|)
+name|next_name
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+name|next_name
+operator|=
+name|av
+index|[
+name|curr_ac
+operator|+
+literal|1
+index|]
 expr_stmt|;
 name|file
 operator|=
