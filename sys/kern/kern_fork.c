@@ -2793,7 +2793,13 @@ operator|->
 name|vm_ssize
 expr_stmt|;
 block|}
-comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 *   What if they have an error? XXX 	 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 *   What if they have an error? XXX 	 * 	 * Handlers must be MPSAFE, or aquire Giant themselves if not. 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_fork
@@ -2803,12 +2809,6 @@ argument_list|,
 name|p2
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set the child start time and mark the process as being complete. 	 */
