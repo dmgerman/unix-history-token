@@ -326,6 +326,34 @@ name|_cury
 value|cury
 end_define
 
+begin_define
+define|#
+directive|define
+name|_begx
+value|begx
+end_define
+
+begin_define
+define|#
+directive|define
+name|_begy
+value|begy
+end_define
+
+begin_define
+define|#
+directive|define
+name|_maxx
+value|maxx
+end_define
+
+begin_define
+define|#
+directive|define
+name|_maxy
+value|maxy
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1587,9 +1615,9 @@ operator|(
 name|WINDOW
 operator|*
 operator|,
-name|int
+name|char
 operator|,
-name|int
+name|char
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2206,7 +2234,7 @@ operator|(
 name|WINDOW
 operator|*
 operator|,
-name|int
+name|char
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2347,7 +2375,7 @@ operator|(
 name|WINDOW
 operator|*
 operator|,
-name|int
+name|char
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2435,8 +2463,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|int
 name|wstandend
 name|__P
 argument_list|(
@@ -2449,8 +2476,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
+name|int
 name|wstandout
 name|__P
 argument_list|(

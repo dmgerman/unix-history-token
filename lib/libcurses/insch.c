@@ -57,7 +57,7 @@ name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-name|int
+name|char
 name|ch
 decl_stmt|;
 block|{

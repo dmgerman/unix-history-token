@@ -53,7 +53,7 @@ name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-name|int
+name|char
 name|vert
 decl_stmt|,
 name|hor
