@@ -160,27 +160,6 @@ begin_comment
 comment|/* cmds.c globals */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|passivemode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* no reverse FTP connections */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|curtype
@@ -228,6 +207,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* interactively prompt on m* cmds */
+end_comment
+
+begin_decl_stmt
+name|int
+name|passivemode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* no reverse FTP connections */
 end_comment
 
 begin_decl_stmt
@@ -310,8 +299,32 @@ comment|/* TRUE if executing "init" macro. */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|char
+name|pad1a
+index|[
+literal|8
+index|]
+init|=
+literal|"Pad 1a"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|jmp_buf
 name|jabort
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|pad1b
+index|[
+literal|8
+index|]
+init|=
+literal|"Pad 1b"
 decl_stmt|;
 end_decl_stmt
 
@@ -10538,28 +10551,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
-end_ifdef
-
-begin_expr_stmt
-name|DStrs
-index|[
-name|nDStrs
-operator|++
-index|]
-operator|=
-literal|"PASSIVEMODE"
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* DONE with #ifdefs for now! */
 end_comment
@@ -11248,12 +11239,6 @@ begin_comment
 comment|/* unimpl */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PASSIVEMODE
-end_ifdef
-
 begin_function
 name|int
 name|setpassive
@@ -11290,11 +11275,6 @@ name|NOERR
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* eof cmds.c */

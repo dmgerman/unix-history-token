@@ -194,24 +194,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PASSIVEMODE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PASSIVEMODE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* If passive FTP can be used, this specifies whether it is turned on  * by default.  If not, we have passive mode available, but are using  * Port ftp by default.  */
 end_comment

@@ -217,6 +217,8 @@ name|int
 name|startup_msg
 decl_stmt|,
 name|anon_open
+decl_stmt|,
+name|passivemode
 decl_stmt|;
 end_decl_stmt
 
@@ -452,6 +454,20 @@ argument_list|,
 literal|0
 argument_list|,
 name|rcname
+argument_list|,
+name|NULL
+argument_list|)
+block|,
+name|VARENTRY
+argument_list|(
+literal|"passive"
+argument_list|,
+name|BOOL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|passivemode
 argument_list|,
 name|NULL
 argument_list|)
