@@ -151,6 +151,13 @@ begin_comment
 comment|/* We don't want one. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FBSD_DATA_PREFIX
+value|PREFIX"/libdata/gcc/"
+end_define
+
 begin_comment
 comment|/* Under FreeBSD, the normal location of the various *crt*.o files is the    /usr/lib directory.  */
 end_comment
