@@ -32,7 +32,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|int
 name|socklen_t
 typedef|;
 end_typedef
