@@ -1670,7 +1670,7 @@ name|ch
 operator|->
 name|delta
 operator|>>
-literal|16
+literal|8
 operator|)
 operator|<<
 literal|24
