@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c 4.24 %G%"
+literal|"@(#)c21.c 4.25 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4216,19 +4216,7 @@ condition|)
 name|clearreg
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|op
-operator|==
-name|BIT
-condition|)
-name|bitopt
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+comment|/*if (p->op==BIT) bitopt(p);*/
 name|ccloc
 index|[
 literal|0
@@ -6471,6 +6459,12 @@ block|}
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_expr_stmt
 name|bitopt
 argument_list|(
@@ -6946,6 +6940,11 @@ literal|0
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|isfield
