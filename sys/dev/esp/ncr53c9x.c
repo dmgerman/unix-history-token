@@ -16,7 +16,7 @@ comment|/*  * Copyright (c) 1994 Peter Galbavy  * Copyright (c) 1995 Paul Kranen
 end_comment
 
 begin_comment
-comment|/*  * Based on aic6360 by Jarle Greipsland  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  */
+comment|/*  * Based on aic6360 by Jarle Greipsland  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@FreeBSD.org) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  */
 end_comment
 
 begin_include
@@ -627,7 +627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach this instance, and then all the sub-devices  */
+comment|/*  * Attach this instance, and then all the sub-devices.  */
 end_comment
 
 begin_function
@@ -3101,7 +3101,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Who am I. This is where we tell the target that we are 	 * happy for it to disconnect etc. 	 */
+comment|/* 	 * Who am I?  This is where we tell the target that we are 	 * happy for it to disconnect etc. 	 */
 comment|/* Now get the command into the FIFO */
 name|ncr53c9x_wrfifo
 argument_list|(
@@ -3305,7 +3305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * DRIVER FUNCTIONS CALLABLE FROM HIGHER LEVEL DRIVERS  */
+comment|/*  * DRIVER FUNCTIONS CALLABLE FROM HIGHER LEVEL DRIVERS:  */
 end_comment
 
 begin_comment
@@ -4487,7 +4487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Used when interrupt driven I/O isn't allowed, e.g. during boot.  */
+comment|/*  * Used when interrupt driven I/O is not allowed, e.g. during boot.  */
 end_comment
 
 begin_function
@@ -7130,7 +7130,7 @@ name|sc_state
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* we got complete message, flush the imess, */
+comment|/* We got a complete message, flush the imess, */
 comment|/* XXX nobody uses imlen below */
 name|sc
 operator|->
@@ -8353,7 +8353,7 @@ name|sc_prevphase
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX - the NCR_ATN flag is not in sync with the actual ATN 	 *	 condition on the SCSI bus. The 53c9x chip 	 *	 automatically turns off ATN before sending the 	 *	 message byte.  (see also the comment below in the 	 *	 default case when picking out a message to send) 	 */
+comment|/* 	 * XXX - the NCR_ATN flag is not in sync with the actual ATN 	 *	 condition on the SCSI bus. The 53c9x chip 	 *	 automatically turns off ATN before sending the 	 *	 message byte.  (See also the comment below in the 	 *	 default case when picking out a message to send.) 	 */
 if|if
 condition|(
 name|sc
@@ -10444,7 +10444,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 			 * The C90 only inhibits FIFO writes until reselection 			 * is complete, instead of waiting until the interrupt 			 * status register has been read.  So, if the reselect 			 * happens while we were entering command bytes (for 			 * another target) some of those bytes can appear in 			 * the FIFO here, after the interrupt is taken. 			 * 			 * To remedy this situation, pull the Selection ID 			 * and Identify message from the FIFO directly, and 			 * ignore any extraneous fifo contents. Also, set 			 * a flag that allows one Illegal Command Interrupt 			 * to occur which the chip also generates as a result 			 * of writing to the FIFO during a reselect. 			 */
+comment|/* 			 * The C90 only inhibits FIFO writes until reselection 			 * is complete instead of waiting until the interrupt 			 * status register has been read.  So, if the reselect 			 * happens while we were entering command bytes (for 			 * another target) some of those bytes can appear in 			 * the FIFO here, after the interrupt is taken. 			 * 			 * To remedy this situation, pull the Selection ID 			 * and Identify message from the FIFO directly, and 			 * ignore any extraneous fifo contents. Also, set 			 * a flag that allows one Illegal Command Interrupt 			 * to occur which the chip also generates as a result 			 * of writing to the FIFO during a reselect. 			 */
 if|if
 condition|(
 name|sc

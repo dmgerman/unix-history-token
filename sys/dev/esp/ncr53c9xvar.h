@@ -85,7 +85,7 @@ value|(((freq + 4) / 5))
 end_define
 
 begin_comment
-comment|/*  * NCR 53c9x variants.  Note, these values are used as indexes into  * a table; don't modify them unless you know what you're doing.  */
+comment|/*  * NCR 53c9x variants.  Note these values are used as indexes into  * a table; do not modify them unless you know what you are doing.  */
 end_comment
 
 begin_define
@@ -381,18 +381,15 @@ expr_stmt|;
 name|time_t
 name|last_used
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|used
 decl_stmt|;
 comment|/* # slots in use */
-name|unsigned
-name|char
+name|u_char
 name|avail
 decl_stmt|;
 comment|/* where to start scanning */
-name|unsigned
-name|char
+name|u_char
 name|busy
 decl_stmt|;
 name|struct
@@ -1232,7 +1229,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* waiting for something to do */
+comment|/* Waiting for something to do */
 end_comment
 
 begin_define

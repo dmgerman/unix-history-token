@@ -200,7 +200,7 @@ name|lsi64854_softc
 modifier|*
 name|sc_dma
 decl_stmt|;
-comment|/* pointer to my dma */
+comment|/* pointer to my DMA */
 name|int
 name|sc_pri
 decl_stmt|;
@@ -698,7 +698,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * allocate space for dma, in SUNW,fas there are no separate 	 * dma device 	 */
+comment|/* 	 * allocate space for dma, in SUNW,fas there are no separate 	 * dma devices 	 */
 name|lsc
 operator|=
 name|malloc
@@ -2340,7 +2340,7 @@ operator|*
 operator|)
 name|sc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|csr
 decl_stmt|;
 name|csr
