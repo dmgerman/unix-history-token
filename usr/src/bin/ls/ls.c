@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.50 (Berkeley) %G%"
+literal|"@(#)ls.c	5.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -964,12 +964,17 @@ else|else
 block|{
 specifier|static
 name|char
+name|dot
+index|[]
+init|=
+literal|"."
+decl_stmt|,
 modifier|*
 name|dotav
 index|[]
 init|=
 block|{
-literal|"."
+name|dot
 block|,
 name|NULL
 block|}
