@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.94 2001/11/20 13:50:07 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.95 2001/11/20 16:09:01 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -2577,11 +2577,10 @@ condition|)
 break|break;
 block|}
 comment|/* passed end, or bad desc */
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
 literal|"usbd_fill_iface_data: bad descriptor(s): %s\n"
-operator|,
+argument_list|,
 name|ed
 operator|->
 name|bLength
@@ -2599,7 +2598,6 @@ condition|?
 literal|"iface desc"
 else|:
 literal|"out of data"
-operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2618,6 +2616,86 @@ name|edesc
 operator|=
 name|ed
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|speed
+operator|==
+name|USB_SPEED_HIGH
+condition|)
+block|{
+name|u_int
+name|mps
+decl_stmt|;
+comment|/* Control and bulk endpoints have max packet limits. */
+switch|switch
+condition|(
+name|UE_GET_XFERTYPE
+argument_list|(
+name|ed
+operator|->
+name|bmAttributes
+argument_list|)
+condition|)
+block|{
+case|case
+name|UE_CONTROL
+case|:
+name|mps
+operator|=
+name|USB_2_MAX_CTRL_PACKET
+expr_stmt|;
+goto|goto
+name|check
+goto|;
+case|case
+name|UE_BULK
+case|:
+name|mps
+operator|=
+name|USB_2_MAX_BULK_PACKET
+expr_stmt|;
+name|check
+label|:
+if|if
+condition|(
+name|UGETW
+argument_list|(
+name|ed
+operator|->
+name|wMaxPacketSize
+argument_list|)
+operator|!=
+name|mps
+condition|)
+block|{
+name|USETW
+argument_list|(
+name|ed
+operator|->
+name|wMaxPacketSize
+argument_list|,
+name|mps
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"usbd_fill_iface_data: bad max "
+literal|"packet size\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+break|break;
+default|default:
+break|break;
+block|}
+block|}
 name|ifc
 operator|->
 name|endpoints
@@ -5351,6 +5429,43 @@ operator|(
 name|err
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|speed
+operator|==
+name|USB_SPEED_HIGH
+condition|)
+block|{
+comment|/* Max packet size must be 64 (sec 5.5.3). */
+if|if
+condition|(
+name|dd
+operator|->
+name|bMaxPacketSize
+operator|!=
+name|USB_2_MAX_CTRL_PACKET
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|printf
+argument_list|(
+literal|"usbd_new_device: addr=%d bad max packet size\n"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|dd
+operator|->
+name|bMaxPacketSize
+operator|=
+name|USB_2_MAX_CTRL_PACKET
+expr_stmt|;
+block|}
 block|}
 name|DPRINTF
 argument_list|(
