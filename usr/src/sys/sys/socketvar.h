@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socketvar.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -72,23 +72,23 @@ comment|/*  * Variables for socket buffering.  */
 struct|struct
 name|sockbuf
 block|{
-name|short
+name|u_short
 name|sb_cc
 decl_stmt|;
 comment|/* actual chars in buffer */
-name|short
+name|u_short
 name|sb_hiwat
 decl_stmt|;
 comment|/* max actual char count */
-name|short
+name|u_short
 name|sb_mbcnt
 decl_stmt|;
 comment|/* chars of mbufs used */
-name|short
+name|u_short
 name|sb_mbmax
 decl_stmt|;
 comment|/* max chars of mbufs to use */
-name|short
+name|u_short
 name|sb_lowat
 decl_stmt|;
 comment|/* low water mark (not used yet) */
@@ -120,7 +120,7 @@ struct|;
 define|#
 directive|define
 name|SB_MAX
-value|32767
+value|65535
 comment|/* max chars in sockbuf */
 define|#
 directive|define
