@@ -4752,6 +4752,8 @@ operator|!=
 name|memcmp
 argument_list|(
 name|buf
+operator|+
+literal|1
 argument_list|,
 name|s
 operator|->

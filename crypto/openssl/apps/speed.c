@@ -11,6 +11,12 @@ begin_comment
 comment|/* most of this code has been pilfered from my libdes speed.c program */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SPEED
+end_ifndef
+
 begin_undef
 undef|#
 directive|undef
@@ -1912,12 +1918,17 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE
 modifier|*
 name|e
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|char
 modifier|*
@@ -3180,6 +3191,9 @@ operator|--
 expr_stmt|;
 comment|/* Otherwise, -elapsed gets confused with 				   an algorithm. */
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -3243,6 +3257,8 @@ name|j
 operator|--
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_FORK
@@ -4786,6 +4802,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -4793,6 +4812,8 @@ argument_list|,
 literal|"-engine e       use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -8790,6 +8811,12 @@ argument_list|(
 name|STOP
 argument_list|)
 expr_stmt|;
+name|EVP_CIPHER_CTX_cleanup
+argument_list|(
+operator|&
+name|ctx
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -11932,6 +11959,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
