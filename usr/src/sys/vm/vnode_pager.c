@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -769,6 +769,9 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTDEF
 name|struct
 name|proc
 modifier|*
@@ -777,6 +780,8 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -819,9 +824,22 @@ name|VTEXT
 expr_stmt|;
 if|#
 directive|if
-literal|0
+name|NOTDEF
 comment|/* can hang if done at reboot on NFS FS */
-block|(void) VOP_FSYNC(vp, p->p_ucred, p);
+operator|(
+name|void
+operator|)
+name|VOP_FSYNC
+argument_list|(
+name|vp
+argument_list|,
+name|p
+operator|->
+name|p_ucred
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|vrele
