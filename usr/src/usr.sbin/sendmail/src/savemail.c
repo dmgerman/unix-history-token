@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.47 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2976,6 +2976,9 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DSN
 comment|/* 	**  Output machine-readable version. 	*/
 if|if
 condition|(
@@ -3981,6 +3984,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 	**  Output text of original message 	*/
 if|if
 condition|(
