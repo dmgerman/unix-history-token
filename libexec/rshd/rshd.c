@@ -3667,7 +3667,7 @@ name|pam_end
 argument_list|(
 name|pamh
 argument_list|,
-name|PAM_DATA_SILENT
+literal|0
 argument_list|)
 operator|)
 operator|!=
