@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	8.3 (Berkeley) %G%"
+literal|"@(#)lfs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3289,20 +3289,14 @@ expr_stmt|;
 name|dip
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 operator|=
 name|dip
 operator|->
 name|di_mtime
-operator|.
-name|ts_sec
 operator|=
 name|dip
 operator|->
 name|di_ctime
-operator|.
-name|ts_sec
 operator|=
 name|lfsp
 operator|->
@@ -3310,21 +3304,15 @@ name|lfs_tstamp
 expr_stmt|;
 name|dip
 operator|->
-name|di_atime
-operator|.
-name|ts_nsec
+name|di_atimensec
 operator|=
 name|dip
 operator|->
-name|di_mtime
-operator|.
-name|ts_nsec
+name|di_mtimensec
 operator|=
 name|dip
 operator|->
-name|di_ctime
-operator|.
-name|ts_nsec
+name|di_ctimensec
 operator|=
 literal|0
 expr_stmt|;
