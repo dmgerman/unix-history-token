@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	initgroups.c	4.3	83/05/01	*/
+comment|/*	initgroups.c	4.4	83/06/17	*/
 end_comment
 
 begin_comment
@@ -178,6 +178,9 @@ block|}
 block|}
 name|toomany
 label|:
+name|endgrent
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|setgroups
