@@ -1306,12 +1306,18 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
+operator|(
+name|pmap
+operator|==
+name|kernel_pmap
+operator|||
 name|pmap
 operator|==
 name|PCPU_GET
 argument_list|(
 name|current_pmap
 argument_list|)
+operator|)
 argument_list|,
 operator|(
 literal|"invalidating TLB for non-current pmap"
@@ -1352,12 +1358,18 @@ name|psr
 decl_stmt|;
 name|KASSERT
 argument_list|(
+operator|(
+name|pmap
+operator|==
+name|kernel_pmap
+operator|||
 name|pmap
 operator|==
 name|PCPU_GET
 argument_list|(
 name|current_pmap
 argument_list|)
+operator|)
 argument_list|,
 operator|(
 literal|"invalidating TLB for non-current pmap"
