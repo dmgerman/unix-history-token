@@ -233,6 +233,8 @@ operator|.
 name|offset
 operator|=
 literal|4
+operator|-
+literal|4
 operator|*
 name|i
 expr_stmt|;
