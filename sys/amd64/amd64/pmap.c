@@ -5545,9 +5545,6 @@ expr_stmt|;
 comment|/* 	 * Get the page directory entry 	 */
 name|ptepa
 operator|=
-operator|(
-name|vm_offset_t
-operator|)
 name|pmap
 operator|->
 name|pm_pdir
