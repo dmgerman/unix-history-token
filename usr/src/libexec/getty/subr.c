@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	4.1 (Berkeley) 83/07/06"
+literal|"@(#)subr.c	4.2 (Berkeley) 83/07/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -929,17 +929,25 @@ name|crdelay
 index|[]
 init|=
 block|{
-literal|20
+literal|1
 block|,
 name|CR1
 block|,
-literal|30
+literal|2
 block|,
 name|CR2
 block|,
-literal|40
+literal|3
 block|,
 name|CR3
+block|,
+literal|83
+block|,
+name|CR1
+block|,
+literal|166
+block|,
+name|CR2
 block|,
 literal|0
 block|,
@@ -960,13 +968,17 @@ block|,
 name|NL1
 block|,
 comment|/* special, calculated */
-literal|16
+literal|2
 block|,
 name|NL2
 block|,
-literal|30
+literal|3
 block|,
 name|NL3
+block|,
+literal|100
+block|,
+name|NL2
 block|,
 literal|0
 block|,
@@ -982,6 +994,10 @@ name|bsdelay
 index|[]
 init|=
 block|{
+literal|1
+block|,
+name|BS1
+block|,
 literal|0
 block|,
 literal|0
@@ -996,6 +1012,10 @@ name|ffdelay
 index|[]
 init|=
 block|{
+literal|1
+block|,
+name|FF1
+block|,
 literal|1750
 block|,
 name|FF1
@@ -1014,13 +1034,22 @@ name|tbdelay
 index|[]
 init|=
 block|{
-literal|10
+literal|1
 block|,
 name|TAB1
 block|,
-literal|20
+literal|2
 block|,
 name|TAB2
+block|,
+literal|3
+block|,
+name|XTABS
+block|,
+comment|/* this is expand tabs */
+literal|100
+block|,
+name|TAB1
 block|,
 literal|0
 block|,
