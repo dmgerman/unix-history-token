@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: inet.c,v 1.21 1996/10/28 18:56:34 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -929,7 +929,7 @@ name|p
 argument_list|(
 name|tcps_sndtotal
 argument_list|,
-literal|"\t%ld packet%s sent\n"
+literal|"\t%lu packet%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -938,7 +938,7 @@ name|tcps_sndpack
 argument_list|,
 name|tcps_sndbyte
 argument_list|,
-literal|"\t\t%ld data packet%s (%ld byte%s)\n"
+literal|"\t\t%lu data packet%s (%lu byte%s)\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -947,14 +947,14 @@ name|tcps_sndrexmitpack
 argument_list|,
 name|tcps_sndrexmitbyte
 argument_list|,
-literal|"\t\t%ld data packet%s (%ld byte%s) retransmitted\n"
+literal|"\t\t%lu data packet%s (%lu byte%s) retransmitted\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_mturesent
 argument_list|,
-literal|"\t\t%ld resend%s initiated by MTU discovery\n"
+literal|"\t\t%lu resend%s initiated by MTU discovery\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -963,42 +963,42 @@ name|tcps_sndacks
 argument_list|,
 name|tcps_delack
 argument_list|,
-literal|"\t\t%ld ack-only packet%s (%ld delayed)\n"
+literal|"\t\t%lu ack-only packet%s (%lu delayed)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndurg
 argument_list|,
-literal|"\t\t%ld URG only packet%s\n"
+literal|"\t\t%lu URG only packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndprobe
 argument_list|,
-literal|"\t\t%ld window probe packet%s\n"
+literal|"\t\t%lu window probe packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndwinup
 argument_list|,
-literal|"\t\t%ld window update packet%s\n"
+literal|"\t\t%lu window update packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_sndctrl
 argument_list|,
-literal|"\t\t%ld control packet%s\n"
+literal|"\t\t%lu control packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvtotal
 argument_list|,
-literal|"\t%ld packet%s received\n"
+literal|"\t%lu packet%s received\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1007,21 +1007,21 @@ name|tcps_rcvackpack
 argument_list|,
 name|tcps_rcvackbyte
 argument_list|,
-literal|"\t\t%ld ack%s (for %ld byte%s)\n"
+literal|"\t\t%lu ack%s (for %lu byte%s)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvdupack
 argument_list|,
-literal|"\t\t%ld duplicate ack%s\n"
+literal|"\t\t%lu duplicate ack%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvacktoomuch
 argument_list|,
-literal|"\t\t%ld ack%s for unsent data\n"
+literal|"\t\t%lu ack%s for unsent data\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1030,7 +1030,7 @@ name|tcps_rcvpack
 argument_list|,
 name|tcps_rcvbyte
 argument_list|,
-literal|"\t\t%ld packet%s (%ld byte%s) received in-sequence\n"
+literal|"\t\t%lu packet%s (%lu byte%s) received in-sequence\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1039,14 +1039,14 @@ name|tcps_rcvduppack
 argument_list|,
 name|tcps_rcvdupbyte
 argument_list|,
-literal|"\t\t%ld completely duplicate packet%s (%ld byte%s)\n"
+literal|"\t\t%lu completely duplicate packet%s (%lu byte%s)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_pawsdrop
 argument_list|,
-literal|"\t\t%ld old duplicate packet%s\n"
+literal|"\t\t%lu old duplicate packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1055,7 +1055,7 @@ name|tcps_rcvpartduppack
 argument_list|,
 name|tcps_rcvpartdupbyte
 argument_list|,
-literal|"\t\t%ld packet%s with some dup. data (%ld byte%s duped)\n"
+literal|"\t\t%lu packet%s with some dup. data (%lu byte%s duped)\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1064,7 +1064,7 @@ name|tcps_rcvoopack
 argument_list|,
 name|tcps_rcvoobyte
 argument_list|,
-literal|"\t\t%ld out-of-order packet%s (%ld byte%s)\n"
+literal|"\t\t%lu out-of-order packet%s (%lu byte%s)\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1073,84 +1073,84 @@ name|tcps_rcvpackafterwin
 argument_list|,
 name|tcps_rcvbyteafterwin
 argument_list|,
-literal|"\t\t%ld packet%s (%ld byte%s) of data after window\n"
+literal|"\t\t%lu packet%s (%lu byte%s) of data after window\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvwinprobe
 argument_list|,
-literal|"\t\t%ld window probe%s\n"
+literal|"\t\t%lu window probe%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvwinupd
 argument_list|,
-literal|"\t\t%ld window update packet%s\n"
+literal|"\t\t%lu window update packet%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvafterclose
 argument_list|,
-literal|"\t\t%ld packet%s received after close\n"
+literal|"\t\t%lu packet%s received after close\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvbadsum
 argument_list|,
-literal|"\t\t%ld discarded for bad checksum%s\n"
+literal|"\t\t%lu discarded for bad checksum%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvbadoff
 argument_list|,
-literal|"\t\t%ld discarded for bad header offset field%s\n"
+literal|"\t\t%lu discarded for bad header offset field%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rcvshort
 argument_list|,
-literal|"\t\t%ld discarded because packet too short\n"
+literal|"\t\t%lu discarded because packet too short\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_connattempt
 argument_list|,
-literal|"\t%ld connection request%s\n"
+literal|"\t%lu connection request%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_accepts
 argument_list|,
-literal|"\t%ld connection accept%s\n"
+literal|"\t%lu connection accept%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_badsyn
 argument_list|,
-literal|"\t%ld bad connection attempt%s\n"
+literal|"\t%lu bad connection attempt%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_listendrop
 argument_list|,
-literal|"\t%ld listen queue overflow%s\n"
+literal|"\t%lu listen queue overflow%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_connects
 argument_list|,
-literal|"\t%ld connection%s established (including accepts)\n"
+literal|"\t%lu connection%s established (including accepts)\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1159,35 +1159,35 @@ name|tcps_closed
 argument_list|,
 name|tcps_drops
 argument_list|,
-literal|"\t%ld connection%s closed (including %ld drop%s)\n"
+literal|"\t%lu connection%s closed (including %lu drop%s)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_cachedrtt
 argument_list|,
-literal|"\t\t%ld connection%s updated cached RTT on close\n"
+literal|"\t\t%lu connection%s updated cached RTT on close\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_cachedrttvar
 argument_list|,
-literal|"\t\t%ld connection%s updated cached RTT variance on close\n"
+literal|"\t\t%lu connection%s updated cached RTT variance on close\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_cachedssthresh
 argument_list|,
-literal|"\t\t%ld connection%s updated cached ssthresh on close\n"
+literal|"\t\t%lu connection%s updated cached ssthresh on close\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_conndrops
 argument_list|,
-literal|"\t%ld embryonic connection%s dropped\n"
+literal|"\t%lu embryonic connection%s dropped\n"
 argument_list|)
 expr_stmt|;
 name|p2
@@ -1196,70 +1196,70 @@ name|tcps_rttupdated
 argument_list|,
 name|tcps_segstimed
 argument_list|,
-literal|"\t%ld segment%s updated rtt (of %ld attempt%s)\n"
+literal|"\t%lu segment%s updated rtt (of %lu attempt%s)\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_rexmttimeo
 argument_list|,
-literal|"\t%ld retransmit timeout%s\n"
+literal|"\t%lu retransmit timeout%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_timeoutdrop
 argument_list|,
-literal|"\t\t%ld connection%s dropped by rexmit timeout\n"
+literal|"\t\t%lu connection%s dropped by rexmit timeout\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_persisttimeo
 argument_list|,
-literal|"\t%ld persist timeout%s\n"
+literal|"\t%lu persist timeout%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_persistdrop
 argument_list|,
-literal|"\t\t%ld connection%s dropped by persist timeout\n"
+literal|"\t\t%lu connection%s dropped by persist timeout\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_keeptimeo
 argument_list|,
-literal|"\t%ld keepalive timeout%s\n"
+literal|"\t%lu keepalive timeout%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_keepprobe
 argument_list|,
-literal|"\t\t%ld keepalive probe%s sent\n"
+literal|"\t\t%lu keepalive probe%s sent\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_keepdrops
 argument_list|,
-literal|"\t\t%ld connection%s dropped by keepalive\n"
+literal|"\t\t%lu connection%s dropped by keepalive\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_predack
 argument_list|,
-literal|"\t%ld correct ACK header prediction%s\n"
+literal|"\t%lu correct ACK header prediction%s\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|tcps_preddat
 argument_list|,
-literal|"\t%ld correct data packet header prediction%s\n"
+literal|"\t%lu correct data packet header prediction%s\n"
 argument_list|)
 expr_stmt|;
 undef|#
