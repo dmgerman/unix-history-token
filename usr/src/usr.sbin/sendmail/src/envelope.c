@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.60 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,6 +1279,9 @@ expr_stmt|;
 comment|/* 	**  Arrange to send warning messages to postmaster as requested. 	*/
 if|if
 condition|(
+operator|(
+name|failure_return
+operator|||
 name|bitset
 argument_list|(
 name|EF_PM_NOTIFY
@@ -1287,6 +1290,7 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
+operator|)
 operator|&&
 name|PostMasterCopy
 operator|!=

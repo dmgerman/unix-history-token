@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.77 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.78 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2883,7 +2883,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"writable(%s, %x)\n"
+literal|"writable(%s, 0x%x)\n"
 argument_list|,
 name|filename
 argument_list|,
@@ -2932,10 +2932,16 @@ operator|->
 name|q_user
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|RUN_AS_REAL_UID
-else|else
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|SFF_RUNASREALUID
+argument_list|,
+name|flags
+argument_list|)
+condition|)
 block|{
 specifier|extern
 name|char
@@ -2955,8 +2961,6 @@ operator|=
 name|RealUserName
 expr_stmt|;
 block|}
-else|#
-directive|else
 elseif|else
 if|if
 condition|(
@@ -2987,8 +2991,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|euid
