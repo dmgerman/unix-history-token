@@ -5117,6 +5117,19 @@ condition|(
 name|xfer
 operator|->
 name|fc
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"fw_xfer_done: why xfer->fc is NULL?"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|fc
 operator|->
 name|status
 operator|!=
@@ -5138,14 +5151,6 @@ argument_list|(
 literal|"fw_xfer_done: pending\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|xfer
-operator|->
-name|fc
-operator|!=
-name|NULL
-condition|)
 name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5158,12 +5163,6 @@ argument_list|,
 name|xfer
 argument_list|,
 name|link
-argument_list|)
-expr_stmt|;
-else|else
-name|panic
-argument_list|(
-literal|"fw_xfer_done: why xfer->fc is NULL?"
 argument_list|)
 expr_stmt|;
 block|}
