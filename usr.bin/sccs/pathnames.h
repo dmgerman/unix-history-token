@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SCCSWHAT
-value|"/usr/local/bin/what"
+value|"/usr/bin/what"
 end_define
 
 begin_undef
