@@ -10,7 +10,7 @@ modifier|*
 name|SccsID
 index|[]
 init|=
-literal|"@(#)config.c	1.5 %G%"
+literal|"@(#)config.c	1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,13 @@ literal|'z'
 block|,
 name|SN
 block|,
+name|EMPTY
+block|,
+name|EMPTYID
+block|,
+name|SN
+block|,
+comment|/* Filled in dynamically */
 literal|0
 block|,
 literal|0
