@@ -872,7 +872,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Relaunch revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%llx, length %ld\n"
+literal|"Relaunch revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%jx, length %ld\n"
 argument_list|,
 name|rq
 operator|->
@@ -910,6 +910,9 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1321,8 +1324,11 @@ name|reply
 operator|->
 name|msg
 argument_list|,
-literal|"Parity incorrect at offset 0x%llx\n"
+literal|"Parity incorrect at offset 0x%jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|errorloc
 argument_list|)
 expr_stmt|;

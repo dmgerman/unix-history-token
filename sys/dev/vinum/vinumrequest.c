@@ -1464,7 +1464,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%llx, length %ld\n"
+literal|"Revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%jx, length %ld\n"
 argument_list|,
 name|rq
 operator|->
@@ -1502,6 +1502,9 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1577,7 +1580,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Request: %p\n%s dev %d.%d, offset 0x%llx, length %ld\n"
+literal|"Request: %p\n%s dev %d.%d, offset 0x%jx, length %ld\n"
 argument_list|,
 name|rq
 argument_list|,
@@ -1611,6 +1614,9 @@ operator|->
 name|b_dev
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|rq
 operator|->
 name|bp
@@ -1926,7 +1932,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%llx, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%x, devoffset 0x%jx, length %ld\n"
 argument_list|,
 name|rqe
 operator|->
@@ -1982,6 +1988,9 @@ operator|.
 name|driveoffset
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|rqe
 operator|->
 name|b
@@ -2871,7 +2880,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"vinum: EOF on plex %s, sd %s offset %x (user offset 0x%llx)\n"
+literal|"vinum: EOF on plex %s, sd %s offset %x (user offset 0x%jx)\n"
 argument_list|,
 name|plex
 operator|->
@@ -2888,6 +2897,9 @@ name|sd
 operator|->
 name|sectors
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|b_blkno
@@ -2897,12 +2909,21 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"vinum: stripebase %#llx, stripeoffset %#llxx, blockoffset %#llx\n"
+literal|"vinum: stripebase %#jx, stripeoffset %#jx, blockoffset %#jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|stripebase
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|stripeoffset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|blockoffset
 argument_list|)
 expr_stmt|;
@@ -4481,7 +4502,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"  %s dev %d.%d, sd %d, offset 0x%llx, devoffset 0x%llx, length %ld\n"
+literal|"  %s dev %d.%d, sd %d, offset 0x%jx, devoffset 0x%jx, length %ld\n"
 argument_list|,
 name|sbp
 operator|->
@@ -4517,6 +4538,10 @@ name|sbp
 operator|->
 name|sdno
 argument_list|,
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|sbp
 operator|->
 name|b
@@ -4531,7 +4556,11 @@ name|sdno
 index|]
 operator|.
 name|driveoffset
+argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sbp
 operator|->
 name|b
