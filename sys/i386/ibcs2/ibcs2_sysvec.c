@@ -18,6 +18,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/imgact.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -49,6 +67,24 @@ begin_include
 include|#
 directive|include
 file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -107,6 +143,22 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|int
+name|ibcs2_fixup
+parameter_list|(
+name|register_t
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|sysentvec
@@ -140,10 +192,10 @@ literal|1
 block|,
 name|bsd_to_ibcs2_errno
 block|,
-literal|0
+name|NULL
 block|,
 comment|/* trap-to-signal translation function */
-literal|0
+name|ibcs2_fixup
 block|,
 comment|/* fixup */
 name|sendsig
@@ -155,7 +207,7 @@ operator|&
 name|szsigcode
 block|,
 comment|/* use generic trampoline size */
-literal|0
+name|NULL
 block|,
 comment|/* prepsyscall */
 literal|"IBCS2 COFF"
@@ -166,9 +218,60 @@ comment|/* we don't have a COFF coredump function */
 name|NULL
 block|,
 name|IBCS2_MINSIGSTKSZ
+block|,
+name|PAGE_SIZE
+block|,
+name|VM_MIN_ADDRESS
+block|,
+name|VM_MAXUSER_ADDRESS
+block|,
+name|USRSTACK
+block|,
+name|PS_STRINGS
+block|,
+name|VM_PROT_ALL
+block|,
+name|exec_copyout_strings
+block|,
+name|exec_setregs
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|ibcs2_fixup
+parameter_list|(
+name|register_t
+modifier|*
+modifier|*
+name|stack_base
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
+parameter_list|)
+block|{
+return|return
+operator|(
+name|suword
+argument_list|(
+operator|--
+operator|(
+operator|*
+name|stack_base
+operator|)
+argument_list|,
+name|imgp
+operator|->
+name|argc
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Create an "ibcs2" module that does nothing but allow checking for  * the presence of the subsystem.  */

@@ -170,6 +170,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|register_t
+modifier|*
+name|exec_copyout_strings
+parameter_list|(
+name|struct
+name|image_params
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|exec_extract_strings
 parameter_list|(

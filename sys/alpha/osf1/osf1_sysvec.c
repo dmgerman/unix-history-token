@@ -208,17 +208,17 @@ name|OSF1_SYS_MAXSYSCALL
 block|,
 name|osf1_sysent
 block|,
-literal|0x0
-block|,
 literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
+block|,
+name|NULL
 block|,
 comment|/* trap-to-signal translation function */
 name|osf1_freebsd_fixup
@@ -233,7 +233,7 @@ operator|&
 name|osf1_szsigcode
 block|,
 comment|/* use generic trampoline size */
-literal|0
+name|NULL
 block|,
 comment|/* prepsyscall */
 literal|"OSF/1 ECOFF"
@@ -244,6 +244,22 @@ comment|/* we don't have an ECOFF coredump function */
 name|NULL
 block|,
 name|OSF1_MINSIGSTKSZ
+block|,
+name|PAGE_SIZE
+block|,
+name|VM_MIN_ADDRESS
+block|,
+name|VM_MAXUSER_ADDRESS
+block|,
+name|USRSTACK
+block|,
+name|PS_STRINGS
+block|,
+name|VM_PROT_ALL
+block|,
+name|exec_copyout_strings
+block|,
+name|exec_setregs
 block|}
 decl_stmt|;
 end_decl_stmt

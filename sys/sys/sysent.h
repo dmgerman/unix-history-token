@@ -271,15 +271,27 @@ comment|/* minimum signal stack size */
 name|int
 name|sv_pagesize
 decl_stmt|;
-comment|/* pagesize override */
+comment|/* pagesize */
+name|vm_offset_t
+name|sv_minuser
+decl_stmt|;
+comment|/* VM_MIN_ADDRESS */
 name|vm_offset_t
 name|sv_maxuser
 decl_stmt|;
-comment|/* VM_MAXUSER_ADDRESS override */
+comment|/* VM_MAXUSER_ADDRESS */
 name|vm_offset_t
 name|sv_usrstack
 decl_stmt|;
-comment|/* USRSTACK override */
+comment|/* USRSTACK */
+name|vm_offset_t
+name|sv_psstrings
+decl_stmt|;
+comment|/* PS_STRINGS */
+name|int
+name|sv_stackprot
+decl_stmt|;
+comment|/* vm protection for stack */
 name|register_t
 modifier|*
 function_decl|(
@@ -332,6 +344,14 @@ specifier|extern
 name|struct
 name|sysentvec
 name|elf_freebsd_sysvec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sysentvec
+name|null_sysvec
 decl_stmt|;
 end_decl_stmt
 

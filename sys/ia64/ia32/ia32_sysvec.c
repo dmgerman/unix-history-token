@@ -390,13 +390,13 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|,
-literal|0
+name|NULL
 block|,
 name|elf32_freebsd_fixup
 block|,
@@ -407,7 +407,7 @@ block|,
 operator|&
 name|ia32_szsigcode
 block|,
-literal|0
+name|NULL
 block|,
 literal|"FreeBSD ELF"
 block|,
@@ -419,9 +419,15 @@ name|MINSIGSTKSZ
 block|,
 literal|4096
 block|,
+literal|0
+block|,
 name|IA32_USRSTACK
 block|,
 name|IA32_USRSTACK
+block|,
+name|IA32_PS_STRINGS
+block|,
+name|VM_PROT_ALL
 block|,
 name|ia32_copyout_strings
 block|,

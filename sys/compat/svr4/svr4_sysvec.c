@@ -454,7 +454,7 @@ block|,
 comment|/* ELAST */
 name|bsd_to_svr4_errno
 block|,
-literal|0
+name|NULL
 block|,
 name|svr4_fixup
 block|,
@@ -474,6 +474,22 @@ block|,
 name|NULL
 block|,
 name|SVR4_MINSIGSTKSZ
+block|,
+name|PAGE_SIZE
+block|,
+name|VM_MIN_ADDRESS
+block|,
+name|VM_MAXUSER_ADDRESS
+block|,
+name|USRSTACK
+block|,
+name|PS_STRINGS
+block|,
+name|VM_PROT_ALL
+block|,
+name|exec_copyout_strings
+block|,
+name|exec_setregs
 block|}
 decl_stmt|;
 end_decl_stmt

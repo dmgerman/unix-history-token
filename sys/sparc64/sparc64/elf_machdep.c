@@ -24,6 +24,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/imgact.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/linker.h>
 end_include
 
@@ -60,13 +72,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/elf.h>
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/elf.h>
 end_include
 
 begin_include
@@ -89,15 +107,18 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|,
-literal|0
+name|NULL
 block|,
-name|elf64_freebsd_fixup
+name|__elfN
+argument_list|(
+name|freebsd_fixup
+argument_list|)
 block|,
 name|sendsig
 block|,
@@ -105,7 +126,7 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|0
+name|NULL
 block|,
 literal|"FreeBSD ELF64"
 block|,
@@ -117,6 +138,24 @@ block|,
 name|NULL
 block|,
 name|MINSIGSTKSZ
+block|,
+name|PAGE_SIZE
+block|,
+name|VM_MIN_ADDRESS
+block|,
+name|VM_MAXUSER_ADDRESS
+block|,
+name|USRSTACK
+block|,
+name|PS_STRINGS
+block|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+block|,
+name|exec_copyout_strings
+block|,
+name|exec_setregs
 block|}
 decl_stmt|;
 end_decl_stmt

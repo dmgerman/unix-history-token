@@ -311,19 +311,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|register_t
-modifier|*
-name|exec_copyout_strings
-parameter_list|(
-name|struct
-name|image_params
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* XXX This should be vm_size_t. */
 end_comment
