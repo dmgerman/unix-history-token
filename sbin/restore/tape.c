@@ -2499,9 +2499,6 @@ name|ioctl
 argument_list|(
 name|mt
 argument_list|,
-operator|(
-name|int
-operator|)
 name|MTIOCTOP
 argument_list|,
 operator|(
