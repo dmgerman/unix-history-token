@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	5.1 (Berkeley) %G%"
+literal|"@(#)umount.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<mtab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|</usr/src/local/mkmsys/macklem/mkmsys/h/mount.h>
 end_include
 
 begin_decl_stmt
@@ -418,7 +424,7 @@ name|umountfs
 argument_list|(
 name|fs
 operator|->
-name|fs_spec
+name|fs_file
 argument_list|)
 operator|<
 literal|0
@@ -427,7 +433,7 @@ name|perror
 argument_list|(
 name|fs
 operator|->
-name|fs_spec
+name|fs_file
 argument_list|)
 expr_stmt|;
 name|freefsent
@@ -709,7 +715,7 @@ name|fs
 decl_stmt|;
 name|fs
 operator|=
-name|getfsfile
+name|getfsspec
 argument_list|(
 name|name
 argument_list|)
@@ -724,13 +730,15 @@ name|name
 operator|=
 name|fs
 operator|->
-name|fs_spec
+name|fs_file
 expr_stmt|;
 if|if
 condition|(
 name|umount
 argument_list|(
 name|name
+argument_list|,
+name|MNT_NOFORCE
 argument_list|)
 operator|<
 literal|0
@@ -760,41 +768,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|(
-name|p1
-operator|=
-name|rindex
-argument_list|(
-name|name
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-operator|&&
-name|p1
-index|[
-literal|1
-index|]
-operator|==
-literal|0
-condition|)
-operator|*
-name|p1
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|p1
-condition|)
-name|name
-operator|=
-name|p1
-operator|+
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|mp
@@ -819,7 +792,7 @@ name|strncmp
 argument_list|(
 name|mp
 operator|->
-name|m_dname
+name|m_path
 argument_list|,
 name|name
 argument_list|,
@@ -827,7 +800,7 @@ sizeof|sizeof
 argument_list|(
 name|mp
 operator|->
-name|m_dname
+name|m_path
 argument_list|)
 argument_list|)
 condition|)

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.6 (Berkeley) %G%"
+literal|"@(#)mount.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|</usr/src/local/mkmsys/macklem/mkmsys/h/mount.h>
 end_include
 
 begin_define
@@ -648,6 +654,12 @@ name|p
 decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|flags
+decl_stmt|;
+name|struct
+name|ufs_args
+name|args
 decl_stmt|;
 name|char
 modifier|*
@@ -668,14 +680,12 @@ operator|!
 name|fake
 condition|)
 block|{
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|mount
-argument_list|(
-name|spec
-argument_list|,
-name|name
-argument_list|,
 operator|!
 name|strcmp
 argument_list|(
@@ -683,6 +693,29 @@ name|type
 argument_list|,
 name|FSTAB_RO
 argument_list|)
+condition|)
+name|flags
+operator||=
+name|M_RDONLY
+expr_stmt|;
+name|args
+operator|.
+name|fspec
+operator|=
+name|spec
+expr_stmt|;
+if|if
+condition|(
+name|mount
+argument_list|(
+name|MOUNT_UFS
+argument_list|,
+name|name
+argument_list|,
+name|flags
+argument_list|,
+operator|&
+name|args
 argument_list|)
 condition|)
 block|{
