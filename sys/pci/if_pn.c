@@ -6345,6 +6345,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PN_RX_BUG_WAR
+if|if
+condition|(
+name|sc
+operator|->
+name|pn_rx_war
+condition|)
 name|free
 argument_list|(
 name|sc
@@ -6916,7 +6922,16 @@ name|u_int64_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PN_RX_BUG_WAR
 comment|/* 	 * Zero the buffer. This is part of the workaround for the 	 * promiscuous mode bug in the revision 33 PNIC chips. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|pn_rx_war
+condition|)
 name|bzero
 argument_list|(
 operator|(
@@ -6936,6 +6951,8 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|c
 operator|->
 name|pn_mbuf
