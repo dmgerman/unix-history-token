@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4506,6 +4506,90 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_inodefmt
+operator|<
+name|FS_44INODEFMT
+condition|)
+block|{
+comment|/* XXX */
+name|long
+modifier|*
+name|lp
+decl_stmt|,
+name|tmp
+decl_stmt|;
+comment|/* XXX */
+comment|/* XXX */
+name|lp
+operator|=
+operator|(
+name|long
+operator|*
+operator|)
+operator|&
+operator|(
+operator|(
+expr|struct
+name|fs
+operator|*
+operator|)
+name|bp
+operator|->
+name|b_data
+operator|)
+operator|->
+name|fs_qbmask
+expr_stmt|;
+comment|/* XXX */
+name|tmp
+operator|=
+name|lp
+index|[
+literal|4
+index|]
+expr_stmt|;
+comment|/* XXX */
+for|for
+control|(
+name|i
+operator|=
+literal|4
+init|;
+name|i
+operator|>
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+comment|/* XXX */
+name|lp
+index|[
+name|i
+index|]
+operator|=
+name|lp
+index|[
+name|i
+operator|-
+literal|1
+index|]
+expr_stmt|;
+comment|/* XXX */
+name|lp
+index|[
+literal|0
+index|]
+operator|=
+name|tmp
+expr_stmt|;
+comment|/* XXX */
+block|}
 comment|/* XXX */
 ifdef|#
 directive|ifdef
