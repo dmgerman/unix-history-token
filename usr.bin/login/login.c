@@ -2553,6 +2553,10 @@ expr_stmt|;
 comment|/* 	 * Clear flags of the tty.  None should be set, and when the 	 * user sets them otherwise, this can cause the chown to fail. 	 * Since it isn't clear that flags are useful on character 	 * devices, we just clear them. 	 */
 if|if
 condition|(
+name|ttyn
+operator|!=
+name|tname
+operator|&&
 name|chflags
 argument_list|(
 name|ttyn
@@ -2568,13 +2572,17 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"chmod(%s): %m"
+literal|"chflags(%s): %m"
 argument_list|,
 name|ttyn
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ttyn
+operator|!=
+name|tname
+operator|&&
 name|chown
 argument_list|(
 name|ttyn
