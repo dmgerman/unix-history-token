@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.4 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1672,6 +1672,11 @@ argument_list|,
 name|d2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|yflag
+condition|)
+return|return;
 if|if
 condition|(
 name|reply
