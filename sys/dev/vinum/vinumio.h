@@ -605,7 +605,7 @@ value|_IOWR(L, 96, struct _ioctl_reply)
 end_define
 
 begin_comment
-comment|/* check RAID-5 parity */
+comment|/* check RAID-4/5 parity */
 end_comment
 
 begin_define
@@ -616,7 +616,7 @@ value|_IOWR(L, 97, struct _ioctl_reply)
 end_define
 
 begin_comment
-comment|/* rebuild RAID-5 parity */
+comment|/* rebuild RAID-4/5 parity */
 end_comment
 
 begin_define

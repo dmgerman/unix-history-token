@@ -19,16 +19,6 @@ directive|include
 file|<dev/vinum/request.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/sysproto.h>
-end_include
-
-begin_comment
-comment|/* for sync(2) */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1225,7 +1215,7 @@ return|;
 case|case
 name|VINUM_CHECKPARITY
 case|:
-comment|/* check RAID-5 parity */
+comment|/* check RAID-4/5 parity */
 name|parityops
 argument_list|(
 operator|(
@@ -1244,7 +1234,7 @@ return|;
 case|case
 name|VINUM_REBUILDPARITY
 case|:
-comment|/* rebuild RAID-5 parity */
+comment|/* rebuild RAID-4/5 parity */
 name|parityops
 argument_list|(
 operator|(
@@ -2471,7 +2461,7 @@ name|organization
 operator|!=
 name|plex_concat
 operator|)
-comment|/* can't attach to striped and raid-5 */
+comment|/* can't attach to striped and RAID-4/5 */
 operator|&&
 operator|(
 operator|!
@@ -3193,24 +3183,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|isstriped
+argument_list|(
 name|plex
-operator|->
-name|organization
-operator|==
-name|plex_striped
-operator|)
-comment|/* we've just mutilated our plex, */
-operator|||
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_raid5
-operator|)
+argument_list|)
 condition|)
-comment|/* the data no longer matches */
+comment|/* we've just mutilated our plex, */
 name|set_plex_state
 argument_list|(
 name|plex
