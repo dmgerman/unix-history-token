@@ -3702,14 +3702,10 @@ name|iphdr
 decl_stmt|;
 name|int
 name|hlen
-decl_stmt|,
-name|vjlen
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|vjlen
-operator|=
 name|sl_uncompress_tcp_core
 argument_list|(
 name|m
