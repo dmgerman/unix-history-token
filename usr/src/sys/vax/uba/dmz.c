@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmz.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmz.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -181,14 +181,6 @@ end_decl_stmt
 begin_comment
 comment|/* silo timeout, in ms */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|dmx_speeds
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -744,6 +736,10 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|dmxparam
+parameter_list|()
+function_decl|;
 name|unit
 operator|=
 name|minor
@@ -830,6 +826,12 @@ operator|=
 name|dev
 expr_stmt|;
 comment|/* needed before dmxopen */
+name|tp
+operator|->
+name|t_param
+operator|=
+name|dmxparam
+expr_stmt|;
 comment|/* 	 * While setting up state for this uba, 	 * block uba resets which can clear the state. 	 */
 name|s
 operator|=
@@ -903,6 +905,8 @@ argument_list|(
 name|tp
 argument_list|,
 name|sc
+argument_list|,
+name|flag
 argument_list|)
 operator|)
 return|;
@@ -961,6 +965,8 @@ argument_list|(
 argument|dev
 argument_list|,
 argument|uio
+argument_list|,
+argument|flag
 argument_list|)
 end_macro
 
@@ -1014,6 +1020,8 @@ operator|(
 name|tp
 operator|,
 name|uio
+operator|,
+name|flag
 operator|)
 operator|)
 return|;
@@ -1766,6 +1774,11 @@ block|{
 name|dmxparam
 argument_list|(
 name|tp
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|t_termios
 argument_list|)
 expr_stmt|;
 operator|(
