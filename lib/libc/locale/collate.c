@@ -700,10 +700,8 @@ argument_list|(
 operator|*
 name|__collate_chain_pri_table
 argument_list|)
-operator|*
-name|chains
 argument_list|,
-literal|1
+name|chains
 argument_list|,
 name|fp
 argument_list|)
@@ -1382,13 +1380,15 @@ name|str
 index|[
 literal|0
 index|]
+operator|!=
+literal|'\0'
 condition|;
 name|p2
 operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t\"%s\" : %d %d\n\n"
+literal|"\t\"%s\" : %d %d\n"
 argument_list|,
 name|p2
 operator|->
