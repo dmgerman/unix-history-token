@@ -1133,7 +1133,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: mount_ntfs [-a] [-i] [-u user] [-g group] [-m mask]"
 argument_list|,
-literal|"                  [-C charset] [-W u2wtable] bdev dir"
+literal|"                  [-C charset] [-W u2wtable] special node"
 argument_list|)
 expr_stmt|;
 else|#
@@ -1142,7 +1142,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mount_ntfs [-a] [-i] [-u user] [-g group] [-m mask] [-C charset] bdev dir\n"
+literal|"usage: mount_ntfs [-a] [-i] [-u user] [-g group] [-m mask] [-C charset] special node\n"
 argument_list|)
 expr_stmt|;
 endif|#

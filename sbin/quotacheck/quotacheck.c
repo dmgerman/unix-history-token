@@ -1106,7 +1106,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: quotacheck -a [-guv]"
+literal|"usage: quotacheck [-guv] -a"
 argument_list|,
 literal|"       quotacheck [-guv] filesystem ..."
 argument_list|)

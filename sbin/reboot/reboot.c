@@ -843,13 +843,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-dnpq] [-k kernel]\n"
+literal|"usage: %s [-%slnpq] [-k kernel]\n"
+argument_list|,
+name|getprogname
+argument_list|()
 argument_list|,
 name|dohalt
 condition|?
-literal|"halt"
+literal|""
 else|:
-literal|"reboot"
+literal|"d"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -167,7 +167,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mdconfig -a -t type [-n] [-o [no]option] ... [ -f file]\n"
+literal|"usage: mdconfig -a -t type [-n] [-o [no]option] ... [-f file]\n"
 literal|"                [-s size] [-S sectorsize] [-u unit]\n"
 literal|"                [-x sectors/track] [-y heads/cyl]\n"
 literal|"       mdconfig -d -u unit\n"

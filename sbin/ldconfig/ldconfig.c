@@ -968,7 +968,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ldconfig [-aout | -elf] [-Rimrsv] [-f hints_file] [dir | file ...]\n"
+literal|"usage: ldconfig [-aout | -elf] [-Rimrsv] [-f hints_file] [directory | file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -13700,32 +13700,65 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ping6 [-dfH"
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPSEC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IPSEC_POLICY_IPSEC
+argument_list|)
+literal|"A"
+endif|#
+directive|endif
+literal|"usage: ping6 [-"
+literal|"d"
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IPSEC
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IPSEC_POLICY_IPSEC
+argument_list|)
+literal|"E"
+endif|#
+directive|endif
+literal|"fH"
 ifdef|#
 directive|ifdef
 name|IPV6_USE_MIN_MTU
 literal|"m"
 endif|#
 directive|endif
-literal|"nNqtvwW"
-ifdef|#
-directive|ifdef
+literal|"nNqtvwW] "
+literal|"[-a addrtype] [-b bufsiz] [-c count] [-g gateway]\n"
+literal|"             [-h hoplimit] [-I interface] [-i wait] [-l preload]"
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IPSEC
-ifdef|#
-directive|ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|IPSEC_POLICY_IPSEC
-literal|"] [-P policy"
-else|#
-directive|else
-literal|"AE"
+argument_list|)
+literal|" [-P policy]"
 endif|#
 directive|endif
-endif|#
-directive|endif
-literal|"] [-a [aAclsg]] [-b sockbufsiz] [-c count] \n"
-literal|"\t[-I interface] [-i wait] [-l preload] [-p pattern] "
-literal|"[-S sourceaddr]\n"
-literal|"\t[-s packetsize] [-h hoplimit] [hops...] [-g gateway] host\n"
+literal|"\n"
+literal|"             [-p pattern] [-S sourceaddr] [-s packetsize] "
+literal|"[hops ...] host\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -1143,7 +1143,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"23a:bcdD:g:I:iLl:No:PR:r:sTt:w:x:U"
+literal|"23a:bcdD:g:I:iLlNo:PR:r:sTt:w:x:U"
 argument_list|)
 operator|)
 operator|!=
@@ -4377,13 +4377,13 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: mount_nfs [-23KNPTUbcdilqs] [-D deadthresh] [-I readdirsize]"
+literal|"usage: mount_nfs [-23bcdiLlNPsTU] [-a maxreadahead] [-D deadthresh]"
 argument_list|,
-literal|"                 [-R retrycnt] [-a maxreadahead]"
+literal|"                 [-g maxgroups] [-I readdirsize] [-o options] [-R retrycnt]"
 argument_list|,
-literal|"                 [-g maxgroups] [-m realm] [-o options] [-r readsize]"
+literal|"                 [-r readsize] [-t timeout] [-w writesize] [-x retrans]"
 argument_list|,
-literal|"                 [-t timeout] [-w writesize] [-x retrans] rhost:path node"
+literal|"                 rhost:path node"
 argument_list|)
 expr_stmt|;
 name|exit

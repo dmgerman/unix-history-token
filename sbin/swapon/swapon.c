@@ -781,24 +781,16 @@ name|orig_prog
 condition|)
 block|{
 case|case
+name|SWAPON
+case|:
+case|case
 name|SWAPOFF
 case|:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[-a] [special_file ...]\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|SWAPON
-case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"[-a] [special_file ...]\n"
+literal|"-a | file ...\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -809,7 +801,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[-lshAU] [-a/-d special_file ...]\n"
+literal|"[-AhklsU] [-a file ... | -d file ...]\n"
 argument_list|)
 expr_stmt|;
 break|break;

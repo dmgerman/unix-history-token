@@ -1641,7 +1641,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: nos-tun -t<tun_name> -s<source_addr> -d<dest_addr> -p<protocol_number> [<source_addr>]<target_addr>\n"
+literal|"usage: nos-tun -t tunnel -s source -d destination -p protocol_number [source] target\n"
 argument_list|)
 expr_stmt|;
 name|exit

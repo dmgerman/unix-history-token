@@ -3709,11 +3709,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: mount [-dfpruvw] [-o options] [-t ufs | external_type] special node"
-argument_list|,
-literal|"       mount [-adfpruvw] [ -F fstab] [-o options] [-t ufs | external_type]"
+literal|"usage: mount [-adfpruvw] [-F fstab] [-o options] [-t ufs | external_type]"
 argument_list|,
 literal|"       mount [-dfpruvw] special | node"
+argument_list|,
+literal|"       mount [-dfpruvw] [-o options] [-t ufs | external_type] special node"
 argument_list|)
 expr_stmt|;
 name|exit

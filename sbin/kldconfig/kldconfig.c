@@ -1562,7 +1562,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage:\tkldconfig [-dfimnUv] [-S sysctlname] [path..]"
+literal|"usage:\tkldconfig [-dfimnUv] [-S sysctlname] [path ...]"
 argument_list|,
 literal|"\tkldconfig -r"
 argument_list|)

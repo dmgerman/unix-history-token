@@ -3397,7 +3397,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ffsinfo [-L] [-g cylgrp] [-i inode] [-l level] "
+literal|"usage: ffsinfo [-g cylinder_group] [-i inode] [-l level] "
 literal|"[-o outfile]\n"
 literal|"               special | file\n"
 argument_list|)

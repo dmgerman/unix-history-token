@@ -2108,15 +2108,15 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ccdconfig [-cv] ccd ileave [flags] dev [...]"
+literal|"usage: ccdconfig [-cv] ccd ileave [flags] dev ..."
 argument_list|,
 literal|"       ccdconfig -C [-v] [-f config_file]"
 argument_list|,
-literal|"       ccdconfig -u [-v] ccd [...]"
+literal|"       ccdconfig -u [-v] ccd ..."
 argument_list|,
 literal|"       ccdconfig -U [-v] [-f config_file]"
 argument_list|,
-literal|"       ccdconfig -g [ccd [...]]"
+literal|"       ccdconfig -g [ccd ...]"
 argument_list|)
 expr_stmt|;
 name|exit

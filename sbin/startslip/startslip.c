@@ -3085,7 +3085,7 @@ literal|"                 [-L] [-A annexname] [-U upscript] [-D downscript]"
 argument_list|,
 literal|"                 [-t script_timeout] [-W maxtries] [-w retry_pause]"
 argument_list|,
-literal|"                 [-K keepalive] [-O outfill] [-S unit] device user passwd"
+literal|"                 [-K keepalive] [-O outfill] [-S unit] device user password"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -2098,7 +2098,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: savecore [-Cv|-cfkvz] [directory [device...]]\n"
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: savecore -c"
+argument_list|,
+literal|"       savecore -C [-v] [directory device]"
+argument_list|,
+literal|"       savecore [-fkvz] [directory [device ...]]"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -2469,7 +2469,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-BFpfny] [-b block] [-c level] [-m mode] "
-literal|"file system ...\n"
+literal|"filesystem ...\n"
 argument_list|,
 name|getprogname
 argument_list|()

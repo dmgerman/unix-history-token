@@ -302,7 +302,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bdehNnox] variable[=value] ..."
+literal|"usage: sysctl [-bdehNnox] name[=value] ..."
 argument_list|,
 literal|"       sysctl [-bdehNnox] -a"
 argument_list|)

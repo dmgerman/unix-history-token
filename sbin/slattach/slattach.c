@@ -576,11 +576,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: slattach [-acfhlnz] [-e command] [-r command] [-s speed] [-u command]"
+literal|"usage: slattach [-acfhLlnz] [-e exit-command] [-K keepalive] [-O outfill]"
 argument_list|,
-literal|"                [-L] [-K timeout] [-O timeout] [-S unit] device"
+literal|"                [-r redial-command] [-S unit] [-s baudrate] [-u unit-command]"
+argument_list|,
+literal|"                ttyname"
 argument_list|)
 expr_stmt|;
 comment|/* do not exit here */

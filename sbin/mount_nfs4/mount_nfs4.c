@@ -1143,7 +1143,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:bcdD:I:iNo:PR:sTt:x:U"
+literal|"a:bD:I:iNo:PR:sTt:x:U"
 argument_list|)
 operator|)
 operator|!=
@@ -3210,15 +3210,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: mount_nfs [-KNPTUbiqs] [-D deadthresh] [-I readdirsize]"
+literal|"usage: mount_nfs4 [-biNPsTU] [-a maxreadahead] [-D deadthresh] [-I readdirsize]"
 argument_list|,
-literal|"                 [-R retrycnt] [-a maxreadahead]"
+literal|"                  [-o options] [-R retrycnt] [-t timeout] [-x retrans]"
 argument_list|,
-literal|"                 [-m realm] [-o options]"
-argument_list|,
-literal|"                 [-t timeout] [-x retrans] rhost:path node"
+literal|"                  rhost:path node"
 argument_list|)
 expr_stmt|;
 name|exit

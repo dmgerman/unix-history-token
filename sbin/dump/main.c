@@ -2990,8 +2990,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: dump [-0123456789acLnSu] [-B records] [-b blocksize] [-C cachesize]\n"
-literal|"            [-D dumpdates] [-d density] [-h level] [-s feet] [-T date]\n"
-literal|"            [-f file | -P pipecommand] filesystem\n"
+literal|"            [-D dumpdates] [-d density] [-f file | -P pipecommand] [-h level]\n"
+literal|"            [-s feet] [-T date] filesystem\n"
 literal|"       dump -W | -w\n"
 argument_list|)
 expr_stmt|;

@@ -3042,11 +3042,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DLlMNSUX] [-a maxcontig [-b block-size] [-c cylinders]\n"
+literal|"usage: %s [-DLlMNSUX] [-a maxcontig] [-b block-size] [-c cylinders]\n"
 literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
 literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
-literal|"\t[-o mount-options] [-p permissions] [-s size] [-w user:group]\n"
-literal|"\tmd-device mount-point\n"
+literal|"\t[-o mount-options] [-p permissions] [-s size] [-v version]\n"
+literal|"\t[-w user:group] md-device mount-point\n"
 argument_list|,
 name|name
 argument_list|)
@@ -3058,7 +3058,7 @@ argument_list|,
 literal|"usage: %s -C [-lNU] [-a maxcontig] [-b block-size] [-c cylinders]\n"
 literal|"\t[-d rotdelay] [-e maxbpg] [-F file] [-f frag-size] [-i bytes]\n"
 literal|"\t[-m percent-free] [-n rotational-positions] [-O optimization]\n"
-literal|"\t[-o mount-options] [-s size] md-device mount-point\n"
+literal|"\t[-o mount-options] [-s size] [-v version] md-device mount-point\n"
 argument_list|,
 name|name
 argument_list|)

@@ -2665,7 +2665,7 @@ name|char
 name|common
 index|[]
 init|=
-literal|"[-BFdfnpvy] [-T fstype:fsoptions] [-t fstype]"
+literal|"[-dfnpvy] [-B | -F] [-T fstype:fsoptions] [-t fstype]"
 decl_stmt|;
 operator|(
 name|void
@@ -2674,7 +2674,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s [special|node]...\n"
+literal|"usage: %s %s [special | node] ...\n"
 argument_list|,
 name|getprogname
 argument_list|()
