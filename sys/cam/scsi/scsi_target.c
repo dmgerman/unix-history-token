@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Implementation of a simple Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_target.c,v 1.5 1998/12/15 08:15:15 gibbs Exp $  */
+comment|/*  * Implementation of a simple Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_target.c,v 1.6 1998/12/17 00:03:14 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -6500,23 +6500,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|desc
-operator|->
-name|bp
-operator|!=
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"targ%d: desc->bp should be NULL"
-argument_list|,
-name|periph
-operator|->
-name|unit_number
-argument_list|)
-expr_stmt|;
 comment|/* Queue us up for another buffer */
 if|if
 condition|(
@@ -6532,6 +6515,28 @@ operator|==
 name|SEND
 condition|)
 block|{
+if|if
+condition|(
+name|desc
+operator|->
+name|bp
+operator|!=
+name|NULL
+condition|)
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|snd_buf_queue
+operator|.
+name|queue
+argument_list|,
+name|bp
+argument_list|,
+name|b_act
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -6552,6 +6557,28 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|desc
+operator|->
+name|bp
+operator|!=
+name|NULL
+condition|)
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|rcv_buf_queue
+operator|.
+name|queue
+argument_list|,
+name|bp
+argument_list|,
+name|b_act
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
