@@ -90,7 +90,9 @@ end_comment
 begin_function
 name|void
 name|pos_in
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|off_t
 name|cnt
@@ -334,7 +336,9 @@ end_function
 begin_function
 name|void
 name|pos_out
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|mtop

@@ -78,7 +78,9 @@ end_comment
 begin_function
 name|void
 name|def
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -191,7 +193,9 @@ end_function
 begin_function
 name|void
 name|def_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Just update the count, everything is already in the buffer. */
 if|if
@@ -218,7 +222,9 @@ end_comment
 begin_function
 name|void
 name|block
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -627,7 +633,9 @@ end_function
 begin_function
 name|void
 name|block_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * Copy any remaining data into the output buffer and pad to a record. 	 * Don't worry about truncation or translation, the input buffer is 	 * always empty when truncating, and no characters have been added for 	 * translation.  The bottom line is that anything left in the input 	 * buffer is a truncated record.  Anything left in the output buffer 	 * just wasn't big enough. 	 */
 if|if
@@ -710,7 +718,9 @@ end_comment
 begin_function
 name|void
 name|unblock
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_char
 modifier|*
@@ -925,7 +935,9 @@ end_function
 begin_function
 name|void
 name|unblock_close
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_char
 modifier|*

@@ -98,7 +98,9 @@ end_include
 begin_function
 name|void
 name|summary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|timeval
@@ -363,12 +365,10 @@ begin_function
 name|void
 name|summaryx
 parameter_list|(
-name|notused
-parameter_list|)
 name|int
 name|notused
 name|__unused
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|save_errno
@@ -393,11 +393,9 @@ begin_function
 name|void
 name|terminate
 parameter_list|(
-name|sig
-parameter_list|)
 name|int
 name|sig
-decl_stmt|;
+parameter_list|)
 block|{
 name|summary
 argument_list|()

@@ -150,11 +150,9 @@ begin_function
 name|int
 name|netsettime
 parameter_list|(
-name|tval
-parameter_list|)
 name|time_t
 name|tval
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|timeval
