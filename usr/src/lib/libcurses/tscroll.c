@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tscroll.c	5.3 (Berkeley) %G%"
+literal|"@(#)tscroll.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|tscroll
+name|__tscroll
 parameter_list|(
 name|cap
 parameter_list|,

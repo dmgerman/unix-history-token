@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.27 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3612,7 +3612,7 @@ name|DL
 condition|)
 name|tputs
 argument_list|(
-name|tscroll
+name|__tscroll
 argument_list|(
 name|DL
 argument_list|,
@@ -3669,7 +3669,7 @@ name|AL
 condition|)
 name|tputs
 argument_list|(
-name|tscroll
+name|__tscroll
 argument_list|(
 name|AL
 argument_list|,
@@ -3745,7 +3745,7 @@ name|DL
 condition|)
 name|tputs
 argument_list|(
-name|tscroll
+name|__tscroll
 argument_list|(
 name|DL
 argument_list|,
@@ -3803,7 +3803,7 @@ name|AL
 condition|)
 name|tputs
 argument_list|(
-name|tscroll
+name|__tscroll
 argument_list|(
 name|AL
 argument_list|,
