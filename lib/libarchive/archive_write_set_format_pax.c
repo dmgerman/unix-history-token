@@ -846,7 +846,7 @@ name|wchar_t
 modifier|*
 name|wp
 decl_stmt|;
-name|wchar_t
+name|int
 name|wc
 decl_stmt|;
 name|char
