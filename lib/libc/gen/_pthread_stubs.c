@@ -776,17 +776,9 @@ modifier|*
 name|oset
 parameter_list|)
 block|{
-comment|/* 	* No need to use _sigprocmask, since we know that the threads 	* library is not linked in. 	* 	*/
 return|return
 operator|(
-name|sigprocmask
-argument_list|(
-name|how
-argument_list|,
-name|set
-argument_list|,
-name|oset
-argument_list|)
+literal|0
 operator|)
 return|;
 block|}
