@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.14 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1176,7 +1176,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|fragacct
+name|ffs_fragacct
 argument_list|(
 name|fs
 argument_list|,
