@@ -2674,7 +2674,10 @@ operator|)
 name|data
 expr_stmt|;
 break|break;
-comment|/* 	 * Set the memory window to be used for the read/write interface. 	 */
+ifndef|#
+directive|ifndef
+name|__alpha__
+comment|/* 	 * Set the memory window to be used for the read/write interface. 	 * Not available on the alpha. 	 */
 case|case
 name|PIOCRWMEM
 case|:
@@ -2795,6 +2798,8 @@ name|IOM_BEGIN
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 comment|/* 	 * Set power values. 	 */
 case|case
 name|PIOCSPOW
