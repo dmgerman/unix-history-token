@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.90 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.91 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1000,6 +1000,9 @@ decl_stmt|,
 modifier|*
 name|vq
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1153,6 +1156,9 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|vp
@@ -1164,6 +1170,29 @@ argument_list|(
 literal|"cleaned vnode isn't"
 argument_list|)
 expr_stmt|;
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_numoutput
+condition|)
+name|panic
+argument_list|(
+literal|"Clean vnode has pending I/O's"
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vp
 operator|->
 name|v_flag
@@ -1178,11 +1207,41 @@ literal|0
 expr_stmt|;
 name|vp
 operator|->
+name|v_lastw
+operator|=
+literal|0
+expr_stmt|;
+name|vp
+operator|->
+name|v_lasta
+operator|=
+literal|0
+expr_stmt|;
+name|vp
+operator|->
+name|v_cstart
+operator|=
+literal|0
+expr_stmt|;
+name|vp
+operator|->
+name|v_clen
+operator|=
+literal|0
+expr_stmt|;
+name|vp
+operator|->
 name|v_socket
 operator|=
 literal|0
 expr_stmt|;
 block|}
+name|vp
+operator|->
+name|v_ralen
+operator|=
+literal|1
+expr_stmt|;
 name|vp
 operator|->
 name|v_type
@@ -1416,6 +1475,19 @@ name|vp
 operator|->
 name|v_numoutput
 operator|--
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_numoutput
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vwakeup: neg numoutput"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
