@@ -57,7 +57,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: daemon.c,v 1.2 1997/05/28 05:38:09 assar Exp $"
+literal|"$Id: daemon.c,v 1.3 1997/10/04 21:55:48 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -129,15 +129,12 @@ begin_function
 name|int
 name|daemon
 parameter_list|(
-name|nochdir
-parameter_list|,
-name|noclose
-parameter_list|)
 name|int
 name|nochdir
-decl_stmt|,
+parameter_list|,
+name|int
 name|noclose
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|fd
@@ -188,9 +185,6 @@ condition|(
 operator|!
 name|nochdir
 condition|)
-operator|(
-name|void
-operator|)
 name|chdir
 argument_list|(
 literal|"/"
@@ -218,9 +212,6 @@ operator|-
 literal|1
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|dup2
 argument_list|(
 name|fd
@@ -228,9 +219,6 @@ argument_list|,
 name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|dup2
 argument_list|(
 name|fd
@@ -238,9 +226,6 @@ argument_list|,
 name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|dup2
 argument_list|(
 name|fd
@@ -254,9 +239,6 @@ name|fd
 operator|>
 literal|2
 condition|)
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd

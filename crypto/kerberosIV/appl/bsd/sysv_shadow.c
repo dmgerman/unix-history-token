@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sysv_shadow.c,v 1.7 1997/03/23 04:56:05 assar Exp $"
+literal|"$Id: sysv_shadow.c,v 1.8 1997/12/29 19:56:07 bg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -55,7 +55,16 @@ name|time
 argument_list|(
 literal|0
 argument_list|)
+operator|/
+operator|(
+literal|60
+operator|*
+literal|60
+operator|*
+literal|24
+operator|)
 expr_stmt|;
+comment|/* In days since Jan. 1, 1970 */
 if|if
 condition|(
 name|spwd

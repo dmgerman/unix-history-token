@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the Kungliga Tekniska  *      Högskolan and its contributors.  *   * 4. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_ifndef
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: forkpty.c,v 1.52 1997/05/25 07:37:01 assar Exp $"
+literal|"$Id: forkpty.c,v 1.57 1999/12/02 16:58:28 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -513,6 +513,9 @@ name|char
 modifier|*
 name|pts_name
 parameter_list|,
+name|size_t
+name|pts_name_sz
+parameter_list|,
 name|int
 modifier|*
 name|streams_pty
@@ -604,14 +607,16 @@ operator|!=
 name|NULL
 condition|)
 comment|/* Get slave's name */
-name|strcpy
+comment|/* Return name of slave */
+name|strlcpy
 argument_list|(
 name|pts_name
 argument_list|,
 name|ptr1
+argument_list|,
+name|pts_name_sz
 argument_list|)
 expr_stmt|;
-comment|/* Return name of slave */
 else|else
 block|{
 name|close
@@ -695,6 +700,9 @@ name|char
 modifier|*
 name|pts_name
 parameter_list|,
+name|size_t
+name|pts_name_sz
+parameter_list|,
 name|int
 modifier|*
 name|streams_pty
@@ -748,7 +756,7 @@ if|#
 directive|if
 name|SunOS
 operator|==
-literal|4
+literal|40
 comment|/* Avoid a bug in SunOS4 ttydriver */
 if|if
 condition|(
@@ -986,11 +994,13 @@ name|streams_pty
 operator|=
 literal|1
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|pts_name
 argument_list|,
 name|p
+argument_list|,
+name|pts_name_sz
 argument_list|)
 expr_stmt|;
 return|return
@@ -1008,6 +1018,8 @@ operator|=
 name|ptym_open_streams_flavor
 argument_list|(
 name|pts_name
+argument_list|,
+name|pts_name_sz
 argument_list|,
 name|streams_pty
 argument_list|)
@@ -1036,6 +1048,8 @@ name|ptym_open_bsd_flavor
 argument_list|(
 name|pts_name
 argument_list|,
+name|pts_name_sz
+argument_list|,
 name|streams_pty
 argument_list|)
 expr_stmt|;
@@ -1063,6 +1077,8 @@ operator|=
 name|ptym_open_streams_flavor
 argument_list|(
 name|pts_name
+argument_list|,
+name|pts_name_sz
 argument_list|,
 name|streams_pty
 argument_list|)
@@ -1388,6 +1404,8 @@ literal|1
 expr_stmt|;
 comment|/* group tty is not in the group file */
 comment|/* Grant access to slave */
+if|if
+condition|(
 name|chown
 argument_list|(
 name|pts_name
@@ -1397,7 +1415,20 @@ argument_list|()
 argument_list|,
 name|gid
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|0
+argument_list|,
+literal|"chown slave tty failed"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|chmod
 argument_list|(
 name|pts_name
@@ -1407,6 +1438,17 @@ operator||
 name|S_IWUSR
 operator||
 name|S_IWGRP
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|0
+argument_list|,
+literal|"chmod slave tty failed"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1448,7 +1490,7 @@ end_function
 
 begin_function
 name|int
-name|forkpty
+name|forkpty_truncate
 parameter_list|(
 name|int
 modifier|*
@@ -1457,6 +1499,9 @@ parameter_list|,
 name|char
 modifier|*
 name|slave_name
+parameter_list|,
+name|size_t
+name|slave_name_sz
 parameter_list|,
 name|struct
 name|termios
@@ -1530,14 +1575,16 @@ name|slave_name
 operator|!=
 name|NULL
 condition|)
-name|strcpy
+comment|/* Return name of slave */
+name|strlcpy
 argument_list|(
 name|slave_name
 argument_list|,
 name|pts_name
+argument_list|,
+name|slave_name_sz
 argument_list|)
 expr_stmt|;
-comment|/* Return name of slave */
 name|pid
 operator|=
 name|fork
@@ -1870,6 +1917,46 @@ operator|)
 return|;
 comment|/* Parent returns pid of child */
 block|}
+block|}
+end_function
+
+begin_function
+name|int
+name|forkpty
+parameter_list|(
+name|int
+modifier|*
+name|ptrfdm
+parameter_list|,
+name|char
+modifier|*
+name|slave_name
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+name|slave_termios
+parameter_list|,
+name|struct
+name|winsize
+modifier|*
+name|slave_winsize
+parameter_list|)
+block|{
+return|return
+name|forkpty_truncate
+argument_list|(
+name|ptrfdm
+argument_list|,
+name|slave_name
+argument_list|,
+name|MaxPathLen
+argument_list|,
+name|slave_termios
+argument_list|,
+name|slave_winsize
+argument_list|)
+return|;
 block|}
 end_function
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_cred.c,v 1.6 1997/05/30 17:38:29 bg Exp $"
+literal|"$Id: get_cred.c,v 1.7 1997/12/15 17:12:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -57,7 +57,7 @@ if|if
 condition|(
 name|c
 operator|==
-literal|0
+name|NULL
 condition|)
 name|c
 operator|=

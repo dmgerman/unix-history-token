@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: su.c,v 1.59 1997/05/26 17:45:54 bg Exp $"
+literal|"$Id: su.c,v 1.70 1999/11/13 06:14:11 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -116,8 +116,16 @@ begin_define
 define|#
 directive|define
 name|ARGSTR
-value|"Kflmi:"
+value|"Kflmti:"
 end_define
+
+begin_decl_stmt
+name|int
+name|destroy_tickets
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -254,7 +262,8 @@ name|ARGSTR
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -305,6 +314,14 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+name|destroy_tickets
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'i'
 case|:
 name|root_inst
@@ -320,7 +337,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: su [-Kflm] [-i root-instance] [-] [login]\n"
+literal|"usage: su [-Kflmt] [-i root-instance] [-] [login]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -434,7 +451,7 @@ literal|"su"
 argument_list|,
 name|LOG_CONS
 argument_list|,
-literal|0
+name|LOG_AUTH
 argument_list|)
 expr_stmt|;
 comment|/* get current login name and shell */
@@ -502,8 +519,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|username
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"strdup: out of memory"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|asme
 condition|)
+block|{
 if|if
 condition|(
 name|pwd
@@ -515,17 +546,26 @@ name|pwd
 operator|->
 name|pw_shell
 condition|)
-name|shell
-operator|=
-name|strcpy
+block|{
+name|strlcpy
 argument_list|(
 name|shellbuf
 argument_list|,
 name|pwd
 operator|->
 name|pw_shell
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|shellbuf
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|shell
+operator|=
+name|shellbuf
+expr_stmt|;
+block|}
 else|else
 block|{
 name|shell
@@ -536,6 +576,7 @@ name|iscsh
 operator|=
 name|NO
 expr_stmt|;
+block|}
 block|}
 comment|/* get target login information, default to root */
 name|user
@@ -1131,6 +1172,19 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|environ
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
+argument_list|)
+expr_stmt|;
 name|environ
 index|[
 literal|0
@@ -1265,18 +1319,16 @@ condition|(
 name|asthem
 condition|)
 block|{
-name|avshellbuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'-'
-expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|avshellbuf
-operator|+
-literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|avshellbuf
+argument_list|)
+argument_list|,
+literal|"-%s"
 argument_list|,
 name|avshell
 argument_list|)
@@ -1295,18 +1347,16 @@ name|YES
 condition|)
 block|{
 comment|/* csh strips the first character... */
-name|avshellbuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'_'
-expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|avshellbuf
-operator|+
-literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|avshellbuf
+argument_list|)
+argument_list|,
+literal|"_%s"
 argument_list|,
 name|avshell
 argument_list|)
@@ -1375,7 +1425,7 @@ argument_list|)
 expr_stmt|;
 name|code
 operator|=
-name|k_afsklog
+name|krb_afslog
 argument_list|(
 literal|0
 argument_list|,
@@ -1403,6 +1453,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|destroy_tickets
+condition|)
+name|dest_tkt
+argument_list|()
+expr_stmt|;
 name|execv
 argument_list|(
 name|shell
@@ -1703,6 +1760,28 @@ argument_list|(
 name|krbtkfile
 argument_list|)
 expr_stmt|;
+comment|/*      * Set real as well as effective ID to 0 for the moment,      * to make the kerberos library do the right thing.      */
+if|if
+condition|(
+name|setuid
+argument_list|(
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"setuid"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/*      * Little trick here -- if we are su'ing to root, we need to get a ticket      * for "xxx.root", where xxx represents the name of the person su'ing.      * Otherwise (non-root case), we need to get a ticket for "yyy.", where      * yyy represents the name of the person being su'd to, and the instance      * is null       *      * We should have a way to set the ticket lifetime, with a system default      * for root.       */
 block|{
 name|char
@@ -1982,7 +2061,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|k_gethostname
+name|gethostname
 argument_list|(
 name|hostname
 argument_list|,
@@ -2010,7 +2089,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|savehost
 argument_list|,
@@ -2024,18 +2103,6 @@ argument_list|(
 name|savehost
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|savehost
-index|[
-sizeof|sizeof
-argument_list|(
-name|savehost
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|kerno
 operator|=
@@ -2269,6 +2336,11 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|destroy_tickets
+condition|)
 name|fprintf
 argument_list|(
 name|stderr

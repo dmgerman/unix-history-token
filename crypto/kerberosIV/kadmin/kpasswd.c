@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswd.c,v 1.25 1997/05/02 14:28:51 assar Exp $"
+literal|"$Id: kpasswd.c,v 1.29 1999/11/13 06:33:20 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -173,7 +173,8 @@ literal|"u:n:i:r:h"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -256,7 +257,7 @@ argument_list|(
 name|optarg
 argument_list|)
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -270,8 +271,6 @@ name|principal
 operator|.
 name|name
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -300,7 +299,7 @@ argument_list|(
 name|optarg
 argument_list|)
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -314,8 +313,6 @@ name|principal
 operator|.
 name|instance
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -345,7 +342,7 @@ name|optarg
 argument_list|)
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -359,8 +356,6 @@ name|principal
 operator|.
 name|realm
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|realm_given
@@ -453,7 +448,7 @@ condition|(
 name|use_default
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -462,9 +457,16 @@ argument_list|,
 name|default_principal
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|principal
+operator|.
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -473,9 +475,16 @@ argument_list|,
 name|default_principal
 operator|.
 name|instance
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|principal
+operator|.
+name|instance
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -484,6 +493,13 @@ argument_list|,
 name|default_principal
 operator|.
 name|realm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|principal
+operator|.
+name|realm
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -499,7 +515,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -508,6 +524,13 @@ argument_list|,
 name|default_principal
 operator|.
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|principal
+operator|.
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -520,7 +543,7 @@ index|[
 literal|0
 index|]
 condition|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|principal
 operator|.
@@ -529,6 +552,13 @@ argument_list|,
 name|default_principal
 operator|.
 name|realm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|principal
+operator|.
+name|realm
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -541,8 +571,9 @@ argument_list|(
 name|tktstring
 argument_list|)
 argument_list|,
+literal|"%s_cpw_%u"
+argument_list|,
 name|TKT_ROOT
-literal|"_cpw_%u"
 argument_list|,
 operator|(
 name|unsigned

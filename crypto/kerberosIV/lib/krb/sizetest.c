@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sizetest.c,v 1.5 1996/11/15 18:39:19 bg Exp $"
+literal|"$Id: sizetest.c,v 1.6 1998/01/01 22:29:04 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16,7 +16,7 @@ end_expr_stmt
 begin_function
 specifier|static
 name|void
-name|err
+name|fatal
 parameter_list|(
 specifier|const
 name|char
@@ -42,7 +42,9 @@ end_function
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -53,7 +55,7 @@ argument_list|)
 operator|<
 literal|1
 condition|)
-name|err
+name|fatal
 argument_list|(
 literal|"sizeof(u_int8_t) is smaller than 1 byte\n"
 argument_list|)
@@ -67,7 +69,7 @@ argument_list|)
 operator|<
 literal|2
 condition|)
-name|err
+name|fatal
 argument_list|(
 literal|"sizeof(u_int16_t) is smaller than 2 bytes\n"
 argument_list|)
@@ -81,7 +83,7 @@ argument_list|)
 operator|<
 literal|4
 condition|)
-name|err
+name|fatal
 argument_list|(
 literal|"sizeof(u_int32_t) is smaller than 4 bytes\n"
 argument_list|)
@@ -139,7 +141,7 @@ name|i
 operator|<
 literal|8
 condition|)
-name|err
+name|fatal
 argument_list|(
 literal|"u_int8_t is smaller than 8 bits\n"
 argument_list|)

@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb_cache.c,v 1.6 1997/05/02 10:27:53 joda Exp $"
+literal|"$Id: krb_cache.c,v 1.7 1998/06/09 19:25:14 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -90,10 +90,12 @@ name|char
 modifier|*
 name|serv
 parameter_list|,
+comment|/* could have wild card */
 name|char
 modifier|*
 name|inst
 parameter_list|,
+comment|/* could have wild card */
 name|Principal
 modifier|*
 name|principal
@@ -102,8 +104,6 @@ name|unsigned
 name|int
 name|max
 parameter_list|)
-comment|/* could have wild card */
-comment|/* could have wild card */
 comment|/* max number of name structs to return */
 block|{
 name|int
@@ -326,10 +326,12 @@ name|char
 modifier|*
 name|serv
 parameter_list|,
+comment|/* could have wild card */
 name|char
 modifier|*
 name|inst
 parameter_list|,
+comment|/* could have wild card */
 name|Dba
 modifier|*
 name|dba
@@ -338,8 +340,6 @@ name|unsigned
 name|int
 name|max
 parameter_list|)
-comment|/* could have wild card */
-comment|/* could have wild card */
 comment|/* max number of name structs to return */
 block|{
 name|int

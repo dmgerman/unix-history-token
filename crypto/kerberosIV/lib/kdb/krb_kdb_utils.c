@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: krb_kdb_utils.c,v 1.23 1997/05/02 14:29:10 assar Exp $"
+literal|"$Id: krb_kdb_utils.c,v 1.25 1999/03/13 21:24:21 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -152,6 +152,9 @@ parameter_list|)
 block|{
 name|int
 name|kfile
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|i
@@ -881,10 +884,6 @@ if|if
 condition|(
 name|out
 operator|!=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 condition|)
 name|fprintf
@@ -922,10 +921,6 @@ if|if
 condition|(
 name|out
 operator|!=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 condition|)
 comment|/* should we punt this? */
@@ -1027,10 +1022,6 @@ operator|&&
 operator|(
 name|out
 operator|!=
-operator|(
-name|FILE
-operator|*
-operator|)
 name|NULL
 operator|)
 condition|)

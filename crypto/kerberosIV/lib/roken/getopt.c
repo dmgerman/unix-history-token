@@ -212,7 +212,8 @@ name|EMSG
 expr_stmt|;
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -240,7 +241,8 @@ name|EMSG
 expr_stmt|;
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -277,7 +279,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means EOF. 		 */
+comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means -1 (EOF). 		 */
 if|if
 condition|(
 name|optopt
@@ -289,7 +291,8 @@ literal|'-'
 condition|)
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 if|if

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kcmd.c,v 1.19 1997/05/02 14:27:42 assar Exp $"
+literal|"$Id: kcmd.c,v 1.20 1998/07/13 13:54:07 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -317,6 +317,11 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|h_addr_list
+decl_stmt|;
 name|pid
 operator|=
 name|getpid
@@ -368,6 +373,12 @@ operator|*
 name|ahost
 operator|=
 name|host_save
+expr_stmt|;
+name|h_addr_list
+operator|=
+name|hp
+operator|->
+name|h_addr_list
 expr_stmt|;
 comment|/* If realm is null, look up from table */
 if|if
@@ -450,9 +461,10 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|hp
-operator|->
-name|h_addr
+name|h_addr_list
+index|[
+literal|0
+index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -529,8 +541,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|hp
-operator|->
 name|h_addr_list
 index|[
 literal|1
@@ -551,8 +561,6 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|hp
-operator|->
 name|h_addr_list
 operator|++
 expr_stmt|;
@@ -563,12 +571,8 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|hp
-operator|->
+operator|*
 name|h_addr_list
-index|[
-literal|0
-index|]
 argument_list|,
 sizeof|sizeof
 argument_list|(

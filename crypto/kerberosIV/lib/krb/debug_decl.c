@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: debug_decl.c,v 1.6 1997/03/23 03:53:07 joda Exp $"
+literal|"$Id: debug_decl.c,v 1.10 1999/06/16 15:10:38 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -36,6 +36,56 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|krb_dns_debug
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|krb_enable_debug
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|krb_ap_req_debug
+operator|=
+name|krb_debug
+operator|=
+name|krb_dns_debug
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|krb_disable_debug
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|krb_ap_req_debug
+operator|=
+name|krb_debug
+operator|=
+name|krb_dns_debug
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 end_unit
 

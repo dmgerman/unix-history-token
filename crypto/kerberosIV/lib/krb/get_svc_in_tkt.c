@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_svc_in_tkt.c,v 1.8 1997/03/23 03:53:09 joda Exp $"
+literal|"$Id: get_svc_in_tkt.c,v 1.9 1999/06/29 21:18:04 bg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -29,6 +29,7 @@ begin_function
 name|int
 name|srvtab_to_key
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|user
@@ -37,10 +38,12 @@ name|char
 modifier|*
 name|instance
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|realm
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|srvtab

@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kntoln.c,v 1.7 1997/03/23 03:53:12 joda Exp $"
+literal|"$Id: kntoln.c,v 1.10 1998/06/09 19:25:21 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -174,7 +174,7 @@ comment|/*  * antoln converts an authentication name into a local name by lookin
 end_comment
 
 begin_comment
-unit|static char     lrealm[REALM_SZ] = "";  an_to_ln(ad,lname) AUTH_DAT        *ad; char            *lname; {         static DBM *aname = NULL;         char keyname[ANAME_SZ+INST_SZ+REALM_SZ+2];          if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE))                 return(KFAILURE);          if((strcmp(ad->pinst,"")&& strcmp(ad->pinst,"root")) || strcmp(ad->prealm,lrealm)) {                 datum val;                 datum key;
+unit|static char     lrealm[REALM_SZ] = "";  int an_to_ln(AUTH_DAT *ad, char *lname) {         static DBM *aname = NULL;         char keyname[ANAME_SZ+INST_SZ+REALM_SZ+2];          if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE))                 return(KFAILURE);          if((strcmp(ad->pinst,"")&& strcmp(ad->pinst,"root")) || strcmp(ad->prealm,lrealm)) {                 datum val;                 datum key;
 comment|/*                  * Non-local name (or) non-null and non-root instance.                  * Look up in dbm file.                  */
 end_comment
 
@@ -189,12 +189,12 @@ comment|/* Got it! */
 end_comment
 
 begin_comment
-unit|strcpy(lname,val.dptr);                 return(KSUCCESS);         } else strcpy(lname,ad->pname);         return(KSUCCESS); }  an_to_a(ad, str)         AUTH_DAT *ad;         char *str; {         strcpy(str, ad->pname);         if(*ad->pinst) {                 strcat(str, ".");                 strcat(str, ad->pinst);         }         strcat(str, "@");         strcat(str, ad->prealm); }
+unit|strcpy(lname,val.dptr);                 return(KSUCCESS);         } else strcpy(lname,ad->pname);         return(KSUCCESS); }  void an_to_a(AUTH_DAT *ad, char *str) {         strcpy(str, ad->pname);         if(*ad->pinst) {                 strcat(str, ".");                 strcat(str, ad->pinst);         }         strcat(str, "@");         strcat(str, ad->prealm); }
 comment|/*  * Parse a string of the form "user[.instance][@realm]"   * into a struct AUTH_DAT.  */
 end_comment
 
 begin_comment
-unit|a_to_an(str, ad)         AUTH_DAT *ad;         char *str; {         char *buf = (char *)malloc(strlen(str)+1);         char *rlm, *inst, *princ;          if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE)) {                 free(buf);                 return(KFAILURE);         }
+unit|int a_to_an(char *str, AUTH_DAT *ad) {         char *buf = (char *)malloc(strlen(str)+1);         char *rlm, *inst, *princ;          if(!(*lrealm)&& (krb_get_lrealm(lrealm,1) == KFAILURE)) {                 free(buf);                 return(KFAILURE);         }
 comment|/* destructive string hacking is more fun.. */
 end_comment
 

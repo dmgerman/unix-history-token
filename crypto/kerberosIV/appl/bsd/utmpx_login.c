@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utmpx_login.c,v 1.20 1997/06/01 03:13:15 assar Exp $"
+literal|"$Id: utmpx_login.c,v 1.21 1999/03/29 17:57:31 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -109,7 +109,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_UT_ID
+name|HAVE_STRUCT_UTMPX_UT_ID
 name|strncpy
 argument_list|(
 name|ut
@@ -165,7 +165,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_UT_SYSLEN
+name|HAVE_STRUCT_UTMPX_UT_SYSLEN
 name|ut
 operator|->
 name|ut_syslen

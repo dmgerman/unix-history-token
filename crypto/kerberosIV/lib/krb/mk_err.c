@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_err.c,v 1.6 1997/03/23 03:53:14 joda Exp $"
+literal|"$Id: mk_err.c,v 1.7 1998/06/09 19:25:22 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -53,6 +53,8 @@ argument_list|,
 name|p
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|p
@@ -62,6 +64,8 @@ argument_list|(
 name|AUTH_MSG_APPL_ERR
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
@@ -75,6 +79,8 @@ argument_list|,
 name|p
 argument_list|,
 literal|4
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 name|p
@@ -84,6 +90,13 @@ argument_list|(
 name|e_string
 argument_list|,
 name|p
+argument_list|,
+name|strlen
+argument_list|(
+name|e_string
+argument_list|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 return|return

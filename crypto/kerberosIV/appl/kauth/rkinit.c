@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the Kungliga Tekniska  *      Högskolan and its contributors.  *   * 4. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rkinit.c,v 1.19 1997/04/01 08:17:33 joda Exp $"
+literal|"$Id: rkinit.c,v 1.22.2.1 1999/12/06 17:27:56 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -75,18 +75,10 @@ literal|"gethostbyname '%s' failed: %s\n"
 argument_list|,
 name|hostname
 argument_list|,
-ifdef|#
-directive|ifdef
-name|HAVE_H_ERRNO
 name|hstrerror
 argument_list|(
 name|h_errno
 argument_list|)
-else|#
-directive|else
-literal|"unknown error"
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
 return|return
@@ -412,6 +404,50 @@ return|return
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|krb_get_config_bool
+argument_list|(
+literal|"nat_in_use"
+argument_list|)
+condition|)
+block|{
+name|struct
+name|in_addr
+name|natAddr
+decl_stmt|;
+if|if
+condition|(
+name|krb_get_our_ip_for_realm
+argument_list|(
+name|krb_realmofhost
+argument_list|(
+name|hostname
+argument_list|)
+argument_list|,
+operator|&
+name|natAddr
+argument_list|)
+operator|==
+name|KSUCCESS
+operator|||
+name|krb_get_our_ip_for_realm
+argument_list|(
+name|NULL
+argument_list|,
+operator|&
+name|natAddr
+argument_list|)
+operator|==
+name|KSUCCESS
+condition|)
+name|thisaddr
+operator|.
+name|sin_addr
+operator|=
+name|natAddr
+expr_stmt|;
+block|}
 name|status
 operator|=
 name|krb_sendauth
@@ -481,6 +517,11 @@ name|pack_args
 argument_list|(
 name|buf
 argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
 name|princ
 argument_list|,
 name|lifetime
@@ -490,6 +531,24 @@ argument_list|,
 name|tktfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inlen
+operator|<
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"cannot marshall arguments to %s"
+argument_list|,
+name|hostname
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|write_encrypted
