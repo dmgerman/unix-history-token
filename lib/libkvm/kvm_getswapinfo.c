@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kvm_getswapinfo.c,v 1.38 1999/01/21 08:08:55 dillon Exp $"
+literal|"$Id: kvm_getswapinfo.c,v 1.1 1999/01/22 10:36:04 dillon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -868,7 +868,19 @@ operator|.
 name|ksw_devname
 argument_list|)
 argument_list|,
-literal|"%s"
+literal|"%s%s"
+argument_list|,
+operator|(
+operator|(
+name|flags
+operator|&
+name|SWIF_DEV_PREFIX
+operator|)
+condition|?
+literal|"/dev/"
+else|:
+literal|""
+operator|)
 argument_list|,
 name|devname
 argument_list|(
