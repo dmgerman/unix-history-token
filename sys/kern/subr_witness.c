@@ -3320,6 +3320,9 @@ operator|->
 name|td_critnest
 operator|!=
 literal|0
+operator|&&
+operator|!
+name|kdb_active
 condition|)
 name|panic
 argument_list|(
