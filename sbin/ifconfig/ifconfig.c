@@ -939,6 +939,7 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* XXX not real!! */
 block|{
 literal|0
 block|,
@@ -1245,7 +1246,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ifconfig interface\n%s%s%s%s%s%s"
+literal|"usage: ifconfig interface\n%s%s%s%s%s%s%s"
 argument_list|,
 literal|"\t[ af [ address [ dest_addr ] ] [ up ] [ down ]"
 argument_list|,
@@ -1258,6 +1259,7 @@ argument_list|,
 literal|"\t[ arp | -arp ]\n"
 argument_list|,
 literal|"\t[ link0 | -link0 ] [ link1 | -link1 ] [ link2 | -link2 ] \n"
+literal|"\t[ -a ] [ -ad ] [ -au ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1399,8 +1401,9 @@ index|[
 literal|3
 index|]
 operator|=
-name|AF_INET
+literal|0
 expr_stmt|;
+comment|/* address family */
 name|mib
 index|[
 literal|4
@@ -1415,6 +1418,22 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* if particular family specified, only ask about it */
+if|if
+condition|(
+name|afp
+condition|)
+block|{
+name|mib
+index|[
+literal|3
+index|]
+operator|=
+name|afp
+operator|->
+name|af_af
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sysctl
@@ -1439,7 +1458,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"route-sysctl-estimate"
+literal|"iflist-sysctl-estimate"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3073,13 +3092,12 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|afswtch
 modifier|*
 name|p
 init|=
-name|afp
+name|NULL
 decl_stmt|;
 name|short
 name|af
@@ -3244,15 +3262,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|afp
+condition|)
+block|{
+if|if
+condition|(
+name|afp
+operator|->
+name|af_af
+operator|==
+name|info
+operator|.
+name|rti_info
+index|[
+name|RTAX_IFA
+index|]
+operator|->
+name|sa_family
+operator|&&
+name|afp
+operator|->
+name|af_status
+operator|!=
+name|ether_status
+condition|)
+block|{
 name|p
 operator|=
 name|afp
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -3272,6 +3310,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 for|for
 control|(
@@ -3287,18 +3326,21 @@ name|p
 operator|++
 control|)
 block|{
-name|ifr
-operator|.
-name|ifr_addr
-operator|.
-name|sa_family
-operator|=
+if|if
+condition|(
 name|p
 operator|->
 name|af_af
-expr_stmt|;
-if|if
-condition|(
+operator|==
+name|info
+operator|.
+name|rti_info
+index|[
+name|RTAX_IFA
+index|]
+operator|->
+name|sa_family
+operator|&&
 name|p
 operator|->
 name|af_status
@@ -3332,6 +3374,27 @@ condition|)
 name|ether_status
 argument_list|()
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|afp
+operator|&&
+operator|!
+name|p
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s has no %s IFA address!"
+argument_list|,
+name|name
+argument_list|,
+name|afp
+operator|->
+name|af_name
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -3672,7 +3735,13 @@ operator|!
 name|force
 condition|)
 return|return;
-comment|/* warnx("%s has no AF_IPX IFA address!", name); */
+name|warnx
+argument_list|(
+literal|"%s has no AF_IPX IFA address!"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|sipx
 operator|=
 operator|&
