@@ -120,6 +120,7 @@ comment|/*  * This interface is for merging with malloc() someday.  * Even if we
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|contigmalloc1
