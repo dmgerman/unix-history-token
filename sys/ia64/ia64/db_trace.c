@@ -387,8 +387,13 @@ name|newsof
 expr_stmt|;
 if|if
 condition|(
-operator|!
+operator|(
 name|callpc
+operator|>>
+literal|61
+operator|)
+operator|!=
+literal|7
 condition|)
 break|break;
 block|}
