@@ -682,8 +682,12 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ex: Adding board at 0x%03x, irq %d\n"
+literal|"ex: Adding board at 0x%03lx, irq %d\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ioport
 argument_list|,
 name|irq
