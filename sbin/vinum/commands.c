@@ -2932,7 +2932,7 @@ name|type
 operator|=
 name|plex_object
 expr_stmt|;
-comment|/* it's a subdisk */
+comment|/* it's a plex */
 name|message
 operator|->
 name|state
@@ -4571,6 +4571,14 @@ operator|-
 literal|1
 decl_stmt|;
 name|char
+name|oldname
+index|[
+name|MAXNAME
+operator|+
+literal|8
+index|]
+decl_stmt|;
+name|char
 name|newname
 index|[
 name|MAXNAME
@@ -5077,11 +5085,20 @@ argument_list|,
 name|sdno
 argument_list|)
 expr_stmt|;
-name|vinum_rename_2
+name|sprintf
 argument_list|(
+name|oldname
+argument_list|,
+literal|"%s"
+argument_list|,
 name|sd
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+name|vinum_rename_2
+argument_list|(
+name|oldname
 argument_list|,
 name|newname
 argument_list|)
@@ -5155,11 +5172,20 @@ argument_list|,
 name|plexno
 argument_list|)
 expr_stmt|;
-name|vinum_rename_2
+name|sprintf
 argument_list|(
+name|oldname
+argument_list|,
+literal|"%s"
+argument_list|,
 name|plex
 operator|.
 name|name
+argument_list|)
+expr_stmt|;
+name|vinum_rename_2
+argument_list|(
+name|oldname
 argument_list|,
 name|newname
 argument_list|)
