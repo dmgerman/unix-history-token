@@ -382,6 +382,7 @@ name|skey
 operator|*
 name|mp
 operator|,
+specifier|const
 name|char
 operator|*
 name|name
@@ -420,6 +421,7 @@ name|skey
 operator|*
 name|mp
 operator|,
+specifier|const
 name|char
 operator|*
 name|name
@@ -443,6 +445,7 @@ name|skey
 operator|*
 name|mp
 operator|,
+specifier|const
 name|char
 operator|*
 name|name
@@ -465,14 +468,17 @@ name|char
 operator|*
 name|user
 operator|,
+specifier|const
 name|char
 operator|*
 name|port
 operator|,
+specifier|const
 name|char
 operator|*
 name|host
 operator|,
+specifier|const
 name|char
 operator|*
 name|addr
@@ -488,6 +494,7 @@ name|skey_getpass
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|prompt

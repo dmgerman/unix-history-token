@@ -163,6 +163,7 @@ name|skey
 modifier|*
 name|mp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -280,6 +281,7 @@ name|skey
 modifier|*
 name|mp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -380,6 +382,7 @@ name|skey
 modifier|*
 name|mp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -882,9 +885,14 @@ argument_list|,
 name|tm
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|" %s %s"
 argument_list|,
