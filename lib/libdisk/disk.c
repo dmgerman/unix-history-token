@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.27 1997/02/22 15:06:32 peter Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.28 1998/01/16 12:50:36 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -2029,6 +2029,20 @@ case|:
 return|return
 literal|"ext2fs"
 return|;
+case|case
+literal|166
+case|:
+return|return
+literal|"OpenBSD FFS"
+return|;
+comment|/* 0xA6 */
+case|case
+literal|182
+case|:
+return|return
+literal|"OpenBSD"
+return|;
+comment|/* dedicated */
 case|case
 literal|183
 case|:
