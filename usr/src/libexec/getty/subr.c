@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	5.1 (Berkeley) %G%"
+literal|"@(#)subr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -702,7 +702,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|'\0377'
+literal|'\377'
 expr_stmt|;
 block|}
 block|}
