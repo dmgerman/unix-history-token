@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.17 %G%"
+literal|"@(#)interp.c 1.18 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6090,10 +6090,8 @@ operator|==
 literal|0
 condition|)
 comment|/* default case => error */
-name|ERROR
+name|CASERNG
 argument_list|(
-literal|"Label of %D not found in case\n"
-argument_list|,
 name|tl1
 argument_list|)
 expr_stmt|;
@@ -6186,10 +6184,8 @@ operator|==
 literal|0
 condition|)
 comment|/* default case => error */
-name|ERROR
+name|CASERNG
 argument_list|(
-literal|"Label of %D not found in case\n"
-argument_list|,
 name|tl1
 argument_list|)
 expr_stmt|;
@@ -6282,10 +6278,8 @@ operator|==
 literal|0
 condition|)
 comment|/* default case => error */
-name|ERROR
+name|CASERNG
 argument_list|(
-literal|"Label of %D not found in case\n"
-argument_list|,
 name|tl1
 argument_list|)
 expr_stmt|;
