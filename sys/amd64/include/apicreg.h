@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MACHINE_APIC_H_
+name|_MACHINE_APICREG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MACHINE_APIC_H_
+name|_MACHINE_APICREG_H_
 end_define
 
 begin_comment
@@ -426,6 +426,59 @@ value|0xfee00000
 end_define
 
 begin_comment
+comment|/* constants relating to APIC ID registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_ID_MASK
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ID_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ID_CLUSTER
+value|0xf0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ID_CLUSTER_ID
+value|0x0f
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_MAX_CLUSTER
+value|0xe
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_MAX_INTRACLUSTER_ID
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ID_CLUSTER_SHIFT
+value|4
+end_define
+
+begin_comment
 comment|/* fields in VER */
 end_comment
 
@@ -448,6 +501,49 @@ define|#
 directive|define
 name|MAXLVTSHIFT
 value|16
+end_define
+
+begin_comment
+comment|/* fields in LDR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_LDR_RESERVED
+value|0x00ffffff
+end_define
+
+begin_comment
+comment|/* fields in DFR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_DFR_RESERVED
+value|0x0fffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_DFR_MODEL_MASK
+value|0xf0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_DFR_MODEL_FLAT
+value|0xf0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_DFR_MODEL_CLUSTER
+value|0x00000000
 end_define
 
 begin_comment
@@ -789,24 +885,6 @@ define|#
 directive|define
 name|APIC_ICRLO_RESV_MASK
 value|(APIC_RESV1_MASK | APIC_RESV2_MASK)
-end_define
-
-begin_comment
-comment|/* fields in ICR_HIGH */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|APIC_ID_MASK
-value|0xff000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|APIC_ID_SHIFT
-value|24
 end_define
 
 begin_comment
@@ -1722,7 +1800,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_APIC_H_ */
+comment|/* _MACHINE_APICREG_H_ */
 end_comment
 
 end_unit

@@ -233,6 +233,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -269,18 +275,6 @@ begin_include
 include|#
 directive|include
 file|<machine/vm86.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_ifdef
@@ -2645,11 +2639,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lapic.id = %08x\n"
+literal|"apic id = %02x\n"
 argument_list|,
-name|lapic
-operator|.
-name|id
+name|PCPU_GET
+argument_list|(
+name|apic_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3091,11 +3086,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lapic.id = %08x\n"
+literal|"apic id = %02x\n"
 argument_list|,
-name|lapic
-operator|.
-name|id
+name|PCPU_GET
+argument_list|(
+name|apic_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

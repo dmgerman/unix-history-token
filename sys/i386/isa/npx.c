@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -148,22 +154,11 @@ directive|include
 file|<sys/user.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<machine/asmacros.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -195,22 +190,11 @@ directive|include
 file|<machine/psl.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|<machine/clock.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -235,12 +219,6 @@ include|#
 directive|include
 file|<machine/ucontext.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
 
 begin_include
 include|#
@@ -276,15 +254,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
-file|<i386/isa/intr_machdep.h>
+file|<machine/intr_machdep.h>
 end_include
 
 begin_ifdef
@@ -784,12 +757,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_function_decl
 specifier|static
 name|void
@@ -800,11 +767,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -890,12 +852,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 specifier|volatile
@@ -911,11 +867,6 @@ name|u_int
 name|npx_traps_while_probing
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -953,12 +904,6 @@ name|npx_irq13
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_decl_stmt
 name|alias_for_inthand_t
 name|probetrap
@@ -968,15 +913,6 @@ end_decl_stmt
 begin_asm
 asm|__asm("								\n\ 	.text							\n\ 	.p2align 2,0x90						\n\ 	.type	" __XSTRING(CNAME(probetrap)) ",@function	\n\ " __XSTRING(CNAME(probetrap)) ":				\n\ 	ss							\n\ 	incl	" __XSTRING(CNAME(npx_traps_while_probing)) "	\n\ 	fnclex							\n\ 	iret							\n\ ");
 end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SMP */
-end_comment
 
 begin_comment
 comment|/*  * Identify routine.  Create a connection point on our parent for probing.  */
@@ -1029,12 +965,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
 begin_comment
 comment|/*  * Do minimal handling of npx interrupts to convert them to traps.  */
 end_comment
@@ -1056,14 +986,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|SMP
 name|npx_intrs_while_probing
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * The BUSY# latch must be cleared in all cases so that the next 	 * unmasked npx exception causes an interrupt. 	 */
 ifdef|#
 directive|ifdef
@@ -1131,15 +1056,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !SMP */
-end_comment
-
 begin_comment
 comment|/*  * Probe routine.  Initialize cr0 to give correct behaviour for [f]wait  * whether the device exists or not (XXX should be elsewhere).  Set flags  * to tell npxattach() what to do.  Modify device struct if npx doesn't  * need to use interrupts.  Return 0 if device exists.  */
 end_comment
@@ -1155,9 +1071,6 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
-ifndef|#
-directive|ifndef
-name|SMP
 name|struct
 name|gate_descriptor
 name|save_idt_npxtrap
@@ -1356,9 +1269,6 @@ argument_list|(
 literal|"npx: can't create intr"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !SMP */
 comment|/* 	 * Partially reset the coprocessor, if any.  Some BIOS's don't reset 	 * it after a warm boot. 	 */
 ifdef|#
 directive|ifdef
@@ -1416,26 +1326,6 @@ argument_list|,
 literal|"math processor"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* 	 * Exception 16 MUST work for SMP. 	 */
-name|npx_ex16
-operator|=
-name|hw_float
-operator|=
-name|npx_exists
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|#
-directive|else
-comment|/* !SMP */
 comment|/* 	 * Don't use fwait here because it might hang. 	 * Don't use fnop here because it usually hangs if there is no FPU. 	 */
 name|DELAY
 argument_list|(
@@ -1600,6 +1490,22 @@ index|]
 operator|=
 name|save_idt_npxtrap
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"npx0 cannot use IRQ 13 on an SMP system"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1610,6 +1516,22 @@ comment|/* 			 * Worse, even IRQ13 is broken.  Use emulator. 			 */
 block|}
 block|}
 comment|/* 	 * Probe failed, but we want to get to npxattach to initialize the 	 * emulator and say that it has been installed.  XXX handle devices 	 * that aren't really devices better. 	 */
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"npx0 cannot be emulated on an SMP system"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* FALLTHROUGH */
 name|no_irq13
 label|:
@@ -1631,36 +1553,25 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX hack around brokenness of bus_teardown_intr().  If we left the 	 * irq active then we would get it instead of exception 16. 	 */
 block|{
-name|register_t
-name|crit
+name|struct
+name|intsrc
+modifier|*
+name|isrc
 decl_stmt|;
-name|crit
+name|isrc
 operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
-name|mtx_lock_spin
+name|intr_lookup_source
 argument_list|(
-operator|&
-name|icu_lock
-argument_list|)
-expr_stmt|;
-name|INTRDIS
-argument_list|(
-literal|1
-operator|<<
 name|irq_num
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|isrc
+operator|->
+name|is_pic
+operator|->
+name|pic_disable_source
 argument_list|(
-operator|&
-name|icu_lock
-argument_list|)
-expr_stmt|;
-name|intr_restore
-argument_list|(
-name|crit
+name|isrc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1691,9 +1602,6 @@ operator|(
 literal|0
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* SMP */
 block|}
 end_function
 

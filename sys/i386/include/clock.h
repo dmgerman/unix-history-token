@@ -95,24 +95,6 @@ name|wall_cmos_clock
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|apic_8254_intr
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Driver to clock driver interface.  */
 end_comment

@@ -1797,9 +1797,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|SMP
 name|u_int64_t
 name|apicbase
 decl_stmt|;
@@ -1823,8 +1820,6 @@ argument_list|,
 name|apicbase
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
