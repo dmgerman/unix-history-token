@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.4 (Berkeley) %G%"
+literal|"@(#)command.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1829,6 +1829,9 @@ name|c
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cmdbuf
@@ -1841,6 +1844,9 @@ name|current_file
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|cmdbuf
