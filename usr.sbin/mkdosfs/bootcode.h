@@ -1040,15 +1040,15 @@ literal|0x00
 block|,
 literal|0x00
 block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
+literal|0x00
+block|,
 literal|0x55
 block|,
 literal|0xaa
-block|,
-literal|0x00
-block|,
-literal|0x00
-block|,
-literal|0x00
 block|, }
 decl_stmt|;
 end_decl_stmt
