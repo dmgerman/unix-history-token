@@ -1577,17 +1577,18 @@ name|fieldattr
 condition|)
 block|{
 comment|/* Should we display? */
+comment|/* Display translated data */
 name|addch
 argument_list|(
 name|disp_asc
 index|[
+name|GetTerminalPointer
+argument_list|(
 name|p
-operator|->
-name|data
+argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Display translated data */
 block|}
 else|else
 block|{
@@ -1795,9 +1796,10 @@ operator|++
 operator|=
 name|disp_asc
 index|[
+name|GetTerminalPointer
+argument_list|(
 name|p
-operator|->
-name|data
+argument_list|)
 index|]
 expr_stmt|;
 block|}

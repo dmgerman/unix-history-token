@@ -29,7 +29,7 @@ name|TermAttributes
 parameter_list|(
 name|x
 parameter_list|)
-value|(TermIsStartField(x)? Terminal[x].data&0xff : \ 				    Terminal[WhereTermAttrByte(x)].data&0xff)
+value|(TermIsStartField(x)? GetTerminal(x)&0xff : \ 				    GetTerminal(WhereTermAttrByte(x))&0xff)
 end_define
 
 begin_define
@@ -39,7 +39,7 @@ name|TermIsStartField
 parameter_list|(
 name|x
 parameter_list|)
-value|(Terminal[x].data&ATTR_MASK)
+value|(GetTerminal(x)&ATTR_MASK)
 end_define
 
 begin_define
@@ -51,7 +51,7 @@ name|p
 parameter_list|,
 name|a
 parameter_list|)
-value|(Terminal[p].data = (a)|ATTR_MASK)
+value|SetTerminal(p, (a)|ATTR_MASK)
 end_define
 
 begin_define
@@ -61,7 +61,7 @@ name|TermDeleteField
 parameter_list|(
 name|p
 parameter_list|)
-value|(Terminal[p].data = 0)
+value|SetTerminal(p, 0)
 end_define
 
 begin_define
@@ -175,6 +175,15 @@ parameter_list|)
 value|NeedToRedisplayAttr(c,p,FieldAttributes(p))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(SLOWSCREEN) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -182,7 +191,17 @@ name|GetTerminal
 parameter_list|(
 name|i
 parameter_list|)
-value|Terminal[i].data
+value|GetGeneric(i, Terminal)
+end_define
+
+begin_define
+define|#
+directive|define
+name|GetTerminalPointer
+parameter_list|(
+name|p
+parameter_list|)
+value|GetGenericPointer(p)
 end_define
 
 begin_define
@@ -194,17 +213,8 @@ name|i
 parameter_list|,
 name|c
 parameter_list|)
-value|(Terminal[i].data = c)
+value|SetGeneric(i,c,Terminal)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(SLOWSCREEN) */
-end_comment
 
 end_unit
 
