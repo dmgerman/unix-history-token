@@ -963,7 +963,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|int
+name|gid_t
 name|groups
 index|[
 name|NGROUPS
