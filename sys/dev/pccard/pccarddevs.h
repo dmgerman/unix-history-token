@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.63 2003/08/14 06:26:58 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.64 2003/08/21 16:40:20 imp Exp   */
 end_comment
 
 begin_comment
@@ -37,12 +37,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_NETGEAR_2
+name|PCMCIA_VENDOR_INTERSIL
 value|0x000b
 end_define
 
 begin_comment
-comment|/* Netgear */
+comment|/* Intersil */
 end_comment
 
 begin_define
@@ -2498,6 +2498,35 @@ value|"Intel EtherExpress PRO/100"
 end_define
 
 begin_comment
+comment|/* Intersil */
+end_comment
+
+begin_comment
+comment|/* Note: The following likely is an OEM card under a different Intersil name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_INTERSIL_MA401RA
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_INTERSIL_MA401RA
+value|0x7300
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_INTERSIL_MA401RA
+value|"Netgear MA401RA"
+end_define
+
+begin_comment
 comment|/* I-O DATA */
 end_comment
 
@@ -3387,27 +3416,6 @@ define|#
 directive|define
 name|PCMCIA_STR_NETGEAR_FA411
 value|"Netgear FA411"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_NETGEAR_2_MA401RA
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_NETGEAR_2_MA401RA
-value|0x7300
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_NETGEAR_2_MA401RA
-value|"Netgear MA401RA"
 end_define
 
 begin_comment
