@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_addr.c	5.2 (Berkeley) %G%"
+literal|"@(#)inet_addr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,16 +109,11 @@ name|cp
 operator|==
 literal|'0'
 condition|)
-name|base
-operator|=
-literal|8
-operator|,
-name|cp
-operator|++
-expr_stmt|;
+block|{
 if|if
 condition|(
 operator|*
+operator|++
 name|cp
 operator|==
 literal|'x'
@@ -135,6 +130,12 @@ operator|,
 name|cp
 operator|++
 expr_stmt|;
+else|else
+name|base
+operator|=
+literal|8
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|c
