@@ -7802,8 +7802,7 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|g_detach
@@ -8045,6 +8044,7 @@ argument_list|,
 name|pp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX: Everytime you think you can improve the margin for 	 * footshooting, somebody depends on the ability to do so: 	 * savecore(8) wants to write to our swapdev so we cannot 	 * set an exclusive count :-( 	 */
 name|error
 operator|=
 name|g_access_rel
@@ -8055,7 +8055,7 @@ literal|1
 argument_list|,
 literal|1
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
