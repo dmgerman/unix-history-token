@@ -1776,7 +1776,7 @@ operator|->
 name|aac_dev
 argument_list|,
 literal|"(DiskSetEvent) event %d "
-literal|"diskset %lld creator %lld\n"
+literal|"diskset %jd creator %jd\n"
 argument_list|,
 name|aif
 operator|->
@@ -1791,8 +1791,7 @@ operator|.
 name|eventType
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|aif
 operator|->
@@ -1807,8 +1806,7 @@ operator|.
 name|DsNum
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|aif
 operator|->
