@@ -2449,17 +2449,6 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* spec-ed sustainable xfer speed */
-name|cam_sim_set_basexfer_speed
-argument_list|(
-name|sc
-operator|->
-name|sim
-argument_list|,
-literal|700
-comment|/*kb/s*/
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|xpt_bus_register
