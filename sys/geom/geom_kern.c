@@ -394,6 +394,9 @@ expr_stmt|;
 name|g_event_init
 argument_list|()
 expr_stmt|;
+name|g_ctl_init
+argument_list|()
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
