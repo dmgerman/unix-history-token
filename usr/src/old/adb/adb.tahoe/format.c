@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.3 (Berkeley) %G%"
+literal|"@(#)format.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -726,19 +726,25 @@ literal|'C'
 name|THEN
 name|printesc
 argument_list|(
-name|byte
-argument_list|(
+operator|(
 name|w
-argument_list|)
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|ELSE
 name|printc
 argument_list|(
-name|byte
-argument_list|(
+operator|(
 name|w
-argument_list|)
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
 argument_list|)
 decl_stmt|;
 name|FI
@@ -757,10 +763,13 @@ name|printf
 argument_list|(
 literal|"%-8o"
 argument_list|,
-name|byte
-argument_list|(
+operator|(
 name|w
-argument_list|)
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|dotinc
