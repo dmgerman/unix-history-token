@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.3 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,10 @@ decl_stmt|;
 name|SEGMENT
 name|segp
 decl_stmt|;
+name|oaddr
+operator|=
+literal|0
+expr_stmt|;
 name|bp
 operator|=
 name|LRU
@@ -582,6 +586,14 @@ name|bp
 operator|->
 name|page
 expr_stmt|;
+if|if
+condition|(
+name|shortp
+index|[
+literal|0
+index|]
+condition|)
+block|{
 name|oaddr
 operator|=
 name|shortp
@@ -594,6 +606,7 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -785,6 +798,14 @@ name|xbp
 operator|->
 name|page
 expr_stmt|;
+if|if
+condition|(
+name|shortp
+index|[
+literal|0
+index|]
+condition|)
+block|{
 name|oaddr
 operator|=
 name|shortp
@@ -798,6 +819,7 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* set before __put_page */
+block|}
 if|if
 condition|(
 operator|(
