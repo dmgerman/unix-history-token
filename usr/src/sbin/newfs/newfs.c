@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	5.2 (Berkeley) %G%"
+literal|"@(#)newfs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,12 @@ directive|include
 file|<disktab.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -96,6 +102,11 @@ end_define
 begin_comment
 comment|/* directory for boot blocks */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -1953,6 +1964,9 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|BOOTDIR
 name|int
 name|fd
 decl_stmt|;
@@ -2239,6 +2253,8 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
