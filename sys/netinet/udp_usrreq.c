@@ -3453,6 +3453,11 @@ name|fport
 decl_stmt|,
 name|lport
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
