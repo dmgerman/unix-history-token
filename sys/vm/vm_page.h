@@ -1599,19 +1599,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_set_dirty
-parameter_list|(
-name|vm_page_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_clear_dirty
 parameter_list|(
 name|vm_page_t
