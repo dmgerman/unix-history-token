@@ -144,6 +144,10 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
 name|timeval
 operator|*
 operator|)
@@ -216,8 +220,15 @@ specifier|static
 name|int
 name|settime
 parameter_list|(
+name|p
+parameter_list|,
 name|tv
 parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 name|struct
 name|timeval
 modifier|*
@@ -274,9 +285,16 @@ expr_stmt|;
 comment|/* 	 * If the system is secure, we do not allow the time to be  	 * set to a value earlier than 1 second less than the highest 	 * time we have yet seen. The worst a miscreant can do in 	 * this circumstance is "freeze" time. He couldn't go 	 * back to the past. 	 * 	 * We similarly do not allow the clock to be stepped more 	 * than one second, nor more than once per second. This allows 	 * a miscreant to make the clock march double-time, but no worse. 	 */
 if|if
 condition|(
-name|securelevel
-operator|>
+name|securelevel_gt
+argument_list|(
+name|p
+operator|->
+name|p_ucred
+argument_list|,
 literal|1
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -749,6 +767,10 @@ name|error
 operator|=
 name|settime
 argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
 operator|&
 name|atv
 argument_list|)
@@ -1732,6 +1754,10 @@ name|error
 operator|=
 name|settime
 argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
 operator|&
 name|atv
 argument_list|)
