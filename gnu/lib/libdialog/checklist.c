@@ -101,7 +101,7 @@ name|int
 name|list_height
 parameter_list|,
 name|int
-name|item_no
+name|cnt
 parameter_list|,
 name|void
 modifier|*
@@ -152,6 +152,10 @@ literal|0
 decl_stmt|,
 name|max_choice
 decl_stmt|,
+name|item_no
+init|=
+literal|0
+decl_stmt|,
 modifier|*
 name|status
 decl_stmt|;
@@ -177,6 +181,8 @@ name|char
 modifier|*
 modifier|*
 name|items
+init|=
+name|NULL
 decl_stmt|;
 name|dialogMenuItem
 modifier|*
@@ -222,10 +228,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|draw
+label|:
 comment|/* Previous calling syntax, e.g. just a list of strings? */
 if|if
 condition|(
-name|item_no
+name|cnt
 operator|>=
 literal|0
 condition|)
@@ -237,6 +245,10 @@ expr_stmt|;
 name|ditems
 operator|=
 name|NULL
+expr_stmt|;
+name|item_no
+operator|=
+name|cnt
 expr_stmt|;
 comment|/* Initializes status */
 for|for
@@ -280,13 +292,18 @@ name|item_no
 operator|=
 name|abs
 argument_list|(
-name|item_no
+name|cnt
 argument_list|)
 expr_stmt|;
 name|ditems
 operator|=
 name|it
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|items
+condition|)
 name|items
 operator|=
 operator|(
@@ -623,8 +640,6 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|draw
-label|:
 ifdef|#
 directive|ifdef
 name|HAVE_NCURSES

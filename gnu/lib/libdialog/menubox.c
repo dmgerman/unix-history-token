@@ -104,7 +104,7 @@ name|int
 name|menu_height
 parameter_list|,
 name|int
-name|item_no
+name|cnt
 parameter_list|,
 name|void
 modifier|*
@@ -163,6 +163,8 @@ literal|0
 decl_stmt|,
 name|max_choice
 decl_stmt|,
+name|item_no
+decl_stmt|,
 name|redraw_menu
 init|=
 name|FALSE
@@ -184,11 +186,15 @@ name|char
 modifier|*
 modifier|*
 name|items
+init|=
+name|NULL
 decl_stmt|;
 name|dialogMenuItem
 modifier|*
 name|ditems
 decl_stmt|;
+name|draw
+label|:
 if|if
 condition|(
 name|ch
@@ -211,7 +217,7 @@ expr_stmt|;
 comment|/* If item_no is a positive integer, use old item specification format */
 if|if
 condition|(
-name|item_no
+name|cnt
 operator|>=
 literal|0
 condition|)
@@ -224,6 +230,10 @@ name|ditems
 operator|=
 name|NULL
 expr_stmt|;
+name|item_no
+operator|=
+name|cnt
+expr_stmt|;
 block|}
 comment|/* It's the new specification format - fake the rest of the code out */
 else|else
@@ -232,13 +242,18 @@ name|item_no
 operator|=
 name|abs
 argument_list|(
-name|item_no
+name|cnt
 argument_list|)
 expr_stmt|;
 name|ditems
 operator|=
 name|it
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|items
+condition|)
 name|items
 operator|=
 operator|(
@@ -537,8 +552,6 @@ operator|)
 operator|/
 literal|2
 expr_stmt|;
-name|draw
-label|:
 ifdef|#
 directive|ifdef
 name|HAVE_NCURSES
