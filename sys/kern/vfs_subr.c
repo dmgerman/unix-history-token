@@ -8279,10 +8279,33 @@ condition|(
 name|vp
 operator|->
 name|v_usecount
-operator|==
+operator|!=
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|vprint
+argument_list|(
+literal|"vrele: negative ref count"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"vrele: negative ref cnt"
+argument_list|)
+expr_stmt|;
+block|}
 name|v_incr_usecount
 argument_list|(
 name|vp
@@ -8291,7 +8314,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We must call VOP_INACTIVE with the node locked. Mark 		 * as VI_DOINGINACT to avoid recursion. 		 */
+comment|/* 	 * We must call VOP_INACTIVE with the node locked. Mark 	 * as VI_DOINGINACT to avoid recursion. 	 */
 if|if
 condition|(
 name|vn_lock
@@ -8359,32 +8382,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-name|vprint
-argument_list|(
-literal|"vrele: negative ref count"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"vrele: negative ref cnt"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
