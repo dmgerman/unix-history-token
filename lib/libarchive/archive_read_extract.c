@@ -223,6 +223,9 @@ block|{
 name|mode_t
 name|umask
 decl_stmt|;
+name|mode_t
+name|default_dir_mode
+decl_stmt|;
 name|struct
 name|archive_string
 name|mkdirpath
@@ -806,6 +809,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Read the current umask. */
+name|extract
+operator|->
+name|default_dir_mode
+operator|=
+name|DEFAULT_DIR_MODE
+operator|&
+operator|~
+name|extract
+operator|->
+name|umask
+expr_stmt|;
 name|extract
 operator|->
 name|pst
@@ -1841,6 +1855,9 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+name|mode_t
+name|mode
+decl_stmt|;
 name|extract
 operator|=
 name|a
@@ -1943,6 +1960,30 @@ argument_list|(
 name|entry
 argument_list|)
 expr_stmt|;
+name|mode
+operator|=
+name|st
+operator|->
+name|st_mode
+expr_stmt|;
+comment|/* Obey umask unless ARCHIVE_EXTRACT_PERM for explicit dirs. */
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|ARCHIVE_EXTRACT_PERM
+operator|)
+operator|==
+literal|0
+condition|)
+name|mode
+operator|&=
+operator|~
+name|extract
+operator|->
+name|umask
+expr_stmt|;
 name|extract
 operator|->
 name|pst
@@ -1960,9 +2001,7 @@ name|p
 argument_list|,
 name|st
 argument_list|,
-name|st
-operator|->
-name|st_mode
+name|mode
 argument_list|,
 name|flags
 argument_list|)
@@ -2094,7 +2133,9 @@ name|s
 argument_list|,
 name|NULL
 argument_list|,
-name|DEFAULT_DIR_MODE
+name|extract
+operator|->
+name|default_dir_mode
 argument_list|,
 literal|0
 argument_list|)
@@ -2268,11 +2309,6 @@ operator|->
 name|mode
 operator|=
 name|mode
-operator|&
-operator|~
-name|extract
-operator|->
-name|umask
 expr_stmt|;
 name|le
 operator|->
@@ -2494,6 +2530,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* Terminate path name. */
+comment|/* Note that implicit dirs always obey the umask. */
 name|r
 operator|=
 name|mkdirpath_recursive
@@ -2504,7 +2541,9 @@ name|path
 argument_list|,
 name|NULL
 argument_list|,
-name|DEFAULT_DIR_MODE
+name|extract
+operator|->
+name|default_dir_mode
 argument_list|,
 literal|0
 argument_list|)
