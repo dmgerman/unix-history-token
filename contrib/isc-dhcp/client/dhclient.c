@@ -19,7 +19,8 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.44.2.39 1999/06/22 13:36:46 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.44.2.44 2000/01/26 12:51:11 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$FreeBSD$\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +31,10 @@ end_endif
 
 begin_comment
 comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
@@ -805,6 +810,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|log_perror
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Default to the DHCP/BOOTP port. */
 if|if
 condition|(
@@ -9749,7 +9759,7 @@ literal|"  server-name \"%s\";\n"
 argument_list|,
 name|lease
 operator|->
-name|filename
+name|server_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -10094,9 +10104,15 @@ argument_list|)
 expr_stmt|;
 name|fd
 operator|=
-name|creat
+name|open
 argument_list|(
 name|scriptName
+argument_list|,
+name|O_EXCL
+operator||
+name|O_CREAT
+operator||
+name|O_WRONLY
 argument_list|,
 literal|0600
 argument_list|)
@@ -10107,10 +10123,27 @@ condition|(
 name|fd
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|==
+name|EEXIST
 condition|)
 do|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"can't create temporary script %s: %m"
+argument_list|,
+name|scriptName
+argument_list|)
+expr_stmt|;
 name|scriptFile
 operator|=
 name|fdopen
