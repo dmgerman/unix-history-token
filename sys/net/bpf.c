@@ -1212,6 +1212,9 @@ modifier|*
 name|d
 decl_stmt|;
 block|{
+name|int
+name|error
+decl_stmt|;
 name|struct
 name|bpf_d
 modifier|*
@@ -1243,8 +1246,8 @@ name|bd_promisc
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|ifpromisc
 argument_list|(
 name|bp
@@ -1253,13 +1256,39 @@ name|bif_ifp
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|error
+operator|!=
+name|ENXIO
 condition|)
-comment|/* 			 * Something is really wrong if we were able to put 			 * the driver into promiscuous mode, but can't 			 * take it out. 			 */
-name|panic
+block|{
+comment|/* 			 * ENXIO can happen if a pccard is unplugged 			 * Something is really wrong if we were able to put 			 * the driver into promiscuous mode, but can't 			 * take it out. 			 */
+name|printf
 argument_list|(
-literal|"bpf: ifpromisc failed"
+literal|"%s%d: ifpromisc failed %d\n"
+argument_list|,
+name|bp
+operator|->
+name|bif_ifp
+operator|->
+name|if_name
+argument_list|,
+name|bp
+operator|->
+name|bif_ifp
+operator|->
+name|if_unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Remove d from the interface's descriptor list. */
 name|p
