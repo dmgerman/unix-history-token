@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -701,6 +707,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -3810,6 +3823,7 @@ name|nxtfld
 parameter_list|(
 name|s
 parameter_list|)
+name|unsigned
 name|char
 modifier|*
 name|s
@@ -3825,10 +3839,12 @@ condition|(
 operator|*
 name|s
 operator|&&
+operator|!
+name|isspace
+argument_list|(
 operator|*
 name|s
-operator|>
-literal|' '
+argument_list|)
 condition|)
 name|s
 operator|++
@@ -3844,10 +3860,11 @@ condition|(
 operator|*
 name|s
 operator|&&
+name|isspace
+argument_list|(
 operator|*
 name|s
-operator|<=
-literal|' '
+argument_list|)
 condition|)
 name|s
 operator|++
