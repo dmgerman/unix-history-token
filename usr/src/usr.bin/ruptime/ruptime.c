@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.14 (Berkeley) 83/07/01"
+literal|"@(#)ruptime.c	4.15 (Berkeley) 83/11/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ end_include
 begin_decl_stmt
 name|DIR
 modifier|*
-name|etc
+name|dirp
 decl_stmt|;
 end_decl_stmt
 
@@ -160,7 +160,7 @@ name|down
 parameter_list|(
 name|h
 parameter_list|)
-value|(now - (h)->hs_wd->wd_recvtime> 5 * 60)
+value|(now - (h)->hs_wd->wd_recvtime> 11 * 60)
 end_define
 
 begin_function
@@ -380,7 +380,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|etc
+name|dirp
 operator|=
 name|opendir
 argument_list|(
@@ -389,14 +389,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|etc
+name|dirp
 operator|==
 name|NULL
 condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/etc"
+name|RWHODIR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -411,7 +411,7 @@ name|dp
 operator|=
 name|readdir
 argument_list|(
-name|etc
+name|dirp
 argument_list|)
 condition|)
 block|{
