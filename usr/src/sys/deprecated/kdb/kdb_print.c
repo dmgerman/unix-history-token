@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_print.c	7.1	86/11/20	*/
+comment|/*	kdb_print.c	7.2	86/11/20	*/
 end_comment
 
 begin_include
@@ -8,6 +8,13 @@ include|#
 directive|include
 file|"../kdb/defs.h"
 end_include
+
+begin_decl_stmt
+name|char
+modifier|*
+name|BADRAD
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|ADDR
@@ -349,37 +356,19 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
 name|adrval
-operator|>=
+operator|<
 literal|2
-operator|&&
-name|adrval
-operator|<=
-literal|16
 operator|||
 name|adrval
-operator|<=
-operator|-
-literal|2
-operator|&&
-name|adrval
-operator|>=
-operator|-
+operator|>
 literal|16
-operator|)
 condition|)
-block|{
-name|printf
+name|error
 argument_list|(
-literal|"illegal radix %d base ten"
-argument_list|,
-name|radix
+name|BADRAD
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 name|radix
 operator|=
 name|adrval
@@ -399,6 +388,10 @@ case|:
 case|case
 literal|'W'
 case|:
+name|printf
+argument_list|(
+literal|"maxpos=%d"
+argument_list|,
 name|maxpos
 operator|=
 operator|(
@@ -408,6 +401,7 @@ name|adrval
 else|:
 name|MAXPOS
 operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -416,6 +410,10 @@ case|:
 case|case
 literal|'S'
 case|:
+name|printf
+argument_list|(
+literal|"maxoff=%d"
+argument_list|,
 name|maxoff
 operator|=
 operator|(
@@ -425,6 +423,7 @@ name|adrval
 else|:
 name|MAXOFF
 operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
