@@ -316,7 +316,14 @@ sizeof|sizeof
 name|errmsg
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|exp
+argument_list|)
+expr_stmt|;
 return|return
+name|exp
+operator|=
 name|NULL
 return|;
 block|}
