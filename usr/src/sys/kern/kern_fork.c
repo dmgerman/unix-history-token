@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_fork.c	6.5	84/08/29	*/
+comment|/*	kern_fork.c	6.6	85/05/27	*/
 end_comment
 
 begin_include
@@ -1085,8 +1085,10 @@ operator|=
 literal|0
 init|;
 name|n
-operator|<
-name|NOFILE
+operator|<=
+name|u
+operator|.
+name|u_lastfile
 condition|;
 name|n
 operator|++

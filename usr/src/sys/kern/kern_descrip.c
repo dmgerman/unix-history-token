@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	6.9	85/03/19	*/
+comment|/*	kern_descrip.c	6.10	85/05/27	*/
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ comment|/*  * Descriptor management.  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  *	increase NOFILE  *	eliminate u.u_error side effects  */
+comment|/*  * TODO:  *	eliminate u.u_error side effects  */
 end_comment
 
 begin_comment
@@ -452,6 +452,20 @@ name|fp
 operator|->
 name|f_count
 operator|++
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>
+name|u
+operator|.
+name|u_lastfile
+condition|)
+name|u
+operator|.
+name|u_lastfile
+operator|=
+name|fd
 expr_stmt|;
 block|}
 end_block
@@ -1130,7 +1144,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
 struct|struct
 name|a
 block|{
@@ -1151,6 +1164,14 @@ operator|.
 name|u_ap
 struct|;
 specifier|register
+name|int
+name|i
+init|=
+name|uap
+operator|->
+name|i
+decl_stmt|;
+specifier|register
 name|struct
 name|file
 modifier|*
@@ -1165,8 +1186,6 @@ name|GETF
 argument_list|(
 name|fp
 argument_list|,
-name|uap
-operator|->
 name|i
 argument_list|)
 expr_stmt|;
@@ -1181,8 +1200,6 @@ name|u
 operator|.
 name|u_pofile
 index|[
-name|uap
-operator|->
 name|i
 index|]
 expr_stmt|;
@@ -1195,8 +1212,6 @@ name|UF_MAPPED
 condition|)
 name|munmapfd
 argument_list|(
-name|uap
-operator|->
 name|i
 argument_list|)
 expr_stmt|;
@@ -1204,12 +1219,34 @@ name|u
 operator|.
 name|u_ofile
 index|[
-name|uap
-operator|->
 name|i
 index|]
 operator|=
 name|NULL
+expr_stmt|;
+while|while
+condition|(
+name|u
+operator|.
+name|u_lastfile
+operator|>=
+literal|0
+operator|&&
+name|u
+operator|.
+name|u_ofile
+index|[
+name|u
+operator|.
+name|u_lastfile
+index|]
+operator|==
+name|NULL
+condition|)
+name|u
+operator|.
+name|u_lastfile
+operator|--
 expr_stmt|;
 operator|*
 name|pf
@@ -1430,6 +1467,20 @@ name|i
 index|]
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+name|u
+operator|.
+name|u_lastfile
+condition|)
+name|u
+operator|.
+name|u_lastfile
+operator|=
+name|i
 expr_stmt|;
 return|return
 operator|(
