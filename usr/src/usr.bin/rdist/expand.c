@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.8 (Berkeley) 83/11/30"
+literal|"@(#)expand.c	4.9 (Berkeley) 83/12/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,9 +499,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|tail
-decl_stmt|,
-modifier|*
-name|opathp
 decl_stmt|;
 name|char
 name|buf
@@ -1008,10 +1005,6 @@ name|expsh
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|pathp
-operator|=
-name|opathp
 expr_stmt|;
 if|if
 condition|(

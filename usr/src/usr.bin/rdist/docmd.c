@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)docmd.c	4.10 (Berkeley) 83/11/29"
+literal|"@(#)docmd.c	4.11 (Berkeley) 83/12/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,12 +525,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|block
-modifier|*
-name|c
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -2287,11 +2281,6 @@ name|a
 decl_stmt|,
 modifier|*
 name|c
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 if|if
 condition|(

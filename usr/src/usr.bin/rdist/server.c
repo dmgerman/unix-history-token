@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.11 (Berkeley) 83/12/09"
+literal|"@(#)server.c	4.12 (Berkeley) 83/12/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,17 +146,6 @@ specifier|register
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-specifier|register
-name|struct
-name|block
-modifier|*
-name|bp
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|opts
 decl_stmt|;
 name|oumask
 operator|=
@@ -946,11 +935,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 specifier|register
 name|struct
 name|block
@@ -2629,8 +2613,6 @@ decl_stmt|,
 name|wrerr
 decl_stmt|,
 name|olderrno
-decl_stmt|,
-name|u
 decl_stmt|;
 name|off_t
 name|i
@@ -3145,10 +3127,7 @@ name|stb
 argument_list|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|(
 name|stb
 operator|.
@@ -3169,16 +3148,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|u
-operator|=
-literal|2
-expr_stmt|;
-block|}
-else|else
-name|u
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|chkparent
@@ -3613,6 +3582,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -3807,6 +3779,9 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
