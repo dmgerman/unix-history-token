@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.29	82/01/19	*/
+comment|/*	uipc_socket.c	4.30	82/01/24	*/
 end_comment
 
 begin_include
@@ -1446,7 +1446,7 @@ expr_stmt|;
 if|if
 condition|(
 name|space
-operator|==
+operator|<=
 literal|0
 operator|||
 name|sosendallatonce
