@@ -452,7 +452,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_SIG_ATOMIC_T_IN_SIGNAL_H
-value|1
+value|0
 end_define
 
 begin_comment
