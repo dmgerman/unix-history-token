@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.3 1995/02/16 01:21:44 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.4 1995/02/26 04:42:48 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3474,9 +3474,8 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 operator|(
@@ -3509,9 +3508,8 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 return|return;
 block|}
@@ -3535,9 +3533,8 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 operator|(
@@ -3568,9 +3565,8 @@ argument_list|,
 literal|0644
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 return|return;
 block|}
