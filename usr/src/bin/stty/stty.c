@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980, 1989, 1991 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980, 1989 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1989, 1991 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.18 (Berkeley) %G%"
+literal|"@(#)stty.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1239,12 +1239,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|dodisc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|debug
 init|=
 literal|0
@@ -1661,19 +1655,20 @@ if|if
 condition|(
 name|eq
 argument_list|(
+literal|"tty"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+operator|||
+name|eq
+argument_list|(
 literal|"old"
 argument_list|,
 operator|*
 name|argv
 argument_list|)
-condition|)
-block|{
-goto|goto
-name|next
-goto|;
-block|}
-if|if
-condition|(
+operator|||
 name|eq
 argument_list|(
 literal|"new"
@@ -1683,6 +1678,30 @@ name|argv
 argument_list|)
 condition|)
 block|{
+name|int
+name|nldisc
+init|=
+name|TTYDISC
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSETD
+argument_list|,
+operator|&
+name|nldisc
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserrexit
+argument_list|(
+literal|"TIOCSETD"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|next
 goto|;
@@ -3307,6 +3326,7 @@ name|ld
 operator|=
 name|unknown
 expr_stmt|;
+break|break;
 block|}
 name|put
 argument_list|(
