@@ -57,7 +57,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/signalvar.h>
 end_include
 
 begin_include
@@ -167,7 +167,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"signalvar.h"
 end_include
 
 begin_include
@@ -600,12 +600,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<vm/vm_kern.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -619,12 +613,6 @@ begin_include
 include|#
 directive|include
 file|"machine/pc/display.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_kern.h"
 end_include
 
 begin_endif

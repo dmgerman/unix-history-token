@@ -41,13 +41,16 @@ directive|include
 file|<sys/kernel.h>
 include|#
 directive|include
+file|<sys/conf.h>
+include|#
+directive|include
 file|<sys/ioctl.h>
 include|#
 directive|include
 file|<sys/proc.h>
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/signalvar.h>
 include|#
 directive|include
 file|<sys/file.h>
@@ -66,6 +69,9 @@ file|<sys/errno.h>
 include|#
 directive|include
 file|<sys/mman.h>
+include|#
+directive|include
+file|<machine/frame.h>
 include|#
 directive|include
 file|<machine/spigot.h>

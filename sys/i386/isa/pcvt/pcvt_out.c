@@ -41,6 +41,12 @@ begin_comment
 comment|/* global include */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|u_short
