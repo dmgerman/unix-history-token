@@ -5107,7 +5107,7 @@ name|AcpiInstallFixedEventHandler
 argument_list|(
 name|ACPI_EVENT_POWER_BUTTON
 argument_list|,
-name|acpi_eventhandler_power_button_for_sleep
+name|acpi_event_power_button_sleep
 argument_list|,
 name|sc
 argument_list|)
@@ -5155,7 +5155,7 @@ name|AcpiInstallFixedEventHandler
 argument_list|(
 name|ACPI_EVENT_SLEEP_BUTTON
 argument_list|,
-name|acpi_eventhandler_sleep_button_for_sleep
+name|acpi_event_sleep_button_sleep
 argument_list|,
 name|sc
 argument_list|)
@@ -7488,7 +7488,7 @@ end_comment
 
 begin_function
 name|UINT32
-name|acpi_eventhandler_power_button_for_sleep
+name|acpi_event_power_button_sleep
 parameter_list|(
 name|void
 modifier|*
@@ -7538,7 +7538,7 @@ end_function
 
 begin_function
 name|UINT32
-name|acpi_eventhandler_power_button_for_wakeup
+name|acpi_event_power_button_wake
 parameter_list|(
 name|void
 modifier|*
@@ -7588,7 +7588,7 @@ end_function
 
 begin_function
 name|UINT32
-name|acpi_eventhandler_sleep_button_for_sleep
+name|acpi_event_sleep_button_sleep
 parameter_list|(
 name|void
 modifier|*
@@ -7638,7 +7638,7 @@ end_function
 
 begin_function
 name|UINT32
-name|acpi_eventhandler_sleep_button_for_wakeup
+name|acpi_event_sleep_button_wake
 parameter_list|(
 name|void
 modifier|*

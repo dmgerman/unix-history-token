@@ -1172,7 +1172,7 @@ end_comment
 begin_function_decl
 specifier|extern
 name|UINT32
-name|acpi_eventhandler_power_button_for_sleep
+name|acpi_event_power_button_sleep
 parameter_list|(
 name|void
 modifier|*
@@ -1184,7 +1184,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|UINT32
-name|acpi_eventhandler_power_button_for_wakeup
+name|acpi_event_power_button_wake
 parameter_list|(
 name|void
 modifier|*
@@ -1196,7 +1196,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|UINT32
-name|acpi_eventhandler_sleep_button_for_sleep
+name|acpi_event_sleep_button_sleep
 parameter_list|(
 name|void
 modifier|*
@@ -1208,7 +1208,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|UINT32
-name|acpi_eventhandler_sleep_button_for_wakeup
+name|acpi_event_sleep_button_wake
 parameter_list|(
 name|void
 modifier|*
