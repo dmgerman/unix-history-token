@@ -1107,16 +1107,6 @@ name|CLS_STORAGE
 block|}
 block|,
 block|{
-literal|"wdc"
-block|,
-literal|"IDE/ESDI/MFM disk controller"
-block|,
-literal|0
-block|,
-name|CLS_STORAGE
-block|}
-block|,
-block|{
 literal|"ata"
 block|,
 literal|"ATA/ATAPI compatible disk controller"
