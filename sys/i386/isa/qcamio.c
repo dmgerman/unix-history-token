@@ -282,6 +282,16 @@ directive|include
 file|<i386/isa/qcamdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/limits.h>
+end_include
+
+begin_comment
+comment|/* XXX for bogus UCHAR_MAX checks - 					 * the types are all u_char so the 					 * tests are null */
+end_comment
+
 begin_else
 else|#
 directive|else
