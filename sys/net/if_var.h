@@ -954,24 +954,34 @@ argument|ifmultiaddr
 argument_list|)
 name|ifma_link
 expr_stmt|;
+comment|/* queue macro glue */
 name|struct
 name|sockaddr
 modifier|*
 name|ifma_addr
 decl_stmt|;
+comment|/* address this membership is for */
 name|struct
 name|sockaddr
 modifier|*
 name|ifma_lladdr
 decl_stmt|;
+comment|/* link-layer translation, if any */
 name|struct
 name|ifnet
 modifier|*
 name|ifma_ifp
 decl_stmt|;
+comment|/* back-pointer to interface */
 name|u_int
 name|ifma_refcount
 decl_stmt|;
+comment|/* reference count */
+name|void
+modifier|*
+name|ifma_protospec
+decl_stmt|;
+comment|/* protocol-specific state, if any */
 block|}
 struct|;
 end_struct
@@ -1126,6 +1136,11 @@ operator|*
 operator|,
 expr|struct
 name|sockaddr
+operator|*
+operator|,
+expr|struct
+name|ifmultiaddr
+operator|*
 operator|*
 operator|)
 argument_list|)
@@ -1477,6 +1492,26 @@ argument_list|(
 operator|(
 expr|struct
 name|ifaddr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ifmultiaddr
+modifier|*
+name|ifmaof_ifpforaddr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|,
+expr|struct
+name|ifnet
 operator|*
 operator|)
 argument_list|)
