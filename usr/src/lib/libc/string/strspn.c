@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
-end_comment
-
-begin_comment
-comment|/*  * Sys5 compat routine  */
+comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific written prior permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_if
@@ -28,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strspn.c	5.2 (Berkeley) 86/03/09"
+literal|"@(#)strspn.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +32,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_expr_stmt
 name|strspn
