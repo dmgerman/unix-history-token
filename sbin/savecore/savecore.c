@@ -131,6 +131,7 @@ value|(1024*1024)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|checkfor
 decl_stmt|,
@@ -151,6 +152,7 @@ comment|/* flags */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfound
 decl_stmt|,
