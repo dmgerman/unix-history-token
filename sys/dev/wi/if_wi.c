@@ -1014,6 +1014,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|bpfdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|if_detach
 argument_list|(
 name|ifp
