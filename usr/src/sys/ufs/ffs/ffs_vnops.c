@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	4.47	83/01/01	*/
+comment|/*	ffs_vnops.c	4.48	83/01/11	*/
 end_comment
 
 begin_include
@@ -4658,6 +4658,10 @@ argument_list|(
 name|xp
 argument_list|)
 expr_stmt|;
+name|xp
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 comment|/* 	 * 3) Unlink the source. 	 */
 name|u
@@ -4967,9 +4971,7 @@ name|bad
 label|:
 name|iput
 argument_list|(
-name|u
-operator|.
-name|u_pdir
+name|dp
 argument_list|)
 expr_stmt|;
 name|bad1
@@ -4978,7 +4980,7 @@ if|if
 condition|(
 name|xp
 condition|)
-name|irele
+name|iput
 argument_list|(
 name|xp
 argument_list|)
