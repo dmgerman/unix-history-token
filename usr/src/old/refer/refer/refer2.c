@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer2.c	4.2 (Berkeley) %G%"
+literal|"@(#)refer2.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,14 +66,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|char
-name|dr
-index|[
-literal|100
-index|]
-init|=
-literal|""
+name|usedir
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -825,7 +821,7 @@ name|one
 argument_list|,
 literal|"deliv"
 argument_list|,
-name|dr
+name|usedir
 argument_list|,
 name|QLEN
 argument_list|)
@@ -1104,7 +1100,7 @@ name|ob
 argument_list|,
 literal|"deliv"
 argument_list|,
-name|dr
+name|usedir
 argument_list|,
 name|BUFSIZ
 argument_list|)
