@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.66 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.67 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,6 +313,12 @@ name|e_from
 operator|.
 name|q_paddr
 argument_list|,
+name|RealHostName
+operator|==
+name|NULL
+condition|?
+literal|"localhost"
+else|:
 name|RealHostName
 argument_list|,
 name|e

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.26 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.27 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.26 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.27 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,6 +427,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|REALHOSTNAME
+value|(RealHostName == NULL ? "localhost" : RealHostName)
+end_define
+
 begin_expr_stmt
 name|smtp
 argument_list|(
@@ -508,7 +515,7 @@ argument_list|)
 expr_stmt|;
 name|CurHostName
 operator|=
-name|RealHostName
+name|REALHOSTNAME
 expr_stmt|;
 name|CurSmtpClient
 operator|=
@@ -527,7 +534,7 @@ name|NULL
 condition|)
 name|CurSmtpClient
 operator|=
-name|RealHostName
+name|CurHostName
 expr_stmt|;
 name|setproctitle
 argument_list|(
@@ -1039,7 +1046,7 @@ name|NULL
 condition|)
 name|sendinghost
 operator|=
-name|RealHostName
+name|REALHOSTNAME
 expr_stmt|;
 if|if
 condition|(
@@ -1111,6 +1118,10 @@ operator|>
 literal|0
 condition|)
 break|break;
+name|p
+operator|=
+name|REALHOSTNAME
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1123,7 +1134,7 @@ name|e
 argument_list|,
 literal|"Host %s didn't use HELO protocol"
 argument_list|,
-name|RealHostName
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1136,7 +1147,7 @@ name|strcasecmp
 argument_list|(
 name|sendinghost
 argument_list|,
-name|RealHostName
+name|p
 argument_list|)
 operator|!=
 literal|0
@@ -1144,7 +1155,7 @@ operator|&&
 operator|(
 name|strcasecmp
 argument_list|(
-name|RealHostName
+name|p
 argument_list|,
 literal|"localhost"
 argument_list|)
@@ -1168,7 +1179,7 @@ name|e
 argument_list|,
 literal|"Host %s claimed to be %s"
 argument_list|,
-name|RealHostName
+name|p
 argument_list|,
 name|sendinghost
 argument_list|)
@@ -2596,7 +2607,7 @@ name|c
 operator|->
 name|cmdname
 argument_list|,
-name|RealHostName
+name|REALHOSTNAME
 argument_list|,
 name|anynet_ntoa
 argument_list|(

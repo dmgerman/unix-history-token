@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.32 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.33 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.32 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.33 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1914,7 +1914,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETAUTHINFO -- get the real host name asociated with a file descriptor ** **	Uses RFC1413 protocol to try to get info from the other end. ** **	Parameters: **		fd -- the descriptor ** **	Returns: **		The user@host information associated with this descriptor. ** **	Side Effects: **		Sets RealHostName to the name of the host at the other end. */
+comment|/* **  GETAUTHINFO -- get the real host name asociated with a file descriptor ** **	Uses RFC1413 protocol to try to get info from the other end. ** **	Parameters: **		fd -- the descriptor ** **	Returns: **		The user@host information associated with this descriptor. */
 end_comment
 
 begin_if
@@ -2053,10 +2053,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|RealHostName
-operator|=
-literal|"localhost"
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2089,25 +2085,6 @@ return|return
 name|hbuf
 return|;
 block|}
-name|p
-operator|=
-name|hostnamebyanyaddr
-argument_list|(
-operator|&
-name|fa
-argument_list|)
-expr_stmt|;
-name|RealHostName
-operator|=
-name|newstr
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|RealHostAddr
-operator|=
-name|fa
-expr_stmt|;
 if|#
 directive|if
 name|IDENTPROTO
@@ -2637,6 +2614,12 @@ argument_list|,
 name|p
 argument_list|,
 name|RealHostName
+operator|==
+name|NULL
+condition|?
+literal|"localhost"
+else|:
+name|RealHostName
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2647,6 +2630,31 @@ directive|endif
 comment|/* IDENTPROTO */
 name|noident
 label|:
+if|if
+condition|(
+name|RealHostName
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"getauthinfo: NULL\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -2661,6 +2669,10 @@ name|finish
 label|:
 if|if
 condition|(
+name|RealHostName
+operator|!=
+name|NULL
+operator|&&
 name|RealHostName
 index|[
 literal|0

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.24 (Berkeley) %G%"
+literal|"@(#)headers.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2198,6 +2198,17 @@ operator|!=
 name|NULL
 condition|)
 empty_stmt|;
+elseif|else
+if|if
+condition|(
+name|RealHostName
+operator|==
+name|NULL
+condition|)
+name|name
+operator|=
+literal|"localhost"
+expr_stmt|;
 elseif|else
 if|if
 condition|(
