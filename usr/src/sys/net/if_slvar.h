@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	8.2 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_slvar.h	8.3 (Berkeley) %G%  *  * $Header: if_slvar.h,v 1.3 89/05/31 02:25:18 van Exp $  */
 end_comment
 
 begin_comment
@@ -131,95 +131,6 @@ end_define
 
 begin_comment
 comment|/* auto-enable TCP compression */
-end_comment
-
-begin_comment
-comment|/* this stuff doesn't belong here... */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLIOCGUNIT
-value|_IOR('t', 88, int)
-end_define
-
-begin_comment
-comment|/* get slip unit number */
-end_comment
-
-begin_comment
-comment|/*  * definitions of the pseudo- link-level header attached to slip  * packets grabbed by the packet filter (bpf) traffic monitor.  * These definitions pulled from BPF's "slip.h" by cgd.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLIP_HDRLEN
-value|16
-end_define
-
-begin_comment
-comment|/* BPF SLIP header length */
-end_comment
-
-begin_comment
-comment|/* offsets into BPF SLIP header */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLX_DIR
-value|0
-end_define
-
-begin_comment
-comment|/* direction; see below */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLX_CHDR
-value|1
-end_define
-
-begin_comment
-comment|/* compressed header data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHDR_LEN
-value|15
-end_define
-
-begin_comment
-comment|/* length of compressed header data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLIPDIR_IN
-value|0
-end_define
-
-begin_comment
-comment|/* incoming */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLIPDIR_OUT
-value|1
-end_define
-
-begin_comment
-comment|/* outgoing */
 end_comment
 
 begin_ifdef
