@@ -16056,8 +16056,7 @@ operator|)
 return|;
 block|}
 block|}
-block|}
-comment|/* 	 * If dhclient.conf contains media settings, we cannot 	 * abort if the interface is not set to active mode. 	 */
+comment|/* 		 * If dhclient.conf contains media settings, we cannot 		 * abort if the interface is not set to active mode. 		 */
 if|if
 condition|(
 name|ip
@@ -16077,6 +16076,16 @@ operator|(
 name|HAVELINK
 operator|)
 return|;
+block|}
+else|else
+block|{
+comment|/* 		 * IFM_AVALID is not set. We cannot check 		 * the link state. Assume HAVELINK. 		 */
+return|return
+operator|(
+name|HAVELINK
+operator|)
+return|;
+block|}
 comment|/* 	 * We really have no link. 	 */
 return|return
 operator|(
