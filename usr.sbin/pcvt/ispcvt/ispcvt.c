@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992, 2000 Hellmuth Michaelis  *  * All rights reser
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	ispcvt - check for pcvt driver running and its options  *	------------------------------------------------------  *  *	Last Edit-Date: [Mon Mar 27 16:29:18 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	ispcvt - check for pcvt driver running and its options  *	------------------------------------------------------  *  *	Last Edit-Date: [Fri Mar 31 10:24:43 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -869,6 +869,28 @@ operator|.
 name|compile_opts
 operator|&
 name|CONF_XSERVER
+operator|)
+condition|?
+literal|"ON"
+else|:
+literal|"OFF"
+argument_list|)
+expr_stmt|;
+name|next
+argument_list|()
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"PCVT_GREENSAVER      = %s"
+argument_list|,
+operator|(
+name|pcvtinfo
+operator|.
+name|compile_opts
+operator|&
+name|CONF_GREENSAVER
 operator|)
 condition|?
 literal|"ON"
