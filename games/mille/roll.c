@@ -51,24 +51,19 @@ begin_comment
 comment|/*  *	This routine rolls ndie nside-sided dice.  *  * @(#)roll.c	1.1 (Berkeley) 4/1/82  *  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|roll
-argument_list|(
-argument|ndie
-argument_list|,
-argument|nsides
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ndie
+parameter_list|,
+name|nsides
+parameter_list|)
 name|int
 name|ndie
 decl_stmt|,
 name|nsides
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|tot
@@ -95,7 +90,7 @@ return|return
 name|tot
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -51,12 +51,10 @@ begin_comment
 comment|/*  * @(#)init.c	1.1 (Berkeley) 4/1/82  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|PLAY
 modifier|*
@@ -310,14 +308,12 @@ operator|=
 literal|700
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|shuffle
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -414,14 +410,12 @@ name|DECK_SZ
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|newboard
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -825,14 +819,12 @@ name|newscore
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|newscore
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1450,7 +1442,7 @@ operator|=
 name|Window
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -51,20 +51,15 @@ begin_comment
 comment|/*  * @(#)types.c	1.1 (Berkeley) 4/1/82  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isrepair
-argument_list|(
-argument|card
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|card
+parameter_list|)
 name|CARD
 name|card
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|card
@@ -84,22 +79,17 @@ operator|==
 name|C_INIT
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|CARD
 name|safety
-argument_list|(
-argument|card
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|card
+parameter_list|)
 name|CARD
 name|card
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -162,8 +152,13 @@ name|C_RIGHT_WAY
 return|;
 block|}
 comment|/* NOTREACHED */
+name|exit
+argument_list|(
+name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -51,25 +51,56 @@ begin_comment
 comment|/*  * @(#)end.c	1.1 (Berkeley) 4/1/82  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EXTRAP
+end_ifndef
+
+begin_decl_stmt
+name|void
+name|extrapolate
+name|__P
+argument_list|(
+operator|(
+name|PLAY
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|undoex
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *	print out the score as if it was final, and add the totals for  * the end-of-games points to the user who deserves it (if any).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|finalscore
-argument_list|(
-argument|pp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pp
+parameter_list|)
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|temp
@@ -266,7 +297,7 @@ name|tot
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -292,21 +323,16 @@ begin_comment
 comment|/*  *	print out the score as if it was final, and add the totals for  * the end-of-games points to the user who deserves it (if any).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|extrapolate
-argument_list|(
-argument|pp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pp
+parameter_list|)
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|x
@@ -617,14 +643,12 @@ operator|=
 name|tot
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|undoex
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|reg
 name|PLAY
@@ -678,7 +702,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

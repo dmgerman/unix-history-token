@@ -57,30 +57,18 @@ begin_comment
 comment|/*  * @(#)varpush.c	1.1 (Berkeley) 4/1/82  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|read
-argument_list|()
-decl_stmt|,
-name|write
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *	push variables around via the routine func() on the file  * channel file.  func() is either read or write.  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|void
 name|varpush
 argument_list|(
-argument|file
+name|file
 argument_list|,
-argument|func
+name|func
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|file
 decl_stmt|;

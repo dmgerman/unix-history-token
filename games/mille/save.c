@@ -56,6 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -63,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -114,34 +132,14 @@ name|STAT
 typedef|;
 end_typedef
 
-begin_function_decl
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|int
-name|read
-argument_list|()
-decl_stmt|,
-name|write
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *	This routine saves the current game for use at a later date  */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|save
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -170,6 +168,10 @@ decl_stmt|;
 name|STAT
 name|junk
 decl_stmt|;
+name|sp
+operator|=
+name|NULL
+expr_stmt|;
 name|tp
 operator|=
 operator|&
@@ -409,11 +411,12 @@ name|tp
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|sp
 operator|=
 name|buf
+expr_stmt|;
+for|for
+control|(
 init|;
 operator|*
 name|sp
@@ -464,27 +467,22 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	This does the actual restoring.  It returns TRUE if the  * backup was made on exiting, in which case certain things must  * be cleaned up before the game starts.  */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|rest_f
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -623,7 +621,7 @@ operator|!
 name|On_exit
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

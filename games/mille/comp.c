@@ -58,12 +58,10 @@ name|V_VALUABLE
 value|40
 end_define
 
-begin_macro
+begin_function
+name|void
 name|calcmove
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|CARD
 name|card
@@ -239,6 +237,7 @@ name|C_EMPTY
 case|:
 if|if
 condition|(
+operator|(
 name|playit
 index|[
 name|i
@@ -252,6 +251,9 @@ name|op
 argument_list|,
 name|card
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|canstop
 operator|=
@@ -2186,27 +2188,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return true if the given player could conceivably win with his next card.  */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|onecard
-argument_list|(
-argument|pp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pp
+parameter_list|)
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|CARD
 name|bat
@@ -2262,6 +2259,7 @@ operator|!=
 literal|0
 operator|)
 operator|||
+operator|(
 name|bat
 operator|>=
 literal|0
@@ -2275,6 +2273,7 @@ argument_list|)
 index|]
 operator|!=
 literal|0
+operator|)
 condition|)
 switch|switch
 condition|(
@@ -2395,28 +2394,26 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|bool
 name|canplay
-argument_list|(
-argument|pp
-argument_list|,
-argument|op
-argument_list|,
-argument|card
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pp
+parameter_list|,
+name|op
+parameter_list|,
+name|card
+parameter_list|)
 name|PLAY
 modifier|*
 name|pp
 decl_stmt|,
-modifier|*
+decl|*
 name|op
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|CARD

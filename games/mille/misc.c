@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<termios.h>
 end_include
 
@@ -57,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|"mille.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unctrl.h>
 end_include
 
 begin_ifdef
@@ -105,24 +105,27 @@ begin_comment
 comment|/* VARARGS1 */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|error
-argument_list|(
-argument|str
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|str
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
+name|va_list
+name|arg
+decl_stmt|;
+name|va_start
+argument_list|(
+name|arg
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
 name|stdscr
 operator|=
 name|Score
@@ -135,6 +138,11 @@ name|ERR_X
 argument_list|,
 name|str
 argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
 name|arg
 argument_list|)
 expr_stmt|;
@@ -157,7 +165,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|CARD
@@ -394,20 +402,15 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|bool
 name|check_ext
-argument_list|(
-argument|forcomp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|forcomp
+parameter_list|)
 name|bool
 name|forcomp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -679,26 +682,21 @@ goto|goto
 name|done
 goto|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Get a yes or no answer to the given question.  Saves are  * also allowed.  Return TRUE if the answer was yes, FALSE if no.  */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|getyn
-argument_list|(
-argument|promptno
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|promptno
+parameter_list|)
 name|int
 name|promptno
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|c
@@ -840,7 +838,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Check to see if more games are desired.  If not, and game  * came from a saved file, make sure that they don't want to restore  * it.  Exit appropriately.  */
@@ -988,12 +986,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|char
 name|readch
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|cnt
@@ -1038,7 +1034,7 @@ return|return
 name|c
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
