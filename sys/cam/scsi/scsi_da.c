@@ -654,7 +654,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Sony Memory Stick adapter MSAC-US1, 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 * Sony PCG-C1VJ Internal Memory Stick Slot (MSC-U01) also 		 * has this quirk.  Make all sony MS* products use this 		 * quirk.  Reported by: TERAMOTO Masahiro 		 *<teramoto@comm.eng.osaka-u.ac.jp> (PR 23378). 		 */
+comment|/* 		 * Sony Memory Stick adapter MSAC-US1 and 		 * Sony PCG-C1VJ Internal Memory Stick Slot (MSC-U01). 		 * Make all sony MS* products use this quirk. 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -674,7 +674,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 * do not support READ_6 commands, only READ_10.  		 */
+comment|/* 		 * Sony DSC cameras (DSC-S30, DSC-S50, DSC-S70) 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -711,7 +711,7 @@ name|DA_Q_NO_6_BYTE
 block|}
 block|,
 block|{
-comment|/* 		 * the Microtech USB CameraMate does not like 		 * the sync-cache command, or READ_6. 		 */
+comment|/* 		 * Microtech USB CameraMate 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -751,7 +751,7 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Olympus digital cameras (C-3040ZOOM, C-2040ZOOM, C-1) 		 * do not support READ_6 commands, only READ_10. 		 */
+comment|/* 		 * Olympus digital cameras (C-3040ZOOM, C-2040ZOOM, C-1) 		 */
 block|{
 name|T_DIRECT
 block|,
@@ -760,6 +760,26 @@ block|,
 literal|"OLYMPUS"
 block|,
 literal|"C-*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+operator||
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * KingByte Pen Drives 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"NO BRAND"
+block|,
+literal|"PEN DRIVE"
 block|,
 literal|"*"
 block|}
