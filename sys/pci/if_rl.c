@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -197,27 +197,13 @@ directive|include
 file|<pci/if_rlreg.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Various supported device vendors/types and their names.  */
@@ -1758,7 +1744,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Turn on data xmit. 	 */
+comment|/* 	 * Turn on data xmit. 	 */
 name|MII_SET
 argument_list|(
 name|RL_MII_DIR
@@ -2077,7 +2063,7 @@ name|mii_turnaround
 operator|=
 name|RL_MII_TURNAROUND
 expr_stmt|;
-comment|/*  	 * Turn on data output. 	 */
+comment|/* 	 * Turn on data output. 	 */
 name|MII_SET
 argument_list|(
 name|RL_MII_DIR
@@ -4758,7 +4744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  *  * You know there's something wrong with a PCI bus-master chip design  * when you have to use m_devget().  *  * The receive operation is badly documented in the datasheet, so I'll  * attempt to document it here. The driver provides a buffer area and  * places its base address in the RX buffer start address register.  * The chip then begins copying frames into the RX buffer. Each frame  * is preceded by a 32-bit RX status word which specifies the length  * of the frame and certain other status bits. Each frame (starting with  * the status word) is also 32-bit aligned. The frame length is in the  * first 16 bits of the status word; the lower 15 bits correspond with  * the 'rx status register' mentioned in the datasheet.  *  * Note: to make the Alpha happy, the frame payload needs to be aligned  * on a 32-bit boundary. To achieve this, we pass RL_ETHER_ALIGN (2 bytes)  * as the offset argument to m_devget().   */
+comment|/*  * A frame has been uploaded: pass the resulting mbuf chain up to  * the higher level protocols.  *  * You know there's something wrong with a PCI bus-master chip design  * when you have to use m_devget().  *  * The receive operation is badly documented in the datasheet, so I'll  * attempt to document it here. The driver provides a buffer area and  * places its base address in the RX buffer start address register.  * The chip then begins copying frames into the RX buffer. Each frame  * is preceded by a 32-bit RX status word which specifies the length  * of the frame and certain other status bits. Each frame (starting with  * the status word) is also 32-bit aligned. The frame length is in the  * first 16 bits of the status word; the lower 15 bits correspond with  * the 'rx status register' mentioned in the datasheet.  *  * Note: to make the Alpha happy, the frame payload needs to be aligned  * on a 32-bit boundary. To achieve this, we pass RL_ETHER_ALIGN (2 bytes)  * as the offset argument to m_devget().  */
 end_comment
 
 begin_function
@@ -5005,7 +4991,7 @@ name|total_len
 operator|+
 literal|4
 expr_stmt|;
-comment|/* 		 * XXX The RealTek chip includes the CRC with every 		 * received frame, and there's no way to turn this 		 * behavior off (at least, I can't find anything in 	 	 * the manual that explains how to do it) so we have 		 * to trim off the CRC manually. 		 */
+comment|/* 		 * XXX The RealTek chip includes the CRC with every 		 * received frame, and there's no way to turn this 		 * behavior off (at least, I can't find anything in 		 * the manual that explains how to do it) so we have 		 * to trim off the CRC manually. 		 */
 name|total_len
 operator|-=
 name|ETHER_CRC_LEN
@@ -6124,7 +6110,7 @@ operator|<
 name|RL_MIN_FRAMELEN
 condition|)
 block|{
-comment|/* 		 * Make security concious people happy: zero out the 		 * bytes in the pad area, since we don't know what 		 * this mbuf cluster buffer's previous user might 		 * have left in it. 	 	 */
+comment|/* 		 * Make security concious people happy: zero out the 		 * bytes in the pad area, since we don't know what 		 * this mbuf cluster buffer's previous user might 		 * have left in it. 		 */
 name|bzero
 argument_list|(
 name|mtod
@@ -6298,7 +6284,7 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Transmit the frame. 	 	 */
+comment|/* 		 * Transmit the frame. 		 */
 name|bus_dmamap_create
 argument_list|(
 name|sc
