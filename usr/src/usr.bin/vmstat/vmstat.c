@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.1 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2702,7 +2702,7 @@ directive|ifdef
 name|vax
 name|printf
 argument_list|(
-literal|"%9d pseduo-dma dz interrupts\n"
+literal|"%9d pseudo-dma dz interrupts\n"
 argument_list|,
 name|sum
 operator|.
