@@ -372,7 +372,7 @@ name|next
 operator|=
 name|inpcb
 operator|.
-name|list
+name|inp_list
 operator|.
 name|le_next
 control|)
