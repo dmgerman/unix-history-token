@@ -40,7 +40,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(N_GETMAGIC(x) == OMAGIC || N_GETMAGIC(x) == NMAGIC \ 	 || N_GETMAGIC(x) == ZMAGIC \ 	 ? ((x).a_entry< (x).a_text ? 0 : (x).a_entry& ~TARGET_PAGE_SIZE) \ 	 : TARGET_PAGE_SIZE + sizeof(struct external_exec))
+value|(N_GETMAGIC(x) == OMAGIC || N_GETMAGIC(x) == NMAGIC \ 	 || N_GETMAGIC(x) == ZMAGIC \ 	 ? ((x).a_entry< (x).a_text ? 0 : (x).a_entry& ~TARGET_PAGE_SIZE) \ 	 : TARGET_PAGE_SIZE)
 end_define
 
 begin_define
