@@ -4573,7 +4573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* [2753891]  * Routine to mark a FAT16 or FAT32 volume as "clean" or "dirty" by manipulating the upper bit  * of the FAT entry for cluster 1.  Note that this bit is not defined for FAT12 volumes, which  * are always assumed to be dirty.  *  * The fatentry() routine only works on cluster numbers that a file could occupy, so it won't  * manipulate the entry for cluster 1.  So we have to do it here.  The code is ripped from  * fatentry(), and tailored for cluster 1.  *  * Inputs:  *     pmp     The MS-DOS volume to mark  *     dirty   Non-zero if the volume should be marked dirty; zero if it should be marked clean.  *  * Result:  *     0       Success  *     EROFS   Volume is read-only  *     ?       (other errors from called routines)  */
+comment|/*-  * Routine to mark a FAT16 or FAT32 volume as "clean" or "dirty" by  * manipulating the upper bit of the FAT entry for cluster 1.  Note that  * this bit is not defined for FAT12 volumes, which are always assumed to  * be dirty.  *  * The fatentry() routine only works on cluster numbers that a file could  * occupy, so it won't manipulate the entry for cluster 1.  So we have to do  * it here.  The code was stolen from fatentry() and tailored for cluster 1.  *  * Inputs:  *	pmp	The MS-DOS volume to mark  *	dirty	Non-zero if the volume should be marked dirty; zero if it  *		should be marked clean  *  * Result:  *	0	Success  *	EROFS	Volume is read-only  *	?	(other errors from called routines)  */
 end_comment
 
 begin_function
@@ -4589,8 +4589,10 @@ name|int
 name|dirty
 parameter_list|)
 block|{
-name|int
-name|error
+name|struct
+name|buf
+modifier|*
+name|bp
 decl_stmt|;
 name|u_long
 name|bn
@@ -4600,16 +4602,13 @@ decl_stmt|,
 name|bsize
 decl_stmt|,
 name|byteoffset
-decl_stmt|;
-name|u_long
+decl_stmt|,
 name|fatval
 decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|bp
+name|int
+name|error
 decl_stmt|;
-comment|/* FAT12 does not support a "clean" bit, so don't do anything */
+comment|/* 	 * FAT12 does not support a "clean" bit, so don't do anything for 	 * FAT12. 	 */
 if|if
 condition|(
 name|FAT12
@@ -4618,9 +4617,11 @@ name|pmp
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
-comment|/* Can't change the bit on a read-only filesystem */
+comment|/* Can't change the bit on a read-only filesystem. */
 if|if
 condition|(
 name|pmp
@@ -4630,9 +4631,11 @@ operator|&
 name|MSDOSFSMNT_RONLY
 condition|)
 return|return
+operator|(
 name|EROFS
+operator|)
 return|;
-comment|/* Fetch the block containing the FAT entry */
+comment|/* 	 * Fetch the block containing the FAT entry.  It is given by the 	 * pseudo-cluster 1. 	 */
 name|byteoffset
 operator|=
 name|FATOFS
@@ -4642,7 +4645,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Find the location of cluster 1 */
 name|fatblock
 argument_list|(
 name|pmp
@@ -4693,7 +4695,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* Get the current value of the FAT entry and set/clear the high bit */
+comment|/* 	 * Get the current value of the FAT entry and set/clear the relevant 	 * bit.  Dirty means clear the "clean" bit; clean means set the 	 * "clean" bit. 	 */
 if|if
 condition|(
 name|FAT32
@@ -4702,7 +4704,7 @@ name|pmp
 argument_list|)
 condition|)
 block|{
-comment|/* FAT32 uses bit 27 */
+comment|/* FAT32 uses bit 27. */
 name|fatval
 operator|=
 name|getulong
@@ -4724,13 +4726,11 @@ name|fatval
 operator|&=
 literal|0xF7FFFFFF
 expr_stmt|;
-comment|/* dirty means clear the "clean" bit */
 else|else
 name|fatval
 operator||=
 literal|0x08000000
 expr_stmt|;
-comment|/* clean means set the "clean" bit */
 name|putulong
 argument_list|(
 operator|&
@@ -4747,7 +4747,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Must be FAT16; use bit 15 */
+comment|/* Must be FAT16; use bit 15. */
 name|fatval
 operator|=
 name|getushort
@@ -4769,13 +4769,11 @@ name|fatval
 operator|&=
 literal|0x7FFF
 expr_stmt|;
-comment|/* dirty means clear the "clean" bit */
 else|else
 name|fatval
 operator||=
 literal|0x8000
 expr_stmt|;
-comment|/* clean means set the "clean" bit */
 name|putushort
 argument_list|(
 operator|&
@@ -4790,12 +4788,14 @@ name|fatval
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Write out the modified FAT block immediately */
+comment|/* Write out the modified FAT block synchronously. */
 return|return
+operator|(
 name|bwrite
 argument_list|(
 name|bp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
