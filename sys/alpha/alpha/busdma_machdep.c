@@ -401,13 +401,16 @@ name|dmat
 parameter_list|,
 name|bus_dmamap_t
 name|map
+parameter_list|,
+name|int
+name|commit
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|vm_offset_t
+name|bus_addr_t
 name|add_bounce_page
 parameter_list|(
 name|bus_dma_tag_t
@@ -455,6 +458,10 @@ name|paddr
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Return true if a match is made.  *  * To find a match walk the chain of bus_dma_tag_t's looking for 'paddr'.  *  * If paddr is within the bounds of the dma tag then call the filter callback  * to check for a match, if there is no filter callback then assume a match.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1178,10 +1185,16 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
 name|dmat
 operator|=
 name|parent
+expr_stmt|;
+block|}
+else|else
+name|dmat
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -1585,6 +1598,11 @@ condition|(
 name|map
 operator|!=
 name|NULL
+operator|&&
+name|map
+operator|!=
+operator|&
+name|nobounce_dmamap
 condition|)
 block|{
 if|if
@@ -1604,21 +1622,6 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* 		 * The nobounce_dmamap map is not dynamically 		 * allocated, thus we should on no account try to 		 * free it. 		 */
-if|if
-condition|(
-name|map
-operator|!=
-operator|&
-name|nobounce_dmamap
-condition|)
-name|free
-argument_list|(
-name|map
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
 block|}
 name|dmat
 operator|->
@@ -1786,7 +1789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  Make the same choice for free/contigfree.  */
 end_comment
 
 begin_function
@@ -2177,11 +2180,49 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|flags
+operator|&
+name|BUS_DMA_NOWAIT
+condition|)
+block|{
+if|if
+condition|(
 name|reserve_bounce_pages
 argument_list|(
 name|dmat
 argument_list|,
 name|map
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|bounce_lock
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|reserve_bounce_pages
+argument_list|(
+name|dmat
+argument_list|,
+name|map
+argument_list|,
+literal|1
 argument_list|)
 operator|!=
 literal|0
@@ -2239,6 +2280,7 @@ operator|(
 name|EINPROGRESS
 operator|)
 return|;
+block|}
 block|}
 name|mtx_unlock
 argument_list|(
@@ -2951,7 +2993,7 @@ name|first
 init|=
 literal|1
 decl_stmt|;
-name|vm_offset_t
+name|bus_addr_t
 name|lastaddr
 init|=
 literal|0
@@ -3121,7 +3163,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|vm_offset_t
+name|bus_addr_t
 name|lastaddr
 decl_stmt|;
 ifdef|#
@@ -3805,7 +3847,7 @@ name|bpage
 operator|->
 name|vaddr
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|free
@@ -3881,6 +3923,9 @@ name|dmat
 parameter_list|,
 name|bus_dmamap_t
 name|map
+parameter_list|,
+name|int
+name|commit
 parameter_list|)
 block|{
 name|int
@@ -3909,6 +3954,39 @@ operator|->
 name|pagesreserved
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|commit
+operator|==
+literal|0
+operator|&&
+name|map
+operator|->
+name|pagesneeded
+operator|>
+operator|(
+name|map
+operator|->
+name|pagesreserved
+operator|+
+name|pages
+operator|)
+condition|)
+return|return
+operator|(
+name|map
+operator|->
+name|pagesneeded
+operator|-
+operator|(
+name|map
+operator|->
+name|pagesreserved
+operator|+
+name|pages
+operator|)
+operator|)
+return|;
 name|free_bpages
 operator|-=
 name|pages
@@ -3943,7 +4021,7 @@ end_function
 
 begin_function
 specifier|static
-name|vm_offset_t
+name|bus_addr_t
 name|add_bounce_page
 parameter_list|(
 name|bus_dma_tag_t
@@ -4158,6 +4236,8 @@ operator|->
 name|dmat
 argument_list|,
 name|map
+argument_list|,
+literal|1
 argument_list|)
 operator|==
 literal|0
