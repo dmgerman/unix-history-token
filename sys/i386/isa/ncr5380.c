@@ -117,6 +117,12 @@ directive|include
 file|<scsi/scsiconf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ioconf.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef

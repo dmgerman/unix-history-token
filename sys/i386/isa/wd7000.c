@@ -121,6 +121,12 @@ directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ioconf.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
