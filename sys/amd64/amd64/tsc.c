@@ -3359,6 +3359,8 @@ literal|4
 operator|)
 operator|%
 literal|7
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Write back Weekday */
