@@ -308,18 +308,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|alldigits
-parameter_list|(
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|showusrname
 parameter_list|(
@@ -381,22 +369,6 @@ specifier|const
 name|char
 modifier|*
 name|tag
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|quotause
-modifier|*
-name|getprivs
-parameter_list|(
-name|long
-name|id
-parameter_list|,
-name|int
-name|quotatype
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3269,6 +3241,7 @@ name|gqr_rquota
 operator|.
 name|rq_bhardlimit
 operator|*
+operator|(
 name|gq_rslt
 operator|.
 name|getquota_rslt_u
@@ -3278,6 +3251,7 @@ operator|.
 name|rq_bsize
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 name|dqp
 operator|->
@@ -3291,6 +3265,7 @@ name|gqr_rquota
 operator|.
 name|rq_bsoftlimit
 operator|*
+operator|(
 name|gq_rslt
 operator|.
 name|getquota_rslt_u
@@ -3300,6 +3275,7 @@ operator|.
 name|rq_bsize
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 name|dqp
 operator|->
@@ -3313,6 +3289,7 @@ name|gqr_rquota
 operator|.
 name|rq_curblocks
 operator|*
+operator|(
 name|gq_rslt
 operator|.
 name|getquota_rslt_u
@@ -3322,6 +3299,7 @@ operator|.
 name|rq_bsize
 operator|/
 name|DEV_BSIZE
+operator|)
 expr_stmt|;
 comment|/* inodes */
 name|dqp
