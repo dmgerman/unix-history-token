@@ -9589,6 +9589,7 @@ operator|->
 name|an_associated
 condition|)
 return|return;
+comment|/* We can't send in monitor mode so toss any attempts. */
 if|if
 condition|(
 name|sc
@@ -9627,6 +9628,11 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 block|}
 return|return;
 block|}
