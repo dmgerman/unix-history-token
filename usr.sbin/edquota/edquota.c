@@ -174,6 +174,7 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|qfname
@@ -183,6 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|qfextension
@@ -193,6 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|quotagroup
@@ -258,6 +261,7 @@ name|alldigits
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|s
@@ -330,6 +334,7 @@ name|getentry
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1137,6 +1142,7 @@ name|name
 parameter_list|,
 name|quotatype
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1926,11 +1932,11 @@ begin_function
 name|int
 name|editit
 parameter_list|(
-name|tmpfile
+name|tmpf
 parameter_list|)
 name|char
 modifier|*
-name|tmpfile
+name|tmpf
 decl_stmt|;
 block|{
 name|long
@@ -1939,7 +1945,7 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|,
-name|stat
+name|status
 decl_stmt|;
 name|omask
 operator|=
@@ -2028,6 +2034,7 @@ literal|0
 condition|)
 block|{
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|ed
@@ -2076,7 +2083,7 @@ name|ed
 argument_list|,
 name|ed
 argument_list|,
-name|tmpfile
+name|tmpf
 argument_list|,
 operator|(
 name|char
@@ -2100,7 +2107,7 @@ argument_list|(
 name|pid
 argument_list|,
 operator|&
-name|stat
+name|status
 argument_list|,
 literal|0
 argument_list|)
@@ -2115,12 +2122,12 @@ condition|(
 operator|!
 name|WIFEXITED
 argument_list|(
-name|stat
+name|status
 argument_list|)
 operator|||
 name|WEXITSTATUS
 argument_list|(
-name|stat
+name|status
 argument_list|)
 operator|!=
 literal|0
@@ -3636,10 +3643,10 @@ name|char
 modifier|*
 name|cvtstoa
 parameter_list|(
-name|time
+name|secs
 parameter_list|)
 name|time_t
-name|time
+name|secs
 decl_stmt|;
 block|{
 specifier|static
@@ -3651,7 +3658,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|time
+name|secs
 operator|%
 operator|(
 literal|24
@@ -3664,7 +3671,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|time
+name|secs
 operator|/=
 literal|24
 operator|*
@@ -3681,9 +3688,9 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|time
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3696,7 +3703,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|time
+name|secs
 operator|%
 operator|(
 literal|60
@@ -3707,7 +3714,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|time
+name|secs
 operator|/=
 literal|60
 operator|*
@@ -3722,9 +3729,9 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|time
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3737,14 +3744,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|time
+name|secs
 operator|%
 literal|60
 operator|==
 literal|0
 condition|)
 block|{
-name|time
+name|secs
 operator|/=
 literal|60
 expr_stmt|;
@@ -3757,9 +3764,9 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|time
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3779,9 +3786,9 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|time
+name|secs
 argument_list|,
-name|time
+name|secs
 operator|==
 literal|1
 condition|?
@@ -3806,14 +3813,14 @@ begin_function
 name|int
 name|cvtatos
 parameter_list|(
-name|time
+name|period
 parameter_list|,
 name|units
 parameter_list|,
 name|seconds
 parameter_list|)
 name|time_t
-name|time
+name|period
 decl_stmt|;
 name|char
 modifier|*
@@ -3840,7 +3847,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 expr_stmt|;
 elseif|else
 if|if
@@ -3859,7 +3866,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 operator|*
 literal|60
 expr_stmt|;
@@ -3880,7 +3887,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 operator|*
 literal|60
 operator|*
@@ -3903,7 +3910,7 @@ condition|)
 operator|*
 name|seconds
 operator|=
-name|time
+name|period
 operator|*
 literal|24
 operator|*
@@ -4000,14 +4007,16 @@ parameter_list|(
 name|s
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
 block|{
 specifier|register
+name|int
 name|c
-expr_stmt|;
+decl_stmt|;
 name|c
 operator|=
 operator|*
