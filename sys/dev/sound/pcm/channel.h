@@ -42,6 +42,14 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|struct
+name|pcmchan_caps
+name|pcmchan_caps
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define

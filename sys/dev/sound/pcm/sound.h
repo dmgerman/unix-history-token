@@ -264,6 +264,18 @@ directive|define
 name|USING_DEVFS
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INTR_TYPE_AV
+value|INTR_TYPE_MISC
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -375,11 +387,27 @@ name|pcm_channel
 struct_decl|;
 end_struct_decl
 
+begin_typedef
+typedef|typedef
+name|struct
+name|pcm_channel
+name|pcm_channel
+typedef|;
+end_typedef
+
 begin_struct_decl
 struct_decl|struct
 name|pcm_feeder
 struct_decl|;
 end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|pcm_feeder
+name|pcm_feeder
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
@@ -387,11 +415,27 @@ name|snd_dbuf
 struct_decl|;
 end_struct_decl
 
+begin_typedef
+typedef|typedef
+name|struct
+name|snd_dbuf
+name|snd_dbuf
+typedef|;
+end_typedef
+
 begin_struct_decl
 struct_decl|struct
 name|snd_mixer
 struct_decl|;
 end_struct_decl
+
+begin_typedef
+typedef|typedef
+name|struct
+name|snd_mixer
+name|snd_mixer
+typedef|;
+end_typedef
 
 begin_include
 include|#

@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mixer_if.h"
 end_include
 
@@ -643,6 +637,11 @@ literal|1
 return|;
 block|}
 block|}
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>
+literal|50000
 if|if
 condition|(
 name|curproc
@@ -658,6 +657,8 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
