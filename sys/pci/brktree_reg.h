@@ -2069,6 +2069,18 @@ decl_stmt|;
 name|u_long
 name|id
 decl_stmt|;
+define|#
+directive|define
+name|BT848_USE_XTALS
+value|0
+define|#
+directive|define
+name|BT848_USE_PLL
+value|1
+name|int
+name|xtal_pll_mode
+decl_stmt|;
+comment|/* Use XTAL or PLL mode for PAL/SECAM */
 block|}
 struct|;
 end_struct
