@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amfs_auto.c,v 1.1.1.1 1998/11/05 02:04:46 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: amfs_auto.c,v 1.5 1999/09/30 21:01:29 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -63,6 +63,13 @@ undef|#
 directive|undef
 name|DEBUG_READDIR
 end_undef
+
+begin_define
+define|#
+directive|define
+name|DOT_DOT_COOKIE
+value|(u_int) 1
+end_define
 
 begin_comment
 comment|/****************************************************************************  *** STRUCTURES                                                           ***  ****************************************************************************/
@@ -1234,7 +1241,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pick a file system to try mounting and  * do that in the background if necessary  *  For each location:  if it is new -defaults then  extract and process  continue;  fi  if it is a cut then  if a location has been tried then  break;  fi  continue;  fi  parse mount location  discard previous mount location if required  find matching mounted filesystem  if not applicable then  this_error = No such file or directory  continue  fi  if the filesystem failed to be mounted then  this_error = error from filesystem  elif the filesystem is mounting or unmounting then  this_error = -1  elif the fileserver is down then  this_error = -1  elif the filesystem is already mounted  this_error = 0  break  fi  if no error on this mount then  this_error = initialize mount point  fi  if no error on this mount and mount is delayed then  this_error = -1  fi  if this_error< 0 then  retry = true  fi  if no error on this mount then  make mount point if required  fi  if no error on this mount then  if mount in background then  run mount in background  return -1  else  this_error = mount in foreground  fi  fi  if an error occurred on this mount then  update stats  save error in mount point  fi  endfor  */
+comment|/*  * Pick a file system to try mounting and  * do that in the background if necessary  * For each location: 	if it is new -defaults then 		extract and process 		continue; 	fi 	if it is a cut then 		if a location has been tried then 			break; 		fi 		continue; 	fi 	parse mount location 	discard previous mount location if required 	find matching mounted filesystem 	if not applicable then 		this_error = No such file or directory 		continue 	fi 	if the filesystem failed to be mounted then 		this_error = error from filesystem 	elif the filesystem is mounting or unmounting then 		this_error = -1 	elif the fileserver is down then 		this_error = -1 	elif the filesystem is already mounted 		this_error = 0 		break 	fi 	if no error on this mount then 		this_error = initialize mount point 	fi 	if no error on this mount and mount is delayed then 		this_error = -1 	fi 	if this_error< 0 then 		retry = true 	fi 	if no error on this mount then 		make mount point if required 	fi 	if no error on this mount then 		if mount in background then 			run mount in background 			return -1 		else 			this_error = mount in foreground 		fi 	fi 	if an error occurred on this mount then 		update stats 		save error in mount point 	fi endfor  */
 end_comment
 
 begin_function
@@ -1736,7 +1743,7 @@ name|plog
 argument_list|(
 name|XLOG_ERROR
 argument_list|,
-literal|"use %s instead of 0x%x"
+literal|"use %s instead of 0x%lx"
 argument_list|,
 name|cp
 operator|->
@@ -1744,6 +1751,10 @@ name|fs_opts
 operator|.
 name|opt_fs
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|mf
 operator|->
 name|mf_fo
@@ -2058,12 +2069,16 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"Mount of %s delayed by %ds"
+literal|"Mount of %s delayed by %lds"
 argument_list|,
 name|mf
 operator|->
 name|mf_mount
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|i
 operator|-
 name|clocktime
@@ -2072,6 +2087,7 @@ operator|+
 name|cp
 operator|->
 name|start
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2112,6 +2128,18 @@ name|retry
 operator|=
 name|TRUE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|dlog
+argument_list|(
+literal|"will retry ...\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
+break|break;
 block|}
 if|if
 condition|(
@@ -2353,29 +2381,17 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/*      * Start at the beginning.      * Rewind the location vector and      * reset the default options.      */
-name|cp
-operator|->
-name|ivec
-operator|=
-name|cp
-operator|->
-name|xivec
-expr_stmt|;
-name|cp
-operator|->
-name|def_opts
-operator|=
-name|strealloc
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|dlog
 argument_list|(
-name|cp
-operator|->
-name|def_opts
-argument_list|,
-name|cp
-operator|->
-name|auto_opts
+literal|"(skipping rewind)\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 comment|/*      * Arrange that amfs_auto_bgmount is called      * after anything else happens.      */
 ifdef|#
 directive|ifdef
@@ -3126,8 +3142,6 @@ comment|/* XXX */
 name|dlog
 argument_list|(
 literal|"Returning error: %m"
-argument_list|,
-name|error
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4295,7 +4309,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"default search"
+literal|"amfs_auto_readdir: default search"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4463,17 +4477,15 @@ index|]
 operator|.
 name|ne_cookie
 operator|=
+operator|(
 name|xp
 condition|?
 name|xp
 operator|->
 name|am_gen
 else|:
-operator|~
-operator|(
-name|u_int
+name|DOT_DOT_COOKIE
 operator|)
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4496,7 +4508,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"real child"
+literal|"amfs_auto_readdir: real child"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4506,11 +4518,7 @@ if|if
 condition|(
 name|gen
 operator|==
-operator|~
-operator|(
-name|u_int
-operator|)
-literal|0
+name|DOT_DOT_COOKIE
 condition|)
 block|{
 ifdef|#
@@ -4518,7 +4526,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"End of readdir in %s"
+literal|"amfs_auto_readdir: End of readdir in %s"
 argument_list|,
 name|mp
 operator|->
@@ -4634,11 +4642,7 @@ name|ep
 operator|->
 name|ne_cookie
 operator|=
-operator|~
-operator|(
-name|u_int
-operator|)
-literal|0
+name|DOT_DOT_COOKIE
 expr_stmt|;
 name|dp
 operator|->
@@ -4859,7 +4863,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"default search"
+literal|"amfs_auto_readdir_browsable: default search"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5032,11 +5036,7 @@ index|]
 operator|.
 name|ne_cookie
 operator|=
-operator|~
-operator|(
-name|u_int
-operator|)
-literal|0
+name|DOT_DOT_COOKIE
 expr_stmt|;
 comment|/*      * If map is browsable, call a function make_entry_chain() to construct      * a linked list of unmounted keys, and return it.  Then link the chain      * to the regular list.  Get the chain only once, but return      * chunks of it each time.      */
 name|te
@@ -5063,12 +5063,12 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG_READDIR
+for|for
+control|(
 name|j
 operator|=
 literal|0
-expr_stmt|;
-for|for
-control|(
+operator|,
 name|ne
 operator|=
 name|te
@@ -5188,6 +5188,10 @@ directive|ifdef
 name|DEBUG_READDIR
 for|for
 control|(
+name|j
+operator|=
+literal|0
+operator|,
 name|ne
 operator|=
 name|te
@@ -5214,6 +5218,62 @@ operator|->
 name|ne_name
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|j
+operator|=
+literal|0
+operator|,
+name|ne
+operator|=
+name|ep
+init|;
+name|ne
+condition|;
+name|ne
+operator|=
+name|ne
+operator|->
+name|ne_nextentry
+control|)
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"gen2+ key %4d \"%s\" fi=%d ck=%d"
+argument_list|,
+name|j
+operator|++
+argument_list|,
+name|ne
+operator|->
+name|ne_name
+argument_list|,
+name|ne
+operator|->
+name|ne_fileid
+argument_list|,
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|ne
+operator|->
+name|ne_cookie
+argument_list|)
+expr_stmt|;
+name|plog
+argument_list|(
+name|XLOG_INFO
+argument_list|,
+literal|"EOF is %d"
+argument_list|,
+name|dp
+operator|->
+name|dl_eof
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG_READDIR */
@@ -5227,7 +5287,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"real child"
+literal|"amfs_auto_readdir_browsable: real child"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5237,11 +5297,7 @@ if|if
 condition|(
 name|gen
 operator|==
-operator|~
-operator|(
-name|u_int
-operator|)
-literal|0
+name|DOT_DOT_COOKIE
 condition|)
 block|{
 ifdef|#
@@ -5249,7 +5305,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"End of readdir in %s"
+literal|"amfs_auto_readdir_browsable: End of readdir in %s"
 argument_list|,
 name|mp
 operator|->
@@ -5398,10 +5454,16 @@ name|XLOG_INFO
 argument_list|,
 literal|"dl_entries=0x%x, te_next=0x%x, dl_eof=%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dp
 operator|->
 name|dl_entries
 argument_list|,
+operator|(
+name|int
+operator|)
 name|te_next
 argument_list|,
 name|dp

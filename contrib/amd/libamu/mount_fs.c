@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mount_fs.c,v 1.1.1.2 1999/01/13 19:20:28 obrien Exp $  *  */
+comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: mount_fs.c,v 1.8 1999/09/18 08:38:06 ezk Exp $  * $FreeBSD$  *  */
 end_comment
 
 begin_ifdef
@@ -283,6 +283,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* compute generic mount flags */
+end_comment
+
 begin_function
 name|int
 name|compute_mount_flags
@@ -389,6 +393,50 @@ else|:
 literal|0
 expr_stmt|;
 block|}
+return|return
+name|flags
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* compute generic mount flags for automounter mounts */
+end_comment
+
+begin_function
+name|int
+name|compute_automounter_mount_flags
+parameter_list|(
+name|mntent_t
+modifier|*
+name|mntp
+parameter_list|)
+block|{
+name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MNT2_GEN_OPT_IGNORE
+name|flags
+operator||=
+name|MNT2_GEN_OPT_IGNORE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MNT2_GEN_OPT_IGNORE */
+ifdef|#
+directive|ifdef
+name|MNT2_GEN_OPT_AUTOMNTFS
+name|flags
+operator||=
+name|MNT2_GEN_OPT_AUTOMNTFS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MNT2_GEN_OPT_AUTOMNTFS */
 return|return
 name|flags
 return|;
@@ -2718,7 +2766,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MNT2_NFS_OPT_SYMTTL */
-comment|/*    * This completes the flags for the HIDE_MOUNT_TYPE code above.    * Some systems don't have a mount type, but a mount flag.    */
+comment|/*    * This completes the flags for the HIDE_MOUNT_TYPE  code in the    * mount_amfs_toplvl() function in amd/amfs_toplvl.c.    * Some systems don't have a mount type, but a mount flag.    */
 ifdef|#
 directive|ifdef
 name|MNT2_NFS_OPT_AUTO
@@ -2743,6 +2791,18 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MNT2_NFS_OPT_IGNORE */
+ifdef|#
+directive|ifdef
+name|MNT2_GEN_OPT_AUTOMNTFS
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_GEN_OPT_AUTOMNTFS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not MNT2_GEN_OPT_AUTOMNTFS */
 ifdef|#
 directive|ifdef
 name|MNT2_NFS_OPT_DUMBTIMR
@@ -2850,6 +2910,19 @@ comment|/* defined(MNT2_NFS_OPT_ACDIRMIN)&& defined(MNT2_NFS_OPT_ACDIRMAX) */
 endif|#
 directive|endif
 comment|/* not MNT2_NFS_OPT_NOAC */
+comment|/*    * Provide a slight bit more security by requiring the kernel to use    * reserved ports.    */
+ifdef|#
+directive|ifdef
+name|MNT2_NFS_OPT_RESVPORT
+name|nap
+operator|->
+name|flags
+operator||=
+name|MNT2_NFS_OPT_RESVPORT
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MNT2_NFS_OPT_RESVPORT */
 block|}
 end_function
 
@@ -3152,6 +3225,10 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->knconf->semantics %lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|kncp
 operator|->
 name|knc_semantics
@@ -3212,6 +3289,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->addr {sockaddr_in} (len=%d) = \"%s\""
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -3237,7 +3317,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN_off
+name|HAVE_FIELD_STRUCT_SOCKADDR_SA_LEN
 name|plog
 argument_list|(
 name|XLOG_DEBUG
@@ -3320,6 +3400,23 @@ else|:
 literal|"null"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_FIELD_NFS_ARGS_T_NAMLEN
+name|plog
+argument_list|(
+name|XLOG_DEBUG
+argument_list|,
+literal|"NA->namlen = %d"
+argument_list|,
+name|nap
+operator|->
+name|namlen
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FIELD_NFS_ARGS_T_NAMLEN */
 ifdef|#
 directive|ifdef
 name|MNT2_NFS_OPT_FSNAME
@@ -3438,6 +3535,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->proto = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|proto
@@ -3469,6 +3569,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->flags = 0x%x"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|flags
@@ -3480,6 +3583,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->rsize = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|rsize
@@ -3491,17 +3597,40 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->wsize = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|wsize
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_FIELD_NFS_ARGS_T_BSIZE
+name|plog
+argument_list|(
+name|XLOG_DEBUG
+argument_list|,
+literal|"NA->bsize = %d"
+argument_list|,
+name|nap
+operator|->
+name|bsize
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_FIELD_NFS_ARGS_T_BSIZE */
 name|plog
 argument_list|(
 name|XLOG_DEBUG
 argument_list|,
 literal|"NA->timeo = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|timeo
@@ -3513,6 +3642,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->retrans = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|retrans
@@ -3527,6 +3659,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->acregmin = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|acregmin
@@ -3538,6 +3673,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->acregmax = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|acregmax
@@ -3549,6 +3687,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->acdirmin = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|acdirmin
@@ -3560,6 +3701,9 @@ name|XLOG_DEBUG
 argument_list|,
 literal|"NA->acdirmax = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nap
 operator|->
 name|acdirmax

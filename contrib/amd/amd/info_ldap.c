@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1998 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_ldap.c,v 1.1.1.1 1998/11/05 02:04:49 ezk Exp $  *  */
+comment|/*  * Copyright (c) 1997-1999 Erez Zadok  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      %W% (Berkeley) %G%  *  * $Id: info_ldap.c,v 1.6 1999/09/30 21:01:31 ezk Exp $  *  */
 end_comment
 
 begin_comment
@@ -590,8 +590,14 @@ name|CR
 modifier|*
 name|creds
 decl_stmt|;
+comment|/*    * XXX: by checking that map_type must be defined, aren't we    * excluding the possibility of automatic searches through all    * map types?    */
 if|if
 condition|(
+operator|!
+name|gopt
+operator|.
+name|map_type
+operator|||
 operator|!
 name|STREQ
 argument_list|(
@@ -820,7 +826,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"Got timestamp for map %s: %d\n"
+literal|"Got timestamp for map %s: %ld\n"
 argument_list|,
 name|map
 argument_list|,
@@ -870,6 +876,9 @@ name|now
 init|=
 name|clocktime
 argument_list|()
+decl_stmt|;
+name|int
+name|try
 decl_stmt|;
 if|if
 condition|(
@@ -925,11 +934,21 @@ literal|0
 operator|)
 return|;
 block|}
-while|while
-condition|(
-name|TRUE
-condition|)
+for|for
+control|(
+name|try
+operator|=
+literal|0
+init|;
+name|try
+operator|<
+literal|10
+condition|;
+name|try
+operator|++
+control|)
 block|{
+comment|/* XXX: try up to 10 times (makes sense?) */
 for|for
 control|(
 name|h
@@ -1133,6 +1152,8 @@ name|int
 name|i
 decl_stmt|,
 name|err
+init|=
+literal|0
 decl_stmt|,
 name|nentries
 init|=
@@ -1241,11 +1262,17 @@ operator|==
 name|LDAP_SUCCESS
 condition|)
 break|break;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|dlog
 argument_list|(
 literal|"Timestamp search timed out, trying again...\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 block|}
 if|if
 condition|(
@@ -1470,7 +1497,7 @@ name|plog
 argument_list|(
 name|XLOG_USER
 argument_list|,
-literal|"Nonpositive timestamp %d for map %s\n"
+literal|"Nonpositive timestamp %ld for map %s\n"
 argument_list|,
 operator|*
 name|ts
@@ -1525,7 +1552,7 @@ directive|ifdef
 name|DEBUG
 name|dlog
 argument_list|(
-literal|"The timestamp for %s is %d (err=%d)\n"
+literal|"The timestamp for %s is %ld (err=%d)\n"
 argument_list|,
 name|map
 argument_list|,
@@ -1590,6 +1617,8 @@ name|int
 name|i
 decl_stmt|,
 name|err
+init|=
+literal|0
 decl_stmt|,
 name|nvals
 init|=
@@ -2034,11 +2063,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|dlog
 argument_list|(
 literal|"LDAP panic: unable to find map data\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG */
 return|return
 operator|(
 name|ENOENT
