@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.6	81/04/28	*/
+comment|/*	file.h	4.7	81/05/12	*/
 end_comment
 
 begin_comment
@@ -52,6 +52,18 @@ name|f_conn
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|BBNNET
+name|struct
+name|ucb
+modifier|*
+name|f_ucb
+decl_stmt|;
+comment|/* net connection block pointer */
+endif|#
+directive|endif
+endif|BBNNET
 block|}
 name|f_un
 union|;
@@ -161,6 +173,17 @@ directive|define
 name|FPORT
 value|040
 end_define
+
+begin_define
+define|#
+directive|define
+name|FNET
+value|0100
+end_define
+
+begin_comment
+comment|/* this is a network entry */
+end_comment
 
 end_unit
 

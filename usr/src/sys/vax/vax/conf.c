@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.32	81/05/05	*/
+comment|/*	conf.c	4.33	81/05/12	*/
 end_comment
 
 begin_include
@@ -788,6 +788,44 @@ name|tty
 name|cons
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|"acc.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NACC
+operator|>
+literal|0
+end_if
+
+begin_function_decl
+name|int
+name|accreset
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|accreset
+value|nulldev
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1936,7 +1974,7 @@ name|nodev
 block|,
 name|nodev
 block|,
-name|nodev
+name|accreset
 block|,
 literal|0
 block|,
