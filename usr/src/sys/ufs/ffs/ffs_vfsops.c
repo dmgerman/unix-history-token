@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2129,6 +2129,34 @@ goto|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX updating 4.2 FFS superblocks trashes rotational layout tables */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_postblformat
+operator|==
+name|FS_42POSTBLFMT
+operator|&&
+operator|!
+name|ronly
+condition|)
+block|{
+name|error
+operator|=
+name|EROFS
+expr_stmt|;
+comment|/* needs translation */
+goto|goto
+name|out
+goto|;
+block|}
+end_if
+
 begin_expr_stmt
 name|ump
 operator|=
@@ -2379,27 +2407,25 @@ block|}
 end_if
 
 begin_expr_stmt
-name|blks
-operator|=
-name|howmany
-argument_list|(
-name|fs
-operator|->
-name|fs_cssize
-argument_list|,
-name|fs
-operator|->
-name|fs_fsize
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|size
 operator|=
 name|fs
 operator|->
 name|fs_cssize
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|blks
+operator|=
+name|howmany
+argument_list|(
+name|size
+argument_list|,
+name|fs
+operator|->
+name|fs_fsize
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
