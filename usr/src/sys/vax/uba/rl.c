@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rl.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rl.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -201,6 +201,16 @@ name|NHL
 index|]
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|rlunit
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev)>> 3)
+end_define
 
 begin_comment
 comment|/* THIS SHOULD BE READ OFF THE PACK, PER DRIVE */
@@ -462,24 +472,6 @@ end_define
 begin_comment
 comment|/* Last seek as CYL<<1 | HD */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTRLVE
-end_ifdef
-
-begin_function_decl
-name|daddr_t
-name|dkblock
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -956,12 +948,10 @@ specifier|register
 name|int
 name|unit
 init|=
-name|minor
+name|rlunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 specifier|register
 name|struct
@@ -1069,9 +1059,11 @@ literal|9
 expr_stmt|;
 name|drive
 operator|=
-name|dkunit
+name|rlunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -1080,9 +1072,17 @@ name|drive
 operator|>=
 name|NRL
 condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|ui
 operator|=
 name|rldinfo
@@ -1102,9 +1102,17 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 if|if
 condition|(
 name|bp
@@ -1116,10 +1124,9 @@ operator|||
 operator|(
 name|bn
 operator|=
-name|dkblock
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|b_blkno
 operator|)
 operator|+
 name|sz
@@ -1133,9 +1140,37 @@ index|]
 operator|.
 name|nblocks
 condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_blkno
+operator|==
+name|rl02
+operator|.
+name|sizes
+index|[
+name|partition
+index|]
+operator|.
+name|nblocks
+operator|+
+literal|1
+condition|)
+goto|goto
+name|done
+goto|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 comment|/* bn is in 512 byte block size */
 name|bp
 operator|->
@@ -1235,6 +1270,8 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+name|done
+label|:
 name|iodone
 argument_list|(
 name|bp
@@ -1397,10 +1434,9 @@ expr_stmt|;
 comment|/* 	 * Figure out where this transfer is going to 	 * and see if we are seeked correctly. 	 */
 name|bn
 operator|=
-name|dkblock
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|b_blkno
 expr_stmt|;
 comment|/* Block # desired */
 comment|/* 	 * Map 512 byte logical disk blocks 	 * to 256 byte sectors (rl02's are stupid). 	 */
@@ -1795,19 +1831,20 @@ name|ui
 operator|=
 name|rldinfo
 index|[
-name|dkunit
+name|rlunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 index|]
 expr_stmt|;
 comment|/* Controller */
 name|bn
 operator|=
-name|dkblock
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|b_blkno
 expr_stmt|;
 comment|/* 512 byte Block number */
 name|cyl
@@ -2184,9 +2221,11 @@ name|ui
 operator|=
 name|rldinfo
 index|[
-name|dkunit
+name|rlunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 index|]
 expr_stmt|;
@@ -2306,9 +2345,11 @@ name|printf
 argument_list|(
 literal|"rl%d: write protected\n"
 argument_list|,
-name|dkunit
+name|rlunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3007,12 +3048,10 @@ specifier|register
 name|int
 name|unit
 init|=
-name|minor
+name|rlunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 if|if
 condition|(
@@ -3079,12 +3118,10 @@ specifier|register
 name|int
 name|unit
 init|=
-name|minor
+name|rlunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 if|if
 condition|(
@@ -3659,12 +3696,10 @@ specifier|register
 name|int
 name|unit
 init|=
-name|minor
+name|rlunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 specifier|register
 name|struct

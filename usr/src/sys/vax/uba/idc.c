@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)idc.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -303,6 +303,16 @@ name|sc_sect
 value|sc_un.dar_sect
 end_define
 
+begin_define
+define|#
+directive|define
+name|idcunit
+parameter_list|(
+name|dev
+parameter_list|)
+value|(minor(dev)>> 3)
+end_define
+
 begin_comment
 comment|/* THIS SHOULD BE READ OFF THE PACK, PER DRIVE */
 end_comment
@@ -590,24 +600,6 @@ directive|define
 name|b_cylin
 value|b_resid
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTRLVE
-end_ifdef
-
-begin_function_decl
-name|daddr_t
-name|dkblock
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -1134,12 +1126,10 @@ specifier|register
 name|int
 name|unit
 init|=
-name|minor
+name|idcunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 specifier|register
 name|struct
@@ -1251,9 +1241,11 @@ literal|9
 expr_stmt|;
 name|unit
 operator|=
-name|dkunit
+name|idcunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -1262,9 +1254,17 @@ name|unit
 operator|>=
 name|NRB
 condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|ui
 operator|=
 name|idcdinfo
@@ -1284,9 +1284,17 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|st
 operator|=
 operator|&
@@ -1308,10 +1316,9 @@ operator|||
 operator|(
 name|bn
 operator|=
-name|dkblock
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|b_blkno
 operator|)
 operator|+
 name|sz
@@ -1325,9 +1332,37 @@ index|]
 operator|.
 name|nblocks
 condition|)
+block|{
+if|if
+condition|(
+name|bp
+operator|->
+name|b_blkno
+operator|==
+name|st
+operator|->
+name|sizes
+index|[
+name|xunit
+index|]
+operator|.
+name|nblocks
+operator|+
+literal|1
+condition|)
+goto|goto
+name|done
+goto|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 if|if
 condition|(
 name|ui
@@ -1460,6 +1495,8 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+name|done
+label|:
 name|iodone
 argument_list|(
 name|bp
@@ -1670,10 +1707,9 @@ expr_stmt|;
 comment|/* CHECK DRIVE READY? */
 name|bn
 operator|=
-name|dkblock
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|b_blkno
 expr_stmt|;
 name|trace
 argument_list|(
@@ -2234,18 +2270,19 @@ name|ui
 operator|=
 name|idcdinfo
 index|[
-name|dkunit
+name|idcunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 index|]
 expr_stmt|;
 name|bn
 operator|=
-name|dkblock
-argument_list|(
 name|bp
-argument_list|)
+operator|->
+name|b_blkno
 expr_stmt|;
 name|trace
 argument_list|(
@@ -2409,9 +2446,11 @@ name|printf
 argument_list|(
 literal|"rb%d: not ready\n"
 argument_list|,
-name|dkunit
+name|idcunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2823,9 +2862,11 @@ name|ui
 operator|=
 name|idcdinfo
 index|[
-name|dkunit
+name|idcunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 index|]
 expr_stmt|;
@@ -2952,9 +2993,11 @@ name|printf
 argument_list|(
 literal|"rb%d: write locked\n"
 argument_list|,
-name|dkunit
+name|idcunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3973,12 +4016,10 @@ specifier|register
 name|int
 name|unit
 init|=
-name|minor
+name|idcunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 if|if
 condition|(
@@ -4045,12 +4086,10 @@ specifier|register
 name|int
 name|unit
 init|=
-name|minor
+name|idcunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 if|if
 condition|(
@@ -4276,9 +4315,11 @@ name|KERN_RECOV
 argument_list|,
 literal|"rb%d%c: soft ecc sn%d\n"
 argument_list|,
-name|dkunit
+name|idcunit
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
 argument_list|,
 literal|'a'
@@ -4811,12 +4852,10 @@ name|nspg
 decl_stmt|;
 name|unit
 operator|=
-name|minor
+name|idcunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 expr_stmt|;
 if|if
 condition|(
@@ -5419,12 +5458,10 @@ block|{
 name|int
 name|unit
 init|=
-name|minor
+name|idcunit
 argument_list|(
 name|dev
 argument_list|)
-operator|>>
-literal|3
 decl_stmt|;
 name|struct
 name|uba_device
