@@ -1418,10 +1418,10 @@ operator|->
 name|sc_geom
 decl_stmt|;
 name|char
+modifier|*
 name|tmppath
-index|[
-name|MAXPATHLEN
-index|]
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|error
@@ -1489,6 +1489,17 @@ name|minsize
 operator|=
 literal|0
 expr_stmt|;
+name|tmppath
+operator|=
+name|malloc
+argument_list|(
+name|MAXPATHLEN
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ix
@@ -1531,17 +1542,6 @@ operator|=
 name|vp
 expr_stmt|;
 comment|/* 		 * Copy in the pathname of the component. 		 */
-name|bzero
-argument_list|(
-name|tmppath
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|tmppath
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* sanity */
 if|if
 condition|(
 operator|(
@@ -1871,6 +1871,17 @@ operator|+=
 name|size
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|tmppath
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|tmppath
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Don't allow the interleave to be smaller than 	 * the biggest component sector. 	 */
 if|if
 condition|(
@@ -2234,6 +2245,19 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tmppath
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|tmppath
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|cs
