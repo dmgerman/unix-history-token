@@ -1228,6 +1228,9 @@ argument_list|(
 literal|"vunmapbuf"
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|addr
@@ -1287,6 +1290,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|bp
 operator|->
 name|b_data
