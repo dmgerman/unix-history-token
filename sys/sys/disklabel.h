@@ -1089,39 +1089,6 @@ begin_comment
 comment|/* can do back-back transfers */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Structure used internally to retrieve information about a partition  * on a disk.  */
-end_comment
-
-begin_struct
-struct|struct
-name|partinfo
-block|{
-name|struct
-name|disklabel
-modifier|*
-name|disklab
-decl_stmt|;
-name|struct
-name|partition
-modifier|*
-name|part
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* DOS partition table -- located in boot block */
 end_comment
@@ -1434,7 +1401,7 @@ comment|/*  * Disk-specific ioctls.  */
 end_comment
 
 begin_comment
-comment|/* get and set disklabel; DIOCGPART used internally */
+comment|/* get and set disklabel */
 end_comment
 
 begin_define
@@ -1469,28 +1436,6 @@ end_define
 begin_comment
 comment|/* set, update disk */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DIOCGPART
-value|_IOW('d', 104, struct partinfo)
-end_define
-
-begin_comment
-comment|/* get partition */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -890,11 +890,6 @@ comment|/* index of plexes */
 ifdef|#
 directive|ifdef
 name|_KERNEL
-name|struct
-name|disklabel
-name|label
-decl_stmt|;
-comment|/* for DIOCGPART */
 name|dev_t
 name|dev
 decl_stmt|;
