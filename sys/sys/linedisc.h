@@ -1553,10 +1553,6 @@ name|devfs_present
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * XXX: This included for when DEVFS resurfaces   */
-end_comment
-
 begin_define
 define|#
 directive|define
