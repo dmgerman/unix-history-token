@@ -513,7 +513,7 @@ begin_define
 define|#
 directive|define
 name|M_FREELIST
-value|0x4000
+value|0x8000
 end_define
 
 begin_comment
