@@ -139,7 +139,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|__weak_reference
+name|__strong_reference
 argument_list|(
 name|_wait4
 argument_list|,
