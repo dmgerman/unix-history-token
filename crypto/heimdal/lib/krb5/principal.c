@@ -58,7 +58,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: principal.c,v 1.82 2002/10/21 15:30:53 joda Exp $"
+literal|"$Id: principal.c,v 1.82.2.1 2003/08/15 14:30:07 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1491,6 +1491,9 @@ name|len
 operator|++
 expr_stmt|;
 block|}
+name|len
+operator|++
+expr_stmt|;
 operator|*
 name|name
 operator|=
@@ -1501,10 +1504,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len
-operator|!=
-literal|0
-operator|&&
 operator|*
 name|name
 operator|==
@@ -1542,12 +1541,19 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
 name|free
 argument_list|(
 operator|*
 name|name
 argument_list|)
 expr_stmt|;
+operator|*
+name|name
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return
 name|ret
 return|;

@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c,v 1.33 2002/10/29 09:47:51 joda Exp $"
+literal|"$Id: main.c,v 1.33.2.1 2003/08/20 16:43:14 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,6 +160,26 @@ block|,
 name|NULL
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|KRB5
+block|{
+literal|"gss-bindings"
+block|,
+literal|0
+block|,
+name|arg_negative_flag
+block|,
+operator|&
+name|ftp_do_gss_bindings
+block|,
+literal|"Use GSS-API bindings"
+block|,
+name|NULL
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NULL
 block|,
@@ -357,6 +377,15 @@ name|use_kerberos
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KRB5
+name|ftp_do_gss_bindings
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|getarg

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnetd.c,v 1.69 2002/08/23 19:28:01 assar Exp $"
+literal|"$Id: telnetd.c,v 1.69.6.1 2004/03/22 18:17:25 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -663,6 +663,14 @@ operator|=
 name|nbackp
 operator|=
 name|netobuf
+expr_stmt|;
+name|setprogname
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
 name|progname
 operator|=

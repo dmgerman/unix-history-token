@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2002 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: roken-common.h,v 1.51 2002/09/09 13:41:12 joda Exp $ */
+comment|/* $Id: roken-common.h,v 1.51.6.1 2004/01/15 18:15:05 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -658,7 +658,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|EAI_ADDRFAMILY
+name|EAI_NONAME
 end_ifndef
 
 begin_define
@@ -788,7 +788,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EAI_ADDRFAMILY */
+comment|/* EAI_NONAME */
 end_comment
 
 begin_comment

@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: verify_krb5_conf.c,v 1.17.2.1 2003/09/22 18:46:58 lha Exp $"
+literal|"$Id: verify_krb5_conf.c,v 1.17.2.2 2004/02/13 16:19:44 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -713,24 +713,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|ret
-operator|==
-name|EAI_NODATA
-condition|)
-name|krb5_warnx
-argument_list|(
-name|context
-argument_list|,
-literal|"%s: host not found (%s)"
-argument_list|,
-name|path
-argument_list|,
-name|hostname
-argument_list|)
-expr_stmt|;
-else|else
 name|krb5_warnx
 argument_list|(
 name|context

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: unwrap.c,v 1.22 2003/03/16 17:54:43 lha Exp $"
+literal|"$Id: unwrap.c,v 1.22.2.1 2003/09/18 22:05:22 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1824,6 +1824,29 @@ case|:
 name|ret
 operator|=
 name|unwrap_des3
+argument_list|(
+name|minor_status
+argument_list|,
+name|context_handle
+argument_list|,
+name|input_message_buffer
+argument_list|,
+name|output_message_buffer
+argument_list|,
+name|conf_state
+argument_list|,
+name|qop_state
+argument_list|,
+name|key
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KEYTYPE_ARCFOUR
+case|:
+name|ret
+operator|=
+name|_gssapi_unwrap_arcfour
 argument_list|(
 name|minor_status
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: connect.c,v 1.90 2003/02/18 15:39:10 lha Exp $"
+literal|"$Id: connect.c,v 1.90.2.1 2003/08/25 11:46:55 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2793,10 +2793,11 @@ name|char
 modifier|*
 name|tmp
 decl_stmt|;
-name|d
-operator|->
-name|size
-operator|+=
+name|size_t
+name|grow
+decl_stmt|;
+name|grow
+operator|=
 name|max
 argument_list|(
 literal|1024
@@ -2813,7 +2814,9 @@ condition|(
 name|d
 operator|->
 name|size
-operator|>=
+operator|+
+name|grow
+operator|>
 name|max_request
 condition|)
 block|{
@@ -2830,6 +2833,8 @@ operator|)
 name|d
 operator|->
 name|size
+operator|+
+name|grow
 argument_list|)
 expr_stmt|;
 name|clear_descr
@@ -2853,6 +2858,8 @@ argument_list|,
 name|d
 operator|->
 name|size
+operator|+
+name|grow
 argument_list|)
 expr_stmt|;
 if|if
@@ -2875,6 +2882,8 @@ operator|)
 name|d
 operator|->
 name|size
+operator|+
+name|grow
 argument_list|)
 expr_stmt|;
 name|clear_descr
@@ -2887,6 +2896,12 @@ operator|-
 literal|1
 return|;
 block|}
+name|d
+operator|->
+name|size
+operator|+=
+name|grow
+expr_stmt|;
 name|d
 operator|->
 name|buf
@@ -3554,6 +3569,45 @@ argument_list|,
 name|errno
 argument_list|,
 literal|"recvfrom"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+name|krb5_warnx
+argument_list|(
+name|context
+argument_list|,
+literal|"connection closed before end of data after %d "
+literal|"bytes from %s"
+argument_list|,
+name|d
+index|[
+name|index
+index|]
+operator|.
+name|len
+argument_list|,
+name|d
+index|[
+name|index
+index|]
+operator|.
+name|addr_string
+argument_list|)
+expr_stmt|;
+name|clear_descr
+argument_list|(
+name|d
+operator|+
+name|index
 argument_list|)
 expr_stmt|;
 return|return;

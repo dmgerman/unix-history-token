@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: klist.c,v 1.68.2.1 2003/05/08 18:59:56 lha Exp $"
+literal|"$Id: klist.c,v 1.68.2.2 2003/10/13 15:13:39 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1402,6 +1402,9 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+operator|(
+name|ret
+operator|=
 name|krb5_cc_next_cred
 argument_list|(
 name|context
@@ -1414,6 +1417,7 @@ argument_list|,
 operator|&
 name|creds
 argument_list|)
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1456,6 +1460,23 @@ name|creds
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ret
+operator|!=
+name|KRB5_CC_END
+condition|)
+name|krb5_err
+argument_list|(
+name|context
+argument_list|,
+literal|1
+argument_list|,
+name|ret
+argument_list|,
+literal|"krb5_cc_get_next"
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|krb5_cc_end_seq_get

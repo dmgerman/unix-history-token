@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: afslog.c,v 1.21.2.1 2003/04/23 18:04:26 lha Exp $"
+literal|"$Id: afslog.c,v 1.21.2.2 2003/08/25 11:43:51 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1021,6 +1021,16 @@ return|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|cell
+operator|==
+name|NULL
+condition|)
+name|cell
+operator|=
+literal|"<default cell>"
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KRB5

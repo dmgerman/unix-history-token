@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse-name-test.c,v 1.3 2002/08/30 03:20:11 assar Exp $"
+literal|"$Id: parse-name-test.c,v 1.3.4.1 2004/03/22 19:27:36 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -340,7 +340,9 @@ literal|""
 block|,
 literal|0
 block|,
-block|{}
+block|{
+name|NULL
+block|}
 block|,
 name|FALSE
 block|}

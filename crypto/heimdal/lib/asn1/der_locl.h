@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: der_locl.h,v 1.4 2001/09/27 16:21:47 assar Exp $ */
+comment|/* $Id: der_locl.h,v 1.4.6.1 2004/02/09 17:54:05 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -107,6 +107,24 @@ include|#
 directive|include
 file|<der.h>
 end_include
+
+begin_function_decl
+name|size_t
+name|_heim_len_unsigned
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|size_t
+name|_heim_len_int
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

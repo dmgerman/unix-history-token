@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2003 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/*   * $Id: kdc_locl.h,v 1.58 2003/03/18 00:23:06 lha Exp $   */
+comment|/*   * $Id: kdc_locl.h,v 1.58.2.2 2003/10/27 11:07:16 joda Exp $   */
 end_comment
 
 begin_ifndef
@@ -152,6 +152,25 @@ begin_decl_stmt
 specifier|extern
 name|krb5_boolean
 name|allow_anonymous
+decl_stmt|;
+end_decl_stmt
+
+begin_enum
+enum|enum
+block|{
+name|TRPOLICY_ALWAYS_CHECK
+block|,
+name|TRPOLICY_ALLOW_PER_PRINCIPAL
+block|,
+name|TRPOLICY_ALWAYS_HONOUR_REQUEST
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|trpolicy
 decl_stmt|;
 end_decl_stmt
 

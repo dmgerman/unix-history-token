@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get_in_tkt.c,v 1.107 2003/02/16 06:41:25 nectar Exp $"
+literal|"$Id: get_in_tkt.c,v 1.107.2.1 2003/09/18 21:00:09 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3969,6 +3969,10 @@ condition|)
 return|return
 name|ret
 return|;
+if|if
+condition|(
+name|ccache
+condition|)
 name|ret
 operator|=
 name|krb5_cc_store_cred
@@ -3976,13 +3980,6 @@ argument_list|(
 name|context
 argument_list|,
 name|ccache
-argument_list|,
-name|creds
-argument_list|)
-expr_stmt|;
-name|krb5_free_creds_contents
-argument_list|(
-name|context
 argument_list|,
 name|creds
 argument_list|)
