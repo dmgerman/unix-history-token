@@ -33,15 +33,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ISO88025_HDR_LEN
-value|(ISO88025_CF_LEN + (ISO88025_ADDR_LEN * 2))
+name|ISO88025_CF_LEN
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISO88025_CF_LEN
-value|2
+name|ISO88025_HDR_LEN
+value|(ISO88025_CF_LEN + (ISO88025_ADDR_LEN * 2))
 end_define
 
 begin_define
