@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -230,7 +230,7 @@ comment|/* flags */
 name|uid_t
 name|mnt_exroot
 decl_stmt|;
-comment|/* exported mapping for uid 0 */
+comment|/* XXX - deprecated */
 name|struct
 name|statfs
 name|mnt_stat
@@ -310,6 +310,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNT_EXRDONLY
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* exported read only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNT_EXPORTED
 value|0x00000100
 end_define
@@ -321,12 +332,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNT_EXRDONLY
+name|MNT_DEFEXPORTED
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* exported read only */
+comment|/* exported to the world */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_EXPORTANON
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* use anon uid mapping for everyone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_EXKERB
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* exported with Kerberos uid mapping */
 end_comment
 
 begin_comment
@@ -379,6 +412,17 @@ end_define
 
 begin_comment
 comment|/* not a real mount, just an update */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_DELEXPORT
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* delete export host lists */
 end_comment
 
 begin_define
@@ -891,7 +935,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Arguments to mount LFS/UFS  */
+comment|/*  * Arguments to mount UFS-based filesystems  */
 end_comment
 
 begin_struct
@@ -911,6 +955,31 @@ name|uid_t
 name|exroot
 decl_stmt|;
 comment|/* mapping for root uid */
+name|struct
+name|ucred
+name|anon
+decl_stmt|;
+comment|/* mapping for anonymous user */
+name|struct
+name|sockaddr
+modifier|*
+name|saddr
+decl_stmt|;
+comment|/* net address to which exported */
+name|int
+name|slen
+decl_stmt|;
+comment|/* and the net address length */
+name|struct
+name|sockaddr
+modifier|*
+name|smask
+decl_stmt|;
+comment|/* mask of valid bits in saddr */
+name|int
+name|msklen
+decl_stmt|;
+comment|/* and the smask length */
 block|}
 struct|;
 end_struct
