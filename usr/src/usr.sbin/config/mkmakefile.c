@@ -1545,7 +1545,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@echo loading %s\n\t@rm -f %s\n\t"
+literal|"\t@echo loading %s\n\t@rm -f %s\n"
 argument_list|,
 name|fl
 operator|->
@@ -1576,7 +1576,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@cc $(COPTS) -c vers.c\n"
+literal|"\t@cc $(CFLAGS) -c vers.c\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1584,7 +1584,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"@ld -n -o %s -e start -x -T 80000000 locore.o ${OBJS} vers.o ioconf.o param.o swap%s.o\n"
+literal|"\t@ld -n -o %s -e start -x -T 80000000 locore.o ${OBJS} vers.o ioconf.o param.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
