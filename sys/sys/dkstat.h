@@ -16,6 +16,12 @@ name|_SYS_DKSTAT_H_
 value|1
 end_define
 
+begin_warning
+warning|#
+directive|warning
+literal|"<sys/dkstat.h> is deprecated and should not be #include'd"
+end_warning
+
 begin_endif
 endif|#
 directive|endif
