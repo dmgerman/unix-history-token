@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)suftab.c	1.1 (CWI) 85/07/17"
+literal|"@(#)suftab.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -3124,15 +3124,15 @@ block|,
 comment|/* -STALL */
 literal|04
 block|,
-literal|0200
-operator|+
 literal|'s'
 block|,
+literal|0200
+operator|+
 literal|'t'
 block|,
 literal|'a'
 block|,
-comment|/* -STAL */
+comment|/* S-TAL */
 literal|04
 block|,
 literal|0200
@@ -3704,6 +3704,19 @@ name|sufn
 index|[]
 init|=
 block|{
+literal|05
+block|,
+literal|0200
+operator|+
+literal|'k'
+block|,
+literal|'n'
+block|,
+literal|'o'
+block|,
+literal|'w'
+block|,
+comment|/* -KNOWN */
 literal|04
 block|,
 literal|0200
@@ -4414,7 +4427,6 @@ operator|+
 literal|'e'
 block|,
 comment|/* -COV-ER */
-comment|/*	04,'o',0200+'v','e',	/* O-VER */
 literal|04
 block|,
 literal|0200

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n2.c	1.1 (CWI) 85/07/17"
+literal|"@(#)n2.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,6 +20,10 @@ endif|#
 directive|endif
 endif|lint
 end_endif
+
+begin_comment
+comment|/*  * n2.c  *  * output, cleanup  */
+end_comment
 
 begin_include
 include|#
@@ -33,34 +37,42 @@ directive|include
 file|<sgtty.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
+begin_include
 include|#
 directive|include
-file|"d.h"
-specifier|extern
-include|#
-directive|include
-file|"v.h"
+file|<signal.h>
+end_include
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|NROFF
-specifier|extern
+end_ifdef
+
+begin_include
 include|#
 directive|include
 file|"tw.h"
+end_include
+
+begin_endif
 endif|#
 directive|endif
-include|#
-directive|include
-file|"s.h"
+end_endif
+
+begin_include
 include|#
 directive|include
 file|<setjmp.h>
-comment|/* troff2.c  output, cleanup */
+end_include
+
+begin_include
 include|#
 directive|include
 file|"ext.h"
+end_include
+
+begin_decl_stmt
 specifier|extern
 name|jmp_buf
 name|sjbuf
@@ -79,21 +91,20 @@ name|error
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|pchar
 argument_list|(
-argument|i
+name|i
 argument_list|)
-end_macro
-
-begin_decl_stmt
+specifier|register
 name|tchar
 name|i
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|j
 decl_stmt|;
@@ -252,31 +263,22 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|pchar1
 argument_list|(
-argument|i
+name|i
 argument_list|)
-end_macro
-
-begin_decl_stmt
+specifier|register
 name|tchar
 name|i
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
 specifier|register
 name|j
-operator|,
-operator|*
-name|k
 expr_stmt|;
-specifier|static
-name|int
-name|seendraw
-decl_stmt|;
 name|j
 operator|=
 name|cbits
@@ -350,7 +352,7 @@ name|tflg
 condition|)
 block|{
 comment|/* transparent mode, undiverted */
-name|fprintf
+name|fdprintf
 argument_list|(
 name|ptid
 argument_list|,
@@ -368,7 +370,53 @@ if|if
 condition|(
 name|ascii
 condition|)
+name|outascii
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|ptout
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|outascii
+argument_list|(
+argument|i
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* print i in best-guess ascii */
+end_comment
+
+begin_decl_stmt
+name|tchar
+name|i
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
+specifier|static
+name|int
+name|seendraw
+decl_stmt|;
+name|int
+name|j
+init|=
+name|cbits
+argument_list|(
+name|i
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|ismot
@@ -427,7 +475,7 @@ name|DRAWCIRCLE
 case|:
 name|oputs
 argument_list|(
-literal|"CIRCLE"
+literal|"CIRCLE "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -436,7 +484,7 @@ name|DRAWELLIPSE
 case|:
 name|oputs
 argument_list|(
-literal|"ELLIPSE"
+literal|"ELLIPSE "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -445,16 +493,16 @@ name|DRAWLINE
 case|:
 name|oputs
 argument_list|(
-literal|"LINE"
+literal|"LINE "
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DRAWWIG
+name|DRAWSPLINE
 case|:
 name|oputs
 argument_list|(
-literal|"SPLINE"
+literal|"SPLINE "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -463,32 +511,36 @@ name|DRAWARC
 case|:
 name|oputs
 argument_list|(
-literal|"ARC"
+literal|"ARC "
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'.'
 case|:
-if|if
-condition|(
-name|seendraw
-operator|==
-literal|2
-condition|)
-name|seendraw
-operator|=
-literal|0
+name|oputs
+argument_list|(
+literal|"."
+argument_list|)
 expr_stmt|;
-else|else
-name|seendraw
-operator|++
-expr_stmt|;
+comment|/* 					if(seendraw == 2) 						seendraw = 0; 					else 						seendraw++; 					*/
 break|break;
 default|default:
 name|oputs
 argument_list|(
-literal|"UNKNOWN"
+literal|"UNKNOWN "
+argument_list|)
+expr_stmt|;
+name|flusho
+argument_list|()
+expr_stmt|;
+name|errprint
+argument_list|(
+literal|"Unknown 0%o %c function"
+argument_list|,
+name|j
+argument_list|,
+name|j
 argument_list|)
 expr_stmt|;
 break|break;
@@ -520,22 +572,37 @@ case|:
 case|case
 name|HX
 case|:
-case|case
-name|FONTPOS
-case|:
-comment|/* creeps in as well */
 return|return;
 case|case
 name|DRAWFCN
 case|:
+if|if
+condition|(
 name|seendraw
-operator|++
+operator|==
+literal|1
+condition|)
+block|{
+name|seendraw
+operator|=
+literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
 name|oputs
 argument_list|(
 literal|"DRAWFUNCTION "
 argument_list|)
 expr_stmt|;
+name|flusho
+argument_list|()
+expr_stmt|;
+name|seendraw
+operator|++
+expr_stmt|;
+block|}
+comment|/* 				errprint("Seendraw %d", seendraw); 				*/
 return|return;
 case|case
 literal|'\n'
@@ -547,11 +614,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 default|default:
-name|fprintf
+name|errprint
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown 0%o function\n"
+literal|"Unknown (2) 0%o function"
 argument_list|,
 name|j
 argument_list|)
@@ -634,23 +699,6 @@ argument_list|(
 literal|"ffl"
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|j
-operator|==
-name|NARSP
-operator|||
-name|j
-operator|==
-name|HNARSP
-operator|||
-name|j
-operator|==
-name|WORDSP
-condition|)
-empty_stmt|;
-comment|/* nothing at all */
 else|else
 block|{
 name|oput
@@ -693,53 +741,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-endif|#
-directive|endif
-name|ptout
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-block|}
 end_block
 
-begin_macro
-name|oput
-argument_list|(
-argument|i
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-name|i
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-operator|*
-name|obufp
-operator|++
-operator|=
-name|i
-expr_stmt|;
-if|if
-condition|(
-name|obufp
-operator|>=
-operator|&
-name|obuf
-index|[
-name|OBUFSZ
-index|]
-condition|)
-name|flusho
-argument_list|()
-expr_stmt|;
-block|}
-end_block
+begin_comment
+comment|/*  * now a macro oput(i) 	register int	i; { 	*obufp++ = i; 	if (obufp>=&obuf[OBUFSZ]) 		flusho(); } */
+end_comment
 
 begin_expr_stmt
 name|oputs
@@ -881,6 +887,16 @@ name|p
 operator|++
 condition|)
 empty_stmt|;
+if|if
+condition|(
+name|p
+operator|-
+name|t
+operator|.
+name|twinit
+operator|>
+literal|1
+condition|)
 name|write
 argument_list|(
 name|ptid
@@ -944,10 +960,6 @@ expr_stmt|;
 name|error
 operator||=
 name|x
-expr_stmt|;
-name|level
-operator|=
-literal|0
 expr_stmt|;
 name|app
 operator|=
@@ -1118,9 +1130,12 @@ name|x
 expr_stmt|;
 if|if
 condition|(
-name|v
+name|numtab
+index|[
+name|NL
+index|]
 operator|.
-name|nl
+name|val
 condition|)
 block|{
 name|trap
@@ -1389,11 +1404,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
+name|errprint
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Pipe not created.\n"
+literal|"Pipe not created."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1458,11 +1471,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|errprint
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot exec %s\n"
+literal|"Cannot exec %s"
 argument_list|,
 name|nextf
 argument_list|)

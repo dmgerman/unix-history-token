@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nii.c	1.1 (CWI) 85/07/17"
+literal|"@(#)nii.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,19 +47,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"s.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"d.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"v.h"
+file|"ext.h"
 end_include
 
 begin_include
@@ -67,20 +55,6 @@ include|#
 directive|include
 file|<sgtty.h>
 end_include
-
-begin_decl_stmt
-name|int
-modifier|*
-name|vlist
-init|=
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|v
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -110,17 +84,15 @@ name|pipeflg
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NROFF
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|hflg
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* used in nroff only */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -128,10 +100,9 @@ name|eqflg
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* used in nroff only */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -147,19 +118,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-modifier|*
-name|pslp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|psflg
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|ppts
 decl_stmt|;
 end_decl_stmt
@@ -167,12 +125,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|pfont
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|paper
 decl_stmt|;
 end_decl_stmt
 
@@ -196,12 +148,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|code
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|ccs
 decl_stmt|;
 end_decl_stmt
@@ -212,12 +158,6 @@ name|bd
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|back
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -225,19 +165,7 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|level
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|stdi
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|waitf
 decl_stmt|;
 end_decl_stmt
 
@@ -307,19 +235,42 @@ end_decl_stmt
 
 begin_decl_stmt
 name|tchar
-name|cbuf
+name|pbbuf
 index|[
 name|NC
 index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* pushback buffer for arguments, \n, etc. */
+end_comment
+
 begin_decl_stmt
 name|tchar
 modifier|*
-name|cp
+name|pbp
+init|=
+name|pbbuf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* next free slot in pbbuf */
+end_comment
+
+begin_decl_stmt
+name|tchar
+modifier|*
+name|lastpbp
+init|=
+name|pbbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pbp in previous stack frame */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -338,12 +289,6 @@ name|tchar
 name|ch
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|cps
 decl_stmt|;
 end_decl_stmt
 
@@ -415,18 +360,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|tchar
-name|ch0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|cwidth
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|filep
 name|ip
 decl_stmt|;
@@ -439,13 +372,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|tchar
-modifier|*
-name|ap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|donef
 decl_stmt|;
@@ -454,18 +380,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nflush
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nchar
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|tchar
-name|rchar
 decl_stmt|;
 end_decl_stmt
 
@@ -547,12 +461,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|dilev
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tlss
 decl_stmt|;
 end_decl_stmt
 
@@ -666,24 +574,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|inc
-index|[
-name|NN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|fmt
-index|[
-name|NN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|evi
 decl_stmt|;
 end_decl_stmt
@@ -789,12 +679,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|xbitf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|over
 decl_stmt|;
 end_decl_stmt
@@ -814,7 +698,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|tchar
 modifier|*
 name|olinep
 decl_stmt|;
@@ -845,6 +729,34 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|no_out
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|widcache
+name|widcache
+index|[
+name|NWIDCACHE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|d
+name|d
+index|[
+name|NDI
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|d
+modifier|*
+name|dip
 decl_stmt|;
 end_decl_stmt
 

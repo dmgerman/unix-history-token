@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hytab.c	1.1 (CWI) 85/07/17"
+literal|"@(#)hytab.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,7 +26,7 @@ comment|/*  * Hyphenation digram tables  */
 end_comment
 
 begin_comment
-comment|/*  * These table are for the ORIGINAL dialect  */
+comment|/*  * These tables are for the ORIGINAL algorithm  */
 end_comment
 
 begin_decl_stmt
@@ -2830,7 +2830,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * These tables are for the DUTCH dialect  */
+comment|/*  * These tables are for the DUTCH algorithm  */
 end_comment
 
 begin_decl_stmt

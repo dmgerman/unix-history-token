@@ -1,64 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXPTR
-value|(char *)0xfffffff
-end_define
-
-begin_comment
-comment|/* max value of pointer on vaxes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INCORE
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|pdp11
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXPTR
-value|(char *)-1
-end_define
-
-begin_comment
-comment|/* max value of any pointer variable */
-end_comment
-
-begin_comment
-comment|/* likely to be machine-dependent */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* starting values for typesetting parameters: */
 end_comment
@@ -83,6 +23,39 @@ end_define
 
 begin_comment
 comment|/* default font position */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ULFONT
+value|2
+end_define
+
+begin_comment
+comment|/* default underline font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BDFONT
+value|3
+end_define
+
+begin_comment
+comment|/* default emboldening font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BIFONT
+value|4
+end_define
+
+begin_comment
+comment|/* default bold italic font */
 end_comment
 
 begin_define
@@ -124,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|HOR
-value|t.Hor
+value|t.Adj
 end_define
 
 begin_define
@@ -172,13 +145,6 @@ define|#
 directive|define
 name|TRAILER
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNPAD
-value|0227
 end_define
 
 begin_define
@@ -319,19 +285,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|UNPAD
-value|027
-end_define
-
-begin_define
-define|#
-directive|define
 name|PO
-value|(INCH - INCH/27)
+value|(INCH)
 end_define
 
 begin_comment
-comment|/* page offset 26/27ths inch */
+comment|/* page offset 1 inch */
 end_comment
 
 begin_comment
@@ -531,12 +490,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DRAWWIG
+name|DRAWSPLINE
 value|'~'
 end_define
 
 begin_comment
-comment|/* wiggly line with spline */
+comment|/* quadratic B spline */
 end_comment
 
 begin_define
@@ -575,6 +534,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|XON
+value|023
+end_define
+
+begin_comment
+comment|/* \X'...' starts here */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OHC
 value|024
 end_define
@@ -603,6 +573,17 @@ end_define
 
 begin_comment
 comment|/* printable escape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNPAD
+value|027
+end_define
+
+begin_comment
+comment|/* unpaddable blank */
 end_comment
 
 begin_define
@@ -641,8 +622,15 @@ name|ESC
 value|033
 end_define
 
+begin_define
+define|#
+directive|define
+name|XOFF
+value|034
+end_define
+
 begin_comment
-comment|/* there are several tests (using iscontrol()) 	/* that rely on these having 034 true. 	*/
+comment|/* \X'...' ends here */
 end_comment
 
 begin_define
@@ -652,7 +640,7 @@ name|iscontrol
 parameter_list|(
 name|n
 parameter_list|)
-value|(n>=034&& n<=037)
+value|(n==035 || n==036)
 end_define
 
 begin_comment
@@ -673,23 +661,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FONTPOS
-value|036
-end_define
-
-begin_comment
-comment|/* position of font \f(XX encoded in top */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAXFONTS
 value|99
 end_define
 
 begin_comment
-comment|/* Maximum number of fonts (in fontlab) */
+comment|/* Maximum number of fonts (in fontab) */
 end_comment
 
 begin_define
@@ -730,28 +707,6 @@ end_define
 
 begin_comment
 comment|/* minus sign on current font */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NARSP
-value|c_narsp
-end_define
-
-begin_comment
-comment|/* narrow space \|: fake character */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HNARSP
-value|c_hnarsp
-end_define
-
-begin_comment
-comment|/* half narrow space \^: fake character */
 end_comment
 
 begin_define
@@ -872,6 +827,21 @@ value|c_lefthand
 end_define
 
 begin_comment
+comment|/* left hand for word overflow */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DAGGER
+value|c_dagger
+end_define
+
+begin_comment
+comment|/* dagger for footnotes */
+end_comment
+
+begin_comment
 comment|/* array sizes, and similar limits: */
 end_comment
 
@@ -889,34 +859,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAXCHARS
-value|255
-end_define
-
-begin_comment
-comment|/* Maximum characters in one font up to now */
-end_comment
-
-begin_comment
-comment|/* define enough space for the fontcache. EXTRAFONT is maximum space currently to be used by a font 		  widthtab+kerntab+code 	dev.nchtab "asciifitab" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRAFONT
-value|(3*MAXCHARS * sizeof(char) + dev.nchtab + (128-32)\ 	* sizeof(char) + sizeof(struct font) + 255 * sizeof(short))
-end_define
-
-begin_comment
-comment|/*							fonttab */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NN
-value|300
+value|400
 end_define
 
 begin_comment
@@ -949,7 +893,7 @@ begin_define
 define|#
 directive|define
 name|NS
-value|64
+value|128
 end_define
 
 begin_comment
@@ -1000,65 +944,11 @@ begin_comment
 comment|/* disk sector size in chars */
 end_comment
 
-begin_comment
-comment|/* the following defines the size of the infamous environment block.    this macro is guaranteed to blow older C preprocessors out of the    water.    Furthermore, it is wrong: the proper value is more accurately    determined by using sizeof *tchar in several places.    no harm is done as long as it's big enough. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EVUSED
-define|\
-value|(62 * sizeof(int)
-comment|/* integers in env block */
-value|\ 		+ 9 * sizeof(tchar)
-comment|/* tchars in env block */
-value|\ 		+ NHYP * sizeof(tchar)
-comment|/* hytab */
-value|\ 		+ NTAB * sizeof(int)
-comment|/* tabtab */
-value|\ 		+ (LNSIZE+WDSIZE) * sizeof(tchar))
-end_define
-
-begin_comment
-comment|/* line+word */
-end_comment
-
-begin_comment
-comment|/* added two int's to environment block for ha request jna */
-end_comment
-
-begin_comment
-comment|/* added another int for changed ht request jna */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EVSPARE
-value|DSIZE - EVUSED % DSIZE
-end_define
-
-begin_comment
-comment|/* number of leftover chars */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EVS
-value|(EVUSED + EVSPARE)
-end_define
-
-begin_comment
-comment|/* should be a multiple of DSIZE */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|NM
-value|350
+value|500
 end_define
 
 begin_comment
@@ -1102,7 +992,7 @@ begin_define
 define|#
 directive|define
 name|NTAB
-value|35
+value|40
 end_define
 
 begin_comment
@@ -1157,11 +1047,22 @@ begin_define
 define|#
 directive|define
 name|NTRTAB
-value|350
+value|512
 end_define
 
 begin_comment
 comment|/* number of items in trtab[] */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NWIDCACHE
+value|512
+end_define
+
+begin_comment
+comment|/* number of items in widcache[] */
 end_comment
 
 begin_define
@@ -1201,7 +1102,7 @@ begin_define
 define|#
 directive|define
 name|OBUFSZ
-value|512
+value|4096
 end_define
 
 begin_comment
@@ -1212,7 +1113,7 @@ begin_define
 define|#
 directive|define
 name|IBUFSZ
-value|512
+value|4096
 end_define
 
 begin_comment
@@ -1223,7 +1124,7 @@ begin_define
 define|#
 directive|define
 name|NC
-value|256
+value|1024
 end_define
 
 begin_comment
@@ -1253,7 +1154,7 @@ comment|/* pads per field */
 end_comment
 
 begin_comment
-comment|/* 	Internal character representation: 	Internally, every character is carried around as 	a 32 bit cookie, called a "tchar" (typedef long). 	Bits are numbered 31..0 from left to right. 	If bit 15 is 1, the character is motion, with 		if bit 16 it's vertical motion 		if bit 17 it's negative motion 	If bit 15 is 0, the character is a real character. 		if bit 31	zero motion 		bits 30..24	size 		bits 23..16	font */
+comment|/* 	Internal character representation: 	Internally, every character is carried around as 	a 32 bit cookie, called a "tchar" (typedef long). 	Bits are numbered 31..0 from left to right. 	If bit 15 is 1, the character is motion, with 		if bit 16 it's vertical motion 		if bit 17 it's negative motion 	If bit 15 is 0, the character is a real character. 		if bit 31	zero motion 		bits 30..24	size 		bits 23..16	font 		bit 8		absolute char number in 7..0 	This implies at most 256-32 characters in a single font, 	which is going to be a problem somewhere */
 end_comment
 
 begin_comment
@@ -1264,7 +1165,7 @@ begin_define
 define|#
 directive|define
 name|MOT
-value|(unsigned short)(01<<15)
+value|(01L<<15)
 end_define
 
 begin_comment
@@ -1322,12 +1223,8 @@ name|ismot
 parameter_list|(
 name|n
 parameter_list|)
-value|((unsigned short)(n)& MOT)
+value|((n)& MOT)
 end_define
-
-begin_comment
-comment|/* (short) is a cheap mask */
-end_comment
 
 begin_define
 define|#
@@ -1364,7 +1261,7 @@ name|absmot
 parameter_list|(
 name|n
 parameter_list|)
-value|((unsigned short)(n)& ~MOT)
+value|(unsigned)(0177777& (n)& ~MOT)
 end_define
 
 begin_comment
@@ -1395,6 +1292,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ABSCHAR
+value|0400
+end_define
+
+begin_comment
+comment|/* absolute char number in this font */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SMASK
 value|(0177L<< 24)
 end_define
@@ -1420,29 +1328,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMASK
-value|~MOT
-end_define
-
-begin_comment
-comment|/* clears MOT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMASKL
-value|077777L
-end_define
-
-begin_define
-define|#
-directive|define
 name|sbits
 parameter_list|(
 name|n
 parameter_list|)
-value|((unsigned short)((n)>> 24)& 0177)
+value|(((n)>> 24)& 0177)
 end_define
 
 begin_define
@@ -1452,7 +1342,7 @@ name|fbits
 parameter_list|(
 name|n
 parameter_list|)
-value|((unsigned short)((n)>> 16)& 0377)
+value|(((n)>> 16)& 0377)
 end_define
 
 begin_define
@@ -1462,7 +1352,7 @@ name|sfbits
 parameter_list|(
 name|n
 parameter_list|)
-value|((unsigned short)(((n)& SFMASK)>> 16))
+value|(unsigned)(0177777& (((n)& SFMASK)>> 16))
 end_define
 
 begin_define
@@ -1472,12 +1362,22 @@ name|cbits
 parameter_list|(
 name|n
 parameter_list|)
-value|(unsigned short)(n)
+value|(unsigned)(0177777& (n))
 end_define
 
 begin_comment
 comment|/* isolate bottom 16 bits  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|absbits
+parameter_list|(
+name|n
+parameter_list|)
+value|(cbits(n)& ~ABSCHAR)
+end_define
 
 begin_define
 define|#
@@ -1524,7 +1424,7 @@ name|n
 parameter_list|,
 name|c
 parameter_list|)
-value|n = (n& ~CMASKL | (c))
+value|n = (n& ~077777L | (c))
 end_define
 
 begin_comment
@@ -1534,18 +1434,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MMASK
-value|0100000
-end_define
-
-begin_comment
-comment|/* macro mask indicator */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BMASK
+name|BYTEMASK
 value|0377
 end_define
 
@@ -1559,7 +1448,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|TMASK
+name|ZONE
+value|5
+end_define
+
+begin_comment
+comment|/* 5 hrs for EST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TABMASK
 value|037777
 end_define
 
@@ -1580,6 +1480,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|TABBIT
+value|02
+end_define
+
+begin_comment
+comment|/* bits in gchtab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDRBIT
+value|04
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCBIT
+value|010
+end_define
+
+begin_define
+define|#
+directive|define
 name|PAIR
 parameter_list|(
 name|A
@@ -1589,12 +1514,31 @@ parameter_list|)
 value|(A|(B<<BYTE))
 end_define
 
+begin_define
+define|#
+directive|define
+name|oput
+parameter_list|(
+name|c
+parameter_list|)
+value|if ((*obufp++ = (c)), obufp>=&obuf[OBUFSZ]) flusho(); else
+end_define
+
+begin_comment
+comment|/*  * "temp file" parameters.  macros and strings  * are stored in an array of linked blocks,  * which may be in memory if INCORE is set during  * compilation, or otherwise in a file.  * The numerology is delicate if filep is 16 bits: 	#define BLK 128 	#define NBLIST 512  * i.e., the product is 16 bits long.   * If filep is an unsigned long (and if your  * compiler will let you say that) then NBLIST  * can be a lot bigger.  Of course that makes  * the file or core image a lot bigger too,  * and means you don't detect missing diversion  * terminations as quickly... .  * It also means that you may have trouble running  * on non-swapping systems, since the core image  * will be over 1Mb.   * In any case, both must be powers of 2.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|unsigned
+name|int
 name|filep
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* this is good for 32 bit machines */
+end_comment
 
 begin_define
 define|#
@@ -1604,8 +1548,14 @@ value|128
 end_define
 
 begin_comment
-comment|/* alloc block tchars */
+comment|/* alloc block in tchars */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMALLER
+end_ifdef
 
 begin_define
 define|#
@@ -1614,80 +1564,26 @@ name|NBLIST
 value|1024
 end_define
 
-begin_comment
-comment|/* allocation list */
-end_comment
-
-begin_comment
-comment|/* previous values were BLK 256 NBLIST 512 */
-end_comment
-
-begin_comment
-comment|/* it seems good to keep the product constant */
-end_comment
-
-begin_comment
-comment|/* BLK*NBLIST<=65536 words, if filep=unsigned */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
-name|THRESH
-value|160
+name|NBLIST
+value|2048
 end_define
 
 begin_comment
-comment|/*digram goodness threshold*/
+comment|/* allocation list.  smallish machines use 1024, bigger use 2048 */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DUTCH_THRESH
-value|3
-end_define
-
-begin_comment
-comment|/* for recursive bestesplits jna */
-end_comment
-
-begin_comment
-comment|/* added the ha request, to change the hyphenation algorithm jna */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ORIGINAL
-value|0
-end_define
-
-begin_comment
-comment|/* The original (American English) algorithm */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUTCH
-value|1
-end_define
-
-begin_comment
-comment|/* "Bestesplits" routine */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXDIALECTS
-value|1
-end_define
-
-begin_comment
-comment|/* number of dialects minus 1 */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -1787,16 +1683,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|tchar
 name|setch
-argument_list|()
-decl_stmt|,
-name|absch
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -1869,20 +1762,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|c_minus
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|c_narsp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|c_hnarsp
 decl_stmt|;
 end_decl_stmt
 
@@ -1966,6 +1845,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|c_dagger
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|stderr
 decl_stmt|;
 end_decl_stmt
@@ -1973,6 +1859,1121 @@ end_decl_stmt
 begin_comment
 comment|/* this is NOT the stdio value! */
 end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|d
+block|{
+comment|/* diversion */
+name|filep
+name|op
+decl_stmt|;
+name|int
+name|dnl
+decl_stmt|;
+name|int
+name|dimac
+decl_stmt|;
+name|int
+name|ditrap
+decl_stmt|;
+name|int
+name|ditf
+decl_stmt|;
+name|int
+name|alss
+decl_stmt|;
+name|int
+name|blss
+decl_stmt|;
+name|int
+name|nls
+decl_stmt|;
+name|int
+name|mkline
+decl_stmt|;
+name|int
+name|maxl
+decl_stmt|;
+name|int
+name|hnl
+decl_stmt|;
+name|int
+name|curd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+specifier|extern
+struct|struct
+name|s
+block|{
+comment|/* stack frame */
+name|int
+name|nargs
+decl_stmt|;
+name|struct
+name|s
+modifier|*
+name|pframe
+decl_stmt|;
+name|filep
+name|pip
+decl_stmt|;
+name|int
+name|pnchar
+decl_stmt|;
+name|tchar
+name|prchar
+decl_stmt|;
+name|int
+name|ppendt
+decl_stmt|;
+name|tchar
+name|pch
+decl_stmt|;
+name|tchar
+modifier|*
+name|lastpbp
+decl_stmt|;
+name|int
+name|mname
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+specifier|extern
+struct|struct
+name|contab
+block|{
+name|unsigned
+name|short
+name|rq
+decl_stmt|;
+name|struct
+name|contab
+modifier|*
+name|link
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|f
+function_decl|)
+parameter_list|()
+function_decl|;
+name|unsigned
+name|mx
+decl_stmt|;
+block|}
+name|contab
+index|[
+name|NM
+index|]
+struct|;
+end_struct
+
+begin_struct
+specifier|extern
+struct|struct
+name|numtab
+block|{
+name|short
+name|r
+decl_stmt|;
+comment|/* name */
+name|short
+name|fmt
+decl_stmt|;
+name|short
+name|inc
+decl_stmt|;
+name|int
+name|val
+decl_stmt|;
+name|struct
+name|numtab
+modifier|*
+name|link
+decl_stmt|;
+block|}
+name|numtab
+index|[
+name|NN
+index|]
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|YR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HP
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DN
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|MO
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DY
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|DW
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|LN
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|DL
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ST
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|SB
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|CD
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|PID
+value|14
+end_define
+
+begin_comment
+comment|/* the infamous environment block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ics
+value|env._ics
+end_define
+
+begin_define
+define|#
+directive|define
+name|sps
+value|env._sps
+end_define
+
+begin_define
+define|#
+directive|define
+name|spacesz
+value|env._spacesz
+end_define
+
+begin_define
+define|#
+directive|define
+name|lss
+value|env._lss
+end_define
+
+begin_define
+define|#
+directive|define
+name|lss1
+value|env._lss1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ll
+value|env._ll
+end_define
+
+begin_define
+define|#
+directive|define
+name|ll1
+value|env._ll1
+end_define
+
+begin_define
+define|#
+directive|define
+name|lt
+value|env._lt
+end_define
+
+begin_define
+define|#
+directive|define
+name|lt1
+value|env._lt1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ic
+value|env._ic
+end_define
+
+begin_define
+define|#
+directive|define
+name|icf
+value|env._icf
+end_define
+
+begin_define
+define|#
+directive|define
+name|chbits
+value|env._chbits
+end_define
+
+begin_define
+define|#
+directive|define
+name|spbits
+value|env._spbits
+end_define
+
+begin_define
+define|#
+directive|define
+name|nmbits
+value|env._nmbits
+end_define
+
+begin_define
+define|#
+directive|define
+name|apts
+value|env._apts
+end_define
+
+begin_define
+define|#
+directive|define
+name|apts1
+value|env._apts1
+end_define
+
+begin_define
+define|#
+directive|define
+name|pts
+value|env._pts
+end_define
+
+begin_define
+define|#
+directive|define
+name|pts1
+value|env._pts1
+end_define
+
+begin_define
+define|#
+directive|define
+name|font
+value|env._font
+end_define
+
+begin_define
+define|#
+directive|define
+name|font1
+value|env._font1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ls
+value|env._ls
+end_define
+
+begin_define
+define|#
+directive|define
+name|ls1
+value|env._ls1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ad
+value|env._ad
+end_define
+
+begin_define
+define|#
+directive|define
+name|nms
+value|env._nms
+end_define
+
+begin_define
+define|#
+directive|define
+name|ndf
+value|env._ndf
+end_define
+
+begin_define
+define|#
+directive|define
+name|fi
+value|env._fi
+end_define
+
+begin_define
+define|#
+directive|define
+name|cc
+value|env._cc
+end_define
+
+begin_define
+define|#
+directive|define
+name|c2
+value|env._c2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ohc
+value|env._ohc
+end_define
+
+begin_define
+define|#
+directive|define
+name|tdelim
+value|env._tdelim
+end_define
+
+begin_define
+define|#
+directive|define
+name|hyf
+value|env._hyf
+end_define
+
+begin_define
+define|#
+directive|define
+name|hyoff
+value|env._hyoff
+end_define
+
+begin_define
+define|#
+directive|define
+name|hyalg
+value|env._hyalg
+end_define
+
+begin_define
+define|#
+directive|define
+name|hyalg1
+value|env._hyalg1
+end_define
+
+begin_define
+define|#
+directive|define
+name|thresh
+value|env._thresh
+end_define
+
+begin_define
+define|#
+directive|define
+name|un1
+value|env._un1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tabc
+value|env._tabc
+end_define
+
+begin_define
+define|#
+directive|define
+name|dotc
+value|env._dotc
+end_define
+
+begin_define
+define|#
+directive|define
+name|adsp
+value|env._adsp
+end_define
+
+begin_define
+define|#
+directive|define
+name|adrem
+value|env._adrem
+end_define
+
+begin_define
+define|#
+directive|define
+name|lastl
+value|env._lastl
+end_define
+
+begin_define
+define|#
+directive|define
+name|nel
+value|env._nel
+end_define
+
+begin_define
+define|#
+directive|define
+name|admod
+value|env._admod
+end_define
+
+begin_define
+define|#
+directive|define
+name|wordp
+value|env._wordp
+end_define
+
+begin_define
+define|#
+directive|define
+name|spflg
+value|env._spflg
+end_define
+
+begin_define
+define|#
+directive|define
+name|linep
+value|env._linep
+end_define
+
+begin_define
+define|#
+directive|define
+name|wdend
+value|env._wdend
+end_define
+
+begin_define
+define|#
+directive|define
+name|wdstart
+value|env._wdstart
+end_define
+
+begin_define
+define|#
+directive|define
+name|wne
+value|env._wne
+end_define
+
+begin_define
+define|#
+directive|define
+name|ne
+value|env._ne
+end_define
+
+begin_define
+define|#
+directive|define
+name|nc
+value|env._nc
+end_define
+
+begin_define
+define|#
+directive|define
+name|nb
+value|env._nb
+end_define
+
+begin_define
+define|#
+directive|define
+name|lnmod
+value|env._lnmod
+end_define
+
+begin_define
+define|#
+directive|define
+name|nwd
+value|env._nwd
+end_define
+
+begin_define
+define|#
+directive|define
+name|nn
+value|env._nn
+end_define
+
+begin_define
+define|#
+directive|define
+name|ni
+value|env._ni
+end_define
+
+begin_define
+define|#
+directive|define
+name|ul
+value|env._ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|cu
+value|env._cu
+end_define
+
+begin_define
+define|#
+directive|define
+name|ce
+value|env._ce
+end_define
+
+begin_define
+define|#
+directive|define
+name|in
+value|env._in
+end_define
+
+begin_define
+define|#
+directive|define
+name|in1
+value|env._in1
+end_define
+
+begin_define
+define|#
+directive|define
+name|un
+value|env._un
+end_define
+
+begin_define
+define|#
+directive|define
+name|wch
+value|env._wch
+end_define
+
+begin_define
+define|#
+directive|define
+name|pendt
+value|env._pendt
+end_define
+
+begin_define
+define|#
+directive|define
+name|pendw
+value|env._pendw
+end_define
+
+begin_define
+define|#
+directive|define
+name|pendnf
+value|env._pendnf
+end_define
+
+begin_define
+define|#
+directive|define
+name|spread
+value|env._spread
+end_define
+
+begin_define
+define|#
+directive|define
+name|it
+value|env._it
+end_define
+
+begin_define
+define|#
+directive|define
+name|itmac
+value|env._itmac
+end_define
+
+begin_define
+define|#
+directive|define
+name|lnsize
+value|env._lnsize
+end_define
+
+begin_define
+define|#
+directive|define
+name|hyptr
+value|env._hyptr
+end_define
+
+begin_define
+define|#
+directive|define
+name|tabtab
+value|env._tabtab
+end_define
+
+begin_define
+define|#
+directive|define
+name|line
+value|env._line
+end_define
+
+begin_define
+define|#
+directive|define
+name|word
+value|env._word
+end_define
+
+begin_comment
+comment|/*  * Note (jaap)  * If this structure changes in ni.c, you should change  * this as well  */
+end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|env
+block|{
+name|int
+name|_ics
+decl_stmt|;
+name|int
+name|_sps
+decl_stmt|;
+name|int
+name|_spacesz
+decl_stmt|;
+name|int
+name|_lss
+decl_stmt|;
+name|int
+name|_lss1
+decl_stmt|;
+name|int
+name|_ll
+decl_stmt|;
+name|int
+name|_ll1
+decl_stmt|;
+name|int
+name|_lt
+decl_stmt|;
+name|int
+name|_lt1
+decl_stmt|;
+name|tchar
+name|_ic
+decl_stmt|;
+name|int
+name|_icf
+decl_stmt|;
+name|tchar
+name|_chbits
+decl_stmt|;
+name|tchar
+name|_spbits
+decl_stmt|;
+name|tchar
+name|_nmbits
+decl_stmt|;
+name|int
+name|_apts
+decl_stmt|;
+name|int
+name|_apts1
+decl_stmt|;
+name|int
+name|_pts
+decl_stmt|;
+name|int
+name|_pts1
+decl_stmt|;
+name|int
+name|_font
+decl_stmt|;
+name|int
+name|_font1
+decl_stmt|;
+name|int
+name|_ls
+decl_stmt|;
+name|int
+name|_ls1
+decl_stmt|;
+name|int
+name|_ad
+decl_stmt|;
+name|int
+name|_nms
+decl_stmt|;
+name|int
+name|_ndf
+decl_stmt|;
+name|int
+name|_fi
+decl_stmt|;
+name|int
+name|_cc
+decl_stmt|;
+name|int
+name|_c2
+decl_stmt|;
+name|int
+name|_ohc
+decl_stmt|;
+name|int
+name|_tdelim
+decl_stmt|;
+name|int
+name|_hyf
+decl_stmt|;
+name|int
+name|_hyoff
+decl_stmt|;
+name|int
+name|_hyalg
+decl_stmt|;
+name|int
+name|_hyalg1
+decl_stmt|;
+name|int
+name|_thresh
+decl_stmt|;
+name|int
+name|_un1
+decl_stmt|;
+name|int
+name|_tabc
+decl_stmt|;
+name|int
+name|_dotc
+decl_stmt|;
+name|int
+name|_adsp
+decl_stmt|;
+name|int
+name|_adrem
+decl_stmt|;
+name|int
+name|_lastl
+decl_stmt|;
+name|int
+name|_nel
+decl_stmt|;
+name|int
+name|_admod
+decl_stmt|;
+name|tchar
+modifier|*
+name|_wordp
+decl_stmt|;
+name|int
+name|_spflg
+decl_stmt|;
+name|tchar
+modifier|*
+name|_linep
+decl_stmt|;
+name|tchar
+modifier|*
+name|_wdend
+decl_stmt|;
+name|tchar
+modifier|*
+name|_wdstart
+decl_stmt|;
+name|int
+name|_wne
+decl_stmt|;
+name|int
+name|_ne
+decl_stmt|;
+name|int
+name|_nc
+decl_stmt|;
+name|int
+name|_nb
+decl_stmt|;
+name|int
+name|_lnmod
+decl_stmt|;
+name|int
+name|_nwd
+decl_stmt|;
+name|int
+name|_nn
+decl_stmt|;
+name|int
+name|_ni
+decl_stmt|;
+name|int
+name|_ul
+decl_stmt|;
+name|int
+name|_cu
+decl_stmt|;
+name|int
+name|_ce
+decl_stmt|;
+name|int
+name|_in
+decl_stmt|;
+name|int
+name|_in1
+decl_stmt|;
+name|int
+name|_un
+decl_stmt|;
+name|int
+name|_wch
+decl_stmt|;
+name|int
+name|_pendt
+decl_stmt|;
+name|tchar
+modifier|*
+name|_pendw
+decl_stmt|;
+name|int
+name|_pendnf
+decl_stmt|;
+name|int
+name|_spread
+decl_stmt|;
+name|int
+name|_it
+decl_stmt|;
+name|int
+name|_itmac
+decl_stmt|;
+name|int
+name|_lnsize
+decl_stmt|;
+name|tchar
+modifier|*
+name|_hyptr
+index|[
+name|NHYP
+index|]
+decl_stmt|;
+name|int
+name|_tabtab
+index|[
+name|NTAB
+index|]
+decl_stmt|;
+name|tchar
+name|_line
+index|[
+name|LNSIZE
+index|]
+decl_stmt|;
+name|tchar
+name|_word
+index|[
+name|WDSIZE
+index|]
+decl_stmt|;
+block|}
+name|env
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * All changes will come after this comment (jaap)  */
+end_comment
+
+begin_comment
+comment|/*  * hyphenation dependent stuff (jaap)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THRESH
+value|160
+end_define
+
+begin_comment
+comment|/*digram goodness threshold (from n8.c, (jaap))*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUTCH_THRESH
+value|3
+end_define
+
+begin_comment
+comment|/* for recursive bestesplits (jaap) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ORIGINAL
+value|0
+end_define
+
+begin_comment
+comment|/* original (American) English) algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUTCH
+value|1
+end_define
+
+begin_comment
+comment|/* second hyphenation routine (bestesplits) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXDIALECTS
+value|1
+end_define
+
+begin_comment
+comment|/* number of hyphenation algorithms */
+end_comment
+
+begin_comment
+comment|/*  * define enough space for the fontcache. EXTRAFONT is maximum space  * currently to be used by a font. The space for the fonttab is  * for the "logical to physical font table mapping addition (jaap).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCHARS
+value|255
+end_define
+
+begin_comment
+comment|/* current maximum of characters in a font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTRAFONT
+value|(3*MAXCHARS * sizeof(char) + dev.nchtab + (128-32) \ 	* sizeof(char) + sizeof(struct Font) + 255 * sizeof(short))
+end_define
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n8.c	1.1 (CWI) 85/07/17"
+literal|"@(#)n8.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,18 @@ directive|include
 file|"tdef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ext.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -45,20 +57,8 @@ comment|/* stuff in here only works for ascii */
 end_comment
 
 begin_comment
-comment|/* troff8.c  hyphenation */
+comment|/*  * troff8.c  *   * hyphenation  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ext.h"
-end_include
 
 begin_decl_stmt
 name|char
@@ -464,11 +464,9 @@ operator|>
 name|MAXDIALECTS
 condition|)
 block|{
-name|fprintf
+name|errprint
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown dialect %d.\n"
+literal|"Unknown dialect %d"
 argument_list|,
 name|i
 argument_list|)
@@ -722,11 +720,9 @@ block|}
 return|return;
 name|full
 label|:
-name|fprintf
+name|errprint
 argument_list|(
-name|stderr
-argument_list|,
-literal|"troff: exception word list full.\n"
+literal|"exception word list full."
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1222,18 +1218,16 @@ goto|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
 name|maplow
 argument_list|(
-argument|i
+name|i
 argument_list|)
-end_macro
-
-begin_decl_stmt
+specifier|register
 name|int
 name|i
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -1828,6 +1822,10 @@ name|LETTERZ
 value|58
 end_define
 
+begin_comment
+comment|/*  * split(..) needs to be cleaned up, could install hjt's version...  */
+end_comment
+
 begin_expr_stmt
 name|split
 argument_list|(
@@ -1977,7 +1975,7 @@ literal|3
 index|]
 decl_stmt|;
 name|short
-name|word
+name|woord
 index|[
 name|MAXLETT
 operator|+
@@ -2052,7 +2050,7 @@ operator|+
 literal|1
 decl_stmt|;
 comment|/* translate into bestsplit code : */
-name|word
+name|woord
 index|[
 literal|0
 index|]
@@ -2091,7 +2089,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-name|word
+name|woord
 index|[
 name|i
 operator|++
@@ -2147,7 +2145,7 @@ condition|)
 block|{
 name|letter
 operator|=
-name|word
+name|woord
 index|[
 name|i
 index|]
@@ -2170,7 +2168,7 @@ condition|)
 block|{
 name|nextlett
 operator|=
-name|word
+name|woord
 index|[
 name|i
 operator|+
@@ -2219,7 +2217,7 @@ expr_stmt|;
 name|help
 operator|++
 expr_stmt|;
-name|word
+name|woord
 index|[
 name|i
 index|]
@@ -2231,12 +2229,12 @@ block|}
 block|}
 block|}
 comment|/* end of comprimation */
-name|word
+name|woord
 index|[
 name|j
 index|]
 operator|=
-name|word
+name|woord
 index|[
 name|i
 index|]
@@ -2255,12 +2253,12 @@ operator|+=
 name|help
 expr_stmt|;
 block|}
-name|word
+name|woord
 index|[
 name|j
 index|]
 operator|=
-name|word
+name|woord
 index|[
 name|numlett
 index|]
@@ -2297,7 +2295,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|word
+name|woord
 index|[
 name|i
 index|]
@@ -2566,7 +2564,7 @@ name|help
 operator|=
 name|consonant
 index|[
-name|word
+name|woord
 index|[
 name|j
 index|]
@@ -2574,7 +2572,7 @@ operator|-
 literal|39
 index|]
 index|[
-name|word
+name|woord
 index|[
 name|j
 operator|+
@@ -2633,7 +2631,7 @@ name|help
 operator|=
 name|consonant
 index|[
-name|word
+name|woord
 index|[
 name|i
 index|]
@@ -2641,7 +2639,7 @@ operator|-
 literal|39
 index|]
 index|[
-name|word
+name|woord
 index|[
 name|i
 operator|+
@@ -2702,7 +2700,7 @@ name|abs
 argument_list|(
 name|consonant
 index|[
-name|word
+name|woord
 index|[
 name|i
 operator|-
@@ -2712,7 +2710,7 @@ operator|-
 literal|39
 index|]
 index|[
-name|word
+name|woord
 index|[
 name|i
 index|]
@@ -2806,7 +2804,7 @@ name|vowel1
 expr_stmt|;
 name|help
 operator|=
-name|word
+name|woord
 index|[
 name|j
 operator|+
@@ -2847,7 +2845,7 @@ name|next
 goto|;
 name|l1
 operator|=
-name|word
+name|woord
 index|[
 name|j
 index|]
@@ -2885,7 +2883,7 @@ goto|;
 block|}
 name|l0
 operator|=
-name|word
+name|woord
 index|[
 name|j
 operator|-
@@ -2894,7 +2892,7 @@ index|]
 expr_stmt|;
 name|l2
 operator|=
-name|word
+name|woord
 index|[
 name|j
 operator|+

@@ -7,6 +7,7 @@ begin_struct
 struct|struct
 name|dev
 block|{
+name|unsigned
 name|short
 name|filesize
 decl_stmt|;
@@ -58,17 +59,18 @@ comment|/* length of chname table */
 name|short
 name|spare1
 decl_stmt|;
-comment|/* in case of expansion */
+comment|/* #chars in largest ever font */
 name|short
 name|spare2
 decl_stmt|;
+comment|/* in case of expansion */
 block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|font
+name|Font
 block|{
 comment|/* characteristics of a font */
 name|char
@@ -151,6 +153,10 @@ directive|define
 name|LFFL
 value|020
 end_define
+
+begin_comment
+comment|/*  * Notes by jaap:  *  * spare1 int struct dev is also known as biggestfont  *  * in Font struvture is added:  *	fonttab: if set to 1, the Font.out has an extra  *		  table of shorts which gives the physical font  *		  on which the chracter lives. Allows mapping of  *		  "logial fonts" into variuos physical fonts on the  *		  device. Needed since the Harris f.i. has a weird font  *		  lay-out. Also makes fonts consisting of weird  *		  character combinations easier.  *	slant:	The font can must be slanted to force italics (function  *		of back-end, necessary for f.i. the Harris, which  *		doesn't has italics for the sans-serif fonts; these  *		italics have to be made by slanting)  */
+end_comment
 
 end_unit
 
