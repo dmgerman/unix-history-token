@@ -1863,7 +1863,7 @@ name|hs
 condition|)
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 argument_list|,
