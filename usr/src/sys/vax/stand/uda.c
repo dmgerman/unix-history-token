@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -363,7 +363,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nonexistent device"
+literal|"nonexistent device\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -611,7 +611,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ra: open error, STCON"
+literal|"ra: open error, STCON\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -668,7 +668,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ra: open error, ONLIN"
+literal|"ra: open error, ONLIN\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -728,7 +728,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"can't read disk label"
+literal|"can't read disk label\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -737,21 +737,6 @@ name|EIO
 operator|)
 return|;
 block|}
-operator|*
-name|lp
-operator|=
-operator|*
-operator|(
-expr|struct
-name|disklabel
-operator|*
-operator|)
-operator|(
-name|lbuf
-operator|+
-name|LABELOFFSET
-operator|)
-expr_stmt|;
 if|if
 condition|(
 name|lp
@@ -794,6 +779,22 @@ return|;
 endif|#
 directive|endif
 block|}
+else|else
+operator|*
+name|lp
+operator|=
+operator|*
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+operator|(
+name|lbuf
+operator|+
+name|LABELOFFSET
+operator|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -831,7 +832,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ra: bad partition"
+literal|"ra: bad partition\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1113,11 +1114,12 @@ name|mp
 operator|->
 name|mscp_unit
 operator|=
+name|UNITTODRIVE
+argument_list|(
 name|io
 operator|->
 name|i_unit
-operator|&
-literal|7
+argument_list|)
 expr_stmt|;
 name|mp
 operator|->
