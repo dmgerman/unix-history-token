@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"top.local.h"
 end_include
 
@@ -41,7 +47,9 @@ decl_stmt|;
 name|char
 name|name
 index|[
-literal|9
+name|UT_NAMESIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 block|}
@@ -343,7 +351,7 @@ name|name
 argument_list|,
 name|name
 argument_list|,
-literal|8
+name|UT_NAMESIZE
 argument_list|)
 expr_stmt|;
 return|return
