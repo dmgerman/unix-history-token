@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.10	81/11/14	*/
+comment|/*	param.c	4.11	81/11/30	*/
 end_comment
 
 begin_include
@@ -204,9 +204,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|nmbpages
+name|nmbclusters
 init|=
-name|NMBPAGES
+name|NMBCLUSTERS
 decl_stmt|;
 end_decl_stmt
 

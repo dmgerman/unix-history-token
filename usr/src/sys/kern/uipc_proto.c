@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.8	81/11/26	*/
+comment|/*	uipc_proto.c	4.9	81/11/30	*/
 end_comment
 
 begin_include
@@ -160,6 +160,9 @@ name|int
 name|rip_input
 argument_list|()
 decl_stmt|,
+name|rip_output
+argument_list|()
+decl_stmt|,
 name|rip_ctlinput
 argument_list|()
 decl_stmt|;
@@ -170,7 +173,7 @@ name|int
 name|rip_usrreq
 argument_list|()
 decl_stmt|,
-name|rip_sense
+name|rip_slowtimo
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -185,7 +188,7 @@ block|{
 block|{
 name|SOCK_STREAM
 block|,
-name|PF_LOCAL
+name|PF_UNIX
 block|,
 literal|0
 block|,
@@ -208,16 +211,12 @@ block|,
 literal|0
 block|,
 literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|, }
 block|,
 block|{
 name|SOCK_DGRAM
 block|,
-name|PF_LOCAL
+name|PF_UNIX
 block|,
 literal|0
 block|,
@@ -234,10 +233,6 @@ block|,
 literal|0
 block|,
 name|piusrreq
-block|,
-literal|0
-block|,
-literal|0
 block|,
 literal|0
 block|,
@@ -251,7 +246,7 @@ block|,
 block|{
 name|SOCK_RDM
 block|,
-name|PF_LOCAL
+name|PF_UNIX
 block|,
 literal|0
 block|,
@@ -268,10 +263,6 @@ block|,
 literal|0
 block|,
 name|piusrreq
-block|,
-literal|0
-block|,
-literal|0
 block|,
 literal|0
 block|,
@@ -285,7 +276,7 @@ block|,
 block|{
 name|SOCK_RAW
 block|,
-name|PF_LOCAL
+name|PF_UNIX
 block|,
 literal|0
 block|,
@@ -302,10 +293,6 @@ block|,
 literal|0
 block|,
 name|piusrreq
-block|,
-literal|0
-block|,
-literal|0
 block|,
 literal|0
 block|,
@@ -328,10 +315,6 @@ block|,
 literal|0
 block|,
 name|ip_output
-block|,
-literal|0
-block|,
-literal|0
 block|,
 literal|0
 block|,
@@ -373,10 +356,6 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
-block|,
-literal|0
-block|,
 name|icmp_drain
 block|, }
 block|,
@@ -400,10 +379,6 @@ block|,
 literal|0
 block|,
 name|udp_usrreq
-block|,
-name|udp_sense
-block|,
-name|MLEN
 block|,
 name|udp_init
 block|,
@@ -435,10 +410,6 @@ literal|0
 block|,
 name|tcp_usrreq
 block|,
-name|tcp_sense
-block|,
-name|MLEN
-block|,
 name|tcp_init
 block|,
 name|tcp_fasttimo
@@ -461,7 +432,7 @@ name|PR_ADDR
 block|,
 name|rip_input
 block|,
-literal|0
+name|rip_output
 block|,
 name|rip_ctlinput
 block|,
@@ -469,15 +440,11 @@ literal|0
 block|,
 name|rip_usrreq
 block|,
-name|rip_sense
-block|,
-name|MLEN
-block|,
 literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|rip_slowtimo
 block|,
 literal|0
 block|, }
