@@ -1346,7 +1346,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|mainthread
+operator|(
+name|proc
+operator|.
+name|p_state
+operator|!=
+name|PRS_ZOMBIE
+operator|)
 operator|&&
 name|mainthread
 operator|.
@@ -1615,7 +1621,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|mainthread
+operator|(
+name|proc
+operator|.
+name|p_state
+operator|!=
+name|PRS_ZOMBIE
+operator|)
 operator|&&
 name|mainthread
 operator|.
@@ -1624,7 +1636,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* XXXKSE */
 name|kp
 operator|->
 name|ki_kiflag
@@ -1637,7 +1648,6 @@ name|mainthread
 operator|.
 name|td_mtxname
 condition|)
-comment|/* XXXKSE */
 operator|(
 name|void
 operator|)
@@ -1739,7 +1749,11 @@ name|p_acflag
 expr_stmt|;
 if|if
 condition|(
-name|mainthread
+name|proc
+operator|.
+name|p_state
+operator|!=
+name|PRS_ZOMBIE
 condition|)
 block|{
 name|kp
