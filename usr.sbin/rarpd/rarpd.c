@@ -5286,9 +5286,14 @@ literal|"%s%.*s%s"
 argument_list|,
 name|p
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|m
 operator|-
 name|str
+argument_list|)
 argument_list|,
 name|str
 argument_list|,
