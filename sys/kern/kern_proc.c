@@ -842,6 +842,10 @@ begin_comment
 comment|/********************* * STUB KSE syscalls *********************/
 end_comment
 
+begin_comment
+comment|/* struct thread_wakeup_args { struct thread_mailbox *tmbx; }; */
+end_comment
+
 begin_function
 name|int
 name|thread_wakeup
@@ -856,11 +860,10 @@ name|thread_wakeup_args
 modifier|*
 name|uap
 parameter_list|)
-comment|/* struct thread_wakeup_args { struct thread_mailbox *tmbx; }; */
 block|{
 return|return
 operator|(
-name|EINVAL
+name|ENOSYS
 operator|)
 return|;
 block|}
@@ -883,7 +886,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|EINVAL
+name|ENOSYS
 operator|)
 return|;
 block|}
@@ -906,7 +909,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|EINVAL
+name|ENOSYS
 operator|)
 return|;
 block|}
@@ -929,7 +932,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|EINVAL
+name|ENOSYS
 operator|)
 return|;
 block|}
@@ -953,7 +956,7 @@ comment|/* struct kse_new_args { 	struct kse_mailbox *mbx; 	int	new_grp_flag; };
 block|{
 return|return
 operator|(
-name|EINVAL
+name|ENOSYS
 operator|)
 return|;
 block|}
