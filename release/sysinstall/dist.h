@@ -545,7 +545,7 @@ begin_define
 define|#
 directive|define
 name|DIST_XF86_SERVER_8514
-value|0x0004001
+value|0x0004000
 end_define
 
 begin_define
