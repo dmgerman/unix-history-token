@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.6 (Berkeley) %G%"
+literal|"@(#)ps.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -366,6 +366,16 @@ name|text
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|paduser1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* avoid hardware mem clobbering botch */
+end_comment
+
 begin_union
 union|union
 block|{
@@ -393,6 +403,16 @@ directive|define
 name|u
 value|user.user
 end_define
+
+begin_decl_stmt
+name|int
+name|paduser2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* avoid hardware mem clobbering botch */
+end_comment
 
 begin_define
 define|#
@@ -3925,7 +3945,13 @@ modifier|*
 name|pteaddr
 decl_stmt|,
 name|apte
-decl_stmt|,
+decl_stmt|;
+name|int
+name|pad1
+decl_stmt|;
+comment|/* avoid hardware botch */
+name|struct
+name|pte
 name|arguutl
 index|[
 name|UPAGES
@@ -3933,6 +3959,10 @@ operator|+
 name|CLSIZE
 index|]
 decl_stmt|;
+name|int
+name|pad2
+decl_stmt|;
+comment|/* avoid hardware botch */
 specifier|register
 name|int
 name|i
@@ -4352,6 +4382,10 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|int
+name|pad1
+decl_stmt|;
+comment|/* avoid hardware botch */
 union|union
 block|{
 name|char
@@ -4378,6 +4412,10 @@ decl_stmt|;
 block|}
 name|argspac
 union|;
+name|int
+name|pad2
+decl_stmt|;
+comment|/* avoid hardware botch */
 specifier|register
 name|char
 modifier|*
