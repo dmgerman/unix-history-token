@@ -8825,6 +8825,10 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|IFT_ARCNET
+case|:
 name|bcopy
 argument_list|(
 name|lladdr
