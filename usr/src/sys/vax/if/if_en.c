@@ -2893,7 +2893,6 @@ init|=
 operator|&
 name|enlhif
 decl_stmt|;
-specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
@@ -2942,6 +2941,19 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
+name|sin
+operator|->
+name|sin_addr
+operator|.
+name|s_lh
+operator|=
+name|esifp
+operator|->
+name|if_host
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|ifp
 operator|->
 name|if_net
@@ -2964,7 +2976,7 @@ name|ifp
 operator|->
 name|if_dstaddr
 operator|=
-name|esifp
+name|ifp
 operator|->
 name|if_addr
 expr_stmt|;
