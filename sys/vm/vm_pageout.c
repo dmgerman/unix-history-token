@@ -2901,6 +2901,9 @@ name|maxlaunder
 operator|=
 literal|10000
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|rescan0
 label|:
 name|addl_page_shortage
@@ -3022,9 +3025,6 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 		 * If the object is not being used, we ignore previous  		 * references. 		 */
 if|if
 condition|(
@@ -3081,9 +3081,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|m
 operator|->
 name|act_count
@@ -3129,9 +3126,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 name|m
 operator|->
 name|act_count
@@ -3170,9 +3164,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 		 * Invalid pages can be easily freed 		 */
 if|if
 condition|(
@@ -3183,16 +3174,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_pageout_page_free
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 operator|--
 name|page_shortage
@@ -3209,16 +3194,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_cache
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 operator|--
 name|page_shortage
@@ -3243,9 +3222,6 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Dirty pages need to be paged out, but flushing 			 * a page is extremely expensive verses freeing 			 * a clean page.  Rather then artificially limiting 			 * the number of pages we can flush, we instead give 			 * dirty pages extra priority on the inactive queue 			 * by forcing them to be cycled through the queue 			 * twice before being flushed, after which the 			 * (now clean) page will cycle through once more 			 * before being freed.  This significantly extends 			 * the thrash point for a heavily loaded machine. 			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
 name|m
@@ -3257,9 +3233,6 @@ name|vm_pageq_requeue
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -3400,6 +3373,9 @@ argument_list|,
 name|V_NOWAIT
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vget
@@ -3414,6 +3390,9 @@ name|curthread
 argument_list|)
 condition|)
 block|{
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 operator|++
 name|pageout_lock_miss
 expr_stmt|;
@@ -3435,6 +3414,9 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 				 * The page might have been moved to another 				 * queue during potential blocking in vget() 				 * above.  The page might have been freed and 				 * reused for another vnode.  The object might 				 * have been reused for another vnode. 				 */
 if|if
 condition|(
@@ -3546,9 +3528,6 @@ continue|continue;
 block|}
 block|}
 comment|/* 			 * If a page is dirty, then it is either being washed 			 * (but not yet cleaned) or it is still in the 			 * laundry.  If it is still in the laundry, then we 			 * start the cleaning operation.  			 * 			 * This operation may cluster, invalidating the 'next' 			 * pointer.  To prevent an inordinate number of 			 * restarts we use our marker to remember our place. 			 * 			 * decrement page_shortage on success to account for 			 * the (future) cleaned page.  Otherwise we could wind 			 * up laundering or cleaning too many pages. 			 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|s
 operator|=
 name|splvm
@@ -3630,9 +3609,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -3668,9 +3644,6 @@ expr_stmt|;
 name|page_shortage
 operator|+=
 name|addl_page_shortage
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Scan the active queue for things we can deactivate. We nominally 	 * track the per-page activity counter and use it to locate 	 * deactivation candidates. 	 */
 name|pcount
