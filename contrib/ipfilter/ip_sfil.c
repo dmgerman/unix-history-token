@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_sfil.c,v 2.23.2.15 2001/12/26 22:28:51 darrenr Exp $"
+literal|"@(#)$Id: ip_sfil.c,v 2.23.2.16 2002/04/05 08:43:25 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|u_long
+modifier|*
+name|ip_ttl_ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|frrequest
 name|__P
@@ -603,6 +611,9 @@ name|void
 operator|)
 argument_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IPFDEBUG
@@ -813,6 +824,51 @@ return|return
 operator|-
 literal|1
 return|;
+name|ip_ttl_ptr
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* 	 * XXX - There is no terminator for this array, so it is not possible 	 * to tell if what we are looking for is missing and go off the end 	 * of the array. 	 */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|ip_param_arr
+index|[
+name|i
+index|]
+operator|.
+name|ip_param_name
+argument_list|,
+literal|"ip_def_ttl"
+argument_list|)
+condition|)
+block|{
+name|ip_ttl_ptr
+operator|=
+operator|&
+name|ip_param_arr
+index|[
+name|i
+index|]
+operator|.
+name|ip_param_value
+expr_stmt|;
+break|break;
+block|}
+block|}
 return|return
 literal|0
 return|;
@@ -4357,7 +4413,13 @@ name|ip
 operator|->
 name|ip_ttl
 operator|=
-literal|60
+call|(
+name|u_char
+call|)
+argument_list|(
+operator|*
+name|ip_ttl_ptr
+argument_list|)
 expr_stmt|;
 name|ip_wput
 argument_list|(
@@ -5074,7 +5136,13 @@ name|ip
 operator|->
 name|ip_ttl
 operator|=
-literal|60
+call|(
+name|u_char
+call|)
+argument_list|(
+operator|*
+name|ip_ttl_ptr
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

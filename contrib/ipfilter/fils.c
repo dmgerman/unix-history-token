@@ -634,7 +634,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fils.c,v 2.21.2.34 2002/02/22 15:32:45 darrenr Exp $"
+literal|"@(#)$Id: fils.c,v 2.21.2.35 2002/04/03 14:18:36 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7149,10 +7149,26 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|isalpha
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+name|isupper
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|c
+operator|=
 name|tolower
 argument_list|(
 name|c
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
 operator|==
 literal|'l'
 condition|)
@@ -7165,33 +7181,18 @@ block|}
 elseif|else
 if|if
 condition|(
-name|tolower
-argument_list|(
 name|c
-argument_list|)
 operator|==
 literal|'q'
 condition|)
 block|{
-name|nocbreak
-argument_list|()
-expr_stmt|;
-name|endwin
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
+break|break;
+comment|/* exits while() loop */
 block|}
 elseif|else
 if|if
 condition|(
-name|tolower
-argument_list|(
 name|c
-argument_list|)
 operator|==
 literal|'r'
 condition|)
@@ -7205,10 +7206,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|tolower
-argument_list|(
 name|c
-argument_list|)
 operator|==
 literal|'s'
 condition|)

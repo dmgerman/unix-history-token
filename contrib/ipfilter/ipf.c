@@ -302,7 +302,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.10.2.13 2002/02/22 15:32:53 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.14 2002/04/10 04:56:36 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1136,7 +1136,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"IP FIlter: already initialized\n"
+literal|"IP Filter: already initialized\n"
 argument_list|)
 expr_stmt|;
 else|else

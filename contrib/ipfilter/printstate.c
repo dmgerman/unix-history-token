@@ -74,6 +74,25 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|300000
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if_var.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -310,7 +329,7 @@ name|__OpenBSD__
 argument_list|)
 name|PRINTF
 argument_list|(
-literal|"\t%hu -> %hu %x:%x %hu:%hu"
+literal|"\t%hu -> %hu %x:%x %u<<%d:%u<<%d"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -337,17 +356,33 @@ argument_list|,
 name|ips
 operator|.
 name|is_maxswin
+operator|>>
+name|ips
+operator|.
+name|is_swscale
+argument_list|,
+name|ips
+operator|.
+name|is_swscale
 argument_list|,
 name|ips
 operator|.
 name|is_maxdwin
+operator|>>
+name|ips
+operator|.
+name|is_dwscale
+argument_list|,
+name|ips
+operator|.
+name|is_dwscale
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|PRINTF
 argument_list|(
-literal|"\t%hu -> %hu %x:%x %hu:%hu"
+literal|"\t%hu -> %hu %x:%x %u<<%d:%u<<%d"
 argument_list|,
 name|ntohs
 argument_list|(
@@ -374,10 +409,26 @@ argument_list|,
 name|ips
 operator|.
 name|is_maxswin
+operator|>>
+name|ips
+operator|.
+name|is_swscale
+argument_list|,
+name|ips
+operator|.
+name|is_swscale
 argument_list|,
 name|ips
 operator|.
 name|is_maxdwin
+operator|>>
+name|ips
+operator|.
+name|is_dwscale
+argument_list|,
+name|ips
+operator|.
+name|is_dwscale
 argument_list|)
 expr_stmt|;
 endif|#

@@ -357,7 +357,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.1.2.6 2002/02/22 15:32:56 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.1.2.7 2002/04/24 17:35:37 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1999,6 +1999,23 @@ decl_stmt|;
 name|int
 name|bits
 decl_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|in_p
+operator|!=
+literal|0
+condition|)
+name|pr
+operator|=
+name|getprotobynumber
+argument_list|(
+name|np
+operator|->
+name|in_p
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|np
@@ -2510,6 +2527,23 @@ name|in_p
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|pr
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|pr
+operator|->
+name|p_name
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" %d"
@@ -2519,6 +2553,7 @@ operator|->
 name|in_p
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|np
@@ -2543,6 +2578,34 @@ condition|)
 name|printf
 argument_list|(
 literal|" frag"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|in_age
+index|[
+literal|0
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|" age %d/%d"
+argument_list|,
+name|np
+operator|->
+name|in_age
+index|[
+literal|0
+index|]
+argument_list|,
+name|np
+operator|->
+name|in_age
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2645,7 +2708,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"%d "
+literal|"%d"
 argument_list|,
 name|bits
 argument_list|)
@@ -2752,7 +2815,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"%d "
+literal|"%d"
 argument_list|,
 name|bits
 argument_list|)
@@ -2782,15 +2845,6 @@ operator|->
 name|in_plabel
 condition|)
 block|{
-name|pr
-operator|=
-name|getprotobynumber
-argument_list|(
-name|np
-operator|->
-name|in_p
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|" proxy port"
@@ -2920,6 +2974,30 @@ operator|==
 name|NAT_MAPBLK
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|np
+operator|->
+name|in_pmin
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|np
+operator|->
+name|in_flags
+operator|&
+name|IPN_AUTOPORTMAP
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|" ports auto"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|" ports %d"
@@ -2933,7 +3011,7 @@ if|if
 condition|(
 name|opts
 operator|&
-name|OPT_VERBOSE
+name|OPT_DEBUG
 condition|)
 name|printf
 argument_list|(
@@ -3089,6 +3167,34 @@ condition|)
 name|printf
 argument_list|(
 literal|" frag"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|in_age
+index|[
+literal|0
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|" age %d/%d"
+argument_list|,
+name|np
+operator|->
+name|in_age
+index|[
+literal|0
+index|]
+argument_list|,
+name|np
+operator|->
+name|in_age
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|printf

@@ -225,7 +225,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: kmem.c,v 2.2.2.12 2002/03/06 09:44:16 darrenr Exp $"
+literal|"@(#)$Id: kmem.c,v 2.2.2.14 2002/04/17 17:44:44 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,26 +234,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__sgi
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|kvm_t
-modifier|*
-name|kvm_f
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -264,8 +249,8 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
-name|kvm_t
-name|kvm_f
+name|int
+name|kvm_fd
 init|=
 operator|-
 literal|1
@@ -321,14 +306,21 @@ end_decl_stmt
 
 begin_block
 block|{
-name|kvm_t
-name|fd
-decl_stmt|;
 name|kvm_errstr
 operator|=
 name|errstr
 expr_stmt|;
-name|fd
+if|if
+condition|(
+name|core
+operator|==
+name|NULL
+condition|)
+name|core
+operator|=
+literal|"/dev/kmem"
+expr_stmt|;
+name|kvm_fd
 operator|=
 name|open
 argument_list|(
@@ -338,7 +330,19 @@ name|mode
 argument_list|)
 expr_stmt|;
 return|return
-name|fd
+operator|(
+name|kvm_fd
+operator|>=
+literal|0
+operator|)
+condition|?
+operator|(
+name|kvm_t
+operator|)
+operator|&
+name|kvm_fd
+else|:
+name|NULL
 return|;
 block|}
 end_block
@@ -382,6 +386,7 @@ if|if
 condition|(
 name|lseek
 argument_list|(
+operator|*
 name|kvm
 argument_list|,
 name|pos
@@ -439,6 +444,7 @@ name|r
 operator|=
 name|read
 argument_list|(
+operator|*
 name|kvm
 argument_list|,
 name|bufp
@@ -458,7 +464,7 @@ literal|1
 return|;
 block|}
 return|return
-literal|0
+name|size
 return|;
 block|}
 end_function
@@ -467,6 +473,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|kvm_t
+modifier|*
+name|kvm_f
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int

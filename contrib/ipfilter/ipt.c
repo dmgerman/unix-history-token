@@ -61,6 +61,12 @@ directive|ifdef
 name|__sgi
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_KMEMUSER
+end_define
+
 begin_include
 include|#
 directive|include
@@ -387,7 +393,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipt.c,v 2.6.2.19 2002/03/11 03:30:51 darrenr Exp $"
+literal|"@(#)$Id: ipt.c,v 2.6.2.21 2002/03/26 15:54:40 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -745,17 +751,31 @@ condition|(
 name|c
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USE_INET6
 case|case
 literal|'6'
 case|:
+ifdef|#
+directive|ifdef
+name|USE_INET6
 name|use_inet6
 operator|=
 literal|1
 expr_stmt|;
 break|break;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"IPv6 not supported\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 case|case
