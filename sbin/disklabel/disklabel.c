@@ -7071,6 +7071,22 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* 	 * Try to use the new get-virgin-label ioctl.  If it fails, 	 * fallback to the old get-disdk-info ioctl. 	 */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|f
+argument_list|,
+name|DIOCGDVIRGIN
+argument_list|,
+operator|&
+name|lab
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|ioctl
@@ -7101,6 +7117,7 @@ operator|(
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 name|close
 argument_list|(
