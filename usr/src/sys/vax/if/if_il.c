@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.24	83/06/13	*/
+comment|/*	if_il.c	4.25	83/07/19	*/
 end_comment
 
 begin_include
@@ -2359,7 +2359,9 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|setup
+goto|;
 endif|#
 directive|endif
 default|default:
