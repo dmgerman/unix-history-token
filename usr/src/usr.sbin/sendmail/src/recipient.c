@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -1165,7 +1165,14 @@ expr_stmt|;
 comment|/* see if this is to a file */
 if|if
 condition|(
-operator|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
 name|p
 operator|=
 name|rindex
@@ -1174,11 +1181,7 @@ name|buf
 argument_list|,
 literal|'/'
 argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 comment|/* check if writable or creatable */
 if|if
 condition|(
