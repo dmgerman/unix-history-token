@@ -5621,6 +5621,16 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
+comment|/* Unlink the no longer needed /dev/dev -> / symlink */
+name|kern_unlink
+argument_list|(
+name|td
+argument_list|,
+literal|"/dev/dev"
+argument_list|,
+name|UIO_SYSSPACE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
