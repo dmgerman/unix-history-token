@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xten.c,v 1.3 1997/10/27 12:27:21 charnier Exp $"
+literal|"$Id: xten.c,v 1.1.1.1.8.1 1997/11/18 07:30:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -867,7 +867,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|s
 argument_list|,
