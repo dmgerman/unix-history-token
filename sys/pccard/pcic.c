@@ -2650,7 +2650,7 @@ operator|&
 name|PCIC_PD_POWER
 condition|)
 block|{
-comment|/* 			 * The 6710 does it one way, and the '22 and '29 do it 			 * another.  And it appears that the '32 and '33 yet 			 * another way (which I don't know). 			 */
+comment|/* 			 * The 6710 does it one way, and the '22 and '29 do it 			 * another.  And it appears that the '32 and '33 yet 			 * another way (which I don't know).  The '22 can also 			 * do it the same way as a '10 does it, despite what 			 * the datasheets say.  Some laptops with '22 don't 			 * seem to have the signals wired right for the '29 			 * method to work, so we always use the '10 method for 			 * the '22.  The laptops that don't work hang solid 			 * when the pccard memory is accessed. 			 */
 switch|switch
 condition|(
 name|sp
@@ -2660,6 +2660,9 @@ condition|)
 block|{
 case|case
 name|PCIC_PD6710
+case|:
+case|case
+name|PCIC_PD6722
 case|:
 name|c
 operator|=
@@ -2700,9 +2703,6 @@ operator|=
 literal|50
 expr_stmt|;
 break|break;
-case|case
-name|PCIC_PD6722
-case|:
 case|case
 name|PCIC_PD6729
 case|:
