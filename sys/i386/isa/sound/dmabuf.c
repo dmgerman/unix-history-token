@@ -1601,11 +1601,6 @@ block|{
 name|u_long
 name|flags
 decl_stmt|;
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -5838,17 +5833,6 @@ name|DMA_MAP_MAPPED
 condition|)
 block|{
 comment|/* mmapped access */
-name|int
-name|p
-init|=
-name|dmap
-operator|->
-name|fragment_size
-operator|*
-name|dmap
-operator|->
-name|qhead
-decl_stmt|;
 name|dmap
 operator|->
 name|qhead

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.54 1998/06/21 17:08:08 bde Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.55 1998/10/22 05:58:39 bde Exp $  */
 end_comment
 
 begin_comment
@@ -2707,9 +2707,14 @@ name|isr
 decl_stmt|,
 name|imr
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|SMP
 name|u_int
 name|imask
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.16 1998/12/03 20:28:23 dillon Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.17 1998/12/04 22:54:54 archie Exp $	*/
 end_comment
 
 begin_comment
@@ -1321,11 +1321,6 @@ decl_stmt|,
 name|sa
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|struct
 name|uio
 name|auio
 decl_stmt|;
@@ -1353,9 +1348,6 @@ decl_stmt|,
 name|secs
 decl_stmt|,
 name|timo
-decl_stmt|;
-name|u_int
-name|tport
 decl_stmt|;
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 if|if
@@ -3909,8 +3901,6 @@ decl_stmt|,
 name|len
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|;
 name|char
@@ -3963,13 +3953,6 @@ define|#
 directive|define
 name|EALEN
 value|6
-name|unsigned
-name|char
-name|ea
-index|[
-name|EALEN
-index|]
-decl_stmt|;
 name|struct
 name|ifaddr
 modifier|*

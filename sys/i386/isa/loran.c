@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: loran.c,v 1.11 1998/10/24 19:55:09 phk Exp $  *  * This device-driver helps the userland controlprogram for a LORAN-C  * receiver avoid monopolizing the CPU.  *  * This is clearly a candidate for the "most weird hardware support in  * FreeBSD" prize.  At this time only two copies of the receiver are  * known to exist in the entire world.  *  * Details can be found at:  *     ftp://ftp.eecis.udel.edu/pub/ntp/loran.tar.Z  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: loran.c,v 1.12 1998/12/04 22:54:46 archie Exp $  *  * This device-driver helps the userland controlprogram for a LORAN-C  * receiver avoid monopolizing the CPU.  *  * This is clearly a candidate for the "most weird hardware support in  * FreeBSD" prize.  At this time only two copies of the receiver are  * known to exist in the entire world.  *  * Details can be found at:  *     ftp://ftp.eecis.udel.edu/pub/ntp/loran.tar.Z  *  */
 end_comment
 
 begin_ifdef
@@ -1030,18 +1030,6 @@ name|par
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|datapoint
-modifier|*
-name|this
-decl_stmt|,
-modifier|*
-name|next
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -1624,14 +1612,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|u_long
-name|ef
-decl_stmt|;
-name|struct
-name|datapoint
-modifier|*
-name|this
-decl_stmt|;
 name|int
 name|idx
 decl_stmt|;
@@ -2873,11 +2853,6 @@ name|count
 decl_stmt|;
 name|u_long
 name|ef
-decl_stmt|;
-name|u_int
-name|high
-decl_stmt|,
-name|low
 decl_stmt|;
 name|ef
 operator|=

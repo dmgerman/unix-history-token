@@ -2013,9 +2013,6 @@ name|int
 name|mode
 parameter_list|)
 block|{
-name|int
-name|retval
-decl_stmt|;
 if|if
 condition|(
 operator|!

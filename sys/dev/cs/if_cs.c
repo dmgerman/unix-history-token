@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997,1998 Maxim Bolotin and Oleg Sharoiko.  * All ri
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_cs.c,v 1.5 1998/10/04 02:11:15 msmith Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
+comment|/*  * $Id: if_cs.c,v 1.6 1998/10/22 05:58:38 bde Exp $  *  * Device driver for Crystal Semiconductor CS8920 based ethernet  *   adapters. By Maxim Bolotin and Oleg Sharoiko, 27-April-1997  */
 end_comment
 
 begin_comment
@@ -951,11 +951,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|timeout
-init|=
-literal|1000
-decl_stmt|;
 name|DELAY
 argument_list|(
 literal|30000
@@ -1148,9 +1143,6 @@ name|sc
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|;
-name|int
 name|unit
 init|=
 name|sc
@@ -1240,17 +1232,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
-decl_stmt|;
 name|char
 name|test_packet
 index|[]
@@ -1771,8 +1752,6 @@ decl_stmt|,
 name|irq
 init|=
 literal|0
-decl_stmt|,
-name|result
 decl_stmt|;
 name|int
 name|eeprom_buff
@@ -3175,8 +3154,6 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|,
-name|result
-decl_stmt|,
 name|rx_cfg
 decl_stmt|;
 comment|/* address not known */
@@ -3865,8 +3842,6 @@ operator|)
 decl_stmt|;
 name|int
 name|status
-decl_stmt|,
-name|s
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -5802,11 +5777,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-name|struct
-name|cs_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|struct
 name|csintr_list
 modifier|*

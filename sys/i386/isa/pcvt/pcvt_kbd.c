@@ -877,10 +877,6 @@ name|int
 name|opri
 decl_stmt|,
 name|new_ledstate
-decl_stmt|,
-name|response1
-decl_stmt|,
-name|response2
 decl_stmt|;
 name|opri
 operator|=
@@ -921,6 +917,11 @@ block|{
 ifndef|#
 directive|ifndef
 name|_I386_ISA_KBDIO_H_
+name|int
+name|response1
+decl_stmt|,
+name|response2
+decl_stmt|;
 name|ledstate
 operator|=
 name|LEDSTATE_UPDATE_PENDING
@@ -1417,9 +1418,12 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|int
-name|c
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int c;
+endif|#
+directive|endif
 if|if
 condition|(
 name|kbdc

@@ -1498,11 +1498,6 @@ operator|->
 name|if_unit
 index|]
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 name|int
 name|s
 decl_stmt|;

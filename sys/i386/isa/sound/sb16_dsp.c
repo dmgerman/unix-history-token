@@ -939,9 +939,6 @@ name|int
 name|mode
 parameter_list|)
 block|{
-name|int
-name|retval
-decl_stmt|;
 name|DEB
 argument_list|(
 name|printf

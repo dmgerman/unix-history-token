@@ -1196,12 +1196,6 @@ name|bits
 decl_stmt|,
 name|tmp
 decl_stmt|;
-specifier|static
-name|int
-name|debug
-init|=
-literal|0
-decl_stmt|;
 name|DEB
 argument_list|(
 name|printf
@@ -1288,6 +1282,12 @@ operator|&
 literal|0x01
 condition|)
 block|{
+specifier|static
+name|int
+name|debug
+init|=
+literal|0
+decl_stmt|;
 name|mpuintr
 argument_list|(
 name|irq
@@ -1885,9 +1885,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|int
-name|resid
-decl_stmt|;
 name|int
 name|chn
 decl_stmt|;
@@ -3062,6 +3059,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|EXCLUDE_NATIVE_PCM
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_AUDIO
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -3104,6 +3116,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(EXCLUDE_NATIVE_PCM)&& defined(CONFIG_AUDIO) */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -3123,9 +3144,6 @@ modifier|*
 name|hw_config
 parameter_list|)
 block|{
-name|int
-name|my_dev
-decl_stmt|;
 ifndef|#
 directive|ifndef
 name|SSCAPE_REGS
@@ -3545,6 +3563,9 @@ operator|<
 name|MAX_AUDIO_DEV
 condition|)
 block|{
+name|int
+name|my_dev
+decl_stmt|;
 name|audio_devs
 index|[
 name|my_dev

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.41 1998/11/10 09:16:29 peter Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.42 1998/11/21 00:20:24 dt Exp $ */
 end_comment
 
 begin_comment
@@ -1567,10 +1567,6 @@ name|dep
 operator|->
 name|de_pmp
 decl_stmt|;
-name|struct
-name|timespec
-name|ts
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOSFS_DEBUG
@@ -2125,10 +2121,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|timespec
-name|ts
-decl_stmt|;
 comment|/* 	 * The root of a DOS filesystem cannot be extended. 	 */
 if|if
 condition|(
@@ -2507,10 +2499,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|struct
-name|timespec
-name|ts
 decl_stmt|;
 ifdef|#
 directive|ifdef

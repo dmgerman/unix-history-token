@@ -4762,10 +4762,6 @@ name|ext2_sb_info
 modifier|*
 name|fs
 decl_stmt|;
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -6032,8 +6028,6 @@ modifier|*
 name|bp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
 init|=
 literal|0

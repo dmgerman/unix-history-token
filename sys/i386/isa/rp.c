@@ -3883,13 +3883,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|rp_timeout
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|ndevs
 init|=
 literal|0
@@ -3906,16 +3899,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|tty
-name|rp_tty
-index|[
-literal|128
-index|]
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static	struct	tty	rp_tty[128];
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -4247,8 +4241,6 @@ decl_stmt|;
 name|int
 name|ToRecv
 decl_stmt|,
-name|wRecv
-decl_stmt|,
 name|ch
 decl_stmt|;
 name|ToRecv
@@ -4513,11 +4505,7 @@ name|IntMask
 decl_stmt|,
 name|ChanStatus
 decl_stmt|;
-name|int
-name|oldcts
-decl_stmt|,
-name|ToRecv
-decl_stmt|;
+comment|/*	int	oldcts; */
 if|if
 condition|(
 operator|!
@@ -5090,19 +5078,12 @@ modifier|*
 name|dev
 decl_stmt|;
 block|{
-name|struct
-name|isa_device
-modifier|*
-name|idev
-decl_stmt|;
 name|int
 name|controller
 decl_stmt|,
 name|unit
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|aiop
 decl_stmt|,
 name|num_aiops
@@ -5315,8 +5296,6 @@ decl_stmt|;
 name|int
 name|success
 decl_stmt|,
-name|rpmajor
-decl_stmt|,
 name|oldspl
 decl_stmt|;
 name|u_short
@@ -5365,9 +5344,6 @@ decl_stmt|;
 name|CONTROLLER_t
 modifier|*
 name|ctlp
-decl_stmt|;
-name|char
-name|status
 decl_stmt|;
 name|success
 operator|=
@@ -5962,8 +5938,7 @@ name|iobase
 decl_stmt|,
 name|unit
 decl_stmt|,
-name|rpmajor
-decl_stmt|,
+comment|/*rpmajor,*/
 name|oldspl
 decl_stmt|;
 name|int
@@ -6009,9 +5984,6 @@ decl_stmt|;
 name|CONTROLLER_t
 modifier|*
 name|ctlp
-decl_stmt|;
-name|char
-name|status
 decl_stmt|;
 name|iobase
 operator|=
@@ -6682,8 +6654,6 @@ name|rp
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|,
-name|i
 decl_stmt|,
 name|port
 decl_stmt|,
@@ -7520,10 +7490,6 @@ decl_stmt|,
 name|umynor
 decl_stmt|,
 name|port
-decl_stmt|,
-name|status
-decl_stmt|,
-name|i
 decl_stmt|;
 comment|/* SG */
 name|struct
@@ -7708,10 +7674,6 @@ name|rp
 parameter_list|)
 block|{
 name|int
-name|status
-decl_stmt|,
-name|oldspl
-decl_stmt|,
 name|mynor
 decl_stmt|;
 name|struct
@@ -7929,8 +7891,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|,
-name|i
-decl_stmt|,
 name|mynor
 decl_stmt|,
 name|umynor
@@ -8082,8 +8042,6 @@ name|tp
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|,
-name|i
 decl_stmt|,
 name|mynor
 decl_stmt|,
@@ -8341,24 +8299,11 @@ decl_stmt|;
 comment|/* SG */
 name|int
 name|oldspl
-decl_stmt|,
-name|cflag
-decl_stmt|,
-name|iflag
-decl_stmt|,
-name|oflag
-decl_stmt|,
-name|lflag
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|char
-name|status
 decl_stmt|;
 name|int
 name|arg
@@ -9700,8 +9645,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|,
-name|i
-decl_stmt|,
 name|mynor
 decl_stmt|,
 name|port
@@ -9722,8 +9665,6 @@ name|lflag
 decl_stmt|;
 name|int
 name|ospeed
-decl_stmt|,
-name|flags
 decl_stmt|;
 name|umynor
 operator|=
@@ -10383,8 +10324,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|,
-name|i
-decl_stmt|,
 name|mynor
 decl_stmt|,
 name|port
@@ -10393,8 +10332,6 @@ name|umynor
 decl_stmt|;
 comment|/* SG */
 name|char
-name|status
-decl_stmt|,
 name|ch
 decl_stmt|,
 name|flags
@@ -10406,8 +10343,6 @@ name|xmit_fifo_room
 decl_stmt|;
 name|int
 name|count
-decl_stmt|,
-name|ToRecv
 decl_stmt|;
 name|umynor
 operator|=
@@ -10728,11 +10663,6 @@ name|CHANNEL_t
 modifier|*
 name|cp
 decl_stmt|;
-name|struct
-name|clist
-modifier|*
-name|qp
-decl_stmt|;
 name|int
 name|unit
 decl_stmt|,
@@ -10743,20 +10673,8 @@ decl_stmt|,
 name|umynor
 decl_stmt|;
 comment|/* SG */
-name|char
-name|status
-decl_stmt|,
-name|ch
-decl_stmt|;
 name|int
 name|spl
-decl_stmt|,
-name|xmit_fifo_room
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|count
 decl_stmt|;
 name|umynor
 operator|=
@@ -10944,8 +10862,6 @@ name|rp
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|,
-name|i
 decl_stmt|,
 name|port
 decl_stmt|,

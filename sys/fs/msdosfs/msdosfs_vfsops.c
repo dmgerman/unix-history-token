@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.37 1998/10/25 19:26:18 bde Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.38 1998/10/31 15:31:24 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1990,6 +1990,17 @@ name|struct
 name|partinfo
 name|dpart
 decl_stmt|;
+name|int
+name|bsize
+init|=
+literal|0
+decl_stmt|,
+name|dtype
+init|=
+literal|0
+decl_stmt|,
+name|tmp
+decl_stmt|;
 endif|#
 directive|endif
 name|union
@@ -2019,17 +2030,6 @@ name|int
 name|ronly
 decl_stmt|,
 name|error
-decl_stmt|;
-name|int
-name|bsize
-init|=
-literal|0
-decl_stmt|,
-name|dtype
-init|=
-literal|0
-decl_stmt|,
-name|tmp
 decl_stmt|;
 comment|/* 	 * Disallow multiple mounts of the same device. 	 * Disallow mounting of a device that is currently in use 	 * (except for root, which might share swap device for miniroot). 	 * Flush out any old buffers remaining from a previous use. 	 */
 name|error

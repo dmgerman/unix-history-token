@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.58 1998/11/07 14:30:48 nsouch Exp $ */
+comment|/* $Id: brooktree848.c,v 1.59 1998/11/08 12:39:06 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -7513,9 +7513,6 @@ modifier|*
 name|pr
 parameter_list|)
 block|{
-name|int
-name|tmp_int
-decl_stmt|;
 name|bt848_ptr_t
 name|bt848
 decl_stmt|;
@@ -7557,11 +7554,6 @@ name|cap_area
 decl_stmt|;
 name|vm_offset_t
 name|buf
-decl_stmt|;
-name|struct
-name|format_params
-modifier|*
-name|fp
 decl_stmt|;
 name|int
 name|i
@@ -20223,9 +20215,6 @@ name|card_found
 decl_stmt|;
 name|int
 name|status
-decl_stmt|,
-modifier|*
-name|test
 decl_stmt|;
 name|bt848_ptr_t
 name|bt848
@@ -21272,8 +21261,6 @@ literal|1
 expr_stmt|;
 name|checkEnd
 label|:
-name|checkPLL
-label|:
 if|#
 directive|if
 name|defined
@@ -21326,8 +21313,16 @@ name|xtal_pll_mode
 operator|=
 name|BT848_USE_PLL
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|BKTR_USE_PLL
+argument_list|)
 name|checkPLLEnd
 label|:
+endif|#
+directive|endif
 name|bktr
 operator|->
 name|card

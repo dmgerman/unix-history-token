@@ -1386,9 +1386,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|int
-name|port
-decl_stmt|;
 name|s
 operator|=
 name|spltty
@@ -1493,13 +1490,6 @@ index|]
 decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|int
-name|port
-init|=
-name|sc
-operator|->
-name|sc_port
 decl_stmt|;
 name|s
 operator|=

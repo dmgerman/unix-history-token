@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.61 1998/09/30 20:33:46 sos Exp $  */
+comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.62 1998/10/31 15:31:23 peter Exp $  */
 end_comment
 
 begin_include
@@ -2088,12 +2088,6 @@ name|ap
 parameter_list|)
 comment|/*struct vop_write_args  {                 struct vnode *a_vp;                 struct uio *a_uio;                 int  a_ioflag;                 struct ucred *a_cred;         } */
 block|{
-name|dn_p
-name|file_node
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 switch|switch
 condition|(
 name|ap
@@ -4607,26 +4601,11 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-name|bvp
-decl_stmt|,
-modifier|*
 name|vp
 init|=
 name|ap
 operator|->
 name|a_vp
-decl_stmt|;
-name|dev_t
-name|bdev
-decl_stmt|,
-name|dev
-init|=
-operator|(
-name|dev_t
-operator|)
-name|vp
-operator|->
-name|v_rdev
 decl_stmt|;
 name|int
 name|error
@@ -4831,8 +4810,6 @@ name|int
 name|n
 decl_stmt|,
 name|on
-decl_stmt|,
-name|majordev
 decl_stmt|;
 name|d_ioctl_t
 modifier|*
@@ -6701,29 +6678,7 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|ap
-operator|->
-name|a_p
-decl_stmt|;
-name|dev_t
-name|dev
-init|=
-name|vp
-operator|->
-name|v_rdev
-decl_stmt|;
-name|d_close_t
-modifier|*
-name|devclose
-decl_stmt|;
 name|int
-name|mode
-decl_stmt|,
 name|error
 decl_stmt|;
 name|dn_p

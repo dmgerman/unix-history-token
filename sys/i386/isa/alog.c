@@ -2619,14 +2619,6 @@ operator|->
 name|id_unit
 decl_stmt|;
 comment|/* this device unit number */
-name|int
-name|iobase
-init|=
-name|idp
-operator|->
-name|id_iobase
-decl_stmt|;
-comment|/* the base address of the unit */
 name|talog_unit
 modifier|*
 name|info

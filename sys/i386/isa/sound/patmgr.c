@@ -792,8 +792,6 @@ expr_stmt|;
 else|else
 block|{
 name|int
-name|flag
-decl_stmt|,
 name|chn
 decl_stmt|;
 name|rec
@@ -1047,8 +1045,6 @@ expr_stmt|;
 else|else
 block|{
 name|int
-name|flag
-decl_stmt|,
 name|chn
 decl_stmt|;
 name|mbox

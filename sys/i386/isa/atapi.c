@@ -431,19 +431,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
-name|void
-name|atapi_poll_dsc
-parameter_list|(
-name|struct
-name|atapi
-modifier|*
-name|ata
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|int
 name|wdstart

@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  PCI Bus Attachment for DPT SCSI HBAs  */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.8 1998/09/15 08:33:38 gibbs Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.9 1998/10/07 03:40:51 gibbs Exp $"
 end_empty
 
 begin_include
@@ -315,9 +315,14 @@ decl_stmt|;
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DPT_ALLOW_MEMIO
 name|vm_offset_t
 name|paddr
 decl_stmt|;
+endif|#
+directive|endif
 name|u_int16_t
 name|io_base
 decl_stmt|;
@@ -329,15 +334,6 @@ name|bsh
 decl_stmt|;
 name|u_int32_t
 name|command
-decl_stmt|;
-name|u_int32_t
-name|data
-decl_stmt|;
-name|int
-name|result
-decl_stmt|;
-name|int
-name|ndx
 decl_stmt|;
 name|int
 name|s

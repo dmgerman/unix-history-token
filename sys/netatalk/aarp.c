@@ -162,15 +162,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|aarptab_size
-init|=
-name|AARPTAB_SIZE
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define

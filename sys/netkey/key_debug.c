@@ -1624,11 +1624,6 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|walker
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,

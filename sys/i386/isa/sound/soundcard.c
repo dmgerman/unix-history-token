@@ -790,9 +790,6 @@ name|int
 name|nprot
 parameter_list|)
 block|{
-name|int
-name|unit
-decl_stmt|;
 name|struct
 name|dma_buffparms
 modifier|*

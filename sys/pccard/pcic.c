@@ -2115,8 +2115,6 @@ block|{
 name|int
 name|slotnum
 decl_stmt|,
-name|i
-decl_stmt|,
 name|validslots
 init|=
 literal|0

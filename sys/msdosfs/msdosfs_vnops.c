@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.78 1998/11/21 00:20:24 dt Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.79 1998/11/29 22:38:57 dt Exp $ */
 end_comment
 
 begin_comment
@@ -1384,9 +1384,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|u_int
-name|cn
-decl_stmt|;
 name|struct
 name|denode
 modifier|*
@@ -8093,15 +8090,6 @@ name|ap
 operator|->
 name|a_vp
 argument_list|)
-decl_stmt|;
-name|struct
-name|msdosfsmount
-modifier|*
-name|pmp
-init|=
-name|dep
-operator|->
-name|de_pmp
 decl_stmt|;
 if|if
 condition|(

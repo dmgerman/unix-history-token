@@ -4354,9 +4354,6 @@ name|int
 name|bcount
 parameter_list|)
 block|{
-name|int
-name|timeout
-decl_stmt|;
 name|u_char
 name|fs
 decl_stmt|,
