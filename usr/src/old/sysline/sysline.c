@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.8 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,7 +1142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|short
+name|uid_t
 name|uid
 decl_stmt|;
 end_decl_stmt
