@@ -728,6 +728,16 @@ name|_r
 operator|=
 literal|0
 expr_stmt|;
+name|fp
+operator|->
+name|_p
+operator|=
+name|fp
+operator|->
+name|_bf
+operator|.
+name|_base
+expr_stmt|;
 if|if
 condition|(
 name|HASUB
