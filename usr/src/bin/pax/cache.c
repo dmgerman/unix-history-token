@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cache.c	1.1 (Berkeley) %G%"
+literal|"@(#)cache.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1758,7 +1758,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 operator|++
-name|pwopn
+name|gropn
 expr_stmt|;
 block|}
 if|if
