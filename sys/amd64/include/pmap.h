@@ -360,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|APTDPTDI
-value|(NPDEPG-NPGPTD)
+value|(NPDEPTD-NPGPTD)
 end_define
 
 begin_comment
