@@ -409,7 +409,11 @@ literal|0xa180a3b8
 block|,
 literal|"NEC PC9801-100"
 block|}
-block|, }
+block|,
+block|{
+literal|0
+block|}
+block|}
 decl_stmt|;
 end_decl_stmt
 
