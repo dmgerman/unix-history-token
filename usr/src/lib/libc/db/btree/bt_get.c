@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_get.c	5.5 (Berkeley) %G%"
+literal|"@(#)bt_get.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,7 +511,7 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 		 * Make a special effort not to unpin the page the last (or 		 * original) match was on, but also make sure it's unpinned 		 * if an error occurs. 		 */
-if|if
+while|while
 condition|(
 name|e
 operator|->
@@ -519,7 +519,6 @@ name|index
 operator|==
 literal|0
 condition|)
-do|do
 block|{
 if|if
 condition|(
@@ -608,10 +607,12 @@ name|NULL
 operator|)
 return|;
 block|}
-block|}
-do|while
-condition|(
-operator|(
+name|e
+operator|->
+name|page
+operator|=
+name|h
+expr_stmt|;
 name|e
 operator|->
 name|index
@@ -620,11 +621,8 @@ name|NEXTINDEX
 argument_list|(
 name|h
 argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-do|;
+expr_stmt|;
+block|}
 operator|--
 name|e
 operator|->
