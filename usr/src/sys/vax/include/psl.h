@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	psl.h	4.2	81/02/19	*/
+comment|/*	psl.h	4.3	81/02/23	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|PSL_C
-value|0x1
+value|0x00000001
 end_define
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|PSL_V
-value|0x2
+value|0x00000002
 end_define
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|PSL_Z
-value|0x4
+value|0x00000004
 end_define
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|PSL_N
-value|0x8
+value|0x00000008
 end_define
 
 begin_comment
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|PSL_ALLCC
-value|0xf
+value|0x0000000f
 end_define
 
 begin_comment
@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|PSL_T
-value|0x10
+value|0x00000010
 end_define
 
 begin_comment
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|PSL_IV
-value|0x20
+value|0x00000020
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FU
-value|0x40
+value|0x00000040
 end_define
 
 begin_comment
@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|PSL_DV
-value|0x80
+value|0x00000080
 end_define
 
 begin_comment
@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|PSL_IPL
-value|0x1f0000
+value|0x001f0000
 end_define
 
 begin_comment
@@ -121,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|PSL_PRVMOD
-value|0xc00000
+value|0x00c00000
 end_define
 
 begin_comment
@@ -132,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|PSL_CURMOD
-value|0x3000000
+value|0x03000000
 end_define
 
 begin_comment
@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|PSL_IS
-value|0x4000000
+value|0x04000000
 end_define
 
 begin_comment
@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|PSL_FPD
-value|0x8000000
+value|0x08000000
 end_define
 
 begin_comment
