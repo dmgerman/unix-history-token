@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_input.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_input.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -21,15 +21,15 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|lp
+name|kdblp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|peekc
+name|kdbpeekc
 decl_stmt|,
-name|lastc
+name|kdblastc
 init|=
 name|EOR
 decl_stmt|;
@@ -40,7 +40,7 @@ comment|/* input routines */
 end_comment
 
 begin_macro
-name|eol
+name|kdbeol
 argument_list|(
 argument|c
 argument_list|)
@@ -69,7 +69,7 @@ block|}
 end_block
 
 begin_macro
-name|rdc
+name|kdbrdc
 argument_list|()
 end_macro
 
@@ -79,30 +79,30 @@ do|do
 operator|(
 name|void
 operator|)
-name|readchar
+name|kdbreadchar
 argument_list|()
 expr_stmt|;
 do|while
 condition|(
-name|lastc
+name|kdblastc
 operator|==
 name|SP
 operator|||
-name|lastc
+name|kdblastc
 operator|==
 name|TB
 condition|)
 do|;
 return|return
 operator|(
-name|lastc
+name|kdblastc
 operator|)
 return|;
 block|}
 end_block
 
 begin_macro
-name|readchar
+name|kdbreadchar
 argument_list|()
 end_macro
 
@@ -117,12 +117,12 @@ literal|"\b \b"
 decl_stmt|;
 if|if
 condition|(
-name|lp
+name|kdblp
 operator|==
 literal|0
 condition|)
 block|{
-name|lp
+name|kdblp
 operator|=
 name|line
 expr_stmt|;
@@ -133,14 +133,14 @@ name|void
 operator|)
 name|kdbreadc
 argument_list|(
-name|lp
+name|kdblp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mkfault
+name|kdbmkfault
 condition|)
-name|error
+name|kdberror
 argument_list|(
 operator|(
 name|char
@@ -152,7 +152,7 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|*
-name|lp
+name|kdblp
 condition|)
 block|{
 case|case
@@ -166,7 +166,7 @@ literal|0177
 case|:
 if|if
 condition|(
-name|lp
+name|kdblp
 operator|>
 name|line
 condition|)
@@ -177,7 +177,7 @@ argument_list|,
 literal|3
 argument_list|)
 operator|,
-name|lp
+name|kdblp
 operator|--
 expr_stmt|;
 break|break;
@@ -189,7 +189,7 @@ argument_list|)
 case|:
 while|while
 condition|(
-name|lp
+name|kdblp
 operator|>
 name|line
 condition|)
@@ -200,7 +200,7 @@ argument_list|,
 literal|3
 argument_list|)
 operator|,
-name|lp
+name|kdblp
 operator|--
 expr_stmt|;
 break|break;
@@ -219,7 +219,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lp
+name|kdblp
 operator|>
 name|line
 condition|)
@@ -227,7 +227,7 @@ name|kdbwrite
 argument_list|(
 name|line
 argument_list|,
-name|lp
+name|kdblp
 operator|-
 name|line
 argument_list|)
@@ -241,7 +241,7 @@ argument_list|)
 case|:
 if|if
 condition|(
-name|lp
+name|kdblp
 operator|<=
 name|line
 condition|)
@@ -254,7 +254,7 @@ operator|!
 name|isspace
 argument_list|(
 operator|*
-name|lp
+name|kdblp
 argument_list|)
 condition|)
 goto|goto
@@ -271,7 +271,7 @@ block|}
 do|while
 condition|(
 operator|--
-name|lp
+name|kdblp
 operator|>
 name|line
 condition|)
@@ -290,7 +290,7 @@ expr_stmt|;
 do|while
 condition|(
 operator|--
-name|lp
+name|kdblp
 operator|>
 name|line
 operator|&&
@@ -298,16 +298,16 @@ operator|!
 name|isspace
 argument_list|(
 operator|*
-name|lp
+name|kdblp
 argument_list|)
 condition|)
 do|;
 break|break;
 default|default:
-name|echo
+name|kdbecho
 argument_list|(
 operator|*
-name|lp
+name|kdblp
 operator|++
 argument_list|)
 expr_stmt|;
@@ -316,11 +316,11 @@ block|}
 block|}
 do|while
 condition|(
-name|lp
+name|kdblp
 operator|==
 name|line
 operator|||
-name|lp
+name|kdblp
 index|[
 operator|-
 literal|1
@@ -330,39 +330,39 @@ name|EOR
 condition|)
 do|;
 operator|*
-name|lp
+name|kdblp
 operator|=
 literal|0
 expr_stmt|;
-name|lp
+name|kdblp
 operator|=
 name|line
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|lastc
+name|kdblastc
 operator|=
-name|peekc
+name|kdbpeekc
 condition|)
-name|peekc
+name|kdbpeekc
 operator|=
 literal|0
 expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|lastc
+name|kdblastc
 operator|=
 operator|*
-name|lp
+name|kdblp
 condition|)
-name|lp
+name|kdblp
 operator|++
 expr_stmt|;
 return|return
 operator|(
-name|lastc
+name|kdblastc
 operator|)
 return|;
 block|}
@@ -370,7 +370,7 @@ end_block
 
 begin_expr_stmt
 specifier|static
-name|echo
+name|kdbecho
 argument_list|(
 argument|c
 argument_list|)
@@ -445,7 +445,7 @@ block|}
 end_block
 
 begin_macro
-name|nextchar
+name|kdbnextchar
 argument_list|()
 end_macro
 
@@ -453,14 +453,14 @@ begin_block
 block|{
 if|if
 condition|(
-name|eol
+name|kdbeol
 argument_list|(
-name|rdc
+name|kdbrdc
 argument_list|()
 argument_list|)
 condition|)
 block|{
-name|lp
+name|kdblp
 operator|--
 expr_stmt|;
 return|return
@@ -471,14 +471,14 @@ return|;
 block|}
 return|return
 operator|(
-name|lastc
+name|kdblastc
 operator|)
 return|;
 block|}
 end_block
 
 begin_macro
-name|quotchar
+name|kdbquotchar
 argument_list|()
 end_macro
 
@@ -486,20 +486,20 @@ begin_block
 block|{
 if|if
 condition|(
-name|readchar
+name|kdbreadchar
 argument_list|()
 operator|==
 literal|'\\'
 condition|)
 return|return
 operator|(
-name|readchar
+name|kdbreadchar
 argument_list|()
 operator|)
 return|;
 if|if
 condition|(
-name|lastc
+name|kdblastc
 operator|==
 literal|'\''
 condition|)
@@ -510,14 +510,14 @@ operator|)
 return|;
 return|return
 operator|(
-name|lastc
+name|kdblastc
 operator|)
 return|;
 block|}
 end_block
 
 begin_macro
-name|getformat
+name|kdbgetformat
 argument_list|(
 argument|deformat
 argument_list|)
@@ -554,15 +554,15 @@ condition|(
 operator|(
 name|quote
 condition|?
-name|readchar
+name|kdbreadchar
 argument_list|()
 operator|!=
 name|EOR
 else|:
 operator|!
-name|eol
+name|kdbeol
 argument_list|(
-name|readchar
+name|kdbreadchar
 argument_list|()
 argument_list|)
 operator|)
@@ -574,7 +574,7 @@ operator|*
 name|fptr
 operator|++
 operator|=
-name|lastc
+name|kdblastc
 operator|)
 operator|==
 literal|'"'
@@ -584,7 +584,7 @@ operator|=
 operator|~
 name|quote
 expr_stmt|;
-name|lp
+name|kdblp
 operator|--
 expr_stmt|;
 if|if
