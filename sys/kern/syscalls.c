@@ -628,25 +628,12 @@ comment|/* 173 = nosys */
 literal|"#174"
 block|,
 comment|/* 174 = nosys */
-ifdef|#
-directive|ifdef
-name|INACCURATE_MICROTIME_IS_OK
 literal|"ntp_gettime"
 block|,
 comment|/* 175 = ntp_gettime */
 literal|"ntp_adjtime"
 block|,
 comment|/* 176 = ntp_adjtime */
-else|#
-directive|else
-literal|"#175"
-block|,
-comment|/* 175 = nosys */
-literal|"#176"
-block|,
-comment|/* 176 = nosys */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MACHVMCOMPAT

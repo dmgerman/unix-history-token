@@ -1125,12 +1125,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INACCURATE_MICROTIME_IS_OK
-end_ifdef
-
 begin_function_decl
 name|int
 name|ntp_gettime
@@ -1144,16 +1138,6 @@ name|ntp_adjtime
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1489,22 +1473,6 @@ begin_ifdef
 ifdef|#
 directive|ifdef
 name|SYSVSHM
-end_ifdef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INACCURATE_MICROTIME_IS_OK
 end_ifdef
 
 begin_else
@@ -2609,9 +2577,6 @@ block|,
 name|nosys
 block|,
 comment|/* 174 = nosys */
-ifdef|#
-directive|ifdef
-name|INACCURATE_MICROTIME_IS_OK
 literal|1
 block|,
 name|ntp_gettime
@@ -2622,20 +2587,6 @@ block|,
 name|ntp_adjtime
 block|,
 comment|/* 176 = ntp_adjtime */
-else|#
-directive|else
-literal|0
-block|,
-name|nosys
-block|,
-comment|/* 175 = nosys */
-literal|0
-block|,
-name|nosys
-block|,
-comment|/* 176 = nosys */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MACHVMCOMPAT
