@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright 1996 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: perfmon.c,v 1.1.1.1 1996/03/28 21:20:22 wollman Exp $  */
 end_comment
 
 begin_include
@@ -94,7 +94,6 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|void
-name|__dead
 name|usage
 argument_list|(
 specifier|const
@@ -131,6 +130,10 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|sleeptime
+decl_stmt|;
+name|char
+modifier|*
+name|cmd
 decl_stmt|;
 name|struct
 name|pmc
@@ -183,6 +186,10 @@ name|pmc_mask
 operator|=
 literal|0
 expr_stmt|;
+name|cmd
+operator|=
+name|NULL
+expr_stmt|;
 name|loops
 operator|=
 literal|50
@@ -202,11 +209,12 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"s:l:uoeiU:m:"
+literal|"s:l:uoeiU:m:c:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -320,6 +328,14 @@ name|INT_MAX
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+name|cmd
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 default|default:
@@ -520,15 +536,6 @@ control|)
 block|{
 if|if
 condition|(
-name|sleeptime
-condition|)
-name|sleep
-argument_list|(
-name|sleeptime
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -620,6 +627,24 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"ioctl(PMIOSTART)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sleeptime
+condition|)
+name|sleep
+argument_list|(
+name|sleeptime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmd
+condition|)
+name|system
+argument_list|(
+name|cmd
 argument_list|)
 expr_stmt|;
 block|}
@@ -895,10 +920,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: usage:\n\t%s [-eiou] [-l nloops] [-U unit] [-m mask] "
-literal|"counter\n"
-argument_list|,
-name|pname
+literal|"usage: %s [-eiou] [-c command] [-l nloops] [-m mask] [-s sleeptime]\n"
+literal|"       [-U unit] counter\n"
 argument_list|,
 name|pname
 argument_list|)
