@@ -6232,7 +6232,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+block|}
 name|sc
 operator|->
 name|nge_stat_ch
@@ -6246,7 +6246,6 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-block|}
 name|splx
 argument_list|(
 name|s
@@ -6467,25 +6466,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|status
-operator|&
-name|NGE_IMR_PHY_INTR
-condition|)
-block|{
-name|sc
-operator|->
-name|nge_link
-operator|=
+if|#
+directive|if
 literal|0
-expr_stmt|;
-name|nge_tick
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
+comment|/*  		 * XXX: nge_tick() is not ready to be called this way 		 * it screws up the aneg timeout because mii_tick() is 		 * only to be called once per second. 		 */
+block|if (status& NGE_IMR_PHY_INTR) { 			sc->nge_link = 0; 			nge_tick(sc); 		}
+endif|#
+directive|endif
 block|}
 comment|/* Re-enable interrupts. */
 name|CSR_WRITE_4
@@ -7582,6 +7569,11 @@ name|NGE_RXCFG_RX_FDX
 argument_list|)
 expr_stmt|;
 block|}
+name|nge_tick
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enable the delivery of PHY interrupts based on 	 * link/speed/duplex status changes. Also enable the 	 * extsts field in the DMA descriptors (needed for 	 * TCP/IP checksum offload on transmit). 	 */
 name|NGE_SETBIT
 argument_list|(
