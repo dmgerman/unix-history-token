@@ -206,7 +206,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"client as /.updated.keyXXX.XXX.XXX.XXX (same modes as above).\n"
+literal|"client as /.update.keyXXX.XXX.XXX.XXX (same modes as above).\n"
 argument_list|)
 expr_stmt|;
 name|fflush
