@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.11 1995/04/11 17:13:17 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.12 1995/05/30 08:07:37 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -138,6 +138,47 @@ parameter_list|,
 name|deno
 parameter_list|)
 value|(((dev) + (deno))& dehash)
+end_define
+
+begin_union
+union|union
+name|_qcvt
+block|{
+name|quad_t
+name|qcvt
+decl_stmt|;
+name|long
+name|val
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_define
+define|#
+directive|define
+name|SETHIGH
+parameter_list|(
+name|q
+parameter_list|,
+name|h
+parameter_list|)
+value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_HIGHWORD] = (h); \ 	(q) = tmp.qcvt; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETLOW
+parameter_list|(
+name|q
+parameter_list|,
+name|l
+parameter_list|)
+value|{ \ 	union _qcvt tmp; \ 	tmp.qcvt = (q); \ 	tmp.val[_QUAD_LOWWORD] = (l); \ 	(q) = tmp.qcvt; \ }
 end_define
 
 begin_function
@@ -982,6 +1023,30 @@ operator|->
 name|v_type
 operator|=
 name|VREG
+expr_stmt|;
+name|SETHIGH
+argument_list|(
+name|ldep
+operator|->
+name|de_modrev
+argument_list|,
+name|mono_time
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
+name|SETLOW
+argument_list|(
+name|ldep
+operator|->
+name|de_modrev
+argument_list|,
+name|mono_time
+operator|.
+name|tv_usec
+operator|*
+literal|4294
+argument_list|)
 expr_stmt|;
 name|VREF
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.18 1995/06/28 07:06:48 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.19 1995/08/01 18:50:55 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -1291,6 +1291,14 @@ operator|->
 name|a_vp
 operator|->
 name|v_type
+expr_stmt|;
+name|vap
+operator|->
+name|va_filerev
+operator|=
+name|dep
+operator|->
+name|de_modrev
 expr_stmt|;
 return|return
 literal|0

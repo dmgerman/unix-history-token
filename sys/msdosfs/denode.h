@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.4 1995/03/16 18:14:17 bde Exp $ */
+comment|/*	$Id: denode.h,v 1.5 1995/05/30 08:07:32 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -243,6 +243,10 @@ name|FC_SIZE
 index|]
 decl_stmt|;
 comment|/* fat cache */
+name|u_quad_t
+name|de_modrev
+decl_stmt|;
+comment|/* Revision level for lease. */
 block|}
 struct|;
 end_struct
