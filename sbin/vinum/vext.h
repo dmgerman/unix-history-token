@@ -51,16 +51,6 @@ begin_comment
 comment|/* date text in history (far too much) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VINUMDEBUG
-end_define
-
-begin_comment
-comment|/* for including kernel headers */
-end_comment
-
 begin_enum
 enum|enum
 block|{
