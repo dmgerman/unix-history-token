@@ -457,17 +457,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PDIRUNLOCK
-value|0x0200000
-end_define
-
-begin_comment
-comment|/* filesystem lookup() unlocked parent dir */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NOCROSSMOUNT
 value|0x0400000
 end_define
