@@ -9,7 +9,7 @@ name|char
 name|vpqSCCSid
 index|[]
 init|=
-literal|"@(#)vpq.c	1.3\t%G%"
+literal|"@(#)vpq.c	1.4\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,13 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_include

@@ -22,7 +22,7 @@ name|char
 name|vpdSCCSid
 index|[]
 init|=
-literal|"@(#)vpd.c	1.4\t%G%"
+literal|"@(#)vpd.c	1.5\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
@@ -53,7 +53,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -77,7 +77,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<wait.h>
+file|<sys/wait.h>
 end_include
 
 begin_decl_stmt
