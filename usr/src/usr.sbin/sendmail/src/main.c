@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.16 (Berkeley) %G%"
+literal|"@(#)main.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,18 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
 end_include
 
 begin_ifdef
@@ -1479,10 +1491,15 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_DEBUG
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|DEBUG
 case|case
 literal|'f'
 case|:
