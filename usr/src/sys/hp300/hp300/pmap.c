@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.7 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -618,12 +618,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|pmap_t
-name|kernel_pmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_map_t
 name|pt_map
 decl_stmt|;
@@ -937,12 +931,6 @@ block|}
 comment|/* 	 * Initialize protection array. 	 */
 name|hp300_protection_init
 argument_list|()
-expr_stmt|;
-comment|/* 	 * The kernel's pmap is statically allocated so we don't 	 * have to use pmap_create, which is unlikely to work 	 * correctly at this part of the boot sequence. 	 */
-name|kernel_pmap
-operator|=
-operator|&
-name|kernel_pmap_store
 expr_stmt|;
 comment|/* 	 * Kernel page/segment table allocated in locore, 	 * just initialize pointers. 	 */
 name|kernel_pmap

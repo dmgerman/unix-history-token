@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -459,12 +459,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|pmap_t
-name|kernel_pmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_offset_t
 name|avail_start
 decl_stmt|;
@@ -803,12 +797,6 @@ expr_stmt|;
 comment|/* 	 * Initialize protection array. 	 */
 name|i386_protection_init
 argument_list|()
-expr_stmt|;
-comment|/* 	 * The kernel's pmap is statically allocated so we don't 	 * have to use pmap_create, which is unlikely to work 	 * correctly at this part of the boot sequence. 	 */
-name|kernel_pmap
-operator|=
-operator|&
-name|kernel_pmap_store
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4486,23 +4474,6 @@ expr_stmt|;
 comment|/*printf("pde "); for(x=0x3f6; x< 0x3fA; x++) 	printf("%x ", pmap->pm_pdir[x]);*/
 comment|/*pads(pmap);*/
 comment|/*pg(" pcb_cr3 %x", pcbp->pcb_cr3);*/
-block|}
-end_function
-
-begin_comment
-comment|/*  *	Routine:	pmap_kernel  *	Function:  *		Returns the physical map handle for the kernel.  */
-end_comment
-
-begin_function
-name|pmap_t
-name|pmap_kernel
-parameter_list|()
-block|{
-return|return
-operator|(
-name|kernel_pmap
-operator|)
-return|;
 block|}
 end_function
 

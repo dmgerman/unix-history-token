@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -365,12 +365,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|pmap_t
-name|kernel_pmap
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|pmap_t
 name|cur_pmap
 decl_stmt|;
 end_decl_stmt
@@ -723,9 +717,6 @@ name|pmaxpagesperpage
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * The kernel's pmap is statically allocated so we don't 	 * have to use pmap_create, which is unlikely to work 	 * correctly at this part of the boot sequence. 	 */
-name|kernel_pmap
-operator|=
 name|cur_pmap
 operator|=
 operator|&
