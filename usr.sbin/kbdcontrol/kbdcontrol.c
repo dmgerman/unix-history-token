@@ -96,8 +96,52 @@ file|"lex.h"
 end_include
 
 begin_comment
-comment|/*  * PASTE isn't defined in 4.x, but we need it to bridge to 5.0-current  * so define it here as a stop gap transition measure.  */
+comment|/*  * HALT, PDWN, and PASTE aren't defined in 4.x, but we need them to bridge  * to 5.0-current so define them here as a stop gap transition measure.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HALT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HALT
+value|0xa1
+end_define
+
+begin_comment
+comment|/* halt machine */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PDWN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PDWN
+value|0xa2
+end_define
+
+begin_comment
+comment|/* halt machine and power down */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
