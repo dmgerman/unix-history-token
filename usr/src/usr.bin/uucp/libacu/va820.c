@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)va820.c	4.1 (Berkeley) %G%"
+literal|"@(#)va820.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -460,7 +460,7 @@ goto|goto
 name|ret
 goto|;
 block|}
-comment|/* 	 * Build the dialing sequence for the adapter 	 * It appears that this needs to go in one 	 * write for some obscure reason... 	 */
+comment|/* 	 * Build the dialing sequence for the adapter 	 */
 name|DEBUG
 argument_list|(
 literal|4
@@ -474,7 +474,7 @@ name|sprintf
 argument_list|(
 name|vadbuf
 argument_list|,
-literal|"%c%s%c%c"
+literal|"%c%s<%c%c"
 argument_list|,
 name|c_start
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmacs.c	4.1 (Berkeley) %G%"
+literal|"@(#)vmacs.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,7 +403,7 @@ argument_list|)
 expr_stmt|;
 name|alarm
 argument_list|(
-literal|45
+literal|60
 argument_list|)
 expr_stmt|;
 if|if
@@ -546,19 +546,48 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* send modem address digit */
+for|for
+control|(
+name|p
+operator|=
+name|ph
+init|;
+operator|*
+name|p
+condition|;
+name|p
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'='
+operator|||
+operator|(
+operator|*
+name|p
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|p
+operator|<=
+literal|'9'
+operator|)
+condition|)
 name|write
 argument_list|(
 name|va
 argument_list|,
-name|ph
+name|p
 argument_list|,
-name|strlen
-argument_list|(
-name|ph
-argument_list|)
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Send Phone Number */
+block|}
 name|write
 argument_list|(
 name|va
@@ -633,7 +662,7 @@ name|DEBUG
 argument_list|(
 literal|2
 argument_list|,
-literal|"CALL ABORTED\n"
+literal|"Dialer Timeout or Abort\n"
 argument_list|,
 literal|0
 argument_list|)
@@ -798,6 +827,11 @@ expr_stmt|;
 name|close
 argument_list|(
 name|va
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 return|return

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)va212.c	4.1 (Berkeley) %G%"
+literal|"@(#)va212.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,7 +596,7 @@ name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
-literal|"wanted ON LINE \\r\\n "
+literal|"wanted ON LINE\\r\\n "
 argument_list|,
 name|CNULL
 argument_list|)
@@ -605,7 +605,7 @@ name|ok
 operator|=
 name|expect
 argument_list|(
-literal|"ON LINE \r\n"
+literal|"ON LINE\r\n"
 argument_list|,
 name|dh
 argument_list|)
