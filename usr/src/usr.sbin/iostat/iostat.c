@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.9 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -228,7 +228,7 @@ block|,
 define|#
 directive|define
 name|X_END
-value|11
+value|10
 ifdef|#
 directive|ifdef
 name|hp300
