@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1983, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.16 (Berkeley) %G%"
+literal|"@(#)route.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,6 +192,8 @@ decl_stmt|,
 name|qflag
 decl_stmt|,
 name|Cflag
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -426,6 +428,14 @@ name|verbose
 operator|++
 expr_stmt|;
 break|break;
+case|case
+literal|'N'
+case|:
+name|Cflag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Use routing socket */
 block|}
 block|}
 name|pid
@@ -3069,6 +3079,61 @@ operator|==
 literal|4
 condition|)
 block|{
+name|ret
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"old usage of trailing 0, assuming route to if\n"
+argument_list|)
+expr_stmt|;
+name|iflag
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ret
+operator|>
+literal|0
+operator|&&
+name|ret
+operator|<
+literal|10
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"old usage of trailing digit, "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"assuming route via gateway\n"
+argument_list|)
+expr_stmt|;
+name|iflag
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
 operator|(
 name|void
 operator|)
