@@ -474,7 +474,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ddb_trap
+name|kdb_trap
 name|__P
 argument_list|(
 operator|(

@@ -119,6 +119,47 @@ directive|include
 file|<ddb/db_variables.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|jmp_buf
+modifier|*
+name|db_nofault
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|jmp_buf
+name|db_jmpbuf
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|gdb_handle_exception
+name|__P
+argument_list|(
+operator|(
+name|db_regs_t
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|label_t
@@ -742,7 +783,7 @@ end_comment
 
 begin_function
 name|int
-name|ddb_trap
+name|kdb_trap
 parameter_list|(
 name|a0
 parameter_list|,
@@ -770,6 +811,16 @@ name|regs
 decl_stmt|;
 block|{
 name|int
+name|ddb_mode
+init|=
+operator|!
+operator|(
+name|boothowto
+operator|&
+name|RB_GDB
+operator|)
+decl_stmt|;
+name|int
 name|s
 decl_stmt|;
 comment|/* 	 * Don't bother checking for usermode, since a benign entry 	 * by the kernel (call to Debugger() or a breakpoint) has 	 * already checked for usermode.  If neither of those 	 * conditions exist, something Bad has happened. 	 */
@@ -792,6 +843,11 @@ name|a0
 operator|!=
 name|ALPHA_IF_CODE_GENTRAP
 operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|ddb_mode
 condition|)
 block|{
 name|db_printf
@@ -818,24 +874,37 @@ argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (db_recover != 0) {
-comment|/* 			 * XXX Sould longjump back into command loop! 			 */
-block|db_printf("Faulted in DDB; continuing...\n"); 			alpha_pal_halt();
-comment|/* XXX */
-block|db_error("Faulted in DDB; continuing...\n");
-comment|/* NOTREACHED */
-block|}
-endif|#
-directive|endif
-comment|/* 		 * Tell caller "We did NOT handle the trap." 		 * Caller should panic, or whatever. 		 */
+comment|/* 			 * Tell caller "We did NOT handle the trap." 			 * Caller should panic, or whatever. 			 */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+if|if
+condition|(
+name|db_nofault
+condition|)
+block|{
+name|jmp_buf
+modifier|*
+name|no_fault
+init|=
+name|db_nofault
+decl_stmt|;
+name|db_nofault
+operator|=
+literal|0
+expr_stmt|;
+name|longjmp
+argument_list|(
+operator|*
+name|no_fault
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * XXX Should switch to DDB's own stack, here. 	 */
 name|ddb_regs
@@ -857,6 +926,10 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* Set polling mode, unblank video */
+if|if
+condition|(
+name|ddb_mode
+condition|)
 name|db_trap
 argument_list|(
 name|entry
@@ -865,6 +938,17 @@ name|a0
 argument_list|)
 expr_stmt|;
 comment|/* Where the work happens */
+else|else
+name|gdb_handle_exception
+argument_list|(
+operator|&
+name|ddb_regs
+argument_list|,
+name|entry
+argument_list|,
+name|a0
+argument_list|)
+expr_stmt|;
 name|cnpollc
 argument_list|(
 name|FALSE
@@ -925,6 +1009,11 @@ name|char
 modifier|*
 name|src
 decl_stmt|;
+name|db_nofault
+operator|=
+operator|&
+name|db_jmpbuf
+expr_stmt|;
 name|src
 operator|=
 operator|(
@@ -947,6 +1036,10 @@ operator|=
 operator|*
 name|src
 operator|++
+expr_stmt|;
+name|db_nofault
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -983,6 +1076,11 @@ name|char
 modifier|*
 name|dst
 decl_stmt|;
+name|db_nofault
+operator|=
+operator|&
+name|db_jmpbuf
+expr_stmt|;
 name|dst
 operator|=
 operator|(
@@ -1008,6 +1106,10 @@ operator|++
 expr_stmt|;
 name|alpha_pal_imb
 argument_list|()
+expr_stmt|;
+name|db_nofault
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

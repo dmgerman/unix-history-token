@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: trap.c,v 1.2 1998/06/10 20:12:22 dfr Exp $ */
+comment|/* $Id: trap.c,v 1.3 1998/06/28 00:47:20 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -997,7 +997,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ddb_trap
+name|kdb_trap
 argument_list|(
 name|a0
 argument_list|,
@@ -1683,7 +1683,19 @@ comment|/* XXX dump registers */
 ifdef|#
 directive|ifdef
 name|DDB
-comment|/* XXX 	 * Really would like to be able to indicate that the 	 * kernel should _not_ panic, here.  However, two problems 	 * exist: 	 * 	 *	(a) There is not currently a way for DDB to distinguish 	 *	    between "continue and panic" and "continue, and 	 *	    don't panic". 	 * 	 *	(b) panic() will again invoke the debugger, so calling 	 *	    it here is silly. 	 * 	 * For now, we just do nothing. 	 */
+name|kdb_trap
+argument_list|(
+name|a0
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|,
+name|entry
+argument_list|,
+name|framep
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|panic
