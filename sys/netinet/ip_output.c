@@ -563,10 +563,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* PFIL_HOOKS */
-name|len
-operator|=
-literal|0
-expr_stmt|;
 name|args
 operator|.
 name|eh
@@ -874,6 +870,10 @@ condition|(
 name|opt
 condition|)
 block|{
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|m
 operator|=
 name|ip_insertoptions
@@ -889,12 +889,8 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|>=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
+operator|!=
+literal|0
 condition|)
 name|hlen
 operator|=
@@ -4741,12 +4737,19 @@ name|ip_len
 operator|>
 name|IP_MAXPACKET
 condition|)
+block|{
+operator|*
+name|phlen
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|m
 operator|)
 return|;
 comment|/* XXX should fail */
+block|}
 if|if
 condition|(
 name|p
@@ -4797,11 +4800,18 @@ name|n
 operator|==
 literal|0
 condition|)
+block|{
+operator|*
+name|phlen
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|m
 operator|)
 return|;
+block|}
 name|n
 operator|->
 name|m_pkthdr
