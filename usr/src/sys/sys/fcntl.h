@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fcntl.h	4.2	83/09/25	*/
+comment|/*	fcntl.h	4.3	85/05/22	*/
 end_comment
 
 begin_comment
@@ -48,6 +48,39 @@ end_define
 
 begin_comment
 comment|/* append (writes guaranteed at the end) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|O_CREAT
+value|FCREAT
+end_define
+
+begin_comment
+comment|/* open with file create */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|O_TRUNC
+value|FTRUNC
+end_define
+
+begin_comment
+comment|/* open with truncation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|O_EXCL
+value|FEXCL
+end_define
+
+begin_comment
+comment|/* error on create if file exists */
 end_comment
 
 begin_ifndef
@@ -172,6 +205,39 @@ end_define
 
 begin_comment
 comment|/* signal pgrp when data ready */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FCREAT
+value|01000
+end_define
+
+begin_comment
+comment|/* create if nonexistant */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTRUNC
+value|02000
+end_define
+
+begin_comment
+comment|/* truncate to zero length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEXCL
+value|04000
+end_define
+
+begin_comment
+comment|/* error if already created */
 end_comment
 
 begin_endif
