@@ -238,9 +238,7 @@ begin_function_decl
 name|void
 name|usage
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -317,17 +315,7 @@ modifier|*
 name|devname
 init|=
 literal|"/dev/acd0c"
-decl_stmt|,
-modifier|*
-name|prog_name
 decl_stmt|;
-name|prog_name
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -452,9 +440,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|prog_name
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -473,9 +459,7 @@ operator|==
 literal|0
 condition|)
 name|usage
-argument_list|(
-name|prog_name
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3190,20 +3174,15 @@ begin_function
 name|void
 name|usage
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|prog_name
+name|void
 parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-f device] [-s speed] [-e] [-l] [-m] [-p]\n"
-literal|"\t[-q] [command] [command filename...]\n"
-argument_list|,
-name|prog_name
+literal|"Usage: burncd [-delmpqtv] [-f device] [-s speed] [command]"
+literal|" [command file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
