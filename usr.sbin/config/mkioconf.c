@@ -4415,13 +4415,8 @@ name|dp
 operator|->
 name|d_portn
 operator|==
-name|PORT_AUTO
-operator|||
-name|dp
-operator|->
-name|d_portn
-operator|==
-name|PORT_NONE
+operator|-
+literal|1
 condition|)
 name|fprintf
 argument_list|(

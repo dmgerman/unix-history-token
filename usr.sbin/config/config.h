@@ -347,16 +347,6 @@ name|int
 name|d_portn
 decl_stmt|;
 comment|/* io port base (if number not manifest) */
-define|#
-directive|define
-name|PORT_AUTO
-value|-1
-comment|/* automatically configured */
-define|#
-directive|define
-name|PORT_NONE
-value|-2
-comment|/* no port */
 name|char
 modifier|*
 name|d_mask
