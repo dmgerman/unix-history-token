@@ -561,6 +561,13 @@ decl_stmt|;
 name|natlookup_t
 name|nl
 decl_stmt|;
+name|natlookup_t
+modifier|*
+name|nlp
+init|=
+operator|&
+name|nl
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -832,7 +839,7 @@ argument_list|,
 name|SIOCGNATL
 argument_list|,
 operator|&
-name|nl
+name|nlp
 argument_list|)
 operator|==
 operator|-

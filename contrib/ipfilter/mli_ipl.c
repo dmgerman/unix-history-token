@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1998 by Darren Reed.  * (C)opyright 1997 by Marc Boucher.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original authors and the contributors.  */
+comment|/*  * Copyright (C) 1993-2000 by Darren Reed.  * (C)opyright 1997 by Marc Boucher.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original authors and the contributors.  */
 end_comment
 
 begin_comment
@@ -218,6 +218,8 @@ decl_stmt|,
 name|ipfi_mutex
 decl_stmt|,
 name|ipf_rw
+decl_stmt|,
+name|ipf_hostmap
 decl_stmt|;
 end_decl_stmt
 
@@ -1668,6 +1670,8 @@ argument_list|(
 name|f
 operator|->
 name|fr_ifname
+argument_list|,
+literal|4
 argument_list|)
 operator|==
 name|ifp
@@ -1734,6 +1738,8 @@ argument_list|(
 name|f
 operator|->
 name|fr_ifname
+argument_list|,
+literal|4
 argument_list|)
 operator|==
 name|ifp
@@ -1805,6 +1811,8 @@ argument_list|(
 name|np
 operator|->
 name|in_ifname
+argument_list|,
+literal|4
 argument_list|)
 operator|==
 name|ifp
@@ -2669,6 +2677,13 @@ argument_list|)
 expr_stmt|;
 name|LOCK_DEALLOC
 argument_list|(
+name|ipf_hostmap
+operator|.
+name|l
+argument_list|)
+expr_stmt|;
+name|LOCK_DEALLOC
+argument_list|(
 name|ipf_nat
 operator|.
 name|l
@@ -2851,6 +2866,30 @@ argument_list|,
 name|KM_NOSLEEP
 argument_list|)
 expr_stmt|;
+name|ipf_hostmap
+operator|.
+name|l
+operator|=
+name|LOCK_ALLOC
+argument_list|(
+operator|(
+name|uchar_t
+operator|)
+operator|-
+literal|1
+argument_list|,
+name|IPF_LOCK_PL
+argument_list|,
+operator|(
+name|lkinfo_t
+operator|*
+operator|)
+operator|-
+literal|1
+argument_list|,
+name|KM_NOSLEEP
+argument_list|)
+expr_stmt|;
 name|ipf_natfrag
 operator|.
 name|l
@@ -2991,6 +3030,11 @@ name|l
 operator|||
 operator|!
 name|ipl_mutex
+operator|.
+name|l
+operator|||
+operator|!
+name|ipf_hostmap
 operator|.
 name|l
 condition|)

@@ -262,6 +262,13 @@ decl_stmt|;
 name|natlookup_t
 name|natlook
 decl_stmt|;
+name|natlookup_t
+modifier|*
+name|natlookp
+init|=
+operator|&
+name|natlook
+decl_stmt|;
 name|char
 name|buffer
 index|[
@@ -432,7 +439,7 @@ argument_list|,
 name|SIOCGNATL
 argument_list|,
 operator|&
-name|natlook
+name|natlookp
 argument_list|)
 operator|==
 operator|-
