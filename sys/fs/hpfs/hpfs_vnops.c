@@ -3284,28 +3284,11 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag %s, ino 0x%x"
-argument_list|,
-name|vp
-operator|->
-name|v_tag
+literal|"ino 0x%x\n"
 argument_list|,
 name|hp
 operator|->
 name|h_no
-argument_list|)
-expr_stmt|;
-name|lockmgr_printinfo
-argument_list|(
-operator|&
-name|hp
-operator|->
-name|h_lock
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return

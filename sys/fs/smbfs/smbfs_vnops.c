@@ -4172,11 +4172,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"tag %s, name = %s, parent = %p, opencount = %d"
-argument_list|,
-name|vp
-operator|->
-name|v_tag
+literal|"name = %s, parent = %p, opencount = %d\n"
 argument_list|,
 name|np
 operator|->
@@ -4198,19 +4194,6 @@ argument_list|,
 name|np
 operator|->
 name|n_opencount
-argument_list|)
-expr_stmt|;
-name|lockmgr_printinfo
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_lock
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return

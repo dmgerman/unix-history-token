@@ -2908,17 +2908,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|printf
-argument_list|(
-literal|"tag %s"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_tag
-argument_list|)
-expr_stmt|;
 name|fifo_printinfo
 argument_list|(
 name|ap

@@ -272,18 +272,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|cd9660_print
-parameter_list|(
-name|struct
-name|vop_print_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Setattr call. Only allowed for block and character special devices.  */
 end_comment
@@ -3457,43 +3445,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print out the contents of an inode.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|cd9660_print
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_print_args
-comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"tag %s, isofs vnode\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_tag
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Return POSIX pathconf information applicable to cd9660 filesystems.  */
 end_comment
 
@@ -3791,7 +3742,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_print
+name|vop_null
 block|}
 block|,
 block|{
@@ -3997,7 +3948,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_print
+name|vop_null
 block|}
 block|,
 block|{
@@ -4155,7 +4106,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|cd9660_print
+name|vop_null
 block|}
 block|,
 block|{

@@ -196,19 +196,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|devfs_print
-parameter_list|(
-name|struct
-name|vop_print_args
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|devfs_read
 parameter_list|(
 name|struct
@@ -2572,43 +2559,6 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|devfs_print
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_print_args
-comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"tag %s, devfs vnode\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_tag
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -4548,7 +4498,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|devfs_print
+name|vop_null
 block|}
 block|,
 block|{
@@ -4805,7 +4755,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|devfs_print
+name|vop_null
 block|}
 block|,
 block|{

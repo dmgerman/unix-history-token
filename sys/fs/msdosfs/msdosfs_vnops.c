@@ -8062,13 +8062,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag %s, startcluster %lu, dircluster %lu, diroffset %lu "
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_tag
+literal|"startcluster %lu, dircluster %lu, diroffset %lu, "
 argument_list|,
 name|dep
 operator|->
@@ -8085,7 +8079,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" dev %d, %d"
+literal|"on dev (%d, %d)\n"
 argument_list|,
 name|major
 argument_list|(
@@ -8100,21 +8094,6 @@ name|dep
 operator|->
 name|de_dev
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|lockmgr_printinfo
-argument_list|(
-operator|&
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_lock
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return

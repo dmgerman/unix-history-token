@@ -10822,7 +10822,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"type %s, usecount %d, writecount %d, refcount %d,"
+literal|"tag %s, type %s, usecount %d, writecount %d, refcount %d,"
+argument_list|,
+name|vp
+operator|->
+name|v_tag
 argument_list|,
 name|typename
 index|[
@@ -10997,7 +11001,7 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|" flags (%s)"
+literal|" flags (%s),"
 argument_list|,
 operator|&
 name|buf
@@ -11006,26 +11010,31 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|lockmgr_printinfo
+argument_list|(
+operator|&
 name|vp
 operator|->
-name|v_data
-operator|==
-name|NULL
-condition|)
-block|{
+name|v_lock
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
+if|if
+condition|(
+name|vp
+operator|->
+name|v_data
+operator|!=
+name|NULL
+condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\t"
+literal|"\t"
 argument_list|)
 expr_stmt|;
 name|VOP_PRINT

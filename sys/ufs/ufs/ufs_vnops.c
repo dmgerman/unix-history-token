@@ -9640,11 +9640,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag %s, ino %lu, on dev %s (%d, %d)"
-argument_list|,
-name|vp
-operator|->
-name|v_tag
+literal|"ino %lu, on dev %s (%d, %d)"
 argument_list|,
 operator|(
 name|u_long
@@ -9686,14 +9682,6 @@ condition|)
 name|fifo_printinfo
 argument_list|(
 name|vp
-argument_list|)
-expr_stmt|;
-name|lockmgr_printinfo
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_lock
 argument_list|)
 expr_stmt|;
 name|printf

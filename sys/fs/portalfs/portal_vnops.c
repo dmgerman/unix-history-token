@@ -214,19 +214,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|portal_print
-parameter_list|(
-name|struct
-name|vop_print_args
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|portal_readdir
 parameter_list|(
 name|struct
@@ -2146,47 +2133,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Print out the contents of a Portal vnode.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|portal_print
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_print_args
-comment|/* { 		struct vnode *a_vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"tag %s, portal vnode\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_tag
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 name|vop_t
 modifier|*
@@ -2277,7 +2223,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|portal_print
+name|vop_null
 block|}
 block|,
 block|{
