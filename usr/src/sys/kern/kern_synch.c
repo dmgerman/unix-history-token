@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.11	81/04/13	*/
+comment|/*	kern_synch.c	4.12	81/04/15	*/
 end_comment
 
 begin_include
@@ -1108,6 +1108,27 @@ operator|-
 name|NZERO
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|p_rssize
+operator|>
+name|pp
+operator|->
+name|p_maxrss
+operator|&&
+name|freemem
+operator|<
+name|desfree
+condition|)
+name|p
+operator|+=
+literal|2
+operator|*
+literal|4
+expr_stmt|;
+comment|/* effectively, nice(4) */
 if|if
 condition|(
 name|p
