@@ -9556,9 +9556,9 @@ name|fildesc_cdevsw
 argument_list|,
 literal|0
 argument_list|,
-name|UID_BIN
+name|UID_ROOT
 argument_list|,
-name|GID_BIN
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
@@ -9581,9 +9581,9 @@ name|fildesc_cdevsw
 argument_list|,
 literal|1
 argument_list|,
-name|UID_BIN
+name|UID_ROOT
 argument_list|,
-name|GID_BIN
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
@@ -9606,9 +9606,9 @@ name|fildesc_cdevsw
 argument_list|,
 literal|2
 argument_list|,
-name|UID_BIN
+name|UID_ROOT
 argument_list|,
-name|GID_BIN
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
@@ -9651,9 +9651,9 @@ name|fildesc_cdevsw
 argument_list|,
 name|fd
 argument_list|,
-name|UID_BIN
+name|UID_ROOT
 argument_list|,
-name|GID_BIN
+name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
