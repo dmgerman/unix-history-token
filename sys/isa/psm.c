@@ -1357,7 +1357,7 @@ begin_define
 define|#
 directive|define
 name|GENERIC_MOUSE_ENTRY
-value|7
+value|((sizeof(vendortype) / sizeof(*vendortype)) - 1)
 end_define
 
 begin_comment
@@ -8733,6 +8733,9 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|unit
 operator|=
 operator|(
@@ -8748,6 +8751,11 @@ name|psm_devclass
 argument_list|,
 name|unit
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8800,6 +8808,11 @@ operator|->
 name|watchdog
 operator|=
 name|TRUE
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
