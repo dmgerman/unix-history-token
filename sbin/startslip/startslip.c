@@ -1339,13 +1339,6 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
-name|t
-operator|.
-name|c_iflag
-operator|&=
-operator|~
-name|IMAXBEL
-expr_stmt|;
 switch|switch
 condition|(
 name|flowcontrol
