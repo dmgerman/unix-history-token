@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)verify.c	5.8 (Berkeley) %G%"
+literal|"@(#)verify.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,46 +270,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-name|FTS_DC
-case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mtree: directory cycle: %s.\n"
-argument_list|,
-name|RP
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-continue|continue;
-case|case
-name|FTS_DNR
-case|:
-case|case
-name|FTS_DNX
-case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mtree: %s: unable to read or search.\n"
-argument_list|,
-name|RP
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-case|case
 name|FTS_DP
 case|:
 name|ftsdepth
@@ -347,7 +307,13 @@ expr_stmt|;
 block|}
 continue|continue;
 case|case
+name|FTS_DNR
+case|:
+case|case
 name|FTS_ERR
+case|:
+case|case
+name|FTS_NS
 case|:
 operator|(
 name|void
@@ -366,25 +332,6 @@ argument_list|,
 name|strerror
 argument_list|(
 name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-continue|continue;
-case|case
-name|FTS_NS
-case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mtree: can't stat: %s.\n"
-argument_list|,
-name|RP
-argument_list|(
-name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
