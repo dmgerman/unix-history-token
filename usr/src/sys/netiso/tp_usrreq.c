@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3074,11 +3074,11 @@ name|error
 argument_list|,
 name|tpcb
 condition|?
-literal|0
-else|:
 name|tpcb
 operator|->
 name|tp_state
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3101,7 +3101,7 @@ function_decl|so
 operator|,
 function_decl|m
 operator|,
-function_decl|tpcb?0:tpcb->tp_state
+function_decl|tpcb ? tpcb->tp_state : 0
 end_function_decl
 
 begin_empty_stmt
