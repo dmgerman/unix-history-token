@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vfsops.c	1.3 (Berkeley) %G%  *  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vfsops.c	7.1 (Berkeley) %G%  *  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lofs/lofs.h>
+file|<miscfs/lofs/lofs.h>
 end_include
 
 begin_comment
@@ -677,8 +677,6 @@ name|FORCECLOSE
 expr_stmt|;
 block|}
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
-comment|/* mntflushbuf(mp, 0);  */
-comment|/* if (mntinvalbuf(mp, 1)) 		return (EBUSY); */
 if|if
 condition|(
 name|rootvp

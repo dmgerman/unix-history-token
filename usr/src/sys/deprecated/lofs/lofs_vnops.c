@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	1.3 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	7.1 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lofs/lofs.h>
+file|<miscfs/lofs/lofs.h>
 end_include
 
 begin_comment
@@ -125,6 +125,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lookup_args
+comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -361,6 +362,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_mknod_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -467,6 +469,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_create_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -590,6 +593,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_open_args
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -654,6 +658,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_close_args
+comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -718,6 +723,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_access_args
+comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -782,6 +788,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_getattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -887,6 +894,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_setattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -951,6 +959,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_read_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1015,6 +1024,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_write_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		int  a_ioflag; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1079,6 +1089,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_ioctl_args
+comment|/* { 		struct vnode *a_vp; 		int  a_command; 		caddr_t  a_data; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1151,6 +1162,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_select_args
+comment|/* { 		struct vnode *a_vp; 		int  a_which; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1219,6 +1231,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_mmap_args
+comment|/* { 		struct vnode *a_vp; 		int  a_fflags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1283,6 +1296,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_fsync_args
+comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int  a_waitfor; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1347,6 +1361,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_seek_args
+comment|/* { 		struct vnode *a_vp; 		off_t  a_oldoff; 		off_t  a_newoff; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1411,6 +1426,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_remove_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1545,6 +1561,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_link_args
+comment|/* { 		struct vnode *a_vp; 		struct vnode *a_tdvp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1646,6 +1663,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_rename_args
+comment|/* { 		struct vnode *a_fdvp; 		struct vnode *a_fvp; 		struct componentname *a_fcnp; 		struct vnode *a_tdvp; 		struct vnode *a_tvp; 		struct componentname *a_tcnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -1666,10 +1684,17 @@ name|vnode
 modifier|*
 name|tdvp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct vnode *fsvp, *tsvp;
+ifdef|#
+directive|ifdef
+name|notdef
+name|struct
+name|vnode
+modifier|*
+name|fsvp
+decl_stmt|,
+modifier|*
+name|tsvp
+decl_stmt|;
 endif|#
 directive|endif
 name|int
@@ -1776,17 +1801,61 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
+ifdef|#
+directive|ifdef
+name|notdef
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - switch source start vp\n");
+name|printf
+argument_list|(
+literal|"lofs_rename - switch source start vp\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * And source startdir object if it is lofsed... 	 */
-block|fsvp = fndp->ni_startdir; 	if (fsvp&& fsvp->v_op == lofs_vnodeop_p) { 		fndp->ni_startdir = LOFSVP(fsvp); 		VREF(fndp->ni_startdir); 	} else { 		fsvp = 0; 	}
+name|fsvp
+operator|=
+name|fndp
+operator|->
+name|ni_startdir
+expr_stmt|;
+if|if
+condition|(
+name|fsvp
+operator|&&
+name|fsvp
+operator|->
+name|v_op
+operator|==
+name|lofs_vnodeop_p
+condition|)
+block|{
+name|fndp
+operator|->
+name|ni_startdir
+operator|=
+name|LOFSVP
+argument_list|(
+name|fsvp
+argument_list|)
+expr_stmt|;
+name|VREF
+argument_list|(
+name|fndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fsvp
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -1893,17 +1962,61 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
+ifdef|#
+directive|ifdef
+name|notdef
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - switch target start vp\n");
+name|printf
+argument_list|(
+literal|"lofs_rename - switch target start vp\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * And target startdir object if it is lofsed... 	 */
-block|tsvp = tndp->ni_startdir; 	if (tsvp&& tsvp->v_op == lofs_vnodeop_p) { 		tndp->ni_startdir = LOFSVP(fsvp); 		VREF(tndp->ni_startdir); 	} else { 		tsvp = 0; 	}
+name|tsvp
+operator|=
+name|tndp
+operator|->
+name|ni_startdir
+expr_stmt|;
+if|if
+condition|(
+name|tsvp
+operator|&&
+name|tsvp
+operator|->
+name|v_op
+operator|==
+name|lofs_vnodeop_p
+condition|)
+block|{
+name|tndp
+operator|->
+name|ni_startdir
+operator|=
+name|LOFSVP
+argument_list|(
+name|fsvp
+argument_list|)
+expr_stmt|;
+name|VREF
+argument_list|(
+name|tndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tsvp
+operator|=
+literal|0
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -2009,16 +2122,44 @@ name|a_tcnp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Put everything back... 	 */
-if|#
-directive|if
-literal|0
+ifdef|#
+directive|ifdef
+name|notdef
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - restore target startdir\n");
+name|printf
+argument_list|(
+literal|"lofs_rename - restore target startdir\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-block|if (tsvp) { 		if (tndp->ni_startdir) 			vrele(tndp->ni_startdir); 		tndp->ni_startdir = tsvp; 	}
+if|if
+condition|(
+name|tsvp
+condition|)
+block|{
+if|if
+condition|(
+name|tndp
+operator|->
+name|ni_startdir
+condition|)
+name|vrele
+argument_list|(
+name|tndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
+name|tndp
+operator|->
+name|ni_startdir
+operator|=
+name|tsvp
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -2079,16 +2220,44 @@ name|a_tdvp
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
+ifdef|#
+directive|ifdef
+name|notdef
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
-block|printf("lofs_rename - restore source startdir\n");
+name|printf
+argument_list|(
+literal|"lofs_rename - restore source startdir\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-block|if (fsvp) { 		if (fndp->ni_startdir) 			vrele(fndp->ni_startdir); 		fndp->ni_startdir = fsvp; 	}
+if|if
+condition|(
+name|fsvp
+condition|)
+block|{
+if|if
+condition|(
+name|fndp
+operator|->
+name|ni_startdir
+condition|)
+name|vrele
+argument_list|(
+name|fndp
+operator|->
+name|ni_startdir
+argument_list|)
+expr_stmt|;
+name|fndp
+operator|->
+name|ni_startdir
+operator|=
+name|fsvp
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -2168,6 +2337,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_mkdir_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2306,6 +2476,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_rmdir_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2434,6 +2605,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_symlink_args
+comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 		struct vattr *a_vap; 		char *a_target; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2540,6 +2712,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_readdir_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2600,6 +2773,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_readlink_args
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2664,6 +2838,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_abortop_args
+comment|/* { 		struct vnode *a_dvp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2723,6 +2898,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2825,6 +3001,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_reclaim_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2933,6 +3110,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_lock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3012,6 +3190,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_unlock_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3077,6 +3256,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_bmap_args
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3141,6 +3321,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_strategy_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3225,6 +3406,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3284,6 +3466,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_islocked_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3333,6 +3516,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_advlock_args
+comment|/* { 		struct vnode *a_vp; 		caddr_t  a_id; 		int  a_op; 		struct flock *a_fl; 		int  a_flags; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3384,6 +3568,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_blkatoff_args
+comment|/* { 		struct vnode *a_vp; 		off_t a_offset; 		char **a_res; 		struct buf **a_bpp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3413,6 +3598,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_valloc_args
+comment|/* { 		struct vnode *a_pvp; 		int a_mode; 		struct ucred *a_cred; 		struct vnode **a_vpp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3446,6 +3632,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_vfree_args
+comment|/* { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3453,7 +3640,11 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -3471,6 +3662,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_truncate_args
+comment|/* { 		struct vnode *a_vp; 		off_t a_length; 		int a_flags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3506,6 +3698,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_update_args
+comment|/* { 		struct vnode *a_vp; 		struct timeval *a_ta; 		struct timeval *a_tm; 		int a_waitfor; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -3541,6 +3734,7 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_bwrite_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
