@@ -263,20 +263,14 @@ index|[
 name|MC_YEAR
 index|]
 expr_stmt|;
-comment|/* 	 * This chip is not y2k compliant, so we'll do a 10 year window fix. 	 */
+comment|/* 	 * This chip is not y2k compliant- If it's less than 	 * 70, we're clearly past the year 2000. 	 */
 if|if
 condition|(
 name|ct
 operator|->
 name|year
-operator|>=
-literal|0
-operator|&&
-name|ct
-operator|->
-name|year
 operator|<
-literal|10
+literal|70
 condition|)
 block|{
 name|ct
@@ -384,6 +378,7 @@ name|ct
 operator|->
 name|mon
 expr_stmt|;
+comment|/* 	 * This chip is not y2k compliant- write it with 	 * no more than two digits. 	 */
 name|regs
 index|[
 name|MC_YEAR
@@ -392,24 +387,9 @@ operator|=
 name|ct
 operator|->
 name|year
-expr_stmt|;
-comment|/* 	 * This chip is not y2k compliant, so we'll do a 10 year window fix. 	 * It's probably okay to write more than 100, but let's not and 	 * and say we didn't. 	 */
-if|if
-condition|(
-name|ct
-operator|->
-name|year
-operator|>=
-literal|100
-condition|)
-block|{
-name|ct
-operator|->
-name|year
-operator|-=
+operator|%
 literal|100
 expr_stmt|;
-block|}
 name|s
 operator|=
 name|splclock
