@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.18 (Berkeley) %G%"
+literal|"@(#)w.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1747,7 +1747,7 @@ name|p_slptime
 condition|)
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 if|if
@@ -1762,7 +1762,7 @@ name|p_slptime
 condition|)
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 comment|/* 	 * favor one sleeping in a non-interruptible sleep 	 */
