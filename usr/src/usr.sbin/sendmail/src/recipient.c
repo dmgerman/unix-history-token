@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.34 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2066,8 +2066,6 @@ operator|)
 return|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|tTd
@@ -2082,6 +2080,24 @@ argument_list|(
 literal|"no fuzzy match found\n"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"not found (fuzzy disabled)\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
