@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcore.c	5.2 (Berkeley) %G%"
+literal|"@(#)gcore.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -711,14 +711,11 @@ name|p_flag
 operator|&
 name|SWEXIT
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"Process exiting.\n"
+literal|"Warning: process exiting.\n"
 argument_list|)
 expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|p
