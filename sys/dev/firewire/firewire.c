@@ -9590,6 +9590,12 @@ operator|->
 name|hdr_len
 argument_list|)
 expr_stmt|;
+name|rb
+operator|->
+name|vec
+operator|->
+name|iov_base
+operator|=
 operator|(
 name|u_char
 operator|*
@@ -9599,7 +9605,7 @@ operator|->
 name|vec
 operator|->
 name|iov_base
-operator|+=
+operator|+
 name|tinfo
 operator|->
 name|hdr_len

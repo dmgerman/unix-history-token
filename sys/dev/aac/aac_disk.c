@@ -1086,11 +1086,14 @@ name|offset
 operator|+=
 name|len
 expr_stmt|;
+name|virtual
+operator|=
 operator|(
-name|vm_offset_t
+name|uint8_t
+operator|*
 operator|)
 name|virtual
-operator|+=
+operator|+
 name|len
 expr_stmt|;
 block|}
