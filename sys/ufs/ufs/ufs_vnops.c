@@ -8971,7 +8971,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Calculate the logical to physical mapping if not done already,  * then call the device strategy routine.  *  * In order to be able to swap to a file, the VOP_BMAP operation may not  * deadlock on memory.  See ufs_bmap() for details.  */
+comment|/*  * Calculate the logical to physical mapping if not done already,  * then call the device strategy routine.  *  * In order to be able to swap to a file, the ufs_bmaparray() operation may not  * deadlock on memory.  See ufs_bmap() for details.  */
 end_comment
 
 begin_function
@@ -9055,15 +9055,13 @@ condition|)
 block|{
 name|error
 operator|=
-name|VOP_BMAP
+name|ufs_bmaparray
 argument_list|(
 name|vp
 argument_list|,
 name|bp
 operator|->
 name|b_lblkno
-argument_list|,
-name|NULL
 argument_list|,
 operator|&
 name|bp
