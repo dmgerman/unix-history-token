@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.23 82/12/28 */
+comment|/*	tcp.h	1.24	83/07/06	*/
 end_comment
 
 begin_typedef
@@ -48,22 +48,6 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* data offset */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|sun
-name|u_char
-name|th_off
-range|:
-literal|4
-decl_stmt|,
-comment|/* data offset */
-name|th_x2
-range|:
-literal|4
-decl_stmt|;
-comment|/* (unused) */
 endif|#
 directive|endif
 name|u_char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.10	83/05/12	*/
+comment|/*	ip_var.h	4.11	83/07/06	*/
 end_comment
 
 begin_comment
@@ -108,20 +108,6 @@ range|:
 literal|4
 decl_stmt|,
 name|ip_v
-range|:
-literal|4
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|sun
-name|u_char
-name|ip_v
-range|:
-literal|4
-decl_stmt|,
-name|ip_hl
 range|:
 literal|4
 decl_stmt|;
