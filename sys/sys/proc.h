@@ -1577,14 +1577,7 @@ modifier|*
 name|p_procsig
 decl_stmt|;
 comment|/* (c) Signal actions, state (CPU). */
-name|struct
-name|ksegrp
-name|p_ksegrp
-decl_stmt|;
-name|struct
-name|kse
-name|p_kse
-decl_stmt|;
+comment|/*struct ksegrp	p_ksegrp; 	struct kse	p_kse; */
 comment|/* 	 * The following don't make too much sense.. 	 * See the td_ or ke_ versions of the same flags 	 */
 name|int
 name|p_flag
@@ -3152,6 +3145,30 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|ksegrp
+name|ksegrp0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Primary ksegrp in proc0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|kse
+name|kse0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Primary kse in proc0 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|hogticks
 decl_stmt|;
@@ -4091,6 +4108,52 @@ end_function_decl
 begin_comment
 comment|/* New in KSE. */
 end_comment
+
+begin_function_decl
+name|struct
+name|ksegrp
+modifier|*
+name|ksegrp_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ksegrp_free
+parameter_list|(
+name|struct
+name|ksegrp
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|kse
+modifier|*
+name|kse_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kse_free
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|struct

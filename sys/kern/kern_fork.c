@@ -2663,30 +2663,16 @@ operator|->
 name|p_pfsflags
 expr_stmt|;
 block|}
-comment|/* 	 * set priority of child to be that of parent 	 * XXXKSE hey! copying the estcpu seems dodgy.. should split it.. 	 */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-name|p2
+comment|/* 	 * set priority of child to be that of parent. 	 * XXXKSE this needs redefining.. 	 */
+name|kg2
 operator|->
-name|p_ksegrp
-operator|.
 name|kg_estcpu
 operator|=
-name|p1
+name|td
 operator|->
-name|p_ksegrp
-operator|.
+name|td_ksegrp
+operator|->
 name|kg_estcpu
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
 expr_stmt|;
 comment|/* 	 * This begins the section where we must prevent the parent 	 * from being swapped. 	 */
 name|_PHOLD

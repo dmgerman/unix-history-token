@@ -1628,14 +1628,10 @@ operator|&
 name|proc0
 argument_list|,
 operator|&
-name|proc0
-operator|.
-name|p_ksegrp
+name|ksegrp0
 argument_list|,
 operator|&
-name|proc0
-operator|.
-name|p_kse
+name|kse0
 argument_list|,
 operator|&
 name|thread0
@@ -1857,7 +1853,7 @@ comment|/* Calculate the physical memory in the machine */
 end_comment
 
 begin_comment
-unit|for (mp = allmem; mp->size; mp++) 		physmem += btoc(mp->size);  	for (mp = allmem; mp->size; mp++) { 		vm_offset_t	pa = mp->start& 0xf0000000; 		vm_offset_t	end = mp->start + mp->size;  		do { 			u_int n = pa>> 28;  			battable[n].batl = BATL(pa, BAT_M, BAT_PP_RW); 			battable[n].batu = BATU(pa, BAT_BL_256M, BAT_Vs); 			pa += 0x10000000; 		} while (pa< end); 	}  	chosen = OF_finddevice("/chosen"); 	save_ofw_mapping();  	pmap_setavailmem(startkernel, endkernel);  	proc_linkup(&proc0,&proc0.p_ksegrp,&proc0.p_kse,&thread0);  	proc0uarea = (struct user *)pmap_steal_memory(UAREA_PAGES * PAGE_SIZE); 	proc0kstack = pmap_steal_memory(KSTACK_PAGES * PAGE_SIZE); 	proc0.p_uarea = proc0uarea; 	thread0.td_kstack = proc0kstack; 	thread0.td_pcb = (struct pcb *) 	    (thread0.td_kstack + KSTACK_PAGES * PAGE_SIZE) - 1;  	pcpup = pmap_steal_memory(round_page(sizeof(struct pcpu)));
+unit|for (mp = allmem; mp->size; mp++) 		physmem += btoc(mp->size);  	for (mp = allmem; mp->size; mp++) { 		vm_offset_t	pa = mp->start& 0xf0000000; 		vm_offset_t	end = mp->start + mp->size;  		do { 			u_int n = pa>> 28;  			battable[n].batl = BATL(pa, BAT_M, BAT_PP_RW); 			battable[n].batu = BATU(pa, BAT_BL_256M, BAT_Vs); 			pa += 0x10000000; 		} while (pa< end); 	}  	chosen = OF_finddevice("/chosen"); 	save_ofw_mapping();  	pmap_setavailmem(startkernel, endkernel);  	proc_linkup(&proc0,&ksegrp0,&kse0,&thread0);  	proc0uarea = (struct user *)pmap_steal_memory(UAREA_PAGES * PAGE_SIZE); 	proc0kstack = pmap_steal_memory(KSTACK_PAGES * PAGE_SIZE); 	proc0.p_uarea = proc0uarea; 	thread0.td_kstack = proc0kstack; 	thread0.td_pcb = (struct pcb *) 	    (thread0.td_kstack + KSTACK_PAGES * PAGE_SIZE) - 1;  	pcpup = pmap_steal_memory(round_page(sizeof(struct pcpu)));
 comment|/* 	 * XXX: Pass 0 as CPU id.  This is bad.  We need to work out 	 * XXX: which CPU we are somehow. 	 */
 end_comment
 

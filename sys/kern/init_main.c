@@ -255,6 +255,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|kse
+name|kse0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ksegrp
+name|ksegrp0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|procsig
@@ -1121,6 +1135,16 @@ operator|=
 operator|&
 name|thread0
 expr_stmt|;
+name|ke
+operator|=
+operator|&
+name|kse0
+expr_stmt|;
+name|kg
+operator|=
+operator|&
+name|ksegrp0
+expr_stmt|;
 comment|/* 	 * Initialize magic number. 	 */
 name|p
 operator|->
@@ -1263,22 +1287,6 @@ operator|&
 name|null_sysvec
 expr_stmt|;
 comment|/* 	 * proc_linkup was already done in init_i386() or alphainit() etc. 	 * because the earlier code needed to follow td->td_proc. Otherwise 	 * I would have done it here.. maybe this means this should be 	 * done earlier too. 	 */
-name|ke
-operator|=
-operator|&
-name|proc0
-operator|.
-name|p_kse
-expr_stmt|;
-comment|/* XXXKSE */
-name|kg
-operator|=
-operator|&
-name|proc0
-operator|.
-name|p_ksegrp
-expr_stmt|;
-comment|/* XXXKSE */
 name|p
 operator|->
 name|p_flag

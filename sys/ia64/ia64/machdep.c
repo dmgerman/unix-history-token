@@ -3088,14 +3088,10 @@ operator|&
 name|proc0
 argument_list|,
 operator|&
-name|proc0
-operator|.
-name|p_ksegrp
+name|ksegrp0
 argument_list|,
 operator|&
-name|proc0
-operator|.
-name|p_kse
+name|kse0
 argument_list|,
 operator|&
 name|thread0

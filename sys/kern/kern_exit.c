@@ -2116,10 +2116,11 @@ name|td_ksegrp
 operator|->
 name|kg_estcpu
 operator|+
+name|FIRST_KSEGRP_IN_PROC
+argument_list|(
 name|p
+argument_list|)
 operator|->
-name|p_ksegrp
-operator|.
 name|kg_estcpu
 argument_list|)
 expr_stmt|;
@@ -2606,10 +2607,8 @@ operator|->
 name|ke_tdspare
 argument_list|)
 expr_stmt|;
-name|p
+name|ke
 operator|->
-name|p_kse
-operator|.
 name|ke_tdspare
 operator|=
 name|NULL

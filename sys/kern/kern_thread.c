@@ -136,8 +136,22 @@ file|<machine/frame.h>
 end_include
 
 begin_comment
-comment|/*  * Thread related storage.  */
+comment|/*  * KSEGRP related storage.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|uma_zone_t
+name|ksegrp_zone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|uma_zone_t
+name|kse_zone
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -146,26 +160,9 @@ name|thread_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|allocated_threads
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|active_threads
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cached_threads
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* DEBUG ONLY */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -181,69 +178,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"thread allocation"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_threads
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|active
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|active_threads
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of active threads in system."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_threads
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|cached
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|cached_threads
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of threads in thread cache."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_kern_threads
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|allocated
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|allocated_threads
-argument_list|,
-literal|0
-argument_list|,
-literal|"Number of threads in zone."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -278,6 +212,36 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"OIKS thread debug"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|max_threads_per_proc
+init|=
+literal|4
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_threads
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|max_per_proc
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|max_threads_per_proc
+argument_list|,
+literal|0
+argument_list|,
+literal|"Limit on threads per proc"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -405,14 +369,6 @@ name|td_flags
 operator||=
 name|TDF_UNBOUND
 expr_stmt|;
-name|cached_threads
-operator|--
-expr_stmt|;
-comment|/* XXXSMP */
-name|active_threads
-operator|++
-expr_stmt|;
-comment|/* XXXSMP */
 block|}
 end_function
 
@@ -523,15 +479,6 @@ comment|/* NOTREACHED */
 block|}
 endif|#
 directive|endif
-comment|/* Update counters. */
-name|active_threads
-operator|--
-expr_stmt|;
-comment|/* XXXSMP */
-name|cached_threads
-operator|++
-expr_stmt|;
-comment|/* XXXSMP */
 block|}
 end_function
 
@@ -616,14 +563,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|cached_threads
-operator|++
-expr_stmt|;
-comment|/* XXXSMP */
-name|allocated_threads
-operator|++
-expr_stmt|;
-comment|/* XXXSMP */
 block|}
 end_function
 
@@ -691,14 +630,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|cached_threads
-operator|--
-expr_stmt|;
-comment|/* XXXSMP */
-name|allocated_threads
-operator|--
-expr_stmt|;
-comment|/* XXXSMP */
 block|}
 end_function
 
@@ -732,6 +663,56 @@ argument_list|,
 name|thread_init
 argument_list|,
 name|thread_fini
+argument_list|,
+name|UMA_ALIGN_CACHE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ksegrp_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"KSEGRP"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ksegrp
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_CACHE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|kse_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"KSE"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|kse
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|,
 name|UMA_ALIGN_CACHE
 argument_list|,
@@ -870,6 +851,58 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Allocate a ksegrp.  */
+end_comment
+
+begin_function
+name|struct
+name|ksegrp
+modifier|*
+name|ksegrp_alloc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|uma_zalloc
+argument_list|(
+name|ksegrp_zone
+argument_list|,
+name|M_WAITOK
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Allocate a kse.  */
+end_comment
+
+begin_function
+name|struct
+name|kse
+modifier|*
+name|kse_alloc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|uma_zalloc
+argument_list|(
+name|kse_zone
+argument_list|,
+name|M_WAITOK
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Allocate a thread.  */
 end_comment
 
@@ -896,6 +929,54 @@ name|M_WAITOK
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Deallocate a ksegrp.  */
+end_comment
+
+begin_function
+name|void
+name|ksegrp_free
+parameter_list|(
+name|struct
+name|ksegrp
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|uma_zfree
+argument_list|(
+name|ksegrp_zone
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Deallocate a kse.  */
+end_comment
+
+begin_function
+name|void
+name|kse_free
+parameter_list|(
+name|struct
+name|kse
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|uma_zfree
+argument_list|(
+name|kse_zone
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1517,7 +1598,7 @@ name|p
 operator|->
 name|p_numthreads
 operator|>
-literal|4
+name|max_threads_per_proc
 condition|)
 block|{
 name|printf
