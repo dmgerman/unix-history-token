@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.28	82/10/17	*/
+comment|/*	vfs_vnops.c	4.29	82/10/31	*/
 end_comment
 
 begin_include
@@ -266,6 +266,29 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|!=
+name|IFCHR
+operator|&&
+operator|(
+name|ip
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|!=
+name|IFBLK
+condition|)
+block|{
 name|u
 operator|.
 name|u_error
@@ -277,6 +300,7 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
