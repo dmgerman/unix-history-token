@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.42 (Berkeley) %G%"
+literal|"@(#)mount.c	5.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -724,6 +724,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -821,6 +824,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -934,6 +940,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -960,6 +969,9 @@ name|fs_type
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1667,6 +1679,9 @@ argument_list|,
 name|envp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1722,6 +1737,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1741,6 +1759,9 @@ block|{
 case|case
 name|EMFILE
 case|:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1758,13 +1779,16 @@ name|flags
 operator|&
 name|MNT_UPDATE
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Specified device does %s\n"
+literal|"Specified device %s\n"
 argument_list|,
-literal|"not match mounted device"
+literal|"does not match mounted device"
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1774,6 +1798,9 @@ name|mnttype
 operator|==
 name|MOUNT_UFS
 condition|)
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1789,17 +1816,6 @@ name|char
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|EOPNOTSUPP
-case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Operation not supported\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2128,6 +2144,9 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3023,6 +3042,49 @@ directive|ifdef
 name|NFS
 end_ifdef
 
+begin_macro
+name|exclusive
+argument_list|(
+argument|a
+argument_list|,
+argument|b
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|a
+decl_stmt|,
+modifier|*
+name|b
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mount: Options %s, %s mutually exclusive\n"
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Handle the getoption arg.  * Essentially update "opflags", "retrycnt" and "nfsargs"  */
 end_comment
@@ -3048,6 +3110,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|struct
 name|nfs_args
 modifier|*
@@ -3086,12 +3149,12 @@ name|char
 modifier|*
 name|nump
 decl_stmt|;
+for|for
+control|(
 name|cp
 operator|=
 name|optarg
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|cp
 operator|!=
 name|NULL
@@ -3100,7 +3163,11 @@ operator|*
 name|cp
 operator|!=
 literal|'\0'
-condition|)
+condition|;
+name|cp
+operator|=
+name|nextcp
+control|)
 block|{
 if|if
 condition|(
@@ -3197,20 +3264,11 @@ name|flags
 operator|&
 name|NFSMNT_SPONGY
 condition|)
-block|{
-name|fprintf
+name|exclusive
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Options soft, spongy mutually exclusive\n"
+literal|"soft, spongy"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|nfsargsp
 operator|->
 name|flags
@@ -3238,20 +3296,11 @@ name|flags
 operator|&
 name|NFSMNT_SOFT
 condition|)
-block|{
-name|fprintf
+name|exclusive
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Options soft, spongy mutually exclusive\n"
+literal|"soft, spongy"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|nfsargsp
 operator|->
 name|flags
@@ -3473,10 +3522,6 @@ operator||=
 name|NFSMNT_RETRANS
 expr_stmt|;
 block|}
-name|cp
-operator|=
-name|nextcp
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3692,11 +3737,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"No<host>:<dirpath> or<dirpath>@<host> spec\n"
+literal|"mount: No<host>:<dirpath> or<dirpath>@<host> spec\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3724,11 +3772,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't get net id for host\n"
+literal|"mount: Can't get net id for host\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4030,6 +4081,9 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
