@@ -924,6 +924,8 @@ name|sprintf
 argument_list|(
 name|b
 argument_list|,
+literal|"%s %d"
+argument_list|,
 name|pages
 index|[
 name|k
