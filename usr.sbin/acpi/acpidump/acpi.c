@@ -449,7 +449,7 @@ name|ACPI_GAS_IO
 case|:
 name|printf
 argument_list|(
-literal|"0x%08lx:%u[%u] (IO)"
+literal|"0x%02lx:%u[%u] (IO)"
 argument_list|,
 operator|(
 name|u_long
@@ -473,7 +473,7 @@ name|ACPI_GAS_PCI
 case|:
 name|printf
 argument_list|(
-literal|"%x:%x+%#x (PCI)"
+literal|"%x:%x+0x%x (PCI)"
 argument_list|,
 call|(
 name|uint16_t
@@ -516,7 +516,7 @@ name|ACPI_GAS_EMBEDDED
 case|:
 name|printf
 argument_list|(
-literal|"0x%#x:%u[%u] (EC)"
+literal|"0x%x:%u[%u] (EC)"
 argument_list|,
 operator|(
 name|uint16_t
@@ -540,7 +540,7 @@ name|ACPI_GAS_SMBUS
 case|:
 name|printf
 argument_list|(
-literal|"0x%#x:%u[%u] (SMBus)"
+literal|"0x%x:%u[%u] (SMBus)"
 argument_list|,
 operator|(
 name|uint16_t
