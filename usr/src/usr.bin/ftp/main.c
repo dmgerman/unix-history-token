@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.3 (Berkeley) %G%"
+literal|"@(#)main.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|doglob
+operator|=
+literal|1
+expr_stmt|;
+name|autologin
+operator|=
+literal|1
+expr_stmt|;
 name|argc
 operator|--
 operator|,
@@ -224,6 +232,14 @@ case|case
 literal|'n'
 case|:
 name|autologin
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'g'
+case|:
+name|doglob
 operator|=
 literal|0
 expr_stmt|;
