@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.30 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -82,6 +82,12 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -98,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<netns/ns_if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
 end_include
 
 begin_define
@@ -127,6 +139,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -145,15 +163,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
+file|<stdlib.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_decl_stmt
 name|struct
