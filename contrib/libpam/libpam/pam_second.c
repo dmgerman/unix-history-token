@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pam_second.c -- PAM secondary authentication  * (based on XSSO draft spec of March 1997)  *  * $Id: pam_second.c,v 1.2 2000/12/04 19:02:34 baggins Exp $  *  */
+comment|/*  * pam_second.c -- PAM secondary authentication  * (based on XSSO draft spec of March 1997)  *  * $Id$  * $FreeBSD$  *  * $Log$  */
 end_comment
 
 begin_include

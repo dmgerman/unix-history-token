@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: unix_chkpwd.c,v 1.3 2001/02/11 06:33:53 agmorgan Exp $  *  * This program is designed to run setuid(root) or with sufficient  * privilege to read all of the unix password databases. It is designed  * to provide a mechanism for the current user (defined by this  * process' uid) to verify their own password.  *  * The password is read from the standard input. The exit status of  * this program indicates whether the user is authenticated or not.  *  * Copyright information is located at the end of the file.  *  */
+comment|/*  * $Id: unix_chkpwd.c,v 1.3 2001/02/11 06:33:53 agmorgan Exp $  * $FreeBSD$  *  * This program is designed to run setuid(root) or with sufficient  * privilege to read all of the unix password databases. It is designed  * to provide a mechanism for the current user (defined by this  * process' uid) to verify their own password.  *  * The password is read from the standard input. The exit status of  * this program indicates whether the user is authenticated or not.  *  * Copyright information is located at the end of the file.  *  */
 end_comment
 
 begin_include

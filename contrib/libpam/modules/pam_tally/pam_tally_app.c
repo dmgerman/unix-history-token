@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  #  This seemed like such a good idea at the time. :)  */
+comment|/*  #  This seemed like such a good idea at the time. :)  * $FreeBSD$  */
 end_comment
 
 begin_define

@@ -16,6 +16,10 @@ comment|/* $Id: pam_userdb.h,v 1.1.1.1 2000/06/20 22:12:09 agmorgan Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Header files */
 end_comment
 

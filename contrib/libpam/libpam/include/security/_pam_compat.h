@@ -12,7 +12,7 @@ name|_PAM_COMPAT_H
 end_define
 
 begin_comment
-comment|/*  * $Id: _pam_compat.h,v 1.1.1.1 2000/06/20 22:11:21 agmorgan Exp $  *  * This file was contributed by Derrick J Brashear<shadow@dementia.org>  * slight modification by Brad M. Garcia<bgarcia@fore.com>  *  * A number of operating systems have started to implement PAM.  * unfortunately, they have a different set of numeric values for  * certain constants.  This file is included for compatibility's sake.  */
+comment|/*  * This file was contributed by Derrick J Brashear<shadow@dementia.org>  *  * A number of operating systems have started to implement PAM.  * unfortunately, they have a different set of numeric values for  * certain constants.  This file is included for compatibility's sake.  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -40,17 +40,22 @@ argument_list|)
 operator|)
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SECURITY__PAM_TYPES_H
-end_ifndef
+begin_comment
+comment|/* generic for pam_* functions */
+end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_SECURITY_PAM_MODULES_H
-end_ifdef
+begin_undef
+undef|#
+directive|undef
+name|PAM_SILENT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PAM_SILENT
+value|0x80000000
+end_define
 
 begin_comment
 comment|/* flags for pam_chauthtok() */
@@ -80,41 +85,6 @@ define|#
 directive|define
 name|PAM_UPDATE_AUTHTOK
 value|0x2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SECURITY_PAM_MODULES_H */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _SECURITY__PAM_TYPES_H */
-end_comment
-
-begin_comment
-comment|/* generic for pam_* functions */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PAM_SILENT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PAM_SILENT
-value|0x80000000
 end_define
 
 begin_comment
@@ -160,18 +130,18 @@ name|PAM_REINITIALIZE_CRED
 value|0x4
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|PAM_REFRESH_CRED
-end_undef
-
 begin_define
 define|#
 directive|define
 name|PAM_REFRESH_CRED
 value|0x8
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PAM_REFRESH_CRED
+end_undef
 
 begin_comment
 comment|/* another binary incompatibility comes from the return codes! */
@@ -462,15 +432,6 @@ directive|define
 name|PAM_TRY_AGAIN
 value|27
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SECURITY__PAM_TYPES_H */
-end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pam_private.h  *  * $Id: pam_private.h,v 1.4 2001/02/05 06:50:41 agmorgan Exp $  *  * This is the Linux-PAM Library Private Header. It contains things  * internal to the Linux-PAM library. Things not needed by either an  * application or module.  *  * Please see end of file for copyright.  *  * Creator: Marc Ewing.  * Maintained: CVS  */
+comment|/*  * pam_private.h  *  * $Id: pam_private.h,v 1.12 1997/04/05 06:57:37 morgan Exp morgan $  * $FreeBSD$  *  * This is the Linux-PAM Library Private Header. It contains things  * internal to the Linux-PAM library. Things not needed by either an  * application or module.  *  * Please see end of file for copyright.  *  * Creator: Marc Ewing.  * Maintained: AGM  *   * $Log: pam_private.h,v $  */
 end_comment
 
 begin_ifndef
@@ -15,12 +15,6 @@ directive|define
 name|_PAM_PRIVATE_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<security/_pam_aconf.h>
-end_include
-
 begin_comment
 comment|/* this is not used at the moment --- AGM */
 end_comment
@@ -29,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|LIBPAM_VERSION
-value|(LIBPAM_VERSION_MAJOR*0x100 + LIBPAM_VERSION_MINOR)
+value|65
 end_define
 
 begin_include
@@ -147,14 +141,6 @@ name|actions
 index|[
 name|_PAM_RETURN_VALUES
 index|]
-decl_stmt|;
-comment|/* set by authenticate, open_session, chauthtok(1st)        consumed by setcred, close_session, chauthtok(2nd) */
-name|int
-name|cached_retval
-decl_stmt|;
-name|int
-modifier|*
-name|cached_retval_p
 decl_stmt|;
 name|int
 name|argc
@@ -410,9 +396,6 @@ name|char
 modifier|*
 name|authtok
 decl_stmt|;
-name|unsigned
-name|caller_is
-decl_stmt|;
 name|struct
 name|pam_conv
 modifier|*
@@ -447,6 +430,11 @@ name|char
 modifier|*
 name|tty
 decl_stmt|;
+name|struct
+name|pam_log_state
+name|pam_default_log
+decl_stmt|;
+comment|/* for ident etc., log state */
 name|struct
 name|pam_data
 modifier|*
@@ -729,6 +717,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINUX_PAM
+end_ifdef
+
 begin_comment
 comment|/* these functions deal with failure delays as required by the    authentication modules and application. Their *interface* is likely    to remain the same although their function is hopefully going to    improve */
 end_comment
@@ -781,6 +775,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LINUX_PAM */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|void
@@ -817,7 +820,6 @@ name|pam_module
 modifier|*
 name|_pam_open_static_handler
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|path
@@ -1030,30 +1032,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|_pam_system_log
-parameter_list|(
-name|int
-name|priority
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|_PAM_SYSTEM_LOG_PREFIX
-value|"PAM "
-end_define
-
 begin_comment
 comment|/*  * XXX - Take care with this. It could confuse the logic of a trailing  *       else  */
 end_comment
@@ -1070,7 +1048,7 @@ parameter_list|,
 name|ERR
 parameter_list|)
 define|\
-value|if ((pamh) == NULL) {                             \     _pam_system_log(LOG_ERR, X ": NULL pam handle passed"); \     return ERR;                                   \ }
+value|if ((pamh) == NULL) {                             \     pam_system_log(NULL, NULL, LOG_ERR, X ": NULL pam handle passed"); \     return ERR;                                   \ }
 end_define
 
 begin_comment
@@ -1085,6 +1063,17 @@ value|"Please enter username: "
 end_define
 
 begin_comment
+comment|/*  * pam_system_log default ident/facility..  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAM_LOG_STATE_DEFAULT
+value|{      \     PAM_LOG_STATE_IDENT,     \     PAM_LOG_STATE_OPTION,    \     PAM_LOG_STATE_FACILITY   \ }
+end_define
+
+begin_comment
 comment|/*  * include some helpful macros  */
 end_comment
 
@@ -1095,67 +1084,7 @@ file|<security/_pam_macros.h>
 end_include
 
 begin_comment
-comment|/* used to work out where control currently resides (in an application    or in a module) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PAM_CALLED_FROM_MODULE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PAM_CALLED_FROM_APP
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|__PAM_FROM_MODULE
-parameter_list|(
-name|pamh
-parameter_list|)
-value|((pamh)->caller_is == _PAM_CALLED_FROM_MODULE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__PAM_FROM_APP
-parameter_list|(
-name|pamh
-parameter_list|)
-value|((pamh)->caller_is == _PAM_CALLED_FROM_APP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__PAM_TO_MODULE
-parameter_list|(
-name|pamh
-parameter_list|)
-define|\
-value|do { (pamh)->caller_is = _PAM_CALLED_FROM_MODULE; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__PAM_TO_APP
-parameter_list|(
-name|pamh
-parameter_list|)
-define|\
-value|do { (pamh)->caller_is = _PAM_CALLED_FROM_APP; } while (0)
-end_define
-
-begin_comment
-comment|/*  * Copyright (C) 1995 by Red Hat Software, Marc Ewing  * Copyright (c) 1996-8,2001 by Andrew G. Morgan<morgan@kernel.org>  *  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1995 by Red Hat Software, Marc Ewing  * Copyright (c) 1996-8, Andrew G. Morgan<morgan@linux.kernel.org>  *  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, and the entire permission notice in its entirety,  *    including the disclaimer of warranties.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *   * ALTERNATIVELY, this product may be distributed under the terms of  * the GNU Public License, in which case the provisions of the GPL are  * required INSTEAD OF the above restrictions.  (This clause is  * necessary due to a potential bad interaction between the GPL and  * the restrictions contained in a BSD-style copyright.)  *   * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_endif

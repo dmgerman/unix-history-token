@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: md5_crypt.c,v 1.1.1.1 2000/06/20 22:12:03 agmorgan Exp $  *  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Origin: Id: crypt.c,v 1.3 1995/05/30 05:42:22 rgrimes Exp  *  */
+comment|/*  * $Id: md5_crypt.c,v 1.1.1.1 2000/06/20 22:12:03 agmorgan Exp $  * $FreeBSD$  *  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Origin: Id: crypt.c,v 1.3 1995/05/30 05:42:22 rgrimes Exp  *  */
 end_comment
 
 begin_include

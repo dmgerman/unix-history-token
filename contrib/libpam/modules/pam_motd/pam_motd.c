@@ -4,7 +4,7 @@ comment|/* pam_motd module */
 end_comment
 
 begin_comment
-comment|/*  * Modified for pam_motd by Ben Collins<bcollins@debian.org>  *  * Based off of:  * $Id: pam_motd.c,v 1.1.1.1 2000/06/20 22:11:46 agmorgan Exp $  *   * Written by Michael K. Johnson<johnsonm@redhat.com> 1996/10/24  *  */
+comment|/*  * Modified for pam_motd by Ben Collins<bcollins@debian.org>  *  * Based off of:  * $Id: pam_motd.c,v 1.1.1.1 2000/06/20 22:11:46 agmorgan Exp $  * $FreeBSD$  *   * Written by Michael K. Johnson<johnsonm@redhat.com> 1996/10/24  *  */
 end_comment
 
 begin_include

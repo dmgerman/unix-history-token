@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* pam_issue module - a simple /etc/issue parser to set PAM_USER_PROMPT  *  * Copyright 1999 by Ben Collins<bcollins@debian.org>  *  * Needs to be called before any other auth modules so we can setup the  * user prompt before it's first used. Allows one argument option, which  * is the full path to a file to be used for issue (uses /etc/issue as a  * default) such as "issue=/etc/issue.telnet".  *  * We can also parse escapes within the the issue file (enabled by  * default, but can be disabled with the "noesc" option). It's the exact  * same parsing as util-linux's agetty program performs.  *  * Released under the GNU LGPL version 2 or later  */
+comment|/* pam_issue module - a simple /etc/issue parser to set PAM_USER_PROMPT  *  * Copyright 1999 by Ben Collins<bcollins@debian.org>  *  * Needs to be called before any other auth modules so we can setup the  * user prompt before it's first used. Allows one argument option, which  * is the full path to a file to be used for issue (uses /etc/issue as a  * default) such as "issue=/etc/issue.telnet".  *  * We can also parse escapes within the the issue file (enabled by  * default, but can be disabled with the "noesc" option). It's the exact  * same parsing as util-linux's agetty program performs.  *  * Released under the GNU LGPL version 2 or later  * $FreeBSD$  */
 end_comment
 
 begin_define

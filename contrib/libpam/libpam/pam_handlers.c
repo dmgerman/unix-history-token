@@ -4,7 +4,7 @@ comment|/* pam_handlers.c -- pam config file parsing and module loading */
 end_comment
 
 begin_comment
-comment|/*  * created by Marc Ewing.  * Currently maintained by Andrew G. Morgan<morgan@linux.kernel.org>  *  * $Id: pam_handlers.c,v 1.3 2001/02/05 06:50:41 agmorgan Exp $  *  */
+comment|/*  * created by Marc Ewing.  * Currently maintained by Andrew G. Morgan<morgan@linux.kernel.org>  *  * $Id: pam_handlers.c,v 1.17 1997/04/05 06:55:24 morgan Exp morgan $  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -40,12 +40,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PAM_DYNAMIC
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|PAM_SHL
 end_ifdef
 
@@ -60,10 +54,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* PAM_SHL */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -74,19 +64,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* PAM_SHL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PAM_DYNAMIC */
-end_comment
 
 begin_include
 include|#
@@ -162,13 +139,6 @@ define|#
 directive|define
 name|MODULE_CHUNK
 value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNKNOWN_MODULE_PATH
-value|"<*unknown module path*>"
 end_define
 
 begin_function_decl
@@ -572,8 +542,12 @@ name|tok
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"(%s) illegal module type: %s"
@@ -893,8 +867,12 @@ literal|"_pam_init_handlers: no module name supplied"
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"(%s) no module name supplied"
@@ -1085,6 +1063,16 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"pause to look at debugging: "
+argument_list|)
+expr_stmt|;
+name|getchar
+argument_list|()
+expr_stmt|;
 block|}
 endif|#
 directive|endif
@@ -1118,8 +1106,12 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"error loading %s"
@@ -1253,8 +1245,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"_pam_init_handlers: no memory loading module"
@@ -1320,8 +1316,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: PAM lockfile ("
@@ -1434,8 +1434,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: no memory; service %s"
@@ -1519,8 +1523,12 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: error reading %s"
@@ -1528,8 +1536,12 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: [%s]"
@@ -1689,8 +1701,12 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: error reading %s"
@@ -1698,8 +1714,12 @@ argument_list|,
 name|PAM_DEFAULT_SERVICE_FILE
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: [%s]"
@@ -1732,8 +1752,12 @@ name|PAM_DEFAULT_SERVICE_FILE
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: no default config %s"
@@ -1774,8 +1798,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"_pam_init_handlers: could not open "
@@ -1827,8 +1855,12 @@ name|PAM_SUCCESS
 condition|)
 block|{
 comment|/* Read error */
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"error reading PAM configuration file"
@@ -1864,7 +1896,6 @@ comment|/*  * This is where we read a line of the PAM config file. The line may 
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|_pam_assemble_line
 parameter_list|(
@@ -2276,26 +2307,29 @@ name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
 comment|/* if NULL set to something that can be searched for */
-switch|switch
+if|if
 condition|(
 name|mod_path
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
-default|default:
+name|mod_path
+operator|=
+literal|"<*unknown module path*>"
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|mod_path
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'/'
 condition|)
 block|{
-break|break;
-block|}
 name|mod_full_path
 operator|=
 name|malloc
@@ -2311,11 +2345,6 @@ name|mod_path
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mod_full_path
-condition|)
-block|{
 name|sprintf
 argument_list|(
 name|mod_full_path
@@ -2329,22 +2358,6 @@ expr_stmt|;
 name|mod_path
 operator|=
 name|mod_full_path
-expr_stmt|;
-break|break;
-block|}
-name|_pam_system_log
-argument_list|(
-name|LOG_CRIT
-argument_list|,
-literal|"cannot malloc full mod path"
-argument_list|)
-expr_stmt|;
-case|case
-literal|0
-case|:
-name|mod_path
-operator|=
-name|UNKNOWN_MODULE_PATH
 expr_stmt|;
 block|}
 name|D
@@ -2472,8 +2485,12 @@ literal|"cannot enlarge module pointer memory"
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"realloc returned NULL in _pam_add_handler"
@@ -2595,8 +2612,12 @@ name|mod_path
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"unable to dlopen(%s)"
@@ -2607,8 +2628,12 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PAM_SHL
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"[dlerror: %s]"
@@ -2698,8 +2723,12 @@ name|mod_path
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"unable to open static handler %s"
@@ -2766,8 +2795,12 @@ operator|.
 name|modules_used
 operator|++
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"adding faulty module: %s"
@@ -2805,8 +2838,12 @@ literal|"_pam_handler: couldn't get memory for mod_path"
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"no memory for module path"
@@ -3100,8 +3137,12 @@ name|type
 operator|)
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"internal error: module library type not known: %s;%d"
@@ -3196,8 +3237,12 @@ directive|endif
 comment|/* PAM_SHL */
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"unable to resolve symbol: %s"
@@ -3240,8 +3285,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"unable to resolve static symbol: %s"
@@ -3335,8 +3384,12 @@ directive|endif
 comment|/* PAM_SHL */
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"unable to resolve symbol: %s"
@@ -3379,8 +3432,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"unable to resolve symbol: %s"
@@ -3434,8 +3491,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"cannot malloc struct handler #1"
@@ -3487,34 +3548,6 @@ operator|->
 name|actions
 argument_list|)
 argument_list|)
-expr_stmt|;
-operator|(
-operator|*
-name|handler_p
-operator|)
-operator|->
-name|cached_retval
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* error */
-operator|(
-operator|*
-name|handler_p
-operator|)
-operator|->
-name|cached_retval_p
-operator|=
-operator|&
-operator|(
-operator|(
-operator|*
-name|handler_p
-operator|)
-operator|->
-name|cached_retval
-operator|)
 expr_stmt|;
 operator|(
 operator|*
@@ -3589,8 +3622,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"cannot malloc struct handler #2"
@@ -3648,35 +3685,6 @@ operator|*
 name|handler_p2
 operator|)
 operator|->
-name|cached_retval
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-comment|/* ignored */
-comment|/* Note, this next entry points to the handler_p value! */
-operator|(
-operator|*
-name|handler_p2
-operator|)
-operator|->
-name|cached_retval_p
-operator|=
-operator|&
-operator|(
-operator|(
-operator|*
-name|handler_p
-operator|)
-operator|->
-name|cached_retval
-operator|)
-expr_stmt|;
-operator|(
-operator|*
-name|handler_p2
-operator|)
-operator|->
 name|argc
 operator|=
 name|argc
@@ -3705,8 +3713,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_CRIT
 argument_list|,
 literal|"cannot malloc argv for handler #2"
@@ -3842,6 +3854,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PAM_DYNAMIC
+ifdef|#
+directive|ifdef
+name|PAM_SHL
 if|if
 condition|(
 name|mod
@@ -3850,10 +3865,6 @@ name|type
 operator|==
 name|PAM_MT_DYNAMIC_MOD
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|PAM_SHL
 name|shl_unload
 argument_list|(
 name|mod
@@ -3863,6 +3874,14 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+name|mod
+operator|->
+name|type
+operator|==
+name|PAM_MT_DYNAMIC_MOD
+condition|)
 name|dlclose
 argument_list|(
 name|mod
@@ -3872,7 +3891,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
 endif|#
 directive|endif
 name|mod

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pam_auth.c -- PAM authentication  *  * $Id: pam_auth.c,v 1.3 2001/01/22 06:07:28 agmorgan Exp $  *  */
+comment|/*  * pam_auth.c -- PAM authentication  *  * $Id: pam_auth.c,v 1.7 1997/04/05 06:53:52 morgan Exp morgan $  * $FreeBSD$  *  * $Log: pam_auth.c,v $  * Revision 1.7  1997/04/05 06:53:52  morgan  * fail-delay changes  *  */
 end_comment
 
 begin_include
@@ -43,34 +43,6 @@ literal|"pam_authenticate called"
 operator|)
 argument_list|)
 expr_stmt|;
-name|IF_NO_PAMH
-argument_list|(
-literal|"pam_authenticate"
-argument_list|,
-name|pamh
-argument_list|,
-name|PAM_SYSTEM_ERR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|__PAM_FROM_MODULE
-argument_list|(
-name|pamh
-argument_list|)
-condition|)
-block|{
-name|D
-argument_list|(
-operator|(
-literal|"called from module!?"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|PAM_SYSTEM_ERR
-return|;
-block|}
 if|if
 condition|(
 name|pamh
@@ -94,6 +66,15 @@ argument_list|)
 expr_stmt|;
 comment|/* we try to make the time for a failure 				      independent of the time it takes to 				      fail */
 block|}
+name|IF_NO_PAMH
+argument_list|(
+literal|"pam_authenticate"
+argument_list|,
+name|pamh
+argument_list|,
+name|PAM_SYSTEM_ERR
+argument_list|)
+expr_stmt|;
 name|retval
 operator|=
 name|_pam_dispatch
@@ -164,13 +145,6 @@ block|{
 name|int
 name|retval
 decl_stmt|;
-name|D
-argument_list|(
-operator|(
-literal|"pam_setcred called"
-operator|)
-argument_list|)
-expr_stmt|;
 name|IF_NO_PAMH
 argument_list|(
 literal|"pam_setcred"
@@ -180,25 +154,13 @@ argument_list|,
 name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|__PAM_FROM_MODULE
-argument_list|(
-name|pamh
-argument_list|)
-condition|)
-block|{
 name|D
 argument_list|(
 operator|(
-literal|"called from module!?"
+literal|"pam_setcred called"
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-name|PAM_SYSTEM_ERR
-return|;
-block|}
 if|if
 condition|(
 operator|!

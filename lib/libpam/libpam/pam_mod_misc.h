@@ -29,70 +29,42 @@ begin_define
 define|#
 directive|define
 name|PAM_OPT_DEBUG
-value|0x0001
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|PAM_OPT_NO_WARN
-value|0x0002
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|PAM_OPT_USE_FIRST_PASS
-value|0x0004
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|PAM_OPT_TRY_FIRST_PASS
-value|0x0008
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|PAM_OPT_USE_MAPPED_PASS
-value|0x0010
+value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
 name|PAM_OPT_ECHO_PASS
-value|0x0020
-end_define
-
-begin_define
-define|#
-directive|define
-name|PAM_OPT_AUTH_AS_SELF
-value|0x0040
-end_define
-
-begin_define
-define|#
-directive|define
-name|PAM_OPT_NULLOK
-value|0x0080
-end_define
-
-begin_define
-define|#
-directive|define
-name|PAM_OPT_NO_ANON
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PAM_OPT_IGNORE
-value|0x0200
+value|0x20
 end_define
 
 begin_function_decl

@@ -4,7 +4,7 @@ comment|/* pam_dispatch.c - handles module function dispatch */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1998 Andrew G. Morgan<morgan@kernel.org>  *  * $Id: pam_dispatch.c,v 1.3 2001/02/05 06:50:41 agmorgan Exp $  */
+comment|/*  * $Id: pam_dispatch.c,v 1.8 1997/01/04 20:04:09 morgan Exp morgan $  * $FreeBSD$  *  * last modified by AGM  */
 end_comment
 
 begin_include
@@ -84,9 +84,6 @@ name|h
 parameter_list|,
 name|_pam_boolean
 name|resumed
-parameter_list|,
-name|int
-name|use_cached_chain
 parameter_list|)
 block|{
 name|int
@@ -140,8 +137,12 @@ operator|&
 name|service
 argument_list|)
 expr_stmt|;
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"no modules loaded for `%s' service"
@@ -256,8 +257,6 @@ block|{
 name|int
 name|retval
 decl_stmt|,
-name|cached_retval
-decl_stmt|,
 name|action
 decl_stmt|;
 comment|/* skip leading modules if they have already returned */
@@ -344,7 +343,7 @@ block|{
 name|D
 argument_list|(
 operator|(
-literal|"module poorly listed in PAM config; forcing failure"
+literal|"module poorly listed in pam.conf; forcing failure"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -399,48 +398,16 @@ return|return
 name|retval
 return|;
 block|}
-if|if
-condition|(
-name|use_cached_chain
-condition|)
-block|{
-comment|/* a former stack execution has frozen the chain */
-name|cached_retval
-operator|=
-operator|*
-operator|(
-name|h
-operator|->
-name|cached_retval_p
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* this stack execution is defining the frozen chain */
-name|cached_retval
-operator|=
-name|h
-operator|->
-name|cached_retval
-operator|=
-name|retval
-expr_stmt|;
-block|}
 comment|/* verify that the return value is a valid one */
 if|if
 condition|(
-operator|(
-name|cached_retval
+name|retval
 operator|<
 name|PAM_SUCCESS
-operator|)
 operator|||
-operator|(
-name|cached_retval
+name|retval
 operator|>=
 name|_PAM_RETURN_VALUES
-operator|)
 condition|)
 block|{
 name|retval
@@ -454,34 +421,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We treat the current retval with some respect. It may 	       (for example, in the case of setcred) have a value that 	       needs to be propagated to the user.  We want to use the 	       cached_retval to determine the modules to be executed 	       in the stacked chain, but we want to treat each 	       non-ignored module in the cached chain as now being 	       'required'. We only need to treat the, 	       _PAM_ACTION_IGNORE, _PAM_ACTION_IS_JUMP and 	       _PAM_ACTION_RESET actions specially. */
 name|action
 operator|=
 name|h
 operator|->
 name|actions
 index|[
-name|cached_retval
+name|retval
 index|]
 expr_stmt|;
 block|}
-name|D
-argument_list|(
-operator|(
-name|stderr
-operator|,
-literal|"use_cached_chain=%d action=%d cached_retval=%d retval=%d\n"
-operator|,
-name|use_cached_chain
-operator|,
-name|action
-operator|,
-name|cached_retval
-operator|,
-name|retval
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* decide what to do */
 switch|switch
 condition|(
@@ -491,7 +440,6 @@ block|{
 case|case
 name|_PAM_ACTION_RESET
 case|:
-comment|/* if (use_cached_chain) { 	           XXX - we need to consider the use_cached_chain case       	                 do we want to trash accumulated info here..? 	       } */
 name|impression
 operator|=
 name|_PAM_UNDEF
@@ -507,7 +455,6 @@ case|:
 case|case
 name|_PAM_ACTION_DONE
 case|:
-comment|/* XXX - should we maintain cached_status and status in                the case of use_cached_chain? The same with BAD&DIE                below */
 if|if
 condition|(
 name|impression
@@ -561,7 +508,7 @@ directive|ifdef
 name|PAM_FAIL_NOW_ON
 if|if
 condition|(
-name|cached_retval
+name|retval
 operator|==
 name|PAM_ABORT
 condition|)
@@ -612,7 +559,6 @@ break|break;
 case|case
 name|_PAM_ACTION_IGNORE
 case|:
-comment|/* if (use_cached_chain) { 	            XXX - when evaluating a cached 	            chain, do we still want to ignore the module's 	            return value? 	       } */
 break|break;
 comment|/* if we get here, we expect action is a positive number --            this is what the ...JUMP macro checks. */
 default|default:
@@ -624,39 +570,6 @@ name|action
 argument_list|)
 condition|)
 block|{
-comment|/* If we are evaluating a cached chain, we treat this 		   module as required (aka _PAM_ACTION_OK) as well as 		   executing the jump. */
-if|if
-condition|(
-name|use_cached_chain
-condition|)
-block|{
-if|if
-condition|(
-name|impression
-operator|==
-name|_PAM_UNDEF
-operator|||
-operator|(
-name|impression
-operator|==
-name|_PAM_POSITIVE
-operator|&&
-name|status
-operator|==
-name|PAM_SUCCESS
-operator|)
-condition|)
-block|{
-name|impression
-operator|=
-name|_PAM_POSITIVE
-expr_stmt|;
-name|status
-operator|=
-name|retval
-expr_stmt|;
-block|}
-block|}
 comment|/* this means that we need to skip #action stacked modules */
 do|do
 block|{
@@ -767,8 +680,6 @@ name|NULL
 decl_stmt|;
 name|int
 name|retval
-decl_stmt|,
-name|use_cached_chain
 decl_stmt|;
 name|_pam_boolean
 name|resumed
@@ -782,25 +693,6 @@ argument_list|,
 name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|__PAM_FROM_MODULE
-argument_list|(
-name|pamh
-argument_list|)
-condition|)
-block|{
-name|D
-argument_list|(
-operator|(
-literal|"called from a module!?"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|PAM_SYSTEM_ERR
-return|;
-block|}
 comment|/* Load all modules, resolve all symbols */
 if|if
 condition|(
@@ -816,8 +708,12 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"unable to dispatch function"
@@ -827,11 +723,6 @@ return|return
 name|retval
 return|;
 block|}
-name|use_cached_chain
-operator|=
-literal|0
-expr_stmt|;
-comment|/* default to setting h->cached_retval */
 switch|switch
 condition|(
 name|choice
@@ -863,10 +754,6 @@ operator|.
 name|conf
 operator|.
 name|setcred
-expr_stmt|;
-name|use_cached_chain
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -910,10 +797,6 @@ name|conf
 operator|.
 name|close_session
 expr_stmt|;
-name|use_cached_chain
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|PAM_CHAUTHTOK
@@ -928,22 +811,14 @@ name|conf
 operator|.
 name|chauthtok
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|PAM_UPDATE_AUTHTOK
-condition|)
-block|{
-name|use_cached_chain
-operator|=
-literal|1
-expr_stmt|;
-block|}
 break|break;
 default|default:
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"undefined fn choice; %d"
@@ -1077,8 +952,12 @@ operator|!=
 name|choice
 condition|)
 block|{
-name|_pam_system_log
+name|pam_system_log
 argument_list|(
+name|pamh
+argument_list|,
+name|NULL
+argument_list|,
 name|LOG_ERR
 argument_list|,
 literal|"application failed to re-exec stack [%d:%d]"
@@ -1108,11 +987,6 @@ operator|=
 name|PAM_FALSE
 expr_stmt|;
 block|}
-name|__PAM_TO_MODULE
-argument_list|(
-name|pamh
-argument_list|)
-expr_stmt|;
 comment|/* call the list of module functions */
 name|retval
 operator|=
@@ -1125,18 +999,11 @@ argument_list|,
 name|h
 argument_list|,
 name|resumed
-argument_list|,
-name|use_cached_chain
 argument_list|)
 expr_stmt|;
 name|resumed
 operator|=
 name|PAM_FALSE
-expr_stmt|;
-name|__PAM_TO_APP
-argument_list|(
-name|pamh
-argument_list|)
 expr_stmt|;
 comment|/* Should we recall where to resume next time? */
 if|if
@@ -1178,6 +1045,10 @@ name|retval
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * $Log: pam_dispatch.c,v $  */
+end_comment
 
 end_unit
 

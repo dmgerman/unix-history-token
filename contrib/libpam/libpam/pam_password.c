@@ -4,7 +4,7 @@ comment|/* pam_password.c - PAM Password Management */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_password.c,v 1.2 2001/01/22 06:07:29 agmorgan Exp $  */
+comment|/*  * $Id: pam_password.c,v 1.7 1997/04/05 06:56:45 morgan Exp $  * $FreeBSD$  *  * $Log: pam_password.c,v $  */
 end_comment
 
 begin_include
@@ -18,10 +18,6 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
-
-begin_comment
-comment|/* #define DEBUG */
-end_comment
 
 begin_include
 include|#
@@ -62,25 +58,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|__PAM_FROM_MODULE
-argument_list|(
-name|pamh
-argument_list|)
-condition|)
-block|{
-name|D
-argument_list|(
-operator|(
-literal|"called from module!?"
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|PAM_SYSTEM_ERR
-return|;
-block|}
-if|if
-condition|(
 name|pamh
 operator|->
 name|former
@@ -110,7 +87,7 @@ operator|=
 name|PAM_FALSE
 expr_stmt|;
 block|}
-comment|/* first call to check if there will be a problem */
+comment|/* first loop through to check if there will be a problem */
 if|if
 condition|(
 name|pamh
@@ -137,19 +114,6 @@ operator|==
 name|PAM_SUCCESS
 condition|)
 block|{
-name|D
-argument_list|(
-operator|(
-literal|"completed check ok: former=%d"
-operator|,
-name|pamh
-operator|->
-name|former
-operator|.
-name|update
-operator|)
-argument_list|)
-expr_stmt|;
 name|pamh
 operator|->
 name|former
@@ -204,15 +168,7 @@ comment|/* if unsuccessful then wait now */
 name|D
 argument_list|(
 operator|(
-literal|"pam_chauthtok exit %d - %d"
-operator|,
-name|retval
-operator|,
-name|pamh
-operator|->
-name|former
-operator|.
-name|choice
+literal|"pam_authenticate exit"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -223,8 +179,6 @@ name|D
 argument_list|(
 operator|(
 literal|"will resume when ready"
-operator|,
-name|retval
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: pam_malloc.h,v 1.2 2000/12/04 19:02:34 baggins Exp $  */
+comment|/* $Id: pam_malloc.h,v 1.1 1996/11/10 21:23:14 morgan Exp $  * $FreeBSD$  *  * $Log: pam_malloc.h,v $  * Revision 1.1  1996/11/10 21:23:14  morgan  * Initial revision  *  */
 end_comment
 
 begin_comment

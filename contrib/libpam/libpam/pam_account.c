@@ -3,6 +3,10 @@ begin_comment
 comment|/* pam_account.c - PAM Account Management */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -27,9 +31,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|int
-name|retval
-decl_stmt|;
 name|D
 argument_list|(
 operator|(
@@ -46,27 +47,7 @@ argument_list|,
 name|PAM_SYSTEM_ERR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|__PAM_FROM_MODULE
-argument_list|(
-name|pamh
-argument_list|)
-condition|)
-block|{
-name|D
-argument_list|(
-operator|(
-literal|"called from module!?"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
-name|PAM_SYSTEM_ERR
-return|;
-block|}
-name|retval
-operator|=
 name|_pam_dispatch
 argument_list|(
 name|pamh
@@ -75,9 +56,6 @@ name|flags
 argument_list|,
 name|PAM_ACCOUNT
 argument_list|)
-expr_stmt|;
-return|return
-name|retval
 return|;
 block|}
 end_function

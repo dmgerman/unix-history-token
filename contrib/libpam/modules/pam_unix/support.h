@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: support.h,v 1.3 2000/12/20 05:15:05 vorlon Exp $  */
+comment|/*  * $Id: support.h,v 1.3 2000/12/20 05:15:05 vorlon Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

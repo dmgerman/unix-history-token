@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: xstrdup.c,v 1.1.1.1 2000/06/20 22:11:25 agmorgan Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Header: /home/morgan/pam/Linux-PAM-0.53/libpam_misc/RCS/xstrdup.c,v 1.4 1996/11/10 20:10:56 morgan Exp $ */
+end_comment
+
+begin_comment
+comment|/*  * $Log: xstrdup.c,v $  * Revision 1.4  1996/11/10 20:10:56  morgan  * modification for stack paranoia  *  */
 end_comment
 
 begin_include

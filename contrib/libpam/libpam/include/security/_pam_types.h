@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *<security/_pam_types.h>  *  * $Id: _pam_types.h,v 1.4 2001/01/22 06:07:29 agmorgan Exp $  *  * This file defines all of the types common to the Linux-PAM library  * applications and modules.  *  * Note, the copyright+license information is at end of file.  *  * Created: 1996/3/5 by AGM  */
+comment|/*  *<security/_pam_types.h>  *  * $Id: _pam_types.h,v 1.10 1997/04/05 06:52:50 morgan Exp morgan $  * $FreeBSD$  *  * This file defines all of the types common to the Linux-PAM library  * applications and modules.  *  * Note, the copyright+license information is at end of file.  *  * Created: 1996/3/5 by AGM  *  * $Log$  */
 end_comment
 
 begin_ifndef
@@ -14,32 +14,6 @@ define|#
 directive|define
 name|_SECURITY__PAM_TYPES_H
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__LIBPAM_VERSION
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__LIBPAM_VERSION
-value|__libpam_version
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|__libpam_version
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * include local definition for POSIX - NULL  */
@@ -496,7 +470,7 @@ comment|/* please call this function again to 				   complete authentication sta
 end_comment
 
 begin_comment
-comment|/*  * Add new #define's here - take care to also extend the libpam code:  * pam_strerror() and "libpam/pam_tokens.h" .  */
+comment|/* Add new #define's here */
 end_comment
 
 begin_define
@@ -703,6 +677,17 @@ begin_comment
 comment|/* app supplied function to override failure 				   delays */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PAM_LOG_STATE
+value|11
+end_define
+
+begin_comment
+comment|/* ident, facility etc. logging info */
+end_comment
+
 begin_comment
 comment|/* ---------- Common Linux-PAM application/module PI ----------- */
 end_comment
@@ -836,7 +821,7 @@ comment|/* used to suppress messages... */
 end_comment
 
 begin_comment
-comment|/*  * here we define an externally (by apps or modules) callable function  * that primes the libpam library to delay when a stacked set of  * modules results in a failure. In the case of PAM_SUCCESS this delay  * is ignored.  *  * Note, the pam_[gs]et_item(... PAM_FAIL_DELAY ...) can be used to set  * a function pointer which can override the default fail-delay behavior.  * This item was added to accommodate event driven programs that need to  * manage delays more carefully.  The function prototype for this data  * item is  *     void (*fail_delay)(int status, unsigned int delay, void *appdata_ptr);  */
+comment|/*  * here we define an externally (by apps or modules) callable function  * that primes the libpam library to delay when a stacked set of  * modules results in a failure. In the case of PAM_SUCCESS this delay  * is ignored.  *  * Note, the pam_[gs]et_item(... PAM_FAIL_DELAY ...) can be used to set  * a function pointer which can override the default fail-delay behavior.  * This item was added to accommodate event driven programs that need to  * manage delays more carefully.  The function prototype for this data  * item is  *           void (*fail_delay)(int status, unsigned int delay);  */
 end_comment
 
 begin_define
@@ -861,48 +846,151 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * the standard libc interface for syslog suffers from some problems.  * The first is that it is not thread safe.  It is also three functions  * where PAM only really needs a "log this" function.  It also does  * not provide modules and applications with information about whether  * the log is currently open or not etc...  All of these things mean  * that we need to centralize PAM's logging facility.  These two functions  * provide this centralization.  They are, however, just a gateway to  * libc's openlog/syslog/closelog functions.  Please note, your apps/modules  * will likely start to segfault if you do not use this function for  * system logging.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pam_log_state
+block|{
+name|char
+modifier|*
+name|ident
+decl_stmt|;
+name|int
+name|option
+decl_stmt|;
+name|int
+name|facility
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOG_ERR
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<syslog.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOG_AUTHPRIV
-end_ifndef
+begin_comment
+comment|/* this is a sad HACK. But we need LOG_CRIT etc.. */
+end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOG_PRIV
-end_ifdef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|LOG_AUTHPRIV
-value|LOG_PRIV
+name|PAM_LOG_STATE_IDENT
+value|"PAM"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PAM_LOG_STATE_OPTION
+value|LOG_PID
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAM_LOG_STATE_FACILITY
+value|LOG_AUTHPRIV
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|va_start
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* LOG_PRIV */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_PAM_SYSTEM_LOG
+end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|extern
+name|void
+name|pam_vsystem_log
+parameter_list|(
+specifier|const
+name|pam_handle_t
+modifier|*
+name|pamh
+parameter_list|,
+specifier|const
+name|struct
+name|pam_log_state
+modifier|*
+name|log_state
+parameter_list|,
+name|int
+name|priority
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|va_list
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* !LOG_AUTHPRIV */
-end_comment
+begin_function_decl
+specifier|extern
+name|void
+name|pam_system_log
+parameter_list|(
+specifier|const
+name|pam_handle_t
+modifier|*
+name|pamh
+parameter_list|,
+specifier|const
+name|struct
+name|pam_log_state
+modifier|*
+name|log_state
+parameter_list|,
+name|int
+name|priority
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -977,8 +1065,15 @@ comment|/* yes/no/maybe conditionals */
 end_comment
 
 begin_comment
-comment|/* This is for server client non-human interaction.. these are NOT    part of the X/Open PAM specification. */
+comment|/* This is for server client non-human interaction.. these are NOT    part of the X/Open PAM specification (yet although Vipin has hinted    that they may well be 1997/7/8) but are currently included for    exploritory reasons.  Basically, they are for the module to obtain a    binary chunk of data from the client (via the server).  Such data    is intercepted by the server and unpacked in preparation for the    module */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PAM_BINARY_MSG
+value|6
+end_define
 
 begin_define
 define|#
@@ -1033,7 +1128,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* if the pam_message.msg_style = PAM_BINARY_PROMPT    the 'pam_message.msg' is a pointer to a 'const *' for the following    pseudo-structure.  When used with a PAM_BINARY_PROMPT, the returned    pam_response.resp pointer points to an object with the following    structure:     struct {        u32 length;                         #  network byte order        unsigned char type;        unsigned char data[length-5];    };     The 'libpamc' library is designed around this flavor of    message and should be used to handle this flavor of msg_style.    */
+comment|/* if the pam_message.msg_style = PAM_BINARY_PROMPT    the 'pam_message.msg' is a pointer to a 'const *' for the following    pseudo-structure.  When used with a PAM_BINARY_PROMPT, the returned    pam_response.resp pointer points to an object with the following    structure:     struct {        u32 length;                         #  network byte order        unsigned char data[length];    };     The 'libpam_client' library is designed around this flavor of    message and should be used to handle this flavor of msg_style.    */
 end_comment
 
 begin_comment

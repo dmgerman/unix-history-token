@@ -7,81 +7,49 @@ begin_comment
 comment|/* $Id */
 end_comment
 
-begin_comment
+begin_expr_stmt
+operator|*
+name|$FreeBSD$
 comment|/* Copyright at the end of the file */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_BSD_SOURCE
-end_define
-
-begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<security/pam_modules.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<security/_pam_macros.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|"pam_userdb.h"
-end_include
-
-begin_comment
 comment|/*  * dummy conversation function sending exactly one prompt  * and expecting exactly one response from the other party  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|converse
-parameter_list|(
-name|pam_handle_t
-modifier|*
-name|pamh
-parameter_list|,
-name|struct
-name|pam_message
-modifier|*
-modifier|*
-name|message
-parameter_list|,
-name|struct
-name|pam_response
-modifier|*
-modifier|*
-name|response
-parameter_list|)
+argument_list|(
+argument|pam_handle_t *pamh
+argument_list|,
+argument|struct pam_message **message
+argument_list|,
+argument|struct pam_response **response
+argument_list|)
 block|{
 name|int
 name|retval
-decl_stmt|;
+block|;
 specifier|const
-name|struct
+expr|struct
 name|pam_conv
-modifier|*
+operator|*
 name|conv
-decl_stmt|;
+block|;
 name|retval
 operator|=
 name|pam_get_item
@@ -99,7 +67,7 @@ operator|)
 operator|&
 name|conv
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|retval
@@ -130,15 +98,20 @@ operator|->
 name|appdata_ptr
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|retval
 return|;
+end_return
+
+begin_comment
 comment|/* propagate error status */
-block|}
-end_function
+end_comment
 
 begin_function
-specifier|static
+unit|}   static
 name|char
 modifier|*
 name|_pam_delete
