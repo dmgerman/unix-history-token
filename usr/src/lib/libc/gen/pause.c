@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pause.c	5.3 (Berkeley) %G%"
+literal|"@(#)pause.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,10 @@ end_macro
 
 begin_block
 block|{
+name|long
+name|sigblock
+parameter_list|()
+function_decl|;
 name|sigpause
 argument_list|(
 name|sigblock
