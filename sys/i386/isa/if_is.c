@@ -621,6 +621,9 @@ name|id_iobase
 expr_stmt|;
 comment|/* 	 * It's impossible to do a non-invasive probe of the  	 * LANCE and PCnet_ISA. The LANCE requires setting the 	 * STOP bit to access the registers and the PCnet_ISA 	 * address port resets to an unknown state!! 	 */
 comment|/* 	 * Check for BICC cards first since for the NE2100 and 	 * PCnet-ISA cards this write will hit the Address PROM.  	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"Dumping io space for is%d starting at %x\n"
@@ -670,6 +673,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEBUG*/
 if|if
 condition|(
 name|nports
