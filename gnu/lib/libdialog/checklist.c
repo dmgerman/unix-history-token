@@ -1664,10 +1664,9 @@ operator|++
 control|)
 if|if
 condition|(
-name|isprint
-argument_list|(
 name|key
-argument_list|)
+operator|!=
+literal|' '
 operator|&&
 name|key
 operator|<
