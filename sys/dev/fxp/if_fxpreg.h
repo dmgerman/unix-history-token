@@ -17,6 +17,21 @@ name|FXP_DEVICEID_i82557
 value|0x1229
 end_define
 
+begin_comment
+comment|/* 82557 - 82559 "classic" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_DEVICEID_i82559
+value|0x1030
+end_define
+
+begin_comment
+comment|/* New 82559 device id.. */
+end_comment
+
 begin_define
 define|#
 directive|define
