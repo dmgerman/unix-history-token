@@ -210,6 +210,17 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* #define	XTRA_PAGES	32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XTRA_PAGES
+value|64
+end_define
+
 begin_function
 name|void
 name|extend_heap
@@ -320,7 +331,7 @@ operator|)
 condition|)
 break|break;
 block|}
-comment|/*      * We want to extend the heap from 256k to 512k.  With 8k pages      * (assumed), we need 32 pages.  We take pages from the end of the      * last usable memory region, taking care to avoid the memory used      * by the kernel's message buffer.  We allow 4 pages for the      * message buffer.      */
+comment|/*      * We want to extend the heap from 256k up to XTRA_PAGES more pages.      * We take pages from the end of the last usable memory region,      * taking care to avoid the memory used by the kernel's message      * buffer.  We allow 4 pages for the message buffer.      */
 name|startpfn
 operator|=
 name|memc
@@ -333,7 +344,7 @@ name|mddt_pg_cnt
 operator|-
 literal|4
 operator|-
-literal|32
+name|XTRA_PAGES
 expr_stmt|;
 name|startva
 operator|=
@@ -379,7 +390,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|32
+name|XTRA_PAGES
 condition|;
 name|i
 operator|++
@@ -450,7 +461,13 @@ operator|(
 name|void
 operator|*
 operator|)
-literal|0x20080000
+operator|(
+literal|0x20040000
+operator|+
+name|XTRA_PAGES
+operator|*
+literal|8192
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
