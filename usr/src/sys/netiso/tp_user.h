@@ -8,8 +8,14 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.4 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
+comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.5 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TYPES_
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -20,7 +26,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|"../sys/types.h"
 end_include
 
 begin_else
@@ -39,6 +45,11 @@ begin_endif
 endif|#
 directive|endif
 endif|KERNEL
+end_endif
+
+begin_endif
+endif|#
+directive|endif
 end_endif
 
 begin_ifndef
