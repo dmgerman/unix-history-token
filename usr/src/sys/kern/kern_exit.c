@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -261,10 +261,6 @@ name|struct
 name|vmspace
 modifier|*
 name|vm
-decl_stmt|;
-name|struct
-name|timeval
-name|tv
 decl_stmt|;
 name|int
 name|s
@@ -816,7 +812,7 @@ name|p_cptr
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Save exit status and final rusage info, adding in child rusage 	 * info and self times.  Add its most recent runtime here; we are 	 * not going to reach the usual code in swtch(). 	 */
+comment|/* 	 * Save exit status and final rusage info, adding in child rusage 	 * info and self times. 	 */
 name|p
 operator|->
 name|p_xstat
@@ -833,32 +829,6 @@ operator|->
 name|p_stats
 operator|->
 name|p_ru
-expr_stmt|;
-name|microtime
-argument_list|(
-operator|&
-name|tv
-argument_list|)
-expr_stmt|;
-name|timevalsub
-argument_list|(
-operator|&
-name|tv
-argument_list|,
-operator|&
-name|runtime
-argument_list|)
-expr_stmt|;
-name|timevaladd
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_rtime
-argument_list|,
-operator|&
-name|tv
-argument_list|)
 expr_stmt|;
 name|calcru
 argument_list|(
