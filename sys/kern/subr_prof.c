@@ -251,8 +251,8 @@ decl_stmt|;
 name|uintfptr_t
 name|tmp_addr
 decl_stmt|;
-name|int
-name|intrstate
+name|critical_t
+name|savecrit
 decl_stmt|;
 endif|#
 directive|endif
@@ -545,12 +545,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable interrupts to avoid interference while we calibrate 	 * things. 	 */
-name|intrstate
+name|savecrit
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Determine overheads. 	 * XXX this needs to be repeated for each useful timer/counter. 	 */
@@ -799,9 +796,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|restore_intr
+name|critical_exit
 argument_list|(
-name|intrstate
+name|savecrit
 argument_list|)
 expr_stmt|;
 end_expr_stmt

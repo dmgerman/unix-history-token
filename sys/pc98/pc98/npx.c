@@ -939,8 +939,8 @@ comment|/* SMP */
 name|int
 name|result
 decl_stmt|;
-name|u_long
-name|save_eflags
+name|critical_t
+name|savecrit
 decl_stmt|;
 name|u_char
 name|save_icu1_mask
@@ -994,12 +994,9 @@ name|NRSVIDT
 operator|+
 name|npx_irq
 expr_stmt|;
-name|save_eflags
+name|savecrit
 operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critcal_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -1169,8 +1166,10 @@ name|npx_intrno
 index|]
 expr_stmt|;
 comment|/* 	 * XXX This looks highly bogus, but it appears that npc_probe1 	 * needs interrupts enabled.  Does this make any difference 	 * here? 	 */
-name|enable_intr
-argument_list|()
+name|critical_exit
+argument_list|(
+name|savecrit
+argument_list|)
 expr_stmt|;
 name|result
 operator|=
@@ -1179,7 +1178,9 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|disable_intr
+name|savecrit
+operator|=
+name|critcal_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -1239,9 +1240,9 @@ index|]
 operator|=
 name|save_idt_npxtrap
 expr_stmt|;
-name|write_eflags
+name|critical_exit
 argument_list|(
-name|save_eflags
+name|savecrit
 argument_list|)
 expr_stmt|;
 return|return
@@ -2793,7 +2794,7 @@ name|int
 name|npxdna
 parameter_list|()
 block|{
-name|int
+name|critical_t
 name|s
 decl_stmt|;
 if|if
@@ -2836,10 +2837,7 @@ expr_stmt|;
 block|}
 name|s
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|stop_emulating
@@ -2876,7 +2874,7 @@ operator|->
 name|pcb_savefpu
 argument_list|)
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -2930,8 +2928,8 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* SMP */
-name|int
-name|intrstate
+name|critical_t
+name|savecrit
 decl_stmt|;
 name|u_char
 name|icu1_mask
@@ -2949,12 +2947,9 @@ name|struct
 name|gate_descriptor
 name|save_idt_npxintr
 decl_stmt|;
-name|intrstate
+name|savecrit
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critcal_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -3085,9 +3080,9 @@ index|]
 operator|=
 name|npx_idt_probeintr
 expr_stmt|;
-name|write_eflags
+name|critical_exit
 argument_list|(
-name|intrstate
+name|savecrit
 argument_list|)
 expr_stmt|;
 name|stop_emulating
@@ -3111,7 +3106,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|disable_intr
+name|savecrit
+operator|=
+name|critcal_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -3262,9 +3259,9 @@ index|]
 operator|=
 name|save_idt_npxintr
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
-name|intrstate
+name|savecrit
 argument_list|)
 expr_stmt|;
 comment|/* back to previous state */

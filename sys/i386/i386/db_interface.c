@@ -1074,8 +1074,8 @@ specifier|volatile
 name|u_int
 name|in_Debugger
 decl_stmt|;
-name|int
-name|flags
+name|critical_t
+name|savecrit
 decl_stmt|;
 comment|/* 	 * XXX 	 * Do nothing if the console is in graphics mode.  This is 	 * OK if the call is for the debugger hotkey but not if the call 	 * is a weak form of panicing. 	 */
 if|if
@@ -1092,7 +1092,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|atomic_cmpset_int
+name|atomic_cmpset_acq_int
 argument_list|(
 operator|&
 name|in_Debugger
@@ -1103,12 +1103,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|flags
+name|savecrit
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|db_printf
@@ -1121,14 +1118,18 @@ expr_stmt|;
 name|breakpoint
 argument_list|()
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
-name|flags
+name|savecrit
 argument_list|)
 expr_stmt|;
+name|atomic_store_rel_int
+argument_list|(
+operator|&
 name|in_Debugger
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -316,13 +316,12 @@ name|pa
 operator|&
 name|REG1
 decl_stmt|;
-name|int
+name|critical_t
 name|s
-init|=
-name|save_intr
-argument_list|()
 decl_stmt|;
-name|disable_intr
+name|s
+operator|=
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|cia_hae_mem
@@ -353,7 +352,7 @@ argument_list|(
 name|CIA_CSR_HAE_MEM
 argument_list|)
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -654,15 +653,13 @@ name|ctrl
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|critical_t
 name|s
 decl_stmt|;
 name|s
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Put the Pyxis into PCI loopback mode. 	 */
@@ -743,7 +740,7 @@ expr_stmt|;
 name|alpha_mb
 argument_list|()
 expr_stmt|;
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|s
 argument_list|)

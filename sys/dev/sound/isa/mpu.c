@@ -907,6 +907,9 @@ name|irqp0
 decl_stmt|,
 name|irqp1
 decl_stmt|;
+name|critical_t
+name|savecrit
+decl_stmt|;
 name|scp
 operator|=
 name|device_get_softc
@@ -1008,7 +1011,9 @@ operator|)
 return|;
 block|}
 comment|/* 	 * At this point, we are likely to have an interface. 	 * 	 * Switching the interface to uart mode gives us an interrupt. 	 * We can make use of it to determine the irq. 	 * Idea-stolen-from: sys/isa/sio.c:sioprobe() 	 */
-name|disable_intr
+name|savecrit
+operator|=
+name|critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* 	 * See the initial irq. We have to do this now, 	 * otherwise a midi module/instrument might send 	 * an active sensing, to mess up the irq. 	 */
@@ -1032,8 +1037,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|critical_exit
+argument_list|(
+name|savecrit
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1115,8 +1122,10 @@ operator|==
 name|irqp0
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|critical_exit
+argument_list|(
+name|savecrit
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1151,8 +1160,10 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|critical_exit
+argument_list|(
+name|savecrit
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1174,8 +1185,10 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|enable_intr
-argument_list|()
+name|critical_exit
+argument_list|(
+name|savecrit
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -127,6 +127,51 @@ name|__FreeBSD__
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|500000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|DECLARE_INTR_MASK
+parameter_list|(
+name|s
+parameter_list|)
+value|critical_t s
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISABLE_INTR
+parameter_list|(
+name|s
+parameter_list|)
+value|s = critical_enter()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENABLE_INTR
+parameter_list|(
+name|s
+parameter_list|)
+value|critical_exit(s)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -156,6 +201,11 @@ name|s
 parameter_list|)
 value|splx(s)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

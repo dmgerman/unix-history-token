@@ -1341,7 +1341,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|u_int32_t
+name|critical_t
 name|psr
 decl_stmt|;
 name|KASSERT
@@ -1360,10 +1360,7 @@ argument_list|)
 expr_stmt|;
 name|psr
 operator|=
-name|save_intr
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|addr
@@ -1413,7 +1410,7 @@ operator|+=
 name|pmap_pte_e_stride1
 expr_stmt|;
 block|}
-name|restore_intr
+name|critical_exit
 argument_list|(
 name|psr
 argument_list|)
