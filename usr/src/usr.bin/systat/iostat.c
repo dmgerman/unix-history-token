@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	1.2 (Lucasfilm) %G%"
+literal|"@(#)iostat.c	1.3 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1557,7 +1557,7 @@ name|buf
 argument_list|,
 literal|"%4.1f"
 argument_list|,
-name|v
+name|val
 argument_list|)
 expr_stmt|;
 name|k
