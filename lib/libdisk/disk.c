@@ -2098,6 +2098,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|t
+argument_list|,
+literal|"BDE"
+argument_list|)
+condition|)
+empty_stmt|;
+comment|/* nothing */
 else|else
 block|{
 name|printf
