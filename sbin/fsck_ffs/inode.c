@@ -773,7 +773,11 @@ argument_list|(
 operator|*
 name|func
 argument_list|)
-argument_list|()
+argument_list|(
+expr|struct
+name|inodesc
+operator|*
+argument_list|)
 decl_stmt|,
 name|nif
 decl_stmt|;
@@ -2634,6 +2638,7 @@ name|inodesc
 modifier|*
 name|idesc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type
@@ -2784,7 +2789,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adjrefcnt ino %ld amt %ld\n"
+literal|"adjrefcnt ino %ld amt %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -2793,6 +2798,10 @@ name|cmd
 operator|.
 name|value
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|cmd
 operator|.
 name|size
@@ -3243,6 +3252,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type

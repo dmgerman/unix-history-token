@@ -54,6 +54,7 @@ specifier|extern
 name|void
 name|rwerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|mesg
@@ -69,6 +70,7 @@ specifier|extern
 name|int
 name|reply
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|question

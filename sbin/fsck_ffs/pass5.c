@@ -98,6 +98,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -298,6 +299,7 @@ operator|>
 literal|1
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|doit
@@ -2144,6 +2146,7 @@ name|int
 name|startvalue
 parameter_list|,
 comment|/* resource value for first element in map */
+specifier|const
 name|char
 modifier|*
 name|name

@@ -1173,6 +1173,7 @@ name|dinode
 modifier|*
 name|dp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|errmsg
@@ -2727,6 +2728,7 @@ operator|(
 expr|struct
 name|inoinfo
 operator|*
+specifier|const
 operator|*
 operator|)
 name|arg1
@@ -2743,6 +2745,7 @@ operator|(
 expr|struct
 name|inoinfo
 operator|*
+specifier|const
 operator|*
 operator|)
 name|arg2

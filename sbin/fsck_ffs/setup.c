@@ -151,6 +151,7 @@ parameter_list|(
 name|int
 name|listerr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -219,9 +220,6 @@ name|j
 decl_stmt|;
 name|long
 name|bmapsize
-decl_stmt|;
-name|off_t
-name|sizepb
 decl_stmt|;
 name|struct
 name|stat
@@ -2046,6 +2044,7 @@ parameter_list|(
 name|int
 name|listerr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s

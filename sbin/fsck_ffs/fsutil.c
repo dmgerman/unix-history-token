@@ -239,6 +239,7 @@ begin_function
 name|int
 name|reply
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|question
@@ -1090,7 +1091,7 @@ literal|0
 condition|)
 name|pfatal
 argument_list|(
-literal|"WRITING %sZERO'ED BLOCK %d TO DISK\n"
+literal|"WRITING %sZERO'ED BLOCK %lld TO DISK\n"
 argument_list|,
 operator|(
 name|bp
@@ -1108,6 +1109,10 @@ literal|""
 else|:
 literal|"PARTIALLY "
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bp
 operator|->
 name|b_bno
@@ -1234,6 +1239,7 @@ begin_function
 name|void
 name|rwerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|mesg
@@ -1971,18 +1977,26 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|" %ld (%ld),"
+literal|" %lld (%lld),"
 argument_list|,
-operator|(
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|blk
 operator|*
 name|dev_bsize
 operator|+
 name|i
-operator|)
+argument_list|)
 operator|/
 name|secsize
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|blk
 operator|+
 name|i
@@ -1993,8 +2007,12 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %ld,"
+literal|" %lld,"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|blk
 operator|+
 name|i
@@ -2208,8 +2226,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %ld,"
+literal|" %lld,"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|blk
 operator|+
 name|i
@@ -2727,7 +2749,10 @@ name|idesc
 operator|.
 name|id_name
 operator|=
+name|strdup
+argument_list|(
 literal|".."
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2891,6 +2916,7 @@ name|catch
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|ckfini
@@ -2916,6 +2942,7 @@ name|catchquit
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|printf
@@ -2953,6 +2980,7 @@ name|inodesc
 modifier|*
 name|idesc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -3229,7 +3257,10 @@ name|NULL
 condition|)
 name|cdevname
 operator|=
+name|strdup
+argument_list|(
 literal|"fsck"
+argument_list|)
 expr_stmt|;
 operator|(
 name|void

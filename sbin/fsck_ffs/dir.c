@@ -96,6 +96,7 @@ file|"fsck.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|lfname
@@ -1400,6 +1401,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|errmesg
@@ -1427,6 +1429,7 @@ parameter_list|,
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|errmesg
@@ -1822,7 +1825,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adjrefcnt ino %ld amt %ld\n"
+literal|"adjrefcnt ino %ld amt %lld\n"
 argument_list|,
 operator|(
 name|long
@@ -1831,6 +1834,10 @@ name|cmd
 operator|.
 name|value
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|cmd
 operator|.
 name|size
@@ -2307,7 +2314,10 @@ name|idesc
 operator|.
 name|id_name
 operator|=
+name|strdup
+argument_list|(
 name|lfname
+argument_list|)
 expr_stmt|;
 name|idesc
 operator|.
@@ -2843,6 +2853,7 @@ parameter_list|(
 name|ino_t
 name|dir
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2897,7 +2908,10 @@ name|idesc
 operator|.
 name|id_name
 operator|=
+name|strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|idesc
 operator|.
@@ -2937,6 +2951,7 @@ parameter_list|,
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3031,7 +3046,10 @@ name|idesc
 operator|.
 name|id_name
 operator|=
+name|strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|dp
 operator|=

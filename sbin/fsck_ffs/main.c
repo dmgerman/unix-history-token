@@ -191,10 +191,12 @@ parameter_list|(
 name|int
 name|flag
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|req
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -590,10 +592,12 @@ parameter_list|(
 name|int
 name|flag
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|req
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -701,6 +705,8 @@ name|int
 name|cylno
 decl_stmt|,
 name|size
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|ino_t
 name|files
@@ -1198,14 +1204,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
+literal|"(%lld frags, %lld blocks, %.1f%% fragmentation)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sblock
 operator|.
 name|fs_cstotal
 operator|.
 name|cs_nffree
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sblock
 operator|.
 name|fs_cstotal
@@ -1496,7 +1510,7 @@ name|countdirs
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"Reclaimed: %ld directories, %ld files, %d fragments\n"
+literal|"Reclaimed: %ld directories, %ld files, %lld fragments\n"
 argument_list|,
 name|countdirs
 argument_list|,
@@ -1507,13 +1521,17 @@ name|files
 operator|-
 name|countdirs
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|blks
 argument_list|)
 expr_stmt|;
 block|}
 name|pwarn
 argument_list|(
-literal|"%ld files, %ld used, %qu free "
+literal|"%ld files, %lld used, %llu free "
 argument_list|,
 operator|(
 name|long
@@ -1521,6 +1539,7 @@ operator|)
 name|n_files
 argument_list|,
 operator|(
+name|long
 name|long
 operator|)
 name|n_blks
@@ -1578,9 +1597,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%d blocks missing\n"
+literal|"%lld blocks missing\n"
 argument_list|,
 operator|-
+operator|(
+name|long
+name|long
+operator|)
 name|blks
 argument_list|)
 expr_stmt|;
@@ -1612,8 +1635,12 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %d,"
+literal|" %lld,"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dp
 operator|->
 name|dup
@@ -1888,13 +1915,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|ufs_args
-name|args
-decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 comment|/* 		 * We modified a mounted filesystem.  Do a mount update on 		 * it unless it is read-write, so we can continue using it 		 * as safely as possible. 		 */
 if|if
 condition|(
@@ -2050,7 +2070,7 @@ index|]
 decl_stmt|;
 name|char
 modifier|*
-name|devname
+name|ddevname
 decl_stmt|;
 name|struct
 name|statfs
@@ -2141,7 +2161,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|devname
+name|ddevname
 operator|=
 name|statfsp
 operator|->
@@ -2150,7 +2170,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|devname
+name|ddevname
 operator|!=
 literal|'/'
 condition|)
@@ -2166,7 +2186,7 @@ name|strcat
 argument_list|(
 name|device
 argument_list|,
-name|devname
+name|ddevname
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -2208,7 +2228,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|devname
+name|ddevname
 argument_list|,
 operator|&
 name|mntdevstat

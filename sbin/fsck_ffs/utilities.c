@@ -381,6 +381,7 @@ name|infohandler
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|got_siginfo

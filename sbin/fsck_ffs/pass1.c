@@ -837,10 +837,6 @@ decl_stmt|;
 name|mode_t
 name|mode
 decl_stmt|;
-name|char
-modifier|*
-name|symbuf
-decl_stmt|;
 name|int
 name|j
 decl_stmt|;
@@ -1924,12 +1920,16 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"adjblkcnt ino %qu amount %ld\n"
+literal|"adjblkcnt ino %qu amount %lld\n"
 argument_list|,
 name|cmd
 operator|.
 name|value
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|cmd
 operator|.
 name|size

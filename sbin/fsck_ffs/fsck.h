@@ -468,7 +468,11 @@ function_decl|(
 modifier|*
 name|id_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|inodesc
+modifier|*
+parameter_list|)
 function_decl|;
 comment|/* function to be applied to blocks of inode */
 name|ino_t
@@ -1052,6 +1056,7 @@ comment|/* lost& found directory inode number */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|lfname
@@ -1269,6 +1274,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type
@@ -1380,6 +1386,7 @@ parameter_list|(
 name|ino_t
 name|dir
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1437,6 +1444,7 @@ name|struct
 name|inodesc
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|type
@@ -1465,6 +1473,7 @@ parameter_list|(
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|errmesg
@@ -1491,6 +1500,7 @@ name|struct
 name|inodesc
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -1574,6 +1584,7 @@ parameter_list|,
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|errmesg
@@ -1815,6 +1826,7 @@ parameter_list|,
 name|ino_t
 name|ino
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2000,6 +2012,7 @@ begin_function_decl
 name|int
 name|reply
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|question
@@ -2011,6 +2024,7 @@ begin_function_decl
 name|void
 name|rwerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|mesg
