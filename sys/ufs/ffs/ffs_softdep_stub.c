@@ -439,6 +439,8 @@ parameter_list|(
 name|ip
 parameter_list|,
 name|length
+parameter_list|,
+name|flags
 parameter_list|)
 name|struct
 name|inode
@@ -447,6 +449,9 @@ name|ip
 decl_stmt|;
 name|off_t
 name|length
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 block|{
 name|panic
