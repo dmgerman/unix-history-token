@@ -284,6 +284,11 @@ directive|include
 file|<netipx/ipx_if.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|int
 function_decl|(
@@ -341,11 +346,6 @@ name|hlen
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
