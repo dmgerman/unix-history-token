@@ -288,18 +288,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
-name|ProgName
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* path-stripped argv[0] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
 name|MyHost
 index|[]
 decl_stmt|;
