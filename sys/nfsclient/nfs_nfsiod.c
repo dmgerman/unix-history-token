@@ -1174,6 +1174,10 @@ operator|)
 name|nfs_doio
 argument_list|(
 name|bp
+operator|->
+name|b_vp
+argument_list|,
+name|bp
 argument_list|,
 name|bp
 operator|->
@@ -1188,6 +1192,10 @@ name|void
 operator|)
 name|nfs_doio
 argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|,
 name|bp
 argument_list|,
 name|bp

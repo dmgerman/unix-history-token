@@ -1434,6 +1434,10 @@ name|int
 name|nfs_asyncio
 parameter_list|(
 name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 parameter_list|,
@@ -1452,6 +1456,11 @@ begin_function_decl
 name|int
 name|nfs_doio
 parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
 name|struct
 name|buf
 modifier|*

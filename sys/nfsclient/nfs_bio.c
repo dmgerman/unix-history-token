@@ -2033,6 +2033,8 @@ if|if
 condition|(
 name|nfs_asyncio
 argument_list|(
+name|nmp
+argument_list|,
 name|rabp
 argument_list|,
 name|cred
@@ -2268,6 +2270,8 @@ name|error
 operator|=
 name|nfs_doio
 argument_list|(
+name|vp
+argument_list|,
 name|bp
 argument_list|,
 name|cred
@@ -2403,6 +2407,8 @@ name|error
 operator|=
 name|nfs_doio
 argument_list|(
+name|vp
+argument_list|,
 name|bp
 argument_list|,
 name|cred
@@ -2575,6 +2581,8 @@ name|error
 operator|=
 name|nfs_doio
 argument_list|(
+name|vp
+argument_list|,
 name|bp
 argument_list|,
 name|cred
@@ -2735,6 +2743,8 @@ name|error
 operator|=
 name|nfs_doio
 argument_list|(
+name|vp
+argument_list|,
 name|bp
 argument_list|,
 name|cred
@@ -2897,6 +2907,8 @@ if|if
 condition|(
 name|nfs_asyncio
 argument_list|(
+name|nmp
+argument_list|,
 name|rabp
 argument_list|,
 name|cred
@@ -3994,6 +4006,8 @@ name|error
 operator|=
 name|nfs_doio
 argument_list|(
+name|vp
+argument_list|,
 name|bp
 argument_list|,
 name|cred
@@ -4928,6 +4942,11 @@ name|int
 name|nfs_asyncio
 parameter_list|(
 name|struct
+name|nfsmount
+modifier|*
+name|nmp
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -4943,11 +4962,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|struct
-name|nfsmount
-modifier|*
-name|nmp
-decl_stmt|;
 name|int
 name|iod
 decl_stmt|;
@@ -4969,17 +4983,6 @@ name|error
 decl_stmt|,
 name|error2
 decl_stmt|;
-name|nmp
-operator|=
-name|VFSTONFS
-argument_list|(
-name|bp
-operator|->
-name|b_vp
-operator|->
-name|v_mount
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Commits are usually short and sweet so lets save some cpu and 	 * leave the async daemons for more important rpc's (such as reads 	 * and writes). 	 */
 if|if
 condition|(
@@ -5408,6 +5411,11 @@ name|int
 name|nfs_doio
 parameter_list|(
 name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 name|bp
@@ -5427,11 +5435,6 @@ name|struct
 name|uio
 modifier|*
 name|uiop
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
 decl_stmt|;
 name|struct
 name|nfsnode
@@ -5475,12 +5478,6 @@ name|td_proc
 else|:
 name|NULL
 decl_stmt|;
-name|vp
-operator|=
-name|bp
-operator|->
-name|b_vp
-expr_stmt|;
 name|np
 operator|=
 name|VTONFS
