@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.5 (Berkeley) %G%"
+literal|"@(#)init.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1046,16 +1046,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SCORE_X
+condition|;
+name|i
+operator|++
+control|)
 name|addch
 argument_list|(
 literal|'_'
 argument_list|)
-operator|!=
-name|ERR
-condition|)
-continue|continue;
+expr_stmt|;
 for|for
 control|(
 name|pp
