@@ -2762,7 +2762,7 @@ name|INVARIANTS
 if|if
 condition|(
 operator|!
-name|TD_ON_MUTEX
+name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)

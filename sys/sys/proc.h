@@ -438,9 +438,9 @@ name|TAILQ_ENTRY
 argument_list|(
 argument|thread
 argument_list|)
-name|td_blkq
+name|td_lockq
 expr_stmt|;
-comment|/* (j) Mutex queue. XXXKSE */
+comment|/* (j) Lock queue. XXXKSE */
 name|TAILQ_ENTRY
 argument_list|(
 argument|thread
@@ -527,9 +527,9 @@ comment|/* (b) For interrupt threads only. */
 specifier|const
 name|char
 modifier|*
-name|td_mtxname
+name|td_lockname
 decl_stmt|;
-comment|/* (j) Name of mutex blocked on. */
+comment|/* (j) Name of lock blocked on. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -835,12 +835,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDI_MUTEX
+name|TDI_LOCK
 value|0x08
 end_define
 
 begin_comment
-comment|/* Stopped on a mutex. */
+comment|/* Stopped on a lock. */
 end_comment
 
 begin_define
@@ -908,11 +908,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_ON_MUTEX
+name|TD_ON_LOCK
 parameter_list|(
 name|td
 parameter_list|)
-value|((td)->td_inhibitors& TDI_MUTEX)
+value|((td)->td_inhibitors& TDI_LOCK)
 end_define
 
 begin_define
@@ -1012,11 +1012,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_SET_MUTEX
+name|TD_SET_LOCK
 parameter_list|(
 name|td
 parameter_list|)
-value|TD_SET_INHIB((td), TDI_MUTEX)
+value|TD_SET_INHIB((td), TDI_LOCK)
 end_define
 
 begin_define
@@ -1072,11 +1072,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|TD_CLR_MUTEX
+name|TD_CLR_LOCK
 parameter_list|(
 name|td
 parameter_list|)
-value|TD_CLR_INHIB((td), TDI_MUTEX)
+value|TD_CLR_INHIB((td), TDI_LOCK)
 end_define
 
 begin_define
@@ -2452,12 +2452,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SMTX
+name|SLOCK
 value|7
 end_define
 
 begin_comment
-comment|/* Blocked on a mutex. */
+comment|/* Blocked on a lock. */
 end_comment
 
 begin_define

@@ -479,7 +479,7 @@ name|TDS_INHIBITED
 case|:
 if|if
 condition|(
-name|TD_ON_MUTEX
+name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)

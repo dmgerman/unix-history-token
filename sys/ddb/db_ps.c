@@ -447,7 +447,7 @@ name|TDS_INHIBITED
 case|:
 if|if
 condition|(
-name|TD_ON_MUTEX
+name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)
@@ -455,11 +455,11 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"[MTX %6s %8p]"
+literal|"[LOCK %6s %8p]"
 argument_list|,
 name|td
 operator|->
-name|td_mtxname
+name|td_lockname
 argument_list|,
 operator|(
 name|void

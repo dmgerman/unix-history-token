@@ -278,12 +278,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MTXNAMELEN
+name|LOCKNAMELEN
 value|8
 end_define
 
 begin_comment
-comment|/* size of returned mutex name */
+comment|/* size of returned lock name */
 end_comment
 
 begin_define
@@ -594,14 +594,14 @@ index|]
 decl_stmt|;
 comment|/* setlogin name */
 name|char
-name|ki_mtxname
+name|ki_lockname
 index|[
-name|MTXNAMELEN
+name|LOCKNAMELEN
 operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* mutex name */
+comment|/* lock name */
 name|char
 name|ki_comm
 index|[
@@ -702,12 +702,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KI_MTXBLOCK
+name|KI_LOCKBLOCK
 value|0x00000004
 end_define
 
 begin_comment
-comment|/* proc blocked on mutex ki_mtxname */
+comment|/* proc blocked on lock ki_lockname */
 end_comment
 
 begin_comment

@@ -12180,7 +12180,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|TD_ON_MUTEX
+name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)
@@ -12190,7 +12190,7 @@ name|stmp
 operator|=
 name|td
 operator|->
-name|td_mtxname
+name|td_lockname
 expr_stmt|;
 block|}
 elseif|else
@@ -12309,7 +12309,7 @@ name|pick
 operator|->
 name|p_pid
 argument_list|,
-name|TD_ON_MUTEX
+name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)

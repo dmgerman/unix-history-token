@@ -447,7 +447,7 @@ expr_stmt|;
 comment|/* 		 * If we aren't blocked on a mutex, we should be. 		 */
 name|KASSERT
 argument_list|(
-name|TD_ON_MUTEX
+name|TD_ON_LOCK
 argument_list|(
 name|td
 argument_list|)
@@ -517,7 +517,7 @@ name|td
 argument_list|,
 name|threadqueue
 argument_list|,
-name|td_blkq
+name|td_lockq
 argument_list|)
 expr_stmt|;
 if|if
@@ -541,7 +541,7 @@ name|mtx_blocked
 argument_list|,
 name|td
 argument_list|,
-name|td_blkq
+name|td_lockq
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -550,7 +550,7 @@ argument|td1
 argument_list|,
 argument|&m->mtx_blocked
 argument_list|,
-argument|td_blkq
+argument|td_lockq
 argument_list|)
 block|{
 name|MPASS
@@ -587,7 +587,7 @@ name|td1
 argument_list|,
 name|td
 argument_list|,
-name|td_blkq
+name|td_lockq
 argument_list|)
 expr_stmt|;
 name|CTR4
@@ -2737,7 +2737,7 @@ name|mtx_blocked
 argument_list|,
 name|td
 argument_list|,
-name|td_blkq
+name|td_lockq
 argument_list|)
 expr_stmt|;
 block|}
@@ -2749,7 +2749,7 @@ argument|td1
 argument_list|,
 argument|&m->mtx_blocked
 argument_list|,
-argument|td_blkq
+argument|td_lockq
 argument_list|)
 if|if
 condition|(
@@ -2772,7 +2772,7 @@ name|td1
 argument_list|,
 name|td
 argument_list|,
-name|td_blkq
+name|td_lockq
 argument_list|)
 expr_stmt|;
 else|else
@@ -2785,7 +2785,7 @@ name|mtx_blocked
 argument_list|,
 name|td
 argument_list|,
-name|td_blkq
+name|td_lockq
 argument_list|)
 expr_stmt|;
 block|}
@@ -2849,7 +2849,7 @@ name|m
 expr_stmt|;
 name|td
 operator|->
-name|td_mtxname
+name|td_lockname
 operator|=
 name|m
 operator|->
@@ -2857,7 +2857,7 @@ name|mtx_object
 operator|.
 name|lo_name
 expr_stmt|;
-name|TD_SET_MUTEX
+name|TD_SET_LOCK
 argument_list|(
 name|td
 argument_list|)
@@ -3379,7 +3379,7 @@ name|mtx_blocked
 argument_list|,
 name|td1
 argument_list|,
-name|td_blkq
+name|td_lockq
 argument_list|)
 expr_stmt|;
 if|if
@@ -3528,7 +3528,7 @@ name|td_blocked
 operator|=
 name|NULL
 expr_stmt|;
-name|TD_CLR_MUTEX
+name|TD_CLR_LOCK
 argument_list|(
 name|td1
 argument_list|)
