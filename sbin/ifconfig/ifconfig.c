@@ -6547,12 +6547,17 @@ operator|&&
 operator|!
 name|p
 operator|&&
+ifdef|#
+directive|ifdef
+name|USE_IF_MEDIA
 name|afp
 operator|->
 name|af_status
 operator|!=
 name|media_status
 operator|&&
+endif|#
+directive|endif
 name|afp
 operator|->
 name|af_status
