@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2004 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2004-2005 Pawel Jakub Dawidek<pjd@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -36,14 +36,14 @@ value|"GEOM::CONCAT"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 1 - Initial version number.  * 2 - Added 'stop' command to gconcat(8).  * 3 - Added md_provider field to metadata and '-h' option to gconcat(8).  */
+comment|/*  * Version history:  * 1 - Initial version number.  * 2 - Added 'stop' command to gconcat(8).  * 3 - Added md_provider field to metadata and '-h' option to gconcat(8).  * 4 - Added md_provsize field to metadata.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|G_CONCAT_VERSION
-value|3
+value|4
 end_define
 
 begin_ifdef
@@ -205,6 +205,10 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* Hardcoded provider. */
+name|uint64_t
+name|md_provsize
+decl_stmt|;
+comment|/* Provider's size. */
 block|}
 struct|;
 end_struct
@@ -322,6 +326,17 @@ name|md_provider
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|le64enc
+argument_list|(
+name|data
+operator|+
+literal|60
+argument_list|,
+name|md
+operator|->
+name|md_provsize
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -436,6 +451,17 @@ name|md
 operator|->
 name|md_provider
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|md
+operator|->
+name|md_provsize
+operator|=
+name|le64dec
+argument_list|(
+name|data
+operator|+
+literal|60
 argument_list|)
 expr_stmt|;
 block|}

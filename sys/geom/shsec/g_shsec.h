@@ -36,14 +36,14 @@ value|"GEOM::SHSEC"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 0 - Initial version number.  */
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added md_provsize field to metadata.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|G_SHSEC_VERSION
-value|0
+value|1
 end_define
 
 begin_ifdef
@@ -177,6 +177,10 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* Hardcoded provider. */
+name|uint64_t
+name|md_provsize
+decl_stmt|;
+comment|/* Provider's size. */
 block|}
 struct|;
 end_struct
@@ -294,6 +298,17 @@ name|md_provider
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|le64enc
+argument_list|(
+name|data
+operator|+
+literal|60
+argument_list|,
+name|md
+operator|->
+name|md_provsize
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -408,6 +423,17 @@ name|md
 operator|->
 name|md_provider
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|md
+operator|->
+name|md_provsize
+operator|=
+name|le64dec
+argument_list|(
+name|data
+operator|+
+literal|60
 argument_list|)
 expr_stmt|;
 block|}

@@ -3447,6 +3447,24 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* 	 * Backward compatibility: 	 */
+comment|/* There was no md_provsize field in earlier versions of metadata. */
+if|if
+condition|(
+name|md
+operator|.
+name|md_version
+operator|<
+literal|1
+condition|)
+name|md
+operator|.
+name|md_provsize
+operator|=
+name|pp
+operator|->
+name|mediasize
+expr_stmt|;
 if|if
 condition|(
 name|md
@@ -3470,6 +3488,21 @@ name|name
 argument_list|)
 operator|!=
 literal|0
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
+name|md
+operator|.
+name|md_provsize
+operator|!=
+name|pp
+operator|->
+name|mediasize
 condition|)
 return|return
 operator|(
