@@ -99,7 +99,7 @@ name|prison
 modifier|*
 name|cr_prison
 decl_stmt|;
-comment|/* jail(4) */
+comment|/* jail(2) */
 define|#
 directive|define
 name|cr_endcopy

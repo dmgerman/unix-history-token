@@ -2942,23 +2942,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handy macro to determine if p1 can mangle p2. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PRISON_CHECK
-parameter_list|(
-name|p1
-parameter_list|,
-name|p2
-parameter_list|)
-define|\
-value|((p1)->p_prison == NULL || (p1)->p_prison == (p2)->p_prison)
-end_define
-
-begin_comment
 comment|/*  * We use process IDs<= PID_MAX; PID_MAX + 1 must also fit in a pid_t,  * as it is used to represent "no process group".  */
 end_comment
 
