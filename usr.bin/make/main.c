@@ -3432,6 +3432,9 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|int
+name|setMAKEFILE
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -3462,6 +3465,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|setMAKEFILE
+operator|=
+name|strcmp
+argument_list|(
+name|fname
+argument_list|,
+literal|".depend"
+argument_list|)
+expr_stmt|;
 comment|/* if we've chdir'd, rebuild the path name */
 if|if
 condition|(
@@ -3588,6 +3600,10 @@ expr_stmt|;
 comment|/* 		 * set the MAKEFILE variable desired by System V fans -- the 		 * placement of the setting here means it gets set to the last 		 * makefile specified, as it is set by SysV make. 		 */
 name|found
 label|:
+if|if
+condition|(
+name|setMAKEFILE
+condition|)
 name|Var_Set
 argument_list|(
 literal|"MAKEFILE"
