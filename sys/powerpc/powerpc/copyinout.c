@@ -766,7 +766,8 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|EFAULT
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -895,7 +896,8 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|EFAULT
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -984,7 +986,7 @@ decl_stmt|;
 name|faultbuf
 name|env
 decl_stmt|;
-name|char
+name|u_char
 modifier|*
 name|p
 decl_stmt|;
@@ -1012,7 +1014,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|(
@@ -1050,7 +1052,8 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|EFAULT
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1071,9 +1074,6 @@ argument_list|)
 expr_stmt|;
 name|val
 operator|=
-operator|(
-name|int
-operator|)
 operator|*
 name|p
 expr_stmt|;
@@ -1179,7 +1179,8 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|EFAULT
+operator|-
+literal|1
 operator|)
 return|;
 block|}
