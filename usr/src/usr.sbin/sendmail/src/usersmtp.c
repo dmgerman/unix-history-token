@@ -8,12 +8,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sysexits.h>
 end_include
 
@@ -39,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.16
+literal|3.17
 operator|%
 name|G
 operator|%
@@ -67,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.16
+literal|3.17
 operator|%
 name|G
 operator|%
@@ -276,19 +270,6 @@ operator|)
 return|;
 block|}
 end_if
-
-begin_expr_stmt
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|tick
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously. 	*/

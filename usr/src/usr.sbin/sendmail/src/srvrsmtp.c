@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.25
+literal|3.26
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.25
+literal|3.26
 operator|%
 name|G
 operator|%
@@ -449,16 +449,6 @@ argument_list|,
 name|HostName
 argument_list|,
 name|Version
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|tick
 argument_list|)
 expr_stmt|;
 for|for
