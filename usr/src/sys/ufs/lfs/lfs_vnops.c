@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	3.1	%H%	*/
+comment|/*	lfs_vnops.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"../h/stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/inline.h"
 end_include
 
 begin_comment
@@ -305,7 +311,7 @@ name|struct
 name|stat
 name|ds
 decl_stmt|;
-name|iupdat
+name|IUPDAT
 argument_list|(
 name|ip
 argument_list|,
