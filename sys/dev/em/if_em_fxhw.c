@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************    Copyright (c) 2001 Intel Corporation    All rights reserved.       Redistribution and use in source and binary forms of the Software, with or    without modification, are permitted provided that the following conditions    are met:        1. Redistributions of source code of the Software may retain the above        copyright notice, this list of conditions and the following disclaimer.        2. Redistributions in binary form of the Software may reproduce the above        copyright notice, this list of conditions and the following disclaimer        in the documentation and/or other materials provided with the        distribution.        3. Neither the name of the Intel Corporation nor the names of its        contributors shall be used to endorse or promote products derived from        this Software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF    SUCH DAMAGE.  *******************************************************************************/
+comment|/*******************************************************************************    Copyright (c) 2001-2002 Intel Corporation    All rights reserved.       Redistribution and use in source and binary forms of the Software, with or    without modification, are permitted provided that the following conditions    are met:        1. Redistributions of source code of the Software may retain the above        copyright notice, this list of conditions and the following disclaimer.        2. Redistributions in binary form of the Software may reproduce the above        copyright notice, this list of conditions and the following disclaimer        in the documentation and/or other materials provided with the        distribution.        3. Neither the name of the Intel Corporation nor the names of its        contributors shall be used to endorse or promote products derived from        this Software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE INTEL OR ITS CONTRIBUTORS BE LIABLE    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF    SUCH DAMAGE.  *******************************************************************************/
 end_comment
 
 begin_comment
@@ -42,7 +42,7 @@ modifier|*
 name|eecd_reg
 parameter_list|)
 block|{
-comment|/* Raise the clock input to the EEPROM (by setting the SK bit), and then      *  wait 50 microseconds.      */
+comment|/* Raise the clock input to the EEPROM (by setting the SK bit), and then      * wait 50 microseconds.      */
 operator|*
 name|eecd_reg
 operator|=
@@ -396,7 +396,7 @@ argument_list|,
 name|EECD
 argument_list|)
 expr_stmt|;
-comment|/*  Clear SK and DI  */
+comment|/* Clear SK and DI */
 name|eecd_reg
 operator|&=
 operator|~
@@ -415,7 +415,7 @@ argument_list|,
 name|eecd_reg
 argument_list|)
 expr_stmt|;
-comment|/*  Set CS  */
+comment|/* Set CS */
 name|eecd_reg
 operator||=
 name|E1000_EECD_CS
@@ -460,7 +460,7 @@ argument_list|,
 name|EECD
 argument_list|)
 expr_stmt|;
-comment|/*  Deselct EEPROM  */
+comment|/* Deselct EEPROM */
 name|eecd_reg
 operator|&=
 operator|~
@@ -484,7 +484,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-comment|/*  Clock high  */
+comment|/* Clock high */
 name|eecd_reg
 operator||=
 name|E1000_EECD_SK
@@ -503,7 +503,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-comment|/*  Select EEPROM  */
+comment|/* Select EEPROM */
 name|eecd_reg
 operator||=
 name|E1000_EECD_CS
@@ -522,7 +522,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-comment|/*  Clock low  */
+comment|/* Clock low */
 name|eecd_reg
 operator|&=
 operator|~
@@ -573,7 +573,7 @@ argument_list|,
 name|EECD
 argument_list|)
 expr_stmt|;
-comment|/*  Rising edge of clock  */
+comment|/* Rising edge of clock */
 name|eecd_reg
 operator||=
 name|E1000_EECD_SK
@@ -592,7 +592,7 @@ argument_list|(
 literal|50
 argument_list|)
 expr_stmt|;
-comment|/*  Falling edge of clock  */
+comment|/* Falling edge of clock */
 name|eecd_reg
 operator|&=
 operator|~
@@ -795,7 +795,6 @@ block|{
 case|case
 name|em_fc_none
 case|:
-comment|/* 0 */
 name|ctrl_reg
 operator|&=
 operator|(
@@ -811,7 +810,6 @@ break|break;
 case|case
 name|em_fc_rx_pause
 case|:
-comment|/* 1 */
 name|ctrl_reg
 operator|&=
 operator|(
@@ -827,7 +825,6 @@ break|break;
 case|case
 name|em_fc_tx_pause
 case|:
-comment|/* 2 */
 name|ctrl_reg
 operator|&=
 operator|(
@@ -843,7 +840,6 @@ break|break;
 case|case
 name|em_fc_full
 case|:
-comment|/* 3 */
 name|ctrl_reg
 operator||=
 operator|(
@@ -917,6 +913,9 @@ name|ctrl_reg
 decl_stmt|;
 endif|#
 directive|endif
+name|uint32_t
+name|ctrl_ext_reg
+decl_stmt|;
 name|uint32_t
 name|icr_reg
 decl_stmt|;
@@ -1026,7 +1025,7 @@ name|shared
 argument_list|,
 name|TCTL
 argument_list|,
-literal|0
+name|E1000_TCTL_PSP
 argument_list|)
 expr_stmt|;
 comment|/* The tbi_compatibility_on Flag must be cleared when Rctl is cleared. */
@@ -1087,6 +1086,34 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Force a reload from the EEPROM */
+name|ctrl_ext_reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|shared
+argument_list|,
+name|CTRL_EXT
+argument_list|)
+expr_stmt|;
+name|ctrl_ext_reg
+operator||=
+name|E1000_CTRL_EXT_EE_RST
+expr_stmt|;
+name|E1000_WRITE_REG
+argument_list|(
+name|shared
+argument_list|,
+name|CTRL_EXT
+argument_list|,
+name|ctrl_ext_reg
+argument_list|)
+expr_stmt|;
+name|msec_delay
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* Clear interrupt mask to stop board from generating interrupts */
 name|DEBUGOUT
 argument_list|(
@@ -1435,12 +1462,6 @@ argument_list|)
 expr_stmt|;
 name|shared
 operator|->
-name|large_eeprom
-operator|=
-name|FALSE
-expr_stmt|;
-name|shared
-operator|->
 name|low_profile
 operator|=
 name|FALSE
@@ -1454,18 +1475,14 @@ operator|==
 name|em_82544
 condition|)
 block|{
-name|i
-operator|=
+if|if
+condition|(
 name|em_read_eeprom
 argument_list|(
 name|shared
 argument_list|,
 name|E1000_EEPROM_LED_LOGIC
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
 operator|&
 name|E1000_EEPROM_SWDPIN0
 condition|)
@@ -2793,7 +2810,7 @@ condition|(
 name|shared
 operator|->
 name|mac_type
-operator|>=
+operator|==
 name|em_82543
 condition|)
 block|{
@@ -2813,7 +2830,7 @@ name|E1000_WRITE_REG
 argument_list|(
 name|shared
 argument_list|,
-name|CTRLEXT
+name|CTRL_EXT
 argument_list|,
 name|ctrl_ext_reg
 argument_list|)
@@ -2925,7 +2942,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* We need to set up the Receive Threshold high and low water         * marks as well as (optionally) enabling the transmission of XON frames.         */
+comment|/* We need to set up the Receive Threshold high and low water marks          * as well as (optionally) enabling the transmission of XON frames.          */
 if|if
 condition|(
 name|shared
@@ -3818,7 +3835,10 @@ case|:
 case|case
 name|M88E1000_I_PHY_ID
 case|:
-comment|/* We have a M88E1000 PHY and Auto-Neg is enabled.  If we                * have Si on board that is 82544 or newer, Auto                * Speed Detection takes care of MAC speed/duplex                * configuration.  So we only need to configure Collision                * Distance in the MAC.  Otherwise, we need to force                * speed/duplex on the MAC to the current PHY speed/duplex                * settings.                */
+case|case
+name|M88E1011_I_PHY_ID
+case|:
+comment|/* We have a M88E1000 PHY and Auto-Neg is enabled.  If we              * have Si on board that is 82544 or newer, Auto              * Speed Detection takes care of MAC speed/duplex              * configuration.  So we only need to configure Collision              * Distance in the MAC.  Otherwise, we need to force              * speed/duplex on the MAC to the current PHY speed/duplex              * settings.              */
 if|if
 condition|(
 name|shared
@@ -3846,7 +3866,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Read the Phy Specific Status register to get the                   * resolved speed/duplex settings.  Then call                   * em_config_mac_to_phy which will retrieve                   * PHY register information and configure the MAC to                   * equal the negotiated speed/duplex.                   */
+comment|/* Read the Phy Specific Status register to get the                  * resolved speed/duplex settings.  Then call                  * em_config_mac_to_phy which will retrieve                  * PHY register information and configure the MAC to                  * equal the negotiated speed/duplex.                  */
 name|phy_data
 operator|=
 name|em_read_phy_reg
@@ -3871,7 +3891,7 @@ name|phy_data
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Configure Flow Control now that Auto-Neg has completed.                * We need to first restore the users desired Flow                * Control setting since we may have had to re-autoneg                * with a different link partner.                */
+comment|/* Configure Flow Control now that Auto-Neg has completed.              * We need to first restore the users desired Flow              * Control setting since we may have had to re-autoneg              * with a different link partner.              */
 name|em_config_fc_after_link_up
 argument_list|(
 name|shared
@@ -4185,10 +4205,6 @@ block|}
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/* CheckForLink */
-end_comment
 
 begin_comment
 comment|/******************************************************************************  * Clears all hardware statistics counters.   *  * shared - Struct containing variables accessed by shared code  *****************************************************************************/
@@ -4934,6 +4950,12 @@ operator|->
 name|phy_id
 operator|==
 name|M88E1000_I_PHY_ID
+operator|||
+name|shared
+operator|->
+name|phy_id
+operator|==
+name|M88E1011_I_PHY_ID
 condition|)
 block|{
 comment|/* read the phy specific status register */
@@ -4981,7 +5003,6 @@ name|STATUS
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* DisplayMiiContents(Adapter, (uint8_t)Adapter->PhyAddress); */
 block|}
 endif|#
 directive|endif
@@ -5006,9 +5027,129 @@ name|uint16_t
 name|offset
 parameter_list|)
 block|{
+name|boolean_t
+name|large_eeprom
+init|=
+name|FALSE
+decl_stmt|;
 name|uint16_t
 name|data
 decl_stmt|;
+name|uint32_t
+name|eecd_reg
+decl_stmt|;
+name|uint32_t
+name|tmp
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|shared
+operator|->
+name|mac_type
+operator|>
+name|em_82544
+operator|)
+operator|&&
+operator|(
+name|E1000_READ_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|)
+operator|&
+name|E1000_EECD_SIZE
+operator|)
+condition|)
+name|large_eeprom
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* Request EEPROM Access */
+if|if
+condition|(
+name|shared
+operator|->
+name|mac_type
+operator|>
+name|em_82544
+condition|)
+block|{
+name|E1000_WRITE_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|E1000_EECD_REQ
+argument_list|)
+expr_stmt|;
+name|eecd_reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+operator|!
+operator|(
+name|eecd_reg
+operator|&
+name|E1000_EECD_GNT
+operator|)
+operator|)
+operator|&&
+operator|(
+name|tmp
+operator|<
+literal|100
+operator|)
+condition|)
+block|{
+name|tmp
+operator|++
+expr_stmt|;
+name|usec_delay
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|eecd_reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|eecd_reg
+operator|&
+name|E1000_EECD_GNT
+operator|)
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 comment|/*  Prepare the EEPROM for reading  */
 name|em_setup_eeprom
 argument_list|(
@@ -5028,8 +5169,6 @@ expr_stmt|;
 comment|/* If we have a 256 word EEPROM, there are 8 address bits      * if we have a 64 word EEPROM, there are 6 address bits      */
 if|if
 condition|(
-name|shared
-operator|->
 name|large_eeprom
 condition|)
 name|em_shift_out_bits
@@ -5051,7 +5190,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  Read the data  */
+comment|/* Read the data */
 name|data
 operator|=
 name|em_shift_in_bits
@@ -5059,10 +5198,31 @@ argument_list|(
 name|shared
 argument_list|)
 expr_stmt|;
-comment|/*  End this read operation  */
+comment|/* End this read operation */
 name|em_standby_eeprom
 argument_list|(
 name|shared
+argument_list|)
+expr_stmt|;
+comment|/* Stop requestiong EEPROM access */
+if|if
+condition|(
+name|shared
+operator|->
+name|mac_type
+operator|>
+name|em_82544
+condition|)
+name|E1000_WRITE_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -5230,13 +5390,133 @@ name|uint16_t
 name|data
 parameter_list|)
 block|{
-comment|/*  Prepare the EEPROM for writing  */
+name|boolean_t
+name|large_eeprom
+init|=
+name|FALSE
+decl_stmt|;
+name|uint32_t
+name|eecd_reg
+decl_stmt|;
+name|uint32_t
+name|tmp
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|shared
+operator|->
+name|mac_type
+operator|>
+name|em_82544
+operator|)
+operator|&&
+operator|(
+name|E1000_READ_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|)
+operator|&
+name|E1000_EECD_SIZE
+operator|)
+condition|)
+name|large_eeprom
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* Request EEPROM Access */
+if|if
+condition|(
+name|shared
+operator|->
+name|mac_type
+operator|>
+name|em_82544
+condition|)
+block|{
+name|E1000_WRITE_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+name|E1000_EECD_REQ
+argument_list|)
+expr_stmt|;
+name|eecd_reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+operator|!
+operator|(
+name|eecd_reg
+operator|&
+name|E1000_EECD_GNT
+operator|)
+operator|)
+operator|&&
+operator|(
+name|tmp
+operator|<
+literal|100
+operator|)
+condition|)
+block|{
+name|tmp
+operator|++
+expr_stmt|;
+name|usec_delay
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|eecd_reg
+operator|=
+name|E1000_READ_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|eecd_reg
+operator|&
+name|E1000_EECD_GNT
+operator|)
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+comment|/* Prepare the EEPROM for writing  */
 name|em_setup_eeprom
 argument_list|(
 name|shared
 argument_list|)
 expr_stmt|;
-comment|/*  Send the 9-bit EWEN (write enable) command to the EEPROM (5-bit opcode      *  plus 4-bit dummy).  This puts the EEPROM into write/erase mode.       */
+comment|/* Send the 9-bit (or 11-bit on large EEPROM) EWEN (write enable)       * command to the EEPROM (5-bit opcode plus 4/6-bit dummy).      * This puts the EEPROM into write/erase mode.       */
 name|em_shift_out_bits
 argument_list|(
 name|shared
@@ -5246,6 +5526,20 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|large_eeprom
+condition|)
+name|em_shift_out_bits
+argument_list|(
+name|shared
+argument_list|,
+literal|0
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+else|else
 name|em_shift_out_bits
 argument_list|(
 name|shared
@@ -5255,13 +5549,13 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  Prepare the EEPROM  */
+comment|/* Prepare the EEPROM */
 name|em_standby_eeprom
 argument_list|(
 name|shared
 argument_list|)
 expr_stmt|;
-comment|/*  Send the Write command (3-bit opcode + addr)  */
+comment|/* Send the Write command (3-bit opcode + addr) */
 name|em_shift_out_bits
 argument_list|(
 name|shared
@@ -5274,8 +5568,6 @@ expr_stmt|;
 comment|/* If we have a 256 word EEPROM, there are 8 address bits      * if we have a 64 word EEPROM, there are 6 address bits      */
 if|if
 condition|(
-name|shared
-operator|->
 name|large_eeprom
 condition|)
 name|em_shift_out_bits
@@ -5297,7 +5589,7 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  Send the data  */
+comment|/* Send the data */
 name|em_shift_out_bits
 argument_list|(
 name|shared
@@ -5312,13 +5604,13 @@ argument_list|(
 name|shared
 argument_list|)
 expr_stmt|;
-comment|/*  Recover from write  */
+comment|/* Recover from write */
 name|em_standby_eeprom
 argument_list|(
 name|shared
 argument_list|)
 expr_stmt|;
-comment|/* Send the 9-bit EWDS (write disable) command to the EEPROM (5-bit      * opcode plus 4-bit dummy).  This takes the EEPROM out of write/erase      * mode.      */
+comment|/* Send the 9-bit  (or 11-bit on large EEPROM) EWDS (write disable)       * command to the EEPROM (5-bit opcode plus 4/6-bit dummy).      * This takes the EEPROM out of write/erase mode.      */
 name|em_shift_out_bits
 argument_list|(
 name|shared
@@ -5328,6 +5620,20 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|large_eeprom
+condition|)
+name|em_shift_out_bits
+argument_list|(
+name|shared
+argument_list|,
+literal|0
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+else|else
 name|em_shift_out_bits
 argument_list|(
 name|shared
@@ -5337,10 +5643,31 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*  Done with writing  */
+comment|/* Done with writing */
 name|em_cleanup_eeprom
 argument_list|(
 name|shared
+argument_list|)
+expr_stmt|;
+comment|/* Stop requestiong EEPROM access */
+if|if
+condition|(
+name|shared
+operator|->
+name|mac_type
+operator|>
+name|em_82544
+condition|)
+name|E1000_WRITE_REG
+argument_list|(
+name|shared
+argument_list|,
+name|EECD
+argument_list|,
+operator|(
+name|uint32_t
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
