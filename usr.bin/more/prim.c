@@ -41,7 +41,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: prim.c,v 1.7 1999/05/30 18:06:58 hoek Exp $"
+literal|"$Id: prim.c,v 1.6.2.1 1999/07/28 06:09:52 hoek Exp $"
 decl_stmt|;
 end_decl_stmt
 
