@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.52 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2449,7 +2449,7 @@ name|chmod
 argument_list|(
 name|line
 argument_list|,
-name|DEFFILEMODE
+literal|0666
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2476,7 +2476,7 @@ name|chmod
 argument_list|(
 name|line
 argument_list|,
-name|DEFFILEMODE
+literal|0666
 argument_list|)
 expr_stmt|;
 operator|(
