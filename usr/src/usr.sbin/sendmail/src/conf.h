@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.117 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.118 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4650,7 +4650,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has initgroups(2) call */
+comment|/* has initgroups(3) call */
 end_comment
 
 begin_ifndef
@@ -4751,6 +4751,39 @@ end_define
 begin_comment
 comment|/* has seteuid(2) call& working saved uids */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASSETRLIMIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASSETRLIMIT
+value|1
+end_define
+
+begin_comment
+comment|/* has setrlimit(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
