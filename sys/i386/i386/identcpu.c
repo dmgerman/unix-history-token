@@ -317,14 +317,14 @@ name|I686_CPU
 argument_list|)
 if|if
 condition|(
-literal|0
-operator|==
 name|strcmp
 argument_list|(
 name|cpu_vendor
 argument_list|,
 literal|"GenuineIntel"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -528,18 +528,17 @@ block|}
 elseif|else
 if|if
 condition|(
-literal|0
-operator|==
 name|strcmp
 argument_list|(
 name|cpu_vendor
 argument_list|,
 literal|"AuthenticAMD"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|// values taken from AMD Processor Recognition
-comment|// http://www.amd.com/html/products/pcd/techdocs/appnotes/20734c.pdf
+comment|/* 		 * Values taken from AMD Processor Recognition 		 * http://www.amd.com/html/products/pcd/techdocs/appnotes/20734c.pdf 		 */
 name|cpu_model
 index|[
 literal|0
@@ -826,23 +825,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|==
 name|strcmp
 argument_list|(
 name|cpu_vendor
 argument_list|,
 literal|"GenuineIntel"
 argument_list|)
-operator|||
-literal|0
 operator|==
+literal|0
+operator|||
 name|strcmp
 argument_list|(
 name|cpu_vendor
 argument_list|,
 literal|"AuthenticAMD"
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|printf
