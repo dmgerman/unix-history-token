@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.16 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2116,8 +2116,8 @@ end_block
 begin_define
 define|#
 directive|define
-name|BUFPAGES
-value|(256*1024/NBPG)
+name|BUFSIZE
+value|(256*1024)
 end_define
 
 begin_comment
@@ -2157,9 +2157,7 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
-name|BUFPAGES
-operator|*
-name|NBPG
+name|BUFSIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2209,7 +2207,7 @@ name|ifd
 argument_list|,
 name|cp
 argument_list|,
-name|BUFSIZ
+name|BUFSIZE
 argument_list|)
 operator|)
 operator|>
