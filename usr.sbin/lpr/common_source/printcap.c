@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: printcap.c,v 1.3 1997/12/02 20:45:25 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1253,6 +1253,7 @@ name|pp
 operator|->
 name|tof
 operator|=
+operator|!
 name|capdb_getaltlog
 argument_list|(
 name|bp
