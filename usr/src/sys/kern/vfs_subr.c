@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.83 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.84 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -866,7 +866,6 @@ comment|/*  * Routines having to do with the management of the vnode table.  */
 end_comment
 
 begin_decl_stmt
-specifier|extern
 name|struct
 name|vnode
 modifier|*
@@ -875,6 +874,9 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|vfreet
+init|=
+operator|&
+name|vfreeh
 decl_stmt|;
 end_decl_stmt
 
@@ -2849,29 +2851,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|vfreeh
-operator|==
-name|NULLVP
-condition|)
-block|{
-comment|/* 		 * insert into empty list 		 */
-name|vfreeh
-operator|=
-name|vp
-expr_stmt|;
-name|vp
-operator|->
-name|v_freeb
-operator|=
-operator|&
-name|vfreeh
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * insert at tail of list 		 */
+comment|/* 	 * insert at tail of LRU list 	 */
 operator|*
 name|vfreet
 operator|=
@@ -2883,7 +2863,6 @@ name|v_freeb
 operator|=
 name|vfreet
 expr_stmt|;
-block|}
 name|vp
 operator|->
 name|v_freef
