@@ -3439,7 +3439,7 @@ name|dashutdown
 argument_list|,
 name|NULL
 argument_list|,
-name|SHUTDOWN_PRI_DEFAULT
+name|SHUTDOWN_PRI_FIRST
 argument_list|)
 operator|)
 operator|==
