@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.h	4.8	81/04/02	*/
+comment|/*	mem.h	4.9	81/04/03	*/
 end_comment
 
 begin_comment
@@ -265,13 +265,13 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 end_if
 
 begin_define
 define|#
 directive|define
-name|M730_CRD
+name|M7ZZ_CRD
 value|0x40000000
 end_define
 
@@ -282,7 +282,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M730_FTBPE
+name|M7ZZ_FTBPE
 value|0x20000000
 end_define
 
@@ -293,7 +293,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M730_ENACRD
+name|M7ZZ_ENACRD
 value|0x10000000
 end_define
 
@@ -304,7 +304,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M730_MME
+name|M7ZZ_MME
 value|0x08000000
 end_define
 
@@ -315,7 +315,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M730_DM
+name|M7ZZ_DM
 value|0x04000000
 end_define
 
@@ -326,7 +326,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M730_DISECC
+name|M7ZZ_DISECC
 value|0x02000000
 end_define
 
@@ -337,37 +337,37 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M730_INH
+name|M7ZZ_INH
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[1] = M730_MME)
+value|((mcr)->mc_reg[1] = M7ZZ_MME)
 end_define
 
 begin_define
 define|#
 directive|define
-name|M730_ENA
+name|M7ZZ_ENA
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[1] = (M730_MME|M730_ENACRD))
+value|((mcr)->mc_reg[1] = (M7ZZ_MME|M7ZZ_ENACRD))
 end_define
 
 begin_define
 define|#
 directive|define
-name|M730_ERR
+name|M7ZZ_ERR
 parameter_list|(
 name|mcr
 parameter_list|)
-value|((mcr)->mc_reg[1]& M730_CRD)
+value|((mcr)->mc_reg[1]& M7ZZ_CRD)
 end_define
 
 begin_define
 define|#
 directive|define
-name|M730_SYN
+name|M7ZZ_SYN
 parameter_list|(
 name|mcr
 parameter_list|)
@@ -377,7 +377,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|M730_ADDR
+name|M7ZZ_ADDR
 parameter_list|(
 name|mcr
 parameter_list|)

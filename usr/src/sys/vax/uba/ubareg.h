@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.21	81/03/21	*/
+comment|/*	ubareg.h	4.22	81/04/03	*/
 end_comment
 
 begin_comment
@@ -707,7 +707,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NBDP730
+name|NBDP7ZZ
 value|0
 end_define
 
@@ -735,7 +735,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NUBA730
+name|NUBA7ZZ
 value|1
 end_define
 
@@ -776,13 +776,13 @@ end_comment
 begin_if
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 end_if
 
 begin_define
 define|#
 directive|define
-name|UMEM730
+name|UMEM7ZZ
 value|((u_short *)(0xffe000))
 end_define
 

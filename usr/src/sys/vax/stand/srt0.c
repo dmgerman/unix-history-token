@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	4.7	81/03/22	*/
+comment|/*	srt0.c	4.8	81/04/03	*/
 end_comment
 
 begin_include
@@ -285,7 +285,7 @@ literal|0b
 operator|#
 literal|3
 name|is
-literal|730
+literal|7ZZ
 literal|5
 operator|:
 name|mtpr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	4.9	81/04/02	*/
+comment|/*	nexus.h	4.10	81/04/03	*/
 end_comment
 
 begin_comment
@@ -60,20 +60,20 @@ end_endif
 begin_if
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 end_if
 
 begin_define
 define|#
 directive|define
-name|NNEX730
+name|NNEX7ZZ
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|NEX730
+name|NEX7ZZ
 value|((struct nexus *)0xf20000)
 end_define
 

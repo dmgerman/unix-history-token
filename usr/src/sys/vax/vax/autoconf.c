@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.29	81/03/21	*/
+comment|/*	autoconf.c	4.30	81/04/03	*/
 end_comment
 
 begin_comment
@@ -1809,9 +1809,9 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|VAX730
+name|VAX7ZZ
 case|case
-name|VAX_730
+name|VAX_7ZZ
 case|:
 break|break;
 endif|#

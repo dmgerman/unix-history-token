@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.3	81/03/22	*/
+comment|/*	autoconf.c	4.4	81/04/03	*/
 end_comment
 
 begin_include
@@ -316,21 +316,21 @@ name|UTR
 parameter_list|(
 name|i
 parameter_list|)
-value|((struct uba_regs *)(NEX730+(i)))
+value|((struct uba_regs *)(NEX7ZZ+(i)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMA
-value|((caddr_t)UMEM730)
+value|((caddr_t)UMEM7ZZ)
 end_define
 
 begin_decl_stmt
 name|struct
 name|uba_regs
 modifier|*
-name|ubaddr730
+name|ubaddr7ZZ
 index|[]
 init|=
 block|{
@@ -344,7 +344,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|umaddr730
+name|umaddr7ZZ
 index|[]
 init|=
 block|{
@@ -487,15 +487,15 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|VAX_730
+name|VAX_7ZZ
 case|:
 name|ubaddr
 operator|=
-name|ubaddr730
+name|ubaddr7ZZ
 expr_stmt|;
 name|umaddr
 operator|=
-name|umaddr730
+name|umaddr7ZZ
 expr_stmt|;
 name|nmba
 operator|=
