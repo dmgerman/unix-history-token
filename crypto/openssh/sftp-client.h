@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.h,v 1.9 2002/02/13 00:59:23 djm Exp $ */
+comment|/* $OpenBSD: sftp-client.h,v 1.10 2002/06/23 09:30:14 deraadt Exp $ */
 end_comment
 
 begin_comment

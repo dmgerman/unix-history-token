@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kex.c,v 1.50 2002/05/15 15:47:49 mouring Exp $"
+literal|"$OpenBSD: kex.c,v 1.51 2002/06/24 14:55:38 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -870,9 +870,15 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|packet_get_char
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|packet_get_int
 argument_list|()
 expr_stmt|;

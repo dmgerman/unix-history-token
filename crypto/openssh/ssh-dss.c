@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-dss.c,v 1.14 2002/02/28 15:46:33 markus Exp $"
+literal|"$OpenBSD: ssh-dss.c,v 1.15 2002/06/23 03:30:17 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -282,7 +282,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"bad sig size %d %d"
+literal|"bad sig size %u %u"
 argument_list|,
 name|rlen
 argument_list|,
@@ -716,7 +716,7 @@ condition|)
 block|{
 name|fatal
 argument_list|(
-literal|"bad sigbloblen %d != SIGBLOB_LEN"
+literal|"bad sigbloblen %u != SIGBLOB_LEN"
 argument_list|,
 name|len
 argument_list|)

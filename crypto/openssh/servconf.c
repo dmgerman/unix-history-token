@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: servconf.c,v 1.111 2002/06/20 23:05:55 markus Exp $"
+literal|"$OpenBSD: servconf.c,v 1.112 2002/06/23 09:46:51 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1543,13 +1543,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|HAVE_MMAP
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|MAP_ANON
+name|HAVE_MMAP_ANON_SHARED
 argument_list|)
 if|if
 condition|(
@@ -2432,7 +2426,7 @@ argument_list|,
 sizeof|sizeof
 name|strport
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|port
 argument_list|)
@@ -2548,14 +2542,13 @@ modifier|*
 name|intptr
 decl_stmt|,
 name|value
-decl_stmt|;
-name|ServerOpCodes
-name|opcode
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|,
 name|n
+decl_stmt|;
+name|ServerOpCodes
+name|opcode
 decl_stmt|;
 name|cp
 operator|=
@@ -4932,9 +4925,12 @@ modifier|*
 name|filename
 parameter_list|)
 block|{
-name|FILE
-modifier|*
-name|f
+name|int
+name|linenum
+decl_stmt|,
+name|bad_options
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|line
@@ -4942,13 +4938,9 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|int
-name|linenum
-decl_stmt|;
-name|int
-name|bad_options
-init|=
-literal|0
+name|FILE
+modifier|*
+name|f
 decl_stmt|;
 name|f
 operator|=

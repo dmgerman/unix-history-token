@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: channels.c,v 1.175 2002/06/10 22:28:41 markus Exp $"
+literal|"$OpenBSD: channels.c,v 1.179 2002/06/26 08:55:02 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -632,10 +632,10 @@ parameter_list|,
 name|int
 name|efd
 parameter_list|,
-name|int
+name|u_int
 name|window
 parameter_list|,
-name|int
+name|u_int
 name|maxpack
 parameter_list|,
 name|int
@@ -773,6 +773,20 @@ expr_stmt|;
 name|channels_alloc
 operator|+=
 literal|10
+expr_stmt|;
+if|if
+condition|(
+name|channels_alloc
+operator|>
+literal|10000
+condition|)
+name|fatal
+argument_list|(
+literal|"channel_new: internal error: channels_alloc %d "
+literal|"too big."
+argument_list|,
+name|channels_alloc
+argument_list|)
 expr_stmt|;
 name|debug2
 argument_list|(
@@ -7621,14 +7635,15 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|len
-decl_stmt|,
-name|i
-decl_stmt|;
 name|Channel
 modifier|*
 name|c
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|u_int
+name|len
 decl_stmt|;
 for|for
 control|(
@@ -7983,7 +7998,7 @@ condition|)
 block|{
 name|debug2
 argument_list|(
-literal|"channel %d: rwin %d elen %d euse %d"
+literal|"channel %d: rwin %u elen %u euse %d"
 argument_list|,
 name|c
 operator|->
@@ -8305,15 +8320,14 @@ block|{
 name|int
 name|id
 decl_stmt|;
-name|int
-name|tcode
-decl_stmt|;
 name|char
 modifier|*
 name|data
 decl_stmt|;
 name|u_int
 name|data_len
+decl_stmt|,
+name|tcode
 decl_stmt|;
 name|Channel
 modifier|*
@@ -8967,7 +8981,7 @@ expr_stmt|;
 block|}
 name|debug
 argument_list|(
-literal|"channel %d: open confirm rwindow %d rmax %d"
+literal|"channel %d: open confirm rwindow %u rmax %u"
 argument_list|,
 name|c
 operator|->
@@ -9217,7 +9231,8 @@ name|c
 decl_stmt|;
 name|int
 name|id
-decl_stmt|,
+decl_stmt|;
+name|u_int
 name|adjust
 decl_stmt|;
 if|if
@@ -9272,7 +9287,7 @@ argument_list|()
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"channel %d: rcvd adjust %d"
+literal|"channel %d: rcvd adjust %u"
 argument_list|,
 name|id
 argument_list|,
@@ -11004,7 +11019,7 @@ comment|/* -- X11 forwarding */
 end_comment
 
 begin_comment
-comment|/*  * Creates an internet domain socket for listening for X11 connections.  * Returns a suitable display number for the DISPLAY variable, or -1 if  * an error occurs.  */
+comment|/*  * Creates an internet domain socket for listening for X11 connections.  * Returns 0 and a suitable display number for the DISPLAY variable  * stored in display_numberp , or -1 if an error occurs.  */
 end_comment
 
 begin_function
@@ -11019,6 +11034,10 @@ name|x11_use_localhost
 parameter_list|,
 name|int
 name|single_connection
+parameter_list|,
+name|u_int
+modifier|*
+name|display_numberp
 parameter_list|)
 block|{
 name|Channel
@@ -11569,8 +11588,15 @@ name|single_connection
 expr_stmt|;
 block|}
 comment|/* Return the display number for the DISPLAY environment variable. */
-return|return
+operator|*
+name|display_numberp
+operator|=
 name|display_number
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 end_function

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-chall.c,v 1.18 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: auth2-chall.c,v 1.19 2002/06/26 13:55:37 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -197,6 +197,9 @@ name|KbdintDevice
 modifier|*
 name|device
 decl_stmt|;
+name|u_int
+name|nreq
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -372,6 +375,12 @@ operator|->
 name|device
 operator|=
 name|NULL
+expr_stmt|;
+name|kbdintctxt
+operator|->
+name|nreq
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|kbdintctxt
@@ -937,8 +946,6 @@ name|int
 name|i
 decl_stmt|;
 name|u_int
-name|numprompts
-decl_stmt|,
 modifier|*
 name|echo_on
 decl_stmt|;
@@ -967,7 +974,9 @@ operator|&
 name|instr
 argument_list|,
 operator|&
-name|numprompts
+name|kbdintctxt
+operator|->
+name|nreq
 argument_list|,
 operator|&
 name|prompts
@@ -1002,7 +1011,9 @@ expr_stmt|;
 comment|/* language not used */
 name|packet_put_int
 argument_list|(
-name|numprompts
+name|kbdintctxt
+operator|->
+name|nreq
 argument_list|)
 expr_stmt|;
 for|for
@@ -1013,7 +1024,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|numprompts
+name|kbdintctxt
+operator|->
+name|nreq
 condition|;
 name|i
 operator|++
@@ -1050,7 +1063,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|numprompts
+name|kbdintctxt
+operator|->
+name|nreq
 condition|;
 name|i
 operator|++
@@ -1197,6 +1212,30 @@ name|nresp
 operator|=
 name|packet_get_int
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|nresp
+operator|!=
+name|kbdintctxt
+operator|->
+name|nreq
+condition|)
+name|fatal
+argument_list|(
+literal|"input_userauth_info_response: wrong number of replies"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nresp
+operator|>
+literal|100
+condition|)
+name|fatal
+argument_list|(
+literal|"input_userauth_info_response: too many replies"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

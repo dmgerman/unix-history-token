@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfile.c,v 1.49 2002/05/23 19:24:30 markus Exp $"
+literal|"$OpenBSD: authfile.c,v 1.50 2002/06/24 14:55:38 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1198,6 +1198,9 @@ argument_list|)
 expr_stmt|;
 comment|/* reserved */
 comment|/* Read the public key from the buffer. */
+operator|(
+name|void
+operator|)
 name|buffer_get_int
 argument_list|(
 operator|&
@@ -1602,6 +1605,9 @@ argument_list|)
 expr_stmt|;
 comment|/* Reserved data. */
 comment|/* Read the public key from the buffer. */
+operator|(
+name|void
+operator|)
 name|buffer_get_int
 argument_list|(
 operator|&

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: authfd.c,v 1.55 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: authfd.c,v 1.56 2002/06/25 16:22:42 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -546,10 +546,6 @@ name|buffer_append
 argument_list|(
 name|reply
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
 argument_list|,
 name|l

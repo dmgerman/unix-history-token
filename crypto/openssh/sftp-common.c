@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-common.c,v 1.5 2001/12/02 02:08:32 deraadt Exp $"
+literal|"$OpenBSD: sftp-common.c,v 1.6 2002/06/23 09:30:14 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.95 2002/06/19 18:01:00 markus Exp $"
+literal|"$OpenBSD: packet.c,v 1.96 2002/06/23 21:10:02 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4432,7 +4432,7 @@ modifier|*
 name|seqnr_p
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|reason
 decl_stmt|,
 name|seqnr
@@ -4540,7 +4540,7 @@ argument_list|)
 expr_stmt|;
 name|log
 argument_list|(
-literal|"Received disconnect from %s: %d: %.400s"
+literal|"Received disconnect from %s: %u: %.400s"
 argument_list|,
 name|get_remote_ipaddr
 argument_list|()
@@ -4569,7 +4569,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"Received SSH2_MSG_UNIMPLEMENTED for %d"
+literal|"Received SSH2_MSG_UNIMPLEMENTED for %u"
 argument_list|,
 name|seqnr
 argument_list|)

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-rsa.c,v 1.20 2002/06/10 16:53:06 stevesk Exp $"
+literal|"$OpenBSD: ssh-rsa.c,v 1.21 2002/06/23 03:30:17 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -336,7 +336,7 @@ name|len
 decl_stmt|;
 name|debug
 argument_list|(
-literal|"slen %d> len %d"
+literal|"slen %u> len %u"
 argument_list|,
 name|slen
 argument_list|,
@@ -374,7 +374,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"ssh_rsa_sign: slen %d slen2 %d"
+literal|"ssh_rsa_sign: slen %u slen2 %u"
 argument_list|,
 name|slen
 argument_list|,
@@ -751,7 +751,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"ssh_rsa_verify: len %d> modlen %d"
+literal|"ssh_rsa_verify: len %u> modlen %u"
 argument_list|,
 name|len
 argument_list|,
@@ -785,7 +785,7 @@ name|len
 decl_stmt|;
 name|debug
 argument_list|(
-literal|"ssh_rsa_verify: add padding: modlen %d> len %d"
+literal|"ssh_rsa_verify: add padding: modlen %u> len %u"
 argument_list|,
 name|modlen
 argument_list|,

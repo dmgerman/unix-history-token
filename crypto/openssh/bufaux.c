@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.25 2002/04/20 09:14:58 markus Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.27 2002/06/26 08:53:12 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -236,6 +236,21 @@ literal|7
 operator|)
 operator|/
 literal|8
+expr_stmt|;
+if|if
+condition|(
+name|bytes
+operator|>
+literal|8
+operator|*
+literal|1024
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_get_bignum: cannot handle BN of size %d"
+argument_list|,
+name|bytes
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -468,6 +483,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX does not handle negative BNs */
+end_comment
+
 begin_function
 name|void
 name|buffer_get_bignum2
@@ -481,8 +500,7 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-comment|/**XXX should be two's-complement */
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|u_char
@@ -493,14 +511,25 @@ name|buffer_get_string
 argument_list|(
 name|buffer
 argument_list|,
-operator|(
-name|u_int
-operator|*
-operator|)
 operator|&
 name|len
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|>
+literal|8
+operator|*
+literal|1024
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_get_bignum2: cannot handle BN of size %d"
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 name|BN_bin2bn
 argument_list|(
 name|bin
@@ -788,12 +817,12 @@ modifier|*
 name|length_ptr
 parameter_list|)
 block|{
-name|u_int
-name|len
-decl_stmt|;
 name|u_char
 modifier|*
 name|value
+decl_stmt|;
+name|u_int
+name|len
 decl_stmt|;
 comment|/* Get the length. */
 name|len

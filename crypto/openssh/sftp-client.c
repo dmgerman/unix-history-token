@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.32 2002/06/09 13:32:01 markus Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.33 2002/06/23 09:30:14 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -321,7 +321,7 @@ literal|1024
 condition|)
 name|fatal
 argument_list|(
-literal|"Received message too long %d"
+literal|"Received message too long %u"
 argument_list|,
 name|msg_len
 argument_list|)
@@ -465,7 +465,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Sent message fd %d T:%d I:%d"
+literal|"Sent message fd %d T:%u I:%u"
 argument_list|,
 name|fd
 argument_list|,
@@ -562,7 +562,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Sent message fd %d T:%d I:%d"
+literal|"Sent message fd %d T:%u I:%u"
 argument_list|,
 name|fd
 argument_list|,
@@ -588,7 +588,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
-name|int
+name|u_int
 name|expected_id
 parameter_list|)
 block|{
@@ -640,7 +640,7 @@ name|expected_id
 condition|)
 name|fatal
 argument_list|(
-literal|"ID mismatch (%d != %d)"
+literal|"ID mismatch (%u != %u)"
 argument_list|,
 name|id
 argument_list|,
@@ -655,7 +655,7 @@ name|SSH2_FXP_STATUS
 condition|)
 name|fatal
 argument_list|(
-literal|"Expected SSH2_FXP_STATUS(%d) packet, got %d"
+literal|"Expected SSH2_FXP_STATUS(%u) packet, got %u"
 argument_list|,
 name|SSH2_FXP_STATUS
 argument_list|,
@@ -678,7 +678,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"SSH2_FXP_STATUS %d"
+literal|"SSH2_FXP_STATUS %u"
 argument_list|,
 name|status
 argument_list|)
@@ -758,7 +758,7 @@ name|expected_id
 condition|)
 name|fatal
 argument_list|(
-literal|"ID mismatch (%d != %d)"
+literal|"ID mismatch (%u != %u)"
 argument_list|,
 name|id
 argument_list|,
@@ -806,7 +806,7 @@ name|SSH2_FXP_HANDLE
 condition|)
 name|fatal
 argument_list|(
-literal|"Expected SSH2_FXP_HANDLE(%d) packet, got %d"
+literal|"Expected SSH2_FXP_HANDLE(%u) packet, got %u"
 argument_list|,
 name|SSH2_FXP_HANDLE
 argument_list|,
@@ -897,7 +897,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Received stat reply T:%d I:%d"
+literal|"Received stat reply T:%u I:%u"
 argument_list|,
 name|type
 argument_list|,
@@ -912,7 +912,7 @@ name|expected_id
 condition|)
 name|fatal
 argument_list|(
-literal|"ID mismatch (%d != %d)"
+literal|"ID mismatch (%u != %u)"
 argument_list|,
 name|id
 argument_list|,
@@ -976,7 +976,7 @@ condition|)
 block|{
 name|fatal
 argument_list|(
-literal|"Expected SSH2_FXP_ATTRS(%d) packet, got %d"
+literal|"Expected SSH2_FXP_ATTRS(%u) packet, got %u"
 argument_list|,
 name|SSH2_FXP_ATTRS
 argument_list|,
@@ -1025,9 +1025,10 @@ name|u_int
 name|num_requests
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|type
-decl_stmt|,
+decl_stmt|;
+name|int
 name|version
 decl_stmt|;
 name|Buffer
@@ -1100,7 +1101,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Invalid packet back from SSH2_FXP_INIT (type %d)"
+literal|"Invalid packet back from SSH2_FXP_INIT (type %u)"
 argument_list|,
 name|type
 argument_list|)
@@ -1363,7 +1364,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Sent message SSH2_FXP_CLOSE I:%d"
+literal|"Sent message SSH2_FXP_CLOSE I:%u"
 argument_list|,
 name|id
 argument_list|)
@@ -1587,7 +1588,7 @@ operator|++
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Sending SSH2_FXP_READDIR I:%d"
+literal|"Sending SSH2_FXP_READDIR I:%u"
 argument_list|,
 name|id
 argument_list|)
@@ -1668,7 +1669,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Received reply T:%d I:%d"
+literal|"Received reply T:%u I:%u"
 argument_list|,
 name|type
 argument_list|,
@@ -1683,7 +1684,7 @@ name|expected_id
 condition|)
 name|fatal
 argument_list|(
-literal|"ID mismatch (%d != %d)"
+literal|"ID mismatch (%u != %u)"
 argument_list|,
 name|id
 argument_list|,
@@ -1759,7 +1760,7 @@ name|SSH2_FXP_NAME
 condition|)
 name|fatal
 argument_list|(
-literal|"Expected SSH2_FXP_NAME(%d) packet, got %d"
+literal|"Expected SSH2_FXP_NAME(%u) packet, got %u"
 argument_list|,
 name|SSH2_FXP_NAME
 argument_list|,
@@ -2896,7 +2897,7 @@ name|expected_id
 condition|)
 name|fatal
 argument_list|(
-literal|"ID mismatch (%d != %d)"
+literal|"ID mismatch (%u != %u)"
 argument_list|,
 name|id
 argument_list|,
@@ -2944,7 +2945,7 @@ name|SSH2_FXP_NAME
 condition|)
 name|fatal
 argument_list|(
-literal|"Expected SSH2_FXP_NAME(%d) packet, got %d"
+literal|"Expected SSH2_FXP_NAME(%u) packet, got %u"
 argument_list|,
 name|SSH2_FXP_NAME
 argument_list|,
@@ -3425,7 +3426,7 @@ name|expected_id
 condition|)
 name|fatal
 argument_list|(
-literal|"ID mismatch (%d != %d)"
+literal|"ID mismatch (%u != %u)"
 argument_list|,
 name|id
 argument_list|,
@@ -3473,7 +3474,7 @@ name|SSH2_FXP_NAME
 condition|)
 name|fatal
 argument_list|(
-literal|"Expected SSH2_FXP_NAME(%d) packet, got %d"
+literal|"Expected SSH2_FXP_NAME(%u) packet, got %u"
 argument_list|,
 name|SSH2_FXP_NAME
 argument_list|,
@@ -3942,7 +3943,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Sent message SSH2_FXP_OPEN I:%d P:%s"
+literal|"Sent message SSH2_FXP_OPEN I:%u P:%s"
 argument_list|,
 name|id
 argument_list|,
@@ -4213,7 +4214,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Received reply T:%d I:%d R:%d"
+literal|"Received reply T:%u I:%u R:%d"
 argument_list|,
 name|type
 argument_list|,
@@ -4367,7 +4368,7 @@ condition|)
 name|fatal
 argument_list|(
 literal|"Received more data than asked for "
-literal|"%d> %d"
+literal|"%u> %u"
 argument_list|,
 name|len
 argument_list|,
@@ -4615,7 +4616,7 @@ break|break;
 default|default:
 name|fatal
 argument_list|(
-literal|"Expected SSH2_FXP_DATA(%d) packet, got %d"
+literal|"Expected SSH2_FXP_DATA(%u) packet, got %u"
 argument_list|,
 name|SSH2_FXP_DATA
 argument_list|,
@@ -5156,7 +5157,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Sent message SSH2_FXP_OPEN I:%d P:%s"
+literal|"Sent message SSH2_FXP_OPEN I:%u P:%s"
 argument_list|,
 name|id
 argument_list|,
@@ -5404,7 +5405,7 @@ argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
-literal|"Sent message SSH2_FXP_WRITE I:%d O:%llu S:%u"
+literal|"Sent message SSH2_FXP_WRITE I:%u O:%llu S:%u"
 argument_list|,
 name|id
 argument_list|,
@@ -5568,7 +5569,7 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"Can't find request for ID %d"
+literal|"Can't find request for ID %u"
 argument_list|,
 name|r_id
 argument_list|)
@@ -5622,7 +5623,7 @@ goto|;
 block|}
 name|debug3
 argument_list|(
-literal|"In write loop, ack for %u %d bytes at %llu"
+literal|"In write loop, ack for %u %u bytes at %llu"
 argument_list|,
 name|ack
 operator|->

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect2.c,v 1.104 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: sshconnect2.c,v 1.105 2002/06/23 03:30:17 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1803,7 +1803,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"input_userauth_pk_ok: pkalg %s blen %d lastkey %p hint %d"
+literal|"input_userauth_pk_ok: pkalg %s blen %u lastkey %p hint %d"
 argument_list|,
 name|pkalg
 argument_list|,

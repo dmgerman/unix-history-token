@@ -296,17 +296,9 @@ name|mmalloc
 operator|=
 name|mmalloc
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_MMAP
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|MAP_ANON
-argument_list|)
+ifdef|#
+directive|ifdef
+name|HAVE_MMAP_ANON_SHARED
 name|address
 operator|=
 name|mmap
@@ -354,7 +346,7 @@ else|#
 directive|else
 name|fatal
 argument_list|(
-literal|"%s: UsePrivilegeSeparation=yes not supported"
+literal|"%s: UsePrivilegeSeparation=yes and Compression=yes not supported"
 argument_list|,
 name|__func__
 argument_list|)
@@ -538,7 +530,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|HAVE_MMAP
+name|HAVE_MMAP_ANON_SHARED
 if|if
 condition|(
 name|munmap
@@ -580,7 +572,7 @@ else|#
 directive|else
 name|fatal
 argument_list|(
-literal|"%s: UsePrivilegeSeparation=yes not supported"
+literal|"%s: UsePrivilegeSeparation=yes and Compression=yes not supported"
 argument_list|,
 name|__func__
 argument_list|)

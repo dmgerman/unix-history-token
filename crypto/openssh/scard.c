@@ -26,7 +26,7 @@ end_if
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scard.c,v 1.25 2002/03/26 18:46:59 rees Exp $"
+literal|"$OpenBSD: scard.c,v 1.26 2002/06/23 03:30:17 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -916,7 +916,7 @@ argument_list|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"fingerprint %d %s"
+literal|"fingerprint %u %s"
 argument_list|,
 name|key_size
 argument_list|(

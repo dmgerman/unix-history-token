@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-server.c,v 1.35 2002/06/06 17:30:11 markus Exp $"
+literal|"$OpenBSD: sftp-server.c,v 1.37 2002/06/24 17:57:20 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1115,7 +1115,7 @@ block|}
 decl_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent status id %d error %d"
+literal|"sent status id %u error %u"
 argument_list|,
 name|id
 argument_list|,
@@ -1286,7 +1286,7 @@ parameter_list|)
 block|{
 name|TRACE
 argument_list|(
-literal|"sent data id %d len %d"
+literal|"sent data id %u len %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1339,7 +1339,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent handle id %d handle %d"
+literal|"sent handle id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1419,7 +1419,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent names id %d count %d"
+literal|"sent names id %u count %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1514,7 +1514,7 @@ name|msg
 decl_stmt|;
 name|TRACE
 argument_list|(
-literal|"sent attrib id %d have 0x%x"
+literal|"sent attrib id %u have 0x%x"
 argument_list|,
 name|id
 argument_list|,
@@ -1714,7 +1714,7 @@ literal|0666
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"open id %d name %s flags %d mode 0%o"
+literal|"open id %u name %s flags %d mode 0%o"
 argument_list|,
 name|id
 argument_list|,
@@ -1850,7 +1850,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"close id %d handle %d"
+literal|"close id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -1947,7 +1947,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"read id %d handle %d off %llu len %d"
+literal|"read id %u handle %d off %llu len %d"
 argument_list|,
 name|id
 argument_list|,
@@ -2155,7 +2155,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"write id %d handle %d off %llu len %d"
+literal|"write id %u handle %d off %llu len %d"
 argument_list|,
 name|id
 argument_list|,
@@ -2327,7 +2327,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"%sstat id %d name %s"
+literal|"%sstat id %u name %s"
 argument_list|,
 name|do_lstat
 condition|?
@@ -2493,7 +2493,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"fstat id %d handle %d"
+literal|"fstat id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -2666,12 +2666,11 @@ modifier|*
 name|name
 decl_stmt|;
 name|int
-name|ret
-decl_stmt|;
-name|int
 name|status
 init|=
 name|SSH2_FX_OK
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|id
 operator|=
@@ -2692,7 +2691,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"setstat id %d name %s"
+literal|"setstat id %u name %s"
 argument_list|,
 name|id
 argument_list|,
@@ -2909,7 +2908,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"fsetstat id %d handle %d"
+literal|"fsetstat id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -3209,7 +3208,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"opendir id %d path %s"
+literal|"opendir id %u path %s"
 argument_list|,
 name|id
 argument_list|,
@@ -3439,8 +3438,11 @@ argument_list|,
 sizeof|sizeof
 name|ubuf
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|st
 operator|->
 name|st_uid
@@ -3483,8 +3485,11 @@ argument_list|,
 sizeof|sizeof
 name|gbuf
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|st
 operator|->
 name|st_gid
@@ -3675,7 +3680,7 @@ argument_list|()
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"readdir id %d handle %d"
+literal|"readdir id %u handle %d"
 argument_list|,
 name|id
 argument_list|,
@@ -4003,7 +4008,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"remove id %d name %s"
+literal|"remove id %u name %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4113,7 +4118,7 @@ literal|0777
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"mkdir id %d name %s mode 0%o"
+literal|"mkdir id %u name %s mode 0%o"
 argument_list|,
 name|id
 argument_list|,
@@ -4196,7 +4201,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"rmdir id %d name %s"
+literal|"rmdir id %u name %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4299,7 +4304,7 @@ expr_stmt|;
 block|}
 name|TRACE
 argument_list|(
-literal|"realpath id %d path %s"
+literal|"realpath id %u path %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4421,7 +4426,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"rename id %d old %s new %s"
+literal|"rename id %u old %s new %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4529,7 +4534,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"readlink id %d path %s"
+literal|"readlink id %u path %s"
 argument_list|,
 name|id
 argument_list|,
@@ -4668,7 +4673,7 @@ argument_list|)
 expr_stmt|;
 name|TRACE
 argument_list|(
-literal|"symlink id %d old %s new %s"
+literal|"symlink id %u old %s new %s"
 argument_list|,
 name|id
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.138 2002/06/12 16:57:15 mouring Exp $ */
+comment|/* $Id: acconfig.h,v 1.141 2002/06/25 22:35:16 tim Exp $ */
 end_comment
 
 begin_ifndef
@@ -345,10 +345,6 @@ comment|/* Define if xauth is found in your path */
 undef|#
 directive|undef
 name|XAUTH_PATH
-comment|/* Define if rsh is found in your path */
-undef|#
-directive|undef
-name|RSH_PATH
 comment|/* Define if you want to allow MD5 passwords */
 undef|#
 directive|undef
@@ -546,6 +542,14 @@ comment|/* Path that unprivileged child will chroot() to in privep mode */
 undef|#
 directive|undef
 name|PRIVSEP_PATH
+comment|/* Define if you have the `mmap' function that supports MAP_ANON|SHARED */
+undef|#
+directive|undef
+name|HAVE_MMAP_ANON_SHARED
+comment|/* Define if sendmsg()/recvmsg() has problems passing file descriptors */
+undef|#
+directive|undef
+name|BROKEN_FD_PASSING
 expr|@
 name|BOTTOM
 expr|@
