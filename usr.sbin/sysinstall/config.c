@@ -2526,7 +2526,7 @@ argument_list|)
 condition|)
 name|write_root_xprofile
 argument_list|(
-literal|"gnome-session&\nexec enlightenment\n"
+literal|"exec gnome-session\n"
 argument_list|)
 expr_stmt|;
 block|}
