@@ -15,7 +15,7 @@ operator|)
 name|stab
 operator|.
 name|c
-literal|3.11
+literal|3.12
 operator|%
 name|G
 operator|%
@@ -258,7 +258,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"type %d val %x\n"
+literal|"type %d val %lx\n"
 argument_list|,
 name|s
 operator|->

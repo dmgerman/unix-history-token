@@ -51,7 +51,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.73
+literal|3.74
 operator|%
 name|G
 operator|%
@@ -1241,19 +1241,6 @@ block|}
 block|}
 comment|/* 		**  Address is verified -- add this user to mailer 		**  argv, and add it to the print list of recipients. 		*/
 comment|/* link together the chain of recipients */
-if|if
-condition|(
-operator|!
-name|bitset
-argument_list|(
-name|QDONTSEND
-argument_list|,
-name|to
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-block|{
 name|to
 operator|->
 name|q_tchain
@@ -1264,7 +1251,6 @@ name|tochain
 operator|=
 name|to
 expr_stmt|;
-block|}
 comment|/* create list of users for error messages */
 if|if
 condition|(

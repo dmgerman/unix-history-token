@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.71
+literal|3.72
 operator|%
 name|G
 operator|%
@@ -1265,7 +1265,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"mailer %d: %s %s %o %s\n"
+literal|"mailer %d: %s %s %lo %s\n"
 argument_list|,
 name|i
 argument_list|,

@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.21
+literal|3.22
 operator|%
 name|G
 operator|%
@@ -712,7 +712,7 @@ name|s
 operator|->
 name|s_class
 operator||=
-literal|1
+literal|1L
 operator|<<
 name|class
 expr_stmt|;
@@ -888,7 +888,7 @@ name|s
 operator|->
 name|s_class
 operator||=
-literal|1
+literal|1L
 operator|<<
 name|class
 expr_stmt|;
@@ -1441,7 +1441,7 @@ name|char
 name|opt_name
 decl_stmt|;
 comment|/* external name of option */
-name|int
+name|u_long
 name|opt_value
 decl_stmt|;
 comment|/* internal name of option */
