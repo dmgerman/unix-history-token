@@ -607,7 +607,7 @@ literal|"S,MCA"
 expr_stmt|;
 name|oidp
 operator|->
-name|descr
+name|oid_descr
 operator|=
 literal|"Error record"
 expr_stmt|;
