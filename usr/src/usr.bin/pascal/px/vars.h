@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.3 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.4 %G%"; */
 end_comment
 
 begin_include
@@ -417,6 +417,10 @@ name|long
 name|nargs
 decl_stmt|;
 comment|/* number of bytes of arguments */
+name|short
+name|tests
+decl_stmt|;
+comment|/* TRUE => perform runtime tests */
 name|short
 name|offset
 decl_stmt|;
