@@ -358,9 +358,7 @@ begin_decl_stmt
 name|char
 name|old_filename
 index|[
-name|MAXPATHLEN
-operator|+
-literal|1
+name|PATH_MAX
 index|]
 init|=
 literal|""
@@ -4506,10 +4504,10 @@ elseif|else
 if|if
 condition|(
 name|n
+operator|>
+name|PATH_MAX
 operator|-
 literal|1
-operator|>
-name|MAXPATHLEN
 condition|)
 block|{
 name|sprintf
@@ -4555,9 +4553,7 @@ name|file
 argument_list|,
 name|filesz
 argument_list|,
-name|MAXPATHLEN
-operator|+
-literal|1
+name|PATH_MAX
 argument_list|,
 name|NULL
 argument_list|)
@@ -6511,7 +6507,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* strip_escapes: return copy of escaped string of at most length MAXPATHLEN */
+comment|/* strip_escapes: return copy of escaped string of at most length PATH_MAX */
 end_comment
 
 begin_function
@@ -6550,9 +6546,7 @@ name|file
 argument_list|,
 name|filesz
 argument_list|,
-name|MAXPATHLEN
-operator|+
-literal|1
+name|PATH_MAX
 argument_list|,
 name|NULL
 argument_list|)
@@ -6753,7 +6747,7 @@ operator|)
 operator|+
 literal|8
 operator|<=
-name|MAXPATHLEN
+name|PATH_MAX
 operator|&&
 comment|/* "ed.hup" + '/' */
 operator|(

@@ -13,40 +13,17 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_comment
-comment|/* for MAXPATHLEN */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<errno.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<limits.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -104,28 +81,6 @@ directive|define
 name|FATAL
 value|(-4)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPATHLEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAXPATHLEN
-value|255
-end_define
-
-begin_comment
-comment|/* _POSIX_PATH_MAX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
