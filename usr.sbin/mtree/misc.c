@@ -92,13 +92,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|lineno
-decl_stmt|;
-end_decl_stmt
-
 begin_typedef
 typedef|typedef
 struct|struct
