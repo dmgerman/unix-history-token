@@ -102,6 +102,10 @@ begin_comment
 comment|/* plug-and-play hardware */
 end_comment
 
+begin_comment
+comment|/*  * Limits on resources that we can manage  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -113,20 +117,52 @@ begin_define
 define|#
 directive|define
 name|ISA_NMEM
-value|8
+value|50
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISA_NIRQ
-value|2
+value|50
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISA_NDRQ
+value|50
+end_define
+
+begin_comment
+comment|/*  * Limits on resources the hardware can actually handle  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISA_PNP_NPORT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_PNP_NMEM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_PNP_NIRQ
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISA_PNP_NDRQ
 value|2
 end_define
 
