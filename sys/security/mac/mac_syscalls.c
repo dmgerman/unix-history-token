@@ -8023,6 +8023,11 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_page_clean
 argument_list|(
 name|object
@@ -8048,6 +8053,11 @@ name|PAGE_MASK
 argument_list|)
 argument_list|,
 name|OBJPC_SYNC
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|VOP_UNLOCK

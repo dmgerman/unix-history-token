@@ -13772,6 +13772,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|vm_object_page_clean
 argument_list|(
 name|obj
@@ -13787,6 +13792,11 @@ condition|?
 name|OBJPC_SYNC
 else|:
 name|OBJPC_NOSYNC
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
 argument_list|)
 expr_stmt|;
 block|}
