@@ -490,6 +490,16 @@ name|ALLPERMS
 expr_stmt|;
 name|pmp
 operator|->
+name|pm_dirmask
+operator|=
+name|argp
+operator|->
+name|dirmask
+operator|&
+name|ALLPERMS
+expr_stmt|;
+name|pmp
+operator|->
 name|pm_flags
 operator||=
 name|argp
@@ -878,6 +888,10 @@ expr_stmt|;
 name|args
 operator|.
 name|mask
+operator|=
+name|args
+operator|.
+name|dirmask
 operator|=
 literal|0777
 expr_stmt|;
