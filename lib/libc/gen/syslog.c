@@ -176,12 +176,12 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|connected
+name|status
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* have done connect */
+comment|/* connection status */
 end_comment
 
 begin_decl_stmt
@@ -276,6 +276,20 @@ end_function_decl
 begin_comment
 comment|/* (re)connect to syslogd */
 end_comment
+
+begin_enum
+enum|enum
+block|{
+name|NOCONN
+init|=
+literal|0
+block|,
+name|CONNDEF
+block|,
+name|CONNPRIV
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Format of the magic cookie passed through the stdio hook  */
@@ -1066,7 +1080,7 @@ expr_stmt|;
 name|connectlog
 argument_list|()
 expr_stmt|;
-comment|/* 	 * If the send() failed, there are two likely scenarios:  	 *  1) syslogd was restarted 	 *  2) /var/run/log is out of socket buffer space 	 * We attempt to reconnect to /var/run/log to take care of 	 * case #1 and keep send()ing data to cover case #2 	 * to give syslogd a chance to empty its socket buffer. 	 */
+comment|/* 	 * If the send() failed, there are two likely scenarios:  	 *  1) syslogd was restarted 	 *  2) /var/run/log is out of socket buffer space, which 	 *     in most cases means local DoS. 	 * We attempt to reconnect to /var/run/log to take care of 	 * case #1 and keep send()ing data to cover case #2 	 * to give syslogd a chance to empty its socket buffer. 	 * 	 * If we are working with a priveleged socket, then take 	 * only one attempt, because we don't want to freeze a 	 * critical application like su(1) or sshd(8). 	 * 	 */
 if|if
 condition|(
 name|send
@@ -1118,6 +1132,13 @@ literal|0
 argument_list|)
 operator|>=
 literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|status
+operator|==
+name|CONNPRIV
 condition|)
 break|break;
 block|}
@@ -1262,9 +1283,9 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|connected
+name|status
 operator|=
-literal|0
+name|NOCONN
 expr_stmt|;
 comment|/* retry connect */
 block|}
@@ -1328,8 +1349,9 @@ operator|!=
 operator|-
 literal|1
 operator|&&
-operator|!
-name|connected
+name|status
+operator|==
+name|NOCONN
 condition|)
 block|{
 name|SyslogAddr
@@ -1347,6 +1369,7 @@ name|sun_family
 operator|=
 name|AF_UNIX
 expr_stmt|;
+comment|/* 		 * First try priveleged socket. If no success, 		 * then try default socket. 		 */
 operator|(
 name|void
 operator|)
@@ -1356,7 +1379,7 @@ name|SyslogAddr
 operator|.
 name|sun_path
 argument_list|,
-name|_PATH_LOG
+name|_PATH_LOG_PRIV
 argument_list|,
 sizeof|sizeof
 name|SyslogAddr
@@ -1364,8 +1387,8 @@ operator|.
 name|sun_path
 argument_list|)
 expr_stmt|;
-name|connected
-operator|=
+if|if
+condition|(
 name|_connect
 argument_list|(
 name|LogFile
@@ -1386,11 +1409,68 @@ argument_list|)
 operator|!=
 operator|-
 literal|1
+condition|)
+name|status
+operator|=
+name|CONNPRIV
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|connected
+name|status
+operator|==
+name|NOCONN
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+name|SyslogAddr
+operator|.
+name|sun_path
+argument_list|,
+name|_PATH_LOG
+argument_list|,
+sizeof|sizeof
+name|SyslogAddr
+operator|.
+name|sun_path
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|_connect
+argument_list|(
+name|LogFile
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|SyslogAddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|SyslogAddr
+argument_list|)
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|status
+operator|=
+name|CONNDEF
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|status
+operator|==
+name|NOCONN
 condition|)
 block|{
 comment|/* 			 * Try the old "/dev/log" path, for backward 			 * compatibility. 			 */
@@ -1411,8 +1491,8 @@ operator|.
 name|sun_path
 argument_list|)
 expr_stmt|;
-name|connected
-operator|=
+if|if
+condition|(
 name|_connect
 argument_list|(
 name|LogFile
@@ -1433,12 +1513,17 @@ argument_list|)
 operator|!=
 operator|-
 literal|1
+condition|)
+name|status
+operator|=
+name|CONNDEF
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|connected
+name|status
+operator|==
+name|NOCONN
 condition|)
 block|{
 operator|(
@@ -1553,9 +1638,9 @@ name|LogTag
 operator|=
 name|NULL
 expr_stmt|;
-name|connected
+name|status
 operator|=
-literal|0
+name|NOCONN
 expr_stmt|;
 block|}
 end_function

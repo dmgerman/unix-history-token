@@ -413,7 +413,7 @@ comment|/* maximum number of user names */
 end_comment
 
 begin_comment
-comment|/*  * Unix sockets.  */
+comment|/*  * Unix sockets.  * We have two default sockets, one with 666 permissions,  * and one for priveleged programs  */
 end_comment
 
 begin_struct
@@ -443,6 +443,28 @@ end_struct
 begin_decl_stmt
 name|struct
 name|funix
+name|funix_secure
+init|=
+block|{
+operator|-
+literal|1
+block|,
+name|_PATH_LOG_PRIV
+block|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|funix
 name|funix_default
 init|=
 block|{
@@ -454,7 +476,8 @@ block|,
 name|DEFFILEMODE
 block|,
 block|{
-name|NULL
+operator|&
+name|funix_secure
 block|}
 block|}
 decl_stmt|;
@@ -477,7 +500,7 @@ name|funix_default
 block|,
 operator|&
 operator|(
-name|funix_default
+name|funix_secure
 operator|.
 name|next
 operator|.
@@ -2654,6 +2677,11 @@ name|fx
 operator|==
 operator|&
 name|funix_default
+operator|||
+name|fx
+operator|==
+operator|&
+name|funix_secure
 condition|)
 name|die
 argument_list|(
