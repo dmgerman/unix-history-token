@@ -5,19 +5,6 @@ end_comment
 
 begin_struct
 struct|struct
-name|null_args
-block|{
-name|char
-modifier|*
-name|target
-decl_stmt|;
-comment|/* Target of loopback  */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|null_mount
 block|{
 name|struct
