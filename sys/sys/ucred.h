@@ -101,10 +101,11 @@ comment|/* jail(4) */
 define|#
 directive|define
 name|cr_endcopy
-value|cr_mtx
+value|cr_mtxp
 name|struct
 name|mtx
-name|cr_mtx
+modifier|*
+name|cr_mtxp
 decl_stmt|;
 comment|/* protect refcount */
 block|}
