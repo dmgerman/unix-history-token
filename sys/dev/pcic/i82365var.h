@@ -139,6 +139,7 @@ index|[
 name|PCIC_MEM_WINS
 index|]
 decl_stmt|;
+comment|/* XXX BAD XXX */
 name|int
 name|ioalloc
 decl_stmt|;
@@ -149,6 +150,7 @@ index|[
 name|PCIC_IO_WINS
 index|]
 decl_stmt|;
+comment|/* XXX BAD XXX */
 name|int
 name|ih_irq
 decl_stmt|;

@@ -107,6 +107,14 @@ directive|include
 file|<vm/vm.h>
 end_include
 
+begin_comment
+comment|/* We shouldn't need to include the following, but sadly we do for now */
+end_comment
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_include
 include|#
 directive|include
