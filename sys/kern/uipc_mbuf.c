@@ -4658,7 +4658,7 @@ argument_list|,
 name|how
 argument_list|)
 operator|==
-name|NULL
+literal|0
 condition|)
 goto|goto
 name|nospace
