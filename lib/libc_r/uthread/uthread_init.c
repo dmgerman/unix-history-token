@@ -732,6 +732,18 @@ name|_pthread_page_size
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|_pthread_stack_default
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|_pthread_stack_initial
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Threaded process initialization  */
 end_comment
@@ -808,11 +820,48 @@ literal|4
 operator|*
 name|_pthread_page_size
 expr_stmt|;
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|==
+literal|8
+condition|)
+block|{
+name|_pthread_stack_default
+operator|=
+name|PTHREAD_STACK64_DEFAULT
+expr_stmt|;
+name|_pthread_stack_initial
+operator|=
+name|PTHREAD_STACK64_INITIAL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|_pthread_stack_default
+operator|=
+name|PTHREAD_STACK32_DEFAULT
+expr_stmt|;
+name|_pthread_stack_initial
+operator|=
+name|PTHREAD_STACK32_INITIAL
+expr_stmt|;
+block|}
 name|_pthread_attr_default
 operator|.
 name|guardsize_attr
 operator|=
 name|_pthread_guard_default
+expr_stmt|;
+name|_pthread_attr_default
+operator|.
+name|stacksize_attr
+operator|=
+name|_pthread_stack_default
 expr_stmt|;
 comment|/* 	 * Make gcc quiescent about {,libgcc_}references not being 	 * referenced: 	 */
 if|if
@@ -1473,7 +1522,7 @@ name|mmap
 argument_list|(
 name|_usrstack
 operator|-
-name|PTHREAD_STACK_INITIAL
+name|_pthread_stack_initial
 operator|-
 name|_pthread_guard_default
 argument_list|,
@@ -1503,7 +1552,7 @@ name|stack
 operator|=
 name|_usrstack
 operator|-
-name|PTHREAD_STACK_INITIAL
+name|_pthread_stack_initial
 expr_stmt|;
 comment|/* Set the stack attributes: */
 name|_thread_initial
@@ -1522,7 +1571,7 @@ name|attr
 operator|.
 name|stacksize_attr
 operator|=
-name|PTHREAD_STACK_INITIAL
+name|_pthread_stack_initial
 expr_stmt|;
 comment|/* Setup the context for the scheduler: */
 name|_setjmp
