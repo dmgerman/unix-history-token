@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.5 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,8 +139,8 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|dprintf
-value|if (debug) printf
+name|dsyslog
+value|if (debug) syslog
 end_define
 
 begin_decl_stmt
@@ -345,6 +345,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|openlog
+argument_list|(
+literal|"comsat"
+argument_list|,
+name|LOG_PID
+argument_list|,
+name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
 name|chdir
 argument_list|(
 literal|"/usr/spool/mail"
@@ -366,20 +375,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|openlog
-argument_list|(
-literal|"comsat"
-argument_list|,
-literal|0
-argument_list|,
-name|LOG_DAEMON
-argument_list|)
-expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"/etc/utmp: %m"
+literal|".main: /etc/utmp: %m"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -593,9 +593,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"alarm\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".onalrm: alarm"
 argument_list|)
 expr_stmt|;
 name|alarm
@@ -620,9 +622,11 @@ operator|>
 name|utmpmtime
 condition|)
 block|{
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|" changed\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".onalrm: changed\n"
 argument_list|)
 expr_stmt|;
 name|utmpmtime
@@ -691,9 +695,11 @@ operator|!
 name|utmp
 condition|)
 block|{
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"malloc failed\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".onalrm: malloc failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -733,9 +739,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|" ok\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".onalrm: ok\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -782,9 +790,11 @@ function_decl|;
 name|int
 name|offset
 decl_stmt|;
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"mailfor %s\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".mailfor: mailfor %s\n"
 argument_list|,
 name|name
 argument_list|)
@@ -814,9 +824,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"bad format\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".mailfor: bad format\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -954,9 +966,11 @@ name|ut_line
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"notify %s on %s\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".notify: notify %s on %s\n"
 argument_list|,
 name|utp
 operator|->
@@ -988,9 +1002,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"wrong mode\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".notify: wrong mode on tty"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1029,9 +1045,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"fopen failed\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".notify: fopen of tty failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1189,9 +1207,11 @@ decl_stmt|;
 name|int
 name|inheader
 decl_stmt|;
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"HERE %s's mail starting at %d\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".jkfprint: HERE %s's mail starting at %d\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1214,9 +1234,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|dprintf
+name|dsyslog
 argument_list|(
-literal|"Cant read the mail\n"
+name|LOG_DEBUG
+argument_list|,
+literal|".jkfprintf: Cant read the mail\n"
 argument_list|)
 expr_stmt|;
 return|return;
