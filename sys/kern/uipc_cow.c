@@ -423,6 +423,25 @@ argument_list|(
 name|pa
 argument_list|)
 expr_stmt|;
+comment|/*  	 * set up COW 	 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+name|vm_page_cowsetup
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * wire the page for I/O 	 */
+name|vm_page_wire
+argument_list|(
+name|pp
+argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Allocate an sf buf 	 */
 name|sf
 operator|=
 name|sf_buf_alloc
@@ -445,24 +464,6 @@ name|pp
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-comment|/*  	 * set up COW 	 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_cowsetup
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
-comment|/* 	 * wire the page for I/O 	 */
-name|vm_page_wire
-argument_list|(
-name|pp
-argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 comment|/*  	 * attach to mbuf 	 */
 name|m0
