@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.8 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5661,7 +5661,7 @@ literal|80
 index|]
 decl_stmt|,
 modifier|*
-name|mygetpass
+name|getpass
 argument_list|()
 decl_stmt|;
 name|int
@@ -5778,7 +5778,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|mygetpass
+name|getpass
 argument_list|(
 literal|"Password: "
 argument_list|)
@@ -6792,7 +6792,7 @@ literal|50
 index|]
 decl_stmt|,
 modifier|*
-name|mygetpass
+name|getpass
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -6872,7 +6872,7 @@ else|else
 block|{
 name|ap
 operator|=
-name|mygetpass
+name|getpass
 argument_list|(
 literal|"Account:"
 argument_list|)
