@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.3 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +272,10 @@ decl_stmt|;
 name|int
 name|deleted
 decl_stmt|,
+name|dirty1
+decl_stmt|,
+name|dirty2
+decl_stmt|,
 name|exact
 decl_stmt|;
 comment|/* Find any matching record; __bt_search pins the page. */
@@ -323,7 +327,7 @@ name|RET_SPECIAL
 operator|)
 return|;
 block|}
-comment|/* 	 * Delete forward, then delete backward, from the found key.  The 	 * ordering is so that the deletions don't mess up the page refs. 	 * The first loop deletes the found key, the second unpins the found 	 * page. 	 * 	 * If find the key referenced by the cursor, don't delete it, just 	 * flag it for future deletion.  The cursor page number is P_INVALID 	 * unless the sequential scan is initialized, so no reason to check. 	 * A special case is when the already deleted cursor record was the 	 * only record found.  If so, then the delete opertion fails as no 	 * records were deleted. 	 * 	 * Cycle in place in the current page until the current record doesn't 	 * match the key or the page is empty.  If the latter, walk forward, 	 * skipping empty pages and repeating until an record doesn't match 	 * the key or the end of the tree is reached. 	 */
+comment|/* 	 * Delete forward, then delete backward, from the found key.  The 	 * ordering is so that the deletions don't mess up the page refs. 	 * The first loop deletes the key from the original page, the second 	 * unpins the original page.  In the first loop, dirty1 is set if 	 * the original page is modified, and dirty2 is set if any subsequent 	 * pages are modified.  In the second loop, dirty1 starts off set if 	 * the original page has been modified, and is set if any subsequent 	 * pages are modified. 	 * 	 * If find the key referenced by the cursor, don't delete it, just 	 * flag it for future deletion.  The cursor page number is P_INVALID 	 * unless the sequential scan is initialized, so no reason to check. 	 * A special case is when the already deleted cursor record was the 	 * only record found.  If so, then the delete opertion fails as no 	 * records were deleted. 	 * 	 * Cycle in place in the current page until the current record doesn't 	 * match the key or the page is empty.  If the latter, walk forward, 	 * skipping empty pages and repeating until a record doesn't match 	 * the key or the end of the tree is reached. 	 */
 name|cpgno
 operator|=
 name|t
@@ -345,6 +349,10 @@ operator|=
 operator|*
 name|e
 expr_stmt|;
+name|dirty1
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|h
@@ -360,6 +368,10 @@ init|;
 condition|;
 control|)
 block|{
+name|dirty2
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -420,9 +432,19 @@ operator|->
 name|index
 argument_list|)
 condition|)
-goto|goto
-name|err
-goto|;
+block|{
+if|if
+condition|(
+name|h
+operator|->
+name|pgno
+operator|!=
+name|save
+operator|.
+name|page
+operator|->
+name|pgno
+condition|)
 name|mpool_put
 argument_list|(
 name|t
@@ -431,8 +453,48 @@ name|bt_mp
 argument_list|,
 name|h
 argument_list|,
-name|MPOOL_DIRTY
+name|dirty2
 argument_list|)
+expr_stmt|;
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|save
+operator|.
+name|page
+argument_list|,
+name|dirty1
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|RET_ERROR
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|h
+operator|->
+name|pgno
+operator|==
+name|save
+operator|.
+name|page
+operator|->
+name|pgno
+condition|)
+name|dirty1
+operator|=
+name|MPOOL_DIRTY
+expr_stmt|;
+else|else
+name|dirty2
+operator|=
+name|MPOOL_DIRTY
 expr_stmt|;
 name|deleted
 operator|=
@@ -463,7 +525,7 @@ operator|==
 literal|0
 condition|)
 do|;
-comment|/* 		 * Quit if didn't find a match, no next page, or first key on 		 * the next page doesn't match.  Make a special effort not to 		 * unpin the page the original match was on, but also make sure 		 * it's unpinned if an error occurs. 		 */
+comment|/* 		 * Quit if didn't find a match, no next page, or first key on 		 * the next page doesn't match.  Don't unpin the original page 		 * unless an error occurs. 		 */
 if|if
 condition|(
 name|e
@@ -517,7 +579,7 @@ name|bt_mp
 argument_list|,
 name|h
 argument_list|,
-literal|0
+name|dirty2
 argument_list|)
 expr_stmt|;
 if|if
@@ -540,18 +602,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|h
-operator|->
-name|pgno
-operator|==
-name|save
-operator|.
-name|page
-operator|->
-name|pgno
-condition|)
 name|mpool_put
 argument_list|(
 name|t
@@ -562,7 +612,7 @@ name|save
 operator|.
 name|page
 argument_list|,
-literal|0
+name|dirty1
 argument_list|)
 expr_stmt|;
 return|return
@@ -611,7 +661,7 @@ literal|0
 condition|)
 break|break;
 block|}
-comment|/* 	 * Reach here with the last page that was looked at pinned, and it may 	 * or may not be the same as the page with the original match.  If it's 	 * not, release it. 	 */
+comment|/* 	 * Reach here with the original page and the last page referenced 	 * pinned (they may be the same).  Release it if not the original. 	 */
 name|done1
 label|:
 if|if
@@ -634,10 +684,10 @@ name|bt_mp
 argument_list|,
 name|h
 argument_list|,
-literal|0
+name|dirty2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Walk backwards from the record previous to the record returned by 	 * __bt_search, skipping empty pages, until a current record doesn't 	 * match the key or reach the beginning of the tree. 	 */
+comment|/* 	 * Walk backwards from the record previous to the record returned by 	 * __bt_search, skipping empty pages, until a record doesn't match 	 * the key or reach the beginning of the tree. 	 */
 operator|*
 name|e
 operator|=
@@ -749,9 +799,7 @@ argument_list|)
 operator|==
 name|RET_ERROR
 condition|)
-goto|goto
-name|err
-goto|;
+block|{
 name|mpool_put
 argument_list|(
 name|t
@@ -760,8 +808,30 @@ name|bt_mp
 argument_list|,
 name|h
 argument_list|,
-name|MPOOL_DIRTY
+name|dirty1
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|RET_ERROR
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|h
+operator|->
+name|pgno
+operator|==
+name|save
+operator|.
+name|page
+operator|->
+name|pgno
+condition|)
+name|dirty1
+operator|=
+name|MPOOL_DIRTY
 expr_stmt|;
 name|deleted
 operator|=
@@ -792,8 +862,12 @@ name|bt_mp
 argument_list|,
 name|h
 argument_list|,
-literal|0
+name|dirty1
 argument_list|)
+expr_stmt|;
+name|dirty1
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -842,7 +916,7 @@ name|bt_mp
 argument_list|,
 name|h
 argument_list|,
-literal|0
+name|dirty1
 argument_list|)
 expr_stmt|;
 return|return
@@ -852,24 +926,6 @@ condition|?
 name|RET_SUCCESS
 else|:
 name|RET_SPECIAL
-operator|)
-return|;
-name|err
-label|:
-name|mpool_put
-argument_list|(
-name|t
-operator|->
-name|bt_mp
-argument_list|,
-name|h
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|RET_ERROR
 operator|)
 return|;
 block|}
@@ -1049,15 +1105,8 @@ for|for
 control|(
 name|cnt
 operator|=
-operator|&
-name|h
-operator|->
-name|linp
-index|[
 name|index
-index|]
-operator|-
-operator|(
+operator|,
 name|ip
 operator|=
 operator|&
@@ -1067,7 +1116,6 @@ name|linp
 index|[
 literal|0
 index|]
-operator|)
 init|;
 name|cnt
 operator|--
@@ -1095,18 +1143,12 @@ for|for
 control|(
 name|cnt
 operator|=
-operator|&
-name|h
-operator|->
-name|linp
-index|[
 name|NEXTINDEX
 argument_list|(
 name|h
 argument_list|)
-index|]
 operator|-
-name|ip
+name|index
 init|;
 operator|--
 name|cnt
