@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.7	81/03/31  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.8	81/04/03  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -1503,6 +1503,12 @@ name|file_list
 modifier|*
 name|fl
 decl_stmt|;
+specifier|register
+name|bool
+name|first
+init|=
+name|TRUE
+decl_stmt|;
 for|for
 control|(
 name|fl
@@ -1550,11 +1556,35 @@ operator|->
 name|f_needs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|first
+operator|=
+name|FALSE
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"@ld -n -o %s -e start -x -T 80000000 locore.o ${OBJS} ioconf.o param.o swap%s.o\n"
+literal|"\t@sh ../conf/newvers.sh\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t@cc $(COPTS) -c vers.c\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"@ld -n -o %s -e start -x -T 80000000 locore.o ${OBJS} vers.o ioconf.o param.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
