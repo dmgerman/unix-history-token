@@ -1675,7 +1675,7 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"%s/bt.XXXXXX"
+literal|"%s/bt.XXXXXXXXXX"
 argument_list|,
 name|envtmp
 condition|?
