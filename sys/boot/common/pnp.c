@@ -414,7 +414,7 @@ if|if
 condition|(
 name|pnp_readconf
 argument_list|(
-literal|"fname"
+name|fname
 argument_list|)
 condition|)
 block|{
