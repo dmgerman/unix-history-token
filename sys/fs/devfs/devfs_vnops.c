@@ -1413,7 +1413,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 operator|)
 operator|==
 literal|0
@@ -1496,7 +1496,7 @@ name|vp
 operator|->
 name|v_iflag
 operator|&
-name|VI_XLOCK
+name|VI_DOOMED
 condition|)
 block|{
 comment|/* Forced close. */
@@ -5398,19 +5398,6 @@ literal|"devfs_revoke !REVOKEALL"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If a vgone (or vclean) is already in progress, 	 * wait until it is done and return. 	 */
-if|if
-condition|(
-name|vx_wait
-argument_list|(
-name|vp
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|dev
 operator|=
 name|vp
