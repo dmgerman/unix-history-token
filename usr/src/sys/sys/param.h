@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -63,17 +63,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CANBSIZ
-value|256
-end_define
-
-begin_comment
-comment|/* max size of tty input line */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|NCARGS
 value|ARG_MAX
 end_define
@@ -108,11 +97,41 @@ begin_define
 define|#
 directive|define
 name|MAXHOSTNAMELEN
-value|64
+value|256
 end_define
 
 begin_comment
 comment|/* maximum hostname size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCOMLEN
+value|16
+end_define
+
+begin_comment
+comment|/* maximum command name remembered */
+end_comment
+
+begin_comment
+comment|/* MAXCOMLEN should be>= sizeof(ac_comm) (acct.h)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXLOGNAME
+value|12
+end_define
+
+begin_comment
+comment|/* maximum login name length */
+end_comment
+
+begin_comment
+comment|/* MAXLOGNAME must be>= UT_NAMESIZE (<utmp.h>) */
 end_comment
 
 begin_define

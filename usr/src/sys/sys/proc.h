@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)proc.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -77,28 +77,6 @@ end_struct
 
 begin_comment
 comment|/*  * One structure allocated per active  * process. It contains all data needed  * about the process while the  * process may be swapped out.  * Other per process data (user.h)  * is swapped with the process.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXCOMLEN
-value|16
-end_define
-
-begin_comment
-comment|/*<= MAXNAMLEN,>= sizeof(ac_comm) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXLOGNAME
-value|12
-end_define
-
-begin_comment
-comment|/*>= UT_NAMESIZE */
 end_comment
 
 begin_struct
