@@ -43,12 +43,6 @@ directive|include
 file|<openssl/safestack.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<openssl/e_os.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -110,7 +104,6 @@ decl_stmt|;
 name|CONF
 modifier|*
 function_decl|(
-name|MS_FAR
 modifier|*
 name|create
 function_decl|)
@@ -122,7 +115,6 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|MS_FAR
 modifier|*
 name|init
 function_decl|)
@@ -134,7 +126,6 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|MS_FAR
 modifier|*
 name|destroy
 function_decl|)
@@ -146,7 +137,6 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|MS_FAR
 modifier|*
 name|destroy_data
 function_decl|)
@@ -158,7 +148,6 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|MS_FAR
 modifier|*
 name|load
 function_decl|)
@@ -178,7 +167,6 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|MS_FAR
 modifier|*
 name|dump
 function_decl|)
@@ -194,7 +182,6 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|MS_FAR
 modifier|*
 name|is_number
 function_decl|)
@@ -209,7 +196,6 @@ parameter_list|)
 function_decl|;
 name|int
 function_decl|(
-name|MS_FAR
 modifier|*
 name|to_int
 function_decl|)

@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -68,6 +68,9 @@ parameter_list|,
 name|unsigned
 name|int
 name|len
+parameter_list|,
+name|int
+name|create_empty_fragment
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -299,24 +302,16 @@ comment|/* avoid buffer overflow */
 name|int
 name|max_max
 init|=
-name|SSL3_RT_MAX_PACKET_SIZE
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf_len
 operator|-
 name|s
 operator|->
 name|packet_length
 decl_stmt|;
-if|if
-condition|(
-name|s
-operator|->
-name|options
-operator|&
-name|SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER
-condition|)
-name|max_max
-operator|+=
-name|SSL3_RT_MAX_EXTRA
-expr_stmt|;
 if|if
 condition|(
 name|max
@@ -625,7 +620,8 @@ name|int
 name|clear
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|extra
 decl_stmt|;
 name|rr
@@ -662,6 +658,32 @@ name|extra
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|extra
+operator|!=
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf_len
+operator|-
+name|SSL3_RT_MAX_PACKET_SIZE
+condition|)
+block|{
+comment|/* actually likely an application error: SLS_OP_MICROSOFT_BIG_SSLV3_BUFFER 		 * set after ssl3_setup_buffers() was done */
+name|SSLerr
+argument_list|(
+name|SSL_F_SSL3_GET_RECORD
+argument_list|,
+name|SSL_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|again
 label|:
 comment|/* check if we have the header */
@@ -692,7 +714,11 @@ name|s
 argument_list|,
 name|SSL3_RT_HEADER_LENGTH
 argument_list|,
-name|SSL3_RT_MAX_PACKET_SIZE
+name|s
+operator|->
+name|s3
+operator|->
+name|rbuf_len
 argument_list|,
 literal|0
 argument_list|)
@@ -844,10 +870,6 @@ name|rr
 operator|->
 name|length
 operator|>
-operator|(
-name|unsigned
-name|int
-operator|)
 name|SSL3_RT_MAX_ENCRYPTED_LENGTH
 operator|+
 name|extra
@@ -877,13 +899,11 @@ name|rr
 operator|->
 name|length
 operator|>
-operator|(
 name|s
 operator|->
 name|packet_length
 operator|-
 name|SSL3_RT_HEADER_LENGTH
-operator|)
 condition|)
 block|{
 comment|/* now s->packet_length == SSL3_RT_HEADER_LENGTH */
@@ -951,10 +971,6 @@ name|rr
 operator|->
 name|length
 operator|>
-operator|(
-name|unsigned
-name|int
-operator|)
 name|SSL3_RT_MAX_ENCRYPTED_LENGTH
 operator|+
 name|extra
@@ -1248,10 +1264,6 @@ name|rr
 operator|->
 name|length
 operator|>
-operator|(
-name|unsigned
-name|int
-operator|)
 name|SSL3_RT_MAX_COMPRESSED_LENGTH
 operator|+
 name|extra
@@ -1303,10 +1315,6 @@ name|rr
 operator|->
 name|length
 operator|>
-operator|(
-name|unsigned
-name|int
-operator|)
 name|SSL3_RT_MAX_PLAIN_LENGTH
 operator|+
 name|extra
@@ -1682,10 +1690,8 @@ name|SSL_R_SSL_HANDSHAKE_FAILURE
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 block|}
@@ -1735,6 +1741,8 @@ index|]
 operator|)
 argument_list|,
 name|nw
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1753,9 +1761,7 @@ operator|=
 name|tot
 expr_stmt|;
 return|return
-operator|(
 name|i
-operator|)
 return|;
 block|}
 if|if
@@ -1784,12 +1790,19 @@ operator|)
 operator|)
 condition|)
 block|{
+comment|/* next chunk of data should get another prepended empty fragment 			 * in ciphersuites with known-IV weakness: */
+name|s
+operator|->
+name|s3
+operator|->
+name|empty_fragment_done
+operator|=
+literal|0
+expr_stmt|;
 return|return
-operator|(
 name|tot
 operator|+
 name|i
-operator|)
 return|;
 block|}
 name|n
@@ -1825,6 +1838,9 @@ parameter_list|,
 name|unsigned
 name|int
 name|len
+parameter_list|,
+name|int
+name|create_empty_fragment
 parameter_list|)
 block|{
 name|unsigned
@@ -1844,6 +1860,11 @@ name|clear
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|prefix_len
+init|=
+literal|0
+decl_stmt|;
 name|SSL3_RECORD
 modifier|*
 name|wr
@@ -1856,7 +1877,7 @@ name|SSL_SESSION
 modifier|*
 name|sess
 decl_stmt|;
-comment|/* first check is there is a SSL3_RECORD still being written 	 * out.  This will happen with non blocking IO */
+comment|/* first check if there is a SSL3_BUFFER still being written 	 * out.  This will happen with non blocking IO */
 if|if
 condition|(
 name|s
@@ -1918,11 +1939,12 @@ condition|(
 name|len
 operator|==
 literal|0
+operator|&&
+operator|!
+name|create_empty_fragment
 condition|)
 return|return
-operator|(
-name|len
-operator|)
+literal|0
 return|;
 name|wr
 operator|=
@@ -1998,11 +2020,107 @@ operator|->
 name|write_hash
 argument_list|)
 expr_stmt|;
+comment|/* 'create_empty_fragment' is true only when this function calls itself */
+if|if
+condition|(
+operator|!
+name|clear
+operator|&&
+operator|!
+name|create_empty_fragment
+operator|&&
+operator|!
+name|s
+operator|->
+name|s3
+operator|->
+name|empty_fragment_done
+condition|)
+block|{
+comment|/* countermeasure against known-IV weakness in CBC ciphersuites 		 * (see http://www.openssl.org/~bodo/tls-cbc.txt) */
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|need_empty_fragments
+operator|&&
+name|type
+operator|==
+name|SSL3_RT_APPLICATION_DATA
+condition|)
+block|{
+comment|/* recursive function call with 'create_empty_fragment' set; 			 * this prepares and buffers the data for an empty fragment 			 * (these 'prefix_len' bytes are sent out later 			 * together with the actual payload) */
+name|prefix_len
+operator|=
+name|do_ssl3_write
+argument_list|(
+name|s
+argument_list|,
+name|type
+argument_list|,
+name|buf
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prefix_len
+operator|<=
+literal|0
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
+name|s
+operator|->
+name|s3
+operator|->
+name|wbuf_len
+operator|<
+operator|(
+name|size_t
+operator|)
+name|prefix_len
+operator|+
+name|SSL3_RT_MAX_PACKET_SIZE
+condition|)
+block|{
+comment|/* insufficient space */
+name|SSLerr
+argument_list|(
+name|SSL_F_DO_SSL3_WRITE
+argument_list|,
+name|SSL_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+block|}
+name|s
+operator|->
+name|s3
+operator|->
+name|empty_fragment_done
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|p
 operator|=
 name|wb
 operator|->
 name|buf
+operator|+
+name|prefix_len
 expr_stmt|;
 comment|/* write the header */
 operator|*
@@ -2047,7 +2165,7 @@ name|version
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* record where we are to write out packet length */
+comment|/* field where we are to write out packet length */
 name|plen
 operator|=
 name|p
@@ -2229,11 +2347,25 @@ name|length
 operator|+=
 name|SSL3_RT_HEADER_LENGTH
 expr_stmt|;
-comment|/* Now lets setup wb */
+if|if
+condition|(
+name|create_empty_fragment
+condition|)
+block|{
+comment|/* we are in a recursive call; 		 * just return the length, don't write out anything here 		 */
+return|return
+name|wr
+operator|->
+name|length
+return|;
+block|}
+comment|/* now let's set up wb */
 name|wb
 operator|->
 name|left
 operator|=
+name|prefix_len
+operator|+
 name|wr
 operator|->
 name|length
@@ -2244,6 +2376,7 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
+comment|/* memorize arguments so that ssl3_write_pending can detect bad write retries later */
 name|s
 operator|->
 name|s3
@@ -2278,7 +2411,6 @@ name|len
 expr_stmt|;
 comment|/* we now just need to write the buffer */
 return|return
-operator|(
 name|ssl3_write_pending
 argument_list|(
 name|s
@@ -2289,15 +2421,12 @@ name|buf
 argument_list|,
 name|len
 argument_list|)
-operator|)
 return|;
 name|err
 label|:
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 end_function
@@ -4126,6 +4255,12 @@ operator|==
 name|TLS1_VERSION
 condition|)
 block|{
+name|rr
+operator|->
+name|length
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|start
 goto|;
@@ -4253,7 +4388,7 @@ name|s3
 operator|->
 name|in_read_app_data
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 return|return
 operator|(
@@ -4703,6 +4838,8 @@ literal|0
 index|]
 argument_list|,
 literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

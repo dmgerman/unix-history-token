@@ -1276,16 +1276,10 @@ name|p
 operator|+
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|ntmp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s\n", ntmp);
 endif|#
 directive|endif
 if|if
@@ -1352,16 +1346,10 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|ntmp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s\n", ntmp);
 endif|#
 directive|endif
 if|if
@@ -1420,18 +1408,10 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%s=%s\n"
-argument_list|,
-name|ntmp
-argument_list|,
-name|vtmp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s=%s\n", ntmp, vtmp);
 endif|#
 directive|endif
 if|if
@@ -1471,16 +1451,10 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|ntmp
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("%s\n", ntmp);
 endif|#
 directive|endif
 if|if

@@ -2908,6 +2908,15 @@ literal|1
 expr_stmt|;
 name|err
 label|:
+if|if
+condition|(
+name|d
+condition|)
+name|closedir
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_READDIR

@@ -935,14 +935,10 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"randomness from PROV_RSA_FULL\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("randomness from PROV_RSA_FULL\n");
 endif|#
 directive|endif
 block|}
@@ -1004,14 +1000,10 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"randomness from PROV_INTEL_SEC\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("randomness from PROV_INTEL_SEC\n");
 endif|#
 directive|endif
 block|}
@@ -1726,14 +1718,10 @@ name|kernel
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"Exiting RAND_poll\n"
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("Exiting RAND_poll\n");
 endif|#
 directive|endif
 return|return

@@ -649,7 +649,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" -text         print the key in text\n"
+literal|" -text         print as text\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf

@@ -4110,9 +4110,16 @@ name|p8
 argument_list|)
 operator|)
 condition|)
+block|{
+name|PKCS8_PRIV_KEY_INFO_free
+argument_list|(
+name|p8
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 name|print_attribs
 argument_list|(
 name|out

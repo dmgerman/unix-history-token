@@ -234,11 +234,13 @@ decl_stmt|;
 define|#
 directive|define
 name|PROG_NAME_SIZE
-value|16
+value|39
 name|char
 name|pname
 index|[
 name|PROG_NAME_SIZE
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|FUNCTION

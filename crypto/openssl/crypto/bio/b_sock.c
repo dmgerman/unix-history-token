@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|MAX_LISTEN
-value|SOMAXCONN
+value|SO_MAXCONN
 end_define
 
 begin_elif
@@ -101,7 +101,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|SO_MAXCONN
+name|SOMAXCONN
 argument_list|)
 end_elif
 
@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|MAX_LISTEN
-value|SO_MAXCONN
+value|SOMAXCONN
 end_define
 
 begin_else
