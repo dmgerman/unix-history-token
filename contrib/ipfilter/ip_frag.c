@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_frag.c,v 2.10.2.4 2000/06/06 15:49:15 darrenr Exp $"
+literal|"@(#)$Id: ip_frag.c,v 2.10.2.5 2000/10/19 15:39:58 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,7 +1252,8 @@ name|fr_frag_lock
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
@@ -1337,7 +1338,8 @@ name|fr_frag_lock
 operator|)
 condition|)
 return|return
-name|NULL
+operator|-
+literal|1
 return|;
 name|WRITE_ENTER
 argument_list|(
@@ -1785,7 +1787,18 @@ name|ipf
 operator|->
 name|ipfr_data
 expr_stmt|;
-comment|/* 		 * This is the last fragment for this packet. 		 */
+if|if
+condition|(
+name|nat
+operator|->
+name|nat_ifp
+operator|==
+name|fin
+operator|->
+name|fin_ifp
+condition|)
+block|{
+comment|/* 			 * This is the last fragment for this packet. 			 */
 if|if
 condition|(
 operator|(
@@ -1816,6 +1829,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+block|}
+else|else
+name|nat
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 else|else
 name|nat

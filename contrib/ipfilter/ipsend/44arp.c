@@ -336,7 +336,7 @@ if|if
 condition|(
 name|arp_getipv4
 argument_list|(
-name|ip
+name|addr
 argument_list|,
 name|ether
 argument_list|)

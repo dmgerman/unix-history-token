@@ -1571,7 +1571,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|isdigit
+name|isalnum
 argument_list|(
 operator|*
 operator|*

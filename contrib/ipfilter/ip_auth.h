@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2000 by Darren Reed& Guido Van Rooij.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_auth.h,v 2.3.2.1 2000/05/22 10:26:11 darrenr Exp $  *  */
+comment|/*  * Copyright (C) 1997-2000 by Darren Reed& Guido Van Rooij.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * $Id: ip_auth.h,v 2.3.2.2 2000/10/19 15:38:44 darrenr Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -136,20 +136,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|fr_defaultauthage
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fr_authstart
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|fr_authend
 decl_stmt|;
 end_decl_stmt
 
