@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in.h 4.1 81/11/07 */
+comment|/* in.h 4.2 81/11/08 */
 end_comment
 
 begin_comment
@@ -10,6 +10,13 @@ end_comment
 begin_comment
 comment|/*  * Protocols  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_RAW
+value|-1
+end_define
 
 begin_define
 define|#
@@ -224,9 +231,8 @@ end_comment
 
 begin_struct
 struct|struct
-name|socket
+name|ip_addr
 block|{
-comment|/* should be called inet_addr */
 union|union
 block|{
 struct|struct

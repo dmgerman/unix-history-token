@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_icmp.c 4.1 81/11/07 */
+comment|/* ip_icmp.c 4.2 81/11/08 */
 end_comment
 
 begin_include
@@ -18,19 +18,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../h/inaddr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/ip.h"
+file|"../net/inet_systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/ip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/ip_icmp.h"
 end_include
 
 begin_comment
@@ -84,7 +96,7 @@ name|icp
 init|=
 operator|(
 expr|struct
-name|icp
+name|icmp
 operator|*
 operator|)
 operator|(
@@ -202,8 +214,6 @@ operator|&
 name|icp
 operator|->
 name|icmp_ip
-operator|.
-name|icmp_ip
 argument_list|,
 name|oiplen
 operator|+
@@ -241,17 +251,21 @@ operator|)
 name|mtod
 argument_list|(
 name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
 argument_list|)
 expr_stmt|;
 operator|*
 name|nip
 operator|=
 operator|*
-name|ip
+name|oip
 expr_stmt|;
 name|icmp_reflect
 argument_list|(
-name|ip
+name|nip
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Discard mbufs of original datagram 	 */
@@ -269,7 +283,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Processor a received ICMP message.  */
+comment|/*  * Process a received ICMP message.  */
 end_comment
 
 begin_macro
@@ -289,6 +303,27 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|icmp
+modifier|*
+name|icp
+decl_stmt|;
+specifier|register
+name|struct
+name|ip
+modifier|*
+name|ip
+init|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+decl_stmt|;
 name|int
 name|hlen
 init|=
@@ -298,28 +333,6 @@ name|ip_hl
 operator|<<
 literal|2
 decl_stmt|;
-specifier|register
-name|struct
-name|ip
-modifier|*
-name|ip
-init|=
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|mtod
-argument_list|(
-name|m
-argument_list|)
-decl_stmt|;
-specifier|register
-name|struct
-name|icmp
-modifier|*
-name|icp
-decl_stmt|;
 name|int
 name|icmplen
 init|=
@@ -328,6 +341,9 @@ operator|->
 name|ip_len
 operator|-
 name|hlen
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* 	 * Locate icmp structure in mbuf, and check 	 * that not corrupted and of at least minimum length. 	 */
 name|m
@@ -353,6 +369,10 @@ operator|)
 name|mtod
 argument_list|(
 name|m
+argument_list|,
+expr|struct
+name|icmp
+operator|*
 argument_list|)
 expr_stmt|;
 name|i
@@ -371,7 +391,7 @@ if|if
 condition|(
 name|i
 operator|!=
-name|cksum
+name|inet_cksum
 argument_list|(
 name|m
 argument_list|,
@@ -383,12 +403,12 @@ operator|<
 name|ICMP_MINLEN
 condition|)
 goto|goto
-name|bad
+name|free
 goto|;
 comment|/* 	 * Message type specific processing. 	 */
 switch|switch
 condition|(
-name|ipc
+name|icp
 operator|->
 name|icmp_type
 condition|)
@@ -413,23 +433,23 @@ if|if
 condition|(
 name|icmplen
 operator|<
-name|ICMP_MINADVLEN
+name|ICMP_ADVLENMIN
 operator|||
 name|icmplen
 operator|<
 name|ICMP_ADVLEN
 argument_list|(
-name|ipc
+name|icp
 argument_list|)
 condition|)
 goto|goto
-name|drop
+name|free
 goto|;
 name|icmp_advise
 argument_list|(
 name|ip
 argument_list|,
-name|ipc
+name|icp
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -454,13 +474,10 @@ if|if
 condition|(
 name|icmplen
 operator|<
-name|ICMP_MINLEN
-operator|+
-sizeof|sizeof
-argument_list|()
+name|ICMP_TSLEN
 condition|)
 goto|goto
-name|bad
+name|free
 goto|;
 name|icp
 operator|->
@@ -468,7 +485,7 @@ name|icmp_type
 operator|=
 name|ICMP_TSTAMPREPLY
 expr_stmt|;
-name|millitime
+name|ip_time
 argument_list|(
 operator|&
 name|icp
@@ -508,17 +525,17 @@ if|if
 condition|(
 name|icmplen
 operator|<
-name|ICMP_MINADVLEN
+name|ICMP_ADVLENMIN
 operator|||
 name|icmplen
 operator|<
 name|ICMP_ADVLEN
 argument_list|(
-name|ipc
+name|icp
 argument_list|)
 condition|)
 goto|goto
-name|drop
+name|free
 goto|;
 name|icmp_gotreply
 argument_list|(
@@ -575,38 +592,30 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|inet_addr
+name|ip_addr
 name|t
 decl_stmt|;
-comment|/* 	 * This is a little naive... do we have to munge the options 	 * to reverse source routing? 	 */
 name|t
 operator|=
 name|ip
 operator|->
 name|ip_src
-operator|.
-name|s_addr
 expr_stmt|;
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_addr
 operator|=
 name|ip
 operator|->
 name|ip_src
-operator|.
-name|d_addr
 expr_stmt|;
 name|ip
 operator|->
 name|ip_src
-operator|.
-name|d_addr
 operator|=
 name|t
 expr_stmt|;
+comment|/* 	 * This is a little naive... do we have to munge the options 	 * to reverse source routing? 	 */
 name|icmp_send
 argument_list|(
 name|ip
@@ -624,7 +633,7 @@ name|icmp_send
 argument_list|(
 argument|ip
 argument_list|,
-argument|ipc
+argument|icp
 argument_list|)
 end_macro
 
@@ -640,29 +649,33 @@ begin_decl_stmt
 name|struct
 name|icmp
 modifier|*
-name|ipc
+name|icp
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|ipc
+name|icp
 operator|->
-name|ipc_cksum
+name|icmp_cksum
 operator|=
 literal|0
 expr_stmt|;
-name|ipc
+name|icp
 operator|->
-name|ipc_cksum
+name|icmp_inet_cksum
 operator|=
 name|cksum
 argument_list|(
-name|m
+name|dtom
+argument_list|(
+name|ip
+argument_list|)
 argument_list|,
-name|impclen
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* ### */
 comment|/* what about ttl? */
 name|ip_output
 argument_list|(
@@ -703,62 +716,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-argument_list|(
-operator|*
-name|f
-argument_list|)
-argument_list|()
-decl_stmt|,
-name|tcp_advise
-argument_list|()
-decl_stmt|,
-name|udp_advise
-argument_list|()
-decl_stmt|,
-name|raw_advise
-argument_list|()
-decl_stmt|;
-switch|switch
-condition|(
-name|ip
-operator|->
-name|ip_p
-condition|)
-block|{
-case|case
-name|IPPROTO_TCP
-case|:
-name|f
-operator|=
-name|tcp_advise
-expr_stmt|;
-break|break;
-case|case
-name|IPPROTO_UDP
-case|:
-name|f
-operator|=
-name|udp_advise
-expr_stmt|;
-break|break;
-default|default:
-name|f
-operator|=
-name|raw_advise
-expr_stmt|;
-break|break;
-block|}
-call|(
-modifier|*
-name|f
-call|)
-argument_list|(
-name|ip
-argument_list|,
-name|icp
-argument_list|)
-expr_stmt|;
+comment|/* pass through protocol specific switch */
+comment|/* (*f)(ip, icp); */
 block|}
 end_block
 
@@ -784,6 +743,24 @@ modifier|*
 name|icp
 decl_stmt|;
 end_decl_stmt
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|icmp_drain
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|ip_time
+argument_list|()
+end_macro
 
 begin_block
 block|{  }

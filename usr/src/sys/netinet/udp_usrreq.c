@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* udp_usrreq.c 4.1 81/11/07 */
+comment|/*	udp_usrreq.c	4.2	81/11/08	*/
 end_comment
 
 begin_include
@@ -18,20 +18,29 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../h/protosw.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/udp.h"
+file|"../net/inet_systm.h"
 end_include
+
+begin_macro
+name|udp_init
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
 
 begin_macro
 name|udp_input
@@ -200,6 +209,16 @@ literal|"udp_usrreq"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|udp_sense
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
 end_block
 
 end_unit

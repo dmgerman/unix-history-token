@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* if_en.c 4.5 81/11/07 */
+comment|/* if_en.c 4.6 81/11/08 */
 end_comment
 
 begin_include
@@ -34,31 +34,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/imp.h"
+file|"../net/imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/ip.h"
+file|"../net/ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/tcp.h"
+file|"../net/tcp.h"
 end_include
 
 begin_comment
@@ -548,7 +548,7 @@ name|i
 operator|=
 name|rmalloc
 argument_list|(
-name|netmap
+name|mbmap
 argument_list|,
 name|n
 operator|*
@@ -588,7 +588,7 @@ condition|(
 name|memall
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|j
 index|]
@@ -610,7 +610,7 @@ return|;
 name|vmaccess
 argument_list|(
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|j
 index|]
@@ -1303,7 +1303,7 @@ modifier|*
 name|pte
 init|=
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|mtopf
 argument_list|(
@@ -2484,7 +2484,7 @@ modifier|*
 name|cpte
 init|=
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|mtopf
 argument_list|(
@@ -2500,7 +2500,7 @@ modifier|*
 name|ppte
 init|=
 operator|&
-name|Netmap
+name|Mbmap
 index|[
 name|mtopf
 argument_list|(

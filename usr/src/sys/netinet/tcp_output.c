@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_output.c 4.9 81/11/04 */
+comment|/* tcp_output.c 4.10 81/11/08 */
 end_comment
 
 begin_include
@@ -30,49 +30,67 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/inet_cksum.h"
+file|"../h/socketvar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../net/inet_cksum.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_host.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet_host.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/imp.h"
+file|"../net/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/ip.h"
+file|"../net/imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/tcp.h"
+file|"../net/ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/tcp_fsm.h"
+file|"../net/tcp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/tcp_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/tcp_fsm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"/usr/include/errno.h"
 end_include
 
 begin_comment
@@ -148,6 +166,16 @@ name|ihave
 decl_stmt|,
 name|hehas
 decl_stmt|;
+specifier|register
+name|struct
+name|socket
+modifier|*
+name|so
+init|=
+name|tp
+operator|->
+name|t_socket
+decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_SNDWIN
@@ -162,18 +190,18 @@ condition|)
 block|{
 name|ihave
 operator|=
-name|tp
+name|so
 operator|->
-name|t_ucb
-operator|->
-name|uc_rhiwat
+name|so_rcv
+operator|.
+name|sb_hiwat
 operator|-
 operator|(
-name|tp
+name|so
 operator|->
-name|t_ucb
-operator|->
-name|uc_rcc
+name|so_rcv
+operator|.
+name|sb_cc
 operator|+
 name|tp
 operator|->
@@ -201,11 +229,11 @@ operator|-
 name|hehas
 operator|)
 operator|/
-name|tp
+name|so
 operator|->
-name|t_ucb
-operator|->
-name|uc_rhiwat
+name|so_rcv
+operator|.
+name|sb_hiwat
 operator|)
 operator|<
 literal|35
@@ -389,9 +417,9 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|ucb
+name|socket
 modifier|*
-name|up
+name|so
 decl_stmt|;
 specifier|register
 name|unsigned
@@ -428,11 +456,11 @@ argument_list|(
 name|TCP_SEND
 argument_list|)
 expr_stmt|;
-name|up
+name|so
 operator|=
 name|tp
 operator|->
-name|t_ucb
+name|t_socket
 expr_stmt|;
 name|tp
 operator|->
@@ -481,9 +509,11 @@ for|for
 control|(
 name|m
 operator|=
-name|up
+name|so
 operator|->
-name|uc_sbuf
+name|so_snd
+operator|.
+name|sb_mb
 init|;
 name|m
 operator|!=
@@ -989,9 +1019,7 @@ name|h
 init|=
 name|tp
 operator|->
-name|t_ucb
-operator|->
-name|uc_host
+name|t_host
 decl_stmt|;
 specifier|register
 name|struct
@@ -1465,16 +1493,20 @@ name|t_win
 operator|=
 name|tp
 operator|->
-name|t_ucb
+name|t_socket
 operator|->
-name|uc_rhiwat
+name|so_rcv
+operator|.
+name|sb_hiwat
 operator|-
 operator|(
 name|tp
 operator|->
-name|t_ucb
+name|t_socket
 operator|->
-name|uc_rcc
+name|so_rcv
+operator|.
+name|sb_cc
 operator|+
 name|tp
 operator|->
@@ -1541,11 +1573,11 @@ condition|(
 operator|(
 name|tp
 operator|->
-name|t_ucb
+name|t_socket
 operator|->
-name|uc_flags
+name|so_options
 operator|&
-name|UDEBUG
+name|SO_DEBUG
 operator|)
 operator|||
 name|tcpconsdebug
@@ -1746,7 +1778,9 @@ name|p
 operator|=
 name|tp
 operator|->
-name|t_rcv_next
+name|tcb_hd
+operator|.
+name|seg_next
 operator|)
 operator|==
 operator|(
@@ -1898,9 +1932,11 @@ name|m
 operator|=
 name|tp
 operator|->
-name|t_ucb
+name|t_socket
 operator|->
-name|uc_sbuf
+name|so_snd
+operator|.
+name|sb_mb
 expr_stmt|;
 while|while
 condition|(
@@ -2141,6 +2177,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|tcp_fasttimo
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
 
 end_unit
 

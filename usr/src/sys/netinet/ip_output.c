@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_output.c 1.10 81/11/02 */
+comment|/* ip_output.c 1.11 81/11/08 */
 end_comment
 
 begin_include
@@ -30,43 +30,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/inet_cksum.h"
+file|"../net/inet_cksum.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/imp.h"
+file|"../net/imp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_host.h"
+file|"../net/inet_host.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/ip.h"
+file|"../net/ip.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/tcp.h"
+file|"../net/tcp.h"
 end_include
 
 begin_macro

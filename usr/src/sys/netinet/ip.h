@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip.h 1.5 81/10/29 */
+comment|/* ip.h 1.6 81/11/08 */
 end_comment
 
 begin_comment
@@ -85,7 +85,7 @@ comment|/* checksum */
 union|union
 block|{
 name|struct
-name|socket
+name|ip_addr
 name|ip_s
 decl_stmt|;
 comment|/* source address */
@@ -109,7 +109,7 @@ value|I_sun.ip_nxt
 union|union
 block|{
 name|struct
-name|socket
+name|ip_addr
 name|ip_d
 decl_stmt|;
 comment|/* destination address */
@@ -327,7 +327,7 @@ struct|struct
 name|ipt_ta
 block|{
 name|struct
-name|socket
+name|ip_addr
 name|ipt_addr
 decl_stmt|;
 name|n_long
@@ -473,7 +473,7 @@ name|ipq_prev
 decl_stmt|;
 comment|/* to ip headers of fragments */
 name|struct
-name|socket
+name|ip_addr
 name|ipq_src
 decl_stmt|,
 name|ipq_dst
