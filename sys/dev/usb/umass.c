@@ -1320,6 +1320,10 @@ begin_comment
 comment|/*  * The Reset request shall be sent via the Control endpoint to the device.  *  * There are two types of Bulk-Only Mass Storage Resets; soft and hard.  * Implementation of the soft is optional. If the soft one fails, the hard one  * is immediately tried.  *  * Soft reset shall clear all buffers and reset the interface to the device  * without affecting the state of the device itself.  * Hard reset shall clear all buffers and reset the interface and the  * device without changing STALL or toggle conditions.  */
 end_comment
 
+begin_comment
+comment|/*  * XXX Pat LaVarre<LAVARRE@iomega.com> says that soft reset has been removed  * from current versions of the spec. We can remove it once that checks out.  */
+end_comment
+
 begin_function
 name|usbd_status
 name|umass_bulk_reset
@@ -1927,7 +1931,7 @@ name|UDMASS_BULK
 argument_list|,
 operator|(
 literal|"%s: failed to receive data, "
-literal|"(%d bytes, n = %d), %d(%s)\n"
+literal|"(%d bytes, n = %d), %s\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -1939,8 +1943,6 @@ operator|,
 name|datalen
 operator|,
 name|n
-operator|,
-name|err
 operator|,
 name|usbd_errstr
 argument_list|(
@@ -1990,7 +1992,7 @@ name|UDMASS_BULK
 argument_list|,
 operator|(
 literal|"%s: failed to send data, "
-literal|"(%d bytes, n = %d), %d(%s)\n"
+literal|"(%d bytes, n = %d), %s\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -2002,8 +2004,6 @@ operator|,
 name|datalen
 operator|,
 name|n
-operator|,
-name|err
 operator|,
 name|usbd_errstr
 argument_list|(
@@ -2334,13 +2334,8 @@ name|n
 operator|)
 argument_list|)
 expr_stmt|;
-name|umass_bulk_reset
-argument_list|(
-name|sc
-argument_list|,
-name|URESET_SOFT
-argument_list|)
-expr_stmt|;
+comment|/* 		 * According to Pat LaVarre<LAVARRE@iomega.com> on the linux-usb 		 * mailing list this reset is not necessary at all. It looks like 		 * I have an old revision of the spec. 		 */
+comment|/* umass_bulk_reset(sc, URESET_SOFT); */
 operator|*
 name|residue
 operator|=
