@@ -464,7 +464,7 @@ decl_stmt|;
 name|ACPI_BUFFER
 name|buf
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
+name|ACPI_OBJECT
 modifier|*
 name|obj
 decl_stmt|;
@@ -597,8 +597,6 @@ if|if
 condition|(
 name|obj
 operator|->
-name|Common
-operator|.
 name|Type
 operator|!=
 name|ACPI_TYPE_POWER
@@ -618,22 +616,14 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX ACPI CA seems to return ACPI_TYPE_ANY, needs to be fixed */
-name|rp
-operator|->
-name|ap_systemlevel
+name|status
 operator|=
-literal|0
+name|AE_TYPE
 expr_stmt|;
-name|rp
-operator|->
-name|ap_order
-operator|=
-literal|0
-expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
-else|else
-block|{
 name|rp
 operator|->
 name|ap_systemlevel
@@ -654,7 +644,6 @@ name|PowerResource
 operator|.
 name|ResourceOrder
 expr_stmt|;
-block|}
 comment|/* sort the resource into the list */
 name|status
 operator|=
