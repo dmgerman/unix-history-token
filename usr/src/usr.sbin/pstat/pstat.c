@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.5 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3158,7 +3158,7 @@ name|NETLDISC
 case|:
 name|printf
 argument_list|(
-literal|" net\n"
+literal|" berknet\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3168,15 +3168,6 @@ case|:
 name|printf
 argument_list|(
 literal|" tab\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|NTABLDISC
-case|:
-name|printf
-argument_list|(
-literal|" ntab\n"
 argument_list|)
 expr_stmt|;
 break|break;
