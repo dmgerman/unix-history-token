@@ -41,12 +41,6 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DKTYPENAMES
-end_define
-
 begin_include
 include|#
 directive|include
