@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.60 (Berkeley) %G%"
+literal|"@(#)conf.c	6.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3179,8 +3179,21 @@ specifier|auto
 name|int
 name|status
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
+name|count
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
+operator|(
+name|pid
+operator|=
 name|waitpid
 argument_list|(
 operator|-
@@ -3191,10 +3204,33 @@ name|status
 argument_list|,
 name|WNOHANG
 argument_list|)
+operator|)
 operator|>
 literal|0
 condition|)
-continue|continue;
+block|{
+if|if
+condition|(
+name|count
+operator|++
+operator|>
+literal|1000
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"reapchild: waitpid loop: pid=%d, status=%x"
+argument_list|,
+name|pid
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 else|#
 directive|else
 ifdef|#
