@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.5 %G%"
+literal|"@(#)main.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,6 +365,9 @@ name|argv
 argument_list|)
 expr_stmt|;
 name|language_init
+argument_list|()
+expr_stmt|;
+name|symbols_init
 argument_list|()
 expr_stmt|;
 name|process_init
@@ -1013,7 +1016,7 @@ operator|<
 name|argc
 name|and
 argument_list|(
-argument|not foundfile or corefile == nil
+argument|not foundfile or (corefile == nil and not runfirst)
 argument_list|)
 condition|)
 block|{
