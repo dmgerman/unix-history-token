@@ -222,6 +222,15 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|linux_emul_path
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|linux_emul_find
 name|__P

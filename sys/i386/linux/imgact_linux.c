@@ -112,6 +112,14 @@ file|<i386/linux/linux.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|sysentvec
+name|linux_sysvec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|exec_linux_imgact
