@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.12 1998/10/17 11:25:05 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.13 1998/10/27 20:16:36 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -2011,9 +2011,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"]\nentry=0x%x\n"
-argument_list|,
-name|addr
+literal|"]\n"
 argument_list|)
 expr_stmt|;
 name|bootinfo
@@ -4647,21 +4645,23 @@ literal|0x604
 expr_stmt|;
 name|v86
 operator|.
-name|eax
-operator|=
-name|nblk
-expr_stmt|;
-name|v86
-operator|.
-name|ebx
+name|es
 operator|=
 name|VTOPSEG
 argument_list|(
 name|buf
 argument_list|)
-operator|<<
-literal|16
-operator||
+expr_stmt|;
+name|v86
+operator|.
+name|eax
+operator|=
+name|lba
+expr_stmt|;
+name|v86
+operator|.
+name|ebx
+operator|=
 name|VTOPOFF
 argument_list|(
 name|buf
@@ -4672,12 +4672,16 @@ operator|.
 name|ecx
 operator|=
 name|lba
+operator|>>
+literal|16
 expr_stmt|;
 name|v86
 operator|.
 name|edx
 operator|=
-literal|0x100
+name|nblk
+operator|<<
+literal|8
 operator||
 name|dsk
 operator|.
