@@ -173,7 +173,7 @@ name|fast_vfork
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"flag to indicate whether we have a fast vfork()"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

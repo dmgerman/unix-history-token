@@ -203,7 +203,7 @@ name|acctsuspend
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"percentage of free disk space below which accounting stops"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -237,7 +237,7 @@ name|acctresume
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"percentage of free disk space above which accounting resumes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -271,7 +271,7 @@ name|acctchkfreq
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"frequency for checking the free space"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
