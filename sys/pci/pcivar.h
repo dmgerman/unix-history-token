@@ -488,22 +488,6 @@ name|pcih2cfgregs
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* PCI bus attach definitions (there could be multiple PCI bus *trees* ... */
-end_comment
-
-begin_endif
-unit|typedef struct pciattach {     int		unit;     int		pcibushigh;     struct pciattach *next; } pciattach;
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
