@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	8.3 (Berkeley) %G%"
+literal|"@(#)bt_search.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,8 +63,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|EPG
-modifier|*
+name|int
 name|bt_snext
 name|__P
 argument_list|(
@@ -88,8 +87,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|EPG
-modifier|*
+name|int
 name|bt_sprev
 name|__P
 argument_list|(
@@ -309,7 +307,7 @@ name|lim
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * If it's a leaf page, and duplicates aren't allowed, we're 		 * done.  If duplicates are allowed, it's possible that the 		 * matching spanned pages, and were later deleted, so we could 		 * be on the wrong page.  If we're at the start or end of a 		 * page, check. 		 */
+comment|/* 		 * If it's a leaf page, and duplicates aren't allowed, we're 		 * done.  If duplicates are allowed, it's possible that there 		 * were duplicate keys on duplicate pages, and they were later 		 * deleted, so we could be on a page with no matches while 		 * there are matches on other pages.  If we're at the start or 		 * end of a page, check on both sides. 		 */
 if|if
 condition|(
 name|h
@@ -349,14 +347,6 @@ name|base
 operator|==
 literal|0
 operator|&&
-name|h
-operator|->
-name|prevpg
-operator|!=
-name|P_INVALID
-condition|)
-return|return
-operator|(
 name|bt_sprev
 argument_list|(
 name|t
@@ -367,6 +357,13 @@ name|key
 argument_list|,
 name|exactp
 argument_list|)
+condition|)
+return|return
+operator|(
+operator|&
+name|t
+operator|->
+name|bt_cur
 operator|)
 return|;
 if|if
@@ -378,14 +375,6 @@ argument_list|(
 name|h
 argument_list|)
 operator|&&
-name|h
-operator|->
-name|nextpg
-operator|!=
-name|P_INVALID
-condition|)
-return|return
-operator|(
 name|bt_snext
 argument_list|(
 name|t
@@ -396,6 +385,13 @@ name|key
 argument_list|,
 name|exactp
 argument_list|)
+condition|)
+return|return
+operator|(
+operator|&
+name|t
+operator|->
+name|bt_cur
 operator|)
 return|;
 block|}
@@ -467,10 +463,13 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * BT_SNEXT -- Check for an exact match after the key.  *  * Parameters:  *	t:	tree to search  *	h:	current page.  *	key:	key to find  *	exactp:	pointer to exact match flag  *  * Returns:  *	If an exact match found.  */
+end_comment
+
 begin_function
 specifier|static
-name|EPG
-modifier|*
+name|int
 name|bt_snext
 parameter_list|(
 name|t
@@ -651,23 +650,28 @@ name|exactp
 operator|=
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 block|}
 return|return
 operator|(
-operator|&
-name|t
-operator|->
-name|bt_cur
+literal|0
 operator|)
 return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * BT_SPREV -- Check for an exact match before the key.  *  * Parameters:  *	t:	tree to search  *	h:	current page.  *	key:	key to find  *	exactp:	pointer to exact match flag  *  * Returns:  *	If an exact match found.  */
+end_comment
+
 begin_function
 specifier|static
-name|EPG
-modifier|*
+name|int
 name|bt_sprev
 parameter_list|(
 name|t
@@ -848,14 +852,16 @@ name|exactp
 operator|=
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 block|}
 return|return
 operator|(
-operator|&
-name|t
-operator|->
-name|bt_cur
+literal|0
 operator|)
 return|;
 block|}
