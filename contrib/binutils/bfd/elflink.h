@@ -2485,6 +2485,8 @@ argument_list|(
 name|abfd
 argument_list|,
 name|sz
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2518,6 +2520,13 @@ condition|)
 goto|goto
 name|error_return
 goto|;
+name|msg
+index|[
+name|sz
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|!
