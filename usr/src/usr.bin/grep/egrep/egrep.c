@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)egrep.c	5.1 (Berkeley) %G%"
+literal|"@(#)egrep.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -1389,9 +1395,8 @@ modifier|*
 name|pfname
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|pf
+name|int
+name|fd
 decl_stmt|;
 name|struct
 name|stat
@@ -1405,17 +1410,19 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|pf
+name|fd
 operator|=
-name|fopen
+name|open
 argument_list|(
 name|pfname
 argument_list|,
-literal|"r"
+name|O_RDONLY
+argument_list|,
+literal|0
 argument_list|)
 operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 name|oops
 argument_list|(
@@ -1426,10 +1433,7 @@ if|if
 condition|(
 name|fstat
 argument_list|(
-name|fileno
-argument_list|(
-name|pf
-argument_list|)
+name|fd
 argument_list|,
 operator|&
 name|patstat
@@ -1502,14 +1506,11 @@ name|patstat
 operator|.
 name|st_size
 operator|!=
-name|fread
+name|read
 argument_list|(
-name|pat
+name|fd
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
+name|pat
 argument_list|,
 operator|(
 name|int
@@ -1517,10 +1518,6 @@ operator|)
 name|patstat
 operator|.
 name|st_size
-operator|+
-literal|1
-argument_list|,
-name|pf
 argument_list|)
 condition|)
 name|oops
@@ -1531,9 +1528,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|close
 argument_list|(
-name|pf
+name|fd
 argument_list|)
 expr_stmt|;
 name|pat
