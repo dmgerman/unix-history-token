@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpboot.c	4.1	83/02/16	*/
+comment|/*	hpboot.c	4.2	83/02/27	*/
 end_comment
 
 begin_comment
@@ -415,6 +415,19 @@ decl_stmt|,
 name|r0
 decl_stmt|,
 name|rperr
+name|clrl
+name|r3
+comment|/* Eagle's are too fast for the controller. Slow the thing down. */
+name|buzz
+range|:
+name|acbl
+name|$2000
+decl_stmt|,
+name|$1
+decl_stmt|,
+name|r3
+decl_stmt|,
+name|buzz
 name|bicpsw
 name|$2
 name|jbr
