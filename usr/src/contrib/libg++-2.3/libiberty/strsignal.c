@@ -795,12 +795,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|NEED_sys_siglist
 end_ifdef
 
@@ -811,6 +805,12 @@ name|sys_nsig
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -819,6 +819,11 @@ modifier|*
 name|sys_siglist
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -833,6 +838,12 @@ init|=
 name|NSIG
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_ifdef
 ifdef|#
