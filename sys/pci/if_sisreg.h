@@ -470,6 +470,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SIS_CFG_EDB_MASTER_EN
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIS_EECTL_DIN
 value|0x00000001
 end_define
@@ -1236,9 +1243,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|SIS_RXCFG
+name|SIS_RXCFG256
 define|\
 value|(SIS_RXCFG_DRAIN(64)|SIS_RXDMA_256BYTES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIS_RXCFG64
+define|\
+value|(SIS_RXCFG_DRAIN(64)|SIS_RXDMA_64BYTES)
 end_define
 
 begin_define

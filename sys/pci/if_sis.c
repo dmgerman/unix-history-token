@@ -8245,16 +8245,41 @@ operator|.
 name|sis_tx_paddr
 argument_list|)
 expr_stmt|;
-comment|/* Set RX configuration */
+comment|/* SIS_CFG_EDB_MASTER_EN indicates the EDB bus is used instead of 	 * the PCI bus. When this bit is set, the Max DMA Burst Size 	 * for TX/RX DMA should be no larger than 16 double words. 	 */
+if|if
+condition|(
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|SIS_CFG
+argument_list|)
+operator|&
+name|SIS_CFG_EDB_MASTER_EN
+condition|)
+block|{
 name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|SIS_RX_CFG
 argument_list|,
-name|SIS_RXCFG
+name|SIS_RXCFG64
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|SIS_RX_CFG
+argument_list|,
+name|SIS_RXCFG256
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Accept Long Packets for VLAN support */
 name|SIS_SETBIT
 argument_list|(
