@@ -76,6 +76,16 @@ decl_stmt|;
 name|int
 name|gd_switchticks
 decl_stmt|;
+name|struct
+name|intr_queue
+modifier|*
+name|gd_iq
+decl_stmt|;
+name|struct
+name|intr_vector
+modifier|*
+name|gd_ivt
+decl_stmt|;
 block|}
 struct|;
 end_struct
