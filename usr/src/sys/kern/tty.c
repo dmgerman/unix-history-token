@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.51 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5347,7 +5347,7 @@ block|{
 comment|/* 			 * Place the cursor over the '^' of the ^D. 			 */
 name|i
 operator|=
-name|MIN
+name|min
 argument_list|(
 literal|2
 argument_list|,

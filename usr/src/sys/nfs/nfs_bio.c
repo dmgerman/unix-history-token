@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -722,7 +722,7 @@ operator|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 call|(
 name|unsigned
@@ -1029,7 +1029,7 @@ operator|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|n
 argument_list|,
@@ -1071,7 +1071,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|uio
 operator|->
@@ -1117,7 +1117,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|uio
 operator|->
@@ -1979,7 +1979,7 @@ operator|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|min
 argument_list|(
 call|(
 name|unsigned
@@ -2271,7 +2271,7 @@ name|bp
 operator|->
 name|b_dirtyoff
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|on
 argument_list|,
@@ -2284,7 +2284,7 @@ name|bp
 operator|->
 name|b_dirtyend
 operator|=
-name|MAX
+name|max
 argument_list|(
 operator|(
 name|on
@@ -2363,7 +2363,7 @@ name|bp
 operator|->
 name|b_validoff
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|bp
 operator|->
@@ -2378,7 +2378,7 @@ name|bp
 operator|->
 name|b_validend
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|bp
 operator|->

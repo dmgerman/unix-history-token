@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.22 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uipc_mbuf.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1125,7 +1125,7 @@ name|n
 operator|->
 name|m_len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|len
 argument_list|,
@@ -1396,7 +1396,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|m
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_log.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_log.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -465,7 +465,7 @@ name|msg_bufr
 expr_stmt|;
 name|l
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|l
 argument_list|,
