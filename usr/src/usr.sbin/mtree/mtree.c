@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mtree.c	5.5 (Berkeley) %G%"
+literal|"@(#)mtree.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -68,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fts.h>
 end_include
 
 begin_include
@@ -85,6 +97,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|exitval
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|cflag
 decl_stmt|,
 name|dflag
@@ -94,19 +112,6 @@ decl_stmt|,
 name|rflag
 decl_stmt|,
 name|uflag
-decl_stmt|,
-name|xflag
-decl_stmt|,
-name|exitval
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|path
-index|[
-name|MAXPATHLEN
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +133,8 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
+name|ftsoptions
+decl_stmt|,
 name|optind
 decl_stmt|;
 specifier|extern
@@ -140,9 +147,9 @@ name|ch
 decl_stmt|;
 name|char
 modifier|*
-name|p
+name|dir
 decl_stmt|;
-name|p
+name|dir
 operator|=
 operator|(
 name|char
@@ -239,7 +246,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|p
+name|dir
 operator|=
 name|optarg
 expr_stmt|;
@@ -263,9 +270,9 @@ break|break;
 case|case
 literal|'x'
 case|:
-name|xflag
-operator|=
-literal|1
+name|ftsoptions
+operator||=
+name|FTS_XDEV
 expr_stmt|;
 break|break;
 case|case
@@ -297,11 +304,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|dir
 operator|&&
 name|chdir
 argument_list|(
-name|p
+name|dir
 argument_list|)
 condition|)
 block|{
@@ -314,7 +321,7 @@ name|stderr
 argument_list|,
 literal|"mtree: %s: %s\n"
 argument_list|,
-name|p
+name|dir
 argument_list|,
 name|strerror
 argument_list|(
@@ -328,27 +335,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|path
-index|[
-literal|0
-index|]
-operator|=
-literal|'.'
-expr_stmt|;
 if|if
 condition|(
 name|cflag
 condition|)
-block|{
-name|create
+name|cwalk
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
+else|else
 name|verify
 argument_list|()
 expr_stmt|;
