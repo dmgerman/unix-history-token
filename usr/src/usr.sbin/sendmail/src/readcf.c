@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -1875,6 +1875,22 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* set if option is stuck */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|WizWord
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the stored wizard password */
+end_comment
+
 begin_macro
 name|setoption
 argument_list|(
@@ -2578,6 +2594,29 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|DEBUG
+case|case
+literal|'W'
+case|:
+comment|/* set the wizards password */
+if|if
+condition|(
+operator|!
+name|safe
+condition|)
+goto|goto
+name|syntax
+goto|;
+name|WizWord
+operator|=
+name|val
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+endif|DEBUG
 default|default:
 name|syntax
 label|:

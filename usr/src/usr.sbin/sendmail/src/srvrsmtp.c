@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -222,7 +222,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* _showq -- show send queue (DEBUG) */
+comment|/* showq -- show send queue (DEBUG) */
 end_comment
 
 begin_define
@@ -233,18 +233,18 @@ value|13
 end_define
 
 begin_comment
-comment|/* _debug -- set debug mode */
+comment|/* debug -- set debug mode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CMDDBGVERBOSE
+name|CMDVERB
 value|14
 end_define
 
 begin_comment
-comment|/* _verbose -- go into verbose mode */
+comment|/* verb -- go into verbose mode */
 end_comment
 
 begin_define
@@ -255,7 +255,18 @@ value|15
 end_define
 
 begin_comment
-comment|/* _kill -- kill sendmail */
+comment|/* kill -- kill sendmail */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMDDBGWIZ
+value|16
+end_define
+
+begin_comment
+comment|/* wiz -- become a wizard */
 end_comment
 
 begin_decl_stmt
@@ -319,6 +330,10 @@ literal|"helo"
 block|,
 name|CMDHELO
 block|,
+literal|"verb"
+block|,
+name|CMDVERB
+block|,
 literal|"hops"
 block|,
 name|CMDHOPS
@@ -326,21 +341,21 @@ block|,
 ifdef|#
 directive|ifdef
 name|DEBUG
-literal|"_showq"
+literal|"showq"
 block|,
 name|CMDDBGSHOWQ
 block|,
-literal|"_debug"
+literal|"debug"
 block|,
 name|CMDDBGDEBUG
 block|,
-literal|"_verbose"
-block|,
-name|CMDDBGVERBOSE
-block|,
-literal|"_kill"
+literal|"kill"
 block|,
 name|CMDDBGKILL
+block|,
+literal|"wiz"
+block|,
+name|CMDDBGWIZ
 block|,
 endif|#
 directive|endif
@@ -352,6 +367,43 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_decl_stmt
+name|bool
+name|IsWiz
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if we are a wizard */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|WizWord
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the wizard word to compare against */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
+
 begin_macro
 name|smtp
 argument_list|()
@@ -359,17 +411,12 @@ end_macro
 
 begin_block
 block|{
-name|char
-name|inp
-index|[
-name|MAXLINE
-index|]
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|register
 name|struct
 name|cmd
 modifier|*
@@ -1116,6 +1163,22 @@ literal|"Hop count ok"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|CMDVERB
+case|:
+comment|/* set verbose mode */
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
+name|message
+argument_list|(
+literal|"200"
+argument_list|,
+literal|"Verbose mode"
+argument_list|)
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1166,25 +1229,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CMDDBGVERBOSE
-case|:
-comment|/* set verbose mode */
-name|Verbose
-operator|=
-name|TRUE
-expr_stmt|;
-name|message
-argument_list|(
-literal|"200"
-argument_list|,
-literal|"Verbose mode"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|CMDDBGKILL
 case|:
 comment|/* kill the parent */
+if|if
+condition|(
+operator|!
+name|iswiz
+argument_list|()
+condition|)
+break|break;
 if|if
 condition|(
 name|kill
@@ -1209,6 +1263,77 @@ argument_list|(
 literal|"500"
 argument_list|,
 literal|"Can't kill Mom"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMDDBGWIZ
+case|:
+comment|/* become a wizard */
+if|if
+condition|(
+name|WizWord
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+name|seed
+index|[
+literal|3
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|crypt
+parameter_list|()
+function_decl|;
+name|strncpy
+argument_list|(
+name|seed
+argument_list|,
+name|WizWord
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|WizWord
+argument_list|,
+name|crypt
+argument_list|(
+name|p
+argument_list|,
+name|seed
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"500"
+argument_list|,
+literal|"You are no wizard!"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|IsWiz
+operator|=
+name|TRUE
+expr_stmt|;
+name|message
+argument_list|(
+literal|"200"
+argument_list|,
+literal|"Please pass, oh mighty wizard"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1590,6 +1715,38 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  ISWIZ -- tell us if we are a wizard ** **	If not, print a nasty message. ** **	Parameters: **		none. ** **	Returns: **		TRUE if we are a wizard. **		FALSE if we are not a wizard. ** **	Side Effects: **		Prints a 500 exit stat if we are not a wizard. */
+end_comment
+
+begin_function
+name|bool
+name|iswiz
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|IsWiz
+condition|)
+name|message
+argument_list|(
+literal|"500"
+argument_list|,
+literal|"Mere mortals musn't mutter that mantra"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|IsWiz
+operator|)
+return|;
+block|}
+end_function
 
 begin_escape
 end_escape
