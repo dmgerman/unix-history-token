@@ -111,8 +111,14 @@ decl_stmt|;
 name|int
 name|gd_switchticks
 decl_stmt|;
-name|int
+name|u_char
 name|gd_intr_nesting_level
+decl_stmt|;
+name|u_char
+name|gd_pad0
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|struct
 name|segment_descriptor
@@ -127,9 +133,6 @@ name|int
 name|gd_currentldt
 decl_stmt|;
 comment|/* only used for USER_LDT */
-ifdef|#
-directive|ifdef
-name|SMP
 name|u_int
 name|gd_cpuid
 decl_stmt|;
@@ -174,8 +177,6 @@ name|unsigned
 modifier|*
 name|gd_prv_PADDR1
 decl_stmt|;
-endif|#
-directive|endif
 name|u_int
 name|gd_astpending
 decl_stmt|;

@@ -83,6 +83,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCPU_PTR
+parameter_list|(
+name|name
+parameter_list|)
+value|(&GLOBALP->gd_##name)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCPU_SET
 parameter_list|(
 name|name
