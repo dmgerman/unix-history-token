@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispmbox.h,v 1.9 1999/04/04 01:32:09 mjacob Exp $ */
+comment|/* $Id: ispmbox.h,v 1.10 1999/05/11 05:00:35 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_5_11_99 */
+comment|/* release_6_2_99 */
 end_comment
 
 begin_comment
-comment|/*  * Mailbox and Queue Entry Definitions for for Qlogic ISP SCSI adapters.  *  *---------------------------------------  * Copyright (c) 1997, 1998 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Mailbox and Queue Entry Definitions for for Qlogic ISP SCSI adapters.  *  *---------------------------------------  * Copyright (c) 1997, 1998, 1999 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifndef
@@ -587,6 +587,34 @@ define|#
 directive|define
 name|MBOX_INIT_LIP_RESET
 value|0x6c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SEND_SNS
+value|0x6e
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_FABRIC_LOGIN
+value|0x6f
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SEND_CHANGE_REQUEST
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_FABRIC_LOGOUT
+value|0x71
 end_define
 
 begin_define
@@ -2094,105 +2122,105 @@ begin_define
 define|#
 directive|define
 name|ICBOPT_HARD_ADDRESS
-value|(1<<0)
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_FAIRNESS
-value|(1<<1)
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_FULL_DUPLEX
-value|(1<<2)
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_FAST_POST
-value|(1<<3)
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_TGT_ENABLE
-value|(1<<4)
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_INI_DISABLE
-value|(1<<5)
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_INI_ADISC
-value|(1<<6)
+value|0x0040
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_INI_TGTTYPE
-value|(1<<7)
+value|0x0080
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_PDBCHANGE_AE
-value|(1<<8)
+value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_NOLIP
-value|(1<<9)
+value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_SRCHDOWN
-value|(1<<10)
+value|0x0400
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_PREVLOOP
-value|(1<<11)
+value|0x0800
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_STOP_ON_QFULL
-value|(1<<12)
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_FULL_LOGIN
-value|(1<<13)
+value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ICBOPT_USE_PORTNAME
-value|(1<<14)
+value|0x4000
 end_define
 
 begin_define
@@ -2214,6 +2242,34 @@ define|#
 directive|define
 name|ICB_DFLT_FRMLEN
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB_DFLT_ALLOC
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB_DFLT_THROTTLE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB_DFLT_RDELAY
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|ICB_DFLT_RCOUNT
+value|3
 end_define
 
 begin_define
@@ -2469,13 +2525,6 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|INVALID_PDB_OPTIONS
-value|0xDEAD
-end_define
-
-begin_define
-define|#
-directive|define
 name|PDB_OPTIONS_XMITTING
 value|(1<<11)
 end_define
@@ -2605,6 +2654,145 @@ directive|define
 name|SVC3_ROLE_MASK
 value|0x30
 end_define
+
+begin_define
+define|#
+directive|define
+name|SVC3_ROLE_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_GAN
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_GP3
+value|0x171
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int16_t
+name|snscb_rblen
+decl_stmt|;
+comment|/* response buffer length (words) */
+name|u_int16_t
+name|snscb_res0
+decl_stmt|;
+name|u_int16_t
+name|snscb_addr
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* response buffer address */
+name|u_int16_t
+name|snscb_sblen
+decl_stmt|;
+comment|/* subcommand buffer length (words) */
+name|u_int16_t
+name|snscb_res1
+decl_stmt|;
+name|u_int16_t
+name|snscb_data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* variable data */
+block|}
+name|sns_screq_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Subcommand Request Structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNS_GAN_REQ_SIZE
+value|(sizeof (sns_screq_t)+(5*(sizeof (u_int16_t))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SNS_GP3_REQ_SIZE
+value|(sizeof (sns_screq_t)+(5*(sizeof (u_int16_t))))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int8_t
+name|snscb_cthdr
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|u_int8_t
+name|snscb_port_type
+decl_stmt|;
+name|u_int8_t
+name|snscb_port_id
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int8_t
+name|snscb_portname
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u_int16_t
+name|snscb_data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* variable data */
+block|}
+name|sns_scrsp_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Subcommand Response Structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNS_GAN_RESP_SIZE
+value|608
+end_define
+
+begin_comment
+comment|/* Maximum response size (bytes) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNS_GP3_RESP_SIZE
+value|532
+end_define
+
+begin_comment
+comment|/* XXX: For 128 ports */
+end_comment
 
 begin_comment
 comment|/*  * Target Mode Structures  */
