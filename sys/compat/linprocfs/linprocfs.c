@@ -1732,7 +1732,7 @@ literal|0
 condition|)
 name|ncpu
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|sbuf_printf
 argument_list|(
@@ -1774,6 +1774,12 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ncpu
+operator|>
+literal|1
+condition|)
 for|for
 control|(
 name|i
