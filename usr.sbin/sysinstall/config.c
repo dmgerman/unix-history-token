@@ -1058,7 +1058,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"/dev/%s\t\t%s\t%s\t%s\t\t%d\t%d\n"
+literal|"/dev/%s\t\t%s\t\t%s\t%s\t\t%d\t%d\n"
 argument_list|,
 name|name_of
 argument_list|(
@@ -1118,7 +1118,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"proc\t\t/proc\tprocfs\t\trw\t0\t0\n"
+literal|"proc\t\t\t/proc\t\tprocfs\t\trw\t0\t0\n"
 argument_list|)
 expr_stmt|;
 comment|/* Now look for the CDROMs */
@@ -1416,6 +1416,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|cp2
 decl_stmt|;
 name|int
 name|i
@@ -1525,14 +1528,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
+operator|(
+name|cp2
+operator|=
+name|index
+argument_list|(
 name|cp
-operator|==
+argument_list|,
 literal|'"'
+argument_list|)
+operator|)
 condition|)
 comment|/* Eliminate leading quote if it's quoted */
-operator|++
 name|cp
+operator|=
+name|cp2
+operator|+
+literal|1
 expr_stmt|;
 name|j
 operator|=
@@ -1540,6 +1552,8 @@ name|strlen
 argument_list|(
 name|cp
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1558,6 +1572,13 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+condition|)
 name|variable_set2
 argument_list|(
 name|lines
