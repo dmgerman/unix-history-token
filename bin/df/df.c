@@ -420,9 +420,9 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|size_t
-name|longwidth
+name|int64width
 parameter_list|(
-name|long
+name|int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -448,7 +448,7 @@ name|struct
 name|statfs
 modifier|*
 parameter_list|,
-name|size_t
+name|int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1687,7 +1687,7 @@ name|statfs
 modifier|*
 name|sfsp
 parameter_list|,
-name|size_t
+name|int64_t
 name|used
 parameter_list|)
 block|{
@@ -1858,7 +1858,7 @@ name|mwp
 parameter_list|)
 block|{
 specifier|static
-name|long
+name|u_long
 name|blocksize
 decl_stmt|;
 specifier|static
@@ -1875,7 +1875,7 @@ name|char
 modifier|*
 name|header
 decl_stmt|;
-name|size_t
+name|int64_t
 name|used
 decl_stmt|,
 name|availblks
@@ -2171,7 +2171,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*ld %*ld %*ld"
+literal|" %*qd %*qd %*qd"
 argument_list|,
 operator|(
 name|u_int
@@ -2180,6 +2180,9 @@ name|mwp
 operator|->
 name|total
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fsbtoblk
 argument_list|(
 name|sfsp
@@ -2200,6 +2203,9 @@ name|mwp
 operator|->
 name|used
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fsbtoblk
 argument_list|(
 name|used
@@ -2218,6 +2224,9 @@ name|mwp
 operator|->
 name|avail
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fsbtoblk
 argument_list|(
 name|sfsp
@@ -2283,7 +2292,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*lu %*lu %4.0f%% "
+literal|" %*qd %*qd %4.0f%% "
 argument_list|,
 operator|(
 name|u_int
@@ -2293,7 +2302,7 @@ operator|->
 name|iused
 argument_list|,
 operator|(
-name|u_long
+name|intmax_t
 operator|)
 name|used
 argument_list|,
@@ -2304,6 +2313,9 @@ name|mwp
 operator|->
 name|ifree
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sfsp
 operator|->
 name|f_ffree
@@ -2374,7 +2386,7 @@ name|sfsp
 parameter_list|)
 block|{
 specifier|static
-name|long
+name|u_long
 name|blocksize
 init|=
 literal|0
@@ -2425,10 +2437,13 @@ name|mwp
 operator|->
 name|total
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|fsbtoblk
 argument_list|(
+operator|(
+name|int64_t
+operator|)
 name|sfsp
 operator|->
 name|f_blocks
@@ -2452,14 +2467,20 @@ name|mwp
 operator|->
 name|used
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|fsbtoblk
 argument_list|(
+operator|(
+name|int64_t
+operator|)
 name|sfsp
 operator|->
 name|f_blocks
 operator|-
+operator|(
+name|int64_t
+operator|)
 name|sfsp
 operator|->
 name|f_bfree
@@ -2483,7 +2504,7 @@ name|mwp
 operator|->
 name|avail
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|fsbtoblk
 argument_list|(
@@ -2510,8 +2531,11 @@ name|mwp
 operator|->
 name|iused
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
+operator|(
+name|int64_t
+operator|)
 name|sfsp
 operator|->
 name|f_files
@@ -2532,7 +2556,7 @@ name|mwp
 operator|->
 name|ifree
 argument_list|,
-name|longwidth
+name|int64width
 argument_list|(
 name|sfsp
 operator|->
@@ -2550,9 +2574,9 @@ end_comment
 begin_function
 specifier|static
 name|size_t
-name|longwidth
+name|int64width
 parameter_list|(
-name|long
+name|int64_t
 name|val
 parameter_list|)
 block|{

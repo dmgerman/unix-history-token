@@ -1323,10 +1323,13 @@ operator|.
 name|f_iosize
 argument_list|,
 operator|(
-literal|"cluster_rbuild: size %ld != filesize %ld\n"
+literal|"cluster_rbuild: size %ld != filesize %jd\n"
 operator|,
 name|size
 operator|,
+operator|(
+name|intmax_t
+operator|)
 name|vp
 operator|->
 name|v_mount

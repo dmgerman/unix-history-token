@@ -12054,8 +12054,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" iosize: %ld, lblkno: %jd, flags: 0x%x, npages: %d\n"
+literal|" iosize: %jd, lblkno: %jd, flags: 0x%x, npages: %d\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 operator|->
 name|b_vp
