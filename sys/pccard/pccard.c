@@ -2470,12 +2470,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|devi
-operator|->
-name|running
-operator|=
-literal|1
-expr_stmt|;
 name|MALLOC
 argument_list|(
 name|devi
@@ -2507,6 +2501,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 *	Create an entry for the device under this slot. 	 */
+name|devi
+operator|->
+name|running
+operator|=
+literal|1
+expr_stmt|;
 name|devi
 operator|->
 name|drv
