@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.29 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.30 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.29 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.30 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2717,7 +2717,7 @@ name|Verbose
 condition|)
 name|nmessage
 argument_list|(
-literal|"%s"
+literal|"050 %s"
 argument_list|,
 name|bufp
 argument_list|)
