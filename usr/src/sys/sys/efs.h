@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	efs.h	4.1	82/06/26	*/
+comment|/*	efs.h	4.2	82/06/26	*/
 end_comment
 
 begin_comment
@@ -407,8 +407,19 @@ begin_comment
 comment|/* major device of efs char special routines */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|efsinode
+parameter_list|(
+name|ip
+parameter_list|)
+define|\
+value|(((ip)->i_mode&IFMT) == IFCHR&& \ 	major((ip)->i_rdev) == efs_major&& minor((ip)->i_rdev) == 0)
+end_define
+
 begin_comment
-comment|/* The patchboard connects file pointers on the local machine and sockets 	on the remote machine */
+comment|/*  * The patchboard connects file pointers on the local  * machine and sockets on the remote machine  */
 end_comment
 
 begin_struct
