@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if.h	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -500,85 +500,17 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * ARP ioctl request  */
-end_comment
-
-begin_struct
-struct|struct
-name|arpreq
-block|{
-name|struct
-name|sockaddr
-name|arp_pa
-decl_stmt|;
-comment|/* protocol address */
-name|struct
-name|sockaddr
-name|arp_ha
-decl_stmt|;
-comment|/* hardware address */
-name|int
-name|arp_flags
-decl_stmt|;
-comment|/* flags */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  arp_flags and at_flags field values */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATF_INUSE
-value|1
-end_define
-
-begin_comment
-comment|/* entry in use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATF_COM
-value|2
-end_define
-
-begin_comment
-comment|/* completed entry (enaddr valid) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATF_PERM
-value|4
-end_define
-
-begin_comment
-comment|/* permanent entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATF_PUBL
-value|8
-end_define
-
-begin_comment
-comment|/* publish entry (respond for other host) */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../net/if_arp.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -638,9 +570,22 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_else
+else|#
+directive|else
+else|KERNEL
+end_else
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
+endif|KERNEL
 end_endif
 
 end_unit
