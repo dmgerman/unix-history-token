@@ -502,14 +502,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tboolnames + %d,\n"
+literal|"\tboolnames + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sboolnames
 index|[
 name|i
 index|]
 operator|-
 name|boolnames
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -542,14 +547,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tboolcodes + %d,\n"
+literal|"\tboolcodes + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sboolcodes
 index|[
 name|i
 index|]
 operator|-
 name|boolcodes
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -582,14 +592,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tboolfnames + %d,\n"
+literal|"\tboolfnames + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sboolfnames
 index|[
 name|i
 index|]
 operator|-
 name|boolfnames
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -622,14 +637,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tnumnames + %d,\n"
+literal|"\tnumnames + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|snumnames
 index|[
 name|i
 index|]
 operator|-
 name|numnames
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -662,14 +682,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tnumcodes + %d,\n"
+literal|"\tnumcodes + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|snumcodes
 index|[
 name|i
 index|]
 operator|-
 name|numcodes
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -702,14 +727,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tnumfnames + %d,\n"
+literal|"\tnumfnames + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|snumfnames
 index|[
 name|i
 index|]
 operator|-
 name|numfnames
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -742,14 +772,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tstrnames + %d,\n"
+literal|"\tstrnames + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sstrnames
 index|[
 name|i
 index|]
 operator|-
 name|strnames
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -782,14 +817,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tstrcodes + %d,\n"
+literal|"\tstrcodes + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sstrcodes
 index|[
 name|i
 index|]
 operator|-
 name|strcodes
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -822,14 +862,19 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\tstrfnames + %d,\n"
+literal|"\tstrfnames + %ld,\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|sstrfnames
 index|[
 name|i
 index|]
 operator|-
 name|strfnames
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
