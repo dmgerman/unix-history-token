@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) %G%"
+literal|"@(#)main.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -814,6 +814,17 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|status
+operator|.
+name|w_termsig
+condition|)
+name|sumstatus
+operator||=
+literal|8
+expr_stmt|;
+else|else
 name|sumstatus
 operator||=
 name|status
@@ -888,6 +899,33 @@ name|wp
 operator|->
 name|next
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|.
+name|w_termsig
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: EXITED WITH SIGNAL %d\n"
+argument_list|,
+name|wp
+operator|->
+name|name
+argument_list|,
+name|status
+operator|.
+name|w_termsig
+argument_list|)
+expr_stmt|;
+name|status
+operator|.
+name|w_retcode
+operator|=
+literal|8
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|status
